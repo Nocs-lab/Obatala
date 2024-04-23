@@ -88,8 +88,6 @@ class Nocs_ObatalaPlugin {
     private function includes() {
        
         // include_once plugin_dir_path(__FILE__) . 'path/to/file.php';
-        include_once plugin_dir_path(__FILE__) . 'includes/classes/acf-configurator.php';
-        
             
     }
 
