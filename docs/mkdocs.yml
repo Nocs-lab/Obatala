@@ -1,0 +1,5 @@
+site_name: Obatala
+plugins: 
+  - mermaid2
+  - search
+theme: material

@@ -5,20 +5,41 @@ defined('ABSPATH') || exit;
 
 class SettingsPage {
     public static function register_settings() {
-        register_setting('obatala_settings_group', 'some_setting');  // Note the settings group name
+        // Register settings group
+        register_setting('obatala_settings_group', 'some_setting');
+        register_setting('obatala_settings_group', 'enable_feature');
+        register_setting('obatala_settings_group', 'api_key');
 
+        // Add a settings section for general settings
         add_settings_section(
             'obatala_general_settings',
             __('General Settings', 'obatala-tainacan'),
             null,
-            'obatala_settings_page'  // Ensure this matches with the page on which the settings are shown
+            'obatala_settings_page'
         );
 
+        // Add individual settings fields
         add_settings_field(
             'some_setting_field',
             __('Some Setting', 'obatala-tainacan'),
             [self::class, 'some_setting_field_render'],
-            'obatala_settings_page',  // Ensure this matches with the settings section
+            'obatala_settings_page',
+            'obatala_general_settings'
+        );
+
+        add_settings_field(
+            'enable_feature_field',
+            __('Enable Feature', 'obatala-tainacan'),
+            [self::class, 'enable_feature_field_render'],
+            'obatala_settings_page',
+            'obatala_general_settings'
+        );
+
+        add_settings_field(
+            'api_key_field',
+            __('API Key', 'obatala-tainacan'),
+            [self::class, 'api_key_field_render'],
+            'obatala_settings_page',
             'obatala_general_settings'
         );
     }
@@ -27,6 +48,18 @@ class SettingsPage {
         $value = get_option('some_setting');
         echo '<input type="text" name="some_setting" value="' . esc_attr($value) . '"/>';
         echo '<p class="description">' . __('Enter the value for some setting.', 'obatala-tainacan') . '</p>';
+    }
+
+    public static function enable_feature_field_render() {
+        $checked = get_option('enable_feature') ? 'checked' : '';
+        echo '<input type="checkbox" name="enable_feature" ' . $checked . '/>';
+        echo '<p class="description">' . __('Enable or disable a specific feature.', 'obatala-tainacan') . '</p>';
+    }
+
+    public static function api_key_field_render() {
+        $value = get_option('api_key');
+        echo '<input type="text" name="api_key" value="' . esc_attr($value) . '"/>';
+        echo '<p class="description">' . __('Enter your API key here.', 'obatala-tainacan') . '</p>';
     }
 
     public static function create_settings_page() {
