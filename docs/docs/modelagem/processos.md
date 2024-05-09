@@ -17,7 +17,7 @@ Este documento descreve a modelagem de um processo como uma entidade dentro do W
       - Descrição detalhada do processo.
 
 4. **Etapas (Steps)**
-      - Fases ou passos do processo, incluindo comentários, setores, pessoas, status, e notificações associadas.
+      - Fases ou passos do processo, incluindo comentários, setores, pessoas, status, itens, coleções e notificações associadas.
 
 5. **Status**
       - Estado atual do processo (ex: Iniciado, Em Progresso, Concluído).
@@ -55,6 +55,17 @@ classDiagram
         +String nome
     }
 
+    class Colecao {
+        +String nome
+        +TaincanID
+        +List Itens
+    }
+
+    class Item {
+        +String nome
+        +TaincanID
+    }
+
     class Etapa {
         +String nome
         +List<Comentario> comentarios
@@ -86,7 +97,10 @@ classDiagram
         +String url
     }
 
-    Etapa "1" -- "1" Setor : pertence a
+    Etapa "*" -- "1" Setor : pertence a
+    Processo "1" -- "*" Item : interage com
+    Processo "1" -- "*" Colecao : interage com
+    Colecao "1" -- "*" Item : possui
     Etapa "1" -- "*" Pessoa : envolvido
     Etapa "1" -- "*" Comentario : possui
     Etapa "1" -- "*" Notificacao : dispara
@@ -106,6 +120,7 @@ sequenceDiagram
     participant Usuário
     participant Sistema
     participant Notificação
+    participant Tainacan
 
     Usuário->>Sistema: Criar Processo
     Sistema-->>Usuário: Confirmação de Criação
@@ -118,6 +133,8 @@ sequenceDiagram
         Notificação-->>Usuário: Receber Notificação
         Usuário->>Sistema: Adicionar Pessoas e Arquivos
         Sistema-->>Usuário: Confirmação de Adição
+        Sistema->>Tainacan: Adiciona ou recupera Itens/Coleções
+        Tainacan-->>Sistema: Confirmação de Adição
         Usuário->>Sistema: Concluir Etapa
         Sistema-->>Notificação: Disparar Notificação
         Sistema-->>Usuário: Confirmação de Conclusão
