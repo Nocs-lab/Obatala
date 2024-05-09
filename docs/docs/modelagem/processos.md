@@ -1,7 +1,7 @@
 ---
 hide:
     - toc
----mk
+---
 # Documento de Modelagem de Processo Atualizado
 
 Este documento descreve a modelagem de um processo como uma entidade dentro do WordPress, utilizando o post customizado `process_collection` e as taxonomias `process_step` e `process_type`.
