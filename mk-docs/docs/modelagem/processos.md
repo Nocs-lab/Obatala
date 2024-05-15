@@ -2,9 +2,12 @@
 hide:
     - toc
 ---
-# Documento de Modelagem de Processo
+# Visão geral do processo
 
-Este documento descreve a modelagem de um processo como uma entidade dentro do WordPress, utilizando o post customizado `process_collection` e as taxonomias `process_step` e `process_type`.
+Este documento descreve a modelagem de um processo como uma entidade dentro do WordPress, esta é a modelagem inicial do processo dentro do sistema e serve como base para ter um entendimento desta entidade, e como modelar ela dentro do sistema, os métodos aqui descritos serão ampliados e trabalhados conforme o desenvolvimento do plugin tomar forma. 
+
+!!! nota    
+    Manteremos esta documentação como está por ter sido aceita como a primeira modelagem de um processo válida.
 
 ---
 
