@@ -1,6 +1,6 @@
 
 <!doctype html>
-<html lang="en" class="no-js">
+<html lang="pt" class="no-js">
   <head>
     
       <meta charset="utf-8">
@@ -16,15 +16,15 @@
       
       
       <link rel="icon" href="../assets/images/favicon.png">
-      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.15">
+      <meta name="generator" content="mkdocs-1.6.0, mkdocs-material-9.5.22">
     
     
       
-        <title>Criação de Interfaces no WordPress para Gerenciamento de Processos no Plugin - Obatala</title>
+        <title>Interfaces - Obatala</title>
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.7e359304.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.732c4fb1.min.css">
       
       
 
@@ -63,7 +63,7 @@
       
         
         <a href="#criacao-de-interfaces-no-wordpress-para-gerenciamento-de-processos-no-plugin" class="md-skip">
-          Skip to content
+          Ir para o conteúdo
         </a>
       
     </div>
@@ -74,10 +74,8 @@
     
       
 
-  
-
-<header class="md-header md-header--shadow" data-md-component="header">
-  <nav class="md-header__inner md-grid" aria-label="Header">
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
     <a href=".." title="Obatala" class="md-header__button md-logo" aria-label="Obatala" data-md-component="logo">
       
   
@@ -98,7 +96,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Criação de Interfaces no WordPress para Gerenciamento de Processos no Plugin
+              Interfaces
             
           </span>
         </div>
@@ -118,16 +116,21 @@
   <label class="md-search__overlay" for="__search"></label>
   <div class="md-search__inner" role="search">
     <form class="md-search__form" name="search">
-      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
       <label class="md-search__icon md-icon" for="__search">
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
         
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
       </label>
-      <nav class="md-search__options" aria-label="Search">
+      <nav class="md-search__options" aria-label="Pesquisar">
         
-        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Compartilhar" aria-label="Compartilhar" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
           
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
         </button>
@@ -138,7 +141,7 @@
       <div class="md-search__scrollwrap" data-md-scrollfix>
         <div class="md-search-result" data-md-component="search-result">
           <div class="md-search-result__meta">
-            Initializing search
+            Inicializando a pesquisa
           </div>
           <ol class="md-search-result__list" role="presentation"></ol>
         </div>
@@ -157,6 +160,69 @@
       
         
           
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+    
+  
+  Interfaces
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../modelagem/processos/" class="md-tabs__link">
+          
+  
+  Modelagem
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
         
       
       <main class="md-main" data-md-component="main">
@@ -170,8 +236,12 @@
                     
 
 
+  
 
-<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navegação" data-md-level="0">
   <label class="md-nav__title" for="__drawer">
     <a href=".." title="Obatala" class="md-nav__button md-logo" aria-label="Obatala" data-md-component="logo">
       
@@ -195,7 +265,7 @@
         
   
   <span class="md-ellipsis">
-    Documentação do Plugin Obatala
+    Home
   </span>
   
 
@@ -224,7 +294,7 @@
           
   
   <span class="md-ellipsis">
-    Criação de Interfaces no WordPress para Gerenciamento de Processos no Plugin
+    Interfaces
   </span>
   
 
@@ -235,7 +305,7 @@
         
   
   <span class="md-ellipsis">
-    Criação de Interfaces no WordPress para Gerenciamento de Processos no Plugin
+    Interfaces
   </span>
   
 
@@ -243,7 +313,7 @@
       
         
 
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
   
   
   
@@ -252,7 +322,7 @@
   
     <label class="md-nav__title" for="__toc">
       <span class="md-nav__icon md-icon"></span>
-      Table of contents
+      Índice
     </label>
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
@@ -399,55 +469,36 @@
     
     
     
+      
+      
+        
+      
     
-    <li class="md-nav__item md-nav__item--nested">
+    
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
         
-          
-          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
-            
+  
+  
+    <a href="../modelagem/processos/" class="md-nav__link">
+      
   
   <span class="md-ellipsis">
     Modelagem
   </span>
   
 
-            <span class="md-nav__icon md-icon"></span>
-          </label>
-        
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_3">
-            <span class="md-nav__icon md-icon"></span>
-            Modelagem
-          </label>
-          <ul class="md-nav__list" data-md-scrollfix>
-            
-              
-                
-  
-  
-  
-  
-    <li class="md-nav__item">
-      <a href="../modelagem/processos/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Documento de Modelagem de Processo
-  </span>
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
   
 
-      </a>
-    </li>
-  
-
-              
-            
-          </ul>
-        </nav>
       
     </li>
   
@@ -459,158 +510,6 @@
                 </div>
               </div>
             
-            
-              
-              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
-                <div class="md-sidebar__scrollwrap">
-                  <div class="md-sidebar__inner">
-                    
-
-<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
-  
-  
-  
-    
-  
-  
-    <label class="md-nav__title" for="__toc">
-      <span class="md-nav__icon md-icon"></span>
-      Table of contents
-    </label>
-    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
-      
-        <li class="md-nav__item">
-  <a href="#1-estruturacao-do-plugin" class="md-nav__link">
-    <span class="md-ellipsis">
-      1. Estruturação do Plugin
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#2-registro-de-custom-post-types" class="md-nav__link">
-    <span class="md-ellipsis">
-      2. Registro de Custom Post Types
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#3-criacao-da-interface-de-administracao" class="md-nav__link">
-    <span class="md-ellipsis">
-      3. Criação da Interface de Administração
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#4-envolvendo-ajax-para-interfaces-dinamicas" class="md-nav__link">
-    <span class="md-ellipsis">
-      4. Envolvendo AJAX para Interfaces Dinâmicas
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#5-seguranca-e-validacao" class="md-nav__link">
-    <span class="md-ellipsis">
-      5. Segurança e Validação
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#6-criar-templates-de-pagina" class="md-nav__link">
-    <span class="md-ellipsis">
-      6. Criar Templates de Página
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="6. Criar Templates de Página">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#exemplo-de-um-template-php" class="md-nav__link">
-    <span class="md-ellipsis">
-      Exemplo de um Template PHP:
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#7-injetar-conteudo-dinamico-com-shortcodes" class="md-nav__link">
-    <span class="md-ellipsis">
-      7. Injetar Conteúdo Dinâmico com Shortcodes
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="7. Injetar Conteúdo Dinâmico com Shortcodes">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#exemplo-de-um-shortcode" class="md-nav__link">
-    <span class="md-ellipsis">
-      Exemplo de um Shortcode:
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#8-manipular-formularios-e-requisicoes-ajax" class="md-nav__link">
-    <span class="md-ellipsis">
-      8. Manipular Formulários e Requisições AJAX
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="8. Manipular Formulários e Requisições AJAX">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#exemplo-de-ajax-no-wordpress" class="md-nav__link">
-    <span class="md-ellipsis">
-      Exemplo de AJAX no WordPress:
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#9-permissoes-e-restricoes-de-acesso" class="md-nav__link">
-    <span class="md-ellipsis">
-      9. Permissões e Restrições de Acesso
-    </span>
-  </a>
-  
-</li>
-      
-    </ul>
-  
-</nav>
-                  </div>
-                </div>
-              </div>
             
           
           
@@ -633,111 +532,111 @@
 </ul>
 <h2 id="2-registro-de-custom-post-types">2. Registro de Custom Post Types</h2>
 <p>O primeiro passo para a gestão de processos é registrar um custom post type (CPT) específico para os processos. Isso é feito utilizando a função <code>register_post_type()</code> do WordPress. Este CPT terá capacidades específicas para controlar quem pode criar, editar ou deletar os processos.</p>
-<pre><code class="language-php">function obatala_register_post_type() {
-    $args = [
-        'label' =&gt; __('Processos', 'obatala'),
-        'public' =&gt; true,
-        'show_ui' =&gt; true,
-        'capability_type' =&gt; 'post',
-        'has_archive' =&gt; true,
-        'supports' =&gt; ['title', 'editor', 'comments'],
-        'menu_icon' =&gt; 'dashicons-admin-tools',
-    ];
-    register_post_type('obatala_processos', $args);
-}
-add_action('init', 'obatala_register_post_type');
-</code></pre>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="x">function obatala_register_post_type() {</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="x">    $args = [</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="x">        &#39;label&#39; =&gt; __(&#39;Processos&#39;, &#39;obatala&#39;),</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="x">        &#39;public&#39; =&gt; true,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="x">        &#39;show_ui&#39; =&gt; true,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="x">        &#39;capability_type&#39; =&gt; &#39;post&#39;,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="x">        &#39;has_archive&#39; =&gt; true,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="x">        &#39;supports&#39; =&gt; [&#39;title&#39;, &#39;editor&#39;, &#39;comments&#39;],</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="x">        &#39;menu_icon&#39; =&gt; &#39;dashicons-admin-tools&#39;,</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="x">    ];</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="x">    register_post_type(&#39;obatala_processos&#39;, $args);</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="x">}</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="x">add_action(&#39;init&#39;, &#39;obatala_register_post_type&#39;);</span>
+</span></code></pre></div>
 <h2 id="3-criacao-da-interface-de-administracao">3. Criação da Interface de Administração</h2>
 <p>Para criar uma interface de administração:
 - <strong>Adicionar uma página de menu</strong>: Utilize <code>add_menu_page()</code> ou <code>add_submenu_page()</code> para adicionar uma página no painel administrativo.
 - <strong>Renderizar a interface</strong>: Crie funções de callback que renderizam o conteúdo da página utilizando HTML e PHP.</p>
-<pre><code class="language-php">function obatala_add_admin_menu() {
-    add_menu_page(
-        __('Gerenciar Processos', 'obatala'),
-        'Gerenciar Processos',
-        'manage_options',
-        'obatala_manage_processos',
-        'obatala_manage_processos_page',
-        'dashicons-admin-tools'
-    );
-}
-
-function obatala_manage_processos_page() {
-    ?&gt;
-    &lt;div class=&quot;wrap&quot;&gt;
-        &lt;h1&gt;&lt;?php echo esc_html(get_admin_page_title()); ?&gt;&lt;/h1&gt;
-        &lt;form method=&quot;post&quot; action=&quot;options.php&quot;&gt;
-            &lt;?php
-            // Adicionar conteúdo da página aqui.
-            ?&gt;
-        &lt;/form&gt;
-    &lt;/div&gt;
-    &lt;?php
-}
-add_action('admin_menu', 'obatala_add_admin_menu');
-</code></pre>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="x">function obatala_add_admin_menu() {</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="x">    add_menu_page(</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="x">        __(&#39;Gerenciar Processos&#39;, &#39;obatala&#39;),</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="x">        &#39;Gerenciar Processos&#39;,</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="x">        &#39;manage_options&#39;,</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="x">        &#39;obatala_manage_processos&#39;,</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="x">        &#39;obatala_manage_processos_page&#39;,</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="x">        &#39;dashicons-admin-tools&#39;</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="x">    );</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="x">}</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="x">function obatala_manage_processos_page() {</span>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="x">    ?&gt;</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="x">    &lt;div class=&quot;wrap&quot;&gt;</span>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="x">        &lt;h1&gt;</span><span class="cp">&lt;?php</span> <span class="k">echo</span> <span class="nx">esc_html</span><span class="p">(</span><span class="nx">get_admin_page_title</span><span class="p">());</span> <span class="cp">?&gt;</span><span class="x">&lt;/h1&gt;</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a><span class="x">        &lt;form method=&quot;post&quot; action=&quot;options.php&quot;&gt;</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="x">            </span><span class="cp">&lt;?php</span>
+</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>            <span class="c1">// Adicionar conteúdo da página aqui.</span>
+</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>            <span class="cp">?&gt;</span>
+</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="x">        &lt;/form&gt;</span>
+</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="x">    &lt;/div&gt;</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="x">    </span><span class="cp">&lt;?php</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="p">}</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="nx">add_action</span><span class="p">(</span><span class="s1">&#39;admin_menu&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala_add_admin_menu&#39;</span><span class="p">);</span>
+</span></code></pre></div>
 <h2 id="4-envolvendo-ajax-para-interfaces-dinamicas">4. Envolvendo AJAX para Interfaces Dinâmicas</h2>
 <p>Para tornar a interface mais interativa, o WordPress permite o uso de AJAX. Registre os hooks <code>wp_ajax_</code> para lidar com as requisições AJAX do lado do servidor.</p>
-<pre><code class="language-php">function obatala_process_ajax_requests() {
-    // Verificar nonce e permissões de usuário
-    // Processar a requisição AJAX
-    wp_send_json_success(['message' =&gt; 'Processo atualizado com sucesso!']);
-}
-
-add_action('wp_ajax_obatala_update_processo', 'obatala_process_ajax_requests');
-</code></pre>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="x">function obatala_process_ajax_requests() {</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="x">    // Verificar nonce e permissões de usuário</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="x">    // Processar a requisição AJAX</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="x">    wp_send_json_success([&#39;message&#39; =&gt; &#39;Processo atualizado com sucesso!&#39;]);</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="x">}</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="x">add_action(&#39;wp_ajax_obatala_update_processo&#39;, &#39;obatala_process_ajax_requests&#39;);</span>
+</span></code></pre></div>
 <h2 id="5-seguranca-e-validacao">5. Segurança e Validação</h2>
 <p>É crucial validar e sanitizar todas as entradas para evitar vulnerabilidades de segurança. Utilize funções como <code>sanitize_text_field()</code>, <code>check_admin_referer()</code>, entre outras, para garantir que a entrada do usuário seja segura.</p>
 <p>Para adicionar páginas ao front-end do seu site WordPress através de um plugin, você pode seguir uma abordagem similar à criação de páginas de administração, mas com o foco em interagir com os usuários finais do site. Aqui estão as etapas detalhadas para realizar isso:</p>
 <h2 id="6-criar-templates-de-pagina">6. <strong>Criar Templates de Página</strong></h2>
 <p>Para as páginas do front-end, você pode criar templates específicos dentro do seu plugin. Esses templates podem ser usados para exibir informações, formulários de submissão, listas de processos, etc.</p>
 <h3 id="exemplo-de-um-template-php">Exemplo de um Template PHP:</h3>
-<pre><code class="language-php">function obatala_processos_template() {
-    if (is_singular('obatala_processos')) {
-        include plugin_dir_path(__FILE__) . 'views/processos-template.php';
-    }
-}
-add_filter('template_include', 'obatala_processos_template');
-</code></pre>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="x">function obatala_processos_template() {</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="x">    if (is_singular(&#39;obatala_processos&#39;)) {</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="x">        include plugin_dir_path(__FILE__) . &#39;views/processos-template.php&#39;;</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="x">    }</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="x">}</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="x">add_filter(&#39;template_include&#39;, &#39;obatala_processos_template&#39;);</span>
+</span></code></pre></div>
 <p>Dentro de <code>processos-template.php</code>, você pode estruturar o HTML e o PHP como desejar para exibir os dados do processo.</p>
 <h2 id="7-injetar-conteudo-dinamico-com-shortcodes">7. <strong>Injetar Conteúdo Dinâmico com Shortcodes</strong></h2>
 <p>Shortcodes são uma excelente maneira de adicionar conteúdo dinâmico às páginas do WordPress. Você pode criar shortcodes que os usuários podem adicionar em páginas ou posts para mostrar informações dos processos ou outras funcionalidades do plugin.</p>
 <h3 id="exemplo-de-um-shortcode">Exemplo de um Shortcode:</h3>
-<pre><code class="language-php">function obatala_listar_processos_shortcode() {
-    ob_start();
-
-    // Aqui você pode consultar os processos e exibi-los como desejar.
-    $query = new WP_Query(['post_type' =&gt; 'obatala_processos']);
-    if ($query-&gt;have_posts()) {
-        while ($query-&gt;have_posts()) {
-            $query-&gt;the_post();
-            echo '&lt;div&gt;' . get_the_title() . '&lt;/div&gt;'; // Simplificado para exemplo
-        }
-    }
-
-    return ob_get_clean();
-}
-add_shortcode('listar_processos', 'obatala_listar_processos_shortcode');
-</code></pre>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="x">function obatala_listar_processos_shortcode() {</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a><span class="x">    ob_start();</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>
+</span><span id="__span-4-4"><a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="x">    // Aqui você pode consultar os processos e exibi-los como desejar.</span>
+</span><span id="__span-4-5"><a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a><span class="x">    $query = new WP_Query([&#39;post_type&#39; =&gt; &#39;obatala_processos&#39;]);</span>
+</span><span id="__span-4-6"><a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a><span class="x">    if ($query-&gt;have_posts()) {</span>
+</span><span id="__span-4-7"><a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a><span class="x">        while ($query-&gt;have_posts()) {</span>
+</span><span id="__span-4-8"><a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="x">            $query-&gt;the_post();</span>
+</span><span id="__span-4-9"><a id="__codelineno-4-9" name="__codelineno-4-9" href="#__codelineno-4-9"></a><span class="x">            echo &#39;&lt;div&gt;&#39; . get_the_title() . &#39;&lt;/div&gt;&#39;; // Simplificado para exemplo</span>
+</span><span id="__span-4-10"><a id="__codelineno-4-10" name="__codelineno-4-10" href="#__codelineno-4-10"></a><span class="x">        }</span>
+</span><span id="__span-4-11"><a id="__codelineno-4-11" name="__codelineno-4-11" href="#__codelineno-4-11"></a><span class="x">    }</span>
+</span><span id="__span-4-12"><a id="__codelineno-4-12" name="__codelineno-4-12" href="#__codelineno-4-12"></a>
+</span><span id="__span-4-13"><a id="__codelineno-4-13" name="__codelineno-4-13" href="#__codelineno-4-13"></a><span class="x">    return ob_get_clean();</span>
+</span><span id="__span-4-14"><a id="__codelineno-4-14" name="__codelineno-4-14" href="#__codelineno-4-14"></a><span class="x">}</span>
+</span><span id="__span-4-15"><a id="__codelineno-4-15" name="__codelineno-4-15" href="#__codelineno-4-15"></a><span class="x">add_shortcode(&#39;listar_processos&#39;, &#39;obatala_listar_processos_shortcode&#39;);</span>
+</span></code></pre></div>
 <h2 id="8-manipular-formularios-e-requisicoes-ajax">8. <strong>Manipular Formulários e Requisições AJAX</strong></h2>
 <p>Para interações mais complexas, como formulários de submissão ou ações que requerem atualização de dados sem recarregar a página, use AJAX.</p>
 <h3 id="exemplo-de-ajax-no-wordpress">Exemplo de AJAX no WordPress:</h3>
-<pre><code class="language-php">// Enfileirar scripts e declarar variável global para AJAX
-function obatala_enqueue_scripts() {
-    wp_enqueue_script('obatala-ajax-script', plugin_dir_url(__FILE__) . 'js/obatala-scripts.js', array('jquery'), null, true);
-    wp_localize_script('obatala-ajax-script', 'obatalaAjax', array('ajaxurl' =&gt; admin_url('admin-ajax.php')));
-}
-add_action('wp_enqueue_scripts', 'obatala_enqueue_scripts');
-
-// Manipular a requisição AJAX
-add_action('wp_ajax_nopriv_submit_processo', 'obatala_handle_submit_processo');
-add_action('wp_ajax_submit_processo', 'obatala_handle_submit_processo');
-
-function obatala_handle_submit_processo() {
-    // Verificações de segurança, processar dados do formulário
-    wp_send_json_success(['message' =&gt; 'Processo submetido com sucesso!']);
-}
-</code></pre>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-5-1"><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a><span class="x">// Enfileirar scripts e declarar variável global para AJAX</span>
+</span><span id="__span-5-2"><a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a><span class="x">function obatala_enqueue_scripts() {</span>
+</span><span id="__span-5-3"><a id="__codelineno-5-3" name="__codelineno-5-3" href="#__codelineno-5-3"></a><span class="x">    wp_enqueue_script(&#39;obatala-ajax-script&#39;, plugin_dir_url(__FILE__) . &#39;js/obatala-scripts.js&#39;, array(&#39;jquery&#39;), null, true);</span>
+</span><span id="__span-5-4"><a id="__codelineno-5-4" name="__codelineno-5-4" href="#__codelineno-5-4"></a><span class="x">    wp_localize_script(&#39;obatala-ajax-script&#39;, &#39;obatalaAjax&#39;, array(&#39;ajaxurl&#39; =&gt; admin_url(&#39;admin-ajax.php&#39;)));</span>
+</span><span id="__span-5-5"><a id="__codelineno-5-5" name="__codelineno-5-5" href="#__codelineno-5-5"></a><span class="x">}</span>
+</span><span id="__span-5-6"><a id="__codelineno-5-6" name="__codelineno-5-6" href="#__codelineno-5-6"></a><span class="x">add_action(&#39;wp_enqueue_scripts&#39;, &#39;obatala_enqueue_scripts&#39;);</span>
+</span><span id="__span-5-7"><a id="__codelineno-5-7" name="__codelineno-5-7" href="#__codelineno-5-7"></a>
+</span><span id="__span-5-8"><a id="__codelineno-5-8" name="__codelineno-5-8" href="#__codelineno-5-8"></a><span class="x">// Manipular a requisição AJAX</span>
+</span><span id="__span-5-9"><a id="__codelineno-5-9" name="__codelineno-5-9" href="#__codelineno-5-9"></a><span class="x">add_action(&#39;wp_ajax_nopriv_submit_processo&#39;, &#39;obatala_handle_submit_processo&#39;);</span>
+</span><span id="__span-5-10"><a id="__codelineno-5-10" name="__codelineno-5-10" href="#__codelineno-5-10"></a><span class="x">add_action(&#39;wp_ajax_submit_processo&#39;, &#39;obatala_handle_submit_processo&#39;);</span>
+</span><span id="__span-5-11"><a id="__codelineno-5-11" name="__codelineno-5-11" href="#__codelineno-5-11"></a>
+</span><span id="__span-5-12"><a id="__codelineno-5-12" name="__codelineno-5-12" href="#__codelineno-5-12"></a><span class="x">function obatala_handle_submit_processo() {</span>
+</span><span id="__span-5-13"><a id="__codelineno-5-13" name="__codelineno-5-13" href="#__codelineno-5-13"></a><span class="x">    // Verificações de segurança, processar dados do formulário</span>
+</span><span id="__span-5-14"><a id="__codelineno-5-14" name="__codelineno-5-14" href="#__codelineno-5-14"></a><span class="x">    wp_send_json_success([&#39;message&#39; =&gt; &#39;Processo submetido com sucesso!&#39;]);</span>
+</span><span id="__span-5-15"><a id="__codelineno-5-15" name="__codelineno-5-15" href="#__codelineno-5-15"></a><span class="x">}</span>
+</span></code></pre></div>
 <h2 id="9-permissoes-e-restricoes-de-acesso">9. <strong>Permissões e Restrições de Acesso</strong></h2>
 <p>Certifique-se de que as páginas e funcionalidades do plugin sejam acessíveis apenas para os usuários com as permissões adequadas. Use funções do WordPress como <code>current_user_can()</code> para checar as capacidades do usuário antes de exibir conteúdo sensível ou permitir ações específicas.</p>
 <p>Com essas etapas, você pode construir uma interface robusta e segura para o front-end do seu site WordPress, permitindo aos usuários interagir com o plugin de maneira eficaz e segura.</p>
@@ -787,10 +686,10 @@ function obatala_handle_submit_processo() {
     </div>
     
     
-    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    <script id="__config" type="application/json">{"base": "..", "features": ["navigation.expand", "navigation.tabs", "navigation.prune", "navigation.sections", "search.highlight", "search.share", "toc.integrate", "content.code.copy"], "search": "../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "Mais 1 nesta p\u00e1gina", "search.result.more.other": "Mais # nesta p\u00e1gina", "search.result.none": "Nenhum resultado encontrado", "search.result.one": "1 resultado encontrado", "search.result.other": "# resultados encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}}</script>
     
     
-      <script src="../assets/javascripts/bundle.bd41221c.min.js"></script>
+      <script src="../assets/javascripts/bundle.5cfa9459.min.js"></script>
       
     
   </body>
