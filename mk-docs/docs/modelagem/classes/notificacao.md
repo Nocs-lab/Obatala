@@ -1,7 +1,5 @@
 ### Documento de Modelagem de Classe: Notificação
 
----
-
 ## Introdução
 
 Este documento descreve a modelagem da classe `Notificação` dentro do sistema "Obatala", que será utilizada para gerenciar notificações relacionadas às etapas de processos curatoriais no WordPress. As notificações serão disparadas automaticamente sempre que o status de uma etapa mudar, notificando todos os envolvidos no processo de acordo com seu envolvimento na etapa.
@@ -50,6 +48,8 @@ A classe `Notificação` é responsável por gerenciar e enviar alertas aos usu�
     - `String $novoStatus` - O novo status da etapa.
     - `List<WP_User> $usuariosEnvolvidos` - A lista de usuários envolvidos na etapa.
 - **Retorno**: void
+
+---
 
 ### Diagramas
 

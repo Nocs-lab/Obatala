@@ -30,6 +30,10 @@ A classe `Pessoa` representa um usuário do WordPress que pode ser atribuído a 
 - **Descrição**: Função do usuário no WordPress (ex: Administrador, Editor, Colaborador).
 - **Tipo**: String
 
+#### 5. Setor (Department)
+- **Descrição**: Setor ao qual a pessoa pertence.
+- **Tipo**: Objeto `Setor`
+
 ---
 
 ### Métodos da Classe
@@ -81,6 +85,7 @@ classDiagram
         +String email
         +Array<String> permissoes
         +String funcao
+        +Setor setor
         +Array<String> obterPermissoes()
         +void atribuirPermissao(String permissao)
         +void removerPermissao(String permissao)
@@ -90,12 +95,27 @@ classDiagram
         +Boolean podeReabrirEtapa(Etapa etapa)
     }
 
+    class Setor {
+        +String nome
+        +String descricao
+        +Array<Pessoa> pessoas
+        +Array<String> permissoes
+        +void adicionarPessoa(Pessoa pessoa)
+        +void removerPessoa(Pessoa pessoa)
+        +Array<String> obterPermissoes()
+        +void atribuirPermissao(String permissao)
+        +void removerPermissao(String permissao)
+        +Boolean podeEditarEtapa(Etapa etapa)
+        +Boolean podeApagarEtapa(Etapa etapa)
+        +Boolean podeAtualizarEtapa(Etapa etapa)
+    }
+
     class Etapa {
         +String nome
         +Date prazo
         +String status
         +List<Comentario> comentarios
-        +List<Setor> setores
+        +Setor setor
         +List<Pessoa> pessoas
         +List<Notificacao> notificacoes
         +List<Arquivo> arquivos
@@ -108,17 +128,25 @@ classDiagram
         +void alterarStatus(String novoStatus)
     }
 
-    Pessoa "1" -- "*" Etapa : atribuido a
+    Pessoa "1" -- "1" Setor : pertence a
+    Setor "1" -- "*" Pessoa : agrupa
+    Etapa "1" -- "1" Setor : atribuido a
+    Etapa "*" -- "*" Pessoa : atribuido a
 ```
 
 ### Explicação do Diagrama
 
-1. **Pessoa**: Representa um usuário do WordPress, com propriedades como nome, email, permissões e função. A classe inclui métodos para gerenciar as permissões do usuário e verificar suas capacidades de interação com as etapas do processo.
+1. **Pessoa**: Representa um usuário do WordPress, com propriedades como nome, email, permissões, função e setor. A classe inclui métodos para gerenciar as permissões do usuário e verificar suas capacidades de interação com as etapas do processo.
 
-2. **Etapa**: Uma fase específica dentro de um processo. Cada etapa pode conter comentários, setores, pessoas, notificações e arquivos.
+2. **Setor**: Agrupa pessoas com permissões específicas para interagir com as etapas de um processo. Cada setor tem um nome, descrição, lista de pessoas e permissões. Um setor pode ter várias pessoas, mas cada pessoa pertence a apenas um setor.
 
-3. **Relacionamento**:
-    - **Pessoa** pode ser atribuída a múltiplas **Etapas**. As permissões de uma pessoa determinarão suas capacidades de editar, apagar, atualizar e reabrir etapas.
+3. **Etapa**: Uma fase específica dentro de um processo. Cada etapa pode conter comentários, setores, pessoas, notificações e arquivos. Cada etapa é atribuída a um único setor.
+
+4. **Relacionamentos**:
+    - **Pessoa** pertence a um **Setor**.
+    - **Setor** agrupa múltiplas **Pessoas**.
+    - **Etapa** é atribuída a um único **Setor**.
+    - **Pessoa** pode ser atribuída a múltiplas **Etapas**.
 
 #### Diagrama de Sequência
 

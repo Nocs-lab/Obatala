@@ -34,11 +34,14 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  - Interfaces: interfaces.md
+  - Organização: organizacao.md
+  - Guia para devs: guia-dev.md
+  - Guia do Frontend: gutenberg.md
+  - Posts Customizados: posts-customizados.md
   - Modelagem: 
-      # - Classes: modelagem/classes.md
       - O Processo: modelagem/processos.md
       - Classe Processo: modelagem/classes/processo.md
       - Classe Etapa: modelagem/classes/etapa.md
-      - Classe Notificacao: modelagem/classes/notificacao.md
+      - Classe Notificação: modelagem/classes/notificacao.md
+      - Classe Setor: modelagem/classes/setor.md
       - Classe Pessoa: modelagem/classes/pessoa.md
