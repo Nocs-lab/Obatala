@@ -9,8 +9,10 @@
       
       
       
-        <link rel="prev" href="../setor/">
+        <link rel="prev" href="../notificacao/">
       
+      
+        <link rel="next" href="../pessoa/">
       
       
       <link rel="icon" href="../../../assets/images/favicon.png">
@@ -18,7 +20,7 @@
     
     
       
-        <title>Classe Pessoa - Obatala</title>
+        <title>Classe Setor - Obatala</title>
       
     
     
@@ -60,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#documento-de-modelagem-de-classe-pessoa" class="md-skip">
+        <a href="#documento-de-modelagem-de-classe-setor" class="md-skip">
           Ir para o conteúdo
         </a>
       
@@ -94,7 +96,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Classe Pessoa
+              Classe Setor
             
           </span>
         </div>
@@ -538,27 +540,6 @@
                 
   
   
-  
-  
-    <li class="md-nav__item">
-      <a href="../setor/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Classe Setor
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-              
-            
-              
-                
-  
-  
     
   
   
@@ -573,7 +554,7 @@
           
   
   <span class="md-ellipsis">
-    Classe Pessoa
+    Classe Setor
   </span>
   
 
@@ -584,7 +565,7 @@
         
   
   <span class="md-ellipsis">
-    Classe Pessoa
+    Classe Setor
   </span>
   
 
@@ -604,9 +585,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#documento-de-modelagem-de-classe-pessoa" class="md-nav__link">
+  <a href="#documento-de-modelagem-de-classe-setor" class="md-nav__link">
     <span class="md-ellipsis">
-      Documento de Modelagem de Classe: Pessoa
+      Documento de Modelagem de Classe: Setor
     </span>
   </a>
   
@@ -651,36 +632,27 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-email-email" class="md-nav__link">
+  <a href="#2-descricao-description" class="md-nav__link">
     <span class="md-ellipsis">
-      2. Email (Email)
+      2. Descrição (Description)
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-permissoes-permissions" class="md-nav__link">
+  <a href="#3-pessoas-people" class="md-nav__link">
     <span class="md-ellipsis">
-      3. Permissões (Permissions)
+      3. Pessoas (People)
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-funcao-role" class="md-nav__link">
+  <a href="#4-permissoes-permissions" class="md-nav__link">
     <span class="md-ellipsis">
-      4. Função (Role)
-    </span>
-  </a>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#5-setor-department" class="md-nav__link">
-    <span class="md-ellipsis">
-      5. Setor (Department)
+      4. Permissões (Permissions)
     </span>
   </a>
   
@@ -702,63 +674,72 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-obterpermissoes" class="md-nav__link">
+  <a href="#1-adicionarpessoapessoa-pessoa" class="md-nav__link">
     <span class="md-ellipsis">
-      1. obterPermissoes()
+      1. adicionarPessoa(Pessoa $pessoa)
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-atribuirpermissaostring-permissao" class="md-nav__link">
+  <a href="#2-removerpessoapessoa-pessoa" class="md-nav__link">
     <span class="md-ellipsis">
-      2. atribuirPermissao(String $permissao)
+      2. removerPessoa(Pessoa $pessoa)
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-removerpermissaostring-permissao" class="md-nav__link">
+  <a href="#3-obterpermissoes" class="md-nav__link">
     <span class="md-ellipsis">
-      3. removerPermissao(String $permissao)
+      3. obterPermissoes()
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-podeeditaretapaetapa-etapa" class="md-nav__link">
+  <a href="#4-atribuirpermissaostring-permissao" class="md-nav__link">
     <span class="md-ellipsis">
-      4. podeEditarEtapa(Etapa $etapa)
+      4. atribuirPermissao(String $permissao)
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-podeapagaretapaetapa-etapa" class="md-nav__link">
+  <a href="#5-removerpermissaostring-permissao" class="md-nav__link">
     <span class="md-ellipsis">
-      5. podeApagarEtapa(Etapa $etapa)
+      5. removerPermissao(String $permissao)
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#6-podeatualizaretapaetapa-etapa" class="md-nav__link">
+  <a href="#6-podeeditaretapaetapa-etapa" class="md-nav__link">
     <span class="md-ellipsis">
-      6. podeAtualizarEtapa(Etapa $etapa)
+      6. podeEditarEtapa(Etapa $etapa)
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#7-podereabriretapaetapa-etapa" class="md-nav__link">
+  <a href="#7-podeapagaretapaetapa-etapa" class="md-nav__link">
     <span class="md-ellipsis">
-      7. podeReabrirEtapa(Etapa $etapa)
+      7. podeApagarEtapa(Etapa $etapa)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-podeatualizaretapaetapa-etapa" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. podeAtualizarEtapa(Etapa $etapa)
     </span>
   </a>
   
@@ -828,63 +809,72 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-obterpermissoes_1" class="md-nav__link">
+  <a href="#1-adicionarpessoapessoa-pessoa_1" class="md-nav__link">
     <span class="md-ellipsis">
-      1. obterPermissoes()
+      1. adicionarPessoa(Pessoa $pessoa)
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-atribuirpermissaostring-permissao_1" class="md-nav__link">
+  <a href="#2-removerpessoapessoa-pessoa_1" class="md-nav__link">
     <span class="md-ellipsis">
-      2. atribuirPermissao(String $permissao)
+      2. removerPessoa(Pessoa $pessoa)
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-removerpermissaostring-permissao_1" class="md-nav__link">
+  <a href="#3-obterpermissoes_1" class="md-nav__link">
     <span class="md-ellipsis">
-      3. removerPermissao(String $permissao)
+      3. obterPermissoes()
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#4-podeeditaretapaetapa-etapa_1" class="md-nav__link">
+  <a href="#4-atribuirpermissaostring-permissao_1" class="md-nav__link">
     <span class="md-ellipsis">
-      4. podeEditarEtapa(Etapa $etapa)
+      4. atribuirPermissao(String $permissao)
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#5-podeapagaretapaetapa-etapa_1" class="md-nav__link">
+  <a href="#5-removerpermissaostring-permissao_1" class="md-nav__link">
     <span class="md-ellipsis">
-      5. podeApagarEtapa(Etapa $etapa)
+      5. removerPermissao(String $permissao)
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#6-podeatualizaretapaetapa-etapa_1" class="md-nav__link">
+  <a href="#6-podeeditaretapaetapa-etapa_1" class="md-nav__link">
     <span class="md-ellipsis">
-      6. podeAtualizarEtapa(Etapa $etapa)
+      6. podeEditarEtapa(Etapa $etapa)
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#7-podereabriretapaetapa-etapa_1" class="md-nav__link">
+  <a href="#7-podeapagaretapaetapa-etapa_1" class="md-nav__link">
     <span class="md-ellipsis">
-      7. podeReabrirEtapa(Etapa $etapa)
+      7. podeApagarEtapa(Etapa $etapa)
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-podeatualizaretapaetapa-etapa_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      8. podeAtualizarEtapa(Etapa $etapa)
     </span>
   </a>
   
@@ -918,6 +908,27 @@
 
               
             
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../pessoa/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Classe Pessoa
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
           </ul>
         </nav>
       
@@ -940,81 +951,82 @@
                   
 
 
-  <h1>Classe Pessoa</h1>
+  <h1>Classe Setor</h1>
 
-<h3 id="documento-de-modelagem-de-classe-pessoa">Documento de Modelagem de Classe: Pessoa</h3>
+<h3 id="documento-de-modelagem-de-classe-setor">Documento de Modelagem de Classe: Setor</h3>
 <hr />
 <h2 id="introducao">Introdução</h2>
-<p>Este documento descreve a modelagem da classe <code>Pessoa</code> dentro do sistema "Obatala", que será utilizada como uma abstração sobre os usuários do WordPress. A classe <code>Pessoa</code> possibilitará a extensão das permissões de usuários em coleções do Tainacan, permitindo um controle mais granular sobre quem pode editar, apagar ou atualizar determinada etapa de um processo.</p>
+<p>Este documento descreve a modelagem da classe <code>Setor</code> dentro do sistema "Obatala", que será utilizada para gerenciar os setores envolvidos nas etapas dos processos curatoriais no WordPress. A classe <code>Setor</code> representará um tipo de função adicional, agrupando diversas pessoas e definindo permissões de edição, exclusão e atualização de informações em uma etapa.</p>
 <hr />
 <h3 id="descricao-geral">Descrição Geral</h3>
-<p>A classe <code>Pessoa</code> representa um usuário do WordPress que pode ser atribuído a uma etapa de um processo curatorial. As permissões de um usuário determinarão suas capacidades de interação com as etapas, como editar, apagar ou atualizar. Apenas administradores terão a permissão de reabrir uma etapa de um processo.</p>
+<p>A classe <code>Setor</code> agrupa pessoas que terão permissões específicas para interagir com as etapas de um processo curatorial. Cada etapa será atribuída a um setor, e o sistema permitirá a criação de múltiplos setores, com cada setor participando de uma etapa específica.</p>
 <h3 id="propriedades-da-classe">Propriedades da Classe</h3>
 <h4 id="1-nome-name">1. Nome (Name)</h4>
 <ul>
-<li><strong>Descrição</strong>: Nome da pessoa.</li>
+<li><strong>Descrição</strong>: Nome do setor.</li>
 <li><strong>Tipo</strong>: String</li>
 </ul>
-<h4 id="2-email-email">2. Email (Email)</h4>
+<h4 id="2-descricao-description">2. Descrição (Description)</h4>
 <ul>
-<li><strong>Descrição</strong>: Email da pessoa.</li>
+<li><strong>Descrição</strong>: Descrição do setor.</li>
 <li><strong>Tipo</strong>: String</li>
 </ul>
-<h4 id="3-permissoes-permissions">3. Permissões (Permissions)</h4>
+<h4 id="3-pessoas-people">3. Pessoas (People)</h4>
 <ul>
-<li><strong>Descrição</strong>: Permissões do usuário sobre etapas e processos.</li>
+<li><strong>Descrição</strong>: Lista de pessoas que fazem parte do setor.</li>
+<li><strong>Tipo</strong>: Array de objetos <code>Pessoa</code></li>
+</ul>
+<h4 id="4-permissoes-permissions">4. Permissões (Permissions)</h4>
+<ul>
+<li><strong>Descrição</strong>: Permissões atribuídas ao setor.</li>
 <li><strong>Tipo</strong>: Array de Strings</li>
-</ul>
-<h4 id="4-funcao-role">4. Função (Role)</h4>
-<ul>
-<li><strong>Descrição</strong>: Função do usuário no WordPress (ex: Administrador, Editor, Colaborador).</li>
-<li><strong>Tipo</strong>: String</li>
-</ul>
-<h4 id="5-setor-department">5. Setor (Department)</h4>
-<ul>
-<li><strong>Descrição</strong>: Setor ao qual a pessoa pertence.</li>
-<li><strong>Tipo</strong>: Objeto <code>Setor</code></li>
 </ul>
 <hr />
 <h3 id="metodos-da-classe">Métodos da Classe</h3>
-<h4 id="1-obterpermissoes">1. obterPermissoes()</h4>
+<h4 id="1-adicionarpessoapessoa-pessoa">1. adicionarPessoa(Pessoa $pessoa)</h4>
 <ul>
-<li><strong>Descrição</strong>: Retorna a lista de permissões do usuário.</li>
+<li><strong>Descrição</strong>: Adiciona uma nova pessoa ao setor.</li>
+<li><strong>Parâmetros</strong>: <code>Pessoa $pessoa</code></li>
+<li><strong>Retorno</strong>: void</li>
+</ul>
+<h4 id="2-removerpessoapessoa-pessoa">2. removerPessoa(Pessoa $pessoa)</h4>
+<ul>
+<li><strong>Descrição</strong>: Remove uma pessoa do setor.</li>
+<li><strong>Parâmetros</strong>: <code>Pessoa $pessoa</code></li>
+<li><strong>Retorno</strong>: void</li>
+</ul>
+<h4 id="3-obterpermissoes">3. obterPermissoes()</h4>
+<ul>
+<li><strong>Descrição</strong>: Retorna a lista de permissões atribuídas ao setor.</li>
 <li><strong>Retorno</strong>: Array de Strings</li>
 </ul>
-<h4 id="2-atribuirpermissaostring-permissao">2. atribuirPermissao(String $permissao)</h4>
+<h4 id="4-atribuirpermissaostring-permissao">4. atribuirPermissao(String $permissao)</h4>
 <ul>
-<li><strong>Descrição</strong>: Atribui uma nova permissão ao usuário.</li>
+<li><strong>Descrição</strong>: Atribui uma nova permissão ao setor.</li>
 <li><strong>Parâmetros</strong>: <code>String $permissao</code></li>
 <li><strong>Retorno</strong>: void</li>
 </ul>
-<h4 id="3-removerpermissaostring-permissao">3. removerPermissao(String $permissao)</h4>
+<h4 id="5-removerpermissaostring-permissao">5. removerPermissao(String $permissao)</h4>
 <ul>
-<li><strong>Descrição</strong>: Remove uma permissão do usuário.</li>
+<li><strong>Descrição</strong>: Remove uma permissão do setor.</li>
 <li><strong>Parâmetros</strong>: <code>String $permissao</code></li>
 <li><strong>Retorno</strong>: void</li>
 </ul>
-<h4 id="4-podeeditaretapaetapa-etapa">4. podeEditarEtapa(Etapa $etapa)</h4>
+<h4 id="6-podeeditaretapaetapa-etapa">6. podeEditarEtapa(Etapa $etapa)</h4>
 <ul>
-<li><strong>Descrição</strong>: Verifica se o usuário tem permissão para editar uma etapa.</li>
+<li><strong>Descrição</strong>: Verifica se o setor tem permissão para editar uma etapa.</li>
 <li><strong>Parâmetros</strong>: <code>Etapa $etapa</code></li>
 <li><strong>Retorno</strong>: Boolean</li>
 </ul>
-<h4 id="5-podeapagaretapaetapa-etapa">5. podeApagarEtapa(Etapa $etapa)</h4>
+<h4 id="7-podeapagaretapaetapa-etapa">7. podeApagarEtapa(Etapa $etapa)</h4>
 <ul>
-<li><strong>Descrição</strong>: Verifica se o usuário tem permissão para apagar uma etapa.</li>
+<li><strong>Descrição</strong>: Verifica se o setor tem permissão para apagar uma etapa.</li>
 <li><strong>Parâmetros</strong>: <code>Etapa $etapa</code></li>
 <li><strong>Retorno</strong>: Boolean</li>
 </ul>
-<h4 id="6-podeatualizaretapaetapa-etapa">6. podeAtualizarEtapa(Etapa $etapa)</h4>
+<h4 id="8-podeatualizaretapaetapa-etapa">8. podeAtualizarEtapa(Etapa $etapa)</h4>
 <ul>
-<li><strong>Descrição</strong>: Verifica se o usuário tem permissão para atualizar uma etapa.</li>
-<li><strong>Parâmetros</strong>: <code>Etapa $etapa</code></li>
-<li><strong>Retorno</strong>: Boolean</li>
-</ul>
-<h4 id="7-podereabriretapaetapa-etapa">7. podeReabrirEtapa(Etapa $etapa)</h4>
-<ul>
-<li><strong>Descrição</strong>: Verifica se o usuário tem permissão para reabrir uma etapa (apenas administradores).</li>
+<li><strong>Descrição</strong>: Verifica se o setor tem permissão para atualizar uma etapa.</li>
 <li><strong>Parâmetros</strong>: <code>Etapa $etapa</code></li>
 <li><strong>Retorno</strong>: Boolean</li>
 </ul>
@@ -1022,21 +1034,6 @@
 <h3 id="diagramas">Diagramas</h3>
 <h4 id="diagrama-de-classe">Diagrama de Classe</h4>
 <pre class="mermaid"><code>classDiagram
-    class Pessoa {
-        +String nome
-        +String email
-        +Array&lt;String&gt; permissoes
-        +String funcao
-        +Setor setor
-        +Array&lt;String&gt; obterPermissoes()
-        +void atribuirPermissao(String permissao)
-        +void removerPermissao(String permissao)
-        +Boolean podeEditarEtapa(Etapa etapa)
-        +Boolean podeApagarEtapa(Etapa etapa)
-        +Boolean podeAtualizarEtapa(Etapa etapa)
-        +Boolean podeReabrirEtapa(Etapa etapa)
-    }
-
     class Setor {
         +String nome
         +String descricao
@@ -1052,12 +1049,26 @@
         +Boolean podeAtualizarEtapa(Etapa etapa)
     }
 
+    class Pessoa {
+        +String nome
+        +String email
+        +Array&lt;String&gt; permissoes
+        +String funcao
+        +Array&lt;String&gt; obterPermissoes()
+        +void atribuirPermissao(String permissao)
+        +void removerPermissao(String permissao)
+        +Boolean podeEditarEtapa(Etapa etapa)
+        +Boolean podeApagarEtapa(Etapa etapa)
+        +Boolean podeAtualizarEtapa(Etapa etapa)
+        +Boolean podeReabrirEtapa(Etapa etapa)
+    }
+
     class Etapa {
         +String nome
         +Date prazo
         +String status
         +List&lt;Comentario&gt; comentarios
-        +Setor setor
+        +List&lt;Setor&gt; setores
         +List&lt;Pessoa&gt; pessoas
         +List&lt;Notificacao&gt; notificacoes
         +List&lt;Arquivo&gt; arquivos
@@ -1070,17 +1081,15 @@
         +void alterarStatus(String novoStatus)
     }
 
-    Pessoa "1" -- "1" Setor : pertence a
     Setor "1" -- "*" Pessoa : agrupa
-    Etapa "1" -- "1" Setor : atribuido a
-    Etapa "*" -- "*" Pessoa : atribuido a</code></pre>
+    Etapa "1" -- "1" Setor : atribuido a</code></pre>
 <h3 id="explicacao-do-diagrama">Explicação do Diagrama</h3>
 <ol>
 <li>
-<p><strong>Pessoa</strong>: Representa um usuário do WordPress, com propriedades como nome, email, permissões, função e setor. A classe inclui métodos para gerenciar as permissões do usuário e verificar suas capacidades de interação com as etapas do processo.</p>
+<p><strong>Setor</strong>: Representa um grupo de pessoas com permissões específicas para interagir com as etapas de um processo. Cada setor tem um nome, descrição, lista de pessoas e permissões.</p>
 </li>
 <li>
-<p><strong>Setor</strong>: Agrupa pessoas com permissões específicas para interagir com as etapas de um processo. Cada setor tem um nome, descrição, lista de pessoas e permissões. Um setor pode ter várias pessoas, mas cada pessoa pertence a apenas um setor.</p>
+<p><strong>Pessoa</strong>: Representa um usuário do WordPress, com propriedades como nome, email, permissões e função. A classe inclui métodos para gerenciar as permissões do usuário e verificar suas capacidades de interação com as etapas do processo.</p>
 </li>
 <li>
 <p><strong>Etapa</strong>: Uma fase específica dentro de um processo. Cada etapa pode conter comentários, setores, pessoas, notificações e arquivos. Cada etapa é atribuída a um único setor.</p>
@@ -1088,41 +1097,47 @@
 <li>
 <p><strong>Relacionamentos</strong>:</p>
 <ul>
-<li><strong>Pessoa</strong> pertence a um <strong>Setor</strong>.</li>
 <li><strong>Setor</strong> agrupa múltiplas <strong>Pessoas</strong>.</li>
 <li><strong>Etapa</strong> é atribuída a um único <strong>Setor</strong>.</li>
-<li><strong>Pessoa</strong> pode ser atribuída a múltiplas <strong>Etapas</strong>.</li>
 </ul>
 </li>
 </ol>
 <h4 id="diagrama-de-sequencia">Diagrama de Sequência</h4>
 <pre class="mermaid"><code>sequenceDiagram
-    participant Administrador
+    participant Usuário
     participant Sistema
     participant Etapa
 
-    Administrador-&gt;&gt;Sistema: Reabrir Etapa
-    Sistema--&gt;&gt;Etapa: Verifica Permissão do Usuário
-    Etapa--&gt;&gt;Sistema: Permissão Concedida
-    Sistema--&gt;&gt;Administrador: Etapa Reaberta</code></pre>
+    Usuário-&gt;&gt;Sistema: Criar Setor
+    Sistema--&gt;&gt;Usuário: Confirmação de Criação
+    Usuário-&gt;&gt;Sistema: Adicionar Pessoa ao Setor
+    Sistema--&gt;&gt;Usuário: Confirmação de Adição
+
+    loop Gerenciamento de Etapa
+        Usuário-&gt;&gt;Sistema: Atualizar Status da Etapa
+        Sistema--&gt;&gt;Etapa: Verifica Permissão do Setor
+        Etapa--&gt;&gt;Sistema: Permissão Concedida
+        Sistema--&gt;&gt;Usuário: Atualização Confirmada
+    end</code></pre>
 <h3 id="explicacao-dos-metodos">Explicação dos Métodos</h3>
-<h4 id="1-obterpermissoes_1">1. obterPermissoes()</h4>
-<p>Este método retorna a lista de permissões atribuídas ao usuário, permitindo verificar quais ações o usuário pode realizar.</p>
-<h4 id="2-atribuirpermissaostring-permissao_1">2. atribuirPermissao(String $permissao)</h4>
-<p>Este método atribui uma nova permissão ao usuário, adicionando a capacidade de realizar ações adicionais sobre as etapas.</p>
-<h4 id="3-removerpermissaostring-permissao_1">3. removerPermissao(String $permissao)</h4>
-<p>Este método remove uma permissão do usuário, restringindo suas capacidades de interação com as etapas.</p>
-<h4 id="4-podeeditaretapaetapa-etapa_1">4. podeEditarEtapa(Etapa $etapa)</h4>
-<p>Este método verifica se o usuário tem permissão para editar uma etapa específica.</p>
-<h4 id="5-podeapagaretapaetapa-etapa_1">5. podeApagarEtapa(Etapa $etapa)</h4>
-<p>Este método verifica se o usuário tem permissão para apagar uma etapa específica.</p>
-<h4 id="6-podeatualizaretapaetapa-etapa_1">6. podeAtualizarEtapa(Etapa $etapa)</h4>
-<p>Este método verifica se o usuário tem permissão para atualizar uma etapa específica.</p>
-<h4 id="7-podereabriretapaetapa-etapa_1">7. podeReabrirEtapa(Etapa $etapa)</h4>
-<p>Este método verifica se o usuário tem permissão para reabrir uma etapa. Apenas administradores terão essa permissão.</p>
-<hr />
+<h4 id="1-adicionarpessoapessoa-pessoa_1">1. adicionarPessoa(Pessoa $pessoa)</h4>
+<p>Este método adiciona uma nova pessoa ao setor, permitindo que essa pessoa tenha as permissões atribuídas ao setor.</p>
+<h4 id="2-removerpessoapessoa-pessoa_1">2. removerPessoa(Pessoa $pessoa)</h4>
+<p>Este método remove uma pessoa do setor, revogando suas permissões relacionadas ao setor.</p>
+<h4 id="3-obterpermissoes_1">3. obterPermissoes()</h4>
+<p>Este método retorna a lista de permissões atribuídas ao setor, permitindo verificar quais ações o setor pode realizar.</p>
+<h4 id="4-atribuirpermissaostring-permissao_1">4. atribuirPermissao(String $permissao)</h4>
+<p>Este método atribui uma nova permissão ao setor, adicionando a capacidade de realizar ações adicionais sobre as etapas.</p>
+<h4 id="5-removerpermissaostring-permissao_1">5. removerPermissao(String $permissao)</h4>
+<p>Este método remove uma permissão do setor, restringindo suas capacidades de interação com as etapas.</p>
+<h4 id="6-podeeditaretapaetapa-etapa_1">6. podeEditarEtapa(Etapa $etapa)</h4>
+<p>Este método verifica se o setor tem permissão para editar uma etapa específica.</p>
+<h4 id="7-podeapagaretapaetapa-etapa_1">7. podeApagarEtapa(Etapa $etapa)</h4>
+<p>Este método verifica se o setor tem permissão para apagar uma etapa específica.</p>
+<h4 id="8-podeatualizaretapaetapa-etapa_1">8. podeAtualizarEtapa(Etapa $etapa)</h4>
+<p>Este método verifica se o setor tem permissão para atualizar uma etapa específica.</p>
 <h3 id="conclusao">Conclusão</h3>
-<p>A classe <code>Pessoa</code>, implementada como uma abstração sobre os usuários do WordPress, é fundamental para a gestão de permissões e atribuições dentro de um processo curatorial no sistema "Obatala". Este documento apresentou uma visão geral das propriedades e métodos da classe, assim como diagramas que explicam sua estrutura e sequência de utilização. Ao utilizar a classe <code>Pessoa</code>, o sistema pode controlar de forma granular as permissões dos usuários sobre as etapas, garantindo um fluxo de trabalho seguro e eficiente.</p>
+<p>A classe <code>Setor</code>, implementada como um tipo de função adicional no WordPress, é fundamental para a gestão de grupos de pessoas e suas permissões nas etapas de um processo curatorial no sistema "Obatala". Este documento apresentou uma visão geral das propriedades e métodos da classe, assim como diagramas que explicam sua estrutura e sequência de utilização. Ao utilizar a classe <code>Setor</code>, o sistema pode controlar de forma granular as permissões dos grupos de usuários sobre as etapas, garantindo um fluxo de trabalho seguro e eficiente. Cada etapa será atribuída a um setor específico, e as permissões do setor determinarão as capacidades de interação dos usuários com a etapa.</p>
 <hr />
 
 
