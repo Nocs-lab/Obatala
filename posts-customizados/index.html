@@ -62,7 +62,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#registro-de-custom-post-types" class="md-skip">
+        <a href="#registro-de-custom-post-types-obatala" class="md-skip">
           Ir para o conteúdo
         </a>
       
@@ -270,6 +270,24 @@
   
 
       
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../roadmap/stories/" class="md-tabs__link">
+          
+  
+  Roadmap
+
+        </a>
+      </li>
+    
+  
+
+      
     </ul>
   </div>
 </nav>
@@ -434,22 +452,22 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#registro-de-custom-post-types" class="md-nav__link">
+  <a href="#registro-de-custom-post-types-obatala" class="md-nav__link">
     <span class="md-ellipsis">
-      Registro de Custom Post Types
+      Registro de Custom Post Types - Obatala
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#exemplo-de-extensao-da-classe-repository-do-tainacan" class="md-nav__link">
+  <a href="#exemplo-de-extensao-de-custom-post-types-do-wordpress" class="md-nav__link">
     <span class="md-ellipsis">
-      Exemplo de Extensão da Classe Repository do Tainacan
+      Exemplo de Extensão de Custom Post Types do WordPress
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Exemplo de Extensão da Classe Repository do Tainacan">
+    <nav class="md-nav" aria-label="Exemplo de Extensão de Custom Post Types do WordPress">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -461,19 +479,25 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#processrepositoryphp" class="md-nav__link">
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#registro-do-custom-post-type" class="md-nav__link">
     <span class="md-ellipsis">
-      ProcessRepository.php
+      Registro do Custom Post Type
     </span>
   </a>
   
-</li>
+    <nav class="md-nav" aria-label="Registro do Custom Post Type">
+      <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#registro-do-repositorio-e-custom-post-type" class="md-nav__link">
+  <a href="#obatalaphp" class="md-nav__link">
     <span class="md-ellipsis">
-      Registro do Repositório e Custom Post Type
+      obatala.php
     </span>
   </a>
   
@@ -485,11 +509,50 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#obatalaphp" class="md-nav__link">
+  <a href="#campos-personalizados" class="md-nav__link">
+    <span class="md-ellipsis">
+      Campos Personalizados
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Campos Personalizados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#processmetaphp" class="md-nav__link">
+    <span class="md-ellipsis">
+      ProcessMeta.php
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#registro-dos-metadados" class="md-nav__link">
+    <span class="md-ellipsis">
+      Registro dos Metadados
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Registro dos Metadados">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#obatalaphp_1" class="md-nav__link">
     <span class="md-ellipsis">
       obatala.php
     </span>
   </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -554,6 +617,50 @@
   
 
     
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../roadmap/stories/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Roadmap
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
   </ul>
 </nav>
                   </div>
@@ -571,130 +678,156 @@
 
   <h1>Posts Customizados</h1>
 
-<h3 id="registro-de-custom-post-types">Registro de Custom Post Types</h3>
-<p>Para a gestão de processos no "Obatala", utilizamos o Tainacan para criar e gerenciar tipos de posts personalizados. Para ter a liberdade que queremos, será necessário estender a classe <code>Repository</code> do Tainacan. A documentação detalhada dos métodos do repositório pode ser encontrada <a href="https://tainacan.github.io/tainacan-wiki/#/dev/repository-methods">aqui</a>.</p>
-<h3 id="exemplo-de-extensao-da-classe-repository-do-tainacan">Exemplo de Extensão da Classe Repository do Tainacan</h3>
-<p>Primeiro, criamos uma nova classe que estende a classe <code>Repository</code> do Tainacan para gerenciar os processos curatoriais.</p>
+<h3 id="registro-de-custom-post-types-obatala">Registro de Custom Post Types - Obatala</h3>
+<p>Para a gestão de processos no "Obatala", utilizamos WordPress para criar e gerenciar tipos de posts personalizados (Custom Post Types). Este guia explica como estender os posts personalizados do WordPress para gerenciar processos curatoriais no sistema Obatala.</p>
+<div class="admonition nota">
+<p class="admonition-title">Nota</p>
+<p>Apesar de não extender as classes do tainacan diretamente usaremos nomenclatura similar para que durante o desenvolvimento exercitar e criar familiaridade com o tainacan que será extendido futuramente.</p>
+</div>
+<h3 id="exemplo-de-extensao-de-custom-post-types-do-wordpress">Exemplo de Extensão de Custom Post Types do WordPress</h3>
+<p>Primeiro, criamos uma nova classe para gerenciar os processos curatoriais, utilizando os posts personalizados do WordPress.</p>
 <h4 id="processcollectionphp"><code>ProcessCollection.php</code></h4>
-<div class="language-php highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="cp">&lt;?</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="k">namespace</span> <span class="nx">Obatala\Entities</span><span class="p">;</span>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="cp">&lt;?php</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="k">namespace</span> <span class="nx">Obatala\Entities</span><span class="p">;</span>
 </span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>    <span class="k">use</span> <span class="nx">Tainacan\Entities\Collection</span><span class="p">;</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="k">use</span> <span class="nx">Respect\Validation\Validator</span> <span class="k">as</span> <span class="nx">v</span><span class="p">;</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="k">class</span> <span class="nc">ProcessCollection</span> <span class="k">extends</span> <span class="nx">Collection</span> <span class="p">{</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>        <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">get_post_type</span><span class="p">()</span> <span class="p">{</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>            <span class="k">return</span> <span class="s1">&#39;process_collection&#39;</span><span class="p">;</span>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        <span class="p">}</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>        <span class="k">protected</span> <span class="k">function</span> <span class="nf">_get_map</span><span class="p">()</span> <span class="p">{</span>
-</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>            <span class="k">return</span> <span class="nb">array_merge</span><span class="p">(</span><span class="k">parent</span><span class="o">::</span><span class="na">_get_map</span><span class="p">(),</span> <span class="p">[</span>
-</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>                <span class="s1">&#39;nome&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
-</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>                    <span class="s1">&#39;map&#39;</span>         <span class="o">=&gt;</span> <span class="s1">&#39;post_title&#39;</span><span class="p">,</span>
-</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>                    <span class="s1">&#39;title&#39;</span>       <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Nome&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
-</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>                    <span class="s1">&#39;type&#39;</span>        <span class="o">=&gt;</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span>
-</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>                    <span class="s1">&#39;description&#39;</span> <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;O nome do processo&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
-</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>                    <span class="s1">&#39;validation&#39;</span>  <span class="o">=&gt;</span> <span class="nx">v</span><span class="o">::</span><span class="na">stringType</span><span class="p">()</span><span class="o">-&gt;</span><span class="na">notEmpty</span><span class="p">(),</span>
-</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>                <span class="p">],</span>
-</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>                <span class="s1">&#39;descricao&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
-</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>                    <span class="s1">&#39;map&#39;</span>         <span class="o">=&gt;</span> <span class="s1">&#39;post_content&#39;</span><span class="p">,</span>
-</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>                    <span class="s1">&#39;title&#39;</span>       <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Descrição&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
-</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>                    <span class="s1">&#39;type&#39;</span>        <span class="o">=&gt;</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span>
-</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>                    <span class="s1">&#39;description&#39;</span> <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Descrição detalhada do processo&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
-</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>                <span class="p">],</span>
-</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>                <span class="c1">// Adicione mais campos conforme necessário</span>
-</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>            <span class="p">]);</span>
-</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>        <span class="p">}</span>
-</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>    <span class="p">}</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="k">class</span> <span class="nc">ProcessCollection</span> <span class="p">{</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">get_post_type</span><span class="p">()</span> <span class="p">{</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        <span class="k">return</span> <span class="s1">&#39;process_obatala&#39;</span><span class="p">;</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>    <span class="p">}</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">register_post_type</span><span class="p">()</span> <span class="p">{</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>        <span class="nv">$labels</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>            <span class="s1">&#39;name&#39;</span>               <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Processos&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>            <span class="s1">&#39;singular_name&#39;</span>      <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Processo&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>            <span class="s1">&#39;add_new&#39;</span>            <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Adicionar Novo&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>            <span class="s1">&#39;add_new_item&#39;</span>       <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Adicionar Novo Processo&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>            <span class="s1">&#39;edit_item&#39;</span>          <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Editar Processo&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>            <span class="s1">&#39;new_item&#39;</span>           <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Novo Processo&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>            <span class="s1">&#39;view_item&#39;</span>          <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Ver Processo&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>            <span class="s1">&#39;view_items&#39;</span>         <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Ver Processos&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>            <span class="s1">&#39;search_items&#39;</span>       <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Buscar Processos&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>            <span class="s1">&#39;not_found&#39;</span>          <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Nenhum Processo Encontrado&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>            <span class="s1">&#39;not_found_in_trash&#39;</span> <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Nenhum Processo Encontrado na Lixeira&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>            <span class="s1">&#39;parent_item_colon&#39;</span>  <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Processo Pai:&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>            <span class="s1">&#39;all_items&#39;</span>          <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Todos os Processos&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>            <span class="s1">&#39;archives&#39;</span>           <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Arquivos de Processos&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>            <span class="s1">&#39;menu_name&#39;</span>          <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Processos&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">)</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>        <span class="p">];</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>        <span class="nv">$args</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>            <span class="s1">&#39;labels&#39;</span>              <span class="o">=&gt;</span> <span class="nv">$labels</span><span class="p">,</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>            <span class="s1">&#39;hierarchical&#39;</span>        <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>            <span class="s1">&#39;public&#39;</span>              <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>            <span class="s1">&#39;show_ui&#39;</span>             <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>            <span class="s1">&#39;show_in_menu&#39;</span>        <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>            <span class="s1">&#39;publicly_queryable&#39;</span>  <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>            <span class="s1">&#39;exclude_from_search&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a>            <span class="s1">&#39;has_archive&#39;</span>         <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+</span><span id="__span-0-37"><a id="__codelineno-0-37" name="__codelineno-0-37" href="#__codelineno-0-37"></a>            <span class="s1">&#39;query_var&#39;</span>           <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+</span><span id="__span-0-38"><a id="__codelineno-0-38" name="__codelineno-0-38" href="#__codelineno-0-38"></a>            <span class="s1">&#39;can_export&#39;</span>          <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+</span><span id="__span-0-39"><a id="__codelineno-0-39" name="__codelineno-0-39" href="#__codelineno-0-39"></a>            <span class="s1">&#39;rewrite&#39;</span>             <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">&#39;slug&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;processos&#39;</span><span class="p">],</span>
+</span><span id="__span-0-40"><a id="__codelineno-0-40" name="__codelineno-0-40" href="#__codelineno-0-40"></a>            <span class="s1">&#39;capabilities&#39;</span>        <span class="o">=&gt;</span> <span class="p">[</span>
+</span><span id="__span-0-41"><a id="__codelineno-0-41" name="__codelineno-0-41" href="#__codelineno-0-41"></a>                <span class="s1">&#39;edit_post&#39;</span>          <span class="o">=&gt;</span> <span class="s1">&#39;edit_process&#39;</span><span class="p">,</span>
+</span><span id="__span-0-42"><a id="__codelineno-0-42" name="__codelineno-0-42" href="#__codelineno-0-42"></a>                <span class="s1">&#39;read_post&#39;</span>          <span class="o">=&gt;</span> <span class="s1">&#39;read_process&#39;</span><span class="p">,</span>
+</span><span id="__span-0-43"><a id="__codelineno-0-43" name="__codelineno-0-43" href="#__codelineno-0-43"></a>                <span class="s1">&#39;delete_post&#39;</span>        <span class="o">=&gt;</span> <span class="s1">&#39;delete_process&#39;</span><span class="p">,</span>
+</span><span id="__span-0-44"><a id="__codelineno-0-44" name="__codelineno-0-44" href="#__codelineno-0-44"></a>                <span class="s1">&#39;edit_posts&#39;</span>         <span class="o">=&gt;</span> <span class="s1">&#39;edit_processes&#39;</span><span class="p">,</span>
+</span><span id="__span-0-45"><a id="__codelineno-0-45" name="__codelineno-0-45" href="#__codelineno-0-45"></a>                <span class="s1">&#39;edit_others_posts&#39;</span>  <span class="o">=&gt;</span> <span class="s1">&#39;edit_others_processes&#39;</span><span class="p">,</span>
+</span><span id="__span-0-46"><a id="__codelineno-0-46" name="__codelineno-0-46" href="#__codelineno-0-46"></a>                <span class="s1">&#39;publish_posts&#39;</span>      <span class="o">=&gt;</span> <span class="s1">&#39;publish_processes&#39;</span><span class="p">,</span>
+</span><span id="__span-0-47"><a id="__codelineno-0-47" name="__codelineno-0-47" href="#__codelineno-0-47"></a>                <span class="s1">&#39;read_private_posts&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;read_private_processes&#39;</span>
+</span><span id="__span-0-48"><a id="__codelineno-0-48" name="__codelineno-0-48" href="#__codelineno-0-48"></a>            <span class="p">],</span>
+</span><span id="__span-0-49"><a id="__codelineno-0-49" name="__codelineno-0-49" href="#__codelineno-0-49"></a>            <span class="s1">&#39;map_meta_cap&#39;</span>        <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+</span><span id="__span-0-50"><a id="__codelineno-0-50" name="__codelineno-0-50" href="#__codelineno-0-50"></a>            <span class="s1">&#39;show_in_rest&#39;</span>        <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+</span><span id="__span-0-51"><a id="__codelineno-0-51" name="__codelineno-0-51" href="#__codelineno-0-51"></a>            <span class="s1">&#39;show_in_nav_menus&#39;</span>   <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+</span><span id="__span-0-52"><a id="__codelineno-0-52" name="__codelineno-0-52" href="#__codelineno-0-52"></a>            <span class="s1">&#39;supports&#39;</span>            <span class="o">=&gt;</span> <span class="p">[</span>
+</span><span id="__span-0-53"><a id="__codelineno-0-53" name="__codelineno-0-53" href="#__codelineno-0-53"></a>                <span class="s1">&#39;title&#39;</span><span class="p">,</span>
+</span><span id="__span-0-54"><a id="__codelineno-0-54" name="__codelineno-0-54" href="#__codelineno-0-54"></a>                <span class="s1">&#39;editor&#39;</span><span class="p">,</span>
+</span><span id="__span-0-55"><a id="__codelineno-0-55" name="__codelineno-0-55" href="#__codelineno-0-55"></a>                <span class="s1">&#39;thumbnail&#39;</span><span class="p">,</span>
+</span><span id="__span-0-56"><a id="__codelineno-0-56" name="__codelineno-0-56" href="#__codelineno-0-56"></a>                <span class="s1">&#39;revisions&#39;</span><span class="p">,</span>
+</span><span id="__span-0-57"><a id="__codelineno-0-57" name="__codelineno-0-57" href="#__codelineno-0-57"></a>                <span class="s1">&#39;page-attributes&#39;</span>
+</span><span id="__span-0-58"><a id="__codelineno-0-58" name="__codelineno-0-58" href="#__codelineno-0-58"></a>            <span class="p">]</span>
+</span><span id="__span-0-59"><a id="__codelineno-0-59" name="__codelineno-0-59" href="#__codelineno-0-59"></a>        <span class="p">];</span>
+</span><span id="__span-0-60"><a id="__codelineno-0-60" name="__codelineno-0-60" href="#__codelineno-0-60"></a>        <span class="nx">register_post_type</span><span class="p">(</span><span class="nx">self</span><span class="o">::</span><span class="na">get_post_type</span><span class="p">(),</span> <span class="nv">$args</span><span class="p">);</span>
+</span><span id="__span-0-61"><a id="__codelineno-0-61" name="__codelineno-0-61" href="#__codelineno-0-61"></a>    <span class="p">}</span>
+</span><span id="__span-0-62"><a id="__codelineno-0-62" name="__codelineno-0-62" href="#__codelineno-0-62"></a><span class="p">}</span>
 </span></code></pre></div>
-<h4 id="processrepositoryphp"><code>ProcessRepository.php</code></h4>
-<div class="language-php highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="cp">&lt;?</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="k">namespace</span> <span class="nx">Obatala\Repositories</span><span class="p">;</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="k">use</span> <span class="nx">Obatala\Entities\ProcessCollection</span><span class="p">;</span>
-</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a>    <span class="k">use</span> <span class="nx">Tainacan\Repositories\Repository</span><span class="p">;</span>
-</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a>
-</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a>    <span class="k">class</span> <span class="nc">ProcessRepository</span> <span class="k">extends</span> <span class="nx">Repository</span> <span class="p">{</span>
-</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>        <span class="k">public</span> <span class="nv">$entities_type</span> <span class="o">=</span> <span class="s1">&#39;\Obatala\Entities\ProcessCollection&#39;</span><span class="p">;</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a>
-</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>        <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">get_instance</span><span class="p">()</span> <span class="p">{</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a>            <span class="k">static</span> <span class="nv">$instance</span> <span class="o">=</span> <span class="k">null</span><span class="p">;</span>
-</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>            <span class="k">if</span> <span class="p">(</span><span class="k">null</span> <span class="o">===</span> <span class="nv">$instance</span><span class="p">)</span> <span class="p">{</span>
-</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a>                <span class="nv">$instance</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">self</span><span class="p">();</span>
-</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>            <span class="p">}</span>
-</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a>            <span class="k">return</span> <span class="nv">$instance</span><span class="p">;</span>
-</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>        <span class="p">}</span>
-</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a>
-</span><span id="__span-1-18"><a id="__codelineno-1-18" name="__codelineno-1-18" href="#__codelineno-1-18"></a>        <span class="k">protected</span> <span class="k">function</span> <span class="nf">_get_map</span><span class="p">()</span> <span class="p">{</span>
-</span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a>            <span class="k">return</span> <span class="nx">ProcessCollection</span><span class="o">::</span><span class="na">_get_map</span><span class="p">();</span>
-</span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a>        <span class="p">}</span>
-</span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a>
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a>        <span class="k">public</span> <span class="k">function</span> <span class="nf">register_post_type</span><span class="p">()</span> <span class="p">{</span>
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a>            <span class="nv">$labels</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a>                <span class="s1">&#39;name&#39;</span>               <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Processos&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
-</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a>                <span class="s1">&#39;singular_name&#39;</span>      <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Processo&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
-</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a>                <span class="s1">&#39;add_new&#39;</span>            <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Adicionar Novo&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
-</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a>                <span class="s1">&#39;add_new_item&#39;</span>       <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Adicionar Novo Processo&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
-</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a>                <span class="s1">&#39;edit_item&#39;</span>          <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Editar Processo&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
-</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a>                <span class="s1">&#39;new_item&#39;</span>           <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Novo Processo&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
-</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a>                <span class="s1">&#39;view_item&#39;</span>          <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Ver Processo&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
-</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a>                <span class="s1">&#39;view_items&#39;</span>         <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Ver Processos&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
-</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a>                <span class="s1">&#39;search_items&#39;</span>       <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Buscar Processos&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
-</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a>                <span class="s1">&#39;not_found&#39;</span>          <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Nenhum Processo Encontrado&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
-</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a>                <span class="s1">&#39;not_found_in_trash&#39;</span> <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Nenhum Processo Encontrado na Lixeira&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
-</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a>                <span class="s1">&#39;parent_item_colon&#39;</span>  <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Processo Pai:&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
-</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a>                <span class="s1">&#39;all_items&#39;</span>          <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Todos os Processos&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
-</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a>                <span class="s1">&#39;archives&#39;</span>           <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Arquivos de Processos&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
-</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a>                <span class="s1">&#39;menu_name&#39;</span>          <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Processos&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">)</span>
-</span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a>            <span class="p">];</span>
-</span><span id="__span-1-40"><a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a>
-</span><span id="__span-1-41"><a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a>            <span class="nv">$args</span> <span class="o">=</span> <span class="p">[</span>
-</span><span id="__span-1-42"><a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a>                <span class="s1">&#39;labels&#39;</span>              <span class="o">=&gt;</span> <span class="nv">$labels</span><span class="p">,</span>
-</span><span id="__span-1-43"><a id="__codelineno-1-43" name="__codelineno-1-43" href="#__codelineno-1-43"></a>                <span class="s1">&#39;hierarchical&#39;</span>        <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
-</span><span id="__span-1-44"><a id="__codelineno-1-44" name="__codelineno-1-44" href="#__codelineno-1-44"></a>                <span class="s1">&#39;public&#39;</span>              <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
-</span><span id="__span-1-45"><a id="__codelineno-1-45" name="__codelineno-1-45" href="#__codelineno-1-45"></a>                <span class="s1">&#39;show_ui&#39;</span>             <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
-</span><span id="__span-1-46"><a id="__codelineno-1-46" name="__codelineno-1-46" href="#__codelineno-1-46"></a>                <span class="s1">&#39;show_in_menu&#39;</span>        <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
-</span><span id="__span-1-47"><a id="__codelineno-1-47" name="__codelineno-1-47" href="#__codelineno-1-47"></a>                <span class="s1">&#39;publicly_queryable&#39;</span>  <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
-</span><span id="__span-1-48"><a id="__codelineno-1-48" name="__codelineno-1-48" href="#__codelineno-1-48"></a>                <span class="s1">&#39;exclude_from_search&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
-</span><span id="__span-1-49"><a id="__codelineno-1-49" name="__codelineno-1-49" href="#__codelineno-1-49"></a>                <span class="s1">&#39;has_archive&#39;</span>         <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
-</span><span id="__span-1-50"><a id="__codelineno-1-50" name="__codelineno-1-50" href="#__codelineno-1-50"></a>                <span class="s1">&#39;query_var&#39;</span>           <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
-</span><span id="__span-1-51"><a id="__codelineno-1-51" name="__codelineno-1-51" href="#__codelineno-1-51"></a>                <span class="s1">&#39;can_export&#39;</span>          <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
-</span><span id="__span-1-52"><a id="__codelineno-1-52" name="__codelineno-1-52" href="#__codelineno-1-52"></a>                <span class="s1">&#39;rewrite&#39;</span>             <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">&#39;slug&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;processos&#39;</span><span class="p">],</span>
-</span><span id="__span-1-53"><a id="__codelineno-1-53" name="__codelineno-1-53" href="#__codelineno-1-53"></a>                <span class="s1">&#39;capabilities&#39;</span>        <span class="o">=&gt;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">get_capabilities</span><span class="p">(),</span>
-</span><span id="__span-1-54"><a id="__codelineno-1-54" name="__codelineno-1-54" href="#__codelineno-1-54"></a>                <span class="s1">&#39;map_meta_cap&#39;</span>        <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
-</span><span id="__span-1-55"><a id="__codelineno-1-55" name="__codelineno-1-55" href="#__codelineno-1-55"></a>                <span class="s1">&#39;show_in_rest&#39;</span>        <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
-</span><span id="__span-1-56"><a id="__codelineno-1-56" name="__codelineno-1-56" href="#__codelineno-1-56"></a>                <span class="s1">&#39;show_in_nav_menus&#39;</span>   <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
-</span><span id="__span-1-57"><a id="__codelineno-1-57" name="__codelineno-1-57" href="#__codelineno-1-57"></a>                <span class="s1">&#39;supports&#39;</span>            <span class="o">=&gt;</span> <span class="p">[</span>
-</span><span id="__span-1-58"><a id="__codelineno-1-58" name="__codelineno-1-58" href="#__codelineno-1-58"></a>                    <span class="s1">&#39;title&#39;</span><span class="p">,</span>
-</span><span id="__span-1-59"><a id="__codelineno-1-59" name="__codelineno-1-59" href="#__codelineno-1-59"></a>                    <span class="s1">&#39;editor&#39;</span><span class="p">,</span>
-</span><span id="__span-1-60"><a id="__codelineno-1-60" name="__codelineno-1-60" href="#__codelineno-1-60"></a>                    <span class="s1">&#39;thumbnail&#39;</span><span class="p">,</span>
-</span><span id="__span-1-61"><a id="__codelineno-1-61" name="__codelineno-1-61" href="#__codelineno-1-61"></a>                    <span class="s1">&#39;revisions&#39;</span><span class="p">,</span>
-</span><span id="__span-1-62"><a id="__codelineno-1-62" name="__codelineno-1-62" href="#__codelineno-1-62"></a>                    <span class="s1">&#39;page-attributes&#39;</span>
-</span><span id="__span-1-63"><a id="__codelineno-1-63" name="__codelineno-1-63" href="#__codelineno-1-63"></a>                <span class="p">]</span>
-</span><span id="__span-1-64"><a id="__codelineno-1-64" name="__codelineno-1-64" href="#__codelineno-1-64"></a>            <span class="p">];</span>
-</span><span id="__span-1-65"><a id="__codelineno-1-65" name="__codelineno-1-65" href="#__codelineno-1-65"></a>            <span class="nx">register_post_type</span><span class="p">(</span><span class="nx">ProcessCollection</span><span class="o">::</span><span class="na">get_post_type</span><span class="p">(),</span> <span class="nv">$args</span><span class="p">);</span>
-</span><span id="__span-1-66"><a id="__codelineno-1-66" name="__codelineno-1-66" href="#__codelineno-1-66"></a>        <span class="p">}</span>
-</span><span id="__span-1-67"><a id="__codelineno-1-67" name="__codelineno-1-67" href="#__codelineno-1-67"></a>    <span class="p">}</span>
+<h3 id="registro-do-custom-post-type">Registro do Custom Post Type</h3>
+<p>No arquivo principal do plugin, inicialize e registre o custom post type.</p>
+<h4 id="obatalaphp"><code>obatala.php</code></h4>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="cp">&lt;?php</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="sd">/**</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="sd"> * Plugin Name: Obatala</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="sd"> * Description: Plugin para gerenciar processos curatoriais.</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="sd"> * Version: 1.0</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="sd"> * Author: Douglas de Araújo</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="sd"> */</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">defined</span><span class="p">(</span><span class="s1">&#39;ABSPATH&#39;</span><span class="p">))</span> <span class="p">{</span>
+</span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a>    <span class="k">exit</span><span class="p">;</span> <span class="c1">// Exit if accessed directly</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="p">}</span>
+</span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a>
+</span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="k">require_once</span> <span class="no">__DIR__</span> <span class="o">.</span> <span class="s1">&#39;/classes/entities/ProcessCollection.php&#39;</span><span class="p">;</span>
+</span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a>
+</span><span id="__span-1-15"><a id="__codelineno-1-15" name="__codelineno-1-15" href="#__codelineno-1-15"></a><span class="nx">add_action</span><span class="p">(</span><span class="s1">&#39;init&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span id="__span-1-16"><a id="__codelineno-1-16" name="__codelineno-1-16" href="#__codelineno-1-16"></a>    <span class="nx">\Obatala\Entities\ProcessCollection</span><span class="o">::</span><span class="na">register_post_type</span><span class="p">();</span>
+</span><span id="__span-1-17"><a id="__codelineno-1-17" name="__codelineno-1-17" href="#__codelineno-1-17"></a><span class="p">});</span>
 </span></code></pre></div>
-<h4 id="registro-do-repositorio-e-custom-post-type">Registro do Repositório e Custom Post Type</h4>
-<p>No arquivo principal do plugin, inicialize o repositório e registre o custom post type.</p>
-<h3 id="obatalaphp"><code>obatala.php</code></h3>
+<h3 id="campos-personalizados">Campos Personalizados</h3>
+<p>Para adicionar campos personalizados aos processos, utilizamos a função <code>register_meta</code> do WordPress.</p>
+<h4 id="processmetaphp"><code>ProcessMeta.php</code></h4>
 <div class="language-php highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="cp">&lt;?php</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">defined</span><span class="p">(</span><span class="s1">&#39;ABSPATH&#39;</span><span class="p">))</span> <span class="p">{</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>        <span class="k">exit</span><span class="p">;</span> <span class="c1">// Exit if accessed directly</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="p">}</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>    <span class="k">require_once</span> <span class="no">__DIR__</span> <span class="o">.</span> <span class="s1">&#39;/classes/entities/ProcessCollection.php&#39;</span><span class="p">;</span>
-</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="k">require_once</span> <span class="no">__DIR__</span> <span class="o">.</span> <span class="s1">&#39;/classes/repositories/ProcessRepository.php&#39;</span><span class="p">;</span>
-</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>
-</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>    <span class="nx">add_action</span><span class="p">(</span><span class="s1">&#39;init&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
-</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>        <span class="nv">$processRepository</span> <span class="o">=</span> <span class="nx">\Obatala\Repositories\ProcessRepository</span><span class="o">::</span><span class="na">get_instance</span><span class="p">();</span>
-</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>        <span class="nv">$processRepository</span><span class="o">-&gt;</span><span class="na">register_post_type</span><span class="p">();</span>
-</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>    <span class="p">});</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">namespace</span> <span class="nx">Obatala\Entities</span><span class="p">;</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="k">class</span> <span class="nc">ProcessMeta</span> <span class="p">{</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">register_meta</span><span class="p">()</span> <span class="p">{</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>        <span class="nx">register_post_meta</span><span class="p">(</span><span class="s1">&#39;process_obatala&#39;</span><span class="p">,</span> <span class="s1">&#39;nome&#39;</span><span class="p">,</span> <span class="p">[</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>            <span class="s1">&#39;show_in_rest&#39;</span>  <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a>            <span class="s1">&#39;single&#39;</span>        <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+</span><span id="__span-2-9"><a id="__codelineno-2-9" name="__codelineno-2-9" href="#__codelineno-2-9"></a>            <span class="s1">&#39;type&#39;</span>          <span class="o">=&gt;</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span>
+</span><span id="__span-2-10"><a id="__codelineno-2-10" name="__codelineno-2-10" href="#__codelineno-2-10"></a>            <span class="s1">&#39;description&#39;</span>   <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;O nome do processo&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
+</span><span id="__span-2-11"><a id="__codelineno-2-11" name="__codelineno-2-11" href="#__codelineno-2-11"></a>            <span class="s1">&#39;auth_callback&#39;</span> <span class="o">=&gt;</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span id="__span-2-12"><a id="__codelineno-2-12" name="__codelineno-2-12" href="#__codelineno-2-12"></a>                <span class="k">return</span> <span class="nx">current_user_can</span><span class="p">(</span><span class="s1">&#39;edit_post&#39;</span><span class="p">);</span>
+</span><span id="__span-2-13"><a id="__codelineno-2-13" name="__codelineno-2-13" href="#__codelineno-2-13"></a>            <span class="p">}</span>
+</span><span id="__span-2-14"><a id="__codelineno-2-14" name="__codelineno-2-14" href="#__codelineno-2-14"></a>        <span class="p">]);</span>
+</span><span id="__span-2-15"><a id="__codelineno-2-15" name="__codelineno-2-15" href="#__codelineno-2-15"></a>
+</span><span id="__span-2-16"><a id="__codelineno-2-16" name="__codelineno-2-16" href="#__codelineno-2-16"></a>        <span class="nx">register_post_meta</span><span class="p">(</span><span class="s1">&#39;process_obatala&#39;</span><span class="p">,</span> <span class="s1">&#39;descricao&#39;</span><span class="p">,</span> <span class="p">[</span>
+</span><span id="__span-2-17"><a id="__codelineno-2-17" name="__codelineno-2-17" href="#__codelineno-2-17"></a>            <span class="s1">&#39;show_in_rest&#39;</span>  <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+</span><span id="__span-2-18"><a id="__codelineno-2-18" name="__codelineno-2-18" href="#__codelineno-2-18"></a>            <span class="s1">&#39;single&#39;</span>        <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+</span><span id="__span-2-19"><a id="__codelineno-2-19" name="__codelineno-2-19" href="#__codelineno-2-19"></a>            <span class="s1">&#39;type&#39;</span>          <span class="o">=&gt;</span> <span class="s1">&#39;string&#39;</span><span class="p">,</span>
+</span><span id="__span-2-20"><a id="__codelineno-2-20" name="__codelineno-2-20" href="#__codelineno-2-20"></a>            <span class="s1">&#39;description&#39;</span>   <span class="o">=&gt;</span> <span class="nx">__</span><span class="p">(</span><span class="s1">&#39;Descrição detalhada do processo&#39;</span><span class="p">,</span> <span class="s1">&#39;obatala&#39;</span><span class="p">),</span>
+</span><span id="__span-2-21"><a id="__codelineno-2-21" name="__codelineno-2-21" href="#__codelineno-2-21"></a>            <span class="s1">&#39;auth_callback&#39;</span> <span class="o">=&gt;</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span id="__span-2-22"><a id="__codelineno-2-22" name="__codelineno-2-22" href="#__codelineno-2-22"></a>                <span class="k">return</span> <span class="nx">current_user_can</span><span class="p">(</span><span class="s1">&#39;edit_post&#39;</span><span class="p">);</span>
+</span><span id="__span-2-23"><a id="__codelineno-2-23" name="__codelineno-2-23" href="#__codelineno-2-23"></a>            <span class="p">}</span>
+</span><span id="__span-2-24"><a id="__codelineno-2-24" name="__codelineno-2-24" href="#__codelineno-2-24"></a>        <span class="p">]);</span>
+</span><span id="__span-2-25"><a id="__codelineno-2-25" name="__codelineno-2-25" href="#__codelineno-2-25"></a>
+</span><span id="__span-2-26"><a id="__codelineno-2-26" name="__codelineno-2-26" href="#__codelineno-2-26"></a>        <span class="c1">// Adicione mais campos conforme necessário</span>
+</span><span id="__span-2-27"><a id="__codelineno-2-27" name="__codelineno-2-27" href="#__codelineno-2-27"></a>    <span class="p">}</span>
+</span><span id="__span-2-28"><a id="__codelineno-2-28" name="__codelineno-2-28" href="#__codelineno-2-28"></a><span class="p">}</span>
 </span></code></pre></div>
-<hr />
+<h3 id="registro-dos-metadados">Registro dos Metadados</h3>
+<p>No arquivo principal do plugin, registre os metadados personalizados.</p>
+<h4 id="obatalaphp_1"><code>obatala.php</code></h4>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="cp">&lt;?php</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="sd">/**</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="sd"> * Plugin Name: Obatala</span>
+</span><span id="__span-3-4"><a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="sd"> * Description: Plugin para gerenciar processos curatoriais.</span>
+</span><span id="__span-3-5"><a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a><span class="sd"> * Version: 1.0</span>
+</span><span id="__span-3-6"><a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a><span class="sd"> * Author: Douglas de Araújo</span>
+</span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="sd"> */</span>
+</span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a>
+</span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nb">defined</span><span class="p">(</span><span class="s1">&#39;ABSPATH&#39;</span><span class="p">))</span> <span class="p">{</span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a>    <span class="k">exit</span><span class="p">;</span> <span class="c1">// Exit if accessed directly</span>
+</span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="p">}</span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a>
+</span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="k">require_once</span> <span class="no">__DIR__</span> <span class="o">.</span> <span class="s1">&#39;/classes/entities/ProcessCollection.php&#39;</span><span class="p">;</span>
+</span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="k">require_once</span> <span class="no">__DIR__</span> <span class="o">.</span> <span class="s1">&#39;/classes/entities/ProcessMeta.php&#39;</span><span class="p">;</span>
+</span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="nx">add_action</span><span class="p">(</span><span class="s1">&#39;init&#39;</span><span class="p">,</span> <span class="k">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a>    <span class="nx">\Obatala\Entities\ProcessCollection</span><span class="o">::</span><span class="na">register_post_type</span><span class="p">();</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a>    <span class="nx">\Obatala\Entities\ProcessMeta</span><span class="o">::</span><span class="na">register_meta</span><span class="p">();</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="p">});</span>
+</span></code></pre></div>
 <h3 id="conclusao">Conclusão</h3>
-<p>Estendendo a classe <code>Repository</code> do Tainacan, você pode criar e gerenciar tipos de post personalizados com as funcionalidades avançadas do Tainacan. Consulte a <a href="https://tainacan.github.io/tainacan-wiki/#/dev/repository-methods">documentação do Tainacan</a> para mais detalhes sobre os métodos disponíveis e melhores práticas.</p>
+<p>Estendendo os posts personalizados do WordPress, você pode criar e gerenciar processos curatoriais no sistema Obatala. Este guia mostra como registrar um custom post type e adicionar campos personalizados para atender às necessidades específicas do seu projeto. Utilize as funções e métodos fornecidos pelo WordPress para uma implementação flexível e robusta.</p>
 
 
 
