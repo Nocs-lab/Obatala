@@ -10,20 +10,20 @@ Este documento descreve a estrutura de arquivos do plugin "Obatala", que é util
 └── 📁Obatala
     └── .gitignore
     └── README.md
-    └── archive-process_collection.php
+    └── archive-process_obatala.php
     └── 📁classes
-        └── 📁admin
+        └── 📁Admin
             └── AdminMenu.php
             └── SettingsPage.php
-        └── 📁entities
-            └── class-process-collection.php
-        └── 📁repositories
-            └── ProcessRepository.php
+        └── 📁Entities
+            └── ProcessCollection.php
+            └── ProcessStepCollection.php
     └── composer.json
     └── 📁mk-docs
         └── 📁docs
+            └── guia-dev.md
+            └── gutenberg.md
             └── index.md
-            └── interfaces.md
             └── 📁modelagem
                 └── 📁classes
                     └── etapa.md
@@ -31,13 +31,14 @@ Este documento descreve a estrutura de arquivos do plugin "Obatala", que é util
                     └── pessoa.md
                     └── processo.md
                     └── setor.md
-                └── classes.md
                 └── index.md
                 └── processos.md
+            └── organizacao.md
+            └── posts-customizados.md
         └── mkdocs.yml
         └── requirements.txt
     └── obatala.php
-    └── single-process_collection.php
+    └── single-process_obatala.php
     └── 📁vendor
         └── autoload.php
         └── 📁composer
@@ -60,39 +61,23 @@ Este documento descreve a estrutura de arquivos do plugin "Obatala", que é util
   
 - **README.md**: Arquivo de documentação que fornece uma visão geral do plugin, incluindo instruções de instalação, configuração e uso.
 
-- **archive-process_collection.php**: Template de arquivo para exibição de arquivos de processos.
+- **archive-process_obatala.php**: Template de arquivo para exibição de arquivos de processos.
 
 - **classes/**: Diretório que contém as classes PHP principais do plugin, separadas por funcionalidade.
-  - **admin/**: Contém classes relacionadas à interface de administração do plugin.
+  - **Admin/**: Contém classes relacionadas à interface de administração do plugin.
     - **AdminMenu.php**: Classe responsável por adicionar e gerenciar o menu de administração.
     - **SettingsPage.php**: Classe responsável por gerenciar a página de configurações do plugin.
-  - **entities/**: Contém classes que representam entidades do plugin.
-    - **class-process-collection.php**: Classe que define a coleção de processos.
-  - **repositories/**: Contém classes responsáveis pela interação com o banco de dados.
-    - **ProcessRepository.php**: Classe que gerencia a persistência e recuperação de dados de processos.
+  - **Entities/**: Contém classes que representam entidades do plugin.
+    - **ProcessCollection.php**: Classe que define a coleção de processos.
+    - **ProcessStepCollection.php**: Classe que define os passos dos processos.
 
 - **composer.json**: Arquivo de configuração do Composer, usado para gerenciar dependências PHP e autoloading.
 
 - **mk-docs/**: Diretório que contém a documentação do plugin.
-  - **docs/**: Diretório que contém os arquivos de documentação.
-    - **index.md**: Página inicial da documentação.
-    - **interfaces.md**: Documento que descreve as interfaces de usuário do plugin.
-    - **modelagem/**: Diretório que contém a documentação da modelagem das classes.
-      - **classes/**: Diretório que contém a documentação das classes individuais.
-        - **etapa.md**: Documento que descreve a classe Etapa.
-        - **notificacao.md**: Documento que descreve a classe Notificação.
-        - **pessoa.md**: Documento que descreve a classe Pessoa.
-        - **processo.md**: Documento que descreve a classe Processo.
-        - **setor.md**: Documento que descreve a classe Setor.
-      - **classes.md**: Documento que descreve a estrutura e interações das classes.
-      - **index.md**: Índice da seção de modelagem.
-      - **processos.md**: Documento que descreve o fluxo dos processos.
-  - **mkdocs.yml**: Arquivo de configuração do MkDocs, utilizado para gerar a documentação do plugin.
-  - **requirements.txt**: Arquivo que lista as dependências Python necessárias para gerar a documentação.
 
 - **obatala.php**: Arquivo principal do plugin, responsável por inicializar o plugin e carregar suas dependências.
 
-- **single-process_collection.php**: Template de arquivo para exibição de um único processo.
+- **single-process_obatala.php**: Template de arquivo para exibição de um único processo.
 
 - **vendor/**: Diretório gerenciado pelo Composer que contém as dependências do plugin.
   - **autoload.php**: Script de autoloading gerado pelo Composer.

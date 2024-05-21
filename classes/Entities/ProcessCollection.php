@@ -1,20 +1,16 @@
 <?php
 
-namespace Obatala;
+namespace Obatala\Entities;
 
 defined('ABSPATH') || exit;
 
 class ProcessCollection {
-    private static $instance = null;
 
-    public static function get_instance() {
-        if (self::$instance === null) {
-            self::$instance = new self();
-        }
-        return self::$instance;
+    public static function get_post_type() {
+        return 'process_obatala';
     }
 
-    public function register_post_type() {
+    public static function register_post_type() {
         $labels = array(
             'name'                  => _x('Processes', 'Post type general name', 'obatala'),
             'singular_name'         => _x('Process', 'Post type singular name', 'obatala'),
@@ -25,8 +21,8 @@ class ProcessCollection {
             'new_item'              => __('New Process', 'obatala'),
             'edit_item'             => __('Edit Process', 'obatala'),
             'view_item'             => __('View Process', 'obatala'),
-            'all_items'             => __('All Process', 'obatala'),
-            'search_items'          => __('Search Process', 'obatala'),
+            'all_items'             => __('All Processes', 'obatala'),
+            'search_items'          => __('Search Processes', 'obatala'),
             'parent_item_colon'     => __('Parent Process:', 'obatala'),
             'not_found'             => __('No process found.', 'obatala'),
             'not_found_in_trash'    => __('No process found in Trash.', 'obatala')
@@ -39,22 +35,22 @@ class ProcessCollection {
             'show_ui'            => true,
             'show_in_menu'       => true,
             'query_var'          => true,
-            'rewrite'            => array('slug' => 'process_collection'),
+            'rewrite'            => array('slug' => 'obatala_processes'),
             'capability_type'    => 'post',
             'has_archive'        => true,
             'hierarchical'       => true,
-            'menu_position'      => null,
+            'menu_position'      => -1,
             'supports'           => array('title', 'editor', 'author', 'comments'),
-            'show_in_rest'       => true
+            'show_in_rest'       => true,
+            'menu_icon'               => 'dashicons-media-document'
         );
 
-        register_post_type('process_collection', $args);
-        $this->register_taxonomies();
+        register_post_type(self::get_post_type(), $args);
     }
 
-    private function register_taxonomies() {
+    public static function register_taxonomies() {
         // Register process_type taxonomy
-        register_taxonomy('process_type', 'process_collection', array(
+        register_taxonomy('process_type', self::get_post_type(), array(
             'labels' => array(
                 'name' => _x('Process Types', 'taxonomy general name', 'obatala'),
                 'singular_name' => _x('Process Type', 'taxonomy singular name', 'obatala'),
@@ -73,30 +69,10 @@ class ProcessCollection {
             'show_in_rest' => true,
             'hierarchical' => true,
         ));
-
-        // Register process_step taxonomy
-        register_taxonomy('process_step', 'process_collection', array(
-            'labels' => array(
-                'name' => _x('Process Steps', 'taxonomy general name', 'obatala'),
-                'singular_name' => _x('Process Step', 'taxonomy singular name', 'obatala'),
-                'search_items' => __('Search Process Steps', 'obatala'),
-                'all_items' => __('All Process Steps', 'obatala'),
-                'parent_item' => __('Parent Process Step', 'obatala'),
-                'parent_item_colon' => __('Parent Process Step:', 'obatala'),
-                'edit_item' => __('Edit Process Step', 'obatala'),
-                'update_item' => __('Update Process Step', 'obatala'),
-                'add_new_item' => __('Add New Process Step', 'obatala'),
-                'new_item_name' => __('New Process Step Name', 'obatala'),
-                'menu_name' => __('Process Steps', 'obatala'),
-            ),
-            'show_ui' => true,
-            'show_in_menu' => true,
-            'show_in_rest' => true,
-            'hierarchical' => false,
-        ));
     }
 
-    public function init() {
-        add_action('init', [$this, 'register_post_type']);
+    public static function init() {
+        self::register_post_type();
+        self::register_taxonomies();
     }
 }
