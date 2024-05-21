@@ -1,11 +1,10 @@
 <?php
+
 namespace Obatala;
-// namespaces are used to avoid conflicts with other plugins, themes, or WordPress core, it works like a folder structure
-// in this case, we are using the namespace Obatala, which is the name of the plugin
-// more info about namespaces: https://www.php.net/manual/en/language.namespaces.php
 
-// plugin definition bellow
+require_once __DIR__ . '/vendor/autoload.php';
 
+// Plugin definition
 /*
     Plugin Name: Obatala - Plugin de Gestão de Processos Curatoriais para WordPress
     Description: Adiciona funcionalidades de gestão de processos curatoriais para o plugin Tainacan
@@ -18,6 +17,10 @@ namespace Obatala;
 
 // Prevent direct access to the file
 defined('ABSPATH') || exit;
+
+// Define constants for our plugin
+define('OBATALA_PLUGIN_DIR', plugin_dir_path(__FILE__));
+define('OBATALA_PLUGIN_URL', plugin_dir_url(__FILE__));
 
 /**
  * Main class for the Obatala Plugin
@@ -37,14 +40,13 @@ class Nocs_ObatalaPlugin {
         }
         return self::$instance;
     }
+
     // Prevents cloning of the plugin instance
     public function __clone() {}
+
     // Prevents unserializing of the plugin instance
     public function __wakeup() {}
-    // preventing magic methods in the class is a good practice to avoid conflicts with other plugins, themes, or WordPress core
-    // and to avoid unexpected behaviors like $instance = new ObatalaPlugin(); $instance();
-    
-    
+
     /**
      * Constructor.
      */
@@ -56,46 +58,52 @@ class Nocs_ObatalaPlugin {
      * Initialize the plugin after plugins are loaded.
      */
     public function initialize() {
-        add_action('admin_init', array($this, 'install'));
-        // Define the plugin path as a CONSTANT VARIABLE
-        define('OBATALA_PATH', plugin_dir_path(__FILE__));
-        define('OBATALA_URL', plugin_dir_url(__FILE__));
+        // Load plugin text domain
         load_plugin_textdomain('obatala-tainacan', false, plugin_basename(dirname(__FILE__)) . '/languages');
-        
-        add_action('admin_enqueue_scripts', array($this, 'admin_enqueue_scripts'));
-        add_action('wp_enqueue_scripts', array($this, 'enqueue_scripts'));
-    
 
-        $this->includes();
-        if (is_admin()) {
-            $this->admin_includes();
-        }
+        // Registering admin menus and settings
+        add_action('admin_menu', ['Obatala\Admin\AdminMenu', 'add_admin_pages']);
+        add_action('admin_init', ['Obatala\Admin\SettingsPage', 'register_settings']);
+
+        // Register the custom post type and taxonomies
+        add_action('init', ['Obatala\Entities\ProcessCollection', 'init']);
+        add_action('init', ['Obatala\Entities\ProcessStepCollection', 'init']);
+        // Register and enqueue scripts and styles
+        add_action('admin_enqueue_scripts', [$this, 'admin_enqueue_scripts']);
+        add_action('wp_enqueue_scripts', [$this, 'enqueue_scripts']);
+
+        // Register custom layouts
+        add_filter('single_template', function ($template) {
+            global $post;
+            if ($post->post_type == 'process_obatala') {
+                $plugin_template = plugin_dir_path(__FILE__) . 'single-process_obatala.php';
+                if (file_exists($plugin_template)) {
+                    return $plugin_template;
+                }
+            }
+            return $template;
+        });
+
+        add_filter('archive_template', function ($template) {
+            if (is_post_type_archive('process_obatala')) {
+                $plugin_template = plugin_dir_path(__FILE__) . 'archive-process_obatala.php';
+                if (file_exists($plugin_template)) {
+                    return $plugin_template;
+                }
+            }
+            return $template;
+        });
     }
 
     /**
      * Enqueues scripts and styles.
      */
     public function enqueue_scripts() {
-        // Register and enqueue scripts and styles here
+       
     }
+
     public function admin_enqueue_scripts() {
         // Register and enqueue admin scripts and styles here
-    }
-
-    /**
-     * Includes necessary files for the plugin.
-     */
-    private function includes() {
-       
-        // include_once plugin_dir_path(__FILE__) . 'path/to/file.php';
-            
-    }
-
-    /**
-     * Includes necessary admin files for the plugin.
-     */
-    private function admin_includes() {
-        // include_once plugin_dir_path(__FILE__) . 'path/to/admin/file.php';
     }
 
     /**

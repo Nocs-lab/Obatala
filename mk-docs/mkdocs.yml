@@ -1,0 +1,55 @@
+site_name: Obatala
+theme:
+  name: 'material'
+  language: 'pt'
+  features:
+    - navigation.expand
+    - navigation.tabs
+    - navigation.prune
+    - navigation.sections
+    - search.highlight
+    - search.share
+    - toc.integrate
+    - content.code.copy
+
+plugins:
+  - search
+  # - mermaid2
+  - awesome-pages
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+nav:
+  - Home: index.md
+  - Organização: organizacao.md
+  - Guia para devs: guia-dev.md
+  - Guia do Frontend: gutenberg.md
+  - Posts Customizados: posts-customizados.md
+  - Modelagem: 
+      - O Processo: modelagem/processos.md
+      - Classe Processo: modelagem/classes/processo.md
+      - Classe Etapa: modelagem/classes/etapa.md
+      - Classe Notificação: modelagem/classes/notificacao.md
+      - Classe Setor: modelagem/classes/setor.md
+      - Classe Pessoa: modelagem/classes/pessoa.md
+  - Roadmap: 
+      - Stories: roadmap/stories.md
+      - Sprint 1: roadmap/sprint-1.md
+      - Sprint 2: roadmap/sprint-2.md
+      - Sprint 3: roadmap/sprint-3.md
+      - Sprint 4: roadmap/sprint-4.md
+      - Sprint 5: roadmap/sprint-5.md
+      - Sprint 6: roadmap/sprint-6.md
