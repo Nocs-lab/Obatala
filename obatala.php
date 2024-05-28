@@ -12,7 +12,7 @@ require_once __DIR__ . '/vendor/autoload.php';
     Author: Douglas de Araújo
     Author URI: github.com/everbero
     License: GPLv2 or later
-    Text Domain: obatala-tainacan
+    Text Domain: obatala
 */
 
 // Prevent direct access to the file
@@ -59,7 +59,7 @@ class Nocs_ObatalaPlugin {
      */
     public function initialize() {
         // Load plugin text domain
-        load_plugin_textdomain('obatala-tainacan', false, plugin_basename(dirname(__FILE__)) . '/languages');
+        load_plugin_textdomain('obatala', false, plugin_basename(dirname(__FILE__)) . '/languages');
 
         // Registering admin menus and settings
         add_action('admin_menu', ['Obatala\Admin\AdminMenu', 'add_admin_pages']);
@@ -113,7 +113,7 @@ class Nocs_ObatalaPlugin {
         if (!in_array('tainacan/tainacan.php', apply_filters('active_plugins', get_option('active_plugins')))) {
             deactivate_plugins(plugin_basename(__FILE__));
             wp_die(
-                __('Obatala requires the Tainacan plugin to be installed and activated.', 'obatala-tainacan')
+                __('Obatala requires the Tainacan plugin to be installed and activated.', 'obatala')
             );
         }
     }
