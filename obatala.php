@@ -76,7 +76,7 @@ class Nocs_ObatalaPlugin {
         add_filter('single_template', function ($template) {
             global $post;
             if ($post->post_type == 'process_obatala') {
-                $plugin_template = plugin_dir_path(__FILE__) . 'single-process_obatala.php';
+                $plugin_template = plugin_dir_path(__FILE__) . '/view/single-process_obatala.php';
                 if (file_exists($plugin_template)) {
                     return $plugin_template;
                 }
@@ -86,7 +86,28 @@ class Nocs_ObatalaPlugin {
 
         add_filter('archive_template', function ($template) {
             if (is_post_type_archive('process_obatala')) {
-                $plugin_template = plugin_dir_path(__FILE__) . 'archive-process_obatala.php';
+                $plugin_template = plugin_dir_path(__FILE__) . '/view/archive-process_obatala.php';
+                if (file_exists($plugin_template)) {
+                    return $plugin_template;
+                }
+            }
+            return $template;
+        });
+
+        add_filter('single_template', function ($template) {
+            global $post;
+            if ($post->post_type == 'obatala_steps') {
+                $plugin_template = plugin_dir_path(__FILE__) . '/view/single-step_obatala.php';
+                if (file_exists($plugin_template)) {
+                    return $plugin_template;
+                }
+            }
+            return $template;
+        });
+
+        add_filter('archive_template', function ($template) {
+            if (is_post_type_archive('obatala_steps')) {
+                $plugin_template = plugin_dir_path(__FILE__) . '/view/archive-steps_obatala.php';
                 if (file_exists($plugin_template)) {
                     return $plugin_template;
                 }

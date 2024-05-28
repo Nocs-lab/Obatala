@@ -18,12 +18,12 @@ Configurar o ambiente de desenvolvimento, definir a estrutura de arquivos, imple
 #### Fase 2: Implementação dos Custom Post Types
   - [x] Implementar a classe `ProcessCollection`.
   - [x] Implementar a classe `ProcessStepCollection`.
-  - [ ] Implementar a classe `AdminMenu`.
+  - [X] Implementar a classe `AdminMenu`.
   - [x] Configurar os custom post types para aparecerem como submenus.
-  - [ ] Criar templates de arquivo para exibição dos posts.
+  - [X] Criar templates de arquivo para exibição dos posts.
 
 #### Fase 3: Configurações e Páginas de Administração
-  - [ ] Implementar a classe `SettingsPage`.
+  - [X] Implementar a classe `SettingsPage`.
   - [x] Adicionar a lógica para incluir a página de configurações no menu "Obatala".
 
 #### Fase 4: Estilos e Scripts
@@ -31,8 +31,8 @@ Configurar o ambiente de desenvolvimento, definir a estrutura de arquivos, imple
   - [ ] Integrar Gutenberg.
 
 #### Fase 5: Internacionalização e Localização
-  - [ ] Configurar o carregamento de text domain.
-  - [ ] Adicionar arquivos de idioma.
+  - [X] Configurar o carregamento de text domain.
+  - [X] Adicionar arquivos de idioma.
 
 #### Fase 6: Documentação e Testes
   - [x] Completar a documentação no diretório `mk-docs`.
