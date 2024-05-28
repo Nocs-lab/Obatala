@@ -30,7 +30,8 @@ class AdminMenu {
             __('All Processes', 'obatala'),        // Page title
             __('All Processes', 'obatala'),        // Menu title
             'manage_options',                               // Capability
-            'edit.php?post_type=process_obatala'         // Menu slug
+            'obatala_manage_processes',           // Menu slug
+            [self::class, 'render_all_processes_page']      // Callback function
         );
 
         // Add submenu for Add New Process
@@ -59,5 +60,32 @@ class AdminMenu {
             'manage_options',                               // Capability
             'post-new.php?post_type=step_obatala'// Menu slug
         );
+        
+        add_action('admin_enqueue_scripts', [self::class, 'enqueue_admin_scripts']);
+    }
+
+    public static function render_all_processes_page() {
+        echo '<div id="obatala-manage-processes">';
+    }
+
+    public static function enqueue_admin_scripts($hook) {
+        if ($hook !== 'obatala_page_obatala_manage_processes') {
+            return;
+        }
+
+        wp_enqueue_script(
+            'obatala-admin-scripts',
+            plugin_dir_url(__FILE__) . '../../js/admin.js',
+            ['wp-element', 'wp-components', 'wp-i18n', 'wp-api-fetch', 'wp-data'],
+            filemtime(plugin_dir_path(__FILE__) . '../../js/admin.js'),
+            true
+        );
+
+        // wp_enqueue_style(
+        //     'obatala-admin-styles',
+        //     plugin_dir_url(__FILE__) . '../../css/admin.css',
+        //     [],
+        //     filemtime(plugin_dir_path(__FILE__) . '../../css/admin.css')
+        // );
     }
 }
