@@ -22,6 +22,7 @@ defined('ABSPATH') || exit;
 define('OBATALA_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('OBATALA_PLUGIN_URL', plugin_dir_url(__FILE__));
 
+
 /**
  * Main class for the Obatala Plugin
  */
@@ -116,15 +117,36 @@ class Nocs_ObatalaPlugin {
         });
     }
 
-    /**
+     /**
      * Enqueues scripts and styles.
      */
     public function enqueue_scripts() {
        
     }
 
-    public function admin_enqueue_scripts() {
-        // Register and enqueue admin scripts and styles here
+    public static function render_all_processes_page() {
+        echo '<div id="obatala-manage-processes"></div>';
+    }  
+    public function admin_enqueue_scripts($hook) {
+        //echo $hook;
+        if ($hook !== 'obatala_page_obatala_manage_processes') {
+            return;
+        }
+
+        wp_enqueue_script(
+            'obatala-admin-scripts',
+            plugin_dir_url(__FILE__) . '/js/admin.js',
+            ['wp-element', 'wp-components', 'wp-i18n', 'wp-api-fetch', 'wp-data'],
+            filemtime(plugin_dir_path(__FILE__) . '/js/admin.js'),
+            true
+        );
+
+        // wp_enqueue_style(
+        //     'obatala-admin-styles',
+        //     plugin_dir_url(__FILE__) . '../../css/admin.css',
+        //     [],
+        //     filemtime(plugin_dir_path(__FILE__) . '../../css/admin.css')
+        // );
     }
 
     /**
