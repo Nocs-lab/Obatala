@@ -1,5 +1,7 @@
 <?php
 namespace Obatala\Admin;
+use Obatala\Nocs_ObatalaPlugin;
+
 
 defined('ABSPATH') || exit;
 
@@ -29,26 +31,30 @@ class AdminMenu {
             'obatala_settings_page',                        // Parent slug
             __('All Processes', 'obatala'),        // Page title
             __('All Processes', 'obatala'),        // Menu title
-            'manage_options',                               // Capability
-            'edit.php?post_type=process_obatala'         // Menu slug
+            'manage_options',                      // Capability 
+            'edit.php?post_type=process_obatala'   // Menu slug
+            
         );
 
         // Add submenu for Add New Process
         add_submenu_page(
-            'obatala_settings_page',                        // Parent slug
+            'obatala_settings_page',                                // Parent slug
             __('Add New Process', 'obatala'),      // Page title
             __('Add New Process', 'obatala'),      // Menu title
-            'manage_options',                               // Capability
-            'post-new.php?post_type=process_obatala'     // Menu slug
+            'manage_options',                                        // Capability
+            'obatala_manage_processes',                              // Menu slug
+            [Nocs_ObatalaPlugin::class, 'render_all_processes_page'] // Callback function
+            
         );
+
 
         // Add submenu for Process Step Collection
         add_submenu_page(
-            'obatala_settings_page',                        // Parent slug
+            'obatala_settings_page',               // Parent slug
             __('All Steps', 'obatala'),            // Page title
-            __('All Steps', 'obatala'),            // Menu title
-            'manage_options',                               // Capability
-            'edit.php?post_type=step_obatala'    // Menu slug
+            __('All Steps', 'obatala'),             // Menu title
+            'manage_options',                      // Capability
+            'edit.php?post_type=step_obatala'      // Menu slug
         );
 
         // Add submenu for Add New Step
@@ -56,8 +62,11 @@ class AdminMenu {
             'obatala_settings_page',                        // Parent slug
             __('Add New Step', 'obatala'),         // Page title
             __('Add New Step', 'obatala'),         // Menu title
-            'manage_options',                               // Capability
-            'post-new.php?post_type=step_obatala'// Menu slug
+            'manage_options',                      // Capability
+            'post-new.php?post_type=step_obatala' // Menu slug
         );
+
+        
     }
+
 }
