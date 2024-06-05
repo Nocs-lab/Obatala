@@ -71,8 +71,33 @@ class ProcessCollection {
         ));
     }
 
+    public static function register_process_meta() {
+        register_meta('process_obatala', 'process_type', [
+            'type' => 'integer',
+            'description' => 'Process Type ID',
+            'single' => true,
+            'show_in_rest' => true,
+        ]);
+    
+        register_meta('process_obatala', 'current_stage', [
+            'type' => 'integer',
+            'description' => 'Current Stage ID',
+            'single' => true,
+            'show_in_rest' => true,
+        ]);
+
+        register_meta('comment', 'stage_id', [
+            'type' => 'number',
+            'description' => __('Estágio do Processo', 'obatala'),
+            'single' => true,
+            'show_in_rest' => true
+        ]);
+    }
+   
+
     public static function init() {
         self::register_post_type();
         self::register_taxonomies();
+        self::register_process_meta();
     }
 }
