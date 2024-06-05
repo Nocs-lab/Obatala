@@ -39,7 +39,7 @@ class ProcessTypeCollection {
             'capability_type'    => 'post',
             'has_archive'        => true,
             'hierarchical'       => false,
-            'menu_position'      => -1,
+            'menu_position'      => 99,
             'supports'           => array('title'),
             'show_in_rest'       => true,
             'menu_icon'          => 'dashicons-media-document'

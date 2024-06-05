@@ -1,8 +1,7 @@
 import { Button, Icon, Tooltip, Card, CardBody, CardHeader, CardFooter } from '@wordpress/components';
 import { edit, trash } from '@wordpress/icons';
 
-const ProcessTypeList = ({ processTypes, processSteps, onEdit, onDeleteProcess, onDeleteStep }) => (
-    console.log(processTypes, processSteps),
+const ProcessTypeList = ({ processTypes, processSteps, onEdit, onDelete, onDeleteStep }) => (
     <div>
         <h3>Existing Process Types</h3>
         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px' }}>
@@ -21,14 +20,15 @@ const ProcessTypeList = ({ processTypes, processSteps, onEdit, onDeleteProcess, 
                             <h4>Steps</h4>
                             <ul>
                                 {steps.map(step => (
-                                    <Card key={step.id} style={{ padding: "0 5px", marginBottom: "2px" }}>
-                                    <li key={step.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                    <li key={step.id}>
                                         {step.title.rendered}
-                                        <Tooltip text="Delete Step">
-                                            <Button icon={<Icon icon={trash} />} onClick={() => onDeleteStep(step.id)} />
-                                        </Tooltip>
+                                        <Button
+                                            isDestructive
+                                            onClick={() => onDeleteStep(step.id)}
+                                        >
+                                            Delete
+                                        </Button>
                                     </li>
-                                    </Card>
                                 ))}
                             </ul>
                         </CardBody>
@@ -37,7 +37,7 @@ const ProcessTypeList = ({ processTypes, processSteps, onEdit, onDeleteProcess, 
                                 <Button icon={<Icon icon={edit} />} onClick={() => onEdit(type)} />
                             </Tooltip>
                             <Tooltip text="Delete">
-                                <Button icon={<Icon icon={trash} />} onClick={() => onDeleteProcess(type.id)} />
+                                <Button icon={<Icon icon={trash} />} onClick={() => onDelete(type.id)} />
                             </Tooltip>
                         </CardFooter>
                     </Card>

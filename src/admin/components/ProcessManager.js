@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Spinner, Button, SelectControl, TextControl } from '@wordpress/components';
+import { Spinner, Button, SelectControl, TextControl,  Card, CardFooter } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import ProcessStage from './ProcessManager/ProcessStage';
 
@@ -105,9 +105,13 @@ const ProcessManager = () => {
                 <ul>
                     {processes.map(process => (
                         <li key={process.id}>
-                            <Button onClick={() => handleSelectProcess(process.id)}>
-                                {process.title.rendered}
-                            </Button>
+                            <Card>
+                                <CardFooter>
+                                    <Button onClick={() => handleSelectProcess(process.id)}>
+                                        <b>Processo:  &nbsp; </b>{process.title.rendered} <b>&nbsp;Criado em: &nbsp;</b> {new Date (process.date).toLocaleDateString('pt-br')} 
+                                    </Button>
+                                </CardFooter>
+                            </Card>
                         </li>
                     ))}
                 </ul>
