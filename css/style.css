@@ -1,0 +1,90 @@
+#wpcontent {
+    background: #fff;
+    height: 100%;
+}
+#wpbody{
+    max-width: 90%;
+    height: 100%;
+    padding: 10px;
+}
+button .components-spinner {
+    width: 15px;
+    height: 15px;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+}
+.form-buttons {
+    display: flex;
+}
+.my-gutenberg-form .form-buttons {
+    margin-top: 20px;
+    margin-left: 1px;
+}
+.form-error {
+    color: #cc1818;
+}
+.form-buttons button {
+    margin-right: 4px;
+}
+.form-buttons .components-spinner {
+    margin-top: 0;
+}
+#obatala-manage-processes {
+    max-width: 500px;
+}
+#obatala-manage-processes ul,
+#obatala-manage-processes ul li {
+    list-style-type: disc;
+}
+#obatala-manage-processes ul {
+    padding-left: 20px;
+}
+#obatala-manage-processes .components-search-control__input {
+    height: 36px;
+    margin-left: 0;
+}
+ 
+#obatala-manage-processes .list-controls {
+    display: flex;
+    width: 100%;
+}
+ 
+#obatala-manage-processes .list-controls .components-search-control {
+    flex-grow: 1;
+    margin-right: 8px;
+}
+
+.comment-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.comment {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #f1f1f1;
+    max-width: 60%;
+}
+
+.comment.current-user {
+    background-color: #e0f7fa;
+    margin-left: auto;
+}
+
+.comment .avatar {
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.comment .comment-content {
+    max-width: calc(100% - 50px);
+}
+
+.comment .comment-content p {
+    margin: 5px 0;
+}
