@@ -97,7 +97,9 @@ const ProcessTypeManager = () => {
     return (
         <div>
             <h2>Manage Process Types and Steps</h2>
-            <ProcessTypeForm onSave={handleSaveProcessType} onCancel={() => setEditingProcessType(null)} editingProcessType={editingProcessType} />
+            <div class="panel">
+                <ProcessTypeForm onSave={handleSaveProcessType} onCancel={() => setEditingProcessType(null)} editingProcessType={editingProcessType} />
+            </div>
             <ProcessTypeList processTypes={processTypes} processSteps={processSteps} onEdit={handleEditProcessType} onDelete={handleDeleteProcessType} />
             <ProcessStepForm processTypes={processTypes} onAddStep={handleAddProcessStep} />
         </div>
