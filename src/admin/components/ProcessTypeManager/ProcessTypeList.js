@@ -58,12 +58,7 @@ const ProcessTypeList = ({
                         <li className="list-group-item" key={step.id}>
                           {step.title.rendered}
                           <Tooltip text="Delete Step">
-                            <Button
-                              isDestructive
-                              onClick={() => onDeleteStep(step.id)}
-                            >
-                              Delete
-                            </Button>
+                            <Button isDestructive icon={<Icon icon={trash} />} onClick={() => onDeleteProcess(type.id)} />
                           </Tooltip>
                         </li>
                       ))}
