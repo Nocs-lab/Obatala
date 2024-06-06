@@ -13,7 +13,7 @@ const ProcessTypeList = ({
   processTypes,
   processSteps,
   onEdit,
-  onDeleteProcess,
+  onDelete,
   onDeleteStep,
 }) => (
   console.log(processTypes, processSteps),
@@ -58,7 +58,11 @@ const ProcessTypeList = ({
                         <li className="list-group-item" key={step.id}>
                           {step.title.rendered}
                           <Tooltip text="Delete Step">
-                            <Button isDestructive icon={<Icon icon={trash} />} onClick={() => onDeleteProcess(type.id)} />
+                            <Button
+                              isDestructive
+                              icon={<Icon icon={trash} />}
+                              onClick={() => onDeleteStep(step.id)}
+                            />
                           </Tooltip>
                         </li>
                       ))}

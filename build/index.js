@@ -826,7 +826,7 @@ const ProcessTypeList = ({
   processTypes,
   processSteps,
   onEdit,
-  onDeleteProcess,
+  onDelete,
   onDeleteStep
 }) => (console.log(processTypes, processSteps), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
   className: "panel"
@@ -862,7 +862,7 @@ const ProcessTypeList = ({
     icon: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Icon, {
       icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_2__["default"]
     }),
-    onClick: () => onDeleteProcess(type.id)
+    onClick: () => onDeleteStep(step.id)
   }))))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CardFooter, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Tooltip, {
     text: "Edit"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
