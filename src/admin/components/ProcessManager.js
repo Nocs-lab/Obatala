@@ -82,7 +82,7 @@ const ProcessManager = () => {
         <div>
             <h2>Manage Processes</h2>
             {!selectedProcess && (
-                <div>
+                <div className="panel">
                     <TextControl
                         label="Process Title"
                         value={newProcessTitle}
@@ -100,18 +100,14 @@ const ProcessManager = () => {
                     <Button isPrimary onClick={handleCreateProcess}>Create Process</Button>
                 </div>
             )}
-            <div>
-                <h3>Existing Processes</h3>
-                <ul>
+            <div className="panel">
+                <h3 className="panel-title">Existing Processes</h3>
+                <ul className="list-group">
                     {processes.map(process => (
-                        <li key={process.id}>
-                            <Card>
-                                <CardFooter>
-                                    <Button onClick={() => handleSelectProcess(process.id)}>
-                                        <b>Processo:  &nbsp; </b>{process.title.rendered} <b>&nbsp;Criado em: &nbsp;</b> {new Date (process.date).toLocaleDateString('pt-br')} 
-                                    </Button>
-                                </CardFooter>
-                            </Card>
+                        <li key={process.id} className="list-group-item">
+                            <Button onClick={() => handleSelectProcess(process.id)}>
+                                {process.title.rendered}
+                            </Button>
                         </li>
                     ))}
                 </ul>

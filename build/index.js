@@ -211,7 +211,9 @@ const ProcessManager = () => {
   if (isLoading) {
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, null);
   }
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, "Manage Processes"), !selectedProcess && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, "Manage Processes"), !selectedProcess && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "panel"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
     label: "Process Title",
     value: newProcessTitle,
     onChange: value => setNewProcessTitle(value)
@@ -229,9 +231,22 @@ const ProcessManager = () => {
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
     isPrimary: true,
     onClick: handleCreateProcess
+<<<<<<< HEAD
   }, "Create Process")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", null, "Existing Processes"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", null, processes.map(process => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
     key: process.id
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Card, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CardFooter, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+=======
+  }, "Create Process")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "panel"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
+    className: "panel-title"
+  }, "Existing Processes"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", {
+    className: "list-group"
+  }, processes.map(process => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
+    key: process.id,
+    className: "list-group-item"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+>>>>>>> front
     onClick: () => handleSelectProcess(process.id)
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("b", null, "Processo:  \xA0 "), process.title.rendered, " ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("b", null, "\xA0Criado em: \xA0"), " ", new Date(process.date).toLocaleDateString('pt-br')))))))), selectedProcess && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ProcessManager_ProcessStage__WEBPACK_IMPORTED_MODULE_3__["default"], {
     process: selectedProcess,
@@ -604,11 +619,13 @@ const ProcessTypeManager = () => {
   if (isLoading) {
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, null);
   }
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, "Manage Process Types and Steps"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ProcessTypeManager_ProcessTypeForm__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, "Manage Process Types and Steps"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "panel"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ProcessTypeManager_ProcessTypeForm__WEBPACK_IMPORTED_MODULE_3__["default"], {
     onSave: handleSaveProcessType,
     onCancel: () => setEditingProcessType(null),
     editingProcessType: editingProcessType
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ProcessTypeManager_ProcessTypeList__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ProcessTypeManager_ProcessTypeList__WEBPACK_IMPORTED_MODULE_4__["default"], {
     processTypes: processTypes,
     processSteps: processSteps,
     onEdit: handleEditProcessType,
@@ -663,7 +680,11 @@ const ProcessStepForm = ({
     setSelectedProcessType('');
     setSelectedProcess('');
   };
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", null, "Add Process Step"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "panel"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
+    className: "panel-title"
+  }, "Add Process Step"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
     label: "Step Name",
     value: stepName,
     onChange: value => setStepName(value)
@@ -813,6 +834,7 @@ const ProcessTypeList = ({
   onEdit,
   onDelete,
   onDeleteStep
+<<<<<<< HEAD
 }) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", null, "Existing Process Types"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
   style: {
     display: 'flex',
@@ -830,6 +852,41 @@ const ProcessTypeList = ({
     key: step.id
   }, step.title.rendered, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
     isDestructive: true,
+=======
+}) => (console.log(processTypes, processSteps), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  className: "panel"
+}, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", {
+  className: "panel-title"
+}, "Existing Process Types"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  className: "card-container"
+}, processTypes.map(type => {
+  const steps = processSteps.filter(step => +step.process_type === type.id);
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Card, {
+    key: type.id
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CardHeader, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", {
+    className: "card-title"
+  }, type.title.rendered)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CardBody, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dl", {
+    className: "description-list"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "list-item"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dt", null, "Description:"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dd", null, type.description ? type.description : '-')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "list-item"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dt", null, "Accept Attachments:"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dd", null, type.accept_attachments ? 'Yes' : 'No')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "list-item"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dt", null, "Accept Tainacan Items:"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dd", null, type.accept_tainacan_items ? 'Yes' : 'No')), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "list-item"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dt", null, "Generate Tainacan Items:"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dd", null, type.generate_tainacan_items ? 'Yes' : 'No'))), steps.length > 0 && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("hr", null), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h5", null, "Steps"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", {
+    className: "list-group"
+  }, steps.map(step => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
+    className: "list-group-item",
+    key: step.id
+  }, step.title.rendered, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Tooltip, {
+    text: "Delete Step"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+    icon: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Icon, {
+      icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_2__["default"]
+    }),
+>>>>>>> front
     onClick: () => onDeleteStep(step.id)
   }, "Delete"))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CardFooter, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Tooltip, {
     text: "Edit"
