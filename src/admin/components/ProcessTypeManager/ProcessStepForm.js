@@ -26,8 +26,8 @@ const ProcessStepForm = ({ processTypes, onAddStep }) => {
     };
 
     return (
-        <div class="panel">
-            <h3 class="panel-title">Add Process Step</h3>
+        <div className="panel">
+            <h3 className="panel-title">Add Process Step</h3>
             <TextControl
                 label="Step Name"
                 value={stepName}
