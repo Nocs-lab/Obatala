@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Spinner, Button, SelectControl, TextControl } from '@wordpress/components';
+import { Spinner, Button, SelectControl, TextControl,  Card, CardFooter } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import ProcessStage from './ProcessManager/ProcessStage';
 
@@ -82,7 +82,7 @@ const ProcessManager = () => {
         <div>
             <h2>Manage Processes</h2>
             {!selectedProcess && (
-                <div class="panel">
+                <div className="panel">
                     <TextControl
                         label="Process Title"
                         value={newProcessTitle}
@@ -100,11 +100,11 @@ const ProcessManager = () => {
                     <Button isPrimary onClick={handleCreateProcess}>Create Process</Button>
                 </div>
             )}
-            <div class="panel">
-                <h3 class="panel-title">Existing Processes</h3>
-                <ul class="list-group">
+            <div className="panel">
+                <h3 className="panel-title">Existing Processes</h3>
+                <ul className="list-group">
                     {processes.map(process => (
-                        <li key={process.id} class="list-group-item">
+                        <li key={process.id} className="list-group-item">
                             <Button onClick={() => handleSelectProcess(process.id)}>
                                 {process.title.rendered}
                             </Button>

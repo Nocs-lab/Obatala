@@ -90,6 +90,17 @@ const ProcessTypeManager = () => {
             });
     };
 
+    const handleDeleteProcessStep = (id) => {
+        apiFetch({ path: `/wp/v2/process_step/${id}`, method: 'DELETE' })
+            .then(() => {
+                const updatedProcessSteps = processSteps.filter(step => step.id !== id);
+                setProcessSteps(updatedProcessSteps);
+            })
+            .catch(error => {
+                console.error('Error deleting process step:', error);
+            });
+    };
+
     if (isLoading) {
         return <Spinner />;
     }
@@ -97,10 +108,16 @@ const ProcessTypeManager = () => {
     return (
         <div>
             <h2>Manage Process Types and Steps</h2>
-            <div class="panel">
+            <div className="panel">
                 <ProcessTypeForm onSave={handleSaveProcessType} onCancel={() => setEditingProcessType(null)} editingProcessType={editingProcessType} />
             </div>
-            <ProcessTypeList processTypes={processTypes} processSteps={processSteps} onEdit={handleEditProcessType} onDelete={handleDeleteProcessType} />
+            <ProcessTypeList 
+                processTypes={processTypes} 
+                processSteps={processSteps} 
+                onEdit={handleEditProcessType} 
+                onDelete={handleDeleteProcessType} 
+                onDeleteStep={handleDeleteProcessStep} 
+            />
             <ProcessStepForm processTypes={processTypes} onAddStep={handleAddProcessStep} />
         </div>
     );

@@ -227,12 +227,12 @@ const ProcessStage = ({ process, onCancelEdit }) => {
                         label="Add a comment"
                         value={newComment}
                         onChange={(value) => setNewComment(value)}
-                        disabled={currentStage.id !== +process.current_stage}
+                        disabled={false}
                     />
                     <Button
                         isPrimary
                         onClick={handleAddComment}
-                        disabled={currentStage.id !== +process.current_stage}
+                        disabled={false}
                     >
                         Add Comment
                     </Button>
