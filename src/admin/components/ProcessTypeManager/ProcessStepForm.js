@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, TextControl, SelectControl } from '@wordpress/components';
+import { Button, TextControl, SelectControl, Panel, PanelBody, PanelRow } from '@wordpress/components';
 
 const ProcessStepForm = ({ processTypes, onAddStep }) => {
     const [selectedProcessType, setSelectedProcessType] = useState('');
@@ -26,35 +26,38 @@ const ProcessStepForm = ({ processTypes, onAddStep }) => {
     };
 
     return (
-        <div className="panel">
-            <h3 className="panel-title">Add Process Step</h3>
-            <TextControl
-                label="Step Name"
-                value={stepName}
-                onChange={(value) => setStepName(value)}
-            />
-            <SelectControl
-                label="Select Process Type"
-                value={selectedProcessType}
-                options={[
-                    { label: 'Select a process type...', value: '' },
-                    ...processTypes.map(type => ({ label: type.title.rendered, value: type.id }))
-                ]}
-                onChange={(value) => setSelectedProcessType(value)}
-            />
-            <SelectControl
-                label="Select Parent Process"
-                value={selectedProcess}
-                options={[
-                    { label: 'Select a parent process...', value: '' },
-                    ...processTypes.map(type => ({ label: type.title.rendered, value: type.id }))
-                ]}
-                onChange={(value) => setSelectedProcess(value)}
-            />
-            <Button isSecondary onClick={handleAddStep}>
-                Add Process Step
-            </Button>
-        </div>
+        <Panel>
+            <PanelBody title="Add Process Step" initialOpen={ true }>
+                <PanelRow>
+                    <TextControl
+                        label="Step Name"
+                        value={stepName}
+                        onChange={(value) => setStepName(value)}
+                    />
+                    <SelectControl
+                        label="Select Process Type"
+                        value={selectedProcessType}
+                        options={[
+                            { label: 'Select a process type...', value: '' },
+                            ...processTypes.map(type => ({ label: type.title.rendered, value: type.id }))
+                        ]}
+                        onChange={(value) => setSelectedProcessType(value)}
+                    />
+                    <SelectControl
+                        label="Select Parent Process"
+                        value={selectedProcess}
+                        options={[
+                            { label: 'Select a parent process...', value: '' },
+                            ...processTypes.map(type => ({ label: type.title.rendered, value: type.id }))
+                        ]}
+                        onChange={(value) => setSelectedProcess(value)}
+                    />
+                    <Button isSecondary onClick={handleAddStep}>
+                        Add Process Step
+                    </Button>
+                </PanelRow>
+            </PanelBody>
+        </Panel>
     );
 };
 

@@ -107,18 +107,23 @@ const ProcessTypeManager = () => {
 
     return (
         <div>
+            <span class="brand"><strong>Obatala</strong> Curatorial Process Management</span>
             <h2>Manage Process Types and Steps</h2>
-            <div className="panel">
-                <ProcessTypeForm onSave={handleSaveProcessType} onCancel={() => setEditingProcessType(null)} editingProcessType={editingProcessType} />
+            <div className="panel-container">
+                <main>
+                    <ProcessTypeList 
+                        processTypes={processTypes} 
+                        processSteps={processSteps} 
+                        onEdit={handleEditProcessType} 
+                        onDelete={handleDeleteProcessType} 
+                        onDeleteStep={handleDeleteProcessStep} 
+                    />
+                </main>
+                <aside>
+                    <ProcessTypeForm onSave={handleSaveProcessType} onCancel={() => setEditingProcessType(null)} editingProcessType={editingProcessType} />    
+                    <ProcessStepForm processTypes={processTypes} onAddStep={handleAddProcessStep} />
+                </aside>
             </div>
-            <ProcessTypeList 
-                processTypes={processTypes} 
-                processSteps={processSteps} 
-                onEdit={handleEditProcessType} 
-                onDelete={handleDeleteProcessType} 
-                onDeleteStep={handleDeleteProcessStep} 
-            />
-            <ProcessStepForm processTypes={processTypes} onAddStep={handleAddProcessStep} />
         </div>
     );
 };

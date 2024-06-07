@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, TextControl, CheckboxControl } from '@wordpress/components';
+import { Button, TextControl, CheckboxControl, Panel, PanelBody, PanelRow } from '@wordpress/components';
 
 const ProcessTypeForm = ({ onSave, onCancel, editingProcessType }) => {
     const [processTypeName, setProcessTypeName] = useState('');
@@ -40,47 +40,51 @@ const ProcessTypeForm = ({ onSave, onCancel, editingProcessType }) => {
     };
 
     return (
-        <div>
-            <TextControl
-                label="Process Type Name"
-                value={processTypeName}
-                onChange={(value) => setProcessTypeName(value)}
-            />
-            <TextControl
-                label="Process Type Description"
-                value={processTypeDescription}
-                onChange={(value) => setProcessTypeDescription(value)}
-            />
-            <CheckboxControl
-                label="Accept Attachments"
-                checked={acceptAttachments}
-                onChange={(value) => setAcceptAttachments(value)}
-            />
-            <CheckboxControl
-                label="Accept Tainacan Items"
-                checked={acceptTainacanItems}
-                onChange={(value) => setAcceptTainacanItems(value)}
-            />
-            <CheckboxControl
-                label="Generate Tainacan Items"
-                checked={generateTainacanItems}
-                onChange={(value) => setGenerateTainacanItems(value)}
-            />
-            {editingProcessType ? (
-                <>
-                    <Button isPrimary onClick={handleSave}>
-                        Update Process Type
-                    </Button>
-                    <Button onClick={handleCancel}>
-                        Cancel
-                    </Button>
-                </>
-            ) : (
-                <Button isPrimary onClick={handleSave}>
-                    Add Process Type
-                </Button>
-            )}
-        </div>
+        <Panel>
+            <PanelBody title="Add Process Type" initialOpen={ true }>
+                <PanelRow>
+                    <TextControl
+                        label="Process Type Name"
+                        value={processTypeName}
+                        onChange={(value) => setProcessTypeName(value)}
+                    />
+                    <TextControl
+                        label="Process Type Description"
+                        value={processTypeDescription}
+                        onChange={(value) => setProcessTypeDescription(value)}
+                    />
+                    <CheckboxControl
+                        label="Accept Attachments"
+                        checked={acceptAttachments}
+                        onChange={(value) => setAcceptAttachments(value)}
+                    />
+                    <CheckboxControl
+                        label="Accept Tainacan Items"
+                        checked={acceptTainacanItems}
+                        onChange={(value) => setAcceptTainacanItems(value)}
+                    />
+                    <CheckboxControl
+                        label="Generate Tainacan Items"
+                        checked={generateTainacanItems}
+                        onChange={(value) => setGenerateTainacanItems(value)}
+                    />
+                    {editingProcessType ? (
+                        <>
+                            <Button isPrimary onClick={handleSave}>
+                                Update Process Type
+                            </Button>
+                            <Button onClick={handleCancel}>
+                                Cancel
+                            </Button>
+                        </>
+                    ) : (
+                        <Button isPrimary onClick={handleSave}>
+                            Add Process Type
+                        </Button>
+                    )}
+                </PanelRow>
+            </PanelBody>
+        </Panel>
     );
 };
 
