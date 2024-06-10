@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Spinner, Button, SelectControl, TextControl,  Card, CardFooter } from '@wordpress/components';
+import { Spinner, Button, SelectControl, TextControl, Notice, Panel, PanelBody, PanelRow } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import ProcessStage from './ProcessManager/ProcessStage';
 
@@ -80,37 +80,55 @@ const ProcessManager = () => {
 
     return (
         <div>
+            <span class="brand"><strong>Obatala</strong> Curatorial Process Management</span>
             <h2>Manage Processes</h2>
-            {!selectedProcess && (
-                <div className="panel">
-                    <TextControl
-                        label="Process Title"
-                        value={newProcessTitle}
-                        onChange={(value) => setNewProcessTitle(value)}
-                    />
-                    <SelectControl
-                        label="Process Type"
-                        value={newProcessType}
-                        options={[
-                            { label: 'Select a process type...', value: '' },
-                            ...processTypes.map(type => ({ label: type.title.rendered, value: type.id }))
-                        ]}
-                        onChange={(value) => setNewProcessType(value)}
-                    />
-                    <Button isPrimary onClick={handleCreateProcess}>Create Process</Button>
-                </div>
-            )}
-            <div className="panel">
-                <h3 className="panel-title">Existing Processes</h3>
-                <ul className="list-group">
-                    {processes.map(process => (
-                        <li key={process.id} className="list-group-item">
-                            <Button onClick={() => handleSelectProcess(process.id)}>
-                                {process.title.rendered}
-                            </Button>
-                        </li>
-                    ))}
-                </ul>
+            <div className="panel-container">
+                <main>
+                    <Panel>
+                        <PanelBody title="Existing Processes" initialOpen={ true }>
+                            <PanelRow>
+                                {processes.length > 0 ? (
+                                    <ul className="list-group">
+                                        {processes.map(process => (
+                                            <li key={process.id} className="list-group-item">
+                                                <Button onClick={() => handleSelectProcess(process.id)}>
+                                                    {process.title.rendered}
+                                                </Button>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                ) : (
+                                    <Notice isDismissible={false} status="warning">No existing processes.</Notice>
+                                )}
+                            </PanelRow>
+                        </PanelBody>
+                    </Panel>
+                </main>
+                <aside>
+                    {!selectedProcess && (
+                        <Panel>
+                            <PanelBody title="Create Processes" initialOpen={ true }>
+                                <PanelRow>
+                                    <TextControl
+                                        label="Process Title"
+                                        value={newProcessTitle}
+                                        onChange={(value) => setNewProcessTitle(value)}
+                                    />
+                                    <SelectControl
+                                        label="Process Type"
+                                        value={newProcessType}
+                                        options={[
+                                            { label: 'Select a process type...', value: '' },
+                                            ...processTypes.map(type => ({ label: type.title.rendered, value: type.id }))
+                                        ]}
+                                        onChange={(value) => setNewProcessType(value)}
+                                    />
+                                    <Button isPrimary onClick={handleCreateProcess}>Create Process</Button>
+                                </PanelRow>
+                            </PanelBody>
+                        </Panel>
+                    )}
+                </aside>
             </div>
             {selectedProcess && (
                 <ProcessStage process={selectedProcess} onCancelEdit={handleCancelEdit} />
