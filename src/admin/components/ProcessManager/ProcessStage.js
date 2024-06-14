@@ -169,7 +169,7 @@ const ProcessStage = ({ process, onCancelEdit }) => {
     }
 
     return (
-        <div>
+        <div className='panel'>
             <h3>Process: {process.title.rendered}</h3>
             <Button isSecondary onClick={onCancelEdit}>Back to Processes</Button>
             <div>

@@ -1,172 +1,73 @@
-### Registro de Custom Post Types - Obatala
+# Utilização dos Custom Post Types no Plugin Obatala
 
-Para a gestão de processos no "Obatala", utilizamos WordPress para criar e gerenciar tipos de posts personalizados (Custom Post Types). Este guia explica como estender os posts personalizados do WordPress para gerenciar processos curatoriais no sistema Obatala.
+No plugin Obatala, utilizamos três tipos de post (custom post types) para gerenciar processos curatoriais e suas etapas: **Process**, **ProcessType** e **ProcessStep**. Cada um desses tipos de post tem um papel específico na configuração e operação do sistema de gestão de processos.
 
-!!! nota
-    Apesar de não extender as classes do tainacan diretamente usaremos nomenclatura similar para que durante o desenvolvimento exercitar e criar familiaridade com o tainacan que será extendido futuramente.
-    
-### Exemplo de Extensão de Custom Post Types do WordPress
+### Descrição dos Custom Post Types
 
-Primeiro, criamos uma nova classe para gerenciar os processos curatoriais, utilizando os posts personalizados do WordPress.
+#### 1. ProcessStep
 
-#### `ProcessCollection.php`
+- **Função**: Serve como modelo (mockup) para as etapas de um processo.
+- **Utilização**: Armazena os metadados que serão usados para criar campos personalizados em cada etapa do processo. Esses campos personalizados são exibidos na interface do processo para que os usuários possam interagir.
+- **Estrutura**: Inclui campos para definir o nome da etapa, a descrição, e os metadados associados que especificam o tipo de campo que será exibido na interface do processo.
 
-```php
-<?php
-namespace Obatala\Entities;
+#### 2. ProcessType
 
-class ProcessCollection {
-    public static function get_post_type() {
-        return 'process_obatala';
+- **Função**: Serve como modelo (mockup) para tipos de processos.
+- **Utilização**: Armazena o nome do tipo de processo, uma descrição detalhada e uma lista ordenada de steps (etapas) que compõem o processo.
+- **Estrutura**: Contém campos para o nome do processo, a descrição da sua utilidade, e uma referência às etapas (`ProcessStep`) que definem a sequência do processo.
+
+#### 3. Process
+
+- **Função**: Representa a instância real de um processo na aplicação.
+- **Utilização**: Quando um novo processo é criado, ele é de um determinado tipo (`ProcessType`). Durante a criação, ele consulta o `ProcessType` e os `ProcessStep` associados para gravar os metadados necessários. Esses metadados são usados para criar e interagir com o processo. 
+- **Estrutura**: Inclui campos para o título do processo, uma descrição geral, o tipo do processo, as etapas, e os metadados necessários para a interação.
+
+### Fluxo de Trabalho dos Custom Post Types
+
+1. **Definição dos Steps (Etapas)**:
+      - Cria-se um `ProcessStep` para cada etapa que pode fazer parte de um processo.
+      - Define-se os metadados que descrevem os campos personalizados a serem exibidos na interface do processo.
+
+2. **Criação do Tipo de Processo**:
+      - Cria-se um `ProcessType` para definir um modelo de processo.
+      - Inclui-se uma lista ordenada de `ProcessStep`, especificando a sequência de etapas que o processo seguirá.
+
+3. **Instanciação de um Processo**:
+      - Cria-se um `Process` baseado em um `ProcessType`.
+      - O `Process` consulta o `ProcessType` e os `ProcessStep` associados para configurar os metadados e campos personalizados.
+      - Esses metadados são gravados no `Process` para criar uma interface interativa onde os usuários podem gerenciar e interagir com cada etapa.
+
+### Diagrama do Processo
+
+```mermaid
+classDiagram
+    class ProcessStep {
+        +String nome
+        +String descricao
+        +List~Metadados~ metadados
     }
 
-    public static function register_post_type() {
-        $labels = [
-            'name'               => __('Processos', 'obatala'),
-            'singular_name'      => __('Processo', 'obatala'),
-            'add_new'            => __('Adicionar Novo', 'obatala'),
-            'add_new_item'       => __('Adicionar Novo Processo', 'obatala'),
-            'edit_item'          => __('Editar Processo', 'obatala'),
-            'new_item'           => __('Novo Processo', 'obatala'),
-            'view_item'          => __('Ver Processo', 'obatala'),
-            'view_items'         => __('Ver Processos', 'obatala'),
-            'search_items'       => __('Buscar Processos', 'obatala'),
-            'not_found'          => __('Nenhum Processo Encontrado', 'obatala'),
-            'not_found_in_trash' => __('Nenhum Processo Encontrado na Lixeira', 'obatala'),
-            'parent_item_colon'  => __('Processo Pai:', 'obatala'),
-            'all_items'          => __('Todos os Processos', 'obatala'),
-            'archives'           => __('Arquivos de Processos', 'obatala'),
-            'menu_name'          => __('Processos', 'obatala')
-        ];
-
-        $args = [
-            'labels'              => $labels,
-            'hierarchical'        => true,
-            'public'              => true,
-            'show_ui'             => true,
-            'show_in_menu'        => true,
-            'publicly_queryable'  => true,
-            'exclude_from_search' => true,
-            'has_archive'         => true,
-            'query_var'           => true,
-            'can_export'          => true,
-            'rewrite'             => ['slug' => 'processos'],
-            'capabilities'        => [
-                'edit_post'          => 'edit_process',
-                'read_post'          => 'read_process',
-                'delete_post'        => 'delete_process',
-                'edit_posts'         => 'edit_processes',
-                'edit_others_posts'  => 'edit_others_processes',
-                'publish_posts'      => 'publish_processes',
-                'read_private_posts' => 'read_private_processes'
-            ],
-            'map_meta_cap'        => true,
-            'show_in_rest'        => true,
-            'show_in_nav_menus'   => true,
-            'supports'            => [
-                'title',
-                'editor',
-                'thumbnail',
-                'revisions',
-                'page-attributes'
-            ]
-        ];
-        register_post_type(self::get_post_type(), $args);
+    class ProcessType {
+        +String nome
+        +String descricao
+        +List~ProcessStep~ etapas
     }
-}
-```
 
-### Registro do Custom Post Type
-
-No arquivo principal do plugin, inicialize e registre o custom post type.
-
-#### `obatala.php`
-
-```php
-<?php
-/**
- * Plugin Name: Obatala
- * Description: Plugin para gerenciar processos curatoriais.
- * Version: 1.0
- * Author: Douglas de Araújo
- */
-
-if (!defined('ABSPATH')) {
-    exit; // Exit if accessed directly
-}
-
-require_once __DIR__ . '/classes/entities/ProcessCollection.php';
-
-add_action('init', function() {
-    \Obatala\Entities\ProcessCollection::register_post_type();
-});
-```
-
-### Campos Personalizados
-
-Para adicionar campos personalizados aos processos, utilizamos a função `register_meta` do WordPress.
-
-#### `ProcessMeta.php`
-
-```php
-<?php
-namespace Obatala\Entities;
-
-class ProcessMeta {
-    public static function register_meta() {
-        register_post_meta('process_obatala', 'nome', [
-            'show_in_rest'  => true,
-            'single'        => true,
-            'type'          => 'string',
-            'description'   => __('O nome do processo', 'obatala'),
-            'auth_callback' => function() {
-                return current_user_can('edit_post');
-            }
-        ]);
-
-        register_post_meta('process_obatala', 'descricao', [
-            'show_in_rest'  => true,
-            'single'        => true,
-            'type'          => 'string',
-            'description'   => __('Descrição detalhada do processo', 'obatala'),
-            'auth_callback' => function() {
-                return current_user_can('edit_post');
-            }
-        ]);
-
-        // Adicione mais campos conforme necessário
+    class Process {
+        +String nome
+        +String descricao
+        +ProcessType tipo
+        +List~ProcessStep~ etapas
+        +List~Metadados~ metadados
     }
-}
-```
 
-### Registro dos Metadados
-
-No arquivo principal do plugin, registre os metadados personalizados.
-
-#### `obatala.php`
-
-```php
-<?php
-/**
- * Plugin Name: Obatala
- * Description: Plugin para gerenciar processos curatoriais.
- * Version: 1.0
- * Author: Douglas de Araújo
- */
-
-if (!defined('ABSPATH')) {
-    exit; // Exit if accessed directly
-}
-
-require_once __DIR__ . '/classes/entities/ProcessCollection.php';
-require_once __DIR__ . '/classes/entities/ProcessMeta.php';
-
-add_action('init', function() {
-    \Obatala\Entities\ProcessCollection::register_post_type();
-    \Obatala\Entities\ProcessMeta::register_meta();
-});
+    ProcessType "1" -- "*" ProcessStep : inclui
+    Process "1" -- "*" ProcessStep : consulta e inclui
+    Process "1" -- "1" ProcessType : é baseado em
+    ProcessStep "1" -- "*" Metadados : define
+    Process "1" -- "*" Metadados : utiliza
 ```
 
 ### Conclusão
 
-Estendendo os posts personalizados do WordPress, você pode criar e gerenciar processos curatoriais no sistema Obatala. Este guia mostra como registrar um custom post type e adicionar campos personalizados para atender às necessidades específicas do seu projeto. Utilize as funções e métodos fornecidos pelo WordPress para uma implementação flexível e robusta.
+O plugin Obatala utiliza uma estrutura organizada de custom post types para gerenciar processos curatoriais, etapas e tipos de processos. Essa abordagem permite uma configuração flexível e a integração de metadados personalizados, facilitando a criação de interfaces interativas para a gestão de processos dentro do WordPress.
