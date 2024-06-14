@@ -12,7 +12,7 @@ O plugin define um tipo de post personalizado, `processos`, para lidar com os da
 
 ### Metadatum e Collection do Tainacan
 
-A integração com o Tainacan é feita através do uso das classes `Metadatum` e `Collection`. Estas classes são utilizadas para manipular os dados dos processos curatoriais, permitindo uma organização detalhada e a possibilidade de expandir as funcionalidades conforme necessário.
+Não definido
 
 ### Gerenciamento de Permissões Personalizadas
 
@@ -56,140 +56,168 @@ Este documento fornece uma visão clara e detalhada do funcionamento e da estrut
 
 ## Explicação do Diagrama de Classes do Plugin Obatala
 
-O diagrama de classes fornece uma visão estruturada de como os componentes do plugin Obatala interagem uns com os outros e com o framework do WordPress e o plugin Tainacan. Vamos detalhar cada componente chave do diagrama para uma melhor compreensão.
+O diagrama de classes anexo ilustra uma visão simplificada da organização do plugin e o relacionamento entre as diversas entidades figurantes.
 
-### Classes Principais
+### Explicação do Diagrama de Classes do Plugin Obatala
+
+O diagrama de classes abaixo ilustra a estrutura e as interações entre os principais componentes do plugin Obatala para WordPress. Este plugin é utilizado para a gestão de processos curatoriais, integrando funcionalidades do Tainacan com a flexibilidade dos custom post types do WordPress.
 
 ```mermaid
 classDiagram
-    class ObatalaPlugin {
-        +initialize()
-        +register_post_types()
-        +add_admin_menus()
-        +enqueue_scripts()
-        +register_taxonomies()
+    class Processo {
+        Um tipo de post para 
+        organização de processos
+        onde as etapas são agrupadas
     }
 
-    class AdminMenu {
-        +add_admin_menu()
+    class TipoProcesso{
+        Um tipo de post que serve
+        como mock para os processos
     }
 
-    class SettingsPage {
-        +register_settings()
-        +create_settings_page()
+    class Setor {
+        User roles com permissões
+        customizadas
     }
 
-    class ProcessCollection {
-        +register_collection_item_post_type()
-        +handle_metadata()
-        +manage_permissions()
-        +enable_comments()
-        +get_items_capabilities()
-        +user_can()
+    class Colecao {
+        Uma coleção
+        do Tainacan
     }
 
-    class ProcessCollectionRepository {
-        +insert()
-        +update()
-        +fetch()
-        +validate()
+    class Item {
+        Um item de coleção
+        do Tainacan
     }
 
-    class AJAXHandler {
-        +add_ajax_handlers()
-        +process_ajax_requests()
-        +handle_requests()
+    class Etapa {
+        Um tipo de post que
+        recebe campos customizados
+        dinamicamente criados
     }
 
-    class WordPress {
-        <<framework>>
-        +register_post_type()
-        +add_action()
-        +apply_filters()
-        +wp_ajax_()
-        +wp_ajax_nopriv_()
-        +register_taxonomy()
-        +current_user_can()
+    class Notificacao {
+        Emails e notificações
+        enviadas ao usuários
     }
 
-    class Tainacan {
-        <<framework>>
-        +register_metadata()
-        +add_menu_item()
-        +use_native_interface()
+    class Pessoa {
+        Usuários do wordpress
+        com roles do plugin
     }
 
-    class Metadatum {
-        +create()
-        +update()
-        +delete()
+    class Arquivo {
+        Anexos de posts
+        padrão wordpress
     }
 
-    class Collection {
-        +create()
-        +update()
-        +delete()
-        +fetch_items()
+    class Comentario {
+        Comentários em posts
+        padrão wordpress
+    }
+    class MetaDado{
+        Campos customizados que se
+        traduzem em formulários
     }
 
-    class PermissionManagement {
-        +define_capabilities()
-        +assign_capabilities()
-        +check_permissions()
-    }
+    
+    Processo "1" -- "*" Item : interage com
+    Processo "1" -- "*" Colecao : interage com
+    
+    Processo "1" -- "*" Notificacao : dispara
+    Processo "1" -- "*" Notificacao : possui
+    Etapa "1" -- "*" Comentario : possui
+    Etapa "1" -- "*" Arquivo : possui
+    
+    
 
-    class Taxonomy {
-        +register_taxonomy()
-        +assign_to_post_type()
-    }
+    TipoProcesso "1" -- "*" Processo: obtem modelo do
+    
+    Pessoa "1" -- "*" Setor: pertence a
+    Pessoa "1" -- "*" Comentario : publica
+    Processo "1" -- "*" Arquivo : anexa
+    TipoProcesso "1" -- "*" Etapa: obtem
+    Etapa "*" -- "1" Setor : pertence a
+    MetaDado "*" -- "1" Etapa : possui
+    
+    Colecao "1" -- "*" Item : possui
 
-    class WP_Comments {
-        +record_user_interactions()
-    }
-
-    ObatalaPlugin --> WordPress : uses
-    ObatalaPlugin --> Tainacan : integrates
-    ObatalaPlugin --> AdminMenu : includes
-    ObatalaPlugin --> SettingsPage : includes
-    ObatalaPlugin --> ProcessCollection : includes
-    ObatalaPlugin --> AJAXHandler : includes
-    ObatalaPlugin --> PermissionManagement : includes
-    ObatalaPlugin --> Taxonomy : includes
-    ProcessCollection --> WordPress : uses
-    ProcessCollection --> Tainacan : extends functionalities
-    AJAXHandler --> WordPress : uses
-    ProcessCollection --> Metadatum : uses
-    ProcessCollection --> Collection : uses
-    PermissionManagement --> WordPress : uses
-    Taxonomy --> WordPress : uses
-    ProcessCollection --> WP_Comments : uses
-
-    Metadatum --> Tainacan : is part of
-    Collection --> Tainacan : is part of
-    ObatalaPlugin --> ProcessCollectionRepository
 ```
 
-#### **1. ObatalaPlugin**
-- **Descrição**: Esta é a classe principal do plugin que coordena a inicialização e gestão das funcionalidades principais.
-- **Responsabilidades**:
-  - Registrar o tipo de postagem personalizado `processos`.
-  - Inicializar e gerenciar todas as subclasses necessárias.
-  - Carregar os textos do domínio para internacionalização.
-  - Adicionar hooks e filtros específicos do plugin.
+### Descrição das Classes
 
-#### **2. ProcessCollection**
-- **Extende**: `Tainacan\Entities\Collection`
-- **Descrição**: Representa uma coleção de processos curatoriais, possibilitando a gestão e organização de múltiplos processos dentro do Tainacan.
-- **Responsabilidades**:
-  - Gerenciar metadados específicos dos processos curatoriais.
-  - Utilizar a API do Tainacan para integrar funcionalidades de coleção.
+#### **Processo**
+- **Função**: Representa um processo específico que agrupa várias etapas.
+- **Uso**: Este tipo de post é a entidade principal onde os processos são organizados e gerenciados. Cada processo pode interagir com itens e coleções do Tainacan, além de disparar e possuir notificações associadas ao seu progresso.
 
-#### **3. ProcessCollectionRepository**
-- **Extende**: `Tainacan\Repositories\Collections`
-- **Descrição**: Gerencia as operações de banco de dados para as coleções de processos, incluindo operações de salvar, atualizar e recuperar.
-- **Responsabilidades**:
-  - Executar queries específicas para as coleções de processos.
-  - Oferecer métodos para manipular dados dos processos no banco de dados.
+#### **TipoProcesso**
+- **Função**: Serve como um modelo ou template para a criação de novos processos.
+- **Uso**: Define a estrutura básica de um processo, incluindo uma lista de etapas (`Etapa`). Quando um novo `Processo` é criado, ele herda o modelo do `TipoProcesso`.
+
+#### **Setor**
+- **Função**: Representa grupos de usuários com permissões específicas.
+- **Uso**: Usado para definir permissões e organizar usuários (`Pessoa`) em grupos que interagem com as etapas (`Etapa`) do processo.
+
+#### **Colecao**
+- **Função**: Representa uma coleção do Tainacan.
+- **Uso**: Cada `Processo` pode interagir com uma ou mais coleções, facilitando a gestão e a visualização dos itens relacionados.
+
+#### **Item**
+- **Função**: Representa um item dentro de uma coleção do Tainacan.
+- **Uso**: Os itens são entidades individuais em uma coleção que podem ser associadas a processos, proporcionando um vínculo direto entre os dados curatoriais e os processos.
+
+#### **Etapa**
+- **Função**: Representa uma fase ou passo de um processo.
+- **Uso**: Cada `Etapa` armazena campos personalizados (`MetaDado`) que são utilizados na interface do processo. As etapas estão associadas a setores (`Setor`), têm anexos (`Arquivo`) e podem ter comentários (`Comentario`).
+
+#### **Notificacao**
+- **Função**: Gera e envia notificações e emails aos usuários.
+- **Uso**: Notificações são enviadas durante a execução do processo para informar os usuários sobre atualizações importantes, como mudanças de status ou conclusão de etapas.
+
+#### **Pessoa**
+- **Função**: Representa os usuários do WordPress com funções definidas pelo plugin.
+- **Uso**: Usuários podem pertencer a setores (`Setor`), interagir com processos, adicionar comentários (`Comentario`) e anexar arquivos.
+
+#### **Arquivo**
+- **Função**: Anexa documentos ou arquivos ao processo.
+- **Uso**: Arquivos são usados para associar documentos relevantes a processos ou etapas específicos. Eles seguem o padrão de anexos do WordPress.
+
+#### **Comentario**
+- **Função**: Registra observações e discussões em posts.
+- **Uso**: Comentários são usados para discussões e observações em processos ou etapas, seguindo o padrão de comentários do WordPress.
+
+#### **MetaDado**
+- **Função**: Define campos personalizados que se traduzem em formulários.
+- **Uso**: Os metadados especificam os tipos de campos personalizados exibidos nas etapas (`Etapa`). Eles são usados para capturar informações específicas necessárias para cada fase do processo.
+
+### Relações Entre as Classes
+
+1. **Processo e Itens/Coleções**:
+      - Um `Processo` pode interagir com múltiplos `Itens` e `Colecoes` do Tainacan, permitindo a gestão de recursos curatoriais dentro do processo.
+
+2. **Processo e Notificações**:
+      - Um `Processo` pode disparar e possuir múltiplas `Notificacoes` ao longo de sua execução, mantendo os usuários informados sobre o progresso.
+
+3. **Etapa e Comentários/Arquivos**:
+      - Cada `Etapa` pode possuir vários `Comentarios` e `Arquivos`, permitindo interações ricas e a inclusão de documentos importantes.
+
+4. **TipoProcesso e Processos**:
+      - Um `TipoProcesso` serve como modelo para múltiplos `Processos`, definindo sua estrutura e as etapas a serem seguidas.
+
+5. **Pessoa e Setor**:
+      - Usuários (`Pessoa`) podem pertencer a um `Setor`, que define suas permissões e seu papel no processo.
+
+6. **TipoProcesso e Etapas**:
+      - Um `TipoProcesso` define uma lista de `Etapa` que especifica as fases que os processos baseados nesse tipo seguirão.
+
+7. **Etapa e Setor**:
+      - Cada `Etapa` pertence a um `Setor`, que define quem tem permissão para interagir com essa etapa.
+
+8. **MetaDado e Etapa**:
+      - `MetaDado` são associados a `Etapa`, definindo os campos personalizados que serão exibidos e preenchidos durante a execução da etapa.
+
+9. **Colecao e Itens**:
+      - Uma `Colecao` pode conter múltiplos `Itens`, representando uma coleção de objetos curatoriais gerenciada pelo Tainacan.
 
 ### Subclasses de Administração
 

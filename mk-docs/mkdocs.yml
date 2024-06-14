@@ -35,16 +35,18 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Organização: organizacao.md
-  - Guia para devs: guia-dev.md
   - Guia do Frontend: gutenberg.md
   - Posts Customizados: posts-customizados.md
-  - Modelagem: 
-      - O Processo: modelagem/processos.md
-      - Classe Processo: modelagem/classes/processo.md
-      - Classe Etapa: modelagem/classes/etapa.md
-      - Classe Notificação: modelagem/classes/notificacao.md
-      - Classe Setor: modelagem/classes/setor.md
-      - Classe Pessoa: modelagem/classes/pessoa.md
+  - Metadados Dinâmicos: metadados.md
+  - Tutoriais:
+      - Guia básico: tutoriais/guia-dev.md
+  # - Modelagem: 
+  #     - O Processo: modelagem/processos.md
+  #     - Classe Processo: modelagem/classes/processo.md
+  #     - Classe Etapa: modelagem/classes/etapa.md
+  #     - Classe Notificação: modelagem/classes/notificacao.md
+  #     - Classe Setor: modelagem/classes/setor.md
+  #     - Classe Pessoa: modelagem/classes/pessoa.md
   - Roadmap: 
       - Stories: roadmap/stories.md
       - Sprint 1: roadmap/sprint-1.md
