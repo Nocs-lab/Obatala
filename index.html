@@ -204,23 +204,6 @@
   
   
     <li class="md-tabs__item">
-      <a href="guia-dev/" class="md-tabs__link">
-        
-  
-    
-  
-  Guia para devs
-
-      </a>
-    </li>
-  
-
-      
-        
-  
-  
-  
-    <li class="md-tabs__item">
       <a href="gutenberg/" class="md-tabs__link">
         
   
@@ -254,13 +237,30 @@
   
   
   
+    <li class="md-tabs__item">
+      <a href="metadados/" class="md-tabs__link">
+        
+  
+    
+  
+  Metadados Dinâmicos
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
     
     
       <li class="md-tabs__item">
-        <a href="modelagem/processos/" class="md-tabs__link">
+        <a href="tutoriais/guia-dev/" class="md-tabs__link">
           
   
-  Modelagem
+  Tutoriais
 
         </a>
       </li>
@@ -471,37 +471,118 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#classes-principais" class="md-nav__link">
+  <a href="#explicacao-do-diagrama-de-classes-do-plugin-obatala_1" class="md-nav__link">
     <span class="md-ellipsis">
-      Classes Principais
+      Explicação do Diagrama de Classes do Plugin Obatala
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Classes Principais">
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#descricao-das-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Descrição das Classes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Descrição das Classes">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-obatalaplugin" class="md-nav__link">
+  <a href="#processo" class="md-nav__link">
     <span class="md-ellipsis">
-      1. ObatalaPlugin
+      Processo
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-processcollection" class="md-nav__link">
+  <a href="#tipoprocesso" class="md-nav__link">
     <span class="md-ellipsis">
-      2. ProcessCollection
+      TipoProcesso
     </span>
   </a>
   
 </li>
         
           <li class="md-nav__item">
-  <a href="#3-processcollectionrepository" class="md-nav__link">
+  <a href="#setor" class="md-nav__link">
     <span class="md-ellipsis">
-      3. ProcessCollectionRepository
+      Setor
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#colecao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Colecao
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#item" class="md-nav__link">
+    <span class="md-ellipsis">
+      Item
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#etapa" class="md-nav__link">
+    <span class="md-ellipsis">
+      Etapa
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#notificacao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Notificacao
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pessoa" class="md-nav__link">
+    <span class="md-ellipsis">
+      Pessoa
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arquivo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Arquivo
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#comentario" class="md-nav__link">
+    <span class="md-ellipsis">
+      Comentario
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metadado" class="md-nav__link">
+    <span class="md-ellipsis">
+      MetaDado
     </span>
   </a>
   
@@ -509,6 +590,15 @@
         
       </ul>
     </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relacoes-entre-as-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Relações Entre as Classes
+    </span>
+  </a>
   
 </li>
         
@@ -612,26 +702,6 @@
   
   
     <li class="md-nav__item">
-      <a href="guia-dev/" class="md-nav__link">
-        
-  
-  <span class="md-ellipsis">
-    Guia para devs
-  </span>
-  
-
-      </a>
-    </li>
-  
-
-    
-      
-      
-  
-  
-  
-  
-    <li class="md-nav__item">
       <a href="gutenberg/" class="md-nav__link">
         
   
@@ -671,6 +741,26 @@
   
   
   
+    <li class="md-nav__item">
+      <a href="metadados/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Metadados Dinâmicos
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
     
     
     
@@ -690,11 +780,11 @@
         
   
   
-    <a href="modelagem/processos/" class="md-nav__link">
+    <a href="tutoriais/guia-dev/" class="md-nav__link">
       
   
   <span class="md-ellipsis">
-    Modelagem
+    Tutoriais
   </span>
   
 
@@ -775,7 +865,7 @@
 <h3 id="custom-post-type-para-processos-curatoriais">Custom Post Type para Processos Curatoriais</h3>
 <p>O plugin define um tipo de post personalizado, <code>processos</code>, para lidar com os dados curatoriais. Cada processo é uma instância desse tipo de post, o que permite o uso de funcionalidades nativas do WordPress, como a edição, exclusão, e visualização em uma interface padronizada.</p>
 <h3 id="metadatum-e-collection-do-tainacan">Metadatum e Collection do Tainacan</h3>
-<p>A integração com o Tainacan é feita através do uso das classes <code>Metadatum</code> e <code>Collection</code>. Estas classes são utilizadas para manipular os dados dos processos curatoriais, permitindo uma organização detalhada e a possibilidade de expandir as funcionalidades conforme necessário.</p>
+<p>Não definido</p>
 <h3 id="gerenciamento-de-permissoes-personalizadas">Gerenciamento de Permissões Personalizadas</h3>
 <p>O plugin implementa um sistema de permissões que define quem pode visualizar, criar, editar ou deletar os processos curatoriais. Isso é realizado através da definição de capacidades específicas dentro do WordPress, garantindo que apenas usuários autorizados tenham acesso a essas funcionalidades.</p>
 <h3 id="taxonomias-para-organizacao">Taxonomias para Organização</h3>
@@ -802,139 +892,201 @@
 <p>A implementação de taxonomias personalizadas e o uso de tipos de post customizados garantem que o plugin seja flexível e adaptável às necessidades específicas do gerenciamento curatorial, facilitando a expansão e a customização futura.</p>
 <p>Este documento fornece uma visão clara e detalhada do funcionamento e da estrutura do plugin Obatala, servindo como um guia para desenvolvedores, administradores e curadores que irão trabalhar com o sistema.</p>
 <h2 id="explicacao-do-diagrama-de-classes-do-plugin-obatala">Explicação do Diagrama de Classes do Plugin Obatala</h2>
-<p>O diagrama de classes fornece uma visão estruturada de como os componentes do plugin Obatala interagem uns com os outros e com o framework do WordPress e o plugin Tainacan. Vamos detalhar cada componente chave do diagrama para uma melhor compreensão.</p>
-<h3 id="classes-principais">Classes Principais</h3>
+<p>O diagrama de classes anexo ilustra uma visão simplificada da organização do plugin e o relacionamento entre as diversas entidades figurantes.</p>
+<h3 id="explicacao-do-diagrama-de-classes-do-plugin-obatala_1">Explicação do Diagrama de Classes do Plugin Obatala</h3>
+<p>O diagrama de classes abaixo ilustra a estrutura e as interações entre os principais componentes do plugin Obatala para WordPress. Este plugin é utilizado para a gestão de processos curatoriais, integrando funcionalidades do Tainacan com a flexibilidade dos custom post types do WordPress.</p>
 <pre class="mermaid"><code>classDiagram
-    class ObatalaPlugin {
-        +initialize()
-        +register_post_types()
-        +add_admin_menus()
-        +enqueue_scripts()
-        +register_taxonomies()
+    class Processo {
+        Um tipo de post para 
+        organização de processos
+        onde as etapas são agrupadas
     }
 
-    class AdminMenu {
-        +add_admin_menu()
+    class TipoProcesso{
+        Um tipo de post que serve
+        como mock para os processos
     }
 
-    class SettingsPage {
-        +register_settings()
-        +create_settings_page()
+    class Setor {
+        User roles com permissões
+        customizadas
     }
 
-    class ProcessCollection {
-        +register_collection_item_post_type()
-        +handle_metadata()
-        +manage_permissions()
-        +enable_comments()
-        +get_items_capabilities()
-        +user_can()
+    class Colecao {
+        Uma coleção
+        do Tainacan
     }
 
-    class ProcessCollectionRepository {
-        +insert()
-        +update()
-        +fetch()
-        +validate()
+    class Item {
+        Um item de coleção
+        do Tainacan
     }
 
-    class AJAXHandler {
-        +add_ajax_handlers()
-        +process_ajax_requests()
-        +handle_requests()
+    class Etapa {
+        Um tipo de post que
+        recebe campos customizados
+        dinamicamente criados
     }
 
-    class WordPress {
-        &lt;&lt;framework&gt;&gt;
-        +register_post_type()
-        +add_action()
-        +apply_filters()
-        +wp_ajax_()
-        +wp_ajax_nopriv_()
-        +register_taxonomy()
-        +current_user_can()
+    class Notificacao {
+        Emails e notificações
+        enviadas ao usuários
     }
 
-    class Tainacan {
-        &lt;&lt;framework&gt;&gt;
-        +register_metadata()
-        +add_menu_item()
-        +use_native_interface()
+    class Pessoa {
+        Usuários do wordpress
+        com roles do plugin
     }
 
-    class Metadatum {
-        +create()
-        +update()
-        +delete()
+    class Arquivo {
+        Anexos de posts
+        padrão wordpress
     }
 
-    class Collection {
-        +create()
-        +update()
-        +delete()
-        +fetch_items()
+    class Comentario {
+        Comentários em posts
+        padrão wordpress
+    }
+    class MetaDado{
+        Campos customizados que se
+        traduzem em formulários
     }
 
-    class PermissionManagement {
-        +define_capabilities()
-        +assign_capabilities()
-        +check_permissions()
-    }
 
-    class Taxonomy {
-        +register_taxonomy()
-        +assign_to_post_type()
-    }
+    Processo "1" -- "*" Item : interage com
+    Processo "1" -- "*" Colecao : interage com
 
-    class WP_Comments {
-        +record_user_interactions()
-    }
+    Processo "1" -- "*" Notificacao : dispara
+    Processo "1" -- "*" Notificacao : possui
+    Etapa "1" -- "*" Comentario : possui
+    Etapa "1" -- "*" Arquivo : possui
 
-    ObatalaPlugin --&gt; WordPress : uses
-    ObatalaPlugin --&gt; Tainacan : integrates
-    ObatalaPlugin --&gt; AdminMenu : includes
-    ObatalaPlugin --&gt; SettingsPage : includes
-    ObatalaPlugin --&gt; ProcessCollection : includes
-    ObatalaPlugin --&gt; AJAXHandler : includes
-    ObatalaPlugin --&gt; PermissionManagement : includes
-    ObatalaPlugin --&gt; Taxonomy : includes
-    ProcessCollection --&gt; WordPress : uses
-    ProcessCollection --&gt; Tainacan : extends functionalities
-    AJAXHandler --&gt; WordPress : uses
-    ProcessCollection --&gt; Metadatum : uses
-    ProcessCollection --&gt; Collection : uses
-    PermissionManagement --&gt; WordPress : uses
-    Taxonomy --&gt; WordPress : uses
-    ProcessCollection --&gt; WP_Comments : uses
 
-    Metadatum --&gt; Tainacan : is part of
-    Collection --&gt; Tainacan : is part of
-    ObatalaPlugin --&gt; ProcessCollectionRepository</code></pre>
-<h4 id="1-obatalaplugin"><strong>1. ObatalaPlugin</strong></h4>
+
+    TipoProcesso "1" -- "*" Processo: obtem modelo do
+
+    Pessoa "1" -- "*" Setor: pertence a
+    Pessoa "1" -- "*" Comentario : publica
+    Processo "1" -- "*" Arquivo : anexa
+    TipoProcesso "1" -- "*" Etapa: obtem
+    Etapa "*" -- "1" Setor : pertence a
+    MetaDado "*" -- "1" Etapa : possui
+
+    Colecao "1" -- "*" Item : possui
+</code></pre>
+<h3 id="descricao-das-classes">Descrição das Classes</h3>
+<h4 id="processo"><strong>Processo</strong></h4>
 <ul>
-<li><strong>Descrição</strong>: Esta é a classe principal do plugin que coordena a inicialização e gestão das funcionalidades principais.</li>
-<li><strong>Responsabilidades</strong>:</li>
-<li>Registrar o tipo de postagem personalizado <code>processos</code>.</li>
-<li>Inicializar e gerenciar todas as subclasses necessárias.</li>
-<li>Carregar os textos do domínio para internacionalização.</li>
-<li>Adicionar hooks e filtros específicos do plugin.</li>
+<li><strong>Função</strong>: Representa um processo específico que agrupa várias etapas.</li>
+<li><strong>Uso</strong>: Este tipo de post é a entidade principal onde os processos são organizados e gerenciados. Cada processo pode interagir com itens e coleções do Tainacan, além de disparar e possuir notificações associadas ao seu progresso.</li>
 </ul>
-<h4 id="2-processcollection"><strong>2. ProcessCollection</strong></h4>
+<h4 id="tipoprocesso"><strong>TipoProcesso</strong></h4>
 <ul>
-<li><strong>Extende</strong>: <code>Tainacan\Entities\Collection</code></li>
-<li><strong>Descrição</strong>: Representa uma coleção de processos curatoriais, possibilitando a gestão e organização de múltiplos processos dentro do Tainacan.</li>
-<li><strong>Responsabilidades</strong>:</li>
-<li>Gerenciar metadados específicos dos processos curatoriais.</li>
-<li>Utilizar a API do Tainacan para integrar funcionalidades de coleção.</li>
+<li><strong>Função</strong>: Serve como um modelo ou template para a criação de novos processos.</li>
+<li><strong>Uso</strong>: Define a estrutura básica de um processo, incluindo uma lista de etapas (<code>Etapa</code>). Quando um novo <code>Processo</code> é criado, ele herda o modelo do <code>TipoProcesso</code>.</li>
 </ul>
-<h4 id="3-processcollectionrepository"><strong>3. ProcessCollectionRepository</strong></h4>
+<h4 id="setor"><strong>Setor</strong></h4>
 <ul>
-<li><strong>Extende</strong>: <code>Tainacan\Repositories\Collections</code></li>
-<li><strong>Descrição</strong>: Gerencia as operações de banco de dados para as coleções de processos, incluindo operações de salvar, atualizar e recuperar.</li>
-<li><strong>Responsabilidades</strong>:</li>
-<li>Executar queries específicas para as coleções de processos.</li>
-<li>Oferecer métodos para manipular dados dos processos no banco de dados.</li>
+<li><strong>Função</strong>: Representa grupos de usuários com permissões específicas.</li>
+<li><strong>Uso</strong>: Usado para definir permissões e organizar usuários (<code>Pessoa</code>) em grupos que interagem com as etapas (<code>Etapa</code>) do processo.</li>
 </ul>
+<h4 id="colecao"><strong>Colecao</strong></h4>
+<ul>
+<li><strong>Função</strong>: Representa uma coleção do Tainacan.</li>
+<li><strong>Uso</strong>: Cada <code>Processo</code> pode interagir com uma ou mais coleções, facilitando a gestão e a visualização dos itens relacionados.</li>
+</ul>
+<h4 id="item"><strong>Item</strong></h4>
+<ul>
+<li><strong>Função</strong>: Representa um item dentro de uma coleção do Tainacan.</li>
+<li><strong>Uso</strong>: Os itens são entidades individuais em uma coleção que podem ser associadas a processos, proporcionando um vínculo direto entre os dados curatoriais e os processos.</li>
+</ul>
+<h4 id="etapa"><strong>Etapa</strong></h4>
+<ul>
+<li><strong>Função</strong>: Representa uma fase ou passo de um processo.</li>
+<li><strong>Uso</strong>: Cada <code>Etapa</code> armazena campos personalizados (<code>MetaDado</code>) que são utilizados na interface do processo. As etapas estão associadas a setores (<code>Setor</code>), têm anexos (<code>Arquivo</code>) e podem ter comentários (<code>Comentario</code>).</li>
+</ul>
+<h4 id="notificacao"><strong>Notificacao</strong></h4>
+<ul>
+<li><strong>Função</strong>: Gera e envia notificações e emails aos usuários.</li>
+<li><strong>Uso</strong>: Notificações são enviadas durante a execução do processo para informar os usuários sobre atualizações importantes, como mudanças de status ou conclusão de etapas.</li>
+</ul>
+<h4 id="pessoa"><strong>Pessoa</strong></h4>
+<ul>
+<li><strong>Função</strong>: Representa os usuários do WordPress com funções definidas pelo plugin.</li>
+<li><strong>Uso</strong>: Usuários podem pertencer a setores (<code>Setor</code>), interagir com processos, adicionar comentários (<code>Comentario</code>) e anexar arquivos.</li>
+</ul>
+<h4 id="arquivo"><strong>Arquivo</strong></h4>
+<ul>
+<li><strong>Função</strong>: Anexa documentos ou arquivos ao processo.</li>
+<li><strong>Uso</strong>: Arquivos são usados para associar documentos relevantes a processos ou etapas específicos. Eles seguem o padrão de anexos do WordPress.</li>
+</ul>
+<h4 id="comentario"><strong>Comentario</strong></h4>
+<ul>
+<li><strong>Função</strong>: Registra observações e discussões em posts.</li>
+<li><strong>Uso</strong>: Comentários são usados para discussões e observações em processos ou etapas, seguindo o padrão de comentários do WordPress.</li>
+</ul>
+<h4 id="metadado"><strong>MetaDado</strong></h4>
+<ul>
+<li><strong>Função</strong>: Define campos personalizados que se traduzem em formulários.</li>
+<li><strong>Uso</strong>: Os metadados especificam os tipos de campos personalizados exibidos nas etapas (<code>Etapa</code>). Eles são usados para capturar informações específicas necessárias para cada fase do processo.</li>
+</ul>
+<h3 id="relacoes-entre-as-classes">Relações Entre as Classes</h3>
+<ol>
+<li>
+<p><strong>Processo e Itens/Coleções</strong>:</p>
+<ul>
+<li>Um <code>Processo</code> pode interagir com múltiplos <code>Itens</code> e <code>Colecoes</code> do Tainacan, permitindo a gestão de recursos curatoriais dentro do processo.</li>
+</ul>
+</li>
+<li>
+<p><strong>Processo e Notificações</strong>:</p>
+<ul>
+<li>Um <code>Processo</code> pode disparar e possuir múltiplas <code>Notificacoes</code> ao longo de sua execução, mantendo os usuários informados sobre o progresso.</li>
+</ul>
+</li>
+<li>
+<p><strong>Etapa e Comentários/Arquivos</strong>:</p>
+<ul>
+<li>Cada <code>Etapa</code> pode possuir vários <code>Comentarios</code> e <code>Arquivos</code>, permitindo interações ricas e a inclusão de documentos importantes.</li>
+</ul>
+</li>
+<li>
+<p><strong>TipoProcesso e Processos</strong>:</p>
+<ul>
+<li>Um <code>TipoProcesso</code> serve como modelo para múltiplos <code>Processos</code>, definindo sua estrutura e as etapas a serem seguidas.</li>
+</ul>
+</li>
+<li>
+<p><strong>Pessoa e Setor</strong>:</p>
+<ul>
+<li>Usuários (<code>Pessoa</code>) podem pertencer a um <code>Setor</code>, que define suas permissões e seu papel no processo.</li>
+</ul>
+</li>
+<li>
+<p><strong>TipoProcesso e Etapas</strong>:</p>
+<ul>
+<li>Um <code>TipoProcesso</code> define uma lista de <code>Etapa</code> que especifica as fases que os processos baseados nesse tipo seguirão.</li>
+</ul>
+</li>
+<li>
+<p><strong>Etapa e Setor</strong>:</p>
+<ul>
+<li>Cada <code>Etapa</code> pertence a um <code>Setor</code>, que define quem tem permissão para interagir com essa etapa.</li>
+</ul>
+</li>
+<li>
+<p><strong>MetaDado e Etapa</strong>:</p>
+<ul>
+<li><code>MetaDado</code> são associados a <code>Etapa</code>, definindo os campos personalizados que serão exibidos e preenchidos durante a execução da etapa.</li>
+</ul>
+</li>
+<li>
+<p><strong>Colecao e Itens</strong>:</p>
+<ul>
+<li>Uma <code>Colecao</code> pode conter múltiplos <code>Itens</code>, representando uma coleção de objetos curatoriais gerenciada pelo Tainacan.</li>
+</ul>
+</li>
+</ol>
 <h3 id="subclasses-de-administracao">Subclasses de Administração</h3>
 <h4 id="4-adminmenu"><strong>4. AdminMenu</strong></h4>
 <ul>
