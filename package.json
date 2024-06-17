@@ -1,0 +1,32 @@
+{
+    "name": "nocs-obatala",
+    "version": "1.0.0",
+    "private": true,
+    "description": "Curatorial process manager for Tainacan",
+    "author": "Nocs Lab",
+    "license": "MIT",
+    "keywords": [
+        "WordPress",
+        "Tainacan"
+    ],
+    "homepage": "https://github.com/Nocs-lab/Obatala/",
+    "repository": "git+https://github.com/Nocs-lab/Obatala.git",
+    "bugs": {
+        "url": "https://github.com/Nocs-lab/Obatala/issues"
+    },
+    "main": "build/index.js",
+    "scripts": {
+        "build": "wp-scripts build",
+        "format": "wp-scripts format",
+        "lint:js": "wp-scripts lint-js",
+        "packages-update": "wp-scripts packages-update",
+        "start": "wp-scripts start",
+        "check-engines": "wp-scripts check-engines"
+    },
+    "devDependencies": {
+        "@wordpress/scripts": "^27.8.0"
+    },
+    "dependencies": {
+        "@wordpress/icons": "^10.0.0"
+    }
+}

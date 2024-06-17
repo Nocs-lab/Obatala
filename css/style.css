@@ -1,0 +1,281 @@
+:root {
+    --primary-50:  #e5f0ff;
+    --primary-100: #c4ddfe;
+    --primary-200: #91c1fe;
+    --primary-300: #5fa4fd;
+    --primary-400: #2c88fd;
+    --primary-500: #036cf3;
+    --primary-600: #0256c1;
+    --primary-700: #023f8e;
+    --primary-800: #01295c;
+    --primary-900: #00132a;
+    --primary:     var(--primary-800);
+
+    --white:    #fff;
+    --gray-100: #eee;
+    --gray-200: #ddd;
+    --gray-300: #ccc;
+    --gray-400: #bbb;
+    --gray-500: #999;
+    --gray-600: #777;
+    --gray-700: #555;
+    --gray-800: #333;
+    --gray-900: #111;
+    --black:    #000;
+
+    --border-radius:       15px;
+    --gap:                 2rem;
+    --input-border-radius: 4px;
+}
+
+/* Layout */
+#wpwrap {
+    background-color: var(--gray-50);
+}
+#wpcontent {
+    height: 100%;
+}
+#wpbody {
+    height: 100%;
+    padding: var(--gap);
+}
+h2 {
+    color: var(--primary-900);
+    font-size: 2rem;
+    margin-top: 1.5rem;
+}
+
+/* Forms */
+.components-base-control {
+    width: 100%;
+}
+.components-base-control:not(.components-checkbox-control) + .components-base-control,
+.components-base-control + .components-button {
+    margin-top: 1rem;
+}
+.components-base-control__field > label {
+    margin-bottom: .1rem;
+    text-transform: none;
+}
+.components-button {
+    border-radius: var(--input-border-radius);
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+}
+.components-button.is-primary {
+    background-color: var(--primary);
+}
+.components-checkbox-control + .components-checkbox-control {
+    margin-top: .75rem;
+}
+.components-flex.components-select-control {
+    gap: .1rem;
+}
+.components-select-control__input,
+.components-text-control__input {
+    border-radius: var(--input-border-radius) !important;
+    height: 38px !important;
+    min-height: 38px !important;
+}
+
+/* Components */
+.card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap);
+}
+.card-container .components-card {
+    background-color: var(--primary-50);
+    border-radius: var(--border-radius);
+    box-shadow: 0 0 0;
+    flex-basis: 300px;
+    flex-grow: 1;
+}
+.components-card > div {
+    display: flex;
+    flex-flow: column;
+}
+.components-card__header {
+    border-bottom-color: var(--primary-100) !important;
+}
+.components-card__header .card-title {
+    color: var(--primary-700);
+    font-size: 1.1rem;
+    margin: 0;
+}
+.components-card dt {
+    color: var(--gray-600);
+}
+.components-card dd {
+    margin: 0;
+}
+.components-card dd + dt {
+    margin-top: .5rem;
+}
+.components-card h5 {
+    margin-bottom: 0;
+}
+.components-card .components-button.has-icon {
+    color: var(--primary-300);
+}
+.components-card .components-button.has-icon:hover {
+    color: var(--primary);
+}
+.components-card__footer {
+    margin-top: auto;
+}
+.description-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem 4rem;
+}
+.description-list .list-item {
+    flex-basis: 150px;
+    flex-grow: 1;
+}
+.list-group-item {
+    border: 1px solid var(--primary-300);
+    border-radius: var(--border-radius);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    justify-content: space-between;
+    padding: .15rem .75rem;
+}
+.panel-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.panel-container main {
+    flex-basis: 65%;
+    flex-grow: 1;
+}
+.panel-container aside {
+    flex-basis: 180px;
+    flex-grow: 1;
+}
+.components-notice {
+    width: 100%;
+}
+.components-panel {
+    background-color: transparent;
+    border: 0 none;
+}
+.components-panel__body {
+    background: var(--white);
+    border: 0 none;
+    border-radius: var(--border-radius);
+    padding: 0 !important;
+}
+.components-panel__body.is-opened>.components-panel__body-title {
+    margin: 0;
+}
+.components-panel__body-toggle.components-button {
+    color: var(--gray-700);
+    font-size: 1.25rem;
+    font-weight: 300;
+    padding: 1.5rem var(--gap);
+}
+.components-panel__row {
+    flex-wrap: wrap;
+    padding: 1rem var(--gap) var(--gap);
+}
+.components-panel+.components-panel {
+    margin-top: 1rem;
+}
+
+/* Extra */
+.brand {
+    color: var(--primary-700);
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+    justify-content: space-between;
+    width: 100%;
+}
+.brand strong {
+    font-weight: 900;
+    text-transform: uppercase;
+}
+button .components-spinner {
+    width: 15px;
+    height: 15px;
+    margin-top: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+}
+.form-buttons {
+    display: flex;
+}
+.my-gutenberg-form .form-buttons {
+    margin-top: 20px;
+    margin-left: 1px;
+}
+.form-error {
+    color: #cc1818;
+}
+.form-buttons button {
+    margin-right: 4px;
+}
+.form-buttons .components-spinner {
+    margin-top: 0;
+}
+#obatala-manage-processes {
+    max-width: 500px;
+}
+#obatala-manage-processes ul,
+#obatala-manage-processes ul li {
+    list-style-type: disc;
+}
+#obatala-manage-processes ul {
+    padding-left: 20px;
+}
+#obatala-manage-processes .components-search-control__input {
+    height: 36px;
+    margin-left: 0;
+}
+ 
+#obatala-manage-processes .list-controls {
+    display: flex;
+    width: 100%;
+}
+ 
+#obatala-manage-processes .list-controls .components-search-control {
+    flex-grow: 1;
+    margin-right: 8px;
+}
+
+.comment-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.comment {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 15px;
+    padding: 10px;
+    border-radius: 10px;
+    background-color: #f1f1f1;
+    max-width: 60%;
+}
+
+.comment.current-user {
+    background-color: #e0f7fa;
+    margin-left: auto;
+}
+
+.comment .avatar {
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.comment .comment-content {
+    max-width: calc(100% - 50px);
+}
+
+.comment .comment-content p {
+    margin: 5px 0;
+}
