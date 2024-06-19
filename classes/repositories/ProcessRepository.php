@@ -45,7 +45,8 @@ class ProcessCollection {
             'hierarchical'       => true,
             'menu_position'      => null,
             'supports'           => array('title', 'editor', 'author', 'comments'),
-            'show_in_rest'       => true
+            'show_in_rest'       => true,
+            'show_in_admin'      => true
         );
 
         register_post_type('process_collection', $args);
