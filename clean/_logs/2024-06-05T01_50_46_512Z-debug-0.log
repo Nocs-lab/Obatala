@@ -1,0 +1,34 @@
+0 verbose cli /home/douglas/.nvm/versions/node/v18.20.2/bin/node /home/douglas/.nvm/versions/node/v18.20.2/bin/npm
+1 info using npm@10.5.0
+2 info using node@v18.20.2
+3 timing npm:load:whichnode Completed in 0ms
+4 timing config:load:defaults Completed in 1ms
+5 timing config:load:file:/home/douglas/.nvm/versions/node/v18.20.2/lib/node_modules/npm/npmrc Completed in 0ms
+6 timing config:load:builtin Completed in 0ms
+7 timing config:load:cli Completed in 2ms
+8 timing config:load:env Completed in 0ms
+9 timing config:load:file:/var/www/html/wp-content/plugins/Obatala/.npmrc Completed in 0ms
+10 timing config:load:project Completed in 2ms
+11 timing config:load:file:/home/douglas/.npmrc Completed in 0ms
+12 timing config:load:user Completed in 0ms
+13 timing config:load:file:/home/douglas/.nvm/versions/node/v18.20.2/etc/npmrc Completed in 0ms
+14 timing config:load:global Completed in 0ms
+15 timing config:load:setEnvs Completed in 0ms
+16 timing config:load Completed in 5ms
+17 timing npm:load:configload Completed in 5ms
+18 timing config:load:flatten Completed in 0ms
+19 timing npm:load:mkdirpcache Completed in 1ms
+20 timing npm:load:mkdirplogs Completed in 0ms
+21 verbose title npm
+22 verbose argv "--cache" "clean"
+23 timing npm:load:setTitle Completed in 0ms
+24 timing npm:load:display Completed in 0ms
+25 verbose logfile logs-max:10 dir:/var/www/html/wp-content/plugins/Obatala/clean/_logs/2024-06-05T01_50_46_512Z-
+26 verbose logfile /var/www/html/wp-content/plugins/Obatala/clean/_logs/2024-06-05T01_50_46_512Z-debug-0.log
+27 timing npm:load:logFile Completed in 4ms
+28 timing npm:load:timers Completed in 0ms
+29 timing npm:load:configScope Completed in 0ms
+30 timing npm:load Completed in 16ms
+31 verbose exit 1
+32 timing npm Completed in 19ms
+33 verbose code 1

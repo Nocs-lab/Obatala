@@ -1,253 +1,112 @@
-### Guia Detalhado: Criando uma Página no Painel de Administração com Blocos Gutenberg
+# Criando uma Página no Painel de Administração com Blocos Gutenberg
 
-Este guia detalha como criar uma página no painel de administração do WordPress que utiliza blocos Gutenberg. O uso de Gutenberg permite criar interfaces interativas e dinâmicas, aproveitando o poder do React no WordPress.
+Este guia fornece uma visão clara e concisa sobre como criar uma página no painel de administração do WordPress utilizando blocos Gutenberg, permitindo a criação de interfaces interativas e dinâmicas com React no WordPress.
 
-!!! nota
-    Para mais detalhes sobre a utilização do Gutenberb e a lista completa de blocos reutilizáveis visite: [The WordPress Gutenberg](https://wordpress.github.io/gutenberg/?path=/docs/docs-introduction--page)
-
----
-
-## Passo 1: Estrutura do Projeto
-
-Certifique-se de que seu plugin tem uma estrutura organizada. Para este guia, usaremos a seguinte estrutura de diretórios:
-
-```
-└── 📁Obatala
-    └── 📁js
-        └── admin.js
-    └── 📁src
-        └── admin
-            └── App.js
-            └── components
-                └── ExampleComponent.js
-    └── 📁classes
-        └── 📁admin
-            └── AdminMenu.php
-            └── SettingsPage.php
-    └── obatala.php
-```
+!!! Nota 
+    Para mais detalhes sobre o uso de Gutenberg e uma lista completa de blocos reutilizáveis, visite: [The WordPress Gutenberg](https://wordpress.github.io/gutenberg/?path=/docs/docs-introduction--page).
 
 ---
 
-## Passo 2: Registrar a Página de Administração
+### Passo 1: Enfileiramento de Scripts
 
-Primeiro, registre uma página de administração no WordPress usando `add_menu_page()`.
-
-### `AdminMenu.php`
+No arquivo principal `obatala.php`, enfileiramos os scripts necessários para carregar a interface React no painel de administração:
 
 ```php
 <?php
-    namespace Obatala\Admin;
 
-    class AdminMenu {
-        public function __construct() {
-            add_action('admin_menu', [$this, 'add_admin_menu']);
-        }
-
-        public function add_admin_menu() {
-            add_menu_page(
-                __('Gerenciar Processos', 'obatala'),
-                'Gerenciar Processos',
-                'manage_options',
-                'obatala_manage_processos',
-                [$this, 'render_admin_page'],
-                'dashicons-admin-tools'
-            );
-        }
-
-        public function render_admin_page() {
-            echo '<div id="obatala-admin-app"></div>';
-        }
-    }
+public function admin_enqueue_scripts( $hook ) {
+    \Obatala\Admin\Enqueuer::enqueue_admin_scripts( $hook );
+}
 ```
 
-### `obatala.php`
+### Passo 2: Registro das Páginas de Administração
 
-No arquivo principal do plugin, inicialize a classe `AdminMenu`.
-
-```php
-<?php 
-    if ( ! defined( 'ABSPATH' ) ) {
-        exit; // Exit if accessed directly
-    }
-
-    require_once __DIR__ . '/classes/admin/AdminMenu.php';
-
-    new \Obatala\Admin\AdminMenu();
-```
-
----
-
-## Passo 3: Enfileirar Scripts de Blocos Gutenberg
-
-Enfileire os scripts necessários para Gutenberg na página de administração.
-
-### `AdminMenu.php` (continuação)
-
-Adicione a função para enfileirar scripts no construtor da classe.
+Na classe `AdminMenu`, registramos as páginas de administração. Cada página é associada a um callback que imprime uma `div` com um ID específico. Este ID é usado posteriormente para renderizar o corpo da página com React.
 
 ```php
 <?php
-    public function __construct() {
-        add_action('admin_menu', [$this, 'add_admin_menu']);
-        add_action('admin_enqueue_scripts', [$this, 'enqueue_admin_scripts']);
-    }
 
-    public function enqueue_admin_scripts($hook) {
-        if ($hook !== 'toplevel_page_obatala_manage_processos') {
-            return;
-        }
+namespace Obatala\Admin;
 
-        wp_enqueue_script(
-            'obatala-admin-scripts',
-            plugin_dir_url(__FILE__) . '../../js/admin.js',
-            ['wp-element', 'wp-components', 'wp-i18n', 'wp-api-fetch', 'wp-data'],
-            filemtime(plugin_dir_path(__FILE__) . '../../js/admin.js'),
-            true
-        );
-
-        wp_enqueue_style(
-            'obatala-admin-styles',
-            plugin_dir_url(__FILE__) . '../../css/admin.css',
-            [],
-            filemtime(plugin_dir_path(__FILE__) . '../../css/admin.css')
+class AdminMenu {
+    public static function add_admin_pages() {
+        add_menu_page(
+            __('Exemplo', 'obatala'),
+            __('Exemplo', 'obatala'),
+            'manage_options',
+            'exemplo',
+            [self::class, 'funcao_exemplo'],
+            'dashicons-admin-generic',
+            8
         );
     }
-```
-
----
-
-## Passo 4: Criar Componentes React para Gutenberg
-
-Crie componentes React que serão usados nos blocos Gutenberg.
-
-### `App.js`
-
-```javascript
-import { render } from '@wordpress/element';
-import ExampleComponent from './components/ExampleComponent';
-
-const App = () => {
-    return (
-        <div>
-            <h1>Gerenciar Processos</h1>
-            <ExampleComponent />
-        </div>
-    );
-};
-
-document.addEventListener('DOMContentLoaded', () => {
-    const appElement = document.getElementById('obatala-admin-app');
-    if (appElement) {
-        render(<App />, appElement);
-    }
-});
-```
-
-### `ExampleComponent.js`
-
-```javascript
-import { useState } from '@wordpress/element';
-
-const ExampleComponent = () => {
-    const [count, setCount] = useState(0);
-
-    return (
-        <div>
-            <p>Você clicou {count} vezes</p>
-            <button onClick={() => setCount(count + 1)}>Clique aqui</button>
-        </div>
-    );
-};
-
-export default ExampleComponent;
-```
-
----
-
-## Passo 5: Configurar o Build com Webpack
-
-Configure o Webpack para compilar seus arquivos JavaScript.
-
-### `webpack.config.js`
-
-```javascript
-const path = require('path');
-
-module.exports = {
-    entry: './src/admin/App.js',
-    output: {
-        path: path.resolve(__dirname, 'js'),
-        filename: 'admin.js',
-    },
-    module: {
-        rules: [
-            {
-                test: /\.js$/,
-                exclude: /node_modules/,
-                use: {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: ['@babel/preset-react', '@babel/preset-env']
-                    }
-                }
-            }
-        ]
-    }
-};
-```
-
-### `package.json`
-
-Adicione os scripts de build e dependências.
-
-```json
-{
-    "name": "obatala",
-    "version": "1.0.0",
-    "main": "index.js",
-    "scripts": {
-        "build": "webpack --mode production",
-        "start": "webpack --mode development --watch"
-    },
-    "devDependencies": {
-        "@babel/core": "^7.14.6",
-        "@babel/preset-env": "^7.14.7",
-        "@babel/preset-react": "^7.14.5",
-        "babel-loader": "^8.2.2",
-        "webpack": "^5.44.0",
-        "webpack-cli": "^4.7.2"
-    },
-    "dependencies": {
-        "@wordpress/api-fetch": "^4.2.0",
-        "@wordpress/components": "^11.1.0",
-        "@wordpress/element": "^2.9.0",
-        "@wordpress/i18n": "^4.0.11"
+    public static function funcao_exemplo() {
+        echo '<div id="id-exemplo"></div>';
     }
 }
 ```
 
----
+### Passo 3: Enfileiramento Condicional de Scripts
 
-## Passo 6: Build e Enfileiramento
+A classe `Enqueuer` verifica se o hook da página atual corresponde a um dos hooks esperados. Se sim, os scripts JavaScript e estilos CSS são carregados na página.
 
-### Construir o Projeto
+```php
+<?php
 
-Execute o comando para compilar o JavaScript:
+namespace Obatala\Admin;
 
-```bash
-npm install
-npm run build
+class Enqueuer {
+    private static $pages = [
+        'toplevel_page_exemplo' => 'exemplo',
+    ];
+
+    public static function enqueue_admin_scripts($hook) {
+        if (array_key_exists($hook, self::$pages)) {
+            $asset_file = include OBATALA_PLUGIN_DIR . 'build/index.asset.php';
+
+            wp_register_script(
+                'obatala-admin-scripts',
+                OBATALA_PLUGIN_URL . 'build/index.js',
+                $asset_file['dependencies'],
+                $asset_file['version'],
+                true
+            );
+            wp_enqueue_script('obatala-admin-scripts');
+
+            wp_register_style(
+                'obatala-admin-styles',
+                OBATALA_PLUGIN_URL . 'css/style.css',
+                ['wp-components'],
+                $asset_file['version']
+            );
+            wp_enqueue_style('obatala-admin-styles');
+        }
+    }
+}
+```
+
+### Passo 4: Renderização com React
+
+No arquivo `src/admin/App.js`, utilizamos o React para renderizar componentes nas páginas de administração do WordPress. A função `render` do React é chamada para cada `div` com um ID correspondente.
+
+```javascript
+import { render } from '@wordpress/element';
+import Exemplo from './components/Exemplo';
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    const exemploElement = document.getElementById('id-exemplo');
+
+    if (exemploElement) {
+        render(<Exemplo />, exemploElement);
+    }
+
+});
 ```
 
 ---
 
-### Enfileirar o JavaScript e o CSS
-
-Certifique-se de que os arquivos compilados sejam enfileirados corretamente na função `enqueue_admin_scripts` que criamos anteriormente.
-
----
-
-### Conclusão
-
-Seguindo esses passos, você criou uma página no painel de administração do WordPress que utiliza blocos Gutenberg para uma interface dinâmica e interativa. Este guia detalha o processo de configuração da página de administração, criação de componentes React, e compilação do código com Webpack. A utilização de Gutenberg e React proporciona uma experiência de usuário moderna e eficiente.
+### Recursos Adicionais
+!!! Nota 
+    - Para uma visão detalhada sobre como utilizar Gutenberg no contexto do nosso plugin, acesse o [curso online](https://learn.wordpress.org/course/using-the-wordpress-data-layer/).
+    - Documentação completa e lista de blocos reutilizáveis estão disponíveis em: [The WordPress Gutenberg](https://wordpress.github.io/gutenberg/?path=/docs/docs-introduction--page).

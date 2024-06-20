@@ -35,6 +35,11 @@ classDiagram
         onde as etapas são agrupadas
     }
 
+    class TipoProcesso{
+        Um tipo de post que serve
+        como mock para os processos
+    }
+
     class Setor {
         User roles com permissões
         customizadas
@@ -79,13 +84,14 @@ classDiagram
     Etapa "*" -- "1" Setor : pertence a
     Processo "1" -- "*" Item : interage com
     Processo "1" -- "*" Colecao : interage com
+    TipoProcesso "1" -- "*" Processo: obtem modelo do
+    TipoProcesso "1" -- "*" Etapa: obtem etapas de
     Colecao "1" -- "*" Item : possui
     Etapa "1" -- "*" Pessoa : envolvido
     Etapa "1" -- "*" Comentario : possui
-    Etapa "1" -- "*" Notificacao : dispara
+    Processo "1" -- "*" Notificacao : dispara
     Etapa "1" -- "*" Arquivo : anexa
     Pessoa "1" -- "*"  Setor: pertence a
-    Processo "1" -- "*" Etapa : contém
     Processo "1" -- "*" Notificacao : possui
     Processo "1" -- "*" Arquivo : possui
 ```
