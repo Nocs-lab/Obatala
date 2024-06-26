@@ -17,18 +17,19 @@ class AjaxHandler {
 
         // Determina a ação específica a ser executada
         $action = isset($_POST['action_type']) ? sanitize_text_field($_POST['action_type']) : '';
+        $handler = new MetadataHandler();
         switch ($action) {
             case 'save_metadata':
-                $handler = new SaveMetadataHandler();
-                $handler->process();
+                $handler->handle_save_metadata();
                 break;
             case 'get_metadata':
-                $handler = new GetMetadataHandler();
-                $handler->process();
+                $handler->handle_get_metadata();
                 break;
             case 'delete_metadata':
-                $handler = new DeleteMetadataHandler();
-                $handler->process();
+                $handler->handle_delete_metadata();
+                break;
+            case 'save_step_data':
+                $handler->handle_save_step_data();
                 break;
             default:
                 wp_send_json_error('Ação inválida.');
@@ -45,3 +46,4 @@ class AjaxHandler {
 
 // Instancia a classe para registrar os hooks
 new AjaxHandler();
+?>
