@@ -37,7 +37,9 @@ nav:
   - Organização: organizacao.md
   - Guia do Frontend: gutenberg.md
   - Posts Customizados: posts-customizados.md
-  - Metadados Dinâmicos: metadados.md
+  - Metadados Dinâmicos: 
+    - Conceito: metadados/metadados.md
+    - Implementação: metadados/implementacao.md
   - Tutoriais:
       - Guia básico: tutoriais/guia-dev.md
   # - Modelagem: 
@@ -55,3 +57,5 @@ nav:
       - Sprint 4: roadmap/sprint-4.md
       - Sprint 5: roadmap/sprint-5.md
       - Sprint 6: roadmap/sprint-6.md
+extra_css:
+  - stylesheets/extra.css

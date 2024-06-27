@@ -1,0 +1,26 @@
+.md-nav__list{
+    font-size: 0.8em;   
+}
+
+.md-sidebar{
+   max-width: 20%;
+}
+.md-typeset h1 {
+   font-size: 1.3em;   
+}
+.md-typeset h2 {
+   font-size: 1.1em;   
+}
+p{
+   font-size: .7em;
+}
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3,
+.md-typeset h4,
+.md-typeset h5{
+   margin: .4em 0
+}
+.md-typeset ul {
+   margin: .4em 0
+}
