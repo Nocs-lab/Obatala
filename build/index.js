@@ -104,20 +104,36 @@ __webpack_require__.r(__webpack_exports__);
 
 // import ProcessStepManager from './components/ProcessStepManager';
 
-document.addEventListener('DOMContentLoaded', () => {
-  const processElement = document.getElementById('process-manager');
-  const processTypeElement = document.getElementById('process-type-manager');
-  const processStepElement = document.getElementById('process-step-manager');
+// Adiciona um evento listener para ser executado quando o conteúdo do DOM for completamente carregado
+document.addEventListener("DOMContentLoaded", () => {
+  // Obtém os elementos do DOM pelos IDs
+  const processElement = document.getElementById("process-manager");
+  const processTypeElement = document.getElementById("process-type-manager");
+  const processStepElement = document.getElementById("process-step-manager");
+  const processViewerElement = document.getElementById("process-viewer");
+
+  // Verifica se o elemento com o ID 'process-manager' existe
+  // Se existir, renderiza o componente ProcessManager dentro deste elemento
   if (processElement) {
     (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.render)((0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_ProcessManager__WEBPACK_IMPORTED_MODULE_2__["default"], null), processElement);
   }
+
+  // Verifica se o elemento com o ID 'process-type-manager' existe
+  // Se existir, renderiza o componente ProcessTypeManager dentro deste elemento
   if (processTypeElement) {
     (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.render)((0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_ProcessTypeManager__WEBPACK_IMPORTED_MODULE_3__["default"], null), processTypeElement);
   }
 
-  // if (processStepElement) {
-  //     render(<ProcessStepManager />, processStepElement);
-  // }
+  // Verifica se o elemento com o ID 'process-step-manager' existe
+  // Se existir, renderiza o componente ProcessStepManager dentro deste elemento
+  if (processStepElement) {
+    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.render)((0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", null, "ProcessStepManager"), processStepElement);
+  }
+  // Verifica se o elemento com o ID 'process-viewer' existe
+  // Se existir, renderiza o componente ProcessViewer dentro deste elemento
+  if (processViewerElement) {
+    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.render)((0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", null, "ProcessViewer"), processViewerElement);
+  }
 });
 
 /***/ }),
