@@ -1,16 +1,20 @@
 import { useState, useEffect } from 'react';
-import { Spinner } from '@wordpress/components';
+import { Spinner,  __experimentalConfirmDialog as ConfirmDialog  } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import ProcessTypeForm from './ProcessTypeManager/ProcessTypeForm';
 import ProcessTypeList from './ProcessTypeManager/ProcessTypeList';
 import ProcessStepForm from './ProcessTypeManager/ProcessStepForm';
+
+
 
 const ProcessTypeManager = () => {
     const [processTypes, setProcessTypes] = useState([]);
     const [processSteps, setProcessSteps] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [editingProcessType, setEditingProcessType] = useState(null);
-
+    const [isOpen, setIsOpen] = useState(false);
+    const [stepToDelete, setStepToDelete] = useState(null);
+      
     useEffect(() => {
         fetchProcessTypes();
         fetchProcessSteps();
@@ -88,35 +92,60 @@ const ProcessTypeManager = () => {
             .catch(error => {
                 console.error('Error adding process step:', error);
             });
+        
     };
+     
+    const handleDeleteProcessStep = () => {
+        if(stepToDelete){
+            apiFetch({ path: `/wp/v2/process_step/${stepToDelete}`, method: 'DELETE' })
+                .then(() => {
+                    const updatedProcessSteps = processSteps.filter(step => step.id !== stepToDelete);
+                    setProcessSteps(updatedProcessSteps);
+                    setStepToDelete(null);
+                    setIsOpen(false);
+                })
+                .catch(error => {
+                    console.error('Error deleting process step:', error);
+                });
+        }
+        return false 
+        
+       }; 
 
-    const handleDeleteProcessStep = (id) => {
-        apiFetch({ path: `/wp/v2/process_step/${id}`, method: 'DELETE' })
-            .then(() => {
-                const updatedProcessSteps = processSteps.filter(step => step.id !== id);
-                setProcessSteps(updatedProcessSteps);
-            })
-            .catch(error => {
-                console.error('Error deleting process step:', error);
-            });
-    };
+     const handleConfirmDelete = (id) => {
+        setStepToDelete(id);
+        setIsOpen(true);
+    } 
+     
+    const handleCancel = () => {
+        setIsOpen( false );
+        setStepToDelete(null);
+    }; 
 
     if (isLoading) {
         return <Spinner />;
     }
 
     return (
-        <div>
+            <div>
             <span class="brand"><strong>Obatala</strong> Curatorial Process Management</span>
             <h2>Manage Process Types and Steps</h2>
             <div className="panel-container">
                 <main>
+                     <ConfirmDialog
+                     isOpen={ isOpen }
+                     onConfirm={ handleDeleteProcessStep }
+                     onCancel={handleCancel}
+                    >
+                        Are you sure you want to delete this step?
+                    </ConfirmDialog> 
                     <ProcessTypeList 
                         processTypes={processTypes} 
                         processSteps={processSteps} 
                         onEdit={handleEditProcessType} 
                         onDelete={handleDeleteProcessType} 
-                        onDeleteStep={handleDeleteProcessStep} 
+                        onDeleteStep={handleConfirmDelete}
+                        
                     />
                 </main>
                 <aside>
@@ -125,6 +154,7 @@ const ProcessTypeManager = () => {
                 </aside>
             </div>
         </div>
+      
     );
 };
 
