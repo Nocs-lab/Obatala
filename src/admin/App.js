@@ -1,7 +1,13 @@
 import { render } from "@wordpress/element";
 import ProcessManager from "./components/ProcessManager";
 import ProcessTypeManager from "./components/ProcessTypeManager";
-// import ProcessStepManager from './components/ProcessStepManager';
+import ProcessStepManager from './components/ProcessStepManager';
+import ProcessViewer from './components/ProcessViewer';
+
+// Função para navegar para o ProcessViewer ao selecionar um processo
+const navigateToProcessViewer = (processId) => {
+  window.location.href = `?page=process-viewer&process_id=${processId}`;
+};
 
 // Adiciona um evento listener para ser executado quando o conteúdo do DOM for completamente carregado
 document.addEventListener("DOMContentLoaded", () => {
@@ -14,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Verifica se o elemento com o ID 'process-manager' existe
   // Se existir, renderiza o componente ProcessManager dentro deste elemento
   if (processElement) {
-    render(<ProcessManager />, processElement);
+    render(<ProcessManager onSelectProcess={navigateToProcessViewer} />, processElement);
   }
 
   // Verifica se o elemento com o ID 'process-type-manager' existe
@@ -26,11 +32,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // Verifica se o elemento com o ID 'process-step-manager' existe
   // Se existir, renderiza o componente ProcessStepManager dentro deste elemento
   if (processStepElement) {
-    render(<h1>ProcessStepManager</h1>, processStepElement);
+    render(<ProcessStepManager />, processStepElement);
   }
+
   // Verifica se o elemento com o ID 'process-viewer' existe
   // Se existir, renderiza o componente ProcessViewer dentro deste elemento
   if (processViewerElement) {
-    render(<h1>ProcessViewer</h1>, processViewerElement);
+    render(<ProcessViewer />, processViewerElement);
   }
 });
