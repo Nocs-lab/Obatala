@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Spinner, Notice } from '@wordpress/components';
+import { Spinner, Notice, Panel, PanelBody, PanelRow } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 
 const ProcessViewer = () => {
@@ -57,12 +57,28 @@ const ProcessViewer = () => {
     return (
         <div>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Viewer</span>
-            <h2>{process.title.rendered}</h2>
-            <div className="process-details">
-                <p><strong>Process Type:</strong> {process.process_type}</p>
-                <p><strong>Status:</strong> {process.status}</p>
-                <p><strong>Current Stage:</strong> {process.current_stage}</p>
-                {/* Detalhes adicionais do processo podem ser adicionados aqui */}
+            <h2>Process: {process.title.rendered}</h2>
+            <span className="badge">{process.status}</span>
+            <div className="panel-container">
+                <main>
+                    <Panel>
+                        <PanelBody title="Process details" initialOpen={true}>
+                            <PanelRow>
+                                <dl className="description-list">
+                                    <div className="list-item">
+                                        <dt>Process Type:</dt>
+                                        <dd>{process.process_type}</dd>
+                                    </div>
+                                    <div className="list-item">
+                                        <dt>Current Stage:</dt>
+                                        <dd>{process.current_stage}</dd>
+                                    </div>
+                                    {/* Detalhes adicionais do processo podem ser adicionados aqui */}
+                                </dl>
+                            </PanelRow>
+                        </PanelBody>
+                    </Panel>
+                </main>
             </div>
         </div>
     );

@@ -83,22 +83,35 @@ const ProcessManager = ({ onSelectProcess }) => {
     return (
         <div>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
-            <h2>Manage Processes</h2>
+            <h2>Process Manager</h2>
             <div className="panel-container">
                 <main>
                     <Panel>
                         <PanelBody title="Existing Processes" initialOpen={true}>
                             <PanelRow>
                                 {processes.length > 0 ? (
-                                    <ul className="list-group">
+                                    <table className="wp-list-table widefat fixed striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Process Title</th>
+                                                <th>Status</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
                                         {processes.map(process => (
-                                            <li key={process.id} className="list-group-item">
-                                                <Button onClick={() => handleSelectProcess(process.id)}>
-                                                    {process.title.rendered}
-                                                </Button>
-                                            </li>
+                                            <tr key={process.id}>
+                                                <td>{process.title.rendered}</td>
+                                                <td><span className="badge">{process.status}</span></td>
+                                                <td>
+                                                    <Button isSecondary onClick={() => handleSelectProcess(process.id)}>
+                                                        View
+                                                    </Button>
+                                                </td>
+                                            </tr>
                                         ))}
-                                    </ul>
+                                        </tbody>
+                                    </table>
                                 ) : (
                                     <Notice isDismissible={false} status="warning">No existing processes.</Notice>
                                 )}

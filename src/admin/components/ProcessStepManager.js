@@ -83,13 +83,20 @@ const ProcessStepManager = () => {
                             <PanelRow>
                                 {/* Lista os passos de processo existentes */}
                                 {processSteps.length > 0 ? (
-                                    <ul className="list-group">
-                                        {processSteps.map(step => (
-                                            <li key={step.id} className="list-group-item">
-                                                {step.title.rendered}
-                                            </li>
-                                        ))}
-                                    </ul>
+                                    <table className="wp-list-table widefat fixed striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Step Title</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {processSteps.map(step => (
+                                                <tr key={step.id} className="list-gsroup-item">
+                                                    <td>{step.title.rendered}</td>
+                                                </tr>
+                                            ))}    
+                                        </tbody>
+                                    </table>
                                 ) : (
                                     // Aviso se não houver passos de processo existentes
                                     <Notice isDismissible={false} status="warning">No existing process steps.</Notice>
