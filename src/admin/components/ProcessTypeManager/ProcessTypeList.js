@@ -42,19 +42,18 @@ const ProcessTypeList = ({
                           <dt>Description:</dt>
                           <dd>{type.description ? type.description : "-"}</dd>
                         </div>
-                        <div className="list-item">
-                          <dt>Accept Attachments:</dt>
-                          <dd>{type.accept_attachments ? "Yes" : "No"}</dd>
-                        </div>
-                        <div className="list-item">
-                          <dt>Accept Tainacan Items:</dt>
-                          <dd>{type.accept_tainacan_items ? "Yes" : "No"}</dd>
-                        </div>
-                        <div className="list-item">
-                          <dt>Generate Tainacan Items:</dt>
-                          <dd>{type.generate_tainacan_items ? "Yes" : "No"}</dd>
-                        </div>
                       </dl>
+
+                      <p className={type.accept_attachments ? "check true" : "check false"}>
+                        {!type.accept_attachments && <span className="visually-hidden">Not</span>} Accept attachments
+                      </p>
+                      <p className={type.accept_tainacan_items ? "check true" : "check false"}>
+                        {!type.accept_tainacan_items && <span className="visually-hidden">Not</span>} Accept Tainacan items
+                      </p>
+                      <p className={type.generate_tainacan_items ? "check true" : "check false"}>
+                        {!type.generate_tainacan_items && <span className="visually-hidden">Not</span>} Generate Tainacan items
+                      </p>
+
                       {steps.length > 0 && (
                         <>
                           <hr></hr>
