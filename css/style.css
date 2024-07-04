@@ -1,5 +1,5 @@
 :root {
-    --primary-50:  #e5f0ff;
+    --primary-50:  #eff6ff;
     --primary-100: #c4ddfe;
     --primary-200: #91c1fe;
     --primary-300: #5fa4fd;
@@ -22,6 +22,9 @@
     --gray-800: #333;
     --gray-900: #111;
     --black:    #000;
+
+    --error:   #C52233;
+    --success: #00A676;
 
     --border-radius:       15px;
     --gap:                 2rem;
@@ -99,7 +102,7 @@ h2 {
     border-bottom-color: var(--primary-100) !important;
 }
 .components-card__header .card-title {
-    color: var(--primary-700);
+    color: var(--gray-700);
     font-size: 1.1rem;
     margin: 0;
 }
@@ -168,14 +171,20 @@ h2 {
     border-radius: var(--border-radius);
     padding: 0 !important;
 }
+.components-panel__body>.components-panel__body-title:hover {
+    background-color: transparent;
+}
 .components-panel__body.is-opened>.components-panel__body-title {
     margin: 0;
 }
 .components-panel__body-toggle.components-button {
-    color: var(--gray-700);
+    color: var(--primary);
     font-size: 1.25rem;
     font-weight: 300;
     padding: 1.5rem var(--gap);
+}
+.components-panel__body-toggle.components-button:hover {
+    color: var(--primary-900);
 }
 .components-panel__row {
     flex-wrap: wrap;
@@ -198,6 +207,26 @@ h2 {
     font-weight: 900;
     text-transform: uppercase;
 }
+.check {
+    color: var(--gray-600);
+    display: flex;
+    align-items: center;
+    gap: .25rem;
+    line-height: 1;
+    margin-bottom: 0;
+}
+.check::before {
+    font-family: 'Dashicons';
+    font-size: 1.25rem;
+}
+.check.true::before {
+    color: var(--success);
+    content: '\f147';
+}
+.check.false::before {
+    color: var(--error);
+    content: '\f158';
+}
 button .components-spinner {
     width: 15px;
     height: 15px;
@@ -213,13 +242,27 @@ button .components-spinner {
     margin-left: 1px;
 }
 .form-error {
-    color: #cc1818;
+    color: var(--error);
 }
 .form-buttons button {
     margin-right: 4px;
 }
 .form-buttons .components-spinner {
     margin-top: 0;
+}
+.text-center {
+    text-align: center;
+}
+.visually-hidden {
+    position: absolute!important;
+    width: 1px!important;
+    height: 1px!important;
+    padding: 0!important;
+    margin: -1px!important;
+    overflow: hidden!important;
+    clip: rect(0,0,0,0)!important;
+    white-space: nowrap!important;
+    border: 0!important;
 }
 #obatala-manage-processes {
     max-width: 500px;
