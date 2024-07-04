@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useReducer } from 'react';
 import { Spinner,  __experimentalConfirmDialog as ConfirmDialog  } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import ProcessTypeForm from './ProcessTypeManager/ProcessTypeForm';
 import ProcessTypeList from './ProcessTypeManager/ProcessTypeList';
 import ProcessStepForm from './ProcessTypeManager/ProcessStepForm';
-
+import Reducer, { initialState } from '../redux/reducer'; 
 
 
 const ProcessTypeManager = () => {
@@ -12,8 +12,8 @@ const ProcessTypeManager = () => {
     const [processSteps, setProcessSteps] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [editingProcessType, setEditingProcessType] = useState(null);
-    const [isOpen, setIsOpen] = useState(false);
-    const [stepToDelete, setStepToDelete] = useState(null);
+    const [state, dispatch] = useReducer(Reducer, initialState);
+
       
     useEffect(() => {
         fetchProcessTypes();
@@ -95,11 +95,11 @@ const ProcessTypeManager = () => {
         
     };
      
-    const handleDeleteProcessStep = () => {
-        if(stepToDelete){
-            apiFetch({ path: `/wp/v2/process_step/${stepToDelete}`, method: 'DELETE' })
+    const handleDeleteProcessStep = (id) => {
+        
+            apiFetch({ path: `/wp/v2/process_step/${id}`, method: 'DELETE' })
                 .then(() => {
-                    const updatedProcessSteps = processSteps.filter(step => step.id !== stepToDelete);
+                    const updatedProcessSteps = processSteps.filter(step => step.id !== id);
                     setProcessSteps(updatedProcessSteps);
                     setStepToDelete(null);
                     setIsOpen(false);
@@ -107,19 +107,18 @@ const ProcessTypeManager = () => {
                 .catch(error => {
                     console.error('Error deleting process step:', error);
                 });
-        }
-        return false 
-        
-       }; 
+    }; 
 
-     const handleConfirmDelete = (id) => {
-        setStepToDelete(id);
-        setIsOpen(true);
-    } 
+    const handleConfirmDeleteType = (id) => {
+        dispatch({ type: 'OPEN_MODAL_PROCESS_TYPE', payload: id });
+    };
+
+    const handleConfirmDeleteStep = (id) => {
+        dispatch({ type: 'OPEN_MODAL_STEP', payload: id });
+    };
      
     const handleCancel = () => {
-        setIsOpen( false );
-        setStepToDelete(null);
+        dispatch({ type: 'CLOSE_MODAL' });
     }; 
 
     if (isLoading) {
@@ -133,18 +132,27 @@ const ProcessTypeManager = () => {
             <div className="panel-container">
                 <main>
                      <ConfirmDialog
-                     isOpen={ isOpen }
-                     onConfirm={ handleDeleteProcessStep }
-                     onCancel={handleCancel}
-                    >
-                        Are you sure you want to delete this step?
-                    </ConfirmDialog> 
+                        isOpen={ state.isOpen }
+                        onConfirm={() => {
+                            if (state.deleteProcessType) {
+                                handleDeleteProcessType(state.deleteProcessType);
+                            } else if (state.deleteStep) {
+                                handleDeleteProcessStep(state.deleteStep);
+                            }
+                            dispatch({ type: 'CLOSE_MODAL' });
+                        }}
+                        onCancel={handleCancel}
+                    >   
+                        Are you sure you want to delete this {state.deleteProcessType ? 'Process Type' : 'Step' }?
+
+                    </ConfirmDialog>
+
                     <ProcessTypeList 
                         processTypes={processTypes} 
                         processSteps={processSteps} 
                         onEdit={handleEditProcessType} 
-                        onDelete={handleDeleteProcessType} 
-                        onDeleteStep={handleConfirmDelete}
+                        onDelete={handleConfirmDeleteType} 
+                        onDeleteStep={handleConfirmDeleteStep}
                         
                     />
                 </main>
