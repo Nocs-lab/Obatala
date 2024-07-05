@@ -96,13 +96,11 @@ const ProcessTypeManager = () => {
     };
      
     const handleDeleteProcessStep = (id) => {
-        
-            apiFetch({ path: `/wp/v2/process_step/${id}`, method: 'DELETE' })
+        apiFetch({ path: `/wp/v2/process_step/${id}`, method: 'DELETE' })
                 .then(() => {
                     const updatedProcessSteps = processSteps.filter(step => step.id !== id);
                     setProcessSteps(updatedProcessSteps);
-                    setStepToDelete(null);
-                    setIsOpen(false);
+                    
                 })
                 .catch(error => {
                     console.error('Error deleting process step:', error);
