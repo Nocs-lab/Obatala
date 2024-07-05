@@ -98,11 +98,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _components_ProcessManager__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/ProcessManager */ "./src/admin/components/ProcessManager.js");
 /* harmony import */ var _components_ProcessTypeManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/ProcessTypeManager */ "./src/admin/components/ProcessTypeManager.js");
+/* harmony import */ var _components_ProcessStepManager__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/ProcessStepManager */ "./src/admin/components/ProcessStepManager.js");
+/* harmony import */ var _components_ProcessViewer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/ProcessViewer */ "./src/admin/components/ProcessViewer.js");
 
 
 
 
-// import ProcessStepManager from './components/ProcessStepManager';
+
+
+
+// Função para navegar para o ProcessViewer ao selecionar um processo
+const navigateToProcessViewer = processId => {
+  window.location.href = `?page=process-viewer&process_id=${processId}`;
+};
 
 // Adiciona um evento listener para ser executado quando o conteúdo do DOM for completamente carregado
 document.addEventListener("DOMContentLoaded", () => {
@@ -115,7 +123,9 @@ document.addEventListener("DOMContentLoaded", () => {
   // Verifica se o elemento com o ID 'process-manager' existe
   // Se existir, renderiza o componente ProcessManager dentro deste elemento
   if (processElement) {
-    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.render)((0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_ProcessManager__WEBPACK_IMPORTED_MODULE_2__["default"], null), processElement);
+    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.render)((0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_ProcessManager__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      onSelectProcess: navigateToProcessViewer
+    }), processElement);
   }
 
   // Verifica se o elemento com o ID 'process-type-manager' existe
@@ -127,12 +137,13 @@ document.addEventListener("DOMContentLoaded", () => {
   // Verifica se o elemento com o ID 'process-step-manager' existe
   // Se existir, renderiza o componente ProcessStepManager dentro deste elemento
   if (processStepElement) {
-    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.render)((0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", null, "ProcessStepManager"), processStepElement);
+    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.render)((0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_ProcessStepManager__WEBPACK_IMPORTED_MODULE_4__["default"], null), processStepElement);
   }
+
   // Verifica se o elemento com o ID 'process-viewer' existe
   // Se existir, renderiza o componente ProcessViewer dentro deste elemento
   if (processViewerElement) {
-    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.render)((0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h1", null, "ProcessViewer"), processViewerElement);
+    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_1__.render)((0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_components_ProcessViewer__WEBPACK_IMPORTED_MODULE_5__["default"], null), processViewerElement);
   }
 });
 
@@ -154,23 +165,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _ProcessManager_ProcessStage__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ProcessManager/ProcessStage */ "./src/admin/components/ProcessManager/ProcessStage.js");
 
 
 
 
-
-const ProcessManager = () => {
+const ProcessManager = ({
+  onSelectProcess
+}) => {
   const [processTypes, setProcessTypes] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [processes, setProcesses] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
-  const [selectedProcess, setSelectedProcess] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   const [isLoading, setIsLoading] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
   const [newProcessTitle, setNewProcessTitle] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
   const [newProcessType, setNewProcessType] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  const [selectedProcessId, setSelectedProcessId] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null); // Estado para armazenar o ID do processo selecionado
+
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     fetchProcessTypes();
     fetchProcesses();
   }, []);
+
+  // Função para buscar os tipos de processo na API
   const fetchProcessTypes = () => {
     _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
       path: `/wp/v2/process_type?per_page=100&_embed`
@@ -180,6 +194,8 @@ const ProcessManager = () => {
       console.error('Error fetching process types:', error);
     });
   };
+
+  // Função para buscar os processos existentes na API
   const fetchProcesses = () => {
     setIsLoading(true);
     _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
@@ -192,6 +208,8 @@ const ProcessManager = () => {
       setIsLoading(false);
     });
   };
+
+  // Função para criar um novo processo
   const handleCreateProcess = () => {
     if (!newProcessTitle || !newProcessType) {
       alert('Please provide a title and select a process type.');
@@ -212,39 +230,45 @@ const ProcessManager = () => {
       setProcesses([...processes, savedProcess]);
       setNewProcessTitle('');
       setNewProcessType('');
-      setSelectedProcess(savedProcess);
+      // Seleciona o processo apenas quando clicado explicitamente
+      // onSelectProcess(savedProcess.id);
     }).catch(error => {
       console.error('Error creating process:', error);
     });
   };
+
+  // Função para selecionar um processo e redirecionar para o ProcessViewer
   const handleSelectProcess = processId => {
-    const process = processes.find(p => p.id === processId);
-    setSelectedProcess(process);
+    setSelectedProcessId(processId);
+    onSelectProcess(processId);
   };
-  const handleCancelEdit = () => {
-    setSelectedProcess(null);
-  };
+
+  // Renderização condicional com base no estado de carregamento
   if (isLoading) {
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, null);
   }
+
+  // Renderiza a lista de processos ou o ProcessViewer dependendo do estado de selectedProcessId
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    class: "brand"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "Obatala"), " Curatorial Process Management"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, "Manage Processes"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "brand"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "Obatala"), " Curatorial Process Management"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, "Process Manager"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "panel-container"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("main", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
     title: "Existing Processes",
     initialOpen: true
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, null, processes.length > 0 ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", {
-    className: "list-group"
-  }, processes.map(process => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
-    key: process.id,
-    className: "list-group-item"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, null, processes.length > 0 ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("table", {
+    className: "wp-list-table widefat fixed striped"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("thead", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("tr", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("th", null, "Process Title"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("th", null, "Status"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("th", null, "Actions"))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("tbody", null, processes.map(process => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("tr", {
+    key: process.id
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("td", null, process.title.rendered), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("td", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "badge"
+  }, process.status)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("td", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+    isSecondary: true,
     onClick: () => handleSelectProcess(process.id)
-  }, process.title.rendered)))) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
+  }, "View")))))) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
     isDismissible: false,
     status: "warning"
-  }, "No existing processes."))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("aside", null, !selectedProcess && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
+  }, "No existing processes."))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("aside", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
     title: "Create Processes",
     initialOpen: true
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
@@ -265,19 +289,16 @@ const ProcessManager = () => {
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
     isPrimary: true,
     onClick: handleCreateProcess
-  }, "Create Process")))))), selectedProcess && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ProcessManager_ProcessStage__WEBPACK_IMPORTED_MODULE_3__["default"], {
-    process: selectedProcess,
-    onCancelEdit: handleCancelEdit
-  }));
+  }, "Create Process")))))), selectedProcessId && onSelectProcess(selectedProcessId));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProcessManager);
 
 /***/ }),
 
-/***/ "./src/admin/components/ProcessManager/ProcessStage.js":
-/*!*************************************************************!*\
-  !*** ./src/admin/components/ProcessManager/ProcessStage.js ***!
-  \*************************************************************/
+/***/ "./src/admin/components/ProcessStepManager.js":
+/*!****************************************************!*\
+  !*** ./src/admin/components/ProcessStepManager.js ***!
+  \****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
@@ -290,227 +311,118 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _wordpress_date__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/date */ "@wordpress/date");
-/* harmony import */ var _wordpress_date__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_date__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/data */ "@wordpress/data");
-/* harmony import */ var _wordpress_data__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_data__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var _wordpress_core_data__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/core-data */ "@wordpress/core-data");
-/* harmony import */ var _wordpress_core_data__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(_wordpress_core_data__WEBPACK_IMPORTED_MODULE_5__);
 
 
 
 
-
-
-
-const ProcessStage = ({
-  process,
-  onCancelEdit
-}) => {
-  const [stages, setStages] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
-  const [currentStage, setCurrentStage] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
-  const [comments, setComments] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
-  const [attachments, setAttachments] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
-  const [newComment, setNewComment] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+const ProcessStepManager = () => {
+  const [processSteps, setProcessSteps] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+  const [processTypes, setProcessTypes] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+  const [newStepTitle, setNewStepTitle] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  const [newStepType, setNewStepType] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
   const [isLoading, setIsLoading] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
-  const [file, setFile] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
-  const currentUser = (0,_wordpress_data__WEBPACK_IMPORTED_MODULE_4__.useSelect)(select => select(_wordpress_core_data__WEBPACK_IMPORTED_MODULE_5__.store).getCurrentUser(), []);
+
+  // Carrega os passos de processo e tipos de processo ao inicializar
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    if (process) {
-      fetchStages();
-    }
-  }, [process]);
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    if (currentStage) {
-      fetchComments(currentStage.id);
-      fetchAttachments();
-    }
-  }, [currentStage]);
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    if (currentStage && process.current_stage !== currentStage.id) {
-      updateCurrentStage(currentStage.id);
-    }
-  }, [currentStage]);
-  const fetchStages = () => {
+    fetchProcessSteps();
+    fetchProcessTypes();
+  }, []);
+
+  // Função para buscar os passos de processo da API WordPress
+  const fetchProcessSteps = () => {
     setIsLoading(true);
-    const processTypeId = process ? process.process_type : null;
-    if (!processTypeId) {
-      console.error('Process type ID is missing');
+    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+      path: `/wp/v2/process_step?per_page=100&_embed`
+    }).then(data => {
+      setProcessSteps(data);
       setIsLoading(false);
+    }).catch(error => {
+      console.error('Error fetching process steps:', error);
+      setIsLoading(false);
+    });
+  };
+
+  // Função para buscar os tipos de processo da API WordPress
+  const fetchProcessTypes = () => {
+    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+      path: `/wp/v2/process_type?per_page=100&_embed`
+    }).then(data => {
+      setProcessTypes(data);
+    }).catch(error => {
+      console.error('Error fetching process types:', error);
+    });
+  };
+
+  // Função para criar um novo passo de processo
+  const handleCreateStep = () => {
+    if (!newStepTitle || !newStepType) {
+      alert('Please provide a title and select a process type.');
       return;
     }
-    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-      path: `/wp/v2/process_step?parent_process=${processTypeId}&per_page=100&_embed`
-    }).then(data => {
-      const stages = data.map((stage, index) => ({
-        id: stage.id,
-        title: stage.title ? stage.title.rendered : 'Untitled',
-        content: stage.content ? stage.content.rendered : ''
-      }));
-      stages.sort((a, b) => a.id - b.id); // Ordenar as etapas pelo ID
-      setStages(stages);
-      const currentStageId = process.current_stage || stages[0]?.id;
-      const currentStage = stages.find(stage => stage.id === currentStageId) || stages[0];
-      setCurrentStage(currentStage);
-      if (process.current_stage === null || process.current_stage === "0") {
-        updateCurrentStage(stages[0]?.id);
-      }
-      setIsLoading(false);
-    }).catch(error => {
-      console.error('Error fetching stages:', error);
-      setIsLoading(false);
-    });
-  };
-  const fetchComments = stageId => {
-    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-      path: `/wp/v2/comments?post=${process.id}&meta_key=stage_id&meta_value=${stageId}&per_page=100&_embed`
-    }).then(data => {
-      const sortedComments = data.sort((a, b) => new Date(a.date) - new Date(b.date));
-      setComments(sortedComments);
-    }).catch(error => {
-      console.error('Error fetching comments:', error);
-    });
-  };
-  const fetchAttachments = () => {
-    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-      path: `/wp/v2/media?parent=${process.id}&per_page=100&_embed`
-    }).then(data => {
-      setAttachments(data);
-    }).catch(error => {
-      console.error('Error fetching attachments:', error);
-    });
-  };
-  const handleAddComment = () => {
-    if (!newComment) {
-      alert('Please enter a comment.');
-      return;
-    }
-    const commentData = {
-      post: process.id,
-      content: newComment,
-      status: 'approved',
-      meta: {
-        stage_id: currentStage.id
-      }
+    const newStep = {
+      title: newStepTitle,
+      status: 'publish',
+      type: 'process_step',
+      process_type: newStepType
     };
     _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-      path: `/wp/v2/comments`,
+      path: `/wp/v2/process_step`,
       method: 'POST',
-      data: commentData
-    }).then(savedComment => {
-      setComments([...comments, savedComment].sort((a, b) => new Date(a.date) - new Date(b.date)));
-      setNewComment('');
+      data: newStep
+    }).then(savedStep => {
+      setProcessSteps([...processSteps, savedStep]);
+      setNewStepTitle('');
+      setNewStepType('');
     }).catch(error => {
-      console.error('Error adding comment:', error);
+      console.error('Error creating process step:', error);
     });
   };
-  const handleFileUpload = event => {
-    const uploadedFile = event.target.files[0];
-    const formData = new FormData();
-    formData.append('file', uploadedFile);
-    formData.append('post', process.id);
-    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-      path: `/wp/v2/media`,
-      method: 'POST',
-      body: formData
-    }).then(savedFile => {
-      setAttachments([...attachments, savedFile]);
-    }).catch(error => {
-      console.error('Error uploading file:', error);
-    });
-  };
-  const handleAdvanceStage = () => {
-    const currentIndex = stages.findIndex(stage => stage.id === currentStage.id);
-    if (currentIndex < stages.length - 1) {
-      const nextStage = stages[currentIndex + 1];
-      setCurrentStage(nextStage);
-    }
-  };
-  const handleReopenStage = stageId => {
-    const stageIndex = stages.findIndex(stage => stage.id === stageId);
-    setCurrentStage(stages[stageIndex]);
-  };
-  const handlePreviousStage = () => {
-    const currentIndex = stages.findIndex(stage => stage.id === currentStage.id);
-    if (currentIndex > 0) {
-      const previousStage = stages[currentIndex - 1];
-      setCurrentStage(previousStage);
-    }
-  };
-  const updateCurrentStage = stageId => {
-    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-      path: `/wp/v2/process_obatala/${process.id}`,
-      method: 'PUT',
-      data: {
-        current_stage: stageId
-      }
-    }).then(() => {
-      process.current_stage = stageId;
-    }).catch(error => {
-      console.error('Error updating current stage:', error);
-    });
-  };
-  if (isLoading || !currentStage) {
+
+  // Renderiza um spinner enquanto os dados estão sendo carregados
+  if (isLoading) {
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, null);
   }
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "panel"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", null, "Process: ", process.title.rendered), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-    isSecondary: true,
-    onClick: onCancelEdit
-  }, "Back to Processes"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", null, "Current Stage: ", currentStage.title), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", null, currentStage.content), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-    isSecondary: true,
-    onClick: handlePreviousStage,
-    disabled: stages.findIndex(stage => stage.id === currentStage.id) === 0
-  }, "View Previous Stage"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-    isSecondary: true,
-    onClick: handleAdvanceStage,
-    disabled: stages.findIndex(stage => stage.id === currentStage.id) === stages.length - 1
-  }, "Advance Stage"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-    isSecondary: true,
-    onClick: () => handleReopenStage(currentStage.id),
-    disabled: stages.findIndex(stage => stage.id === currentStage.id) <= stages.findIndex(stage => stage.id === process.current_stage)
-  }, "Reopen Stage"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h5", null, "Comments"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", {
-    className: "comment-list"
-  }, comments.filter(comment => comment.meta.stage_id == currentStage.id).map(comment => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
-    key: comment.id,
-    className: `comment ${comment.author === currentUser?.id ? 'current-user' : ''}`
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("img", {
-    src: comment.author_avatar_urls['48'],
-    alt: `${comment.author_name} avatar`,
-    className: "avatar"
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "comment-content"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, comment.author_name), " - ", (0,_wordpress_date__WEBPACK_IMPORTED_MODULE_3__.dateI18n)((0,_wordpress_date__WEBPACK_IMPORTED_MODULE_3__.__experimentalGetSettings)().formats.datetime, comment.date), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
-    dangerouslySetInnerHTML: {
-      __html: comment.content?.rendered
-    }
-  }))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h5", null, "Attachments"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", {
-    className: "attachment-list"
-  }, attachments.map(attachment => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
-    key: attachment.id,
-    className: "attachment"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("a", {
-    href: attachment.source_url,
-    target: "_blank",
-    rel: "noopener noreferrer"
-  }, attachment.title.rendered)))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.FormFileUpload, {
-    onChange: handleFileUpload,
-    style: {
-      border: "1px solid blue"
-    }
-  }, "Attach file"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextareaControl, {
-    label: "Add a comment",
-    value: newComment,
-    onChange: value => setNewComment(value),
-    disabled: false
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "brand"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "Obatala"), " Curatorial Process Management"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, "Process Step Manager"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "panel-container"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("main", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
+    title: "Existing Process Steps",
+    initialOpen: true
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, null, processSteps.length > 0 ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("table", {
+    className: "wp-list-table widefat fixed striped"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("thead", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("tr", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("th", null, "Step Title"))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("tbody", null, processSteps.map(step => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("tr", {
+    key: step.id,
+    className: "list-gsroup-item"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("td", null, step.title.rendered))))) :
+  // Aviso se não houver passos de processo existentes
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
+    isDismissible: false,
+    status: "warning"
+  }, "No existing process steps."))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("aside", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
+    title: "Create Process Step",
+    initialOpen: true
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+    label: "Step Title",
+    value: newStepTitle,
+    onChange: value => setNewStepTitle(value)
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
+    label: "Process Type",
+    value: newStepType,
+    options: [{
+      label: 'Select a process type...',
+      value: ''
+    }, ...processTypes.map(type => ({
+      label: type.title.rendered,
+      value: type.id
+    }))],
+    onChange: value => setNewStepType(value)
   }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
     isPrimary: true,
-    onClick: handleAddComment,
-    disabled: false
-  }, "Add Comment"))));
+    onClick: handleCreateStep
+  }, "Create Step")))))));
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProcessStage);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProcessStepManager);
 
 /***/ }),
 
@@ -911,6 +823,103 @@ const ProcessTypeList = ({
   status: "warning"
 }, "No existing processes types.")))));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProcessTypeList);
+
+/***/ }),
+
+/***/ "./src/admin/components/ProcessViewer.js":
+/*!***********************************************!*\
+  !*** ./src/admin/components/ProcessViewer.js ***!
+  \***********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+
+const ProcessViewer = () => {
+  // Estados para armazenar o processo, estado de carregamento e erros
+  const [process, setProcess] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null); // Armazena os dados do processo
+  const [isLoading, setIsLoading] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true); // Estado para indicar se está carregando
+  const [error, setError] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null); // Armazena mensagens de erro
+
+  // Função para obter o ID do processo da URL atual
+  const getProcessIdFromUrl = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('process_id');
+  };
+
+  // Efeito para carregar o processo ao montar o componente
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    const processId = getProcessIdFromUrl();
+    if (processId) {
+      fetchProcess(processId); // Se houver ID de processo na URL, busca o processo
+    } else {
+      setError('No process ID found in the URL.'); // Se não houver ID, define erro
+      setIsLoading(false); // Finaliza o estado de carregamento
+    }
+  }, []);
+
+  // Função para buscar os detalhes do processo na API
+  const fetchProcess = processId => {
+    setIsLoading(true); // Indica que está carregando
+    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+      path: `/wp/v2/process_obatala/${processId}?_embed`
+    }).then(data => {
+      setProcess(data); // Define os dados do processo no estado
+      setIsLoading(false); // Finaliza o estado de carregamento
+    }).catch(error => {
+      console.error('Error fetching process:', error); // Registra erro no console
+      setError('Error fetching process details.'); // Define mensagem de erro
+      setIsLoading(false); // Finaliza o estado de carregamento
+    });
+  };
+
+  // Renderização condicional com base nos estados de carregamento e erro
+  if (isLoading) {
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, null); // Exibe spinner enquanto está carregando
+  }
+  if (error) {
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
+      status: "error",
+      isDismissible: false
+    }, error); // Exibe mensagem de erro se houver
+  }
+  if (!process) {
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
+      status: "warning",
+      isDismissible: false
+    }, "No process found."); // Exibe aviso se não houver processo
+  }
+
+  // Renderiza os detalhes do processo
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "brand"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "Obatala"), " Curatorial Process Viewer"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, "Process: ", process.title.rendered), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "badge"
+  }, process.status), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "panel-container"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("main", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
+    title: "Process details",
+    initialOpen: true
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dl", {
+    className: "description-list"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "list-item"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dt", null, "Process Type:"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dd", null, process.process_type)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "list-item"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dt", null, "Current Stage:"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dd", null, process.current_stage)))))))));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProcessViewer);
 
 /***/ }),
 
@@ -2299,36 +2308,6 @@ module.exports = window["wp"]["apiFetch"];
 /***/ ((module) => {
 
 module.exports = window["wp"]["components"];
-
-/***/ }),
-
-/***/ "@wordpress/core-data":
-/*!**********************************!*\
-  !*** external ["wp","coreData"] ***!
-  \**********************************/
-/***/ ((module) => {
-
-module.exports = window["wp"]["coreData"];
-
-/***/ }),
-
-/***/ "@wordpress/data":
-/*!******************************!*\
-  !*** external ["wp","data"] ***!
-  \******************************/
-/***/ ((module) => {
-
-module.exports = window["wp"]["data"];
-
-/***/ }),
-
-/***/ "@wordpress/date":
-/*!******************************!*\
-  !*** external ["wp","date"] ***!
-  \******************************/
-/***/ ((module) => {
-
-module.exports = window["wp"]["date"];
 
 /***/ }),
 
