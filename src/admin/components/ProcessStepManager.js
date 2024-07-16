@@ -74,7 +74,7 @@ const ProcessStepManager = () => {
         <div>
             {/* Título e cabeçalho da página */}
             <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
-            <h2>Process Step Manager</h2>
+            <h2>Step Manager</h2>
             <div className="panel-container">
                 <main>
                     {/* Painel com os passos de processo existentes */}
