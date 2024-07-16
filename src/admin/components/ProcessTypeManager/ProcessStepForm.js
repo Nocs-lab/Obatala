@@ -1,15 +1,17 @@
 import { useState } from 'react';
-import { Button, TextControl, SelectControl, Panel, PanelBody, PanelRow } from '@wordpress/components';
+import { Button, TextControl, SelectControl, Panel, PanelBody, PanelRow, Notice } from '@wordpress/components';
 
 const ProcessStepForm = ({ processTypes, onAddStep }) => {
     const [selectedProcessType, setSelectedProcessType] = useState('');
     const [stepName, setStepName] = useState('');
     const [selectedProcess, setSelectedProcess] = useState('');
+    const [notice, setNotice] = useState(null);
 
     const handleAddStep = () => {
         if (!selectedProcessType || !selectedProcess || !stepName) {
-            alert('Please select both a process type and a parent process and a step name.');
+            setNotice({ status: 'error', message: 'Please select both a process type and a parent process and a step name.' });
             return;
+        
         }
 
         const newStep = {
@@ -29,6 +31,11 @@ const ProcessStepForm = ({ processTypes, onAddStep }) => {
         <Panel>
             <PanelBody title="Add Process Step" initialOpen={ true }>
                 <PanelRow>
+                {notice && (
+                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                        {notice.message}
+                    </Notice>
+                    )}
                     <TextControl
                         label="Step Name"
                         value={stepName}
