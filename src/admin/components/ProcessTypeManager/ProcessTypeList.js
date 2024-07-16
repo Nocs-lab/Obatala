@@ -97,7 +97,7 @@ const ProcessTypeList = ({
                         <>
                           <hr />
                           <h5>Steps</h5>
-                          <ul className="list-group">
+                          <ol className="list-group">
                             {steps.map((step, index) => (
                               <Draggable
                                 key={step.id}
@@ -127,7 +127,7 @@ const ProcessTypeList = ({
                                 )}
                               </Draggable>
                             ))}
-                          </ul>
+                          </ol>
                         </>
                       )}
                     </CardBody>

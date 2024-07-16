@@ -166,6 +166,22 @@ table.widefat td {
     justify-content: space-between;
     padding: .15rem .75rem;
 }
+ol.list-group {
+    counter-reset: list-counter;
+}
+ol.list-group .list-group-item {
+    position: relative;
+}
+ol.list-group .list-group-item::before {
+    color: var(--gray-600);
+    content: counter(list-counter, decimal);
+    counter-increment: list-counter;
+    height: 30px;
+    line-height: 30px;
+    position: absolute;
+    left: -1rem;
+    width: 30px;
+}
 .panel-container {
     display: flex;
     flex-wrap: wrap;
