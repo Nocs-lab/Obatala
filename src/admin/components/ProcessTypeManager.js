@@ -154,7 +154,6 @@ const ProcessTypeManager = () => {
                         onEdit={handleEditProcessType} 
                         onDelete={handleConfirmDeleteType} 
                         onDeleteStep={handleConfirmDeleteStep}
-                        
                     />
                 </main>
                 <aside>

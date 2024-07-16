@@ -70,7 +70,9 @@ const ProcessTypeList = ({
                       <dl className="description-list">
                         <div className="list-item">
                           <dt>Description:</dt>
-                          <dd>{type.description ? type.description : "-"}</dd>
+                          <dd>
+                            {type.description ? type.description.split('\n').map((item, key) => ( <span key={key}>{item}<br /></span> )) : "-"}
+                          </dd>
                         </div>
                       </dl>
 
