@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, TextControl, CheckboxControl, Panel, PanelBody, PanelRow } from '@wordpress/components';
+import { Button, TextControl, TextareaControl, CheckboxControl, Panel, PanelBody, PanelRow } from '@wordpress/components';
 
 const ProcessTypeForm = ({ onSave, onCancel, editingProcessType }) => {
     const [processTypeName, setProcessTypeName] = useState('');
@@ -48,7 +48,7 @@ const ProcessTypeForm = ({ onSave, onCancel, editingProcessType }) => {
                         value={processTypeName}
                         onChange={(value) => setProcessTypeName(value)}
                     />
-                    <TextControl
+                    <TextareaControl
                         label="Process Type Description"
                         value={processTypeDescription}
                         onChange={(value) => setProcessTypeDescription(value)}

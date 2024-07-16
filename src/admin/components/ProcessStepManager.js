@@ -91,7 +91,7 @@ const ProcessStepManager = () => {
                                         </thead>
                                         <tbody>
                                             {processSteps.map(step => (
-                                                <tr key={step.id} className="list-gsroup-item">
+                                                <tr key={step.id}>
                                                     <td>{step.title.rendered}</td>
                                                 </tr>
                                             ))}    
