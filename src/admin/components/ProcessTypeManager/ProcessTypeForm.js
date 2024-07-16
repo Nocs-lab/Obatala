@@ -19,6 +19,11 @@ const ProcessTypeForm = ({ onSave, onCancel, editingProcessType }) => {
     }, [editingProcessType]);
 
     const handleSave = () => {
+        if (!processTypeName || !processTypeDescription) {
+            alert('Field Name and Description cannot be empty.');
+            return;
+        }
+
         const processType = {
             status: 'publish',
             title: processTypeName,
@@ -28,7 +33,20 @@ const ProcessTypeForm = ({ onSave, onCancel, editingProcessType }) => {
             generate_tainacan_items: generateTainacanItems,
         };
         onSave(processType);
+
+        if (!editingProcessType) {
+            handleResetForm();
+        }
+        
     };
+
+    const handleResetForm = () => {
+        setProcessTypeName('');
+        setProcessTypeDescription('');
+        setAcceptAttachments(false);
+        setAcceptTainacanItems(false);
+        setGenerateTainacanItems(false);
+    }
 
     const handleCancel = () => {
         onCancel();
@@ -38,6 +56,7 @@ const ProcessTypeForm = ({ onSave, onCancel, editingProcessType }) => {
         setAcceptTainacanItems(false);
         setGenerateTainacanItems(false);
     };
+    
 
     return (
         <Panel>
