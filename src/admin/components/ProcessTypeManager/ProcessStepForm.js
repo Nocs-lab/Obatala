@@ -7,8 +7,8 @@ const ProcessStepForm = ({ processTypes, onAddStep }) => {
     const [selectedProcess, setSelectedProcess] = useState('');
 
     const handleAddStep = () => {
-        if (!selectedProcessType || !selectedProcess) {
-            alert('Please select both a process type and a parent process.');
+        if (!selectedProcessType || !selectedProcess || !stepName) {
+            alert('Please select both a process type and a parent process and a step name.');
             return;
         }
 
