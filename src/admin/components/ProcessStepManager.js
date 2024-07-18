@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Spinner, Button, SelectControl, TextControl, Notice, Panel, PanelHeader, PanelBody, PanelRow, Icon, DatePicker, RadioControl } from '@wordpress/components';
+import { Spinner, Button, SelectControl, TextControl, Notice, Panel, PanelHeader, PanelBody, PanelRow, Icon, Modal, DatePicker, RadioControl } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
-import { trash } from "@wordpress/icons";
+import { edit, trash } from "@wordpress/icons";
 import { MediaUpload, MediaUploadCheck } from '@wordpress/block-editor';
 
 const ProcessStepManager = () => {
     // Estado para armazenar os passos de processo
     const [processSteps, setProcessSteps] = useState([]);
+
+    const [editingStep, setEditingStep] = useState(null);
+    const [notice, setNotice] = useState(null);
+
     // Estado para armazenar os tipos de processo
     const [processTypes, setProcessTypes] = useState([]);
     // Estado para armazenar o título do novo passo de processo
@@ -23,7 +27,6 @@ const ProcessStepManager = () => {
     // Carrega os passos de processo e tipos de processo ao inicializar
     useEffect(() => {
         fetchProcessSteps();
-        fetchProcessTypes();
     }, []);
 
     // Função para buscar os passos de processo da API WordPress
@@ -40,42 +43,67 @@ const ProcessStepManager = () => {
             });
     };
 
-    // Função para buscar os tipos de processo da API WordPress
-    const fetchProcessTypes = () => {
-        apiFetch({ path: `/wp/v2/process_type?per_page=100&_embed` })
-            .then(data => {
-                setProcessTypes(data);
-            })
-            .catch(error => {
-                console.error('Error fetching process types:', error);
-            });
-    };
-
     // Função para criar um novo passo de processo
-    const handleCreateStep = () => {
-        if (!newStepTitle || !newStepType) {
-            alert('Please provide a title and select a process type.');
+    const handleSaveStep = () => {
+        if (!newStepTitle) {
+            setNotice({ status: 'error', message: 'Step Title field cannot be empty.' });
             return;
         }
-    
-        const newStep = {
+
+        const requestData = {
             title: newStepTitle,
             status: 'publish',
             type: 'process_step',
-            process_type: newStepType,
         };
-    
-        // Cria o novo passo de processo
-        apiFetch({ path: `/wp/v2/process_step`, method: 'POST', data: newStep })
-            .then(savedStep => {
-                const stepId = savedStep.id;
-                const metaData = dynamicFields.map(field => ({
-                    key: field.name,
-                    value: getDefaultFieldValue(field.type) // Define o valor padrão conforme o tipo
-                }));
-    
-                // Salva os metadados do novo passo
-                saveMetadata(stepId, metaData)
+
+        if (editingStep) {
+            apiFetch({ path: `/wp/v2/process_step/${editingStep}`, method: 'PUT', data: requestData })
+                .then(updatedStep => {
+                    const updatedProcessSteps = processSteps.map(step =>
+                        step.id === editingStep ? updatedStep : step
+                    );
+                    setProcessSteps(updatedProcessSteps);
+                    setEditingStep(null);
+                    setNewStepTitle('');
+                    setNotice(null);
+
+                    const stepId = savedStep.id;
+                    const metaData = dynamicFields.map(field => ({
+                        key: field.name,
+                        value: getDefaultFieldValue(field.type) // Define o valor padrão conforme o tipo
+                    }));
+        
+                    // Salva os metadados do novo passo
+                    saveMetadata(stepId, metaData)
+                        .then(() => {
+                            // Atualiza a lista de passos de processo após salvar com sucesso
+                            fetchProcessSteps();
+                            // Limpa os campos de entrada após salvar
+                            setNewStepTitle('');
+                            setNewStepType('');
+                            setDynamicFields([{ name: '', type: 'text', value: '' }]);
+                        })
+                        .catch(error => {
+                            console.error('Error saving metadata:', error);
+                        });
+                })
+                .catch(error => {
+                    console.error('Error updating process step:', error);
+                });
+        } else {
+            apiFetch({ path: `/wp/v2/process_step`, method: 'POST', data: requestData })
+                .then(savedStep => {
+                    setProcessSteps([...processSteps, savedStep]);
+                    setNewStepTitle('');
+
+                    const stepId = savedStep.id;
+                    const metaData = dynamicFields.map(field => ({
+                        key: field.name,
+                        value: getDefaultFieldValue(field.type) // Define o valor padrão conforme o tipo
+                    }));
+
+                    // Salva os metadados do novo passo
+                    saveMetadata(stepId, metaData)
                     .then(() => {
                         // Atualiza a lista de passos de processo após salvar com sucesso
                         fetchProcessSteps();
@@ -87,10 +115,22 @@ const ProcessStepManager = () => {
                     .catch(error => {
                         console.error('Error saving metadata:', error);
                     });
-            })
-            .catch(error => {
-                console.error('Error creating process step:', error);
-            });
+                })
+                .catch(error => {
+                    console.error('Error creating process step:', error);
+                });
+        }
+    };
+
+    const handleEditStep = (stepId, currentTitle) => {
+        setEditingStep(stepId);
+        setNewStepTitle(currentTitle);
+    };
+
+    const handleCancel = () => {
+        setEditingStep(null);
+        setNewStepTitle('');
+        setNotice(null);
     };
 
     // Função para salvar metadados do passo de processo
@@ -181,7 +221,7 @@ const ProcessStepManager = () => {
             <h2>Step Manager</h2>
             <div className="panel-container">
                 <main>
-                    {/* Painel com os passos de processo existentes */}
+                     {/* Painel com os passos de processo existentes */}
                     <Panel>
                         <PanelHeader>Existing Steps</PanelHeader>
                         <PanelRow>
@@ -191,12 +231,19 @@ const ProcessStepManager = () => {
                                     <thead>
                                         <tr>
                                             <th>Step Title</th>
+                                            <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {processSteps.map(step => (
                                             <tr key={step.id}>
                                                 <td>{step.title.rendered}</td>
+                                                <td>
+                                                    <Button
+                                                        icon={<Icon icon={edit} />}
+                                                        onClick={() => handleEditStep(step.id, step.title.rendered)}
+                                                    />
+                                                </td>
                                             </tr>
                                         ))}    
                                     </tbody>
@@ -209,26 +256,25 @@ const ProcessStepManager = () => {
                     </Panel>
                 </main>
                 <aside>
-                    {/* Painel para criar um novo passo de processo */}
+                     {/* Painel para criar um novo passo de processo */}
                     <Panel>
                         <PanelHeader>Add Step</PanelHeader>
                         <PanelBody title="Main data">
                             <PanelRow>
                                 {/* Formulário para inserir título e tipo de processo do novo passo */}
+                                {notice && !editingStep && (
+                                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                                        {notice.message}
+                                    </Notice>
+                                )}
                                 <TextControl
                                     label="Step Title"
                                     value={newStepTitle}
                                     onChange={(value) => setNewStepTitle(value)}
                                 />
-                                <SelectControl
-                                    label="Process Type"
-                                    value={newStepType}
-                                    options={[
-                                        { label: 'Select a process type...', value: '' },
-                                        ...processTypes.map(type => ({ label: type.title.rendered, value: type.id }))
-                                    ]}
-                                    onChange={(value) => setNewStepType(value)}
-                                />
+                                <Button isPrimary onClick={handleSaveStep}>
+                                    Add Step
+                                </Button>
                             </PanelRow>
                         </PanelBody>
                         <PanelBody title="Metadata" className="counter-container">
@@ -266,11 +312,35 @@ const ProcessStepManager = () => {
                         </PanelBody>
 
                         <PanelRow>
-                            <Button isPrimary onClick={handleCreateStep}>Add Step</Button>
+                            <Button isPrimary onClick={handleSaveStep}>Add Step</Button>
                         </PanelRow>
                     </Panel>
                 </aside>
             </div>
+            {editingStep && (
+                <Modal
+                    title="Edit Process Step"
+                    onRequestClose={handleCancel}
+                    isDismissible={true}
+                >
+                    {notice && editingStep && (
+                        <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                            {notice.message}
+                        </Notice>
+                    )}
+                    <TextControl
+                        label="Step Title"
+                        value={newStepTitle}
+                        onChange={(value) => setNewStepTitle(value)}
+                    />
+                    <Button isPrimary onClick={handleSaveStep}>
+                        Save
+                    </Button>
+                    <Button onClick={handleCancel}>
+                        Cancel
+                    </Button>
+                </Modal>
+            )}
         </div>
     );
 };
