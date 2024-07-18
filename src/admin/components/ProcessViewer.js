@@ -91,10 +91,10 @@ const ProcessViewer = () => {
             </div>
 
             <div className="panel-container">
-                <main>
+                <main className="counter-container">
                     {filteredSteps.length > 0 ? (
                         filteredSteps.map((step, index) => (
-                            <Panel key={step.id}>
+                            <Panel key={step.id} className="counter-item">
                                 <PanelHeader>{step.title.rendered}<span className="badge success">Completed</span><small>Completed at 21/04/2024 by João Silva</small></PanelHeader>
                                 <PanelBody title="History" initialOpen={false}>
                                     <PanelRow>
@@ -109,7 +109,7 @@ const ProcessViewer = () => {
                             </Panel>
                         ))
                     ) : (
-                        <Notice status="info" isDismissible={false}>No steps found for this process type.</Notice>
+                        <Notice status="warning" isDismissible={false}>No steps found for this process type.</Notice>
                     )}
                 </main>
             </div>

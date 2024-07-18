@@ -159,31 +159,23 @@ table.widefat td {
 .components-card__footer {
     margin-top: auto;
 }
-.counter-container {
+main.counter-container {
     counter-reset: number-counter;
 }
-.counter-container .counter-item {
-    background-color: var(--primary-50);
-    border-radius: 5px;
-    margin: 0 2rem;
-    padding: 3rem 1rem 1rem;
+main.counter-container .counter-item {
     position: relative;
 }
-.counter-container .counter-item + .counter-item {
-    margin-top: .5rem;
-}
-.counter-container .counter-item::before {
+main.counter-container .counter-item::before {
     color: var(--primary-500);
-    content: "Metadata " counter(number-counter, decimal-leading-zero);
+    content: counter(number-counter, decimal-leading-zero);
     counter-increment: number-counter;
     position: absolute;
-    top: 1rem;
-    left: 1rem;
+    top: 1.65rem;
+    left: 2rem;
     text-transform: uppercase;
 }
-.counter-item .components-button {
-    margin-top: -2.5rem;
-    margin-left: auto;
+main.counter-container .components-panel.counter-item .components-panel__header {
+    padding: .75rem var(--gap) .75rem 3.5rem;
 }
 .description-list {
     display: flex;
@@ -275,6 +267,32 @@ ol.list-group .list-group-item::before {
 }
 .components-panel__body {
     padding: 0 !important;
+}
+.components-panel__body.counter-container {
+    counter-reset: number-counter;
+}
+.components-panel__body.counter-container .counter-item {
+    background-color: var(--primary-50);
+    border-radius: 5px;
+    margin: 0 2rem;
+    padding: 3rem 1rem 1rem;
+    position: relative;
+}
+.components-panel__body.counter-container .counter-item + .counter-item {
+    margin-top: .5rem;
+}
+.components-panel__body.counter-container .counter-item::before {
+    color: var(--primary-500);
+    content: "Metadata " counter(number-counter, decimal-leading-zero);
+    counter-increment: number-counter;
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    text-transform: uppercase;
+}
+.components-panel__body.counter-container .counter-item .components-button {
+    margin-top: -2.5rem;
+    margin-left: auto;
 }
 .components-panel__body>.components-panel__body-title:hover {
     background-color: transparent;
