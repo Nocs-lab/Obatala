@@ -3,57 +3,84 @@ import { Spinner, Notice, Panel, PanelHeader, PanelBody, PanelRow } from '@wordp
 import apiFetch from '@wordpress/api-fetch';
 
 const ProcessViewer = () => {
-    // Estados para armazenar o processo, estado de carregamento e erros
-    const [process, setProcess] = useState(null); // Armazena os dados do processo
-    const [isLoading, setIsLoading] = useState(true); // Estado para indicar se está carregando
-    const [error, setError] = useState(null); // Armazena mensagens de erro
+    const [process, setProcess] = useState(null);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [processTypes, setProcessTypes] = useState([]);
+    const [processSteps, setProcessSteps] = useState([]);
 
-    // Função para obter o ID do processo da URL atual
     const getProcessIdFromUrl = () => {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get('process_id');
     };
 
-    // Efeito para carregar o processo ao montar o componente
     useEffect(() => {
         const processId = getProcessIdFromUrl();
         if (processId) {
-            fetchProcess(processId); // Se houver ID de processo na URL, busca o processo
+            fetchProcess(processId);
+            fetchProcessTypes();
+            fetchProcessSteps();
         } else {
-            setError('No process ID found in the URL.'); // Se não houver ID, define erro
-            setIsLoading(false); // Finaliza o estado de carregamento
+            setError('No process ID found in the URL.');
+            setIsLoading(false);
         }
     }, []);
 
-    // Função para buscar os detalhes do processo na API
     const fetchProcess = (processId) => {
-        setIsLoading(true); // Indica que está carregando
+        setIsLoading(true);
         apiFetch({ path: `/wp/v2/process_obatala/${processId}?_embed` })
             .then(data => {
-                setProcess(data); // Define os dados do processo no estado
-                setIsLoading(false); // Finaliza o estado de carregamento
+                setProcess(data);
+                setIsLoading(false);
             })
             .catch(error => {
-                console.error('Error fetching process:', error); // Registra erro no console
-                setError('Error fetching process details.'); // Define mensagem de erro
-                setIsLoading(false); // Finaliza o estado de carregamento
+                console.error('Error fetching process:', error);
+                setError('Error fetching process details.');
+                setIsLoading(false);
             });
     };
 
-    // Renderização condicional com base nos estados de carregamento e erro
+    const fetchProcessTypes = () => {
+        setIsLoading(true);
+        apiFetch({ path: `/wp/v2/process_type?per_page=100&_embed` })
+            .then(data => {
+                setProcessTypes(data);
+                setIsLoading(false);
+            })
+            .catch(error => {
+                console.error('Error fetching process types:', error);
+                setIsLoading(false);
+            });
+    };
+
+    const fetchProcessSteps = () => {
+        setIsLoading(true);
+        apiFetch({ path: `/wp/v2/process_step?per_page=100&_embed` })
+            .then(data => {
+                setProcessSteps(data);
+                setIsLoading(false);
+            })
+            .catch(error => {
+                console.error('Error fetching process steps:', error);
+                setIsLoading(false);
+            });
+    };
+
     if (isLoading) {
-        return <Spinner />; // Exibe spinner enquanto está carregando
+        return <Spinner />;
     }
 
     if (error) {
-        return <Notice status="error" isDismissible={false}>{error}</Notice>; // Exibe mensagem de erro se houver
+        return <Notice status="error" isDismissible={false}>{error}</Notice>;
     }
 
     if (!process) {
-        return <Notice status="warning" isDismissible={false}>No process found.</Notice>; // Exibe aviso se não houver processo
+        return <Notice status="warning" isDismissible={false}>No process found.</Notice>;
     }
 
-    // Renderiza os detalhes do processo
+    // Filtrar as etapas pelo tipo de processo atual
+    const filteredSteps = processSteps.filter(step => step.process_type === process.process_type);
+
     return (
         <div>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Viewer</span>
@@ -62,40 +89,28 @@ const ProcessViewer = () => {
                 <span className="badge success">{process.status}</span>
                 <span className="badge">Current step</span>
             </div>
+
             <div className="panel-container">
                 <main>
-                    <Panel>
-                        <PanelHeader>01: Step title 1 <span className="badge success">Completed</span><small>Completed at 21/04/2024 by João Silva</small></PanelHeader>
-                        <PanelBody title="History" initialOpen={false}>
-                            <PanelRow>
- 
-                            </PanelRow>
-                        </PanelBody>
-                        <PanelBody title="Comments" initialOpen={false}>
-                            <PanelRow>
-
-                            </PanelRow>
-                        </PanelBody>
-                    </Panel>
-                    <Panel>
-                        <PanelHeader>02: Step title 2 <span className="badge warning">In progress</span><small>Started at 22/04/2024 by Joana Silva</small></PanelHeader>
-                        <PanelBody title="History" initialOpen={false}>
-                            <PanelRow>
- 
-                            </PanelRow>
-                        </PanelBody>
-                        <PanelBody title="Comments" initialOpen={false}>
-                            <PanelRow>
-
-                            </PanelRow>
-                        </PanelBody>
-                    </Panel>
-                    <Panel>
-                        <PanelHeader>03: Step title 3 <span className="badge error">Not started</span></PanelHeader>
-                    </Panel>
-                    <Panel>
-                        <PanelHeader>04: Step title 4 <span className="badge error">Not started</span></PanelHeader>
-                    </Panel>
+                    {filteredSteps.length > 0 ? (
+                        filteredSteps.map((step, index) => (
+                            <Panel key={step.id}>
+                                <PanelHeader>{step.title.rendered}<span className="badge success">Completed</span><small>Completed at 21/04/2024 by João Silva</small></PanelHeader>
+                                <PanelBody title="History" initialOpen={false}>
+                                    <PanelRow>
+                                        {/* Renderizar histórico aqui, se houver */}
+                                    </PanelRow>
+                                </PanelBody>
+                                <PanelBody title="Comments" initialOpen={false}>
+                                    <PanelRow>
+                                        {/* Renderizar comentários aqui, se houver */}
+                                    </PanelRow>
+                                </PanelBody>
+                            </Panel>
+                        ))
+                    ) : (
+                        <Notice status="info" isDismissible={false}>No steps found for this process type.</Notice>
+                    )}
                 </main>
             </div>
         </div>
