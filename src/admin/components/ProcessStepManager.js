@@ -1,13 +1,23 @@
-import { useState, useEffect } from 'react';
-import { Spinner, Button, SelectControl, TextControl, Notice, Panel, PanelHeader, PanelRow } from '@wordpress/components';
+import  React, { useState, useEffect } from 'react';
+import { Spinner, Button, SelectControl, TextControl, Notice, Panel, PanelHeader, PanelRow, DatePicker, RadioControl } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
+import { MediaUpload, MediaUploadCheck } from '@wordpress/block-editor';
 
 const ProcessStepManager = () => {
+    // Estado para armazenar os passos de processo
     const [processSteps, setProcessSteps] = useState([]);
+    // Estado para armazenar os tipos de processo
     const [processTypes, setProcessTypes] = useState([]);
+    // Estado para armazenar o título do novo passo de processo
     const [newStepTitle, setNewStepTitle] = useState('');
+    // Estado para armazenar o tipo do novo passo de processo
     const [newStepType, setNewStepType] = useState('');
+    // Estado para armazenar os campos dinâmicos para os metadados
+    const [dynamicFields, setDynamicFields] = useState([{ name: '', type: 'text', value: '' }]);
+    // Estado para controlar o carregamento
     const [isLoading, setIsLoading] = useState(true);
+    // Estado para o índice do campo dinâmico atualmente em modo de edição
+    const [editableFieldIndex, setEditableFieldIndex] = useState(-1);
 
     // Carrega os passos de processo e tipos de processo ao inicializar
     useEffect(() => {
@@ -46,23 +56,116 @@ const ProcessStepManager = () => {
             alert('Please provide a title and select a process type.');
             return;
         }
-
+    
         const newStep = {
             title: newStepTitle,
             status: 'publish',
             type: 'process_step',
             process_type: newStepType,
         };
-
+    
+        // Cria o novo passo de processo
         apiFetch({ path: `/wp/v2/process_step`, method: 'POST', data: newStep })
             .then(savedStep => {
-                setProcessSteps([...processSteps, savedStep]);
-                setNewStepTitle('');
-                setNewStepType('');
+                const stepId = savedStep.id;
+                const metaData = dynamicFields.map(field => ({
+                    key: field.name,
+                    value: getDefaultFieldValue(field.type) // Define o valor padrão conforme o tipo
+                }));
+    
+                // Salva os metadados do novo passo
+                saveMetadata(stepId, metaData)
+                    .then(() => {
+                        // Atualiza a lista de passos de processo após salvar com sucesso
+                        fetchProcessSteps();
+                        // Limpa os campos de entrada após salvar
+                        setNewStepTitle('');
+                        setNewStepType('');
+                        setDynamicFields([{ name: '', type: 'text', value: '' }]);
+                    })
+                    .catch(error => {
+                        console.error('Error saving metadata:', error);
+                    });
             })
             .catch(error => {
                 console.error('Error creating process step:', error);
             });
+    };
+
+    // Função para salvar metadados do passo de processo
+    const saveMetadata = (stepId, metaData) => {
+        return new Promise((resolve, reject) => {
+            apiFetch({
+                path: `/wp-admin/admin-ajax.php`,
+                method: 'POST',
+                data: {
+                    action: 'save_metadata',
+                    step_id: stepId,
+                    meta_data: metaData
+                }
+            })
+            .then(response => {
+                if (response.success) {
+                    resolve();
+                } else {
+                    reject('Error saving metadata:', response.data);
+                }
+            })
+            .catch(error => {
+                reject('Error saving metadata:', error);
+            });
+        });
+    };
+
+    // Função para lidar com a mudança de campo dinâmico
+    const handleDynamicFieldChange = (index, field, value) => {
+        const updatedFields = [...dynamicFields];
+        updatedFields[index][field] = value;
+        setDynamicFields(updatedFields);
+    };
+
+    // Função para adicionar um novo campo dinâmico
+    const handleAddField = () => {
+        setDynamicFields([...dynamicFields, { name: '', type: 'text', value: '' }]);
+    };
+
+    // Função para remover um campo dinâmico
+    const handleRemoveField = (index) => {
+        const updatedFields = dynamicFields.filter((_, idx) => idx !== index);
+        setDynamicFields(updatedFields);
+    };
+
+    // Função para obter o valor padrão conforme o tipo do campo
+    const getDefaultFieldValue = (type) => {
+        switch (type) {
+            case 'text':
+            case 'textfield':
+            case 'number':
+                return '';
+            case 'datepicker':
+                return null; // Exemplo de valor padrão para datepicker
+            case 'upload':
+                return ''; // Exemplo de valor padrão para upload
+            case 'select':
+                return ''; // Exemplo de valor padrão para select
+            case 'radio':
+                return ''; // Exemplo de valor padrão para radio
+            default:
+                return '';
+        }
+    };
+
+    // Função para iniciar a edição do nome do campo dinâmico
+    const startEditFieldName = (index) => {
+        setEditableFieldIndex(index);
+    };
+
+    // Função para finalizar a edição do nome do campo dinâmico
+    const finishEditFieldName = (index, newName) => {
+        const updatedFields = [...dynamicFields];
+        updatedFields[index].name = newName;
+        setDynamicFields(updatedFields);
+        setEditableFieldIndex(-1);
     };
 
     // Renderiza um spinner enquanto os dados estão sendo carregados
@@ -124,6 +227,50 @@ const ProcessStepManager = () => {
                                 ]}
                                 onChange={(value) => setNewStepType(value)}
                             />
+                        </PanelRow>
+
+                        {/* Renderiza os campos dinâmicos para os metadados */}
+                        {dynamicFields.map((field, index) => (
+                            <PanelRow key={index}>
+                                {editableFieldIndex === index ? (
+                                    <input
+                                        type="text"
+                                        value={field.name}
+                                        onChange={(e) => handleDynamicFieldChange(index, 'name', e.target.value)}
+                                        onBlur={() => finishEditFieldName(index, dynamicFields[index].name)}
+                                        autoFocus
+                                    />
+                                ) : (
+                                    <span
+                                        className="editable-field-name"
+                                        onClick={() => startEditFieldName(index)}
+                                    >
+                                        {field.name || `Metadata Name ${index + 1}`}
+                                    </span>
+                                )}
+                                <SelectControl
+                                    label={`Metadata Type ${index + 1}`}
+                                    value={field.type}
+                                    options={[
+                                        { label: 'Text', value: 'text' },
+                                        { label: 'Date Picker', value: 'datepicker' },
+                                        { label: 'Upload', value: 'upload' },
+                                        { label: 'Number', value: 'number' },
+                                        { label: 'Text Field', value: 'textfield' },
+                                        { label: 'Select', value: 'select' },
+                                        { label: 'Radio', value: 'radio' },
+                                    ]}
+                                    onChange={(value) => handleDynamicFieldChange(index, 'type', value)}
+                                />
+                                <Button isDestructive onClick={() => handleRemoveField(index)}>Remove</Button>
+                            </PanelRow>
+                        ))}
+
+                        <PanelRow>
+                            <Button isSecondary onClick={handleAddField}>Add Metadata</Button>
+                        </PanelRow>
+
+                        <PanelRow>
                             <Button isPrimary onClick={handleCreateStep}>Create Step</Button>
                         </PanelRow>
                     </Panel>

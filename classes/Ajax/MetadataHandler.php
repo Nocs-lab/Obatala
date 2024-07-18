@@ -15,25 +15,31 @@ class MetadataHandler {
         if (isset($_POST['step_id']) && isset($_POST['meta_data'])) {
             // Sanitiza e converte 'step_id' para um inteiro
             $step_id = intval($_POST['step_id']);
-            // Pega os dados dos metadados
             $meta_data = $_POST['meta_data'];
-            // Sanitiza a chave dos metadados se ela for fornecida, caso contrário, fica uma string vazia
-            $meta_key = isset($_POST['meta_key']) ? sanitize_text_field($_POST['meta_key']) : '';
 
-            // Chama o método para salvar os metadados, passando o ID da etapa, os dados e a chave
-            $result = ProcessMetadataManager::save_metadata($step_id, $meta_data, $meta_key);
-            if ($result) {
-                // Se a operação for bem-sucedida, envia uma resposta de sucesso
-                wp_send_json_success('Metadados salvos com sucesso.');
-            } else {
-                // Se houver falha ao salvar, envia uma resposta de erro
-                wp_send_json_error('Erro ao salvar os metadados.');
+            // Itera sobre cada campo de metadado enviado
+            foreach ($meta_data as $field) {
+                // Sanitiza a chave e o valor do metadado
+                $meta_key = sanitize_text_field($field['key']);
+                $meta_value = sanitize_text_field($field['value']);
+
+                // Chama o método para salvar o metadado
+                $result = ProcessMetadataManager::save_metadata($step_id, $meta_value, $meta_key);
+                if (!$result) {
+                    // Se houver erro ao salvar, envia uma resposta de erro
+                    wp_send_json_error('Erro ao salvar os metadados.');
+                    return;
+                }
             }
+
+            // Se todos os metadados foram salvos com sucesso, envia uma resposta de sucesso
+            wp_send_json_success('Metadados salvos com sucesso.');
         } else {
             // Se 'step_id' ou 'meta_data' não forem fornecidos, envia uma resposta de erro
             wp_send_json_error('Dados inválidos.');
         }
     }
+
 
     /**
      * Processa a requisição AJAX para obter metadados.
