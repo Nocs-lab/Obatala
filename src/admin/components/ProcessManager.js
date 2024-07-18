@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Spinner, Button, SelectControl, TextControl, Notice, Panel, PanelBody, PanelRow } from '@wordpress/components';
+import { Spinner, Button, SelectControl, TextControl, Notice, Panel, PanelHeader, PanelRow } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 
 const ProcessManager = ({ onSelectProcess }) => {
@@ -87,61 +87,59 @@ const ProcessManager = ({ onSelectProcess }) => {
             <div className="panel-container">
                 <main>
                     <Panel>
-                        <PanelBody title="Existing Processes" initialOpen={true}>
-                            <PanelRow>
-                                {processes.length > 0 ? (
-                                    <table className="wp-list-table widefat fixed striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Process Title</th>
-                                                <th>Process Type</th>
-                                                <th>Status</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                        {processes.map(process => (
-                                            <tr key={process.id}>
-                                                <td>{process.title.rendered}</td>
-                                                <td>{process.process_type ? 'Process type title' : ''}</td>
-                                                <td><span className="badge success">{process.status}</span></td>
-                                                <td>
-                                                    <Button isSecondary onClick={() => handleSelectProcess(process.id)}>
-                                                        View
-                                                    </Button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                        </tbody>
-                                    </table>
-                                ) : (
-                                    <Notice isDismissible={false} status="warning">No existing processes.</Notice>
-                                )}
-                            </PanelRow>
-                        </PanelBody>
+                        <PanelHeader>Existing Processes</PanelHeader>
+                        <PanelRow>
+                            {processes.length > 0 ? (
+                                <table className="wp-list-table widefat fixed striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Process Title</th>
+                                            <th>Process Type</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {processes.map(process => (
+                                        <tr key={process.id}>
+                                            <td>{process.title.rendered}</td>
+                                            <td>{process.process_type ? 'Process type title' : ''}</td>
+                                            <td><span className="badge success">{process.status}</span></td>
+                                            <td>
+                                                <Button isSecondary onClick={() => handleSelectProcess(process.id)}>
+                                                    View
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                    </tbody>
+                                </table>
+                            ) : (
+                                <Notice isDismissible={false} status="warning">No existing processes.</Notice>
+                            )}
+                        </PanelRow>
                     </Panel>
                 </main>
                 <aside>
                     <Panel>
-                        <PanelBody title="Create Processes" initialOpen={true}>
-                            <PanelRow>
-                                <TextControl
-                                    label="Process Title"
-                                    value={newProcessTitle}
-                                    onChange={(value) => setNewProcessTitle(value)}
-                                />
-                                <SelectControl
-                                    label="Process Type"
-                                    value={newProcessType}
-                                    options={[
-                                        { label: 'Select a process type...', value: '' },
-                                        ...processTypes.map(type => ({ label: type.title.rendered, value: type.id }))
-                                    ]}
-                                    onChange={(value) => setNewProcessType(value)}
-                                />
-                                <Button isPrimary onClick={handleCreateProcess}>Create Process</Button>
-                            </PanelRow>
-                        </PanelBody>
+                        <PanelHeader>Create Process</PanelHeader>
+                        <PanelRow>
+                            <TextControl
+                                label="Process Title"
+                                value={newProcessTitle}
+                                onChange={(value) => setNewProcessTitle(value)}
+                            />
+                            <SelectControl
+                                label="Process Type"
+                                value={newProcessType}
+                                options={[
+                                    { label: 'Select a process type...', value: '' },
+                                    ...processTypes.map(type => ({ label: type.title.rendered, value: type.id }))
+                                ]}
+                                onChange={(value) => setNewProcessType(value)}
+                            />
+                            <Button isPrimary onClick={handleCreateProcess}>Create Process</Button>
+                        </PanelRow>
                     </Panel>
                 </aside>
             </div>

@@ -222,7 +222,7 @@ ol.list-group .list-group-item::before {
 }
 .components-panel__header {
     font-size: 1.25rem;
-    padding: 1rem var(--gap);
+    padding: .75rem var(--gap);
 }
 .components-panel__body {
     padding: 0 !important;
