@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, TextControl, TextareaControl, CheckboxControl, Panel, PanelBody, PanelRow } from '@wordpress/components';
+import { Button, TextControl, TextareaControl, CheckboxControl, Panel, PanelBody, PanelRow, Notice } from '@wordpress/components';
 
 const ProcessTypeForm = ({ onSave, onCancel, editingProcessType }) => {
     const [processTypeName, setProcessTypeName] = useState('');
@@ -7,6 +7,8 @@ const ProcessTypeForm = ({ onSave, onCancel, editingProcessType }) => {
     const [acceptAttachments, setAcceptAttachments] = useState(false);
     const [acceptTainacanItems, setAcceptTainacanItems] = useState(false);
     const [generateTainacanItems, setGenerateTainacanItems] = useState(false);
+    const [notice, setNotice] = useState(null);
+
 
     useEffect(() => {
         if (editingProcessType) {
@@ -19,6 +21,11 @@ const ProcessTypeForm = ({ onSave, onCancel, editingProcessType }) => {
     }, [editingProcessType]);
 
     const handleSave = () => {
+        if (!processTypeName || !processTypeDescription) {
+            setNotice({ status: 'error', message: 'Field Name and Description cannot be empty.' });
+            return;
+        }
+
         const processType = {
             status: 'publish',
             title: processTypeName,
@@ -28,7 +35,20 @@ const ProcessTypeForm = ({ onSave, onCancel, editingProcessType }) => {
             generate_tainacan_items: generateTainacanItems,
         };
         onSave(processType);
+
+        if (!editingProcessType) {
+            handleResetForm();
+        }
+        
     };
+
+    const handleResetForm = () => {
+        setProcessTypeName('');
+        setProcessTypeDescription('');
+        setAcceptAttachments(false);
+        setAcceptTainacanItems(false);
+        setGenerateTainacanItems(false);
+    }
 
     const handleCancel = () => {
         onCancel();
@@ -38,11 +58,19 @@ const ProcessTypeForm = ({ onSave, onCancel, editingProcessType }) => {
         setAcceptTainacanItems(false);
         setGenerateTainacanItems(false);
     };
+    
 
     return (
         <Panel>
+             
             <PanelBody title="Add Process Type" initialOpen={ true }>
+              
                 <PanelRow>
+                    {notice && (
+                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                        {notice.message}
+                    </Notice>
+                    )}
                     <TextControl
                         label="Process Type Name"
                         value={processTypeName}

@@ -196,7 +196,20 @@ ol.list-group .list-group-item::before {
     flex-grow: 1;
 }
 .components-notice {
+    margin-bottom: 2rem;
+    padding-top: 0;
+    padding-bottom: 0;
     width: 100%;
+}
+.components-notice.is-error {
+    background-color: transparent;
+    border-left-color: var(--error);
+    color: var(--error);
+}
+.components-notice.is-success {
+    background-color: transparent;
+    border-left-color: var(--success);
+    color: var(--success);
 }
 .components-panel {
     background-color: transparent;
