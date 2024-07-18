@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Spinner, Button, SelectControl, TextControl, Notice, Panel, PanelBody, PanelRow } from '@wordpress/components';
+import { Spinner, Button, SelectControl, TextControl, Notice, Panel, PanelHeader, PanelRow } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 
 const ProcessStepManager = () => {
@@ -79,55 +79,53 @@ const ProcessStepManager = () => {
                 <main>
                     {/* Painel com os passos de processo existentes */}
                     <Panel>
-                        <PanelBody title="Existing Process Steps" initialOpen={true}>
-                            <PanelRow>
-                                {/* Lista os passos de processo existentes */}
-                                {processSteps.length > 0 ? (
-                                    <table className="wp-list-table widefat fixed striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Step Title</th>
+                        <PanelHeader>Existing Steps</PanelHeader>
+                        <PanelRow>
+                            {/* Lista os passos de processo existentes */}
+                            {processSteps.length > 0 ? (
+                                <table className="wp-list-table widefat fixed striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Step Title</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {processSteps.map(step => (
+                                            <tr key={step.id}>
+                                                <td>{step.title.rendered}</td>
                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                            {processSteps.map(step => (
-                                                <tr key={step.id}>
-                                                    <td>{step.title.rendered}</td>
-                                                </tr>
-                                            ))}    
-                                        </tbody>
-                                    </table>
-                                ) : (
-                                    // Aviso se não houver passos de processo existentes
-                                    <Notice isDismissible={false} status="warning">No existing process steps.</Notice>
-                                )}
-                            </PanelRow>
-                        </PanelBody>
+                                        ))}    
+                                    </tbody>
+                                </table>
+                            ) : (
+                                // Aviso se não houver passos de processo existentes
+                                <Notice isDismissible={false} status="warning">No existing process steps.</Notice>
+                            )}
+                        </PanelRow>
                     </Panel>
                 </main>
                 <aside>
                     {/* Painel para criar um novo passo de processo */}
                     <Panel>
-                        <PanelBody title="Create Process Step" initialOpen={true}>
-                            <PanelRow>
-                                {/* Formulário para inserir título e tipo de processo do novo passo */}
-                                <TextControl
-                                    label="Step Title"
-                                    value={newStepTitle}
-                                    onChange={(value) => setNewStepTitle(value)}
-                                />
-                                <SelectControl
-                                    label="Process Type"
-                                    value={newStepType}
-                                    options={[
-                                        { label: 'Select a process type...', value: '' },
-                                        ...processTypes.map(type => ({ label: type.title.rendered, value: type.id }))
-                                    ]}
-                                    onChange={(value) => setNewStepType(value)}
-                                />
-                                <Button isPrimary onClick={handleCreateStep}>Create Step</Button>
-                            </PanelRow>
-                        </PanelBody>
+                        <PanelHeader>Create Step</PanelHeader>
+                        <PanelRow>
+                            {/* Formulário para inserir título e tipo de processo do novo passo */}
+                            <TextControl
+                                label="Step Title"
+                                value={newStepTitle}
+                                onChange={(value) => setNewStepTitle(value)}
+                            />
+                            <SelectControl
+                                label="Process Type"
+                                value={newStepType}
+                                options={[
+                                    { label: 'Select a process type...', value: '' },
+                                    ...processTypes.map(type => ({ label: type.title.rendered, value: type.id }))
+                                ]}
+                                onChange={(value) => setNewStepType(value)}
+                            />
+                            <Button isPrimary onClick={handleCreateStep}>Create Step</Button>
+                        </PanelRow>
                     </Panel>
                 </aside>
             </div>

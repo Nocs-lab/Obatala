@@ -79,6 +79,21 @@ const ProcessViewer = () => {
                                 </dl>
                             </PanelRow>
                         </PanelBody>
+                        <PanelBody title="Comments" initialOpen={false}>
+                            <PanelRow>
+                                <dl className="description-list">
+                                    <div className="list-item">
+                                        <dt>Process Type:</dt>
+                                        <dd>{process.process_type}</dd>
+                                    </div>
+                                    <div className="list-item">
+                                        <dt>Current Stage:</dt>
+                                        <dd>{process.current_stage}</dd>
+                                    </div>
+                                    {/* Detalhes adicionais do processo podem ser adicionados aqui */}
+                                </dl>
+                            </PanelRow>
+                        </PanelBody>
                     </Panel>
                     <Panel>
                         <PanelBody title="01: Step title 1" initialOpen={true}>

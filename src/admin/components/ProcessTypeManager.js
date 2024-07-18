@@ -1,5 +1,6 @@
 import { useState, useEffect, useReducer } from 'react';
 import {
+    Panel,
     Spinner,
     __experimentalConfirmDialog as ConfirmDialog
     } from '@wordpress/components';
@@ -157,8 +158,10 @@ const ProcessTypeManager = () => {
                     />
                 </main>
                 <aside>
-                    <ProcessTypeForm onSave={handleSaveProcessType} onCancel={() => setEditingProcessType(null)} editingProcessType={editingProcessType} />    
-                    <ProcessStepForm processTypes={processTypes} onAddStep={handleAddProcessStep} />
+                    <Panel>
+                        <ProcessTypeForm onSave={handleSaveProcessType} onCancel={() => setEditingProcessType(null)} editingProcessType={editingProcessType} />    
+                        <ProcessStepForm processTypes={processTypes} onAddStep={handleAddProcessStep} />
+                    </Panel>
                 </aside>
             </div>
         </div>

@@ -220,6 +220,10 @@ ol.list-group .list-group-item::before {
     border: 0 none;
     border-radius: var(--border-radius);
 }
+.components-panel__header {
+    font-size: 1.25rem;
+    padding: 1rem var(--gap);
+}
 .components-panel__body {
     padding: 0 !important;
 }
@@ -231,7 +235,7 @@ ol.list-group .list-group-item::before {
 }
 .components-panel__body-toggle.components-button {
     color: var(--primary);
-    font-size: 1.25rem;
+    font-size: 1rem;
     font-weight: 300;
     padding: 1.5rem var(--gap);
 }
