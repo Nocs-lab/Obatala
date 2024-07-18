@@ -1,45 +1,50 @@
 import { useState } from 'react';
-import { Button, TextControl, SelectControl, Panel, PanelBody, PanelRow, Notice } from '@wordpress/components';
+import { Button, SelectControl, Panel, PanelBody, PanelRow, Notice } from '@wordpress/components';
 
-const ProcessStepForm = ({ processTypes, onAddStep }) => {
+const ProcessStepForm = ({ processTypes, processSteps, onAddStep }) => {
     const [selectedProcessType, setSelectedProcessType] = useState('');
-    const [stepName, setStepName] = useState('');
-    const [selectedProcess, setSelectedProcess] = useState('');
+    const [selectedStep, setSelectedStep] = useState('');
     const [notice, setNotice] = useState(null);
 
     const handleAddStep = () => {
-        if (!selectedProcessType || !selectedProcess || !stepName) {
-            setNotice({ status: 'error', message: 'Please select both a process type and a parent process and a step name.' });
+        if (!selectedProcessType || !selectedStep) {
+            setNotice({ status: 'error', message: 'Please select both a process type and a step.' });
             return;
-        
         }
 
+        
+        const step = processSteps.find(step => step.title.rendered === selectedStep);
+
         const newStep = {
-            title: stepName,
+            id: step.id, // Use the ID of the existing step
+            title: step.title.rendered,
             status: 'publish',
             process_type: selectedProcessType,
-            parent_process: selectedProcess
-            
         };
+
         onAddStep(newStep);
-        setStepName('');
         setSelectedProcessType('');
-        setSelectedProcess('');
+        setSelectedStep('');
     };
 
     return (
         <Panel>
-            <PanelBody title="Add Process Step" initialOpen={ true }>
+            <PanelBody title="Add Process Step" initialOpen={true}>
                 <PanelRow>
                 {notice && (
                     <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
                         {notice.message}
                     </Notice>
                     )}
-                    <TextControl
-                        label="Step Name"
-                        value={stepName}
-                        onChange={(value) => setStepName(value)}
+
+                    <SelectControl
+                        label="Select Step"
+                        value={selectedStep}
+                        options={[
+                            { label: 'Select a step...', value: '' },
+                            ...processSteps.map(step => ({ label: step.title.rendered, value: step.title.rendered }))
+                        ]}
+                        onChange={(value) => setSelectedStep(value)}
                     />
                     <SelectControl
                         label="Select Process Type"
@@ -49,15 +54,6 @@ const ProcessStepForm = ({ processTypes, onAddStep }) => {
                             ...processTypes.map(type => ({ label: type.title.rendered, value: type.id }))
                         ]}
                         onChange={(value) => setSelectedProcessType(value)}
-                    />
-                    <SelectControl
-                        label="Select Parent Process"
-                        value={selectedProcess}
-                        options={[
-                            { label: 'Select a parent process...', value: '' },
-                            ...processTypes.map(type => ({ label: type.title.rendered, value: type.id }))
-                        ]}
-                        onChange={(value) => setSelectedProcess(value)}
                     />
                     <Button isSecondary onClick={handleAddStep}>
                         Add Process Step
@@ -69,3 +65,4 @@ const ProcessStepForm = ({ processTypes, onAddStep }) => {
 };
 
 export default ProcessStepForm;
+
