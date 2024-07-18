@@ -1,4 +1,5 @@
 /******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
 /***/ "./node_modules/@wordpress/icons/build-module/library/edit.js":
@@ -7,7 +8,6 @@
   \********************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -29,7 +29,6 @@ __webpack_require__.r(__webpack_exports__);
   \**********************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -60,7 +59,6 @@ const pencil = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.js
   \*********************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -93,7 +91,6 @@ const trash = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx
   \**************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
@@ -158,7 +155,6 @@ document.addEventListener("DOMContentLoaded", () => {
   \************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -303,9 +299,284 @@ const ProcessManager = ({
 /*!****************************************************!*\
   !*** ./src/admin/components/ProcessStepManager.js ***!
   \****************************************************/
-/***/ (() => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: /var/www/wordpress/wp-content/plugins/obatala/src/admin/components/ProcessStepManager.js: Unexpected token (1:1)\n\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 1 |\u001b[39m \u001b[33m<<\u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<<\u001b[39m\u001b[33m<\u001b[39m \u001b[33mHEAD\u001b[39m\n \u001b[90m   |\u001b[39m  \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\n \u001b[90m 2 |\u001b[39m \u001b[36mimport\u001b[39m { useState\u001b[33m,\u001b[39m useEffect } \u001b[36mfrom\u001b[39m \u001b[32m'react'\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m 3 |\u001b[39m \u001b[36mimport\u001b[39m { \u001b[33mSpinner\u001b[39m\u001b[33m,\u001b[39m \u001b[33mButton\u001b[39m\u001b[33m,\u001b[39m \u001b[33mSelectControl\u001b[39m\u001b[33m,\u001b[39m \u001b[33mTextControl\u001b[39m\u001b[33m,\u001b[39m \u001b[33mNotice\u001b[39m\u001b[33m,\u001b[39m \u001b[33mPanel\u001b[39m\u001b[33m,\u001b[39m \u001b[33mPanelHeader\u001b[39m\u001b[33m,\u001b[39m \u001b[33mPanelRow\u001b[39m } \u001b[36mfrom\u001b[39m \u001b[32m'@wordpress/components'\u001b[39m\u001b[33m;\u001b[39m\n \u001b[90m 4 |\u001b[39m \u001b[33m===\u001b[39m\u001b[33m===\u001b[39m\u001b[33m=\u001b[39m\u001b[0m\n    at constructor (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:351:19)\n    at JSXParserMixin.raise (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:3233:19)\n    at JSXParserMixin.unexpected (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:3253:16)\n    at JSXParserMixin.jsxParseIdentifier (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:6586:12)\n    at JSXParserMixin.jsxParseNamespacedName (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:6593:23)\n    at JSXParserMixin.jsxParseElementName (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:6602:21)\n    at JSXParserMixin.jsxParseOpeningElementAt (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:6678:22)\n    at JSXParserMixin.jsxParseElementAt (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:6703:33)\n    at JSXParserMixin.jsxParseElement (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:6766:17)\n    at JSXParserMixin.parseExprAtom (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:6776:19)\n    at JSXParserMixin.parseExprSubscripts (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:10568:23)\n    at JSXParserMixin.parseUpdate (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:10551:21)\n    at JSXParserMixin.parseMaybeUnary (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:10529:23)\n    at JSXParserMixin.parseMaybeUnaryOrPrivate (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:10383:61)\n    at JSXParserMixin.parseExprOps (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:10388:23)\n    at JSXParserMixin.parseMaybeConditional (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:10365:23)\n    at JSXParserMixin.parseMaybeAssign (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:10326:21)\n    at JSXParserMixin.parseExpressionBase (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:10280:23)\n    at /var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:10276:39\n    at JSXParserMixin.allowInAnd (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:11913:16)\n    at JSXParserMixin.parseExpression (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:10276:17)\n    at JSXParserMixin.parseStatementContent (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:12354:23)\n    at JSXParserMixin.parseStatementLike (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:12221:17)\n    at JSXParserMixin.parseModuleItem (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:12198:17)\n    at JSXParserMixin.parseBlockOrModuleBlockBody (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:12778:36)\n    at JSXParserMixin.parseBlockBody (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:12771:10)\n    at JSXParserMixin.parseProgram (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:12098:10)\n    at JSXParserMixin.parseTopLevel (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:12088:25)\n    at JSXParserMixin.parse (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:13902:10)\n    at parse (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/parser/lib/index.js:13944:38)\n    at parser (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/core/lib/parser/index.js:41:34)\n    at parser.next (<anonymous>)\n    at normalizeFile (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)\n    at normalizeFile.next (<anonymous>)\n    at run (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/core/lib/transformation/index.js:21:50)\n    at run.next (<anonymous>)\n    at transform (/var/www/wordpress/wp-content/plugins/obatala/node_modules/@babel/core/lib/transform.js:22:33)\n    at transform.next (<anonymous>)\n    at step (/var/www/wordpress/wp-content/plugins/obatala/node_modules/gensync/index.js:261:32)\n    at /var/www/wordpress/wp-content/plugins/obatala/node_modules/gensync/index.js:273:13\n    at async.call.result.err.err (/var/www/wordpress/wp-content/plugins/obatala/node_modules/gensync/index.js:223:11)");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
+/* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__);
+
+
+
+
+
+const ProcessStepManager = () => {
+  // Estado para armazenar os passos de processo
+  const [processSteps, setProcessSteps] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+  // Estado para armazenar os tipos de processo
+  const [processTypes, setProcessTypes] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+  // Estado para armazenar o título do novo passo de processo
+  const [newStepTitle, setNewStepTitle] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  // Estado para armazenar o tipo do novo passo de processo
+  const [newStepType, setNewStepType] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  // Estado para armazenar os campos dinâmicos para os metadados
+  const [dynamicFields, setDynamicFields] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([{
+    name: '',
+    type: 'text',
+    value: ''
+  }]);
+  // Estado para controlar o carregamento
+  const [isLoading, setIsLoading] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
+  // Estado para o índice do campo dinâmico atualmente em modo de edição
+  const [editableFieldIndex, setEditableFieldIndex] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(-1);
+
+  // Carrega os passos de processo e tipos de processo ao inicializar
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    fetchProcessSteps();
+    fetchProcessTypes();
+  }, []);
+
+  // Função para buscar os passos de processo da API WordPress
+  const fetchProcessSteps = () => {
+    setIsLoading(true);
+    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+      path: `/wp/v2/process_step?per_page=100&_embed`
+    }).then(data => {
+      setProcessSteps(data);
+      setIsLoading(false);
+    }).catch(error => {
+      console.error('Error fetching process steps:', error);
+      setIsLoading(false);
+    });
+  };
+
+  // Função para buscar os tipos de processo da API WordPress
+  const fetchProcessTypes = () => {
+    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+      path: `/wp/v2/process_type?per_page=100&_embed`
+    }).then(data => {
+      setProcessTypes(data);
+    }).catch(error => {
+      console.error('Error fetching process types:', error);
+    });
+  };
+
+  // Função para criar um novo passo de processo
+  const handleCreateStep = () => {
+    if (!newStepTitle || !newStepType) {
+      alert('Please provide a title and select a process type.');
+      return;
+    }
+    const newStep = {
+      title: newStepTitle,
+      status: 'publish',
+      type: 'process_step',
+      process_type: newStepType
+    };
+
+    // Cria o novo passo de processo
+    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+      path: `/wp/v2/process_step`,
+      method: 'POST',
+      data: newStep
+    }).then(savedStep => {
+      const stepId = savedStep.id;
+      const metaData = dynamicFields.map(field => ({
+        key: field.name,
+        value: getDefaultFieldValue(field.type) // Define o valor padrão conforme o tipo
+      }));
+
+      // Salva os metadados do novo passo
+      saveMetadata(stepId, metaData).then(() => {
+        // Atualiza a lista de passos de processo após salvar com sucesso
+        fetchProcessSteps();
+        // Limpa os campos de entrada após salvar
+        setNewStepTitle('');
+        setNewStepType('');
+        setDynamicFields([{
+          name: '',
+          type: 'text',
+          value: ''
+        }]);
+      }).catch(error => {
+        console.error('Error saving metadata:', error);
+      });
+    }).catch(error => {
+      console.error('Error creating process step:', error);
+    });
+  };
+
+  // Função para salvar metadados do passo de processo
+  const saveMetadata = (stepId, metaData) => {
+    return new Promise((resolve, reject) => {
+      _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+        path: `/wp-admin/admin-ajax.php`,
+        method: 'POST',
+        data: {
+          action: 'save_metadata',
+          step_id: stepId,
+          meta_data: metaData
+        }
+      }).then(response => {
+        if (response.success) {
+          resolve();
+        } else {
+          reject('Error saving metadata:', response.data);
+        }
+      }).catch(error => {
+        reject('Error saving metadata:', error);
+      });
+    });
+  };
+
+  // Função para lidar com a mudança de campo dinâmico
+  const handleDynamicFieldChange = (index, field, value) => {
+    const updatedFields = [...dynamicFields];
+    updatedFields[index][field] = value;
+    setDynamicFields(updatedFields);
+  };
+
+  // Função para adicionar um novo campo dinâmico
+  const handleAddField = () => {
+    setDynamicFields([...dynamicFields, {
+      name: '',
+      type: 'text',
+      value: ''
+    }]);
+  };
+
+  // Função para remover um campo dinâmico
+  const handleRemoveField = index => {
+    const updatedFields = dynamicFields.filter((_, idx) => idx !== index);
+    setDynamicFields(updatedFields);
+  };
+
+  // Função para obter o valor padrão conforme o tipo do campo
+  const getDefaultFieldValue = type => {
+    switch (type) {
+      case 'text':
+      case 'textfield':
+      case 'number':
+        return '';
+      case 'datepicker':
+        return null;
+      // Exemplo de valor padrão para datepicker
+      case 'upload':
+        return '';
+      // Exemplo de valor padrão para upload
+      case 'select':
+        return '';
+      // Exemplo de valor padrão para select
+      case 'radio':
+        return '';
+      // Exemplo de valor padrão para radio
+      default:
+        return '';
+    }
+  };
+
+  // Função para iniciar a edição do nome do campo dinâmico
+  const startEditFieldName = index => {
+    setEditableFieldIndex(index);
+  };
+
+  // Função para finalizar a edição do nome do campo dinâmico
+  const finishEditFieldName = (index, newName) => {
+    const updatedFields = [...dynamicFields];
+    updatedFields[index].name = newName;
+    setDynamicFields(updatedFields);
+    setEditableFieldIndex(-1);
+  };
+
+  // Renderiza um spinner enquanto os dados estão sendo carregados
+  if (isLoading) {
+    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, null);
+  }
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "brand"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "Obatala"), " Curatorial Process Management"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, "Step Manager"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "panel-container"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("main", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, null, "Existing Steps"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, null, processSteps.length > 0 ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("table", {
+    className: "wp-list-table widefat fixed striped"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("thead", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("tr", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("th", null, "Step Title"))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("tbody", null, processSteps.map(step => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("tr", {
+    key: step.id
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("td", null, step.title.rendered))))) :
+  // Aviso se não houver passos de processo existentes
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
+    isDismissible: false,
+    status: "warning"
+  }, "No existing process steps.")))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("aside", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, null, "Create Step"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+    label: "Step Title",
+    value: newStepTitle,
+    onChange: value => setNewStepTitle(value)
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
+    label: "Process Type",
+    value: newStepType,
+    options: [{
+      label: 'Select a process type...',
+      value: ''
+    }, ...processTypes.map(type => ({
+      label: type.title.rendered,
+      value: type.id
+    }))],
+    onChange: value => setNewStepType(value)
+  })), dynamicFields.map((field, index) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
+    key: index
+  }, editableFieldIndex === index ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
+    type: "text",
+    value: field.name,
+    onChange: e => handleDynamicFieldChange(index, 'name', e.target.value),
+    onBlur: () => finishEditFieldName(index, dynamicFields[index].name),
+    autoFocus: true
+  }) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "editable-field-name",
+    onClick: () => startEditFieldName(index)
+  }, field.name || `Metadata Name ${index + 1}`), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
+    label: `Metadata Type ${index + 1}`,
+    value: field.type,
+    options: [{
+      label: 'Text',
+      value: 'text'
+    }, {
+      label: 'Date Picker',
+      value: 'datepicker'
+    }, {
+      label: 'Upload',
+      value: 'upload'
+    }, {
+      label: 'Number',
+      value: 'number'
+    }, {
+      label: 'Text Field',
+      value: 'textfield'
+    }, {
+      label: 'Select',
+      value: 'select'
+    }, {
+      label: 'Radio',
+      value: 'radio'
+    }],
+    onChange: value => handleDynamicFieldChange(index, 'type', value)
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+    isDestructive: true,
+    onClick: () => handleRemoveField(index)
+  }, "Remove"))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+    isSecondary: true,
+    onClick: handleAddField
+  }, "Add Metadata")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+    isPrimary: true,
+    onClick: handleCreateStep
+  }, "Create Step"))))));
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProcessStepManager);
 
 /***/ }),
 
@@ -315,7 +586,6 @@ throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index
   \****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -496,7 +766,6 @@ const ProcessTypeManager = () => {
   \********************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -583,7 +852,6 @@ const ProcessStepForm = ({
   \********************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -699,7 +967,6 @@ const ProcessTypeForm = ({
   \********************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -840,7 +1107,6 @@ const ProcessTypeList = ({
   \***********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -958,7 +1224,6 @@ const ProcessViewer = () => {
   \************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
@@ -1004,7 +1269,6 @@ function Reducer(state = initialState, action) {
   \*****************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
-"use strict";
 /**
  * @license React
  * react-jsx-runtime.development.js
@@ -2348,7 +2612,6 @@ exports.jsxs = jsxs;
   \*******************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-"use strict";
 
 
 if (false) {} else {
@@ -2364,7 +2627,6 @@ if (false) {} else {
   \************************/
 /***/ ((module) => {
 
-"use strict";
 module.exports = window["React"];
 
 /***/ }),
@@ -2375,8 +2637,17 @@ module.exports = window["React"];
   \**********************************/
 /***/ ((module) => {
 
-"use strict";
 module.exports = window["wp"]["apiFetch"];
+
+/***/ }),
+
+/***/ "@wordpress/block-editor":
+/*!*************************************!*\
+  !*** external ["wp","blockEditor"] ***!
+  \*************************************/
+/***/ ((module) => {
+
+module.exports = window["wp"]["blockEditor"];
 
 /***/ }),
 
@@ -2386,7 +2657,6 @@ module.exports = window["wp"]["apiFetch"];
   \************************************/
 /***/ ((module) => {
 
-"use strict";
 module.exports = window["wp"]["components"];
 
 /***/ }),
@@ -2397,7 +2667,6 @@ module.exports = window["wp"]["components"];
   \*********************************/
 /***/ ((module) => {
 
-"use strict";
 module.exports = window["wp"]["element"];
 
 /***/ }),
@@ -2408,7 +2677,6 @@ module.exports = window["wp"]["element"];
   \************************************/
 /***/ ((module) => {
 
-"use strict";
 module.exports = window["wp"]["primitives"];
 
 /***/ })
@@ -2482,9 +2750,8 @@ module.exports = window["wp"]["primitives"];
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be in strict mode.
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
 (() => {
-"use strict";
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
