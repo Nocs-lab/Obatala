@@ -1,5 +1,8 @@
 import { useState, useEffect, useReducer } from 'react';
-import { Spinner,  __experimentalConfirmDialog as ConfirmDialog  } from '@wordpress/components';
+import {
+    Spinner,
+    __experimentalConfirmDialog as ConfirmDialog
+    } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import ProcessTypeForm from './ProcessTypeManager/ProcessTypeForm';
 import ProcessTypeList from './ProcessTypeManager/ProcessTypeList';
