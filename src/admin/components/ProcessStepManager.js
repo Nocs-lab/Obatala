@@ -1,6 +1,7 @@
 import  React, { useState, useEffect } from 'react';
-import { Spinner, Button, SelectControl, TextControl, Notice, Panel, PanelHeader, PanelRow, DatePicker, RadioControl } from '@wordpress/components';
+import { Spinner, Button, SelectControl, TextControl, Notice, Panel, PanelHeader, PanelBody, PanelRow, Icon, DatePicker, RadioControl } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
+import { trash } from "@wordpress/icons";
 import { MediaUpload, MediaUploadCheck } from '@wordpress/block-editor';
 
 const ProcessStepManager = () => {
@@ -210,68 +211,62 @@ const ProcessStepManager = () => {
                 <aside>
                     {/* Painel para criar um novo passo de processo */}
                     <Panel>
-                        <PanelHeader>Create Step</PanelHeader>
-                        <PanelRow>
-                            {/* Formulário para inserir título e tipo de processo do novo passo */}
-                            <TextControl
-                                label="Step Title"
-                                value={newStepTitle}
-                                onChange={(value) => setNewStepTitle(value)}
-                            />
-                            <SelectControl
-                                label="Process Type"
-                                value={newStepType}
-                                options={[
-                                    { label: 'Select a process type...', value: '' },
-                                    ...processTypes.map(type => ({ label: type.title.rendered, value: type.id }))
-                                ]}
-                                onChange={(value) => setNewStepType(value)}
-                            />
-                        </PanelRow>
-
-                        {/* Renderiza os campos dinâmicos para os metadados */}
-                        {dynamicFields.map((field, index) => (
-                            <PanelRow key={index}>
-                                {editableFieldIndex === index ? (
-                                    <input
-                                        type="text"
-                                        value={field.name}
+                        <PanelHeader>Add Step</PanelHeader>
+                        <PanelBody title="Main data">
+                            <PanelRow>
+                                {/* Formulário para inserir título e tipo de processo do novo passo */}
+                                <TextControl
+                                    label="Step Title"
+                                    value={newStepTitle}
+                                    onChange={(value) => setNewStepTitle(value)}
+                                />
+                                <SelectControl
+                                    label="Process Type"
+                                    value={newStepType}
+                                    options={[
+                                        { label: 'Select a process type...', value: '' },
+                                        ...processTypes.map(type => ({ label: type.title.rendered, value: type.id }))
+                                    ]}
+                                    onChange={(value) => setNewStepType(value)}
+                                />
+                            </PanelRow>
+                        </PanelBody>
+                        <PanelBody title="Metadata" className="counter-container">
+                            {/* Renderiza os campos dinâmicos para os metadados */}
+                            {dynamicFields.map((field, index) => (
+                                <PanelRow key={index} className="counter-item">
+                                    <Button icon={<Icon icon={trash} />} isDestructive onClick={() => handleRemoveField(index)} />
+                                    <TextControl
+                                        label="Title"
+                                        value={field.name || `Metadata Name ${index + 1}`}
                                         onChange={(e) => handleDynamicFieldChange(index, 'name', e.target.value)}
                                         onBlur={() => finishEditFieldName(index, dynamicFields[index].name)}
                                         autoFocus
                                     />
-                                ) : (
-                                    <span
-                                        className="editable-field-name"
-                                        onClick={() => startEditFieldName(index)}
-                                    >
-                                        {field.name || `Metadata Name ${index + 1}`}
-                                    </span>
-                                )}
-                                <SelectControl
-                                    label={`Metadata Type ${index + 1}`}
-                                    value={field.type}
-                                    options={[
-                                        { label: 'Text', value: 'text' },
-                                        { label: 'Date Picker', value: 'datepicker' },
-                                        { label: 'Upload', value: 'upload' },
-                                        { label: 'Number', value: 'number' },
-                                        { label: 'Text Field', value: 'textfield' },
-                                        { label: 'Select', value: 'select' },
-                                        { label: 'Radio', value: 'radio' },
-                                    ]}
-                                    onChange={(value) => handleDynamicFieldChange(index, 'type', value)}
-                                />
-                                <Button isDestructive onClick={() => handleRemoveField(index)}>Remove</Button>
+                                    <SelectControl
+                                        label="Type"
+                                        value={field.type}
+                                        options={[
+                                            { label: 'Text', value: 'text' },
+                                            { label: 'Date Picker', value: 'datepicker' },
+                                            { label: 'Upload', value: 'upload' },
+                                            { label: 'Number', value: 'number' },
+                                            { label: 'Text Field', value: 'textfield' },
+                                            { label: 'Select', value: 'select' },
+                                            { label: 'Radio', value: 'radio' },
+                                        ]}
+                                        onChange={(value) => handleDynamicFieldChange(index, 'type', value)}
+                                    />
+                                </PanelRow>
+                                
+                            ))}
+                            <PanelRow>
+                                <Button isSecondary onClick={handleAddField}>Add Metadata</Button>
                             </PanelRow>
-                        ))}
+                        </PanelBody>
 
                         <PanelRow>
-                            <Button isSecondary onClick={handleAddField}>Add Metadata</Button>
-                        </PanelRow>
-
-                        <PanelRow>
-                            <Button isPrimary onClick={handleCreateStep}>Create Step</Button>
+                            <Button isPrimary onClick={handleCreateStep}>Add Step</Button>
                         </PanelRow>
                     </Panel>
                 </aside>

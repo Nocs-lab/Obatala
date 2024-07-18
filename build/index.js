@@ -305,8 +305,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/trash.js");
 /* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/block-editor */ "@wordpress/block-editor");
 /* harmony import */ var _wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_block_editor__WEBPACK_IMPORTED_MODULE_3__);
+
 
 
 
@@ -507,7 +509,9 @@ const ProcessStepManager = () => {
   (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
     isDismissible: false,
     status: "warning"
-  }, "No existing process steps.")))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("aside", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, null, "Create Step"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+  }, "No existing process steps.")))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("aside", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, null, "Add Step"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
+    title: "Main data"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
     label: "Step Title",
     value: newStepTitle,
     onChange: value => setNewStepTitle(value)
@@ -522,19 +526,26 @@ const ProcessStepManager = () => {
       value: type.id
     }))],
     onChange: value => setNewStepType(value)
-  })), dynamicFields.map((field, index) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
-    key: index
-  }, editableFieldIndex === index ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("input", {
-    type: "text",
-    value: field.name,
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
+    title: "Metadata",
+    className: "counter-container"
+  }, dynamicFields.map((field, index) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
+    key: index,
+    className: "counter-item"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+    icon: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Icon, {
+      icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_4__["default"]
+    }),
+    isDestructive: true,
+    onClick: () => handleRemoveField(index)
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+    label: "Title",
+    value: field.name || `Metadata Name ${index + 1}`,
     onChange: e => handleDynamicFieldChange(index, 'name', e.target.value),
     onBlur: () => finishEditFieldName(index, dynamicFields[index].name),
     autoFocus: true
-  }) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "editable-field-name",
-    onClick: () => startEditFieldName(index)
-  }, field.name || `Metadata Name ${index + 1}`), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
-    label: `Metadata Type ${index + 1}`,
+  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
+    label: "Type",
     value: field.type,
     options: [{
       label: 'Text',
@@ -559,16 +570,13 @@ const ProcessStepManager = () => {
       value: 'radio'
     }],
     onChange: value => handleDynamicFieldChange(index, 'type', value)
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-    isDestructive: true,
-    onClick: () => handleRemoveField(index)
-  }, "Remove"))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
     isSecondary: true,
     onClick: handleAddField
-  }, "Add Metadata")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+  }, "Add Metadata"))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
     isPrimary: true,
     onClick: handleCreateStep
-  }, "Create Step"))))));
+  }, "Add Step"))))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProcessStepManager);
 
@@ -719,7 +727,7 @@ const ProcessTypeManager = () => {
     return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, null);
   }
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    class: "brand"
+    className: "brand"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "Obatala"), " Curatorial Process Management"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, "Process Type Manager"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "panel-container"
   }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("main", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.__experimentalConfirmDialog, {
@@ -1173,40 +1181,35 @@ const ProcessViewer = () => {
   // Renderiza os detalhes do processo
   return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "brand"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "Obatala"), " Curatorial Process Viewer"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, process.process_type ? 'Process type title' : '', ": ", process.title.rendered), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "Obatala"), " Curatorial Process Viewer"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, process.process_type ? 'Process type title' : '', ": ", process.title.rendered), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+    className: "badge-container"
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "badge success"
   }, process.status), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
     className: "badge"
-  }, "Current step"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
+  }, "Current step")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
     className: "panel-container"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("main", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, null, "01: Step title 1 ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("small", null, "Finalizado em 21/04/2024 por Jo\xE3o Silva")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("main", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, null, "01: Step title 1 ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "badge success"
+  }, "Completed"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("small", null, "Completed at 21/04/2024 by Jo\xE3o Silva")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
     title: "History",
     initialOpen: false
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dl", {
-    className: "description-list"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "list-item"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dt", null, "Process Type:"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dd", null, process.process_type)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "list-item"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dt", null, "Current Stage:"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dd", null, process.current_stage))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, null)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
     title: "Comments",
     initialOpen: false
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dl", {
-    className: "description-list"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "list-item"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dt", null, "Process Type:"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dd", null, process.process_type)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "list-item"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dt", null, "Current Stage:"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dd", null, process.current_stage)))))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
-    title: "01: Step title 1",
-    initialOpen: true
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dl", {
-    className: "description-list"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "list-item"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dt", null, "Process Type:"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dd", null, process.process_type)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "list-item"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dt", null, "Current Stage:"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dd", null, process.current_stage)))))))));
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, null))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, null, "02: Step title 2 ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "badge warning"
+  }, "In progress"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("small", null, "Started at 22/04/2024 by Joana Silva")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
+    title: "History",
+    initialOpen: false
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, null)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
+    title: "Comments",
+    initialOpen: false
+  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, null))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, null, "03: Step title 3 ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "badge error"
+  }, "Not started"))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, null, "04: Step title 4 ", (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
+    className: "badge error"
+  }, "Not started"))))));
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProcessViewer);
 
