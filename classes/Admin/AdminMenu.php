@@ -31,8 +31,8 @@ class AdminMenu {
                 'position' => -1,
             ], 
             'process-step-manager' => [
-                'title' => __('Process Step Manager', 'obatala'),
-                'menu_title' => __('Process Step Manager', 'obatala'),
+                'title' => __('Step Manager', 'obatala'),
+                'menu_title' => __('Step Manager', 'obatala'),
                 'capability' => 'manage_options', // Capacidade necessária para acessar esta página.
                 'icon' => 'dashicons-admin-tools',
                 'position' => -1,

@@ -1,5 +1,7 @@
 import { useState, useEffect, useReducer } from 'react';
 import {
+    Panel,
+    PanelHeader,
     Spinner,
     __experimentalConfirmDialog as ConfirmDialog
     } from '@wordpress/components';
@@ -139,7 +141,7 @@ const ProcessTypeManager = () => {
 
     return (
             <div>
-            <span class="brand"><strong>Obatala</strong> Curatorial Process Management</span>
+            <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
             <h2>Process Type Manager</h2>
             <div className="panel-container">
                 <main>
@@ -168,8 +170,11 @@ const ProcessTypeManager = () => {
                     />
                 </main>
                 <aside>
-                    <ProcessTypeForm onSave={handleSaveProcessType} onCancel={() => setEditingProcessType(null)} editingProcessType={editingProcessType} />    
-                    <ProcessStepForm processTypes={processTypes} processSteps={processSteps} onAddStep={handleAddProcessStep} />
+                    <Panel>
+                        <PanelHeader>Managing process types</PanelHeader>
+                        <ProcessTypeForm onSave={handleSaveProcessType} onCancel={() => setEditingProcessType(null)} editingProcessType={editingProcessType} />    
+                        <ProcessStepForm processTypes={processTypes} processSteps={processSteps} onAddStep={handleAddProcessStep} />
+                    </Panel>
                 </aside>
             </div>
         </div>

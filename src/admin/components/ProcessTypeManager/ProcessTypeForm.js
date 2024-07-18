@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, TextControl, TextareaControl, CheckboxControl, Panel, PanelBody, PanelRow, Notice } from '@wordpress/components';
+import { Button, TextControl, TextareaControl, CheckboxControl, PanelBody, PanelRow, Notice } from '@wordpress/components';
 
 const ProcessTypeForm = ({ onSave, onCancel, editingProcessType }) => {
     const [processTypeName, setProcessTypeName] = useState('');
@@ -58,61 +58,57 @@ const ProcessTypeForm = ({ onSave, onCancel, editingProcessType }) => {
         setAcceptTainacanItems(false);
         setGenerateTainacanItems(false);
     };
-    
 
     return (
-        <Panel>
-             
-            <PanelBody title="Add Process Type" initialOpen={ true }>
-              
-                <PanelRow>
-                    {notice && (
-                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                        {notice.message}
-                    </Notice>
-                    )}
-                    <TextControl
-                        label="Process Type Name"
-                        value={processTypeName}
-                        onChange={(value) => setProcessTypeName(value)}
-                    />
-                    <TextareaControl
-                        label="Process Type Description"
-                        value={processTypeDescription}
-                        onChange={(value) => setProcessTypeDescription(value)}
-                    />
-                    <CheckboxControl
-                        label="Accept Attachments"
-                        checked={acceptAttachments}
-                        onChange={(value) => setAcceptAttachments(value)}
-                    />
-                    <CheckboxControl
-                        label="Accept Tainacan Items"
-                        checked={acceptTainacanItems}
-                        onChange={(value) => setAcceptTainacanItems(value)}
-                    />
-                    <CheckboxControl
-                        label="Generate Tainacan Items"
-                        checked={generateTainacanItems}
-                        onChange={(value) => setGenerateTainacanItems(value)}
-                    />
-                    {editingProcessType ? (
-                        <>
-                            <Button isPrimary onClick={handleSave}>
-                                Update Process Type
-                            </Button>
-                            <Button onClick={handleCancel}>
-                                Cancel
-                            </Button>
-                        </>
-                    ) : (
+        <PanelBody title="Add Process Type" initialOpen={ true }>
+            
+            <PanelRow>
+                {notice && (
+                <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                    {notice.message}
+                </Notice>
+                )}
+                <TextControl
+                    label="Process Type Name"
+                    value={processTypeName}
+                    onChange={(value) => setProcessTypeName(value)}
+                />
+                <TextareaControl
+                    label="Process Type Description"
+                    value={processTypeDescription}
+                    onChange={(value) => setProcessTypeDescription(value)}
+                />
+                <CheckboxControl
+                    label="Accept Attachments"
+                    checked={acceptAttachments}
+                    onChange={(value) => setAcceptAttachments(value)}
+                />
+                <CheckboxControl
+                    label="Accept Tainacan Items"
+                    checked={acceptTainacanItems}
+                    onChange={(value) => setAcceptTainacanItems(value)}
+                />
+                <CheckboxControl
+                    label="Generate Tainacan Items"
+                    checked={generateTainacanItems}
+                    onChange={(value) => setGenerateTainacanItems(value)}
+                />
+                {editingProcessType ? (
+                    <>
                         <Button isPrimary onClick={handleSave}>
-                            Add Process Type
+                            Update Process Type
                         </Button>
-                    )}
-                </PanelRow>
-            </PanelBody>
-        </Panel>
+                        <Button onClick={handleCancel}>
+                            Cancel
+                        </Button>
+                    </>
+                ) : (
+                    <Button isPrimary onClick={handleSave}>
+                        Add Process Type
+                    </Button>
+                )}
+            </PanelRow>
+        </PanelBody>
     );
 };
 
