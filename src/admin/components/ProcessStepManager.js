@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Spinner, Button, SelectControl, TextControl, Notice, Panel, PanelBody, PanelRow, Icon, Modal, DatePicker, RadioControl } from '@wordpress/components';
+import { Spinner, Button, SelectControl, TextControl, Notice, Panel, PanelHeader, PanelBody, PanelRow, Icon, Modal, DatePicker, RadioControl } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { edit, trash } from "@wordpress/icons";
 import { MediaUpload, MediaUploadCheck } from '@wordpress/block-editor';
@@ -8,8 +8,6 @@ const ProcessStepManager = () => {
     // Estado para armazenar os passos de processo
     const [processSteps, setProcessSteps] = useState([]);
 
-    const [newStepTitle, setNewStepTitle] = useState('');
-    const [isLoading, setIsLoading] = useState(true);
     const [editingStep, setEditingStep] = useState(null);
     const [notice, setNotice] = useState(null);
 
@@ -68,6 +66,26 @@ const ProcessStepManager = () => {
                     setEditingStep(null);
                     setNewStepTitle('');
                     setNotice(null);
+
+                    const stepId = savedStep.id;
+                    const metaData = dynamicFields.map(field => ({
+                        key: field.name,
+                        value: getDefaultFieldValue(field.type) // Define o valor padrão conforme o tipo
+                    }));
+        
+                    // Salva os metadados do novo passo
+                    saveMetadata(stepId, metaData)
+                        .then(() => {
+                            // Atualiza a lista de passos de processo após salvar com sucesso
+                            fetchProcessSteps();
+                            // Limpa os campos de entrada após salvar
+                            setNewStepTitle('');
+                            setNewStepType('');
+                            setDynamicFields([{ name: '', type: 'text', value: '' }]);
+                        })
+                        .catch(error => {
+                            console.error('Error saving metadata:', error);
+                        });
                 })
                 .catch(error => {
                     console.error('Error updating process step:', error);
@@ -77,37 +95,15 @@ const ProcessStepManager = () => {
                 .then(savedStep => {
                     setProcessSteps([...processSteps, savedStep]);
                     setNewStepTitle('');
-                })
-                .catch(error => {
-                    console.error('Error creating process step:', error);
-                });
-        }
-    };
 
-    const handleEditStep = (stepId, currentTitle) => {
-        setEditingStep(stepId);
-        setNewStepTitle(currentTitle);
-        
-    };
+                    const stepId = savedStep.id;
+                    const metaData = dynamicFields.map(field => ({
+                        key: field.name,
+                        value: getDefaultFieldValue(field.type) // Define o valor padrão conforme o tipo
+                    }));
 
-    const handleCancel = () => {
-        setEditingStep(null);
-        setNewStepTitle('');
-        setNotice(null);
-    };
-    
-    const newStep = {
-        // Cria o novo passo de processo
-        apiFetch({ path: `/wp/v2/process_step`, method: 'POST', data: newStep })
-            .then(savedStep => {
-                const stepId = savedStep.id;
-                const metaData = dynamicFields.map(field => ({
-                    key: field.name,
-                    value: getDefaultFieldValue(field.type) // Define o valor padrão conforme o tipo
-                }));
-    
-                // Salva os metadados do novo passo
-                saveMetadata(stepId, metaData)
+                    // Salva os metadados do novo passo
+                    saveMetadata(stepId, metaData)
                     .then(() => {
                         // Atualiza a lista de passos de processo após salvar com sucesso
                         fetchProcessSteps();
@@ -119,11 +115,22 @@ const ProcessStepManager = () => {
                     .catch(error => {
                         console.error('Error saving metadata:', error);
                     });
-            })
-            .catch(error => {
-                console.error('Error creating process step:', error);
-            });
-        };
+                })
+                .catch(error => {
+                    console.error('Error creating process step:', error);
+                });
+        }
+    };
+
+    const handleEditStep = (stepId, currentTitle) => {
+        setEditingStep(stepId);
+        setNewStepTitle(currentTitle);
+    };
+
+    const handleCancel = () => {
+        setEditingStep(null);
+        setNewStepTitle('');
+        setNotice(null);
     };
 
     // Função para salvar metadados do passo de processo
@@ -266,7 +273,7 @@ const ProcessStepManager = () => {
                                     onChange={(value) => setNewStepTitle(value)}
                                 />
                                 <Button isPrimary onClick={handleSaveStep}>
-                                    Create Step
+                                    Add Step
                                 </Button>
                             </PanelRow>
                         </PanelBody>
@@ -305,7 +312,7 @@ const ProcessStepManager = () => {
                         </PanelBody>
 
                         <PanelRow>
-                            <Button isPrimary onClick={handleCreateStep}>Add Step</Button>
+                            <Button isPrimary onClick={handleSaveStep}>Add Step</Button>
                         </PanelRow>
                     </Panel>
                 </aside>
