@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Spinner, Notice, Panel, PanelBody, PanelRow } from '@wordpress/components';
+import { Spinner, Notice, Panel, PanelHeader, PanelBody, PanelRow } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 
 const ProcessViewer = () => {
@@ -57,12 +57,31 @@ const ProcessViewer = () => {
     return (
         <div>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Viewer</span>
-            <h2>Process: {process.title.rendered}</h2>
-            <span className="badge">{process.status}</span>
+            <h2>{process.process_type ? 'Process type title' : ''}: {process.title.rendered}</h2>
+            <span className="badge success">{process.status}</span>
+            <span className="badge">Current step</span>
             <div className="panel-container">
                 <main>
                     <Panel>
-                        <PanelBody title="Process details" initialOpen={true}>
+                        <PanelHeader>01: Step title 1 <small>Finalizado em 21/04/2024 por João Silva</small></PanelHeader>
+                        <PanelBody title="History" initialOpen={false}>
+                            <PanelRow>
+                                <dl className="description-list">
+                                    <div className="list-item">
+                                        <dt>Process Type:</dt>
+                                        <dd>{process.process_type}</dd>
+                                    </div>
+                                    <div className="list-item">
+                                        <dt>Current Stage:</dt>
+                                        <dd>{process.current_stage}</dd>
+                                    </div>
+                                    {/* Detalhes adicionais do processo podem ser adicionados aqui */}
+                                </dl>
+                            </PanelRow>
+                        </PanelBody>
+                    </Panel>
+                    <Panel>
+                        <PanelBody title="01: Step title 1" initialOpen={true}>
                             <PanelRow>
                                 <dl className="description-list">
                                     <div className="list-item">

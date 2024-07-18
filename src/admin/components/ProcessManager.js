@@ -94,6 +94,7 @@ const ProcessManager = ({ onSelectProcess }) => {
                                         <thead>
                                             <tr>
                                                 <th>Process Title</th>
+                                                <th>Process Type</th>
                                                 <th>Status</th>
                                                 <th>Actions</th>
                                             </tr>
@@ -102,7 +103,8 @@ const ProcessManager = ({ onSelectProcess }) => {
                                         {processes.map(process => (
                                             <tr key={process.id}>
                                                 <td>{process.title.rendered}</td>
-                                                <td><span className="badge">{process.status}</span></td>
+                                                <td>{process.process_type ? 'Process type title' : ''}</td>
+                                                <td><span className="badge success">{process.status}</span></td>
                                                 <td>
                                                     <Button isSecondary onClick={() => handleSelectProcess(process.id)}>
                                                         View
