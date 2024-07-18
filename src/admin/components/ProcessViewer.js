@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Spinner, Notice, Panel, PanelBody, PanelRow } from '@wordpress/components';
+import { Spinner, Notice, Panel, PanelHeader, PanelBody, PanelRow } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 
 const ProcessViewer = () => {
@@ -57,26 +57,44 @@ const ProcessViewer = () => {
     return (
         <div>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Viewer</span>
-            <h2>Process: {process.title.rendered}</h2>
-            <span className="badge">{process.status}</span>
+            <h2>{process.process_type ? 'Process type title' : ''}: {process.title.rendered}</h2>
+            <div className="badge-container">
+                <span className="badge success">{process.status}</span>
+                <span className="badge">Current step</span>
+            </div>
             <div className="panel-container">
                 <main>
                     <Panel>
-                        <PanelBody title="Process details" initialOpen={true}>
+                        <PanelHeader>01: Step title 1 <span className="badge success">Completed</span><small>Completed at 21/04/2024 by João Silva</small></PanelHeader>
+                        <PanelBody title="History" initialOpen={false}>
                             <PanelRow>
-                                <dl className="description-list">
-                                    <div className="list-item">
-                                        <dt>Process Type:</dt>
-                                        <dd>{process.process_type}</dd>
-                                    </div>
-                                    <div className="list-item">
-                                        <dt>Current Stage:</dt>
-                                        <dd>{process.current_stage}</dd>
-                                    </div>
-                                    {/* Detalhes adicionais do processo podem ser adicionados aqui */}
-                                </dl>
+ 
                             </PanelRow>
                         </PanelBody>
+                        <PanelBody title="Comments" initialOpen={false}>
+                            <PanelRow>
+
+                            </PanelRow>
+                        </PanelBody>
+                    </Panel>
+                    <Panel>
+                        <PanelHeader>02: Step title 2 <span className="badge warning">In progress</span><small>Started at 22/04/2024 by Joana Silva</small></PanelHeader>
+                        <PanelBody title="History" initialOpen={false}>
+                            <PanelRow>
+ 
+                            </PanelRow>
+                        </PanelBody>
+                        <PanelBody title="Comments" initialOpen={false}>
+                            <PanelRow>
+
+                            </PanelRow>
+                        </PanelBody>
+                    </Panel>
+                    <Panel>
+                        <PanelHeader>03: Step title 3 <span className="badge error">Not started</span></PanelHeader>
+                    </Panel>
+                    <Panel>
+                        <PanelHeader>04: Step title 4 <span className="badge error">Not started</span></PanelHeader>
                     </Panel>
                 </main>
             </div>

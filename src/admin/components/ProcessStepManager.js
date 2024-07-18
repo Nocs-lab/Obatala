@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Spinner, Button, SelectControl, TextControl, Notice, Panel, PanelBody, PanelRow, DatePicker, RadioControl } from '@wordpress/components';
+import  React, { useState, useEffect } from 'react';
+import { Spinner, Button, SelectControl, TextControl, Notice, Panel, PanelHeader, PanelBody, PanelRow, Icon, DatePicker, RadioControl } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
+import { trash } from "@wordpress/icons";
 import { MediaUpload, MediaUploadCheck } from '@wordpress/block-editor';
 
 const ProcessStepManager = () => {
@@ -177,41 +178,41 @@ const ProcessStepManager = () => {
         <div>
             {/* Título e cabeçalho da página */}
             <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
-            <h2>Process Step Manager</h2>
+            <h2>Step Manager</h2>
             <div className="panel-container">
                 <main>
                     {/* Painel com os passos de processo existentes */}
                     <Panel>
-                        <PanelBody title="Existing Process Steps" initialOpen={true}>
-                            <PanelRow>
-                                {/* Lista os passos de processo existentes */}
-                                {processSteps.length > 0 ? (
-                                    <table className="wp-list-table widefat fixed striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Step Title</th>
+                        <PanelHeader>Existing Steps</PanelHeader>
+                        <PanelRow>
+                            {/* Lista os passos de processo existentes */}
+                            {processSteps.length > 0 ? (
+                                <table className="wp-list-table widefat fixed striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Step Title</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {processSteps.map(step => (
+                                            <tr key={step.id}>
+                                                <td>{step.title.rendered}</td>
                                             </tr>
-                                        </thead>
-                                        <tbody>
-                                            {processSteps.map(step => (
-                                                <tr key={step.id}>
-                                                    <td>{step.title.rendered}</td>
-                                                </tr>
-                                            ))}    
-                                        </tbody>
-                                    </table>
-                                ) : (
-                                    // Aviso se não houver passos de processo existentes
-                                    <Notice isDismissible={false} status="warning">No existing process steps.</Notice>
-                                )}
-                            </PanelRow>
-                        </PanelBody>
+                                        ))}    
+                                    </tbody>
+                                </table>
+                            ) : (
+                                // Aviso se não houver passos de processo existentes
+                                <Notice isDismissible={false} status="warning">No existing process steps.</Notice>
+                            )}
+                        </PanelRow>
                     </Panel>
                 </main>
                 <aside>
                     {/* Painel para criar um novo passo de processo */}
                     <Panel>
-                        <PanelBody title="Create Process Step" initialOpen={true}>
+                        <PanelHeader>Add Step</PanelHeader>
+                        <PanelBody title="Main data">
                             <PanelRow>
                                 {/* Formulário para inserir título e tipo de processo do novo passo */}
                                 <TextControl
@@ -229,27 +230,21 @@ const ProcessStepManager = () => {
                                     onChange={(value) => setNewStepType(value)}
                                 />
                             </PanelRow>
+                        </PanelBody>
+                        <PanelBody title="Metadata" className="counter-container">
                             {/* Renderiza os campos dinâmicos para os metadados */}
                             {dynamicFields.map((field, index) => (
-                                <PanelRow key={index}>
-                                    {editableFieldIndex === index ? (
-                                        <input
-                                            type="text"
-                                            value={field.name}
-                                            onChange={(e) => handleDynamicFieldChange(index, 'name', e.target.value)}
-                                            onBlur={() => finishEditFieldName(index, dynamicFields[index].name)}
-                                            autoFocus
-                                        />
-                                    ) : (
-                                        <span
-                                            className="editable-field-name"
-                                            onClick={() => startEditFieldName(index)}
-                                        >
-                                            {field.name || `Metadata Name ${index + 1}`}
-                                        </span>
-                                    )}
+                                <PanelRow key={index} className="counter-item">
+                                    <Button icon={<Icon icon={trash} />} isDestructive onClick={() => handleRemoveField(index)} />
+                                    <TextControl
+                                        label="Title"
+                                        value={field.name || `Metadata Name ${index + 1}`}
+                                        onChange={(e) => handleDynamicFieldChange(index, 'name', e.target.value)}
+                                        onBlur={() => finishEditFieldName(index, dynamicFields[index].name)}
+                                        autoFocus
+                                    />
                                     <SelectControl
-                                        label={`Metadata Type ${index + 1}`}
+                                        label="Type"
                                         value={field.type}
                                         options={[
                                             { label: 'Text', value: 'text' },
@@ -262,16 +257,17 @@ const ProcessStepManager = () => {
                                         ]}
                                         onChange={(value) => handleDynamicFieldChange(index, 'type', value)}
                                     />
-                                    <Button isDestructive onClick={() => handleRemoveField(index)}>Remove</Button>
                                 </PanelRow>
+                                
                             ))}
                             <PanelRow>
                                 <Button isSecondary onClick={handleAddField}>Add Metadata</Button>
                             </PanelRow>
-                            <PanelRow>
-                                <Button isPrimary onClick={handleCreateStep}>Create Step</Button>
-                            </PanelRow>
                         </PanelBody>
+
+                        <PanelRow>
+                            <Button isPrimary onClick={handleCreateStep}>Add Step</Button>
+                        </PanelRow>
                     </Panel>
                 </aside>
             </div>
