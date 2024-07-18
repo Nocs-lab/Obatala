@@ -88,16 +88,27 @@ const ProcessTypeManager = () => {
     };
 
     const handleAddProcessStep = (step) => {
-        apiFetch({ path: `/wp/v2/process_step`, method: 'POST', data: step })
-            .then(savedProcessStep => {
-                setProcessSteps([...processSteps, savedProcessStep]);
+        const { id, process_type } = step;
+
+         // Verifica se já existe uma associação com base no ID da etapa e no ID do tipo de processo
+        const existingStep = processSteps.find(existing => existing.id === id && existing.process_type === process_type);
+    
+        if (existingStep) {
+            console.log('Associação já existe:', existingStep);
+            return; 
+        }
+    
+        // Se não existe, adicionar uma nova associação
+        apiFetch({ path: `/wp/v2/process_step/${id}`, method: 'PUT', data: step })
+            .then(updatedProcessStep => {
+                setProcessSteps([...processSteps, updatedProcessStep]);
             })
             .catch(error => {
-                console.error('Error adding process step:', error);
+                console.error('Error updating process step:', error);
             });
-        
     };
-     
+    
+
     const handleDeleteProcessStep = (id) => {
         apiFetch({ path: `/wp/v2/process_step/${id}`, method: 'DELETE' })
                 .then(() => {
@@ -158,7 +169,7 @@ const ProcessTypeManager = () => {
                 </main>
                 <aside>
                     <ProcessTypeForm onSave={handleSaveProcessType} onCancel={() => setEditingProcessType(null)} editingProcessType={editingProcessType} />    
-                    <ProcessStepForm processTypes={processTypes} onAddStep={handleAddProcessStep} />
+                    <ProcessStepForm processTypes={processTypes} processSteps={processSteps} onAddStep={handleAddProcessStep} />
                 </aside>
             </div>
         </div>
