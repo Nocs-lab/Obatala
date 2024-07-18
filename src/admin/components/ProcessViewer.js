@@ -95,7 +95,7 @@ const ProcessViewer = () => {
                     {filteredSteps.length > 0 ? (
                         filteredSteps.map((step, index) => (
                             <Panel key={step.id}>
-                                <PanelHeader>{step.title.rendered}</PanelHeader>
+                                <PanelHeader>{step.title.rendered}<span className="badge success">Completed</span><small>Completed at 21/04/2024 by João Silva</small></PanelHeader>
                                 <PanelBody title="History" initialOpen={false}>
                                     <PanelRow>
                                         {/* Renderizar histórico aqui, se houver */}
