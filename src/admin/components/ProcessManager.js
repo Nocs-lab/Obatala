@@ -8,17 +8,17 @@ const ProcessManager = ({ onSelectProcess }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [newProcessTitle, setNewProcessTitle] = useState('');
     const [newProcessType, setNewProcessType] = useState('');
-    const [selectedProcessId, setSelectedProcessId] = useState(null); // Estado para armazenar o ID do processo selecionado
+    const [selectedProcessId, setSelectedProcessId] = useState(null);
 
     useEffect(() => {
         fetchProcessTypes();
         fetchProcesses();
     }, []);
 
-    // Função para buscar os tipos de processo na API
     const fetchProcessTypes = () => {
         apiFetch({ path: `/wp/v2/process_type?per_page=100&_embed` })
             .then(data => {
+                console.log('Fetched process types:', data); // Adiciona log para verificar os dados
                 setProcessTypes(data);
             })
             .catch(error => {
@@ -26,11 +26,11 @@ const ProcessManager = ({ onSelectProcess }) => {
             });
     };
 
-    // Função para buscar os processos existentes na API
     const fetchProcesses = () => {
         setIsLoading(true);
         apiFetch({ path: `/wp/v2/process_obatala?per_page=100&_embed` })
             .then(data => {
+                console.log('Fetched processes:', data); // Adiciona log para verificar os dados
                 setProcesses(data);
                 setIsLoading(false);
             })
@@ -40,7 +40,6 @@ const ProcessManager = ({ onSelectProcess }) => {
             });
     };
 
-    // Função para criar um novo processo
     const handleCreateProcess = () => {
         if (!newProcessTitle || !newProcessType) {
             alert('Please provide a title and select a process type.');
@@ -60,26 +59,21 @@ const ProcessManager = ({ onSelectProcess }) => {
                 setProcesses([...processes, savedProcess]);
                 setNewProcessTitle('');
                 setNewProcessType('');
-                // Seleciona o processo apenas quando clicado explicitamente
-                // onSelectProcess(savedProcess.id);
             })
             .catch(error => {
                 console.error('Error creating process:', error);
             });
     };
 
-    // Função para selecionar um processo e redirecionar para o ProcessViewer
     const handleSelectProcess = (processId) => {
         setSelectedProcessId(processId);
         onSelectProcess(processId);
     };
 
-    // Renderização condicional com base no estado de carregamento
     if (isLoading) {
         return <Spinner />;
     }
 
-    // Renderiza a lista de processos ou o ProcessViewer dependendo do estado de selectedProcessId
     return (
         <div>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
@@ -100,18 +94,27 @@ const ProcessManager = ({ onSelectProcess }) => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                    {processes.map(process => (
-                                        <tr key={process.id}>
-                                            <td>{process.title.rendered}</td>
-                                            <td>{process.process_type ? 'Process type title' : ''}</td>
-                                            <td><span className="badge success">{process.status}</span></td>
-                                            <td>
-                                                <Button isSecondary onClick={() => handleSelectProcess(process.id)}>
-                                                    View
-                                                </Button>
-                                            </td>
-                                        </tr>
-                                    ))}
+                                        {processes.map(process => {
+                                            console.log("Current process:", process);
+                                            const processTypeFiltered = processTypes.find(processType => {
+                                                return processType.id == process.process_type;
+                                            });
+                                            console.log("Lista de Type:", processTypes);
+                                            console.log("ID do process type", process.process_type);
+                                            console.log("Dados do type filtrado", processTypeFiltered);
+                                            return (
+                                                <tr key={process.id}>
+                                                    <td>{process.title.rendered}</td>
+                                                    <td>{processTypeFiltered ? processTypeFiltered.title.rendered : 'Unknown'}</td>
+                                                    <td><span className="badge success">{process.status}</span></td>
+                                                    <td>
+                                                        <Button isSecondary onClick={() => handleSelectProcess(process.id)}>
+                                                            View
+                                                        </Button>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
                                     </tbody>
                                 </table>
                             ) : (
@@ -143,9 +146,11 @@ const ProcessManager = ({ onSelectProcess }) => {
                     </Panel>
                 </aside>
             </div>
-            {/* Renderiza o ProcessViewer apenas se selectedProcessId estiver definido */}
             {selectedProcessId && (
-                onSelectProcess(selectedProcessId)
+                <div>
+                    {/* Render your ProcessViewer component or call onSelectProcess with selectedProcessId */}
+                    {onSelectProcess(selectedProcessId)}
+                </div>
             )}
         </div>
     );
