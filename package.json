@@ -24,9 +24,11 @@
         "check-engines": "wp-scripts check-engines"
     },
     "devDependencies": {
-        "@wordpress/scripts": "^27.8.0"
+        "@wordpress/scripts": "^28.3.0"
     },
     "dependencies": {
-        "@wordpress/icons": "^10.0.0"
+        "@wordpress/icons": "^10.0.0",
+        "dotenv": "^16.4.5",
+        "react-trello": "github:rcdexta/react-trello"
     }
 }

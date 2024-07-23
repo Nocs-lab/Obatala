@@ -15,6 +15,7 @@ class Enqueuer {
         'toplevel_page_process-type-manager' => 'process-type-manager',
         'toplevel_page_process-viewer' => 'process-viewer',
         'toplevel_page_process-step-manager' => 'process-step-manager',
+        'toplevel_page_process-sector-manager' => 'process-sector-manager',
         // Adicione mais páginas conforme necessário
     ];
 

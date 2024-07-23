@@ -37,6 +37,13 @@ class AdminMenu {
                 'icon' => 'dashicons-admin-tools',
                 'position' => -1,
             ],
+            'process-sector-manager' => [
+                'title' => __('Process Sector Manager', 'obatala'),
+                'menu_title' => __('Process Sector Manager', 'obatala'),
+                'capability' => 'manage_options', // Capacidade necessária para acessar esta página.
+                'icon' => 'dashicons-admin-tools',
+                'position' => -1,
+            ],
         ];
 
         // Chama a função que cria as páginas de administração.
@@ -84,6 +91,9 @@ class AdminMenu {
                 break;
             case 'toplevel_page_process-step-manager':
                 echo '<div id="process-step-manager"></div>';
+                break;
+            case 'toplevel_page_process-sector-manager':
+                echo '<div id="process-sector-manager"></div>';
                 break;
         }
     }
