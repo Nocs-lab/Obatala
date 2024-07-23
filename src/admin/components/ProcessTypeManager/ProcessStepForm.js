@@ -1,14 +1,31 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button, TextControl, SelectControl, Panel, PanelBody, PanelRow } from '@wordpress/components';
+import apiFetch from '@wordpress/api-fetch';
 
 const ProcessStepForm = ({ processTypes, onAddStep }) => {
     const [selectedProcessType, setSelectedProcessType] = useState('');
     const [stepName, setStepName] = useState('');
     const [selectedProcess, setSelectedProcess] = useState('');
+    const [sectors, setSectors] = useState([]);
+    const [selectedSector, setSelectedSector] = useState('');
+
+    useEffect(() => {
+        fetchSectors();
+    }, []);
+
+    const fetchSectors = () => {
+        apiFetch({ path: '/wp/v2/sector?per_page=100&_embed' })
+            .then(data => {
+                setSectors(data);
+            })
+            .catch(error => {
+                console.error('Error fetching sectors:', error);
+            });
+    };
 
     const handleAddStep = () => {
-        if (!selectedProcessType || !selectedProcess) {
-            alert('Please select both a process type and a parent process.');
+        if (!selectedProcessType || !selectedProcess || !selectedSector) {
+            alert('Please select a process type, a parent process, and a sector.');
             return;
         }
 
@@ -16,18 +33,19 @@ const ProcessStepForm = ({ processTypes, onAddStep }) => {
             title: stepName,
             status: 'publish',
             process_type: selectedProcessType,
-            parent_process: selectedProcess
-            
+            parent_process: selectedProcess,
+            sector: selectedSector
         };
         onAddStep(newStep);
         setStepName('');
         setSelectedProcessType('');
         setSelectedProcess('');
+        setSelectedSector('');
     };
 
     return (
         <Panel>
-            <PanelBody title="Add Process Step" initialOpen={ true }>
+            <PanelBody title="Add Process Step" initialOpen={true}>
                 <PanelRow>
                     <TextControl
                         label="Step Name"
@@ -51,6 +69,15 @@ const ProcessStepForm = ({ processTypes, onAddStep }) => {
                             ...processTypes.map(type => ({ label: type.title.rendered, value: type.id }))
                         ]}
                         onChange={(value) => setSelectedProcess(value)}
+                    />
+                    <SelectControl
+                        label="Select Sector"
+                        value={selectedSector}
+                        options={[
+                            { label: 'Select a sector...', value: '' },
+                            ...sectors.map(sector => ({ label: sector.name, value: sector.id }))
+                        ]}
+                        onChange={(value) => setSelectedSector(value)}
                     />
                     <Button isSecondary onClick={handleAddStep}>
                         Add Process Step

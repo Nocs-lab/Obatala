@@ -1,36 +1,17 @@
-import {
-  Button,
-  Icon,
-  Tooltip,
-  Card,
-  CardBody,
-  CardHeader,
-  CardFooter,
-  Notice,
-  Panel,
-  PanelBody,
-  PanelRow
-} from "@wordpress/components";
-import { edit, trash } from "@wordpress/icons";
+import React from 'react';
+import { Button, Icon, Tooltip, Card, CardBody, CardHeader, CardFooter, Notice, Panel, PanelBody, PanelRow } from '@wordpress/components';
+import { edit, trash } from '@wordpress/icons';
 
-const ProcessTypeList = ({
-  processTypes,
-  processSteps,
-  onEdit,
-  onDelete,
-  onDeleteStep,
-}) => (
-  console.log(processTypes, processSteps),
+const ProcessTypeList = ({ processTypes, processSteps, sectors, onEdit, onDelete, onDeleteStep }) => (
+  console.log(processTypes, processSteps, sectors),
   (
     <Panel>
-      <PanelBody title="Existing Process Types" initialOpen={ true }>
+      <PanelBody title="Existing Process Types" initialOpen={true}>
         <PanelRow>
           {processTypes.length > 0 ? (
             <div className="card-container">
               {processTypes.map((type) => {
-                const steps = processSteps.filter(
-                  (step) => +step.process_type === type.id
-                );
+                const steps = processSteps.filter((step) => +step.process_type === type.id);
                 return (
                   <Card key={type.id}>
                     <CardHeader>
@@ -40,9 +21,7 @@ const ProcessTypeList = ({
                       <dl className="description-list">
                         <div className="list-item">
                           <dt>Description:</dt>
-                          <dd>
-                            {type.description ? type.description.split('\n').map((item, key) => ( <span key={key}>{item}<br /></span> )) : "-"}
-                          </dd>
+                          <dd>{type.description ? type.description : "-"}</dd>
                         </div>
                       </dl>
 
@@ -61,18 +40,25 @@ const ProcessTypeList = ({
                           <hr></hr>
                           <h5>Steps</h5>
                           <ul className="list-group">
-                            {steps.map((step) => (
-                              <li className="list-group-item" key={step.id}>
-                                {step.title.rendered}
-                                <Tooltip text="Delete Step">
-                                  <Button
-                                    isDestructive
-                                    icon={<Icon icon={trash} />}
-                                    onClick={() => onDeleteStep(step.id)}
-                                  />
-                                </Tooltip>
-                              </li>
-                            ))}
+                            {steps.map((step) => {
+                              const sectorNames = step.sector.map(sectorId => {
+                                const sector = sectors.find(sector => sector.id === sectorId);
+                                return sector ? sector.name : 'N/A';
+                              }).join(', ');
+
+                              return (
+                                <li className="list-group-item" key={step.id}>
+                                  {step.title.rendered} (Sector: {sectorNames})
+                                  <Tooltip text="Delete Step">
+                                    <Button
+                                      isDestructive
+                                      icon={<Icon icon={trash} />}
+                                      onClick={() => onDeleteStep(step.id)}
+                                    />
+                                  </Tooltip>
+                                </li>
+                              );
+                            })}
                           </ul>
                         </>
                       )}
@@ -96,7 +82,7 @@ const ProcessTypeList = ({
               })}
             </div>
           ) : (
-            <Notice isDismissible={false} status="warning">No existing processes types.</Notice>
+            <Notice isDismissible={false} status="warning">No existing process types.</Notice>
           )}
         </PanelRow>
       </PanelBody>

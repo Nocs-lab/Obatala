@@ -101,8 +101,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_ProcessStepManager__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/ProcessStepManager */ "./src/admin/components/ProcessStepManager.js");
 /* harmony import */ var _components_ProcessViewer__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/ProcessViewer */ "./src/admin/components/ProcessViewer.js");
 /* harmony import */ var _components_ProcessSectorManager__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/ProcessSectorManager */ "./src/admin/components/ProcessSectorManager.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _contexts_ErrorContext__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./contexts/ErrorContext */ "./src/admin/contexts/ErrorContext.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__);
+
 
 
 
@@ -116,6 +118,17 @@ const navigateToProcessViewer = processId => {
   window.location.href = `?page=process-viewer&process_id=${processId}`;
 };
 
+// Função para renderizar um componente dentro de um elemento do DOM
+const renderComponent = (Component, props, element) => {
+  if (element) {
+    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.render)( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_contexts_ErrorContext__WEBPACK_IMPORTED_MODULE_6__.ErrorProvider, {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(Component, {
+        ...props
+      })
+    }), element);
+  }
+};
+
 // Adiciona um evento listener para ser executado quando o conteúdo do DOM for completamente carregado
 document.addEventListener("DOMContentLoaded", () => {
   // Obtém os elementos do DOM pelos IDs
@@ -127,36 +140,78 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Verifica se o elemento com o ID 'process-manager' existe
   // Se existir, renderiza o componente ProcessManager dentro deste elemento
-  if (processElement) {
-    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.render)( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_components_ProcessManager__WEBPACK_IMPORTED_MODULE_1__["default"], {
-      onSelectProcess: navigateToProcessViewer
-    }), processElement);
-  }
+  renderComponent(_components_ProcessManager__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    onSelectProcess: navigateToProcessViewer
+  }, processElement);
 
   // Verifica se o elemento com o ID 'process-type-manager' existe
   // Se existir, renderiza o componente ProcessTypeManager dentro deste elemento
-  if (processTypeElement) {
-    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.render)( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_components_ProcessTypeManager__WEBPACK_IMPORTED_MODULE_2__["default"], {}), processTypeElement);
-  }
+  renderComponent(_components_ProcessTypeManager__WEBPACK_IMPORTED_MODULE_2__["default"], {}, processTypeElement);
 
   // Verifica se o elemento com o ID 'process-step-manager' existe
   // Se existir, renderiza o componente ProcessStepManager dentro deste elemento
-  if (processStepElement) {
-    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.render)( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_components_ProcessStepManager__WEBPACK_IMPORTED_MODULE_3__["default"], {}), processStepElement);
-  }
+  renderComponent(_components_ProcessStepManager__WEBPACK_IMPORTED_MODULE_3__["default"], {}, processStepElement);
 
   // Verifica se o elemento com o ID 'process-viewer' existe
   // Se existir, renderiza o componente ProcessViewer dentro deste elemento
-  if (processViewerElement) {
-    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.render)( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_components_ProcessViewer__WEBPACK_IMPORTED_MODULE_4__["default"], {}), processViewerElement);
-  }
+  renderComponent(_components_ProcessViewer__WEBPACK_IMPORTED_MODULE_4__["default"], {}, processViewerElement);
 
   // Verifica se o elemento com o ID 'process-sector-manager' existe
   // Se existir, renderiza o componente ProcessSectorManager dentro deste elemento
-  if (processSectorElement) {
-    (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.render)( /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_components_ProcessSectorManager__WEBPACK_IMPORTED_MODULE_5__["default"], {}), processSectorElement);
-  }
+  renderComponent(_components_ProcessSectorManager__WEBPACK_IMPORTED_MODULE_5__["default"], {}, processSectorElement);
 });
+
+/***/ }),
+
+/***/ "./src/admin/components/ErrorNotification.js":
+/*!***************************************************!*\
+  !*** ./src/admin/components/ErrorNotification.js ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _contexts_ErrorContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../contexts/ErrorContext */ "./src/admin/contexts/ErrorContext.js");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__);
+
+
+
+
+const ErrorNotification = () => {
+  const {
+    errors,
+    removeError
+  } = (0,_contexts_ErrorContext__WEBPACK_IMPORTED_MODULE_1__.useError)();
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+    className: "error-notifications",
+    style: {
+      position: 'absolute',
+      top: 15,
+      width: '80%',
+      zIndex: 1000
+    },
+    children: errors.map((error, index) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Animate, {
+      type: "slide-in",
+      children: ({
+        className
+      }) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Notice, {
+        className: className,
+        status: "error",
+        onRemove: () => removeError(index),
+        isDismissible: true,
+        children: error.message
+      })
+    }, index))
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ErrorNotification);
 
 /***/ }),
 
@@ -444,8 +499,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Modals_reducer__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Modals/reducer */ "./src/admin/components/Modals/reducer.js");
 /* harmony import */ var _ProcessSectorManager_SectorCard__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ProcessSectorManager/SectorCard */ "./src/admin/components/ProcessSectorManager/SectorCard.js");
 /* harmony import */ var _Modals_ConfirmDeleteModal__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./Modals/ConfirmDeleteModal */ "./src/admin/components/Modals/ConfirmDeleteModal.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _contexts_ErrorContext__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../contexts/ErrorContext */ "./src/admin/contexts/ErrorContext.js");
+/* harmony import */ var _ErrorNotification__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./ErrorNotification */ "./src/admin/components/ErrorNotification.js");
+/* harmony import */ var _ProcessSectorManager_AddSectorForm__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./ProcessSectorManager/AddSectorForm */ "./src/admin/components/ProcessSectorManager/AddSectorForm.js");
+/* harmony import */ var _ProcessSectorManager_AddUserToSectorForm__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./ProcessSectorManager/AddUserToSectorForm */ "./src/admin/components/ProcessSectorManager/AddUserToSectorForm.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__);
+
+
+
+
 
 
 
@@ -456,12 +519,14 @@ __webpack_require__.r(__webpack_exports__);
 const ProcessSectorManager = () => {
   const [sectors, setSectors] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [users, setUsers] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
-  const [newSectorName, setNewSectorName] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
-  const [selectedUser, setSelectedUser] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
-  const [selectedSector, setSelectedSector] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  const [selectedUser, setSelectedUser] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
+  const [selectedSector, setSelectedSector] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
   const [isLoading, setIsLoading] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
-  const [error, setError] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const [alert, setAlert] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
   const [state, dispatch] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useReducer)(_Modals_reducer__WEBPACK_IMPORTED_MODULE_3__["default"], _Modals_reducer__WEBPACK_IMPORTED_MODULE_3__.initialState);
+  const {
+    addError
+  } = (0,_contexts_ErrorContext__WEBPACK_IMPORTED_MODULE_6__.useError)();
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     fetchSectors();
     fetchUsers();
@@ -469,163 +534,336 @@ const ProcessSectorManager = () => {
   const fetchSectors = () => {
     setIsLoading(true);
     _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-      path: '/wp/v2/sector?per_page=100&_embed'
+      path: "/wp/v2/sector?per_page=100&_embed"
     }).then(data => {
       setSectors(data);
       setIsLoading(false);
+      // Inicializa o setor selecionado com o primeiro setor disponível
+      if (data.length > 0) {
+        setSelectedSector(data[0].id.toString());
+      }
     }).catch(error => {
-      setError(error);
+      addError(error);
       setIsLoading(false);
     });
   };
   const fetchUsers = () => {
     setIsLoading(true);
     _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-      path: '/wp/v2/users?per_page=100&_embed'
+      path: "/wp/v2/users?per_page=100&_embed"
     }).then(data => {
       setUsers(data);
       setIsLoading(false);
+      // Inicializa o usuário selecionado com o primeiro usuário disponível
+      if (data.length > 0) {
+        setSelectedUser(data[0].id.toString());
+      }
     }).catch(error => {
-      setError(error);
+      addError(error);
       setIsLoading(false);
     });
   };
-  const handleAddSector = () => {
-    if (newSectorName.trim() === '') return;
+  const handleAddSector = (name, description) => {
     setIsLoading(true);
     _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-      path: '/wp/v2/sector',
-      method: 'POST',
+      path: "/wp/v2/sector",
+      method: "POST",
       data: {
-        name: newSectorName
+        name,
+        description
       }
     }).then(newSector => {
       setSectors([...sectors, newSector]);
-      setNewSectorName('');
       setIsLoading(false);
     }).catch(error => {
-      setError(error);
+      addError(error);
       setIsLoading(false);
     });
   };
-  const handleAddUserToSector = () => {
-    if (selectedUser === '' || selectedSector === '') return;
+  const handleAddUserToSector = (selectedUser, selectedSector) => {
+    console.log("Selected User ID:", selectedUser);
+    console.log("Selected Sector ID:", selectedSector);
+    if (selectedUser === "" || selectedSector === "") return;
+    const user = users.find(user => user.id.toString() === selectedUser);
+    if (!user) {
+      console.error("Usuário não encontrado:", selectedUser);
+      setIsLoading(false);
+      return;
+    }
+    console.log("User before update:", user);
+    const updatedSectorIds = user.meta.sector_ids ? [...user.meta.sector_ids] : [];
+    if (updatedSectorIds.includes(parseInt(selectedSector))) {
+      setAlert("O usuário já está no setor selecionado.");
+      setIsLoading(false);
+      return;
+    }
+    updatedSectorIds.push(parseInt(selectedSector));
+    console.log("Updated Sector IDs:", updatedSectorIds);
     setIsLoading(true);
-    const user = users.find(user => user.id === selectedUser);
-    const updatedSectorIds = user.meta.sector_ids ? [...user.meta.sector_ids, selectedSector] : [selectedSector];
     _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
       path: `/wp/v2/users/${selectedUser}`,
-      method: 'PUT',
+      method: "PUT",
       data: {
         meta: {
           sector_ids: updatedSectorIds
         }
       }
-    }).then(updatedUser => {
-      const updatedUsers = users.map(user => user.id === updatedUser.id ? updatedUser : user);
+    }).then(() => {
+      console.log("User successfully updated");
+      const updatedUsers = users.map(user => user.id.toString() === selectedUser ? {
+        ...user,
+        meta: {
+          sector_ids: updatedSectorIds
+        }
+      } : user);
       setUsers(updatedUsers);
-      setSelectedUser('');
-      setSelectedSector('');
+      setSelectedUser(users.length > 0 ? users[0].id.toString() : "");
+      setSelectedSector(sectors.length > 0 ? sectors[0].id.toString() : "");
+      setIsLoading(false);
+      setAlert("");
+    }).catch(error => {
+      addError(error);
+      setIsLoading(false);
+    });
+  };
+  const handleRemoveUserFromSector = (userId, sectorId) => {
+    const user = users.find(user => user.id === userId);
+    if (!user) {
+      console.error("Usuário não encontrado:", userId);
+      return;
+    }
+    const updatedSectorIds = user.meta.sector_ids ? user.meta.sector_ids.filter(id => id !== sectorId) : [];
+    console.log("Updated Sector IDs after removal:", updatedSectorIds);
+    setIsLoading(true);
+    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+      path: `/wp/v2/users/${userId}`,
+      method: "PUT",
+      data: {
+        meta: {
+          sector_ids: updatedSectorIds
+        }
+      }
+    }).then(() => {
+      console.log("User successfully updated");
+      const updatedUsers = users.map(user => user.id === userId ? {
+        ...user,
+        meta: {
+          sector_ids: updatedSectorIds
+        }
+      } : user);
+      setUsers(updatedUsers);
       setIsLoading(false);
     }).catch(error => {
-      setError(error);
+      addError(error);
       setIsLoading(false);
     });
   };
   const handleDeleteSector = id => {
     _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
       path: `/wp/v2/sector/${id}?force=true`,
-      method: 'DELETE'
+      method: "DELETE"
     }).then(() => {
       setSectors(sectors.filter(sector => sector.id !== id));
     }).catch(error => {
-      setError(error);
+      addError(error);
     });
   };
   const handleConfirmDeleteSector = id => {
     dispatch({
-      type: 'OPEN_MODAL_SECTOR',
+      type: "OPEN_MODAL_SECTOR",
       payload: id
     });
   };
   const handleCancel = () => {
     dispatch({
-      type: 'CLOSE_MODAL'
+      type: "CLOSE_MODAL"
     });
   };
-  if (isLoading) {
-    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, {});
-  }
-  if (error) {
-    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
-      status: "error",
-      children: error.message
-    });
-  }
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_Modals_ConfirmDeleteModal__WEBPACK_IMPORTED_MODULE_5__["default"], {
-      isOpen: state.isOpen,
-      onConfirm: () => {
-        if (state.deleteSector) {
-          handleDeleteSector(state.deleteSector);
-        }
-        dispatch({
-          type: 'CLOSE_MODAL'
-        });
-      },
-      onCancel: handleCancel,
-      itemType: "setor"
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
-      title: "Gerenciar Setores e Usu\xE1rios",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
-          label: "Nome do Novo Setor",
-          value: newSectorName,
-          onChange: value => setNewSectorName(value)
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-          isPrimary: true,
-          onClick: handleAddSector,
-          children: "Adicionar Setor"
-        })]
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
-          label: "Usu\xE1rio",
-          value: selectedUser,
-          options: users.map(user => ({
-            label: user.name,
-            value: user.id
-          })),
-          onChange: value => setSelectedUser(value)
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
-          label: "Setor",
-          value: selectedSector,
-          options: sectors.map(sector => ({
-            label: sector.name,
-            value: sector.id
-          })),
-          onChange: value => setSelectedSector(value)
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-          isPrimary: true,
-          onClick: handleAddUserToSector,
-          children: "Adicionar Usu\xE1rio ao Setor"
-        })]
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.Fragment, {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_ErrorNotification__WEBPACK_IMPORTED_MODULE_7__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsxs)("span", {
+      className: "brand",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)("strong", {
+        children: "Obatala"
+      }), " Curatorial Process Management"]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)("h2", {
+      children: "Process Sector Manager"
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsxs)("div", {
+      className: "panel-container",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)("main", {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
+            title: "Existing Sectors",
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)("div", {
+              className: "sectors-container",
+              children: sectors.length === 0 ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)("p", {
+                children: "No sector created yet."
+              }) : sectors.map(sector => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_ProcessSectorManager_SectorCard__WEBPACK_IMPORTED_MODULE_4__["default"], {
+                sector: sector,
+                users: users.filter(user => user.meta.sector_ids && user.meta.sector_ids.includes(sector.id)),
+                onDelete: handleConfirmDeleteSector,
+                onRemoveUser: handleRemoveUserFromSector
+              }, sector.id))
+            })
+          })
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)("aside", {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
+          children: [isLoading && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_Modals_ConfirmDeleteModal__WEBPACK_IMPORTED_MODULE_5__["default"], {
+            isOpen: state.isOpen,
+            onConfirm: () => {
+              if (state.deleteSector) {
+                handleDeleteSector(state.deleteSector);
+              }
+              dispatch({
+                type: "CLOSE_MODAL"
+              });
+            },
+            onCancel: handleCancel,
+            itemType: "setor"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
+            title: "Manage Users & Sectors",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_ProcessSectorManager_AddSectorForm__WEBPACK_IMPORTED_MODULE_8__["default"], {
+              onAddSector: handleAddSector,
+              isLoading: isLoading
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_ProcessSectorManager_AddUserToSectorForm__WEBPACK_IMPORTED_MODULE_9__["default"], {
+              users: users,
+              sectors: sectors,
+              selectedUser: selectedUser,
+              selectedSector: selectedSector,
+              onSelectUser: setSelectedUser,
+              onSelectSector: setSelectedSector,
+              onAddUserToSector: handleAddUserToSector,
+              isLoading: isLoading,
+              onAlert: setAlert
+            }), alert && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Animate, {
+              type: "slide-in",
+              children: ({
+                className
+              }) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_10__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
+                status: "warning",
+                onRemove: () => setAlert(""),
+                className: className,
+                children: alert
+              })
+            })]
+          })]
+        })
       })]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
-      title: "Setores Criados",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
-        className: "sectors-container",
-        children: sectors.length === 0 ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("p", {
-          children: "Nenhum setor criado."
-        }) : sectors.map(sector => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_ProcessSectorManager_SectorCard__WEBPACK_IMPORTED_MODULE_4__["default"], {
-          sector: sector,
-          users: users.filter(user => user.meta.sector_ids && user.meta.sector_ids.includes(sector.id)),
-          onDelete: handleConfirmDeleteSector
-        }, sector.id))
-      })
     })]
   });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProcessSectorManager);
+
+/***/ }),
+
+/***/ "./src/admin/components/ProcessSectorManager/AddSectorForm.js":
+/*!********************************************************************!*\
+  !*** ./src/admin/components/ProcessSectorManager/AddSectorForm.js ***!
+  \********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+const AddSectorForm = ({
+  onAddSector,
+  isLoading
+}) => {
+  const [newSectorName, setNewSectorName] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  const [newSectorDescription, setNewSectorDescription] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  const handleAddSector = () => {
+    if (newSectorName.trim() === '' || newSectorDescription.trim() === '') return;
+    onAddSector(newSectorName, newSectorDescription);
+    setNewSectorName('');
+    setNewSectorDescription('');
+  };
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+      label: "New Sector Name",
+      value: newSectorName,
+      onChange: value => setNewSectorName(value)
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+      label: "Setor Description",
+      value: newSectorDescription,
+      onChange: value => setNewSectorDescription(value)
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+      isPrimary: true,
+      onClick: handleAddSector,
+      disabled: isLoading,
+      children: isLoading ? 'Adding...' : 'Add new sector'
+    })]
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (AddSectorForm);
+
+/***/ }),
+
+/***/ "./src/admin/components/ProcessSectorManager/AddUserToSectorForm.js":
+/*!**************************************************************************!*\
+  !*** ./src/admin/components/ProcessSectorManager/AddUserToSectorForm.js ***!
+  \**************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+const AddUserToSectorForm = ({
+  users,
+  sectors,
+  selectedUser,
+  selectedSector,
+  onSelectUser,
+  onSelectSector,
+  onAddUserToSector,
+  isLoading,
+  onAlert
+}) => {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
+      label: "Usu\xE1rio",
+      value: selectedUser,
+      options: users.map(user => ({
+        label: user.name,
+        value: user.id
+      })),
+      onChange: value => onSelectUser(value)
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
+      label: "Setor",
+      value: selectedSector,
+      options: sectors.map(sector => ({
+        label: sector.name,
+        value: sector.id
+      })),
+      onChange: value => onSelectSector(value)
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+      isPrimary: true,
+      onClick: () => onAddUserToSector(selectedUser, selectedSector),
+      disabled: isLoading,
+      children: isLoading ? "Adding..." : "Add new user to sector"
+    })]
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (AddUserToSectorForm);
 
 /***/ }),
 
@@ -653,20 +891,36 @@ __webpack_require__.r(__webpack_exports__);
 const SectorCard = ({
   sector,
   users,
-  onDelete
+  onDelete,
+  onRemoveUser
 }) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Card, {
   children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CardHeader, {
     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("h3", {
       children: sector.name
     })
-  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CardBody, {
-    children: users.length === 0 ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("p", {
+  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CardBody, {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("p", {
+      children: sector.description
+    }), users.length === 0 ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("p", {
       children: "Nenhum usu\xE1rio vinculado a este setor."
     }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("ul", {
-      children: users.map(user => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("li", {
-        children: [user.name, " (", user.email, ")"]
-      }, user.id))
-    })
+      className: "list-group",
+      children: users.map(user => (console.log(user), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("li", {
+        className: "list-group-item",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("img", {
+          src: user.avatar_urls[24]
+        }), " ", user.name, /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Tooltip, {
+          text: "Remover Usu\xE1rio",
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+            isDestructive: true,
+            icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Icon, {
+              icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_3__["default"]
+            }),
+            onClick: () => onRemoveUser(user.id, sector.id)
+          })
+        })]
+      }, user.id)))
+    })]
   }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CardFooter, {
     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Tooltip, {
       text: "Excluir Setor",
@@ -799,7 +1053,6 @@ const ProcessStepManager = () => {
                   })
                 }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("tbody", {
                   children: processSteps.map(step => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("tr", {
-                    className: "list-gsroup-item",
                     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
                       children: step.title.rendered
                     })
@@ -886,12 +1139,14 @@ __webpack_require__.r(__webpack_exports__);
 const ProcessTypeManager = () => {
   const [processTypes, setProcessTypes] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [processSteps, setProcessSteps] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+  const [sectors, setSectors] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [isLoading, setIsLoading] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
   const [editingProcessType, setEditingProcessType] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   const [state, dispatch] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useReducer)(_redux_reducer__WEBPACK_IMPORTED_MODULE_6__["default"], _redux_reducer__WEBPACK_IMPORTED_MODULE_6__.initialState);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     fetchProcessTypes();
     fetchProcessSteps();
+    fetchSectors();
   }, []);
   const fetchProcessTypes = () => {
     setIsLoading(true);
@@ -916,6 +1171,16 @@ const ProcessTypeManager = () => {
     }).catch(error => {
       console.error('Error fetching process steps:', error);
       setIsLoading(false);
+    });
+  };
+  const fetchSectors = () => {
+    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+      path: '/wp/v2/sector?per_page=100&_embed'
+    }).then(data => {
+      console.log('Fetched Sectors:', data);
+      setSectors(data);
+    }).catch(error => {
+      console.error('Error fetching sectors:', error);
     });
   };
   const handleSaveProcessType = processType => {
@@ -964,6 +1229,30 @@ const ProcessTypeManager = () => {
       data: step
     }).then(savedProcessStep => {
       setProcessSteps([...processSteps, savedProcessStep]);
+      // Herdar usuários do setor selecionado para a etapa
+      const sectorId = savedProcessStep.sector;
+      _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+        path: `/wp/v2/sector/${sectorId}`
+      }).then(sector => {
+        const userIds = sector.users || [];
+        // Atualizar a meta `sector_ids` dos usuários para incluir o ID da nova etapa
+        userIds.forEach(userId => {
+          _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+            path: `/wp/v2/users/${userId}`
+          }).then(user => {
+            const updatedStepIds = user.meta.step_ids ? [...user.meta.step_ids, savedProcessStep.id] : [savedProcessStep.id];
+            _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+              path: `/wp/v2/users/${userId}`,
+              method: 'PUT',
+              data: {
+                meta: {
+                  step_ids: updatedStepIds
+                }
+              }
+            });
+          });
+        });
+      });
     }).catch(error => {
       console.error('Error adding process step:', error);
     });
@@ -1001,7 +1290,7 @@ const ProcessTypeManager = () => {
   }
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("span", {
-      class: "brand",
+      className: "brand",
       children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("strong", {
         children: "Obatala"
       }), " Curatorial Process Management"]
@@ -1027,6 +1316,7 @@ const ProcessTypeManager = () => {
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_ProcessTypeManager_ProcessTypeList__WEBPACK_IMPORTED_MODULE_4__["default"], {
           processTypes: processTypes,
           processSteps: processSteps,
+          sectors: sectors,
           onEdit: handleEditProcessType,
           onDelete: handleConfirmDeleteType,
           onDeleteStep: handleConfirmDeleteStep
@@ -1062,8 +1352,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__);
+
 
 
 
@@ -1074,32 +1367,48 @@ const ProcessStepForm = ({
   const [selectedProcessType, setSelectedProcessType] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
   const [stepName, setStepName] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
   const [selectedProcess, setSelectedProcess] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  const [sectors, setSectors] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+  const [selectedSector, setSelectedSector] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    fetchSectors();
+  }, []);
+  const fetchSectors = () => {
+    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+      path: '/wp/v2/sector?per_page=100&_embed'
+    }).then(data => {
+      setSectors(data);
+    }).catch(error => {
+      console.error('Error fetching sectors:', error);
+    });
+  };
   const handleAddStep = () => {
-    if (!selectedProcessType || !selectedProcess) {
-      alert('Please select both a process type and a parent process.');
+    if (!selectedProcessType || !selectedProcess || !selectedSector) {
+      alert('Please select a process type, a parent process, and a sector.');
       return;
     }
     const newStep = {
       title: stepName,
       status: 'publish',
       process_type: selectedProcessType,
-      parent_process: selectedProcess
+      parent_process: selectedProcess,
+      sector: selectedSector
     };
     onAddStep(newStep);
     setStepName('');
     setSelectedProcessType('');
     setSelectedProcess('');
+    setSelectedSector('');
   };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
       title: "Add Process Step",
       initialOpen: true,
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
           label: "Step Name",
           value: stepName,
           onChange: value => setStepName(value)
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
           label: "Select Process Type",
           value: selectedProcessType,
           options: [{
@@ -1110,7 +1419,7 @@ const ProcessStepForm = ({
             value: type.id
           }))],
           onChange: value => setSelectedProcessType(value)
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
           label: "Select Parent Process",
           value: selectedProcess,
           options: [{
@@ -1121,7 +1430,18 @@ const ProcessStepForm = ({
             value: type.id
           }))],
           onChange: value => setSelectedProcess(value)
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
+          label: "Select Sector",
+          value: selectedSector,
+          options: [{
+            label: 'Select a sector...',
+            value: ''
+          }, ...sectors.map(sector => ({
+            label: sector.name,
+            value: sector.id
+          }))],
+          onChange: value => setSelectedSector(value)
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
           isSecondary: true,
           onClick: handleAddStep,
           children: "Add Process Step"
@@ -1201,7 +1521,7 @@ const ProcessTypeForm = ({
           label: "Process Type Name",
           value: processTypeName,
           onChange: value => setProcessTypeName(value)
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextareaControl, {
           label: "Process Type Description",
           value: processTypeDescription,
           onChange: value => setProcessTypeDescription(value)
@@ -1249,99 +1569,109 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/trash.js");
-/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/edit.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/trash.js");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/edit.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
+
 
 
 
 const ProcessTypeList = ({
   processTypes,
   processSteps,
+  sectors,
   onEdit,
   onDelete,
   onDeleteStep
-}) => (console.log(processTypes, processSteps), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Panel, {
-  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.PanelBody, {
+}) => (console.log(processTypes, processSteps, sectors), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
+  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
     title: "Existing Process Types",
     initialOpen: true,
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.PanelRow, {
-      children: processTypes.length > 0 ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
+      children: processTypes.length > 0 ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
         className: "card-container",
         children: processTypes.map(type => {
           const steps = processSteps.filter(step => +step.process_type === type.id);
-          return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Card, {
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.CardHeader, {
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("h4", {
+          return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Card, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CardHeader, {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("h4", {
                 className: "card-title",
                 children: type.title.rendered
               })
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.CardBody, {
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("dl", {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CardBody, {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("dl", {
                 className: "description-list",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
                   className: "list-item",
-                  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("dt", {
+                  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("dt", {
                     children: "Description:"
-                  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("dd", {
+                  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("dd", {
                     children: type.description ? type.description : "-"
                   })]
                 })
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("p", {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("p", {
                 className: type.accept_attachments ? "check true" : "check false",
-                children: [!type.accept_attachments && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+                children: [!type.accept_attachments && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
                   className: "visually-hidden",
                   children: "Not"
                 }), " Accept attachments"]
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("p", {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("p", {
                 className: type.accept_tainacan_items ? "check true" : "check false",
-                children: [!type.accept_tainacan_items && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+                children: [!type.accept_tainacan_items && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
                   className: "visually-hidden",
                   children: "Not"
                 }), " Accept Tainacan items"]
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("p", {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("p", {
                 className: type.generate_tainacan_items ? "check true" : "check false",
-                children: [!type.generate_tainacan_items && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
+                children: [!type.generate_tainacan_items && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
                   className: "visually-hidden",
                   children: "Not"
                 }), " Generate Tainacan items"]
-              }), steps.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.Fragment, {
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("hr", {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("h5", {
+              }), steps.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.Fragment, {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("hr", {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("h5", {
                   children: "Steps"
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("ul", {
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("ul", {
                   className: "list-group",
-                  children: steps.map(step => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("li", {
-                    className: "list-group-item",
-                    children: [step.title.rendered, /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Tooltip, {
-                      text: "Delete Step",
-                      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
-                        isDestructive: true,
-                        icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Icon, {
-                          icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_2__["default"]
-                        }),
-                        onClick: () => onDeleteStep(step.id)
-                      })
-                    })]
-                  }, step.id))
+                  children: steps.map(step => {
+                    const sectorNames = step.sector.map(sectorId => {
+                      const sector = sectors.find(sector => sector.id === sectorId);
+                      return sector ? sector.name : 'N/A';
+                    }).join(', ');
+                    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("li", {
+                      className: "list-group-item",
+                      children: [step.title.rendered, " (Sector: ", sectorNames, ")", /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Tooltip, {
+                        text: "Delete Step",
+                        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+                          isDestructive: true,
+                          icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Icon, {
+                            icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_3__["default"]
+                          }),
+                          onClick: () => onDeleteStep(step.id)
+                        })
+                      })]
+                    }, step.id);
+                  })
                 })]
               })]
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.CardFooter, {
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Tooltip, {
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CardFooter, {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Tooltip, {
                 text: "Edit",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
-                  icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Icon, {
-                    icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_3__["default"]
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+                  icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Icon, {
+                    icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_4__["default"]
                   }),
                   onClick: () => onEdit(type)
                 })
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Tooltip, {
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Tooltip, {
                 text: "Delete",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Button, {
-                  icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Icon, {
-                    icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_2__["default"]
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+                  icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Icon, {
+                    icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_3__["default"]
                   }),
                   onClick: () => onDelete(type.id)
                 })
@@ -1349,10 +1679,10 @@ const ProcessTypeList = ({
             })]
           }, type.id);
         })
-      }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_0__.Notice, {
+      }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
         isDismissible: false,
         status: "warning",
-        children: "No existing processes types."
+        children: "No existing process types."
       })
     })
   })
@@ -1486,6 +1816,49 @@ const ProcessViewer = () => {
   });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProcessViewer);
+
+/***/ }),
+
+/***/ "./src/admin/contexts/ErrorContext.js":
+/*!********************************************!*\
+  !*** ./src/admin/contexts/ErrorContext.js ***!
+  \********************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ErrorProvider: () => (/* binding */ ErrorProvider),
+/* harmony export */   useError: () => (/* binding */ useError)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
+
+
+const ErrorContext = (0,react__WEBPACK_IMPORTED_MODULE_0__.createContext)();
+const ErrorProvider = ({
+  children
+}) => {
+  const [errors, setErrors] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+  const addError = error => {
+    setErrors([...errors, error]);
+  };
+  const removeError = index => {
+    setErrors(errors.filter((_, i) => i !== index));
+  };
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(ErrorContext.Provider, {
+    value: {
+      errors,
+      addError,
+      removeError
+    },
+    children: children
+  });
+};
+const useError = () => {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(ErrorContext);
+};
 
 /***/ }),
 

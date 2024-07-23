@@ -73,6 +73,10 @@ class Nocs_ObatalaPlugin {
 		add_action( 'admin_enqueue_scripts', [ $this, 'admin_enqueue_scripts' ] );
 		add_action( 'wp_enqueue_scripts', [ $this, 'enqueue_scripts' ] );
 
+		// Register user meta fields
+		add_action( 'init', [ 'Obatala\User\UserMetaManager', 'register_user_sector_meta' ] );
+
+
 		// Register REST API fields
 		add_action('rest_api_init', ['Obatala\Api\ProcessCustomFields', 'register']);
         add_action('rest_api_init', ['Obatala\Api\ProcessTypeCustomFields', 'register']);
