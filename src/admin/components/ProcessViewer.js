@@ -80,11 +80,15 @@ const ProcessViewer = () => {
 
     // Filtrar as etapas pelo tipo de processo atual
     const filteredSteps = processSteps.filter(step => step.process_type === process.process_type);
-
+   
+    const processType = processTypes.find(processType => {
+        return processType.id == process.process_type;
+    });
+   
     return (
         <div>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Viewer</span>
-            <h2>{process.process_type ? 'Process type title' : ''}: {process.title.rendered}</h2>
+            <h2>{processType ? processType.title.rendered : ''}: {process.title.rendered}</h2>
             <div className="badge-container">
                 <span className="badge success">{process.status}</span>
                 <span className="badge">Current step</span>
