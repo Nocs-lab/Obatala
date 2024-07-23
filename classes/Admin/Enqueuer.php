@@ -11,10 +11,10 @@ if (!defined('ABSPATH')) {
 class Enqueuer {
     // Propriedade estática que mapeia as páginas de administração aos seus IDs
     private static $pages = [
-        'toplevel_page_process-manager' => 'process-manager',
-        'toplevel_page_process-type-manager' => 'process-type-manager',
-        'toplevel_page_process-viewer' => 'process-viewer',
-        'toplevel_page_process-step-manager' => 'process-step-manager',
+        'obatala_page_process-manager' => 'process-manager',
+        'obatala_page_process-type-manager' => 'process-type-manager',
+        'obatala_page_process-viewer' => 'process-viewer',
+        'obatala_page_process-step-manager' => 'process-step-manager',
         // Adicione mais páginas conforme necessário
     ];
 
