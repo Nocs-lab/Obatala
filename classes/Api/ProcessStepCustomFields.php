@@ -49,16 +49,23 @@ class ProcessStepCustomFields {
 
         register_rest_field('process_step', 'step_order', [
             'get_callback' => function($object) {
-                return get_post_meta($object['id'], 'step_order', true);
+                $meta = get_post_meta($object['id'], 'step_order', true);
+                return is_array($meta) ? $meta : [];
             },
             'update_callback' => function($value, $object) {
-                return update_post_meta($object->ID, 'step_order', (int) $value);
-            },
-            'schema' => [
-                'type' => 'integer',
-                'description' => 'Order of the Step',
-                'context' => ['view', 'edit'],
-            ],
+            if (is_array($value)) {
+                return update_post_meta($object->ID, 'step_order', $value);
+            }
+            return false;
+        },
+        'schema' => [
+            'type' => 'object',
+            'description' => 'Order of the Step per Process Type',
+            'context' => ['view', 'edit'],
+            'items' => [
+                'type' => 'integer'
+            ]
+        ],
         ]);
     }
 
