@@ -64,10 +64,11 @@ class ProcessStepCollection {
         ]);
 
         register_post_meta('process_step', 'step_order', [
-            'type' => 'integer',
+            'type' => 'object',
             'description' => 'Order of the Step',
             'single' => true,
             'show_in_rest' => true,
+            'default' => []
         ]);
     }
     
