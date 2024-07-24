@@ -95,13 +95,9 @@ const ProcessManager = ({ onSelectProcess }) => {
                                     </thead>
                                     <tbody>
                                         {processes.map(process => {
-                                            console.log("Current process:", process);
                                             const processTypeFiltered = processTypes.find(processType => {
                                                 return processType.id == process.process_type;
                                             });
-                                            console.log("Lista de Type:", processTypes);
-                                            console.log("ID do process type", process.process_type);
-                                            console.log("Dados do type filtrado", processTypeFiltered);
                                             return (
                                                 <tr key={process.id}>
                                                     <td>{process.title.rendered}</td>

@@ -101,7 +101,7 @@ const ProcessViewer = () => {
     return (
         <div>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Viewer</span>
-            <h2>{process.process_type ? 'Process type title' : ''}: {process.title.rendered}</h2>
+            <h2>{processType ? processType.title.rendered : ''}: {process.title.rendered}</h2>
             <div className="badge-container">
                 <span className="badge success">{process.status}</span>
                 <span className="badge">Current step</span>
