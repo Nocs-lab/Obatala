@@ -80,11 +80,23 @@ const ProcessViewer = () => {
 
     // Filtrar as etapas pelo tipo de processo atual
     const filteredSteps = processSteps
-        .filter(step => {
-            const stepProcessTypes = Array.isArray(step.process_type) ? step.process_type.map(Number) : [];
-            return stepProcessTypes.some(type => process.process_type.includes(type));
-        })
-        .sort((a, b) => a.step_order - b.step_order);
+    .filter(step => {
+        const stepProcessTypes = Array.isArray(step.process_type) ? step.process_type.map(Number) : [];
+        // Verifica se a etapa pertence ao tipo de processo atual
+        return stepProcessTypes.includes(Number(process.process_type));
+    })
+    .sort((a, b) => {
+        // Obtém o índice do tipo de processo atual
+        const currentProcessTypeId = process.process_type;
+        const indexA = a.step_order[currentProcessTypeId] || 0;
+        const indexB = b.step_order[currentProcessTypeId] || 0;
+
+        return indexA - indexB;
+      });
+
+    console.log('Process Type ID:', Number(process.process_type));
+    console.log('Filtered Steps:', filteredSteps);
+
 
     return (
         <div>
