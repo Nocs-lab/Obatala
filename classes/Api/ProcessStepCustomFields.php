@@ -8,18 +8,31 @@ class ProcessStepCustomFields {
     public static function register() {
         register_rest_field('process_step', 'process_type', [
             'get_callback' => function($object) {
-                return get_post_meta($object['id'], 'process_type', true);
+                $value = get_post_meta($object['id'], 'process_type', true);
+                return is_array($value) ? $value : [];
             },
+
             'update_callback' => function($value, $object) {
-                return update_post_meta($object->ID, 'process_type', $value);
+            
+                delete_post_meta($object->ID, 'process_type');
+
+                if (!empty($value)) {
+                    add_post_meta($object->ID, 'process_type', $value);
+                }
+                return true;
             },
+
             'schema' => [
-                'type' => 'integer',
+                'type' => 'array',
                 'description' => 'Process Type ID',
                 'context' => ['view', 'edit'],
+                'items' => [
+                    'type' => 'integer'
+                ],
             ],
         ]);
     
+
         register_rest_field('process_step', 'parent_process', [
             'get_callback' => function($object) {
                 return get_post_meta($object['id'], 'parent_process', true);
@@ -30,6 +43,20 @@ class ProcessStepCustomFields {
             'schema' => [
                 'type' => 'integer',
                 'description' => 'Parent Process ID',
+                'context' => ['view', 'edit'],
+            ],
+        ]);
+
+        register_rest_field('process_step', 'step_order', [
+            'get_callback' => function($object) {
+                return get_post_meta($object['id'], 'step_order', true);
+            },
+            'update_callback' => function($value, $object) {
+                return update_post_meta($object->ID, 'step_order', (int) $value);
+            },
+            'schema' => [
+                'type' => 'integer',
+                'description' => 'Order of the Step',
                 'context' => ['view', 'edit'],
             ],
         ]);
