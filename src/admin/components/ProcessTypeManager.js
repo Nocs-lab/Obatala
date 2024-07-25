@@ -32,7 +32,8 @@ const ProcessTypeManager = () => {
         apiFetch({ path: `/wp/v2/process_type?per_page=100&_embed` })
             .then(data => {
                 console.log('Fetched Process Types:', data);
-                setProcessTypes(data);
+                const sortedProcessTypes = data.sort((a, b) => a.title.rendered.localeCompare(b.title.rendered));
+                setProcessTypes(sortedProcessTypes);
                 setIsLoading(false);
             })
             .catch(error => {
@@ -45,7 +46,8 @@ const ProcessTypeManager = () => {
         apiFetch({ path: `/wp/v2/process_step?per_page=100&_embed` })
             .then(data => {
                 console.log('Fetched Process Steps:', data);
-                setProcessSteps(data);
+                const sortedSteps = data.sort((a, b) => a.title.rendered.localeCompare(b.title.rendered));
+                setProcessSteps(sortedSteps);
                 setIsLoading(false);
             })
             .catch(error => {
@@ -69,6 +71,7 @@ const ProcessTypeManager = () => {
             apiFetch({ path: `/wp/v2/process_type`, method: 'POST', data: processType })
                 .then(savedProcessType => {
                     setProcessTypes([...processTypes, savedProcessType]);
+                    fetchProcessTypes();
                 })
                 .catch(error => {
                     console.error('Error adding process type:', error);
@@ -91,46 +94,44 @@ const ProcessTypeManager = () => {
         setEditingProcessType(processType);
     };
 
-    const handleAddProcessStep = (step) => {
-        const { id, process_type } = step;
 
-        const existingStep = processSteps.find(existing => existing.id === id);
+    const handleAddProcessStep = (steps) => {
+        steps.forEach(step => {
+            const { id, process_type } = step;
+    
+            const existingStep = processSteps.find(existing => existing.id === id);
+            
+            if (!existingStep) {
+                console.error('Etapa não encontrada:', id);
+                return;
+            }
+    
+            const currentProcessTypes = Array.isArray(existingStep.process_type) ? 
+                                        existingStep.process_type.map(Number) : [];
+            const newProcessType = Number(process_type);
+    
+            if (currentProcessTypes.includes(newProcessType)) {
+                setNotice({ status: 'error', message: `Step is already linked to this Process Type` });
+                return;
+            }
         
-        if (!existingStep) {
-            console.error('Etapa não encontrada:', id);
-            return;
-        }
-
-        const currentProcessTypes = Array.isArray(existingStep.process_type) ? 
-                                    existingStep.process_type.map(Number) : [];
-        const newProcessType = Number(process_type);
-
-        if (currentProcessTypes.includes(newProcessType)) {
-            setNotice({ status: 'error', message: `Step is already linked to this Process Type` });
-            return;
-        }
+            const updatedProcessTypes = [...currentProcessTypes, newProcessType];
     
-        const updatedProcessTypes = [...currentProcessTypes, newProcessType];
-    
-        //console.log('currentProcessTypes', currentProcessTypes);
-        //console.log('process_type', process_type);
-        //console.log('updatedProcessTypes', updatedProcessTypes);
-    
-        apiFetch({
-            path: `/wp/v2/process_step/${id}`,
-            method: 'PUT',
-            data: { process_type: updatedProcessTypes}
-        })
-        .then(updatedProcessStep => {
-            console.log('updatedProcessStep', updatedProcessStep);
-            setProcessSteps(prevProcessSteps =>
-                prevProcessSteps.map(s => s.id === id ? updatedProcessStep : s)
-            );
-        })
-        .catch(error => {
-            console.error('Error updating process step:', error);
+            apiFetch({
+                path: `/wp/v2/process_step/${id}`,
+                method: 'PUT',
+                data: { process_type: updatedProcessTypes }
+            })
+            .then(updatedProcessStep => {
+                setProcessSteps(prevProcessSteps =>
+                    prevProcessSteps.map(s => s.id === id ? updatedProcessStep : s)
+                );
+            })
+            .catch(error => {
+                console.error('Error updating process step:', error);
+            });
         });
-    }; 
+    };
     
     
     
