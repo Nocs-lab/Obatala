@@ -50,9 +50,9 @@ class ProcessStepCollection {
 
    public static function register_process_step_meta() {
         register_post_meta('process_step', 'process_type', [
-            'type' => 'integer',
+            'type' => 'array',
             'description' => 'Process Type ID',
-            'single' => true,
+            'single' => false,
             'show_in_rest' => true,
         ]);
     
@@ -61,6 +61,14 @@ class ProcessStepCollection {
             'description' => 'Parent Process ID',
             'single' => true,
             'show_in_rest' => true,
+        ]);
+
+        register_post_meta('process_step', 'step_order', [
+            'type' => 'object',
+            'description' => 'Order of the Step',
+            'single' => true,
+            'show_in_rest' => true,
+            'default' => []
         ]);
     }
     

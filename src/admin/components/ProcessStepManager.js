@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Spinner, Button, SelectControl, TextControl, Notice, Panel, PanelHeader, PanelBody, PanelRow, Icon, Modal, DatePicker, RadioControl } from '@wordpress/components';
+import React, { useState, useEffect, useReducer} from 'react';
+import { Spinner, Button, SelectControl, TextControl, Notice, Panel, PanelHeader, PanelBody, PanelRow, Icon, Modal, DatePicker, RadioControl, __experimentalConfirmDialog as ConfirmDialog } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { edit, trash } from "@wordpress/icons";
 import { MediaUpload, MediaUploadCheck } from '@wordpress/block-editor';
+import Reducer, { initialState } from '../redux/reducer'; 
 
 const ProcessStepManager = () => {
     // Estado para armazenar os passos de processo
@@ -10,6 +11,7 @@ const ProcessStepManager = () => {
 
     const [editingStep, setEditingStep] = useState(null);
     const [notice, setNotice] = useState(null);
+    const [state, dispatch] = useReducer(Reducer, initialState);
 
     // Estado para armazenar os tipos de processo
     const [processTypes, setProcessTypes] = useState([]);
@@ -127,10 +129,37 @@ const ProcessStepManager = () => {
         setNewStepTitle(currentTitle);
     };
 
+    const handleDeleteProcessStep = async (id) => {
+        try {
+          const step = await apiFetch({ path: `/wp/v2/process_step/${id}` });
+          const stepProcessTypes = Array.isArray(step.process_type) ? step.process_type : [step.process_type];
+      
+        
+          const hasLinkedProcesses = await apiFetch({ path: '/wp/v2/process_obatala?per_page=100' })
+            .then(allProcesses => allProcesses.some(process => stepProcessTypes.includes(Number(process.process_type))));
+      
+          if (hasLinkedProcesses) {
+            setNotice({ status: 'error', message: 'Cannot delete step as it is linked to a process type in use.' });
+            return;
+          }
+      
+          await apiFetch({ path: `/wp/v2/process_step/${id}`, method: 'DELETE' });
+          setProcessSteps(processSteps.filter(step => step.id !== id));
+        } catch (error) {
+          console.error('Error deleting process step:', error);
+        }
+      };
+      
+    
+    const handleConfirmDeleteStep = (id) => {
+        dispatch({ type: 'OPEN_MODAL_STEP', payload: id });
+    };
+
     const handleCancel = () => {
         setEditingStep(null);
         setNewStepTitle('');
         setNotice(null);
+        dispatch({ type: 'CLOSE_MODAL' });
     };
 
     // Função para salvar metadados do passo de processo
@@ -222,6 +251,17 @@ const ProcessStepManager = () => {
             <div className="panel-container">
                 <main>
                      {/* Painel com os passos de processo existentes */}
+                     <ConfirmDialog
+                        isOpen={ state.isOpen }
+                        onConfirm={() => {
+                            handleDeleteProcessStep(state.deleteStep);
+                            dispatch({ type: 'CLOSE_MODAL' });
+                        }}
+                        onCancel={handleCancel}
+                    >   
+                        Are you sure you want to delete this {state.deleteProcessType ? 'Process Type' : 'Step' }?
+
+                    </ConfirmDialog>
                     <Panel>
                         <PanelHeader>Existing Steps</PanelHeader>
                         <PanelRow>
@@ -242,6 +282,10 @@ const ProcessStepManager = () => {
                                                     <Button
                                                         icon={<Icon icon={edit} />}
                                                         onClick={() => handleEditStep(step.id, step.title.rendered)}
+                                                    />
+                                                    <Button
+                                                        icon={<Icon icon={trash} />}
+                                                        onClick={() => handleConfirmDeleteStep(step.id)}
                                                     />
                                                 </td>
                                             </tr>

@@ -3,6 +3,7 @@ import {
     Panel,
     PanelHeader,
     Spinner,
+    Notice,
     __experimentalConfirmDialog as ConfirmDialog
     } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
@@ -18,6 +19,7 @@ const ProcessTypeManager = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [editingProcessType, setEditingProcessType] = useState(null);
     const [state, dispatch] = useReducer(Reducer, initialState);
+    const [notice, setNotice] = useState(null);
 
       
     useEffect(() => {
@@ -92,43 +94,99 @@ const ProcessTypeManager = () => {
     const handleAddProcessStep = (step) => {
         const { id, process_type } = step;
 
-         // Verifica se já existe uma associação com base no ID da etapa e no ID do tipo de processo
-        const existingStep = processSteps.find(existing => existing.id === id && existing.process_type === process_type);
-    
-        if (existingStep) {
-            console.log('Associação já existe:', existingStep);
-            return; 
+        const existingStep = processSteps.find(existing => existing.id === id);
+        
+        if (!existingStep) {
+            console.error('Etapa não encontrada:', id);
+            return;
+        }
+
+        const currentProcessTypes = Array.isArray(existingStep.process_type) ? 
+                                    existingStep.process_type.map(Number) : [];
+        const newProcessType = Number(process_type);
+
+        if (currentProcessTypes.includes(newProcessType)) {
+            setNotice({ status: 'error', message: `Step is already linked to this Process Type` });
+            return;
         }
     
-        // Se não existe, adicionar uma nova associação
-        apiFetch({ path: `/wp/v2/process_step/${id}`, method: 'PUT', data: step })
-            .then(updatedProcessStep => {
-                setProcessSteps([...processSteps, updatedProcessStep]);
-            })
-            .catch(error => {
-                console.error('Error updating process step:', error);
+        const updatedProcessTypes = [...currentProcessTypes, newProcessType];
+    
+        //console.log('currentProcessTypes', currentProcessTypes);
+        //console.log('process_type', process_type);
+        //console.log('updatedProcessTypes', updatedProcessTypes);
+    
+        apiFetch({
+            path: `/wp/v2/process_step/${id}`,
+            method: 'PUT',
+            data: { process_type: updatedProcessTypes}
+        })
+        .then(updatedProcessStep => {
+            console.log('updatedProcessStep', updatedProcessStep);
+            setProcessSteps(prevProcessSteps =>
+                prevProcessSteps.map(s => s.id === id ? updatedProcessStep : s)
+            );
+        })
+        .catch(error => {
+            console.error('Error updating process step:', error);
+        });
+    }; 
+    
+    
+    
+    const handleUpdatedProcessStep = async () => {
+        const { stepId, typeId } = state.deleteStep;
+
+        try {
+            const existingStep = processSteps.find(step => step.id === stepId);
+    
+            if (!existingStep) {
+                console.error('Etapa não encontrada:', stepId);
+                return;
+            }
+    
+            // Verifica se o tipo de processo específico está vinculado a algum processo
+            const hasLinkedProcesses = await apiFetch({ path: `/wp/v2/process_obatala?per_page=100` })
+                .then(allProcesses => 
+                    allProcesses.some(process => Number(process.process_type) === typeId)
+                );
+    
+            if (hasLinkedProcesses) {
+                setNotice({ status: 'error', message: 'Cannot delete step as it is linked to a process type in use.' });
+                return;
+            }
+    
+            // Atualiza os tipos de processo da etapa para remover o tipo específico
+            const stepProcessTypes = Array.isArray(existingStep.process_type) ? existingStep.process_type.map(Number) : [];
+            const updatedProcessTypes = stepProcessTypes.filter(id => id !== typeId);
+    
+            //console.log('Updated Process Types:', updatedProcessTypes);
+    
+            const updatedProcessStep = await apiFetch({
+                path: `/wp/v2/process_step/${stepId}`,
+                method: 'PUT',
+                data: { process_type: updatedProcessTypes }
             });
+    
+            //console.log('Etapa atualizada:', updatedProcessStep);
+    
+            setProcessSteps(prevProcessSteps =>
+                prevProcessSteps.map(step => step.id === stepId ? updatedProcessStep : step)
+            );
+    
+        } catch (error) {
+            console.error('Erro ao atualizar a etapa do processo:', error);
+        }
     };
     
-
-    const handleDeleteProcessStep = (id) => {
-        apiFetch({ path: `/wp/v2/process_step/${id}`, method: 'DELETE' })
-                .then(() => {
-                    const updatedProcessSteps = processSteps.filter(step => step.id !== id);
-                    setProcessSteps(updatedProcessSteps);
-                    
-                })
-                .catch(error => {
-                    console.error('Error deleting process step:', error);
-                });
-    }; 
+    
 
     const handleConfirmDeleteType = (id) => {
         dispatch({ type: 'OPEN_MODAL_PROCESS_TYPE', payload: id });
     };
 
-    const handleConfirmDeleteStep = (id) => {
-        dispatch({ type: 'OPEN_MODAL_STEP', payload: id });
+    const handleConfirmDeleteStep = (stepId, typeId) => {
+        dispatch({ type: 'OPEN_MODAL_STEP', payload: {stepId, typeId} });
     };
      
     const handleCancel = () => {
@@ -151,7 +209,7 @@ const ProcessTypeManager = () => {
                             if (state.deleteProcessType) {
                                 handleDeleteProcessType(state.deleteProcessType);
                             } else if (state.deleteStep) {
-                                handleDeleteProcessStep(state.deleteStep);
+                                handleUpdatedProcessStep(state.deleteStep);
                             }
                             dispatch({ type: 'CLOSE_MODAL' });
                         }}
@@ -173,6 +231,11 @@ const ProcessTypeManager = () => {
                     <Panel>
                         <PanelHeader>Managing process types</PanelHeader>
                         <ProcessTypeForm onSave={handleSaveProcessType} onCancel={() => setEditingProcessType(null)} editingProcessType={editingProcessType} />    
+                        {notice && (
+                            <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                                {notice.message}
+                            </Notice>
+                        )}
                         <ProcessStepForm processTypes={processTypes} processSteps={processSteps} onAddStep={handleAddProcessStep} />
                     </Panel>
                 </aside>

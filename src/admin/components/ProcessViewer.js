@@ -79,16 +79,29 @@ const ProcessViewer = () => {
     }
 
     // Filtrar as etapas pelo tipo de processo atual
-    const filteredSteps = processSteps.filter(step => step.process_type === process.process_type);
-   
-    const processType = processTypes.find(processType => {
-        return processType.id == process.process_type;
-    });
-   
+    const filteredSteps = processSteps
+    .filter(step => {
+        const stepProcessTypes = Array.isArray(step.process_type) ? step.process_type.map(Number) : [];
+        // Verifica se a etapa pertence ao tipo de processo atual
+        return stepProcessTypes.includes(Number(process.process_type));
+    })
+    .sort((a, b) => {
+        // Obtém o índice do tipo de processo atual
+        const currentProcessTypeId = process.process_type;
+        const indexA = a.step_order[currentProcessTypeId] || 0;
+        const indexB = b.step_order[currentProcessTypeId] || 0;
+
+        return indexA - indexB;
+      });
+
+    console.log('Process Type ID:', Number(process.process_type));
+    console.log('Filtered Steps:', filteredSteps);
+
+
     return (
         <div>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Viewer</span>
-            <h2>{processType ? processType.title.rendered : ''}: {process.title.rendered}</h2>
+            <h2>{process.process_type ? 'Process type title' : ''}: {process.title.rendered}</h2>
             <div className="badge-container">
                 <span className="badge success">{process.status}</span>
                 <span className="badge">Current step</span>
