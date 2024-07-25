@@ -1,48 +1,74 @@
 import { useState } from 'react';
-import { Button, TextControl, SelectControl, Panel, PanelBody, PanelRow, Notice } from '@wordpress/components';
+import { Button, ComboboxControl, SelectControl, PanelBody, PanelRow, Notice, Icon } from '@wordpress/components';
+import { closeSmall } from '@wordpress/icons';
 
 const ProcessStepForm = ({ processTypes, processSteps, onAddStep }) => {
     const [selectedProcessType, setSelectedProcessType] = useState('');
-    const [selectedStep, setSelectedStep] = useState('');
+    const [selectedSteps, setSelectedSteps] = useState([]);
+    const [stepInputValue, setStepInputValue] = useState('');
     const [notice, setNotice] = useState(null);
 
     const handleAddStep = () => {
-        if (!selectedProcessType || !selectedStep) {
-            setNotice({ status: 'error', message: 'Please select both a process type and a step.' });
+        if (!selectedProcessType || selectedSteps.length === 0) {
+            setNotice({ status: 'error', message: 'Please select both a process type and at least one step.' });
             return;
         }
 
-        const step = processSteps.find(step => step.title.rendered === selectedStep);
+        const stepsToAdd = selectedSteps.map(stepTitle => {
+            const step = processSteps.find(step => step.title.rendered === stepTitle);
+            return {
+                id: step.id,
+                title: step.title.rendered,
+                status: 'publish',
+                process_type: selectedProcessType,
+            };
+        });
 
-        const newStep = {
-            id: step.id, // Use the ID of the existing step
-            title: step.title.rendered,
-            status: 'publish',
-            process_type: selectedProcessType,
-        };
+        onAddStep(stepsToAdd);
+        setSelectedSteps([]);
+        setNotice({ status: 'success', message: 'Steps added successfully.' });
+    };
 
-        onAddStep(newStep);
-        setSelectedProcessType('');
-        setSelectedStep('');
+    const handleChange = (value) => {
+        if (value && !selectedSteps.includes(value)) {
+            setSelectedSteps([...selectedSteps, value]);
+            setStepInputValue('');
+        }
+    };
+
+    const handleRemoveStep = (stepTitle) => {
+        setSelectedSteps(selectedSteps.filter(step => step !== stepTitle));
     };
 
     return (
-        <PanelBody title="Add Process Step" initialOpen={ true }>
+        <PanelBody title="Add Process Step" initialOpen={true}>
             <PanelRow>
-            {notice && (
-                <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                    {notice.message}
-                </Notice>
+                {notice && (
+                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                        {notice.message}
+                    </Notice>
                 )}
-                <SelectControl
+                <ComboboxControl
                     label="Select Step"
-                    value={selectedStep}
-                    options={[
-                        { label: 'Select a step...', value: '' },
-                        ...processSteps.map(step => ({ label: step.title.rendered, value: step.title.rendered }))
-                    ]}
-                    onChange={(value) => setSelectedStep(value)}
+                    value={stepInputValue}
+                    options={processSteps
+                        .filter(step => !selectedSteps.includes(step.title.rendered))
+                        .map(step => ({ label: step.title.rendered, value: step.title.rendered }))}
+                    onChange={handleChange}
+                    onInputChange={setStepInputValue}
                 />
+                <div className="selected-steps">
+                    {selectedSteps.map(step => (
+                        <div key={step} className="selected-step">
+                            {step}
+                            <Button
+                                icon={closeSmall}
+                                onClick={() => handleRemoveStep(step)}
+                                className="remove-step-button"
+                            />
+                        </div>
+                    ))}
+                </div>
                 <SelectControl
                     label="Select Process Type"
                     value={selectedProcessType}

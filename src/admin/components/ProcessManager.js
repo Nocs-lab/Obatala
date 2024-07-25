@@ -18,8 +18,8 @@ const ProcessManager = ({ onSelectProcess }) => {
     const fetchProcessTypes = () => {
         apiFetch({ path: `/wp/v2/process_type?per_page=100&_embed` })
             .then(data => {
-                console.log('Fetched process types:', data); // Adiciona log para verificar os dados
-                setProcessTypes(data);
+                const sortedProcessType = data.sort((a, b) => a.title.rendered.localeCompare(b.title.rendered));
+                setProcessTypes(sortedProcessType);
             })
             .catch(error => {
                 console.error('Error fetching process types:', error);

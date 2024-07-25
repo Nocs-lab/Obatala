@@ -36,7 +36,8 @@ const ProcessStepManager = () => {
         setIsLoading(true);
         apiFetch({ path: `/wp/v2/process_step?per_page=100&_embed` })
             .then(data => {
-                setProcessSteps(data);
+                const sortedSteps = data.sort((a, b) => a.title.rendered.localeCompare(b.title.rendered));
+                setProcessSteps(sortedSteps);;
                 setIsLoading(false);
             })
             .catch(error => {
