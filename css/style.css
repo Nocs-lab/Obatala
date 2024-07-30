@@ -53,11 +53,14 @@ h2:has(+ span.badge) {
 }
 
 /* Forms */
-.components-base-control {
+.components-base-control,
+.components-base-control:not(.components-checkbox-control) + div:has(> .components-base-control) {
     width: 100%;
 }
 .components-base-control:not(.components-checkbox-control) + .components-base-control,
-.components-base-control + .components-button {
+.components-base-control:not(.components-checkbox-control) + div:has(> .components-base-control),
+.components-base-control + .components-button,
+.selected-steps + .components-button {
     margin-top: 1rem;
 }
 .components-base-control__field > label {
@@ -83,6 +86,27 @@ h2:has(+ span.badge) {
     border-radius: var(--input-border-radius) !important;
     height: 38px !important;
     min-height: 38px !important;
+}
+.components-combobox-control__suggestions-container > .components-flex {
+    height: 38px;
+}
+.selected-steps {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .25rem;
+    margin-top: .5rem;
+    width: 100%;
+}
+.selected-steps .selected-step {
+    background-color: var(--primary-50);
+    display: flex;
+    align-items: center;
+    padding-left: .5rem;
+}
+.selected-steps .selected-step .components-button.has-icon {
+    height: 30px;
+    padding: 0;
 }
 
 /* Tables */
