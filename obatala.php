@@ -53,6 +53,7 @@ class Nocs_ObatalaPlugin {
 	private function __construct() {
 		add_action('plugins_loaded', array($this, 'initialize'));
 	}
+
 	/**
 	 * Initialize the plugin after plugins are loaded.
 	 */
@@ -72,27 +73,23 @@ class Nocs_ObatalaPlugin {
 		// Register and enqueue scripts and styles
 		add_action('admin_enqueue_scripts', [$this, 'admin_enqueue_scripts']);
 		add_action('wp_enqueue_scripts', [$this, 'enqueue_scripts']);
-		
-		// Register REST API fields
-		$this->register_api_endpoints();
 
 		// Register REST API fields
-		add_filter('rest_process_step_query', ['Obatala\Api\ProcessStepCustomFields', 'add_custom_filters'], 10, 2);
+		$this->register_api_endpoints();
 	}
 
 	/**
 	 * Register API endpoints
 	 */
-	// Register REST API fields
 	private function register_api_endpoints() {
 		$process_custom_fields = new \Obatala\Api\ProcessCustomFields();
 		$process_custom_fields->register();
 
-		
 		$custom_metadata_api = new \Obatala\Api\StepMetadataApi();
 		$custom_metadata_api->register();
 
-		
+		$custom_post_type_api = new \Obatala\Api\CustomPostTypeApi();
+		$custom_post_type_api->register();
 
 		$process_step_custom_fields = new \Obatala\Api\ProcessStepCustomFields();
 		$process_step_custom_fields->register();
@@ -101,12 +98,10 @@ class Nocs_ObatalaPlugin {
 		$process_type_custom_fields->register();
 	}
 
-
 	public function enqueue_scripts() {
 	}
 
 	public function admin_enqueue_scripts($hook) {
-		error_log("Hook value in admin_enqueue_scripts: " . $hook);
 		\Obatala\Admin\Enqueuer::enqueue_admin_scripts($hook);
 	}
 

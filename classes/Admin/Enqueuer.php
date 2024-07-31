@@ -48,12 +48,6 @@ class Enqueuer {
             );
             // Enfileira o estilo de administração
             wp_enqueue_style('obatala-admin-styles');
-
-            // Log de depuração indicando que os scripts e estilos foram enfileirados
-            error_log("Scripts and styles enqueued for $hook");
-        } else {
-            // Log de depuração indicando que a página atual foi ignorada
-            error_log("Skipping script enqueue for $hook");
         }
     }
 }
