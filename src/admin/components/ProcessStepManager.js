@@ -34,7 +34,7 @@ const ProcessStepManager = () => {
     // Função para buscar os passos de processo da API WordPress
     const fetchProcessSteps = () => {
         setIsLoading(true);
-        apiFetch({ path: `/wp/v2/process_step?per_page=100&_embed` })
+        apiFetch({ path: `/obatala/v1/process_step?per_page=100&_embed` })
             .then(data => {
                 const sortedSteps = data.sort((a, b) => a.title.rendered.localeCompare(b.title.rendered));
                 setProcessSteps(sortedSteps);;
@@ -60,7 +60,7 @@ const ProcessStepManager = () => {
         };
 
         if (editingStep) {
-            apiFetch({ path: `/wp/v2/process_step/${editingStep}`, method: 'PUT', data: requestData })
+            apiFetch({ path: `/obatala/v1/process_step/${editingStep}`, method: 'PUT', data: requestData })
                 .then(updatedStep => {
                     const updatedProcessSteps = processSteps.map(step =>
                         step.id === editingStep ? updatedStep : step
@@ -94,7 +94,7 @@ const ProcessStepManager = () => {
                     console.error('Error updating process step:', error);
                 });
         } else {
-            apiFetch({ path: `/wp/v2/process_step`, method: 'POST', data: requestData })
+            apiFetch({ path: `/obatala/v1/process_step`, method: 'POST', data: requestData })
                 .then(savedStep => {
                     setProcessSteps([...processSteps, savedStep]);
                     setNewStepTitle('');
@@ -132,11 +132,11 @@ const ProcessStepManager = () => {
 
     const handleDeleteProcessStep = async (id) => {
         try {
-          const step = await apiFetch({ path: `/wp/v2/process_step/${id}` });
+          const step = await apiFetch({ path: `/obatala/v1/process_step/${id}` });
           const stepProcessTypes = Array.isArray(step.process_type) ? step.process_type : [step.process_type];
       
         
-          const hasLinkedProcesses = await apiFetch({ path: '/wp/v2/process_obatala?per_page=100' })
+          const hasLinkedProcesses = await apiFetch({ path: '/obatala/v1/process_obatala?per_page=100' })
             .then(allProcesses => allProcesses.some(process => stepProcessTypes.includes(Number(process.process_type))));
       
           if (hasLinkedProcesses) {
@@ -144,7 +144,7 @@ const ProcessStepManager = () => {
             return;
           }
       
-          await apiFetch({ path: `/wp/v2/process_step/${id}`, method: 'DELETE' });
+          await apiFetch({ path: `/obatala/v1/process_step/${id}`, method: 'DELETE' });
           setProcessSteps(processSteps.filter(step => step.id !== id));
         } catch (error) {
           console.error('Error deleting process step:', error);

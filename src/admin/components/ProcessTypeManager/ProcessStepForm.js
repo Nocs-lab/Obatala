@@ -14,8 +14,8 @@ const ProcessStepForm = ({ processTypes, processSteps, onAddStep }) => {
             return;
         }
 
-        const stepsToAdd = selectedSteps.map(stepTitle => {
-            const step = processSteps.find(step => step.title.rendered === stepTitle);
+        const stepsToAdd = selectedSteps.map(stepId => {
+            const step = processSteps.find(step => step.id === stepId);
             return {
                 id: step.id,
                 title: step.title.rendered,
@@ -36,8 +36,8 @@ const ProcessStepForm = ({ processTypes, processSteps, onAddStep }) => {
         }
     };
 
-    const handleRemoveStep = (stepTitle) => {
-        setSelectedSteps(selectedSteps.filter(step => step !== stepTitle));
+    const handleRemoveStep = (stepId) => {
+        setSelectedSteps(selectedSteps.filter(step => step !== stepId));
     };
 
     return (
@@ -61,22 +61,25 @@ const ProcessStepForm = ({ processTypes, processSteps, onAddStep }) => {
                     label="Select one or more Steps"
                     value={stepInputValue}
                     options={processSteps
-                        .filter(step => !selectedSteps.includes(step.title.rendered))
-                        .map(step => ({ label: step.title.rendered, value: step.title.rendered }))}
+                        .filter(step => !selectedSteps.includes(step.id))
+                        .map(step => ({ label: step.title.rendered, value: step.id }))}
                     onChange={handleChange}
                     onInputChange={setStepInputValue}
                 />
                 <div className="selected-steps">
-                    {selectedSteps.map(step => (
-                        <div key={step} className="selected-step">
-                            {step}
-                            <Button
-                                icon={closeSmall}
-                                onClick={() => handleRemoveStep(step)}
-                                className="remove-step-button"
-                            />
-                        </div>
-                    ))}
+                    {selectedSteps.map((stepId) => {
+                        const step = processSteps.find(step => step.id === stepId);
+                        return (
+                            <div key={stepId} className="selected-step">
+                                {step.title.rendered}
+                                <Button
+                                    icon={closeSmall}
+                                    onClick={() => handleRemoveStep(stepId)}
+                                    className="remove-step-button"
+                                />
+                            </div>
+                        );
+                    })}
                 </div>
                 <Button isSecondary onClick={handleAddStep}>
                     Add Process Step

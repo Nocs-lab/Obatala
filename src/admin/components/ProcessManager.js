@@ -16,7 +16,7 @@ const ProcessManager = ({ onSelectProcess }) => {
     }, []);
 
     const fetchProcessTypes = () => {
-        apiFetch({ path: `/wp/v2/process_type?per_page=100&_embed` })
+        apiFetch({ path: `/obatala/v1/process_type?per_page=100&_embed` })
             .then(data => {
                 const sortedProcessType = data.sort((a, b) => a.title.rendered.localeCompare(b.title.rendered));
                 setProcessTypes(sortedProcessType);
@@ -28,7 +28,7 @@ const ProcessManager = ({ onSelectProcess }) => {
 
     const fetchProcesses = () => {
         setIsLoading(true);
-        apiFetch({ path: `/wp/v2/process_obatala?per_page=100&_embed` })
+        apiFetch({ path: `/obatala/v1/process_obatala?per_page=100&_embed` })
             .then(data => {
                 console.log('Fetched processes:', data); // Adiciona log para verificar os dados
                 setProcesses(data);
@@ -54,7 +54,7 @@ const ProcessManager = ({ onSelectProcess }) => {
             current_stage: null,
         };
 
-        apiFetch({ path: `/wp/v2/process_obatala`, method: 'POST', data: newProcess })
+        apiFetch({ path: `/obatala/v1/process_obatala`, method: 'POST', data: newProcess })
             .then(savedProcess => {
                 setProcesses([...processes, savedProcess]);
                 setNewProcessTitle('');

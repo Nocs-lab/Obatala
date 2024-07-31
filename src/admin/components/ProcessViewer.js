@@ -28,7 +28,7 @@ const ProcessViewer = () => {
 
     const fetchProcess = (processId) => {
         setIsLoading(true);
-        apiFetch({ path: `/wp/v2/process_obatala/${processId}?_embed` })
+        apiFetch({ path: `/obatala/v1/process_obatala/${processId}?_embed` })
             .then(data => {
                 setProcess(data);
                 setIsLoading(false);
@@ -42,7 +42,7 @@ const ProcessViewer = () => {
 
     const fetchProcessTypes = () => {
         setIsLoading(true);
-        apiFetch({ path: `/wp/v2/process_type?per_page=100&_embed` })
+        apiFetch({ path: `/obatala/v1/process_type?per_page=100&_embed` })
             .then(data => {
                 setProcessTypes(data);
                 setIsLoading(false);
@@ -55,7 +55,7 @@ const ProcessViewer = () => {
 
     const fetchProcessSteps = () => {
         setIsLoading(true);
-        apiFetch({ path: `/wp/v2/process_step?per_page=100&_embed` })
+        apiFetch({ path: `/obatala/v1/process_step?per_page=100&_embed` })
             .then(data => {
                 setProcessSteps(data);
                 setIsLoading(false);

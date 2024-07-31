@@ -9,7 +9,6 @@ const ProcessTypeForm = ({ onSave, onCancel, editingProcessType }) => {
     const [generateTainacanItems, setGenerateTainacanItems] = useState(false);
     const [notice, setNotice] = useState(null);
 
-
     useEffect(() => {
         if (editingProcessType) {
             setProcessTypeName(editingProcessType.title.rendered);
@@ -34,12 +33,13 @@ const ProcessTypeForm = ({ onSave, onCancel, editingProcessType }) => {
             accept_tainacan_items: acceptTainacanItems,
             generate_tainacan_items: generateTainacanItems,
         };
+
+        console.log('Saving process type:', processType); // Log para verificar os dados
         onSave(processType);
 
         if (!editingProcessType) {
             handleResetForm();
         }
-        
     };
 
     const handleResetForm = () => {
@@ -61,7 +61,6 @@ const ProcessTypeForm = ({ onSave, onCancel, editingProcessType }) => {
 
     return (
         <PanelBody title="Add Process Type" initialOpen={ true }>
-            
             <PanelRow>
                 {notice && (
                 <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>

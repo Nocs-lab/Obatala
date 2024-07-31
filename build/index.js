@@ -181,6 +181,69 @@ document.addEventListener("DOMContentLoaded", () => {
 
 /***/ }),
 
+/***/ "./src/admin/api/apiRequests.js":
+/*!**************************************!*\
+  !*** ./src/admin/api/apiRequests.js ***!
+  \**************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   checkLinkedProcesses: () => (/* binding */ checkLinkedProcesses),
+/* harmony export */   deleteProcessType: () => (/* binding */ deleteProcessType),
+/* harmony export */   fetchProcessSteps: () => (/* binding */ fetchProcessSteps),
+/* harmony export */   fetchProcessTypes: () => (/* binding */ fetchProcessTypes),
+/* harmony export */   saveProcessType: () => (/* binding */ saveProcessType),
+/* harmony export */   updateProcessStep: () => (/* binding */ updateProcessStep)
+/* harmony export */ });
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0__);
+
+const fetchProcessTypes = async () => {
+  const data = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/obatala/v1/process_type?per_page=100&_embed`
+  });
+  return data.sort((a, b) => a.title.rendered.localeCompare(b.title.rendered));
+};
+const fetchProcessSteps = async () => {
+  const data = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/obatala/v1/process_step?per_page=100&_embed`
+  });
+  return data.sort((a, b) => a.title.rendered.localeCompare(b.title.rendered));
+};
+const saveProcessType = async (id, processType) => {
+  const path = id ? `/obatala/v1/process_type/${id}` : `/obatala/v1/process_type`;
+  const method = id ? 'PUT' : 'POST';
+  const data = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path,
+    method,
+    data: processType
+  });
+  return data;
+};
+const deleteProcessType = async id => {
+  await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/obatala/v1/process_type/${id}`,
+    method: 'DELETE'
+  });
+};
+const updateProcessStep = async (id, processStep) => {
+  const data = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/obatala/v1/process_step/${id}`,
+    method: 'PUT',
+    data: processStep
+  });
+  return data;
+};
+const checkLinkedProcesses = async typeId => {
+  const allProcesses = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
+    path: `/obatala/v1/process_obatala?per_page=100`
+  });
+  return allProcesses.some(process => Number(process.process_type) === typeId);
+};
+
+/***/ }),
+
 /***/ "./src/admin/components/ProcessManager.js":
 /*!************************************************!*\
   !*** ./src/admin/components/ProcessManager.js ***!
@@ -844,8 +907,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
-/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _api_apiRequests__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../api/apiRequests */ "./src/admin/api/apiRequests.js");
 /* harmony import */ var _ProcessTypeManager_ProcessTypeForm__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ProcessTypeManager/ProcessTypeForm */ "./src/admin/components/ProcessTypeManager/ProcessTypeForm.js");
 /* harmony import */ var _ProcessTypeManager_ProcessTypeList__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ProcessTypeManager/ProcessTypeList */ "./src/admin/components/ProcessTypeManager/ProcessTypeList.js");
 /* harmony import */ var _ProcessTypeManager_ProcessStepForm__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ProcessTypeManager/ProcessStepForm */ "./src/admin/components/ProcessTypeManager/ProcessStepForm.js");
@@ -854,7 +916,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__);
 
 
-
+ // Supondo que as funções de API estejam neste arquivo
 
 
 
@@ -868,109 +930,104 @@ const ProcessTypeManager = () => {
   const [state, dispatch] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useReducer)(_redux_reducer__WEBPACK_IMPORTED_MODULE_6__["default"], _redux_reducer__WEBPACK_IMPORTED_MODULE_6__.initialState);
   const [notice, setNotice] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    fetchProcessTypes();
-    fetchProcessSteps();
+    loadProcessTypes();
+    loadProcessSteps();
   }, []);
-  const fetchProcessTypes = () => {
+  const loadProcessTypes = async () => {
     setIsLoading(true);
-    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-      path: `/obatala/v1/process_type?per_page=100&_embed`
-    }).then(data => {
-      console.log('Fetched Process Types:', data);
-      const sortedProcessTypes = data.sort((a, b) => a.title.rendered.localeCompare(b.title.rendered));
-      setProcessTypes(sortedProcessTypes);
-      setIsLoading(false);
-    }).catch(error => {
-      console.error('Error fetching process types:', error);
-      setIsLoading(false);
-    });
-  };
-  const fetchProcessSteps = () => {
-    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-      path: `/obatala/v1/process_step?per_page=100&_embed`
-    }).then(data => {
-      console.log('Fetched Process Steps:', data);
-      const sortedSteps = data.sort((a, b) => a.title.rendered.localeCompare(b.title.rendered));
-      setProcessSteps(sortedSteps);
-      setIsLoading(false);
-    }).catch(error => {
-      console.error('Error fetching process steps:', error);
-      setIsLoading(false);
-    });
-  };
-  const handleSaveProcessType = processType => {
-    if (editingProcessType) {
-      _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-        path: `/obatala/v1/process_type/${editingProcessType.id}`,
-        method: 'PUT',
-        data: processType
-      }).then(savedProcessType => {
-        const updatedProcessTypes = processTypes.map(type => type.id === savedProcessType.id ? savedProcessType : type);
-        setProcessTypes(updatedProcessTypes);
-        setEditingProcessType(null);
-      }).catch(error => {
-        console.error('Error updating process type:', error);
+    try {
+      const data = await (0,_api_apiRequests__WEBPACK_IMPORTED_MODULE_2__.fetchProcessTypes)();
+      setProcessTypes(data);
+    } catch (error) {
+      setNotice({
+        status: 'error',
+        message: 'Error fetching process types.'
       });
-    } else {
-      _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-        path: `/obatala/v1/process_type`,
-        method: 'POST',
-        data: processType
-      }).then(savedProcessType => {
-        setProcessTypes([...processTypes, savedProcessType]);
-        fetchProcessTypes();
-      }).catch(error => {
-        console.error('Error adding process type:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  const loadProcessSteps = async () => {
+    try {
+      const data = await (0,_api_apiRequests__WEBPACK_IMPORTED_MODULE_2__.fetchProcessSteps)();
+      setProcessSteps(data);
+    } catch (error) {
+      setNotice({
+        status: 'error',
+        message: 'Error fetching process steps.'
       });
     }
   };
-  const handleDeleteProcessType = id => {
-    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-      path: `/obatala/v1/process_type/${id}`,
-      method: 'DELETE'
-    }).then(() => {
-      const updatedProcessTypes = processTypes.filter(type => type.id !== id);
-      setProcessTypes(updatedProcessTypes);
-    }).catch(error => {
-      console.error('Error deleting process type:', error);
-    });
+  const handleSaveProcessType = async processType => {
+    try {
+      if (editingProcessType) {
+        const updatedProcessType = await (0,_api_apiRequests__WEBPACK_IMPORTED_MODULE_2__.saveProcessType)(editingProcessType.id, processType);
+        setProcessTypes(prevProcessTypes => prevProcessTypes.map(type => type.id === updatedProcessType.id ? updatedProcessType : type));
+        setEditingProcessType(null);
+      } else {
+        await (0,_api_apiRequests__WEBPACK_IMPORTED_MODULE_2__.saveProcessType)(null, processType);
+        loadProcessTypes();
+      }
+    } catch (error) {
+      setNotice({
+        status: 'error',
+        message: 'Error saving process type.'
+      });
+    }
+  };
+  const handleDeleteProcessType = async id => {
+    try {
+      await (0,_api_apiRequests__WEBPACK_IMPORTED_MODULE_2__.deleteProcessType)(id);
+      setProcessTypes(prevProcessTypes => prevProcessTypes.filter(type => type.id !== id));
+    } catch (error) {
+      setNotice({
+        status: 'error',
+        message: 'Error deleting process type.'
+      });
+    }
   };
   const handleEditProcessType = processType => {
     setEditingProcessType(processType);
   };
-  const handleAddProcessStep = steps => {
-    steps.forEach(step => {
-      const {
-        id,
-        process_type
-      } = step;
-      const existingStep = processSteps.find(existing => existing.id === id);
-      if (!existingStep) {
-        console.error('Etapa não encontrada:', id);
-        return;
-      }
-      const currentProcessTypes = Array.isArray(existingStep.process_type) ? existingStep.process_type.map(Number) : [];
-      const newProcessType = Number(process_type);
-      if (currentProcessTypes.includes(newProcessType)) {
-        setNotice({
-          status: 'error',
-          message: `Step is already linked to this Process Type`
-        });
-        return;
-      }
-      const updatedProcessTypes = [...currentProcessTypes, newProcessType];
-      _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-        path: `/obatala/v1/process_step/${id}`,
-        method: 'PUT',
-        data: {
-          process_type: updatedProcessTypes
+  const handleAddProcessStep = async steps => {
+    try {
+      for (const step of steps) {
+        const {
+          id,
+          process_type
+        } = step;
+        const existingStep = processSteps.find(existing => existing.id === id);
+        if (!existingStep) {
+          setNotice({
+            status: 'error',
+            message: `Step not found: ${id}`
+          });
+          continue;
         }
-      }).then(updatedProcessStep => {
-        setProcessSteps(prevProcessSteps => prevProcessSteps.map(s => s.id === id ? updatedProcessStep : s));
-      }).catch(error => {
-        console.error('Error updating process step:', error);
+        const currentProcessTypes = Array.isArray(existingStep.process_type) ? existingStep.process_type.map(Number) : [];
+        const newProcessType = Number(process_type);
+        if (currentProcessTypes.includes(newProcessType)) {
+          setNotice({
+            status: 'error',
+            message: 'Step is already linked to this Process Type.'
+          });
+          continue;
+        }
+        const updatedProcessTypes = [...currentProcessTypes, newProcessType];
+        await (0,_api_apiRequests__WEBPACK_IMPORTED_MODULE_2__.updateProcessStep)(id, {
+          process_type: updatedProcessTypes
+        });
+        setProcessSteps(prevProcessSteps => prevProcessSteps.map(s => s.id === id ? {
+          ...s,
+          process_type: updatedProcessTypes
+        } : s));
+      }
+    } catch (error) {
+      setNotice({
+        status: 'error',
+        message: 'Error updating process step.'
       });
-    });
+    }
   };
   const handleUpdatedProcessStep = async () => {
     const {
@@ -980,14 +1037,13 @@ const ProcessTypeManager = () => {
     try {
       const existingStep = processSteps.find(step => step.id === stepId);
       if (!existingStep) {
-        console.error('Etapa não encontrada:', stepId);
+        setNotice({
+          status: 'error',
+          message: `Step not found: ${stepId}`
+        });
         return;
       }
-
-      // Verifica se o tipo de processo específico está vinculado a algum processo
-      const hasLinkedProcesses = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-        path: `/obatala/v1/process_obatala?per_page=100`
-      }).then(allProcesses => allProcesses.some(process => Number(process.process_type) === typeId));
+      const hasLinkedProcesses = await (0,_api_apiRequests__WEBPACK_IMPORTED_MODULE_2__.checkLinkedProcesses)(typeId);
       if (hasLinkedProcesses) {
         setNotice({
           status: 'error',
@@ -995,26 +1051,20 @@ const ProcessTypeManager = () => {
         });
         return;
       }
-
-      // Atualiza os tipos de processo da etapa para remover o tipo específico
       const stepProcessTypes = Array.isArray(existingStep.process_type) ? existingStep.process_type.map(Number) : [];
       const updatedProcessTypes = stepProcessTypes.filter(id => id !== typeId);
-
-      //console.log('Updated Process Types:', updatedProcessTypes);
-
-      const updatedProcessStep = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-        path: `/obatala/v1/process_step/${stepId}`,
-        method: 'PUT',
-        data: {
-          process_type: updatedProcessTypes
-        }
+      await (0,_api_apiRequests__WEBPACK_IMPORTED_MODULE_2__.updateProcessStep)(stepId, {
+        process_type: updatedProcessTypes
       });
-
-      //console.log('Etapa atualizada:', updatedProcessStep);
-
-      setProcessSteps(prevProcessSteps => prevProcessSteps.map(step => step.id === stepId ? updatedProcessStep : step));
+      setProcessSteps(prevProcessSteps => prevProcessSteps.map(step => step.id === stepId ? {
+        ...step,
+        process_type: updatedProcessTypes
+      } : step));
     } catch (error) {
-      console.error('Erro ao atualizar a etapa do processo:', error);
+      setNotice({
+        status: 'error',
+        message: 'Error updating process step.'
+      });
     }
   };
   const handleConfirmDeleteType = id => {
@@ -1057,7 +1107,7 @@ const ProcessTypeManager = () => {
             if (state.deleteProcessType) {
               handleDeleteProcessType(state.deleteProcessType);
             } else if (state.deleteStep) {
-              handleUpdatedProcessStep(state.deleteStep);
+              handleUpdatedProcessStep();
             }
             dispatch({
               type: 'CLOSE_MODAL'
@@ -1272,6 +1322,7 @@ const ProcessTypeForm = ({
       accept_tainacan_items: acceptTainacanItems,
       generate_tainacan_items: generateTainacanItems
     };
+    console.log('Saving process type:', processType); // Log para verificar os dados
     onSave(processType);
     if (!editingProcessType) {
       handleResetForm();

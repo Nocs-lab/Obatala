@@ -56,7 +56,7 @@ const ProcessTypeList = ({
         await Promise.all(updatedSteps.map((step, index) => {
             const stepOrder = { ...step.step_order, [typeId]: index };
             return apiFetch({
-                path: `/wp/v2/process_step/${step.id}`,
+                path: `/obatala/v1/process_step/${step.id}`,
                 method: 'PUT',
                 data: { step_order: stepOrder },
             });
