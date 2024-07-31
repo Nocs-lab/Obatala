@@ -1,12 +1,11 @@
 <?php
-
+// Deprecated
 namespace Obatala\Ajax;
 
 use Obatala\Metadata\ProcessMetadataManager;
 
 class MetadataHandler {
-
-    /**
+      /**
      * Processa a requisição AJAX para salvar metadados.
      * Verifica se os dados necessários estão presentes e chama o método de salvamento.
      */

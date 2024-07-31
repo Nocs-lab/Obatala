@@ -1,6 +1,7 @@
 <?php
-
+// Deprecated
 namespace Obatala\Ajax;
+
 
 class AjaxHandler {
     public function __construct() {
