@@ -1,4 +1,4 @@
-import { render } from "@wordpress/element";
+import { createRoot } from "react-dom/client";
 import ProcessManager from "./components/ProcessManager";
 import ProcessTypeManager from "./components/ProcessTypeManager";
 import ProcessStepManager from './components/ProcessStepManager';
@@ -20,24 +20,24 @@ document.addEventListener("DOMContentLoaded", () => {
   // Verifica se o elemento com o ID 'process-manager' existe
   // Se existir, renderiza o componente ProcessManager dentro deste elemento
   if (processElement) {
-    render(<ProcessManager onSelectProcess={navigateToProcessViewer} />, processElement);
+    createRoot(processElement).render(<ProcessManager onSelectProcess={navigateToProcessViewer} />);
   }
 
   // Verifica se o elemento com o ID 'process-type-manager' existe
   // Se existir, renderiza o componente ProcessTypeManager dentro deste elemento
   if (processTypeElement) {
-    render(<ProcessTypeManager />, processTypeElement);
+    createRoot(processTypeElement).render(<ProcessTypeManager />);
   }
 
   // Verifica se o elemento com o ID 'process-step-manager' existe
   // Se existir, renderiza o componente ProcessStepManager dentro deste elemento
   if (processStepElement) {
-    render(<ProcessStepManager />, processStepElement);
+    createRoot(processStepElement).render(<ProcessStepManager />);
   }
 
   // Verifica se o elemento com o ID 'process-viewer' existe
   // Se existir, renderiza o componente ProcessViewer dentro deste elemento
   if (processViewerElement) {
-    render(<ProcessViewer />, processViewerElement);
+    createRoot(processViewerElement).render(<ProcessViewer />);
   }
 });
