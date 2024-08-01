@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import apiFetch from '@wordpress/api-fetch';
 import { Panel, PanelHeader, Spinner, Notice } from '@wordpress/components';
+import apiFetch from '@wordpress/api-fetch';
 import ProcessTypeForm from './ProcessTypeManager/ProcessTypeForm';
 import ProcessStepForm from './ProcessTypeManager/ProcessStepForm';
 import StepList from './ProcessTypeManager/StepList';
@@ -9,26 +9,23 @@ const ProcessTypeEditor = () => {
     const params = new URLSearchParams(window.location.search);
     const id = params.get('process_type_id');
     const [processType, setProcessType] = useState(null);
-    const [processSteps, setProcessSteps] = useState([]);
     const [notice, setNotice] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [stepOrder, setStepOrder] = useState([]);
 
     useEffect(() => {
         setIsLoading(true);
 
-        Promise.all([
-            apiFetch({ path: `/obatala/v1/process_type/${id}` }),
-            apiFetch({ path: `/obatala/v1/process_step?per_page=100&_embed` })
-        ])
-            .then(([typeData, stepsData]) => {
-                const sortedSteps = stepsData.sort((a, b) => a.title.rendered.localeCompare(b.title.rendered));
+        apiFetch({ path: `/obatala/v1/process_type/${id}` })
+            .then((typeData) => {
                 setProcessType(typeData);
-                setProcessSteps(sortedSteps);
+                const order = typeData.meta.step_order || [];
+                setStepOrder(order);
                 setIsLoading(false);
             })
-            .catch(error => {
+            .catch((error) => {
                 console.error('Error fetching data:', error);
-                setNotice({ status: 'error', message: 'Error fetching process type or steps.' });
+                setNotice({ status: 'error', message: 'Error fetching process type.' });
                 setIsLoading(false);
             });
     }, [id]);
@@ -36,29 +33,51 @@ const ProcessTypeEditor = () => {
     const handleSave = async (updatedProcessType) => {
         setIsLoading(true);
         try {
-            await apiFetch({
+            const savedType = await apiFetch({
                 path: `/obatala/v1/process_type/${id}`,
                 method: 'PUT',
                 data: updatedProcessType
             });
-            setNotice({ status: 'success', message: 'Process type updated successfully.' });
+
+            const meta = {
+                description: updatedProcessType.meta.description.toString(),
+                accept_attachments: updatedProcessType.meta.accept_attachments,
+                accept_tainacan_items: updatedProcessType.meta.accept_tainacan_items,
+                generate_tainacan_items: updatedProcessType.meta.generate_tainacan_items,
+                step_order: stepOrder,
+            };
+
+            await apiFetch({
+                path: `/obatala/v1/process_type/${id}/meta`,
+                method: 'PUT',
+                data: meta
+            });
+
+            setProcessType(prevType => ({
+                ...prevType,
+                title: savedType.title,
+                meta
+            }));
+
+            setNotice({ status: 'success', message: 'Process type and meta updated successfully.' });
         } catch (error) {
-            setNotice({ status: 'error', message: 'Error updating process type.' });
+            setNotice({ status: 'error', message: 'Error updating process type and meta.' });
+        } finally {
+            setIsLoading(false);
         }
-        setIsLoading(false);
     };
 
-    const handleAddProcessStep = (processTypeId, stepIds) => {
-        const stepOrder = Array.isArray(processType?.step_order) ? processType.step_order : [];
+    const handleAddProcessStep = (stepIds) => {
+        const newStepOrder = Array.isArray(stepOrder) ? stepOrder : [];
 
-        const stepsToAdd = stepIds.filter(stepId => !stepOrder.includes(stepId));
+        const stepsToAdd = stepIds.filter(stepId => !newStepOrder.includes(stepId));
 
         if (stepsToAdd.length === 0) {
             setNotice({ status: 'warning', message: 'All selected steps are already in the process type.' });
             return;
         }
 
-        const updatedStepOrder = [...stepOrder, ...stepsToAdd];
+        const updatedStepOrder = [...newStepOrder, ...stepsToAdd];
 
         apiFetch({
             path: `/obatala/v1/process_type/${id}/meta`,
@@ -66,10 +85,7 @@ const ProcessTypeEditor = () => {
             data: { step_order: updatedStepOrder }
         })
             .then(() => {
-                setProcessType(prevType => ({
-                    ...prevType,
-                    step_order: updatedStepOrder
-                }));
+                setStepOrder(updatedStepOrder);
                 setNotice({ status: 'success', message: 'Steps added successfully.' });
             })
             .catch(error => {
@@ -94,15 +110,16 @@ const ProcessTypeEditor = () => {
                 <main>
                     <Panel>
                         <PanelHeader><h3>Steps</h3></PanelHeader>
+                    
                         {notice && (
                             <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
                                 {notice.message}
                             </Notice>
                         )}
+
                         <StepList
-                            processTypeId={id}
-                            processSteps={processSteps}
-                            stepOrder={processType.step_order}
+                            processTypeId={processType.id}
+                            stepOrder={stepOrder}
                             onNotice={setNotice}
                         />
                     </Panel>
@@ -110,8 +127,14 @@ const ProcessTypeEditor = () => {
                 <aside>
                     <Panel>
                         <PanelHeader>Editing process type</PanelHeader>
-                        <ProcessTypeForm onSave={handleSave} editingProcessType={processType} onCancel={() => { /* Handle cancel if necessary */ }} />
-                        <ProcessStepForm processTypes={[processType]} processSteps={processSteps} onAddStep={handleAddProcessStep} />
+                        <ProcessTypeForm 
+                            onSave={handleSave} 
+                            editingProcessType={processType} 
+                            onCancel={() => { /* Handle cancel if necessary */ }} 
+                        />
+                        <ProcessStepForm 
+                            onAddStep={handleAddProcessStep} 
+                        />
                     </Panel>
                 </aside>
             </div>

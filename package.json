@@ -24,11 +24,13 @@
         "check-engines": "wp-scripts check-engines"
     },
     "devDependencies": {
-        "@wordpress/scripts": "^27.8.0"
+        "@wordpress/scripts": "^28.4.0"
     },
     "dependencies": {
         "@wordpress/icons": "^10.0.0",
+        "date-fns": "^3.6.0",
         "react-beautiful-dnd": "^13.1.1",
-        "react-router-dom": "^6.25.1"
+        "react-router-dom": "^6.25.1",
+        "react-table": "^7.8.0"
     }
 }

@@ -14,7 +14,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/primitives */ "@wordpress/primitives");
 /* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
 /**
  * WordPress dependencies
  */
@@ -67,7 +68,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/primitives */ "@wordpress/primitives");
 /* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
 /**
  * WordPress dependencies
  */
@@ -98,7 +100,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/primitives */ "@wordpress/primitives");
 /* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "./node_modules/react/jsx-runtime.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
 /**
  * WordPress dependencies
  */
@@ -831,13 +834,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
-/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__);
 /* harmony import */ var _ProcessTypeManager_ProcessTypeForm__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ProcessTypeManager/ProcessTypeForm */ "./src/admin/components/ProcessTypeManager/ProcessTypeForm.js");
 /* harmony import */ var _ProcessTypeManager_ProcessStepForm__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ProcessTypeManager/ProcessStepForm */ "./src/admin/components/ProcessTypeManager/ProcessStepForm.js");
 /* harmony import */ var _ProcessTypeManager_StepList__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ProcessTypeManager/StepList */ "./src/admin/components/ProcessTypeManager/StepList.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__);
 
 
 
@@ -849,25 +854,23 @@ const ProcessTypeEditor = () => {
   const params = new URLSearchParams(window.location.search);
   const id = params.get('process_type_id');
   const [processType, setProcessType] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
-  const [processSteps, setProcessSteps] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [notice, setNotice] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   const [isLoading, setIsLoading] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
+  const [stepOrder, setStepOrder] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     setIsLoading(true);
-    Promise.all([_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_1___default()({
+    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
       path: `/obatala/v1/process_type/${id}`
-    }), _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_1___default()({
-      path: `/obatala/v1/process_step?per_page=100&_embed`
-    })]).then(([typeData, stepsData]) => {
-      const sortedSteps = stepsData.sort((a, b) => a.title.rendered.localeCompare(b.title.rendered));
+    }).then(typeData => {
       setProcessType(typeData);
-      setProcessSteps(sortedSteps);
+      const order = typeData.meta.step_order || [];
+      setStepOrder(order);
       setIsLoading(false);
     }).catch(error => {
       console.error('Error fetching data:', error);
       setNotice({
         status: 'error',
-        message: 'Error fetching process type or steps.'
+        message: 'Error fetching process type.'
       });
       setIsLoading(false);
     });
@@ -875,26 +878,44 @@ const ProcessTypeEditor = () => {
   const handleSave = async updatedProcessType => {
     setIsLoading(true);
     try {
-      await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_1___default()({
+      const savedType = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
         path: `/obatala/v1/process_type/${id}`,
         method: 'PUT',
         data: updatedProcessType
       });
+      const meta = {
+        description: updatedProcessType.meta.description.toString(),
+        accept_attachments: updatedProcessType.meta.accept_attachments,
+        accept_tainacan_items: updatedProcessType.meta.accept_tainacan_items,
+        generate_tainacan_items: updatedProcessType.meta.generate_tainacan_items,
+        step_order: stepOrder
+      };
+      await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+        path: `/obatala/v1/process_type/${id}/meta`,
+        method: 'PUT',
+        data: meta
+      });
+      setProcessType(prevType => ({
+        ...prevType,
+        title: savedType.title,
+        meta
+      }));
       setNotice({
         status: 'success',
-        message: 'Process type updated successfully.'
+        message: 'Process type and meta updated successfully.'
       });
     } catch (error) {
       setNotice({
         status: 'error',
-        message: 'Error updating process type.'
+        message: 'Error updating process type and meta.'
       });
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
   };
-  const handleAddProcessStep = (processTypeId, stepIds) => {
-    const stepOrder = Array.isArray(processType?.step_order) ? processType.step_order : [];
-    const stepsToAdd = stepIds.filter(stepId => !stepOrder.includes(stepId));
+  const handleAddProcessStep = stepIds => {
+    const newStepOrder = Array.isArray(stepOrder) ? stepOrder : [];
+    const stepsToAdd = stepIds.filter(stepId => !newStepOrder.includes(stepId));
     if (stepsToAdd.length === 0) {
       setNotice({
         status: 'warning',
@@ -902,18 +923,15 @@ const ProcessTypeEditor = () => {
       });
       return;
     }
-    const updatedStepOrder = [...stepOrder, ...stepsToAdd];
-    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_1___default()({
+    const updatedStepOrder = [...newStepOrder, ...stepsToAdd];
+    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
       path: `/obatala/v1/process_type/${id}/meta`,
       method: 'PUT',
       data: {
         step_order: updatedStepOrder
       }
     }).then(() => {
-      setProcessType(prevType => ({
-        ...prevType,
-        step_order: updatedStepOrder
-      }));
+      setStepOrder(updatedStepOrder);
       setNotice({
         status: 'success',
         message: 'Steps added successfully.'
@@ -927,33 +945,55 @@ const ProcessTypeEditor = () => {
     });
   };
   if (isLoading) {
-    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Spinner, null);
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, {});
   }
   if (!processType) {
-    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, "Loading...");
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
+      children: "Loading..."
+    });
   }
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "brand"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "Obatala"), " Curatorial Process Management"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, "Process Type Editor"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "panel-container"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("main", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Panel, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelHeader, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h3", null, "Steps")), notice && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Notice, {
-    status: notice.status,
-    isDismissible: true,
-    onRemove: () => setNotice(null)
-  }, notice.message), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ProcessTypeManager_StepList__WEBPACK_IMPORTED_MODULE_5__["default"], {
-    processTypeId: id,
-    processSteps: processSteps,
-    stepOrder: processType.step_order,
-    onNotice: setNotice
-  }))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("aside", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Panel, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelHeader, null, "Editing process type"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ProcessTypeManager_ProcessTypeForm__WEBPACK_IMPORTED_MODULE_3__["default"], {
-    onSave: handleSave,
-    editingProcessType: processType,
-    onCancel: () => {/* Handle cancel if necessary */}
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ProcessTypeManager_ProcessStepForm__WEBPACK_IMPORTED_MODULE_4__["default"], {
-    processTypes: [processType],
-    processSteps: processSteps,
-    onAddStep: handleAddProcessStep
-  })))));
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("span", {
+      className: "brand",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("strong", {
+        children: "Obatala"
+      }), " Curatorial Process Management"]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("h2", {
+      children: "Process Type Editor"
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
+      className: "panel-container",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("main", {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("h3", {
+              children: "Steps"
+            })
+          }), notice && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
+            status: notice.status,
+            isDismissible: true,
+            onRemove: () => setNotice(null),
+            children: notice.message
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_ProcessTypeManager_StepList__WEBPACK_IMPORTED_MODULE_5__["default"], {
+            processTypeId: processType.id,
+            stepOrder: stepOrder,
+            onNotice: setNotice
+          })]
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("aside", {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, {
+            children: "Editing process type"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_ProcessTypeManager_ProcessTypeForm__WEBPACK_IMPORTED_MODULE_3__["default"], {
+            onSave: handleSave,
+            editingProcessType: processType,
+            onCancel: () => {/* Handle cancel if necessary */}
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_ProcessTypeManager_ProcessStepForm__WEBPACK_IMPORTED_MODULE_4__["default"], {
+            onAddStep: handleAddProcessStep
+          })]
+        })
+      })]
+    })]
+  });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProcessTypeEditor);
 
@@ -977,8 +1017,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _api_apiRequests__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../api/apiRequests */ "./src/admin/api/apiRequests.js");
 /* harmony import */ var _ProcessTypeManager_ProcessTypeForm__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ProcessTypeManager/ProcessTypeForm */ "./src/admin/components/ProcessTypeManager/ProcessTypeForm.js");
 /* harmony import */ var _ProcessTypeManager_ProcessTypeList__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ProcessTypeManager/ProcessTypeList */ "./src/admin/components/ProcessTypeManager/ProcessTypeList.js");
-/* harmony import */ var _redux_reducer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../redux/reducer */ "./src/admin/redux/reducer.js");
-
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__);
 
 
 
@@ -989,7 +1029,6 @@ const ProcessTypeManager = () => {
   const [processTypes, setProcessTypes] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [isLoading, setIsLoading] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
   const [editingProcessType, setEditingProcessType] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
-  const [state, dispatch] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useReducer)(_redux_reducer__WEBPACK_IMPORTED_MODULE_5__["default"], _redux_reducer__WEBPACK_IMPORTED_MODULE_5__.initialState);
   const [notice, setNotice] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     loadProcessTypes();
@@ -1020,7 +1059,7 @@ const ProcessTypeManager = () => {
         generate_tainacan_items: processType.generate_tainacan_items,
         description: processType.description
       };
-      await updateProcessTypeMeta(savedProcessType.id, meta);
+      await (0,_api_apiRequests__WEBPACK_IMPORTED_MODULE_2__.updateProcessTypeMeta)(savedProcessType.id, meta);
       setNotice({
         status: 'success',
         message: 'Process type saved successfully.'
@@ -1047,48 +1086,43 @@ const ProcessTypeManager = () => {
   const handleEditProcessType = id => {
     window.location.href = `?page=process-type-editor&process_type_id=${id}`;
   };
-  const handleConfirmDeleteType = id => {
-    dispatch({
-      type: 'OPEN_MODAL_PROCESS_TYPE',
-      payload: id
-    });
-  };
-  const handleCancel = () => {
-    dispatch({
-      type: 'CLOSE_MODAL'
-    });
-  };
   if (isLoading) {
-    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, null);
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, {});
   }
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "brand"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("strong", null, "Obatala"), " Curatorial Process Management"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h2", null, "Process Type Manager"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "panel-container"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("main", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.__experimentalConfirmDialog, {
-    isOpen: state.isOpen,
-    onConfirm: () => {
-      if (state.deleteProcessType) {
-        handleDeleteProcessType(state.deleteProcessType);
-      }
-      dispatch({
-        type: 'CLOSE_MODAL'
-      });
-    },
-    onCancel: handleCancel
-  }, "Are you sure you want to delete this Process Type?"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ProcessTypeManager_ProcessTypeList__WEBPACK_IMPORTED_MODULE_4__["default"], {
-    processTypes: processTypes,
-    onEdit: handleEditProcessType,
-    onDelete: handleConfirmDeleteType
-  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("aside", null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, null, "Managing process types"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_ProcessTypeManager_ProcessTypeForm__WEBPACK_IMPORTED_MODULE_3__["default"], {
-    onSave: handleSaveProcessType,
-    onCancel: () => setEditingProcessType(null),
-    editingProcessType: editingProcessType
-  }), notice && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
-    status: notice.status,
-    isDismissible: true,
-    onRemove: () => setNotice(null)
-  }, notice.message)))));
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("span", {
+      className: "brand",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("strong", {
+        children: "Obatala"
+      }), " Curatorial Process Management"]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("h2", {
+      children: "Process Type Manager"
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
+      className: "panel-container",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("main", {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_ProcessTypeManager_ProcessTypeList__WEBPACK_IMPORTED_MODULE_4__["default"], {
+          processTypes: processTypes,
+          onEdit: handleEditProcessType,
+          onDelete: handleDeleteProcessType
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("aside", {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, {
+            children: "Managing process types"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_ProcessTypeManager_ProcessTypeForm__WEBPACK_IMPORTED_MODULE_3__["default"], {
+            onSave: handleSaveProcessType,
+            onCancel: () => setEditingProcessType(null),
+            editingProcessType: editingProcessType
+          }), notice && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
+            status: notice.status,
+            isDismissible: true,
+            onRemove: () => setNotice(null),
+            children: notice.message
+          })]
+        })
+      })]
+    })]
+  });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProcessTypeManager);
 
@@ -1109,31 +1143,48 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/close-small.js");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/close-small.js");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__);
+
 
 
 
 
 const ProcessStepForm = ({
-  processTypes = [],
-  processSteps = [],
   onAddStep
 }) => {
-  const [selectedProcessType, setSelectedProcessType] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  const [processSteps, setProcessSteps] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [selectedSteps, setSelectedSteps] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [stepInputValue, setStepInputValue] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
   const [notice, setNotice] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
-  const handleAddStep = () => {
-    if (!selectedProcessType || selectedSteps.length === 0) {
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+      path: `/obatala/v1/process_step?per_page=100&_embed`
+    }).then(stepsData => {
+      const sortedSteps = stepsData.sort((a, b) => a.title.rendered.localeCompare(b.title.rendered));
+      setProcessSteps(sortedSteps);
+    }).catch(error => {
+      console.error('Error fetching process steps:', error);
       setNotice({
         status: 'error',
-        message: 'Please select both a process type and at least one step.'
+        message: 'Error fetching process steps.'
+      });
+    });
+  }, []);
+  const handleAddStep = () => {
+    if (selectedSteps.length === 0) {
+      setNotice({
+        status: 'error',
+        message: 'Please select at least one step.'
       });
       return;
     }
 
     // Chama a função onAddStep passada como prop
-    onAddStep(selectedProcessType, selectedSteps);
+    onAddStep(selectedSteps);
     setSelectedSteps([]);
     setNotice({
       status: 'success',
@@ -1149,49 +1200,44 @@ const ProcessStepForm = ({
   const handleRemoveStep = stepId => {
     setSelectedSteps(selectedSteps.filter(step => step !== stepId));
   };
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
-    title: "Add a Step to a Process Type",
-    initialOpen: true
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, null, notice && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
-    status: notice.status,
-    isDismissible: true,
-    onRemove: () => setNotice(null)
-  }, notice.message), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
-    label: "Select Process Type",
-    value: selectedProcessType,
-    options: [{
-      label: 'Select a process type...',
-      value: ''
-    }, ...processTypes.map(type => ({
-      label: type.title.rendered,
-      value: type.id
-    }))],
-    onChange: value => setSelectedProcessType(value)
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.ComboboxControl, {
-    label: "Select one or more Steps",
-    value: stepInputValue,
-    options: processSteps.filter(step => !selectedSteps.includes(step.id)).map(step => ({
-      label: step.title.rendered,
-      value: step.id
-    })),
-    onChange: handleChange,
-    onInputChange: setStepInputValue
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "selected-steps"
-  }, selectedSteps.map(stepId => {
-    const step = processSteps.find(step => step.id === stepId);
-    return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-      key: stepId,
-      className: "selected-step"
-    }, step.title.rendered, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-      icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_2__["default"],
-      onClick: () => handleRemoveStep(stepId),
-      className: "remove-step-button"
-    }));
-  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-    isSecondary: true,
-    onClick: handleAddStep
-  }, "Add Process Step")));
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
+    title: "Add a Step to the Process Type",
+    initialOpen: true,
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
+      children: [notice && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
+        status: notice.status,
+        isDismissible: true,
+        onRemove: () => setNotice(null),
+        children: notice.message
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.ComboboxControl, {
+        label: "Select one or more Steps",
+        value: stepInputValue,
+        options: processSteps.filter(step => !selectedSteps.includes(step.id)).map(step => ({
+          label: step.title.rendered,
+          value: step.id
+        })),
+        onChange: handleChange,
+        onInputChange: setStepInputValue
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+        className: "selected-steps",
+        children: selectedSteps.map(stepId => {
+          const step = processSteps.find(step => step.id === stepId);
+          return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+            className: "selected-step",
+            children: [step.title.rendered, /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+              icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_4__["default"],
+              onClick: () => handleRemoveStep(stepId),
+              className: "remove-step-button"
+            })]
+          }, stepId);
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+        isSecondary: true,
+        onClick: handleAddStep,
+        children: "Add Process Step"
+      })]
+    })
+  });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProcessStepForm);
 
@@ -1212,99 +1258,107 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
 
 
 
 const ProcessTypeForm = ({
   onSave,
-  onCancel,
-  editingProcessType
+  editingProcessType,
+  onCancel
 }) => {
-  const [processTypeName, setProcessTypeName] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
-  const [processTypeDescription, setProcessTypeDescription] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  const [title, setTitle] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  const [description, setDescription] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
   const [acceptAttachments, setAcceptAttachments] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [acceptTainacanItems, setAcceptTainacanItems] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [generateTainacanItems, setGenerateTainacanItems] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [notice, setNotice] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (editingProcessType) {
-      var _editingProcessType$a, _editingProcessType$a2, _editingProcessType$g;
-      setProcessTypeName(editingProcessType.title.rendered);
-      setProcessTypeDescription(editingProcessType.description || '');
-      setAcceptAttachments((_editingProcessType$a = editingProcessType.accept_attachments) !== null && _editingProcessType$a !== void 0 ? _editingProcessType$a : false);
-      setAcceptTainacanItems((_editingProcessType$a2 = editingProcessType.accept_tainacan_items) !== null && _editingProcessType$a2 !== void 0 ? _editingProcessType$a2 : false);
-      setGenerateTainacanItems((_editingProcessType$g = editingProcessType.generate_tainacan_items) !== null && _editingProcessType$g !== void 0 ? _editingProcessType$g : false);
+      setTitle(editingProcessType.title.rendered || '');
+      setDescription(editingProcessType.meta.description || '');
+      setAcceptAttachments(!!editingProcessType.meta.accept_attachments[0]);
+      setAcceptTainacanItems(!!editingProcessType.meta.accept_tainacan_items[0]);
+      setGenerateTainacanItems(!!editingProcessType.meta.generate_tainacan_items[0]);
     }
   }, [editingProcessType]);
-  const handleSave = () => {
-    if (!processTypeName || !processTypeDescription) {
+  const handleSave = async event => {
+    event.preventDefault();
+    if (!title) {
       setNotice({
         status: 'error',
-        message: 'Field Name and Description cannot be empty.'
+        message: 'Title is required.'
       });
       return;
     }
-    const processType = {
-      status: 'publish',
-      title: processTypeName,
-      description: processTypeDescription,
-      accept_attachments: acceptAttachments,
-      accept_tainacan_items: acceptTainacanItems,
-      generate_tainacan_items: generateTainacanItems,
-      step_order: editingProcessType ? editingProcessType.step_order : []
+    const updatedProcessType = {
+      title,
+      meta: {
+        description,
+        accept_attachments: acceptAttachments,
+        accept_tainacan_items: acceptTainacanItems,
+        generate_tainacan_items: generateTainacanItems
+      }
     };
-    onSave(processType);
-    if (!editingProcessType) {
-      handleResetForm();
+    try {
+      await onSave(updatedProcessType);
+      setNotice({
+        status: 'success',
+        message: 'Process type saved successfully.'
+      });
+    } catch (error) {
+      setNotice({
+        status: 'error',
+        message: 'Error saving process type.'
+      });
     }
   };
-  const handleResetForm = () => {
-    setProcessTypeName('');
-    setProcessTypeDescription('');
-    setAcceptAttachments(false);
-    setAcceptTainacanItems(false);
-    setGenerateTainacanItems(false);
-  };
-  const handleCancel = () => {
-    onCancel();
-    handleResetForm();
-  };
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
-    title: "Add Process Type",
-    initialOpen: true
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, null, notice && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
-    status: notice.status,
-    isDismissible: true,
-    onRemove: () => setNotice(null)
-  }, notice.message), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
-    label: "Process Type Name",
-    value: processTypeName,
-    onChange: value => setProcessTypeName(value)
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextareaControl, {
-    label: "Process Type Description",
-    value: processTypeDescription,
-    onChange: value => setProcessTypeDescription(value)
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CheckboxControl, {
-    label: "Accept Attachments",
-    checked: acceptAttachments,
-    onChange: value => setAcceptAttachments(value)
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CheckboxControl, {
-    label: "Accept Tainacan Items",
-    checked: acceptTainacanItems,
-    onChange: value => setAcceptTainacanItems(value)
-  }), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CheckboxControl, {
-    label: "Generate Tainacan Items",
-    checked: generateTainacanItems,
-    onChange: value => setGenerateTainacanItems(value)
-  }), editingProcessType ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-    isPrimary: true,
-    onClick: handleSave
-  }, "Update Process Type"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-    onClick: handleCancel
-  }, "Cancel")) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-    isPrimary: true,
-    onClick: handleSave
-  }, "Add Process Type")));
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
+    title: "Process Type Details",
+    initialOpen: true,
+    children: [notice && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
+      status: notice.status,
+      isDismissible: true,
+      onRemove: () => setNotice(null),
+      children: notice.message
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("form", {
+      onSubmit: handleSave,
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+          label: "Title",
+          value: title,
+          onChange: value => setTitle(value)
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+          label: "Description",
+          value: description,
+          onChange: value => setDescription(value)
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CheckboxControl, {
+          label: "Accept Attachments",
+          checked: acceptAttachments,
+          onChange: checked => setAcceptAttachments(checked)
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CheckboxControl, {
+          label: "Accept Tainacan Items",
+          checked: acceptTainacanItems,
+          onChange: checked => setAcceptTainacanItems(checked)
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CheckboxControl, {
+          label: "Generate Tainacan Items",
+          checked: generateTainacanItems,
+          onChange: checked => setGenerateTainacanItems(checked)
+        })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+          isPrimary: true,
+          type: "submit",
+          children: "Save"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+          isSecondary: true,
+          onClick: onCancel,
+          children: "Cancel"
+        })]
+      })]
+    })]
+  });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProcessTypeForm);
 
@@ -1323,10 +1377,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/edit.js");
-/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/trash.js");
+/* harmony import */ var react_table__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-table */ "./node_modules/react-table/index.js");
+/* harmony import */ var react_table__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_table__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/edit.js");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/trash.js");
+/* harmony import */ var date_fns__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! date-fns */ "./node_modules/date-fns/format.mjs");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__);
+
+
 
 
 
@@ -1336,48 +1397,154 @@ const ProcessTypeList = ({
   onEdit,
   onDelete
 }) => {
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, null, "Existing Process Types"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, null, processTypes.length > 0 ? (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "card-container"
-  }, processTypes.map(type => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Card, {
-    key: type.id
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CardHeader, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("h4", {
-    className: "card-title"
-  }, type.title.rendered)), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CardBody, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dl", {
-    className: "description-list"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "list-item"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dt", null, "Description:"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("dd", null, type.description ? type.description.split('\n').map((item, key) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    key: key
-  }, item, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("br", null))) : "-"))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
-    className: type.accept_attachments ? "check true" : "check false"
-  }, !type.accept_attachments && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "visually-hidden"
-  }, "Not"), " ", "Accept attachments"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
-    className: type.accept_tainacan_items ? "check true" : "check false"
-  }, !type.accept_tainacan_items && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "visually-hidden"
-  }, "Not"), " ", "Accept Tainacan items"), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("p", {
-    className: type.generate_tainacan_items ? "check true" : "check false"
-  }, !type.generate_tainacan_items && (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("span", {
-    className: "visually-hidden"
-  }, "Not"), " ", "Generate Tainacan items")), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CardFooter, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Tooltip, {
-    text: "Edit"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-    icon: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Icon, {
-      icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_2__["default"]
-    }),
-    onClick: () => onEdit(type.id)
-  })), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Tooltip, {
-    text: "Delete"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-    icon: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Icon, {
-      icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_3__["default"]
-    }),
-    onClick: () => onDelete(type.id)
-  })))))) : (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
-    isDismissible: false,
-    status: "warning"
-  }, "No existing process types.")));
+  const columns = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(() => [{
+    Header: 'Title',
+    accessor: 'title.rendered'
+  }, {
+    Header: 'Description',
+    accessor: 'description'
+  }, {
+    Header: 'Created At',
+    accessor: 'date',
+    Cell: ({
+      value
+    }) => (0,date_fns__WEBPACK_IMPORTED_MODULE_4__.format)(new Date(value), 'MM/dd/yyyy')
+  }, {
+    Header: 'Number of Steps',
+    accessor: 'meta.step_order',
+    Cell: ({
+      value
+    }) => value ? value.length : 0
+  }, {
+    Header: 'Actions',
+    accessor: 'id',
+    Cell: ({
+      row
+    }) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+      className: "actions",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Tooltip, {
+        text: "Edit",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+          icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Icon, {
+            icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_5__["default"]
+          }),
+          onClick: () => onEdit(row.original.id)
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Tooltip, {
+        text: "Delete",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+          icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Icon, {
+            icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_6__["default"]
+          }),
+          onClick: () => onDelete(row.original.id)
+        })
+      })]
+    })
+  }], [onEdit, onDelete]);
+  const data = (0,react__WEBPACK_IMPORTED_MODULE_0__.useMemo)(() => processTypes, [processTypes]);
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    page,
+    prepareRow,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    state: {
+      pageIndex,
+      globalFilter
+    },
+    nextPage,
+    previousPage,
+    setPageSize,
+    setGlobalFilter
+  } = (0,react_table__WEBPACK_IMPORTED_MODULE_1__.useTable)({
+    columns,
+    data,
+    initialState: {
+      pageIndex: 0,
+      pageSize: 10
+    }
+  }, react_table__WEBPACK_IMPORTED_MODULE_1__.useGlobalFilter, react_table__WEBPACK_IMPORTED_MODULE_1__.useSortBy, react_table__WEBPACK_IMPORTED_MODULE_1__.usePagination);
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Panel, {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.PanelHeader, {
+      children: "Existing Process Types"
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.TextControl, {
+      value: globalFilter || '',
+      onChange: value => setGlobalFilter(value),
+      placeholder: "Search..."
+    }), processTypes.length > 0 ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.Fragment, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("table", {
+        ...getTableProps(),
+        className: "wp-list-table widefat fixed striped table-view-list",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("thead", {
+          children: headerGroups.map(headerGroup => {
+            const {
+              key: headerGroupKey,
+              ...headerGroupProps
+            } = headerGroup.getHeaderGroupProps();
+            return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("tr", {
+              ...headerGroupProps,
+              children: headerGroup.headers.map(column => {
+                const {
+                  key: columnKey,
+                  ...columnProps
+                } = column.getHeaderProps(column.getSortByToggleProps());
+                return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("th", {
+                  ...columnProps,
+                  children: [column.render('Header'), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                    children: column.isSorted ? column.isSortedDesc ? ' 🔽' : ' 🔼' : ''
+                  })]
+                }, columnKey);
+              })
+            }, headerGroupKey);
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("tbody", {
+          ...getTableBodyProps(),
+          children: page.map(row => {
+            prepareRow(row);
+            const {
+              key: rowKey,
+              ...rowProps
+            } = row.getRowProps();
+            return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("tr", {
+              ...rowProps,
+              children: row.cells.map(cell => {
+                const {
+                  key: cellKey,
+                  ...cellProps
+                } = cell.getCellProps();
+                return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("td", {
+                  ...cellProps,
+                  children: cell.render('Cell')
+                }, cellKey);
+              })
+            }, rowKey);
+          })
+        })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+        className: "pagination",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+          onClick: () => previousPage(),
+          disabled: !canPreviousPage,
+          children: "Previous"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("span", {
+          children: ["Page", ' ', /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("strong", {
+            children: [pageIndex + 1, " of ", pageOptions.length]
+          }), ' ']
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+          onClick: () => nextPage(),
+          disabled: !canNextPage,
+          children: "Next"
+        })]
+      })]
+    }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Notice, {
+      isDismissible: false,
+      status: "warning",
+      children: "No existing process types."
+    })]
+  });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProcessTypeList);
 
@@ -1398,10 +1565,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react-beautiful-dnd */ "./node_modules/react-beautiful-dnd/dist/react-beautiful-dnd.esm.js");
+/* harmony import */ var react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-beautiful-dnd */ "./node_modules/react-beautiful-dnd/dist/react-beautiful-dnd.esm.js");
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/trash.js");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/trash.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__);
 
 
 
@@ -1410,17 +1579,29 @@ __webpack_require__.r(__webpack_exports__);
 
 const StepList = ({
   processTypeId,
-  processSteps = [],
   stepOrder = [],
   onNotice
 }) => {
   const [stepsState, setStepsState] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    if (stepOrder.length > 0 && processSteps.length > 0) {
-      const orderedSteps = stepOrder.map(stepId => processSteps.find(step => step.id === stepId)).filter(Boolean);
-      setStepsState(orderedSteps);
+    if (stepOrder.length > 0) {
+      _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+        path: `/obatala/v1/process_step?include=${stepOrder.join(',')}`
+      }).then(stepsData => {
+        const orderedSteps = stepOrder.map((stepId, index) => ({
+          ...stepsData.find(step => step.id === stepId),
+          orderIndex: index
+        })).filter(Boolean);
+        setStepsState(orderedSteps);
+      }).catch(error => {
+        console.error('Error fetching ordered steps:', error);
+        onNotice({
+          status: 'error',
+          message: 'Error fetching ordered steps.'
+        });
+      });
     }
-  }, [stepOrder, processSteps]);
+  }, [stepOrder, onNotice]);
   const handleDragEnd = async result => {
     if (!result.destination) {
       return;
@@ -1450,8 +1631,9 @@ const StepList = ({
       });
     }
   };
-  const handleDeleteStep = async stepId => {
-    const updatedStepOrder = stepsState.filter(step => step.id !== stepId).map(step => step.id);
+  const handleDeleteStep = async index => {
+    const updatedSteps = stepsState.filter((_, stepIndex) => stepIndex !== index);
+    const updatedStepOrder = updatedSteps.map(step => step.id);
     try {
       await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
         path: `/obatala/v1/process_type/${processTypeId}/meta`,
@@ -1460,7 +1642,7 @@ const StepList = ({
           step_order: updatedStepOrder
         }
       });
-      setStepsState(prevSteps => prevSteps.filter(step => step.id !== stepId));
+      setStepsState(updatedSteps);
       onNotice({
         status: 'success',
         message: 'Step removed successfully.'
@@ -1473,68 +1655,52 @@ const StepList = ({
       });
     }
   };
-  return (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_3__.DragDropContext, {
-    onDragEnd: handleDragEnd
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_3__.Droppable, {
-    droppableId: "steps-list",
-    direction: "horizontal"
-  }, provided => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("ul", {
-    className: "steps-list",
-    ...provided.droppableProps,
-    ref: provided.innerRef
-  }, stepsState.map((step, index) => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_3__.Draggable, {
-    key: step.id,
-    draggableId: String(step.id),
-    index: index
-  }, provided => (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("li", {
-    className: "step-card",
-    ref: provided.innerRef,
-    ...provided.draggableProps,
-    ...provided.dragHandleProps
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "step-number"
-  }, index + 1), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("div", {
-    className: "step-title"
-  }, step.title.rendered), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Tooltip, {
-    text: "Delete Step"
-  }, (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-    isDestructive: true,
-    icon: (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Icon, {
-      icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_4__["default"]
-    }),
-    onClick: () => handleDeleteStep(step.id)
-  }))))), provided.placeholder))), (0,react__WEBPACK_IMPORTED_MODULE_0__.createElement)("style", null, `
-                .steps-list {
-                    display: flex;
-                    flex-wrap: wrap;
-                    gap: 20px;
-                    padding: 0;
-                    list-style: none;
-                }
-                .step-card {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    padding: 20px;
-                    border: 1px solid #ddd;
-                    border-radius: 8px;
-                    background: #fff;
-                    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-                    transition: transform 0.2s, background-color 0.2s;
-                }
-                .step-number {
-                    font-size: 1.5em;
-                    font-weight: bold;
-                    margin-bottom: 10px;
-                }
-                .step-title {
-                    margin-bottom: 10px;
-                    text-align: center;
-                }
-                .step-card button {
-                    align-self: flex-end;
-                }
-            `));
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.Fragment, {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__.DragDropContext, {
+      onDragEnd: handleDragEnd,
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__.Droppable, {
+        droppableId: "steps-list",
+        direction: "horizontal",
+        children: provided => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("ul", {
+          className: "steps-list",
+          ...provided.droppableProps,
+          ref: provided.innerRef,
+          children: [stepsState.length > 0 ? stepsState.map((step, index) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__.Draggable, {
+            draggableId: `${step.id}-${index}`,
+            index: index,
+            children: provided => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("li", {
+              className: "step-card",
+              ref: provided.innerRef,
+              ...provided.draggableProps,
+              ...provided.dragHandleProps,
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+                className: "step-header",
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
+                  className: "step-number",
+                  children: index + 1
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+                className: "step-title",
+                children: step.title.rendered
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Tooltip, {
+                text: "Delete Step",
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+                  isDestructive: true,
+                  icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Icon, {
+                    icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_5__["default"]
+                  }),
+                  onClick: () => handleDeleteStep(index)
+                })
+              })]
+            })
+          }, `${step.id}-${index}`)) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
+            status: "info",
+            children: "No steps found."
+          }), provided.placeholder]
+        })
+      })
+    })
+  });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (StepList);
 
@@ -1911,7 +2077,7 @@ var getBox = function getBox(el) {
 "use strict";
 
 
-var reactIs = __webpack_require__(/*! react-is */ "./node_modules/hoist-non-react-statics/node_modules/react-is/index.js");
+var reactIs = __webpack_require__(/*! react-is */ "./node_modules/react-is/index.js");
 
 /**
  * Copyright 2015, Yahoo! Inc.
@@ -2012,214 +2178,6 @@ function hoistNonReactStatics(targetComponent, sourceComponent, blacklist) {
 }
 
 module.exports = hoistNonReactStatics;
-
-
-/***/ }),
-
-/***/ "./node_modules/hoist-non-react-statics/node_modules/react-is/cjs/react-is.development.js":
-/*!************************************************************************************************!*\
-  !*** ./node_modules/hoist-non-react-statics/node_modules/react-is/cjs/react-is.development.js ***!
-  \************************************************************************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-/** @license React v16.13.1
- * react-is.development.js
- *
- * Copyright (c) Facebook, Inc. and its affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
-
-
-
-
-if (true) {
-  (function() {
-'use strict';
-
-// The Symbol used to tag the ReactElement-like types. If there is no native Symbol
-// nor polyfill, then a plain number is used for performance.
-var hasSymbol = typeof Symbol === 'function' && Symbol.for;
-var REACT_ELEMENT_TYPE = hasSymbol ? Symbol.for('react.element') : 0xeac7;
-var REACT_PORTAL_TYPE = hasSymbol ? Symbol.for('react.portal') : 0xeaca;
-var REACT_FRAGMENT_TYPE = hasSymbol ? Symbol.for('react.fragment') : 0xeacb;
-var REACT_STRICT_MODE_TYPE = hasSymbol ? Symbol.for('react.strict_mode') : 0xeacc;
-var REACT_PROFILER_TYPE = hasSymbol ? Symbol.for('react.profiler') : 0xead2;
-var REACT_PROVIDER_TYPE = hasSymbol ? Symbol.for('react.provider') : 0xeacd;
-var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for('react.context') : 0xeace; // TODO: We don't use AsyncMode or ConcurrentMode anymore. They were temporary
-// (unstable) APIs that have been removed. Can we remove the symbols?
-
-var REACT_ASYNC_MODE_TYPE = hasSymbol ? Symbol.for('react.async_mode') : 0xeacf;
-var REACT_CONCURRENT_MODE_TYPE = hasSymbol ? Symbol.for('react.concurrent_mode') : 0xeacf;
-var REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for('react.forward_ref') : 0xead0;
-var REACT_SUSPENSE_TYPE = hasSymbol ? Symbol.for('react.suspense') : 0xead1;
-var REACT_SUSPENSE_LIST_TYPE = hasSymbol ? Symbol.for('react.suspense_list') : 0xead8;
-var REACT_MEMO_TYPE = hasSymbol ? Symbol.for('react.memo') : 0xead3;
-var REACT_LAZY_TYPE = hasSymbol ? Symbol.for('react.lazy') : 0xead4;
-var REACT_BLOCK_TYPE = hasSymbol ? Symbol.for('react.block') : 0xead9;
-var REACT_FUNDAMENTAL_TYPE = hasSymbol ? Symbol.for('react.fundamental') : 0xead5;
-var REACT_RESPONDER_TYPE = hasSymbol ? Symbol.for('react.responder') : 0xead6;
-var REACT_SCOPE_TYPE = hasSymbol ? Symbol.for('react.scope') : 0xead7;
-
-function isValidElementType(type) {
-  return typeof type === 'string' || typeof type === 'function' || // Note: its typeof might be other than 'symbol' or 'number' if it's a polyfill.
-  type === REACT_FRAGMENT_TYPE || type === REACT_CONCURRENT_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || typeof type === 'object' && type !== null && (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || type.$$typeof === REACT_FUNDAMENTAL_TYPE || type.$$typeof === REACT_RESPONDER_TYPE || type.$$typeof === REACT_SCOPE_TYPE || type.$$typeof === REACT_BLOCK_TYPE);
-}
-
-function typeOf(object) {
-  if (typeof object === 'object' && object !== null) {
-    var $$typeof = object.$$typeof;
-
-    switch ($$typeof) {
-      case REACT_ELEMENT_TYPE:
-        var type = object.type;
-
-        switch (type) {
-          case REACT_ASYNC_MODE_TYPE:
-          case REACT_CONCURRENT_MODE_TYPE:
-          case REACT_FRAGMENT_TYPE:
-          case REACT_PROFILER_TYPE:
-          case REACT_STRICT_MODE_TYPE:
-          case REACT_SUSPENSE_TYPE:
-            return type;
-
-          default:
-            var $$typeofType = type && type.$$typeof;
-
-            switch ($$typeofType) {
-              case REACT_CONTEXT_TYPE:
-              case REACT_FORWARD_REF_TYPE:
-              case REACT_LAZY_TYPE:
-              case REACT_MEMO_TYPE:
-              case REACT_PROVIDER_TYPE:
-                return $$typeofType;
-
-              default:
-                return $$typeof;
-            }
-
-        }
-
-      case REACT_PORTAL_TYPE:
-        return $$typeof;
-    }
-  }
-
-  return undefined;
-} // AsyncMode is deprecated along with isAsyncMode
-
-var AsyncMode = REACT_ASYNC_MODE_TYPE;
-var ConcurrentMode = REACT_CONCURRENT_MODE_TYPE;
-var ContextConsumer = REACT_CONTEXT_TYPE;
-var ContextProvider = REACT_PROVIDER_TYPE;
-var Element = REACT_ELEMENT_TYPE;
-var ForwardRef = REACT_FORWARD_REF_TYPE;
-var Fragment = REACT_FRAGMENT_TYPE;
-var Lazy = REACT_LAZY_TYPE;
-var Memo = REACT_MEMO_TYPE;
-var Portal = REACT_PORTAL_TYPE;
-var Profiler = REACT_PROFILER_TYPE;
-var StrictMode = REACT_STRICT_MODE_TYPE;
-var Suspense = REACT_SUSPENSE_TYPE;
-var hasWarnedAboutDeprecatedIsAsyncMode = false; // AsyncMode should be deprecated
-
-function isAsyncMode(object) {
-  {
-    if (!hasWarnedAboutDeprecatedIsAsyncMode) {
-      hasWarnedAboutDeprecatedIsAsyncMode = true; // Using console['warn'] to evade Babel and ESLint
-
-      console['warn']('The ReactIs.isAsyncMode() alias has been deprecated, ' + 'and will be removed in React 17+. Update your code to use ' + 'ReactIs.isConcurrentMode() instead. It has the exact same API.');
-    }
-  }
-
-  return isConcurrentMode(object) || typeOf(object) === REACT_ASYNC_MODE_TYPE;
-}
-function isConcurrentMode(object) {
-  return typeOf(object) === REACT_CONCURRENT_MODE_TYPE;
-}
-function isContextConsumer(object) {
-  return typeOf(object) === REACT_CONTEXT_TYPE;
-}
-function isContextProvider(object) {
-  return typeOf(object) === REACT_PROVIDER_TYPE;
-}
-function isElement(object) {
-  return typeof object === 'object' && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
-}
-function isForwardRef(object) {
-  return typeOf(object) === REACT_FORWARD_REF_TYPE;
-}
-function isFragment(object) {
-  return typeOf(object) === REACT_FRAGMENT_TYPE;
-}
-function isLazy(object) {
-  return typeOf(object) === REACT_LAZY_TYPE;
-}
-function isMemo(object) {
-  return typeOf(object) === REACT_MEMO_TYPE;
-}
-function isPortal(object) {
-  return typeOf(object) === REACT_PORTAL_TYPE;
-}
-function isProfiler(object) {
-  return typeOf(object) === REACT_PROFILER_TYPE;
-}
-function isStrictMode(object) {
-  return typeOf(object) === REACT_STRICT_MODE_TYPE;
-}
-function isSuspense(object) {
-  return typeOf(object) === REACT_SUSPENSE_TYPE;
-}
-
-exports.AsyncMode = AsyncMode;
-exports.ConcurrentMode = ConcurrentMode;
-exports.ContextConsumer = ContextConsumer;
-exports.ContextProvider = ContextProvider;
-exports.Element = Element;
-exports.ForwardRef = ForwardRef;
-exports.Fragment = Fragment;
-exports.Lazy = Lazy;
-exports.Memo = Memo;
-exports.Portal = Portal;
-exports.Profiler = Profiler;
-exports.StrictMode = StrictMode;
-exports.Suspense = Suspense;
-exports.isAsyncMode = isAsyncMode;
-exports.isConcurrentMode = isConcurrentMode;
-exports.isContextConsumer = isContextConsumer;
-exports.isContextProvider = isContextProvider;
-exports.isElement = isElement;
-exports.isForwardRef = isForwardRef;
-exports.isFragment = isFragment;
-exports.isLazy = isLazy;
-exports.isMemo = isMemo;
-exports.isPortal = isPortal;
-exports.isProfiler = isProfiler;
-exports.isStrictMode = isStrictMode;
-exports.isSuspense = isSuspense;
-exports.isValidElementType = isValidElementType;
-exports.typeOf = typeOf;
-  })();
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/hoist-non-react-statics/node_modules/react-is/index.js":
-/*!*****************************************************************************!*\
-  !*** ./node_modules/hoist-non-react-statics/node_modules/react-is/index.js ***!
-  \*****************************************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-if (false) {} else {
-  module.exports = __webpack_require__(/*! ./cjs/react-is.development.js */ "./node_modules/hoist-non-react-statics/node_modules/react-is/cjs/react-is.development.js");
-}
 
 
 /***/ }),
@@ -2519,7 +2477,7 @@ module.exports = checkPropTypes;
 
 
 
-var ReactIs = __webpack_require__(/*! react-is */ "./node_modules/prop-types/node_modules/react-is/index.js");
+var ReactIs = __webpack_require__(/*! react-is */ "./node_modules/react-is/index.js");
 var assign = __webpack_require__(/*! object-assign */ "./node_modules/object-assign/index.js");
 
 var ReactPropTypesSecret = __webpack_require__(/*! ./lib/ReactPropTypesSecret */ "./node_modules/prop-types/lib/ReactPropTypesSecret.js");
@@ -3138,7 +3096,7 @@ module.exports = function(isValidElement, throwOnDirectAccess) {
  */
 
 if (true) {
-  var ReactIs = __webpack_require__(/*! react-is */ "./node_modules/prop-types/node_modules/react-is/index.js");
+  var ReactIs = __webpack_require__(/*! react-is */ "./node_modules/react-is/index.js");
 
   // By explicitly using `prop-types` you are opting into new development behavior.
   // http://fb.me/prop-types-in-prod
@@ -3179,214 +3137,6 @@ module.exports = ReactPropTypesSecret;
 /***/ ((module) => {
 
 module.exports = Function.call.bind(Object.prototype.hasOwnProperty);
-
-
-/***/ }),
-
-/***/ "./node_modules/prop-types/node_modules/react-is/cjs/react-is.development.js":
-/*!***********************************************************************************!*\
-  !*** ./node_modules/prop-types/node_modules/react-is/cjs/react-is.development.js ***!
-  \***********************************************************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-/** @license React v16.13.1
- * react-is.development.js
- *
- * Copyright (c) Facebook, Inc. and its affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
-
-
-
-
-if (true) {
-  (function() {
-'use strict';
-
-// The Symbol used to tag the ReactElement-like types. If there is no native Symbol
-// nor polyfill, then a plain number is used for performance.
-var hasSymbol = typeof Symbol === 'function' && Symbol.for;
-var REACT_ELEMENT_TYPE = hasSymbol ? Symbol.for('react.element') : 0xeac7;
-var REACT_PORTAL_TYPE = hasSymbol ? Symbol.for('react.portal') : 0xeaca;
-var REACT_FRAGMENT_TYPE = hasSymbol ? Symbol.for('react.fragment') : 0xeacb;
-var REACT_STRICT_MODE_TYPE = hasSymbol ? Symbol.for('react.strict_mode') : 0xeacc;
-var REACT_PROFILER_TYPE = hasSymbol ? Symbol.for('react.profiler') : 0xead2;
-var REACT_PROVIDER_TYPE = hasSymbol ? Symbol.for('react.provider') : 0xeacd;
-var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for('react.context') : 0xeace; // TODO: We don't use AsyncMode or ConcurrentMode anymore. They were temporary
-// (unstable) APIs that have been removed. Can we remove the symbols?
-
-var REACT_ASYNC_MODE_TYPE = hasSymbol ? Symbol.for('react.async_mode') : 0xeacf;
-var REACT_CONCURRENT_MODE_TYPE = hasSymbol ? Symbol.for('react.concurrent_mode') : 0xeacf;
-var REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for('react.forward_ref') : 0xead0;
-var REACT_SUSPENSE_TYPE = hasSymbol ? Symbol.for('react.suspense') : 0xead1;
-var REACT_SUSPENSE_LIST_TYPE = hasSymbol ? Symbol.for('react.suspense_list') : 0xead8;
-var REACT_MEMO_TYPE = hasSymbol ? Symbol.for('react.memo') : 0xead3;
-var REACT_LAZY_TYPE = hasSymbol ? Symbol.for('react.lazy') : 0xead4;
-var REACT_BLOCK_TYPE = hasSymbol ? Symbol.for('react.block') : 0xead9;
-var REACT_FUNDAMENTAL_TYPE = hasSymbol ? Symbol.for('react.fundamental') : 0xead5;
-var REACT_RESPONDER_TYPE = hasSymbol ? Symbol.for('react.responder') : 0xead6;
-var REACT_SCOPE_TYPE = hasSymbol ? Symbol.for('react.scope') : 0xead7;
-
-function isValidElementType(type) {
-  return typeof type === 'string' || typeof type === 'function' || // Note: its typeof might be other than 'symbol' or 'number' if it's a polyfill.
-  type === REACT_FRAGMENT_TYPE || type === REACT_CONCURRENT_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || typeof type === 'object' && type !== null && (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || type.$$typeof === REACT_FUNDAMENTAL_TYPE || type.$$typeof === REACT_RESPONDER_TYPE || type.$$typeof === REACT_SCOPE_TYPE || type.$$typeof === REACT_BLOCK_TYPE);
-}
-
-function typeOf(object) {
-  if (typeof object === 'object' && object !== null) {
-    var $$typeof = object.$$typeof;
-
-    switch ($$typeof) {
-      case REACT_ELEMENT_TYPE:
-        var type = object.type;
-
-        switch (type) {
-          case REACT_ASYNC_MODE_TYPE:
-          case REACT_CONCURRENT_MODE_TYPE:
-          case REACT_FRAGMENT_TYPE:
-          case REACT_PROFILER_TYPE:
-          case REACT_STRICT_MODE_TYPE:
-          case REACT_SUSPENSE_TYPE:
-            return type;
-
-          default:
-            var $$typeofType = type && type.$$typeof;
-
-            switch ($$typeofType) {
-              case REACT_CONTEXT_TYPE:
-              case REACT_FORWARD_REF_TYPE:
-              case REACT_LAZY_TYPE:
-              case REACT_MEMO_TYPE:
-              case REACT_PROVIDER_TYPE:
-                return $$typeofType;
-
-              default:
-                return $$typeof;
-            }
-
-        }
-
-      case REACT_PORTAL_TYPE:
-        return $$typeof;
-    }
-  }
-
-  return undefined;
-} // AsyncMode is deprecated along with isAsyncMode
-
-var AsyncMode = REACT_ASYNC_MODE_TYPE;
-var ConcurrentMode = REACT_CONCURRENT_MODE_TYPE;
-var ContextConsumer = REACT_CONTEXT_TYPE;
-var ContextProvider = REACT_PROVIDER_TYPE;
-var Element = REACT_ELEMENT_TYPE;
-var ForwardRef = REACT_FORWARD_REF_TYPE;
-var Fragment = REACT_FRAGMENT_TYPE;
-var Lazy = REACT_LAZY_TYPE;
-var Memo = REACT_MEMO_TYPE;
-var Portal = REACT_PORTAL_TYPE;
-var Profiler = REACT_PROFILER_TYPE;
-var StrictMode = REACT_STRICT_MODE_TYPE;
-var Suspense = REACT_SUSPENSE_TYPE;
-var hasWarnedAboutDeprecatedIsAsyncMode = false; // AsyncMode should be deprecated
-
-function isAsyncMode(object) {
-  {
-    if (!hasWarnedAboutDeprecatedIsAsyncMode) {
-      hasWarnedAboutDeprecatedIsAsyncMode = true; // Using console['warn'] to evade Babel and ESLint
-
-      console['warn']('The ReactIs.isAsyncMode() alias has been deprecated, ' + 'and will be removed in React 17+. Update your code to use ' + 'ReactIs.isConcurrentMode() instead. It has the exact same API.');
-    }
-  }
-
-  return isConcurrentMode(object) || typeOf(object) === REACT_ASYNC_MODE_TYPE;
-}
-function isConcurrentMode(object) {
-  return typeOf(object) === REACT_CONCURRENT_MODE_TYPE;
-}
-function isContextConsumer(object) {
-  return typeOf(object) === REACT_CONTEXT_TYPE;
-}
-function isContextProvider(object) {
-  return typeOf(object) === REACT_PROVIDER_TYPE;
-}
-function isElement(object) {
-  return typeof object === 'object' && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
-}
-function isForwardRef(object) {
-  return typeOf(object) === REACT_FORWARD_REF_TYPE;
-}
-function isFragment(object) {
-  return typeOf(object) === REACT_FRAGMENT_TYPE;
-}
-function isLazy(object) {
-  return typeOf(object) === REACT_LAZY_TYPE;
-}
-function isMemo(object) {
-  return typeOf(object) === REACT_MEMO_TYPE;
-}
-function isPortal(object) {
-  return typeOf(object) === REACT_PORTAL_TYPE;
-}
-function isProfiler(object) {
-  return typeOf(object) === REACT_PROFILER_TYPE;
-}
-function isStrictMode(object) {
-  return typeOf(object) === REACT_STRICT_MODE_TYPE;
-}
-function isSuspense(object) {
-  return typeOf(object) === REACT_SUSPENSE_TYPE;
-}
-
-exports.AsyncMode = AsyncMode;
-exports.ConcurrentMode = ConcurrentMode;
-exports.ContextConsumer = ContextConsumer;
-exports.ContextProvider = ContextProvider;
-exports.Element = Element;
-exports.ForwardRef = ForwardRef;
-exports.Fragment = Fragment;
-exports.Lazy = Lazy;
-exports.Memo = Memo;
-exports.Portal = Portal;
-exports.Profiler = Profiler;
-exports.StrictMode = StrictMode;
-exports.Suspense = Suspense;
-exports.isAsyncMode = isAsyncMode;
-exports.isConcurrentMode = isConcurrentMode;
-exports.isContextConsumer = isContextConsumer;
-exports.isContextProvider = isContextProvider;
-exports.isElement = isElement;
-exports.isForwardRef = isForwardRef;
-exports.isFragment = isFragment;
-exports.isLazy = isLazy;
-exports.isMemo = isMemo;
-exports.isPortal = isPortal;
-exports.isProfiler = isProfiler;
-exports.isStrictMode = isStrictMode;
-exports.isSuspense = isSuspense;
-exports.isValidElementType = isValidElementType;
-exports.typeOf = typeOf;
-  })();
-}
-
-
-/***/ }),
-
-/***/ "./node_modules/prop-types/node_modules/react-is/index.js":
-/*!****************************************************************!*\
-  !*** ./node_modules/prop-types/node_modules/react-is/index.js ***!
-  \****************************************************************/
-/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
-
-"use strict";
-
-
-if (false) {} else {
-  module.exports = __webpack_require__(/*! ./cjs/react-is.development.js */ "./node_modules/prop-types/node_modules/react-is/cjs/react-is.development.js");
-}
 
 
 /***/ }),
@@ -12018,6 +11768,214 @@ if (false) {} else {
 
 /***/ }),
 
+/***/ "./node_modules/react-is/cjs/react-is.development.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/react-is/cjs/react-is.development.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+/** @license React v16.13.1
+ * react-is.development.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+
+
+
+
+if (true) {
+  (function() {
+'use strict';
+
+// The Symbol used to tag the ReactElement-like types. If there is no native Symbol
+// nor polyfill, then a plain number is used for performance.
+var hasSymbol = typeof Symbol === 'function' && Symbol.for;
+var REACT_ELEMENT_TYPE = hasSymbol ? Symbol.for('react.element') : 0xeac7;
+var REACT_PORTAL_TYPE = hasSymbol ? Symbol.for('react.portal') : 0xeaca;
+var REACT_FRAGMENT_TYPE = hasSymbol ? Symbol.for('react.fragment') : 0xeacb;
+var REACT_STRICT_MODE_TYPE = hasSymbol ? Symbol.for('react.strict_mode') : 0xeacc;
+var REACT_PROFILER_TYPE = hasSymbol ? Symbol.for('react.profiler') : 0xead2;
+var REACT_PROVIDER_TYPE = hasSymbol ? Symbol.for('react.provider') : 0xeacd;
+var REACT_CONTEXT_TYPE = hasSymbol ? Symbol.for('react.context') : 0xeace; // TODO: We don't use AsyncMode or ConcurrentMode anymore. They were temporary
+// (unstable) APIs that have been removed. Can we remove the symbols?
+
+var REACT_ASYNC_MODE_TYPE = hasSymbol ? Symbol.for('react.async_mode') : 0xeacf;
+var REACT_CONCURRENT_MODE_TYPE = hasSymbol ? Symbol.for('react.concurrent_mode') : 0xeacf;
+var REACT_FORWARD_REF_TYPE = hasSymbol ? Symbol.for('react.forward_ref') : 0xead0;
+var REACT_SUSPENSE_TYPE = hasSymbol ? Symbol.for('react.suspense') : 0xead1;
+var REACT_SUSPENSE_LIST_TYPE = hasSymbol ? Symbol.for('react.suspense_list') : 0xead8;
+var REACT_MEMO_TYPE = hasSymbol ? Symbol.for('react.memo') : 0xead3;
+var REACT_LAZY_TYPE = hasSymbol ? Symbol.for('react.lazy') : 0xead4;
+var REACT_BLOCK_TYPE = hasSymbol ? Symbol.for('react.block') : 0xead9;
+var REACT_FUNDAMENTAL_TYPE = hasSymbol ? Symbol.for('react.fundamental') : 0xead5;
+var REACT_RESPONDER_TYPE = hasSymbol ? Symbol.for('react.responder') : 0xead6;
+var REACT_SCOPE_TYPE = hasSymbol ? Symbol.for('react.scope') : 0xead7;
+
+function isValidElementType(type) {
+  return typeof type === 'string' || typeof type === 'function' || // Note: its typeof might be other than 'symbol' or 'number' if it's a polyfill.
+  type === REACT_FRAGMENT_TYPE || type === REACT_CONCURRENT_MODE_TYPE || type === REACT_PROFILER_TYPE || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || typeof type === 'object' && type !== null && (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || type.$$typeof === REACT_FUNDAMENTAL_TYPE || type.$$typeof === REACT_RESPONDER_TYPE || type.$$typeof === REACT_SCOPE_TYPE || type.$$typeof === REACT_BLOCK_TYPE);
+}
+
+function typeOf(object) {
+  if (typeof object === 'object' && object !== null) {
+    var $$typeof = object.$$typeof;
+
+    switch ($$typeof) {
+      case REACT_ELEMENT_TYPE:
+        var type = object.type;
+
+        switch (type) {
+          case REACT_ASYNC_MODE_TYPE:
+          case REACT_CONCURRENT_MODE_TYPE:
+          case REACT_FRAGMENT_TYPE:
+          case REACT_PROFILER_TYPE:
+          case REACT_STRICT_MODE_TYPE:
+          case REACT_SUSPENSE_TYPE:
+            return type;
+
+          default:
+            var $$typeofType = type && type.$$typeof;
+
+            switch ($$typeofType) {
+              case REACT_CONTEXT_TYPE:
+              case REACT_FORWARD_REF_TYPE:
+              case REACT_LAZY_TYPE:
+              case REACT_MEMO_TYPE:
+              case REACT_PROVIDER_TYPE:
+                return $$typeofType;
+
+              default:
+                return $$typeof;
+            }
+
+        }
+
+      case REACT_PORTAL_TYPE:
+        return $$typeof;
+    }
+  }
+
+  return undefined;
+} // AsyncMode is deprecated along with isAsyncMode
+
+var AsyncMode = REACT_ASYNC_MODE_TYPE;
+var ConcurrentMode = REACT_CONCURRENT_MODE_TYPE;
+var ContextConsumer = REACT_CONTEXT_TYPE;
+var ContextProvider = REACT_PROVIDER_TYPE;
+var Element = REACT_ELEMENT_TYPE;
+var ForwardRef = REACT_FORWARD_REF_TYPE;
+var Fragment = REACT_FRAGMENT_TYPE;
+var Lazy = REACT_LAZY_TYPE;
+var Memo = REACT_MEMO_TYPE;
+var Portal = REACT_PORTAL_TYPE;
+var Profiler = REACT_PROFILER_TYPE;
+var StrictMode = REACT_STRICT_MODE_TYPE;
+var Suspense = REACT_SUSPENSE_TYPE;
+var hasWarnedAboutDeprecatedIsAsyncMode = false; // AsyncMode should be deprecated
+
+function isAsyncMode(object) {
+  {
+    if (!hasWarnedAboutDeprecatedIsAsyncMode) {
+      hasWarnedAboutDeprecatedIsAsyncMode = true; // Using console['warn'] to evade Babel and ESLint
+
+      console['warn']('The ReactIs.isAsyncMode() alias has been deprecated, ' + 'and will be removed in React 17+. Update your code to use ' + 'ReactIs.isConcurrentMode() instead. It has the exact same API.');
+    }
+  }
+
+  return isConcurrentMode(object) || typeOf(object) === REACT_ASYNC_MODE_TYPE;
+}
+function isConcurrentMode(object) {
+  return typeOf(object) === REACT_CONCURRENT_MODE_TYPE;
+}
+function isContextConsumer(object) {
+  return typeOf(object) === REACT_CONTEXT_TYPE;
+}
+function isContextProvider(object) {
+  return typeOf(object) === REACT_PROVIDER_TYPE;
+}
+function isElement(object) {
+  return typeof object === 'object' && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
+}
+function isForwardRef(object) {
+  return typeOf(object) === REACT_FORWARD_REF_TYPE;
+}
+function isFragment(object) {
+  return typeOf(object) === REACT_FRAGMENT_TYPE;
+}
+function isLazy(object) {
+  return typeOf(object) === REACT_LAZY_TYPE;
+}
+function isMemo(object) {
+  return typeOf(object) === REACT_MEMO_TYPE;
+}
+function isPortal(object) {
+  return typeOf(object) === REACT_PORTAL_TYPE;
+}
+function isProfiler(object) {
+  return typeOf(object) === REACT_PROFILER_TYPE;
+}
+function isStrictMode(object) {
+  return typeOf(object) === REACT_STRICT_MODE_TYPE;
+}
+function isSuspense(object) {
+  return typeOf(object) === REACT_SUSPENSE_TYPE;
+}
+
+exports.AsyncMode = AsyncMode;
+exports.ConcurrentMode = ConcurrentMode;
+exports.ContextConsumer = ContextConsumer;
+exports.ContextProvider = ContextProvider;
+exports.Element = Element;
+exports.ForwardRef = ForwardRef;
+exports.Fragment = Fragment;
+exports.Lazy = Lazy;
+exports.Memo = Memo;
+exports.Portal = Portal;
+exports.Profiler = Profiler;
+exports.StrictMode = StrictMode;
+exports.Suspense = Suspense;
+exports.isAsyncMode = isAsyncMode;
+exports.isConcurrentMode = isConcurrentMode;
+exports.isContextConsumer = isContextConsumer;
+exports.isContextProvider = isContextProvider;
+exports.isElement = isElement;
+exports.isForwardRef = isForwardRef;
+exports.isFragment = isFragment;
+exports.isLazy = isLazy;
+exports.isMemo = isMemo;
+exports.isPortal = isPortal;
+exports.isProfiler = isProfiler;
+exports.isStrictMode = isStrictMode;
+exports.isSuspense = isSuspense;
+exports.isValidElementType = isValidElementType;
+exports.typeOf = typeOf;
+  })();
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/react-is/index.js":
+/*!****************************************!*\
+  !*** ./node_modules/react-is/index.js ***!
+  \****************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+"use strict";
+
+
+if (false) {} else {
+  module.exports = __webpack_require__(/*! ./cjs/react-is.development.js */ "./node_modules/react-is/cjs/react-is.development.js");
+}
+
+
+/***/ }),
+
 /***/ "./node_modules/react-redux/es/components/Context.js":
 /*!***********************************************************!*\
   !*** ./node_modules/react-redux/es/components/Context.js ***!
@@ -14032,1361 +13990,4687 @@ if (false) {} else {
 
 /***/ }),
 
-/***/ "./node_modules/react/cjs/react-jsx-runtime.development.js":
-/*!*****************************************************************!*\
-  !*** ./node_modules/react/cjs/react-jsx-runtime.development.js ***!
-  \*****************************************************************/
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-/**
- * @license React
- * react-jsx-runtime.development.js
- *
- * Copyright (c) Facebook, Inc. and its affiliates.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
-
-
-if (true) {
-  (function() {
-'use strict';
-
-var React = __webpack_require__(/*! react */ "react");
-
-// ATTENTION
-// When adding new symbols to this file,
-// Please consider also adding to 'react-devtools-shared/src/backend/ReactSymbols'
-// The Symbol used to tag the ReactElement-like types.
-var REACT_ELEMENT_TYPE = Symbol.for('react.element');
-var REACT_PORTAL_TYPE = Symbol.for('react.portal');
-var REACT_FRAGMENT_TYPE = Symbol.for('react.fragment');
-var REACT_STRICT_MODE_TYPE = Symbol.for('react.strict_mode');
-var REACT_PROFILER_TYPE = Symbol.for('react.profiler');
-var REACT_PROVIDER_TYPE = Symbol.for('react.provider');
-var REACT_CONTEXT_TYPE = Symbol.for('react.context');
-var REACT_FORWARD_REF_TYPE = Symbol.for('react.forward_ref');
-var REACT_SUSPENSE_TYPE = Symbol.for('react.suspense');
-var REACT_SUSPENSE_LIST_TYPE = Symbol.for('react.suspense_list');
-var REACT_MEMO_TYPE = Symbol.for('react.memo');
-var REACT_LAZY_TYPE = Symbol.for('react.lazy');
-var REACT_OFFSCREEN_TYPE = Symbol.for('react.offscreen');
-var MAYBE_ITERATOR_SYMBOL = Symbol.iterator;
-var FAUX_ITERATOR_SYMBOL = '@@iterator';
-function getIteratorFn(maybeIterable) {
-  if (maybeIterable === null || typeof maybeIterable !== 'object') {
-    return null;
-  }
-
-  var maybeIterator = MAYBE_ITERATOR_SYMBOL && maybeIterable[MAYBE_ITERATOR_SYMBOL] || maybeIterable[FAUX_ITERATOR_SYMBOL];
-
-  if (typeof maybeIterator === 'function') {
-    return maybeIterator;
-  }
-
-  return null;
-}
-
-var ReactSharedInternals = React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
-
-function error(format) {
-  {
-    {
-      for (var _len2 = arguments.length, args = new Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-        args[_key2 - 1] = arguments[_key2];
-      }
-
-      printWarning('error', format, args);
-    }
-  }
-}
-
-function printWarning(level, format, args) {
-  // When changing this logic, you might want to also
-  // update consoleWithStackDev.www.js as well.
-  {
-    var ReactDebugCurrentFrame = ReactSharedInternals.ReactDebugCurrentFrame;
-    var stack = ReactDebugCurrentFrame.getStackAddendum();
-
-    if (stack !== '') {
-      format += '%s';
-      args = args.concat([stack]);
-    } // eslint-disable-next-line react-internal/safe-string-coercion
-
-
-    var argsWithFormat = args.map(function (item) {
-      return String(item);
-    }); // Careful: RN currently depends on this prefix
-
-    argsWithFormat.unshift('Warning: ' + format); // We intentionally don't use spread (or .apply) directly because it
-    // breaks IE9: https://github.com/facebook/react/issues/13610
-    // eslint-disable-next-line react-internal/no-production-logging
-
-    Function.prototype.apply.call(console[level], console, argsWithFormat);
-  }
-}
-
-// -----------------------------------------------------------------------------
-
-var enableScopeAPI = false; // Experimental Create Event Handle API.
-var enableCacheElement = false;
-var enableTransitionTracing = false; // No known bugs, but needs performance testing
-
-var enableLegacyHidden = false; // Enables unstable_avoidThisFallback feature in Fiber
-// stuff. Intended to enable React core members to more easily debug scheduling
-// issues in DEV builds.
-
-var enableDebugTracing = false; // Track which Fiber(s) schedule render work.
-
-var REACT_MODULE_REFERENCE;
-
-{
-  REACT_MODULE_REFERENCE = Symbol.for('react.module.reference');
-}
-
-function isValidElementType(type) {
-  if (typeof type === 'string' || typeof type === 'function') {
-    return true;
-  } // Note: typeof might be other than 'symbol' or 'number' (e.g. if it's a polyfill).
-
-
-  if (type === REACT_FRAGMENT_TYPE || type === REACT_PROFILER_TYPE || enableDebugTracing  || type === REACT_STRICT_MODE_TYPE || type === REACT_SUSPENSE_TYPE || type === REACT_SUSPENSE_LIST_TYPE || enableLegacyHidden  || type === REACT_OFFSCREEN_TYPE || enableScopeAPI  || enableCacheElement  || enableTransitionTracing ) {
-    return true;
-  }
-
-  if (typeof type === 'object' && type !== null) {
-    if (type.$$typeof === REACT_LAZY_TYPE || type.$$typeof === REACT_MEMO_TYPE || type.$$typeof === REACT_PROVIDER_TYPE || type.$$typeof === REACT_CONTEXT_TYPE || type.$$typeof === REACT_FORWARD_REF_TYPE || // This needs to include all possible module reference object
-    // types supported by any Flight configuration anywhere since
-    // we don't know which Flight build this will end up being used
-    // with.
-    type.$$typeof === REACT_MODULE_REFERENCE || type.getModuleId !== undefined) {
-      return true;
-    }
-  }
-
-  return false;
-}
-
-function getWrappedName(outerType, innerType, wrapperName) {
-  var displayName = outerType.displayName;
-
-  if (displayName) {
-    return displayName;
-  }
-
-  var functionName = innerType.displayName || innerType.name || '';
-  return functionName !== '' ? wrapperName + "(" + functionName + ")" : wrapperName;
-} // Keep in sync with react-reconciler/getComponentNameFromFiber
-
-
-function getContextName(type) {
-  return type.displayName || 'Context';
-} // Note that the reconciler package should generally prefer to use getComponentNameFromFiber() instead.
-
-
-function getComponentNameFromType(type) {
-  if (type == null) {
-    // Host root, text node or just invalid type.
-    return null;
-  }
-
-  {
-    if (typeof type.tag === 'number') {
-      error('Received an unexpected object in getComponentNameFromType(). ' + 'This is likely a bug in React. Please file an issue.');
-    }
-  }
-
-  if (typeof type === 'function') {
-    return type.displayName || type.name || null;
-  }
-
-  if (typeof type === 'string') {
-    return type;
-  }
-
-  switch (type) {
-    case REACT_FRAGMENT_TYPE:
-      return 'Fragment';
-
-    case REACT_PORTAL_TYPE:
-      return 'Portal';
-
-    case REACT_PROFILER_TYPE:
-      return 'Profiler';
-
-    case REACT_STRICT_MODE_TYPE:
-      return 'StrictMode';
-
-    case REACT_SUSPENSE_TYPE:
-      return 'Suspense';
-
-    case REACT_SUSPENSE_LIST_TYPE:
-      return 'SuspenseList';
-
-  }
-
-  if (typeof type === 'object') {
-    switch (type.$$typeof) {
-      case REACT_CONTEXT_TYPE:
-        var context = type;
-        return getContextName(context) + '.Consumer';
-
-      case REACT_PROVIDER_TYPE:
-        var provider = type;
-        return getContextName(provider._context) + '.Provider';
-
-      case REACT_FORWARD_REF_TYPE:
-        return getWrappedName(type, type.render, 'ForwardRef');
-
-      case REACT_MEMO_TYPE:
-        var outerName = type.displayName || null;
-
-        if (outerName !== null) {
-          return outerName;
-        }
-
-        return getComponentNameFromType(type.type) || 'Memo';
-
-      case REACT_LAZY_TYPE:
-        {
-          var lazyComponent = type;
-          var payload = lazyComponent._payload;
-          var init = lazyComponent._init;
-
-          try {
-            return getComponentNameFromType(init(payload));
-          } catch (x) {
-            return null;
-          }
-        }
-
-      // eslint-disable-next-line no-fallthrough
-    }
-  }
-
-  return null;
-}
-
-var assign = Object.assign;
-
-// Helpers to patch console.logs to avoid logging during side-effect free
-// replaying on render function. This currently only patches the object
-// lazily which won't cover if the log function was extracted eagerly.
-// We could also eagerly patch the method.
-var disabledDepth = 0;
-var prevLog;
-var prevInfo;
-var prevWarn;
-var prevError;
-var prevGroup;
-var prevGroupCollapsed;
-var prevGroupEnd;
-
-function disabledLog() {}
-
-disabledLog.__reactDisabledLog = true;
-function disableLogs() {
-  {
-    if (disabledDepth === 0) {
-      /* eslint-disable react-internal/no-production-logging */
-      prevLog = console.log;
-      prevInfo = console.info;
-      prevWarn = console.warn;
-      prevError = console.error;
-      prevGroup = console.group;
-      prevGroupCollapsed = console.groupCollapsed;
-      prevGroupEnd = console.groupEnd; // https://github.com/facebook/react/issues/19099
-
-      var props = {
-        configurable: true,
-        enumerable: true,
-        value: disabledLog,
-        writable: true
-      }; // $FlowFixMe Flow thinks console is immutable.
-
-      Object.defineProperties(console, {
-        info: props,
-        log: props,
-        warn: props,
-        error: props,
-        group: props,
-        groupCollapsed: props,
-        groupEnd: props
-      });
-      /* eslint-enable react-internal/no-production-logging */
-    }
-
-    disabledDepth++;
-  }
-}
-function reenableLogs() {
-  {
-    disabledDepth--;
-
-    if (disabledDepth === 0) {
-      /* eslint-disable react-internal/no-production-logging */
-      var props = {
-        configurable: true,
-        enumerable: true,
-        writable: true
-      }; // $FlowFixMe Flow thinks console is immutable.
-
-      Object.defineProperties(console, {
-        log: assign({}, props, {
-          value: prevLog
-        }),
-        info: assign({}, props, {
-          value: prevInfo
-        }),
-        warn: assign({}, props, {
-          value: prevWarn
-        }),
-        error: assign({}, props, {
-          value: prevError
-        }),
-        group: assign({}, props, {
-          value: prevGroup
-        }),
-        groupCollapsed: assign({}, props, {
-          value: prevGroupCollapsed
-        }),
-        groupEnd: assign({}, props, {
-          value: prevGroupEnd
-        })
-      });
-      /* eslint-enable react-internal/no-production-logging */
-    }
-
-    if (disabledDepth < 0) {
-      error('disabledDepth fell below zero. ' + 'This is a bug in React. Please file an issue.');
-    }
-  }
-}
-
-var ReactCurrentDispatcher = ReactSharedInternals.ReactCurrentDispatcher;
-var prefix;
-function describeBuiltInComponentFrame(name, source, ownerFn) {
-  {
-    if (prefix === undefined) {
-      // Extract the VM specific prefix used by each line.
-      try {
-        throw Error();
-      } catch (x) {
-        var match = x.stack.trim().match(/\n( *(at )?)/);
-        prefix = match && match[1] || '';
-      }
-    } // We use the prefix to ensure our stacks line up with native stack frames.
-
-
-    return '\n' + prefix + name;
-  }
-}
-var reentry = false;
-var componentFrameCache;
-
-{
-  var PossiblyWeakMap = typeof WeakMap === 'function' ? WeakMap : Map;
-  componentFrameCache = new PossiblyWeakMap();
-}
-
-function describeNativeComponentFrame(fn, construct) {
-  // If something asked for a stack inside a fake render, it should get ignored.
-  if ( !fn || reentry) {
-    return '';
-  }
-
-  {
-    var frame = componentFrameCache.get(fn);
-
-    if (frame !== undefined) {
-      return frame;
-    }
-  }
-
-  var control;
-  reentry = true;
-  var previousPrepareStackTrace = Error.prepareStackTrace; // $FlowFixMe It does accept undefined.
-
-  Error.prepareStackTrace = undefined;
-  var previousDispatcher;
-
-  {
-    previousDispatcher = ReactCurrentDispatcher.current; // Set the dispatcher in DEV because this might be call in the render function
-    // for warnings.
-
-    ReactCurrentDispatcher.current = null;
-    disableLogs();
-  }
-
-  try {
-    // This should throw.
-    if (construct) {
-      // Something should be setting the props in the constructor.
-      var Fake = function () {
-        throw Error();
-      }; // $FlowFixMe
-
-
-      Object.defineProperty(Fake.prototype, 'props', {
-        set: function () {
-          // We use a throwing setter instead of frozen or non-writable props
-          // because that won't throw in a non-strict mode function.
-          throw Error();
-        }
-      });
-
-      if (typeof Reflect === 'object' && Reflect.construct) {
-        // We construct a different control for this case to include any extra
-        // frames added by the construct call.
-        try {
-          Reflect.construct(Fake, []);
-        } catch (x) {
-          control = x;
-        }
-
-        Reflect.construct(fn, [], Fake);
-      } else {
-        try {
-          Fake.call();
-        } catch (x) {
-          control = x;
-        }
-
-        fn.call(Fake.prototype);
-      }
-    } else {
-      try {
-        throw Error();
-      } catch (x) {
-        control = x;
-      }
-
-      fn();
-    }
-  } catch (sample) {
-    // This is inlined manually because closure doesn't do it for us.
-    if (sample && control && typeof sample.stack === 'string') {
-      // This extracts the first frame from the sample that isn't also in the control.
-      // Skipping one frame that we assume is the frame that calls the two.
-      var sampleLines = sample.stack.split('\n');
-      var controlLines = control.stack.split('\n');
-      var s = sampleLines.length - 1;
-      var c = controlLines.length - 1;
-
-      while (s >= 1 && c >= 0 && sampleLines[s] !== controlLines[c]) {
-        // We expect at least one stack frame to be shared.
-        // Typically this will be the root most one. However, stack frames may be
-        // cut off due to maximum stack limits. In this case, one maybe cut off
-        // earlier than the other. We assume that the sample is longer or the same
-        // and there for cut off earlier. So we should find the root most frame in
-        // the sample somewhere in the control.
-        c--;
-      }
-
-      for (; s >= 1 && c >= 0; s--, c--) {
-        // Next we find the first one that isn't the same which should be the
-        // frame that called our sample function and the control.
-        if (sampleLines[s] !== controlLines[c]) {
-          // In V8, the first line is describing the message but other VMs don't.
-          // If we're about to return the first line, and the control is also on the same
-          // line, that's a pretty good indicator that our sample threw at same line as
-          // the control. I.e. before we entered the sample frame. So we ignore this result.
-          // This can happen if you passed a class to function component, or non-function.
-          if (s !== 1 || c !== 1) {
-            do {
-              s--;
-              c--; // We may still have similar intermediate frames from the construct call.
-              // The next one that isn't the same should be our match though.
-
-              if (c < 0 || sampleLines[s] !== controlLines[c]) {
-                // V8 adds a "new" prefix for native classes. Let's remove it to make it prettier.
-                var _frame = '\n' + sampleLines[s].replace(' at new ', ' at '); // If our component frame is labeled "<anonymous>"
-                // but we have a user-provided "displayName"
-                // splice it in to make the stack more readable.
-
-
-                if (fn.displayName && _frame.includes('<anonymous>')) {
-                  _frame = _frame.replace('<anonymous>', fn.displayName);
-                }
-
-                {
-                  if (typeof fn === 'function') {
-                    componentFrameCache.set(fn, _frame);
-                  }
-                } // Return the line we found.
-
-
-                return _frame;
-              }
-            } while (s >= 1 && c >= 0);
-          }
-
-          break;
-        }
-      }
-    }
-  } finally {
-    reentry = false;
-
-    {
-      ReactCurrentDispatcher.current = previousDispatcher;
-      reenableLogs();
-    }
-
-    Error.prepareStackTrace = previousPrepareStackTrace;
-  } // Fallback to just using the name if we couldn't make it throw.
-
-
-  var name = fn ? fn.displayName || fn.name : '';
-  var syntheticFrame = name ? describeBuiltInComponentFrame(name) : '';
-
-  {
-    if (typeof fn === 'function') {
-      componentFrameCache.set(fn, syntheticFrame);
-    }
-  }
-
-  return syntheticFrame;
-}
-function describeFunctionComponentFrame(fn, source, ownerFn) {
-  {
-    return describeNativeComponentFrame(fn, false);
-  }
-}
-
-function shouldConstruct(Component) {
-  var prototype = Component.prototype;
-  return !!(prototype && prototype.isReactComponent);
-}
-
-function describeUnknownElementTypeFrameInDEV(type, source, ownerFn) {
-
-  if (type == null) {
-    return '';
-  }
-
-  if (typeof type === 'function') {
-    {
-      return describeNativeComponentFrame(type, shouldConstruct(type));
-    }
-  }
-
-  if (typeof type === 'string') {
-    return describeBuiltInComponentFrame(type);
-  }
-
-  switch (type) {
-    case REACT_SUSPENSE_TYPE:
-      return describeBuiltInComponentFrame('Suspense');
-
-    case REACT_SUSPENSE_LIST_TYPE:
-      return describeBuiltInComponentFrame('SuspenseList');
-  }
-
-  if (typeof type === 'object') {
-    switch (type.$$typeof) {
-      case REACT_FORWARD_REF_TYPE:
-        return describeFunctionComponentFrame(type.render);
-
-      case REACT_MEMO_TYPE:
-        // Memo may contain any component type so we recursively resolve it.
-        return describeUnknownElementTypeFrameInDEV(type.type, source, ownerFn);
-
-      case REACT_LAZY_TYPE:
-        {
-          var lazyComponent = type;
-          var payload = lazyComponent._payload;
-          var init = lazyComponent._init;
-
-          try {
-            // Lazy may contain any component type so we recursively resolve it.
-            return describeUnknownElementTypeFrameInDEV(init(payload), source, ownerFn);
-          } catch (x) {}
-        }
-    }
-  }
-
-  return '';
-}
-
-var hasOwnProperty = Object.prototype.hasOwnProperty;
-
-var loggedTypeFailures = {};
-var ReactDebugCurrentFrame = ReactSharedInternals.ReactDebugCurrentFrame;
-
-function setCurrentlyValidatingElement(element) {
-  {
-    if (element) {
-      var owner = element._owner;
-      var stack = describeUnknownElementTypeFrameInDEV(element.type, element._source, owner ? owner.type : null);
-      ReactDebugCurrentFrame.setExtraStackFrame(stack);
-    } else {
-      ReactDebugCurrentFrame.setExtraStackFrame(null);
-    }
-  }
-}
-
-function checkPropTypes(typeSpecs, values, location, componentName, element) {
-  {
-    // $FlowFixMe This is okay but Flow doesn't know it.
-    var has = Function.call.bind(hasOwnProperty);
-
-    for (var typeSpecName in typeSpecs) {
-      if (has(typeSpecs, typeSpecName)) {
-        var error$1 = void 0; // Prop type validation may throw. In case they do, we don't want to
-        // fail the render phase where it didn't fail before. So we log it.
-        // After these have been cleaned up, we'll let them throw.
-
-        try {
-          // This is intentionally an invariant that gets caught. It's the same
-          // behavior as without this statement except with a better message.
-          if (typeof typeSpecs[typeSpecName] !== 'function') {
-            // eslint-disable-next-line react-internal/prod-error-codes
-            var err = Error((componentName || 'React class') + ': ' + location + ' type `' + typeSpecName + '` is invalid; ' + 'it must be a function, usually from the `prop-types` package, but received `' + typeof typeSpecs[typeSpecName] + '`.' + 'This often happens because of typos such as `PropTypes.function` instead of `PropTypes.func`.');
-            err.name = 'Invariant Violation';
-            throw err;
-          }
-
-          error$1 = typeSpecs[typeSpecName](values, typeSpecName, componentName, location, null, 'SECRET_DO_NOT_PASS_THIS_OR_YOU_WILL_BE_FIRED');
-        } catch (ex) {
-          error$1 = ex;
-        }
-
-        if (error$1 && !(error$1 instanceof Error)) {
-          setCurrentlyValidatingElement(element);
-
-          error('%s: type specification of %s' + ' `%s` is invalid; the type checker ' + 'function must return `null` or an `Error` but returned a %s. ' + 'You may have forgotten to pass an argument to the type checker ' + 'creator (arrayOf, instanceOf, objectOf, oneOf, oneOfType, and ' + 'shape all require an argument).', componentName || 'React class', location, typeSpecName, typeof error$1);
-
-          setCurrentlyValidatingElement(null);
-        }
-
-        if (error$1 instanceof Error && !(error$1.message in loggedTypeFailures)) {
-          // Only monitor this failure once because there tends to be a lot of the
-          // same error.
-          loggedTypeFailures[error$1.message] = true;
-          setCurrentlyValidatingElement(element);
-
-          error('Failed %s type: %s', location, error$1.message);
-
-          setCurrentlyValidatingElement(null);
-        }
-      }
-    }
-  }
-}
-
-var isArrayImpl = Array.isArray; // eslint-disable-next-line no-redeclare
-
-function isArray(a) {
-  return isArrayImpl(a);
-}
-
-/*
- * The `'' + value` pattern (used in in perf-sensitive code) throws for Symbol
- * and Temporal.* types. See https://github.com/facebook/react/pull/22064.
- *
- * The functions in this module will throw an easier-to-understand,
- * easier-to-debug exception with a clear errors message message explaining the
- * problem. (Instead of a confusing exception thrown inside the implementation
- * of the `value` object).
- */
-// $FlowFixMe only called in DEV, so void return is not possible.
-function typeName(value) {
-  {
-    // toStringTag is needed for namespaced types like Temporal.Instant
-    var hasToStringTag = typeof Symbol === 'function' && Symbol.toStringTag;
-    var type = hasToStringTag && value[Symbol.toStringTag] || value.constructor.name || 'Object';
-    return type;
-  }
-} // $FlowFixMe only called in DEV, so void return is not possible.
-
-
-function willCoercionThrow(value) {
-  {
+/***/ "./node_modules/react-table/dist/react-table.development.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/react-table/dist/react-table.development.js ***!
+  \******************************************************************/
+/***/ (function(__unused_webpack_module, exports, __webpack_require__) {
+
+(function (global, factory) {
+   true ? factory(exports, __webpack_require__(/*! react */ "react")) :
+  0;
+}(this, (function (exports, React) { 'use strict';
+
+  React = React && Object.prototype.hasOwnProperty.call(React, 'default') ? React['default'] : React;
+
+  function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
     try {
-      testStringCoercion(value);
-      return false;
-    } catch (e) {
-      return true;
+      var info = gen[key](arg);
+      var value = info.value;
+    } catch (error) {
+      reject(error);
+      return;
+    }
+
+    if (info.done) {
+      resolve(value);
+    } else {
+      Promise.resolve(value).then(_next, _throw);
     }
   }
-}
 
-function testStringCoercion(value) {
-  // If you ended up here by following an exception call stack, here's what's
-  // happened: you supplied an object or symbol value to React (as a prop, key,
-  // DOM attribute, CSS property, string ref, etc.) and when React tried to
-  // coerce it to a string using `'' + value`, an exception was thrown.
-  //
-  // The most common types that will cause this exception are `Symbol` instances
-  // and Temporal objects like `Temporal.Instant`. But any object that has a
-  // `valueOf` or `[Symbol.toPrimitive]` method that throws will also cause this
-  // exception. (Library authors do this to prevent users from using built-in
-  // numeric operators like `+` or comparison operators like `>=` because custom
-  // methods are needed to perform accurate arithmetic or comparison.)
-  //
-  // To fix the problem, coerce this object or symbol value to a string before
-  // passing it to React. The most reliable way is usually `String(value)`.
-  //
-  // To find which value is throwing, check the browser or debugger console.
-  // Before this exception was thrown, there should be `console.error` output
-  // that shows the type (Symbol, Temporal.PlainDate, etc.) that caused the
-  // problem and how that type was used: key, atrribute, input value prop, etc.
-  // In most cases, this console output also shows the component and its
-  // ancestor components where the exception happened.
-  //
-  // eslint-disable-next-line react-internal/safe-string-coercion
-  return '' + value;
-}
-function checkKeyStringCoercion(value) {
-  {
-    if (willCoercionThrow(value)) {
-      error('The provided key is an unsupported type %s.' + ' This value must be coerced to a string before before using it here.', typeName(value));
+  function _asyncToGenerator(fn) {
+    return function () {
+      var self = this,
+          args = arguments;
+      return new Promise(function (resolve, reject) {
+        var gen = fn.apply(self, args);
 
-      return testStringCoercion(value); // throw (to help callers find troubleshooting comments)
-    }
+        function _next(value) {
+          asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
+        }
+
+        function _throw(err) {
+          asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
+        }
+
+        _next(undefined);
+      });
+    };
   }
-}
 
-var ReactCurrentOwner = ReactSharedInternals.ReactCurrentOwner;
-var RESERVED_PROPS = {
-  key: true,
-  ref: true,
-  __self: true,
-  __source: true
-};
-var specialPropKeyWarningShown;
-var specialPropRefWarningShown;
-var didWarnAboutStringRefs;
+  function _extends() {
+    _extends = Object.assign || function (target) {
+      for (var i = 1; i < arguments.length; i++) {
+        var source = arguments[i];
 
-{
-  didWarnAboutStringRefs = {};
-}
-
-function hasValidRef(config) {
-  {
-    if (hasOwnProperty.call(config, 'ref')) {
-      var getter = Object.getOwnPropertyDescriptor(config, 'ref').get;
-
-      if (getter && getter.isReactWarning) {
-        return false;
+        for (var key in source) {
+          if (Object.prototype.hasOwnProperty.call(source, key)) {
+            target[key] = source[key];
+          }
+        }
       }
-    }
-  }
 
-  return config.ref !== undefined;
-}
-
-function hasValidKey(config) {
-  {
-    if (hasOwnProperty.call(config, 'key')) {
-      var getter = Object.getOwnPropertyDescriptor(config, 'key').get;
-
-      if (getter && getter.isReactWarning) {
-        return false;
-      }
-    }
-  }
-
-  return config.key !== undefined;
-}
-
-function warnIfStringRefCannotBeAutoConverted(config, self) {
-  {
-    if (typeof config.ref === 'string' && ReactCurrentOwner.current && self && ReactCurrentOwner.current.stateNode !== self) {
-      var componentName = getComponentNameFromType(ReactCurrentOwner.current.type);
-
-      if (!didWarnAboutStringRefs[componentName]) {
-        error('Component "%s" contains the string ref "%s". ' + 'Support for string refs will be removed in a future major release. ' + 'This case cannot be automatically converted to an arrow function. ' + 'We ask you to manually fix this case by using useRef() or createRef() instead. ' + 'Learn more about using refs safely here: ' + 'https://reactjs.org/link/strict-mode-string-ref', getComponentNameFromType(ReactCurrentOwner.current.type), config.ref);
-
-        didWarnAboutStringRefs[componentName] = true;
-      }
-    }
-  }
-}
-
-function defineKeyPropWarningGetter(props, displayName) {
-  {
-    var warnAboutAccessingKey = function () {
-      if (!specialPropKeyWarningShown) {
-        specialPropKeyWarningShown = true;
-
-        error('%s: `key` is not a prop. Trying to access it will result ' + 'in `undefined` being returned. If you need to access the same ' + 'value within the child component, you should pass it as a different ' + 'prop. (https://reactjs.org/link/special-props)', displayName);
-      }
+      return target;
     };
 
-    warnAboutAccessingKey.isReactWarning = true;
-    Object.defineProperty(props, 'key', {
-      get: warnAboutAccessingKey,
-      configurable: true
-    });
+    return _extends.apply(this, arguments);
   }
-}
 
-function defineRefPropWarningGetter(props, displayName) {
-  {
-    var warnAboutAccessingRef = function () {
-      if (!specialPropRefWarningShown) {
-        specialPropRefWarningShown = true;
+  function _objectWithoutPropertiesLoose(source, excluded) {
+    if (source == null) return {};
+    var target = {};
+    var sourceKeys = Object.keys(source);
+    var key, i;
 
-        error('%s: `ref` is not a prop. Trying to access it will result ' + 'in `undefined` being returned. If you need to access the same ' + 'value within the child component, you should pass it as a different ' + 'prop. (https://reactjs.org/link/special-props)', displayName);
-      }
-    };
+    for (i = 0; i < sourceKeys.length; i++) {
+      key = sourceKeys[i];
+      if (excluded.indexOf(key) >= 0) continue;
+      target[key] = source[key];
+    }
 
-    warnAboutAccessingRef.isReactWarning = true;
-    Object.defineProperty(props, 'ref', {
-      get: warnAboutAccessingRef,
-      configurable: true
-    });
+    return target;
   }
-}
-/**
- * Factory method to create a new React element. This no longer adheres to
- * the class pattern, so do not use new to call it. Also, instanceof check
- * will not work. Instead test $$typeof field against Symbol.for('react.element') to check
- * if something is a React Element.
- *
- * @param {*} type
- * @param {*} props
- * @param {*} key
- * @param {string|object} ref
- * @param {*} owner
- * @param {*} self A *temporary* helper to detect places where `this` is
- * different from the `owner` when React.createElement is called, so that we
- * can warn. We want to get rid of owner and replace string `ref`s with arrow
- * functions, and as long as `this` and owner are the same, there will be no
- * change in behavior.
- * @param {*} source An annotation object (added by a transpiler or otherwise)
- * indicating filename, line number, and/or other information.
- * @internal
- */
 
+  function _toPrimitive(input, hint) {
+    if (typeof input !== "object" || input === null) return input;
+    var prim = input[Symbol.toPrimitive];
 
-var ReactElement = function (type, key, ref, self, source, owner, props) {
-  var element = {
-    // This tag allows us to uniquely identify this as a React Element
-    $$typeof: REACT_ELEMENT_TYPE,
-    // Built-in properties that belong on the element
-    type: type,
-    key: key,
-    ref: ref,
-    props: props,
-    // Record the component responsible for creating this element.
-    _owner: owner
+    if (prim !== undefined) {
+      var res = prim.call(input, hint || "default");
+      if (typeof res !== "object") return res;
+      throw new TypeError("@@toPrimitive must return a primitive value.");
+    }
+
+    return (hint === "string" ? String : Number)(input);
+  }
+
+  function _toPropertyKey(arg) {
+    var key = _toPrimitive(arg, "string");
+
+    return typeof key === "symbol" ? key : String(key);
+  }
+
+  var renderErr = 'Renderer Error ☝️';
+  var actions = {
+    init: 'init'
+  };
+  var defaultRenderer = function defaultRenderer(_ref) {
+    var _ref$value = _ref.value,
+        value = _ref$value === void 0 ? '' : _ref$value;
+    return value;
+  };
+  var emptyRenderer = function emptyRenderer() {
+    return React.createElement(React.Fragment, null, "\xA0");
+  };
+  var defaultColumn = {
+    Cell: defaultRenderer,
+    width: 150,
+    minWidth: 0,
+    maxWidth: Number.MAX_SAFE_INTEGER
   };
 
-  {
-    // The validation flag is currently mutative. We put it on
-    // an external backing store so that we can freeze the whole object.
-    // This can be replaced with a WeakMap once they are implemented in
-    // commonly used development environments.
-    element._store = {}; // To make comparing ReactElements easier for testing purposes, we make
-    // the validation flag non-enumerable (where possible, which should
-    // include every environment we run tests in), so the test framework
-    // ignores it.
+  function mergeProps() {
+    for (var _len = arguments.length, propList = new Array(_len), _key = 0; _key < _len; _key++) {
+      propList[_key] = arguments[_key];
+    }
 
-    Object.defineProperty(element._store, 'validated', {
-      configurable: false,
-      enumerable: false,
-      writable: true,
-      value: false
-    }); // self and source are DEV only properties.
+    return propList.reduce(function (props, next) {
+      var style = next.style,
+          className = next.className,
+          rest = _objectWithoutPropertiesLoose(next, ["style", "className"]);
 
-    Object.defineProperty(element, '_self', {
-      configurable: false,
-      enumerable: false,
-      writable: false,
-      value: self
-    }); // Two elements created in two different places should be considered
-    // equal for testing purposes and therefore we hide it from enumeration.
+      props = _extends({}, props, {}, rest);
 
-    Object.defineProperty(element, '_source', {
-      configurable: false,
-      enumerable: false,
-      writable: false,
-      value: source
+      if (style) {
+        props.style = props.style ? _extends({}, props.style || {}, {}, style || {}) : style;
+      }
+
+      if (className) {
+        props.className = props.className ? props.className + ' ' + className : className;
+      }
+
+      if (props.className === '') {
+        delete props.className;
+      }
+
+      return props;
+    }, {});
+  }
+
+  function handlePropGetter(prevProps, userProps, meta) {
+    // Handle a lambda, pass it the previous props
+    if (typeof userProps === 'function') {
+      return handlePropGetter({}, userProps(prevProps, meta));
+    } // Handle an array, merge each item as separate props
+
+
+    if (Array.isArray(userProps)) {
+      return mergeProps.apply(void 0, [prevProps].concat(userProps));
+    } // Handle an object by default, merge the two objects
+
+
+    return mergeProps(prevProps, userProps);
+  }
+
+  var makePropGetter = function makePropGetter(hooks, meta) {
+    if (meta === void 0) {
+      meta = {};
+    }
+
+    return function (userProps) {
+      if (userProps === void 0) {
+        userProps = {};
+      }
+
+      return [].concat(hooks, [userProps]).reduce(function (prev, next) {
+        return handlePropGetter(prev, next, _extends({}, meta, {
+          userProps: userProps
+        }));
+      }, {});
+    };
+  };
+  var reduceHooks = function reduceHooks(hooks, initial, meta, allowUndefined) {
+    if (meta === void 0) {
+      meta = {};
+    }
+
+    return hooks.reduce(function (prev, next) {
+      var nextValue = next(prev, meta);
+
+      {
+        if (!allowUndefined && typeof nextValue === 'undefined') {
+          console.info(next);
+          throw new Error('React Table: A reducer hook ☝️ just returned undefined! This is not allowed.');
+        }
+      }
+
+      return nextValue;
+    }, initial);
+  };
+  var loopHooks = function loopHooks(hooks, context, meta) {
+    if (meta === void 0) {
+      meta = {};
+    }
+
+    return hooks.forEach(function (hook) {
+      var nextValue = hook(context, meta);
+
+      {
+        if (typeof nextValue !== 'undefined') {
+          console.info(hook, nextValue);
+          throw new Error('React Table: A loop-type hook ☝️ just returned a value! This is not allowed.');
+        }
+      }
+    });
+  };
+  function ensurePluginOrder(plugins, befores, pluginName, afters) {
+    if ( afters) {
+      throw new Error("Defining plugins in the \"after\" section of ensurePluginOrder is no longer supported (see plugin " + pluginName + ")");
+    }
+
+    var pluginIndex = plugins.findIndex(function (plugin) {
+      return plugin.pluginName === pluginName;
     });
 
-    if (Object.freeze) {
-      Object.freeze(element.props);
-      Object.freeze(element);
-    }
-  }
-
-  return element;
-};
-/**
- * https://github.com/reactjs/rfcs/pull/107
- * @param {*} type
- * @param {object} props
- * @param {string} key
- */
-
-function jsxDEV(type, config, maybeKey, source, self) {
-  {
-    var propName; // Reserved names are extracted
-
-    var props = {};
-    var key = null;
-    var ref = null; // Currently, key can be spread in as a prop. This causes a potential
-    // issue if key is also explicitly declared (ie. <div {...props} key="Hi" />
-    // or <div key="Hi" {...props} /> ). We want to deprecate key spread,
-    // but as an intermediary step, we will use jsxDEV for everything except
-    // <div {...props} key="Hi" />, because we aren't currently able to tell if
-    // key is explicitly declared to be undefined or not.
-
-    if (maybeKey !== undefined) {
+    if (pluginIndex === -1) {
       {
-        checkKeyStringCoercion(maybeKey);
+        throw new Error("The plugin \"" + pluginName + "\" was not found in the plugin list!\nThis usually means you need to need to name your plugin hook by setting the 'pluginName' property of the hook function, eg:\n\n  " + pluginName + ".pluginName = '" + pluginName + "'\n");
       }
-
-      key = '' + maybeKey;
     }
 
-    if (hasValidKey(config)) {
-      {
-        checkKeyStringCoercion(config.key);
-      }
+    befores.forEach(function (before) {
+      var beforeIndex = plugins.findIndex(function (plugin) {
+        return plugin.pluginName === before;
+      });
 
-      key = '' + config.key;
-    }
-
-    if (hasValidRef(config)) {
-      ref = config.ref;
-      warnIfStringRefCannotBeAutoConverted(config, self);
-    } // Remaining properties are added to a new props object
-
-
-    for (propName in config) {
-      if (hasOwnProperty.call(config, propName) && !RESERVED_PROPS.hasOwnProperty(propName)) {
-        props[propName] = config[propName];
-      }
-    } // Resolve default props
-
-
-    if (type && type.defaultProps) {
-      var defaultProps = type.defaultProps;
-
-      for (propName in defaultProps) {
-        if (props[propName] === undefined) {
-          props[propName] = defaultProps[propName];
+      if (beforeIndex > -1 && beforeIndex > pluginIndex) {
+        {
+          throw new Error("React Table: The " + pluginName + " plugin hook must be placed after the " + before + " plugin hook!");
         }
       }
-    }
+    });
+  }
+  function functionalUpdate(updater, old) {
+    return typeof updater === 'function' ? updater(old) : updater;
+  }
+  function useGetLatest(obj) {
+    var ref = React.useRef();
+    ref.current = obj;
+    return React.useCallback(function () {
+      return ref.current;
+    }, []);
+  } // SSR has issues with useLayoutEffect still, so use useEffect during SSR
 
-    if (key || ref) {
-      var displayName = typeof type === 'function' ? type.displayName || type.name || 'Unknown' : type;
-
-      if (key) {
-        defineKeyPropWarningGetter(props, displayName);
+  var safeUseLayoutEffect = typeof document !== 'undefined' ? React.useLayoutEffect : React.useEffect;
+  function useMountedLayoutEffect(fn, deps) {
+    var mountedRef = React.useRef(false);
+    safeUseLayoutEffect(function () {
+      if (mountedRef.current) {
+        fn();
       }
 
-      if (ref) {
-        defineRefPropWarningGetter(props, displayName);
-      }
-    }
-
-    return ReactElement(type, key, ref, self, source, ReactCurrentOwner.current, props);
+      mountedRef.current = true; // eslint-disable-next-line
+    }, deps);
   }
-}
-
-var ReactCurrentOwner$1 = ReactSharedInternals.ReactCurrentOwner;
-var ReactDebugCurrentFrame$1 = ReactSharedInternals.ReactDebugCurrentFrame;
-
-function setCurrentlyValidatingElement$1(element) {
-  {
-    if (element) {
-      var owner = element._owner;
-      var stack = describeUnknownElementTypeFrameInDEV(element.type, element._source, owner ? owner.type : null);
-      ReactDebugCurrentFrame$1.setExtraStackFrame(stack);
-    } else {
-      ReactDebugCurrentFrame$1.setExtraStackFrame(null);
-    }
-  }
-}
-
-var propTypesMisspellWarningShown;
-
-{
-  propTypesMisspellWarningShown = false;
-}
-/**
- * Verifies the object is a ReactElement.
- * See https://reactjs.org/docs/react-api.html#isvalidelement
- * @param {?object} object
- * @return {boolean} True if `object` is a ReactElement.
- * @final
- */
-
-
-function isValidElement(object) {
-  {
-    return typeof object === 'object' && object !== null && object.$$typeof === REACT_ELEMENT_TYPE;
-  }
-}
-
-function getDeclarationErrorAddendum() {
-  {
-    if (ReactCurrentOwner$1.current) {
-      var name = getComponentNameFromType(ReactCurrentOwner$1.current.type);
-
-      if (name) {
-        return '\n\nCheck the render method of `' + name + '`.';
-      }
+  function useAsyncDebounce(defaultFn, defaultWait) {
+    if (defaultWait === void 0) {
+      defaultWait = 0;
     }
 
-    return '';
-  }
-}
+    var debounceRef = React.useRef({});
+    var getDefaultFn = useGetLatest(defaultFn);
+    var getDefaultWait = useGetLatest(defaultWait);
+    return React.useCallback(
+    /*#__PURE__*/
+    function () {
+      var _ref2 = _asyncToGenerator(
+      /*#__PURE__*/
+      regeneratorRuntime.mark(function _callee2() {
+        var _len2,
+            args,
+            _key2,
+            _args2 = arguments;
 
-function getSourceInfoErrorAddendum(source) {
-  {
-    if (source !== undefined) {
-      var fileName = source.fileName.replace(/^.*[\\\/]/, '');
-      var lineNumber = source.lineNumber;
-      return '\n\nCheck your code at ' + fileName + ':' + lineNumber + '.';
-    }
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                for (_len2 = _args2.length, args = new Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+                  args[_key2] = _args2[_key2];
+                }
 
-    return '';
-  }
-}
-/**
- * Warn if there's no key explicitly set on dynamic arrays of children or
- * object keys are not valid. This allows us to keep track of children between
- * updates.
- */
+                if (!debounceRef.current.promise) {
+                  debounceRef.current.promise = new Promise(function (resolve, reject) {
+                    debounceRef.current.resolve = resolve;
+                    debounceRef.current.reject = reject;
+                  });
+                }
 
+                if (debounceRef.current.timeout) {
+                  clearTimeout(debounceRef.current.timeout);
+                }
 
-var ownerHasKeyUseWarning = {};
+                debounceRef.current.timeout = setTimeout(
+                /*#__PURE__*/
+                _asyncToGenerator(
+                /*#__PURE__*/
+                regeneratorRuntime.mark(function _callee() {
+                  return regeneratorRuntime.wrap(function _callee$(_context) {
+                    while (1) {
+                      switch (_context.prev = _context.next) {
+                        case 0:
+                          delete debounceRef.current.timeout;
+                          _context.prev = 1;
+                          _context.t0 = debounceRef.current;
+                          _context.next = 5;
+                          return getDefaultFn().apply(void 0, args);
 
-function getCurrentComponentErrorInfo(parentType) {
-  {
-    var info = getDeclarationErrorAddendum();
+                        case 5:
+                          _context.t1 = _context.sent;
 
-    if (!info) {
-      var parentName = typeof parentType === 'string' ? parentType : parentType.displayName || parentType.name;
+                          _context.t0.resolve.call(_context.t0, _context.t1);
 
-      if (parentName) {
-        info = "\n\nCheck the top-level render call using <" + parentName + ">.";
-      }
-    }
+                          _context.next = 12;
+                          break;
 
-    return info;
-  }
-}
-/**
- * Warn if the element doesn't have an explicit key assigned to it.
- * This element is in an array. The array could grow and shrink or be
- * reordered. All children that haven't already been validated are required to
- * have a "key" property assigned to it. Error statuses are cached so a warning
- * will only be shown once.
- *
- * @internal
- * @param {ReactElement} element Element that requires a key.
- * @param {*} parentType element's parent's type.
- */
+                        case 9:
+                          _context.prev = 9;
+                          _context.t2 = _context["catch"](1);
+                          debounceRef.current.reject(_context.t2);
 
+                        case 12:
+                          _context.prev = 12;
+                          delete debounceRef.current.promise;
+                          return _context.finish(12);
 
-function validateExplicitKey(element, parentType) {
-  {
-    if (!element._store || element._store.validated || element.key != null) {
-      return;
-    }
+                        case 15:
+                        case "end":
+                          return _context.stop();
+                      }
+                    }
+                  }, _callee, null, [[1, 9, 12, 15]]);
+                })), getDefaultWait());
+                return _context2.abrupt("return", debounceRef.current.promise);
 
-    element._store.validated = true;
-    var currentComponentErrorInfo = getCurrentComponentErrorInfo(parentType);
-
-    if (ownerHasKeyUseWarning[currentComponentErrorInfo]) {
-      return;
-    }
-
-    ownerHasKeyUseWarning[currentComponentErrorInfo] = true; // Usually the current owner is the offender, but if it accepts children as a
-    // property, it may be the creator of the child that's responsible for
-    // assigning it a key.
-
-    var childOwner = '';
-
-    if (element && element._owner && element._owner !== ReactCurrentOwner$1.current) {
-      // Give the component that originally created this child.
-      childOwner = " It was passed a child from " + getComponentNameFromType(element._owner.type) + ".";
-    }
-
-    setCurrentlyValidatingElement$1(element);
-
-    error('Each child in a list should have a unique "key" prop.' + '%s%s See https://reactjs.org/link/warning-keys for more information.', currentComponentErrorInfo, childOwner);
-
-    setCurrentlyValidatingElement$1(null);
-  }
-}
-/**
- * Ensure that every element either is passed in a static location, in an
- * array with an explicit keys property defined, or in an object literal
- * with valid key property.
- *
- * @internal
- * @param {ReactNode} node Statically passed child of any type.
- * @param {*} parentType node's parent's type.
- */
-
-
-function validateChildKeys(node, parentType) {
-  {
-    if (typeof node !== 'object') {
-      return;
-    }
-
-    if (isArray(node)) {
-      for (var i = 0; i < node.length; i++) {
-        var child = node[i];
-
-        if (isValidElement(child)) {
-          validateExplicitKey(child, parentType);
-        }
-      }
-    } else if (isValidElement(node)) {
-      // This element was passed in a valid location.
-      if (node._store) {
-        node._store.validated = true;
-      }
-    } else if (node) {
-      var iteratorFn = getIteratorFn(node);
-
-      if (typeof iteratorFn === 'function') {
-        // Entry iterators used to provide implicit keys,
-        // but now we print a separate warning for them later.
-        if (iteratorFn !== node.entries) {
-          var iterator = iteratorFn.call(node);
-          var step;
-
-          while (!(step = iterator.next()).done) {
-            if (isValidElement(step.value)) {
-              validateExplicitKey(step.value, parentType);
+              case 5:
+              case "end":
+                return _context2.stop();
             }
           }
-        }
-      }
-    }
+        }, _callee2);
+      }));
+
+      return function () {
+        return _ref2.apply(this, arguments);
+      };
+    }(), [getDefaultFn, getDefaultWait]);
   }
-}
-/**
- * Given an element, validate that its props follow the propTypes definition,
- * provided by the type.
- *
- * @param {ReactElement} element
- */
-
-
-function validatePropTypes(element) {
-  {
-    var type = element.type;
-
-    if (type === null || type === undefined || typeof type === 'string') {
-      return;
+  function makeRenderer(instance, column, meta) {
+    if (meta === void 0) {
+      meta = {};
     }
 
-    var propTypes;
+    return function (type, userProps) {
+      if (userProps === void 0) {
+        userProps = {};
+      }
 
-    if (typeof type === 'function') {
-      propTypes = type.propTypes;
-    } else if (typeof type === 'object' && (type.$$typeof === REACT_FORWARD_REF_TYPE || // Note: Memo only checks outer props here.
-    // Inner props are checked in the reconciler.
-    type.$$typeof === REACT_MEMO_TYPE)) {
-      propTypes = type.propTypes;
-    } else {
-      return;
-    }
+      var Comp = typeof type === 'string' ? column[type] : type;
 
-    if (propTypes) {
-      // Intentionally inside to avoid triggering lazy initializers:
-      var name = getComponentNameFromType(type);
-      checkPropTypes(propTypes, element.props, 'prop', name, element);
-    } else if (type.PropTypes !== undefined && !propTypesMisspellWarningShown) {
-      propTypesMisspellWarningShown = true; // Intentionally inside to avoid triggering lazy initializers:
+      if (typeof Comp === 'undefined') {
+        console.info(column);
+        throw new Error(renderErr);
+      }
 
-      var _name = getComponentNameFromType(type);
-
-      error('Component %s declared `PropTypes` instead of `propTypes`. Did you misspell the property assignment?', _name || 'Unknown');
-    }
-
-    if (typeof type.getDefaultProps === 'function' && !type.getDefaultProps.isReactClassApproved) {
-      error('getDefaultProps is only used on classic React.createClass ' + 'definitions. Use a static property named `defaultProps` instead.');
-    }
+      return flexRender(Comp, _extends({}, instance, {
+        column: column
+      }, meta, {}, userProps));
+    };
   }
-}
-/**
- * Given a fragment, validate that it can only be provided with fragment props
- * @param {ReactElement} fragment
- */
-
-
-function validateFragmentProps(fragment) {
-  {
-    var keys = Object.keys(fragment.props);
-
-    for (var i = 0; i < keys.length; i++) {
-      var key = keys[i];
-
-      if (key !== 'children' && key !== 'key') {
-        setCurrentlyValidatingElement$1(fragment);
-
-        error('Invalid prop `%s` supplied to `React.Fragment`. ' + 'React.Fragment can only have `key` and `children` props.', key);
-
-        setCurrentlyValidatingElement$1(null);
-        break;
-      }
-    }
-
-    if (fragment.ref !== null) {
-      setCurrentlyValidatingElement$1(fragment);
-
-      error('Invalid attribute `ref` supplied to `React.Fragment`.');
-
-      setCurrentlyValidatingElement$1(null);
-    }
+  function flexRender(Comp, props) {
+    return isReactComponent(Comp) ? React.createElement(Comp, props) : Comp;
   }
-}
 
-var didWarnAboutKeySpread = {};
-function jsxWithValidation(type, props, key, isStaticChildren, source, self) {
-  {
-    var validType = isValidElementType(type); // We warn in this case but don't throw. We expect the element creation to
-    // succeed and there will likely be errors in render.
+  function isReactComponent(component) {
+    return isClassComponent(component) || typeof component === 'function' || isExoticComponent(component);
+  }
 
-    if (!validType) {
-      var info = '';
+  function isClassComponent(component) {
+    return typeof component === 'function' && function () {
+      var proto = Object.getPrototypeOf(component);
+      return proto.prototype && proto.prototype.isReactComponent;
+    }();
+  }
 
-      if (type === undefined || typeof type === 'object' && type !== null && Object.keys(type).length === 0) {
-        info += ' You likely forgot to export your component from the file ' + "it's defined in, or you might have mixed up default and named imports.";
-      }
+  function isExoticComponent(component) {
+    return typeof component === 'object' && typeof component.$$typeof === 'symbol' && ['react.memo', 'react.forward_ref'].includes(component.$$typeof.description);
+  }
 
-      var sourceInfo = getSourceInfoErrorAddendum(source);
-
-      if (sourceInfo) {
-        info += sourceInfo;
-      } else {
-        info += getDeclarationErrorAddendum();
-      }
-
-      var typeString;
-
-      if (type === null) {
-        typeString = 'null';
-      } else if (isArray(type)) {
-        typeString = 'array';
-      } else if (type !== undefined && type.$$typeof === REACT_ELEMENT_TYPE) {
-        typeString = "<" + (getComponentNameFromType(type.type) || 'Unknown') + " />";
-        info = ' Did you accidentally export a JSX literal instead of a component?';
-      } else {
-        typeString = typeof type;
-      }
-
-      error('React.jsx: type is invalid -- expected a string (for ' + 'built-in components) or a class/function (for composite ' + 'components) but got: %s.%s', typeString, info);
+  function linkColumnStructure(columns, parent, depth) {
+    if (depth === void 0) {
+      depth = 0;
     }
 
-    var element = jsxDEV(type, props, key, source, self); // The result can be nullish if a mock or a custom function is used.
-    // TODO: Drop this when these are no longer allowed as the type argument.
+    return columns.map(function (column) {
+      column = _extends({}, column, {
+        parent: parent,
+        depth: depth
+      });
+      assignColumnAccessor(column);
 
-    if (element == null) {
-      return element;
-    } // Skip key warning if the type isn't valid since our key validation logic
-    // doesn't expect a non-string/function type and can throw confusing errors.
-    // We don't want exception behavior to differ between dev and prod.
-    // (Rendering will throw with a helpful message and as soon as the type is
-    // fixed, the key warnings will appear.)
+      if (column.columns) {
+        column.columns = linkColumnStructure(column.columns, column, depth + 1);
+      }
 
+      return column;
+    });
+  }
+  function flattenColumns(columns) {
+    return flattenBy(columns, 'columns');
+  }
+  function assignColumnAccessor(column) {
+    // First check for string accessor
+    var id = column.id,
+        accessor = column.accessor,
+        Header = column.Header;
 
-    if (validType) {
-      var children = props.children;
+    if (typeof accessor === 'string') {
+      id = id || accessor;
+      var accessorPath = accessor.split('.');
 
-      if (children !== undefined) {
-        if (isStaticChildren) {
-          if (isArray(children)) {
-            for (var i = 0; i < children.length; i++) {
-              validateChildKeys(children[i], type);
-            }
+      accessor = function accessor(row) {
+        return getBy(row, accessorPath);
+      };
+    }
 
-            if (Object.freeze) {
-              Object.freeze(children);
-            }
+    if (!id && typeof Header === 'string' && Header) {
+      id = Header;
+    }
+
+    if (!id && column.columns) {
+      console.error(column);
+      throw new Error('A column ID (or unique "Header" value) is required!');
+    }
+
+    if (!id) {
+      console.error(column);
+      throw new Error('A column ID (or string accessor) is required!');
+    }
+
+    Object.assign(column, {
+      id: id,
+      accessor: accessor
+    });
+    return column;
+  }
+  function decorateColumn(column, userDefaultColumn) {
+    if (!userDefaultColumn) {
+      throw new Error();
+    }
+
+    Object.assign(column, _extends({
+      // Make sure there is a fallback header, just in case
+      Header: emptyRenderer,
+      Footer: emptyRenderer
+    }, defaultColumn, {}, userDefaultColumn, {}, column));
+    Object.assign(column, {
+      originalWidth: column.width
+    });
+    return column;
+  } // Build the header groups from the bottom up
+
+  function makeHeaderGroups(allColumns, defaultColumn, additionalHeaderProperties) {
+    if (additionalHeaderProperties === void 0) {
+      additionalHeaderProperties = function additionalHeaderProperties() {
+        return {};
+      };
+    }
+
+    var headerGroups = [];
+    var scanColumns = allColumns;
+    var uid = 0;
+
+    var getUID = function getUID() {
+      return uid++;
+    };
+
+    var _loop = function _loop() {
+      // The header group we are creating
+      var headerGroup = {
+        headers: []
+      }; // The parent columns we're going to scan next
+
+      var parentColumns = [];
+      var hasParents = scanColumns.some(function (d) {
+        return d.parent;
+      }); // Scan each column for parents
+
+      scanColumns.forEach(function (column) {
+        // What is the latest (last) parent column?
+        var latestParentColumn = [].concat(parentColumns).reverse()[0];
+        var newParent;
+
+        if (hasParents) {
+          // If the column has a parent, add it if necessary
+          if (column.parent) {
+            newParent = _extends({}, column.parent, {
+              originalId: column.parent.id,
+              id: column.parent.id + "_" + getUID(),
+              headers: [column]
+            }, additionalHeaderProperties(column));
           } else {
-            error('React.jsx: Static children should always be an array. ' + 'You are likely explicitly calling React.jsxs or React.jsxDEV. ' + 'Use the Babel transform instead.');
+            // If other columns have parents, we'll need to add a place holder if necessary
+            var originalId = column.id + "_placeholder";
+            newParent = decorateColumn(_extends({
+              originalId: originalId,
+              id: column.id + "_placeholder_" + getUID(),
+              placeholderOf: column,
+              headers: [column]
+            }, additionalHeaderProperties(column)), defaultColumn);
+          } // If the resulting parent columns are the same, just add
+          // the column and increment the header span
+
+
+          if (latestParentColumn && latestParentColumn.originalId === newParent.originalId) {
+            latestParentColumn.headers.push(column);
+          } else {
+            parentColumns.push(newParent);
           }
-        } else {
-          validateChildKeys(children, type);
         }
+
+        headerGroup.headers.push(column);
+      });
+      headerGroups.push(headerGroup); // Start scanning the parent columns
+
+      scanColumns = parentColumns;
+    };
+
+    while (scanColumns.length) {
+      _loop();
+    }
+
+    return headerGroups.reverse();
+  }
+  var pathObjCache = new Map();
+  function getBy(obj, path, def) {
+    if (!path) {
+      return obj;
+    }
+
+    var cacheKey = typeof path === 'function' ? path : JSON.stringify(path);
+
+    var pathObj = pathObjCache.get(cacheKey) || function () {
+      var pathObj = makePathArray(path);
+      pathObjCache.set(cacheKey, pathObj);
+      return pathObj;
+    }();
+
+    var val;
+
+    try {
+      val = pathObj.reduce(function (cursor, pathPart) {
+        return cursor[pathPart];
+      }, obj);
+    } catch (e) {// continue regardless of error
+    }
+
+    return typeof val !== 'undefined' ? val : def;
+  }
+  function getFirstDefined() {
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    for (var i = 0; i < args.length; i += 1) {
+      if (typeof args[i] !== 'undefined') {
+        return args[i];
       }
     }
+  }
+  function isFunction(a) {
+    if (typeof a === 'function') {
+      return a;
+    }
+  }
+  function flattenBy(arr, key) {
+    var flat = [];
+
+    var recurse = function recurse(arr) {
+      arr.forEach(function (d) {
+        if (!d[key]) {
+          flat.push(d);
+        } else {
+          recurse(d[key]);
+        }
+      });
+    };
+
+    recurse(arr);
+    return flat;
+  }
+  function expandRows(rows, _ref) {
+    var manualExpandedKey = _ref.manualExpandedKey,
+        expanded = _ref.expanded,
+        _ref$expandSubRows = _ref.expandSubRows,
+        expandSubRows = _ref$expandSubRows === void 0 ? true : _ref$expandSubRows;
+    var expandedRows = [];
+
+    var handleRow = function handleRow(row, addToExpandedRows) {
+      if (addToExpandedRows === void 0) {
+        addToExpandedRows = true;
+      }
+
+      row.isExpanded = row.original && row.original[manualExpandedKey] || expanded[row.id];
+      row.canExpand = row.subRows && !!row.subRows.length;
+
+      if (addToExpandedRows) {
+        expandedRows.push(row);
+      }
+
+      if (row.subRows && row.subRows.length && row.isExpanded) {
+        row.subRows.forEach(function (row) {
+          return handleRow(row, expandSubRows);
+        });
+      }
+    };
+
+    rows.forEach(function (row) {
+      return handleRow(row);
+    });
+    return expandedRows;
+  }
+  function getFilterMethod(filter, userFilterTypes, filterTypes) {
+    return isFunction(filter) || userFilterTypes[filter] || filterTypes[filter] || filterTypes.text;
+  }
+  function shouldAutoRemoveFilter(autoRemove, value, column) {
+    return autoRemove ? autoRemove(value, column) : typeof value === 'undefined';
+  }
+  function unpreparedAccessWarning() {
+    throw new Error('React-Table: You have not called prepareRow(row) one or more rows you are attempting to render.');
+  }
+  var passiveSupported = null;
+  function passiveEventSupported() {
+    // memoize support to avoid adding multiple test events
+    if (typeof passiveSupported === 'boolean') return passiveSupported;
+    var supported = false;
+
+    try {
+      var options = {
+        get passive() {
+          supported = true;
+          return false;
+        }
+
+      };
+      window.addEventListener('test', null, options);
+      window.removeEventListener('test', null, options);
+    } catch (err) {
+      supported = false;
+    }
+
+    passiveSupported = supported;
+    return passiveSupported;
+  } //
+
+  var reOpenBracket = /\[/g;
+  var reCloseBracket = /\]/g;
+
+  function makePathArray(obj) {
+    return flattenDeep(obj) // remove all periods in parts
+    .map(function (d) {
+      return String(d).replace('.', '_');
+    }) // join parts using period
+    .join('.') // replace brackets with periods
+    .replace(reOpenBracket, '.').replace(reCloseBracket, '') // split it back out on periods
+    .split('.');
+  }
+
+  function flattenDeep(arr, newArr) {
+    if (newArr === void 0) {
+      newArr = [];
+    }
+
+    if (!Array.isArray(arr)) {
+      newArr.push(arr);
+    } else {
+      for (var i = 0; i < arr.length; i += 1) {
+        flattenDeep(arr[i], newArr);
+      }
+    }
+
+    return newArr;
+  }
+
+  var defaultGetTableProps = function defaultGetTableProps(props) {
+    return _extends({
+      role: 'table'
+    }, props);
+  };
+
+  var defaultGetTableBodyProps = function defaultGetTableBodyProps(props) {
+    return _extends({
+      role: 'rowgroup'
+    }, props);
+  };
+
+  var defaultGetHeaderProps = function defaultGetHeaderProps(props, _ref) {
+    var column = _ref.column;
+    return _extends({
+      key: "header_" + column.id,
+      colSpan: column.totalVisibleHeaderCount,
+      role: 'columnheader'
+    }, props);
+  };
+
+  var defaultGetFooterProps = function defaultGetFooterProps(props, _ref2) {
+    var column = _ref2.column;
+    return _extends({
+      key: "footer_" + column.id,
+      colSpan: column.totalVisibleHeaderCount
+    }, props);
+  };
+
+  var defaultGetHeaderGroupProps = function defaultGetHeaderGroupProps(props, _ref3) {
+    var index = _ref3.index;
+    return _extends({
+      key: "headerGroup_" + index,
+      role: 'row'
+    }, props);
+  };
+
+  var defaultGetFooterGroupProps = function defaultGetFooterGroupProps(props, _ref4) {
+    var index = _ref4.index;
+    return _extends({
+      key: "footerGroup_" + index
+    }, props);
+  };
+
+  var defaultGetRowProps = function defaultGetRowProps(props, _ref5) {
+    var row = _ref5.row;
+    return _extends({
+      key: "row_" + row.id,
+      role: 'row'
+    }, props);
+  };
+
+  var defaultGetCellProps = function defaultGetCellProps(props, _ref6) {
+    var cell = _ref6.cell;
+    return _extends({
+      key: "cell_" + cell.row.id + "_" + cell.column.id,
+      role: 'cell'
+    }, props);
+  };
+
+  function makeDefaultPluginHooks() {
+    return {
+      useOptions: [],
+      stateReducers: [],
+      useControlledState: [],
+      columns: [],
+      columnsDeps: [],
+      allColumns: [],
+      allColumnsDeps: [],
+      accessValue: [],
+      materializedColumns: [],
+      materializedColumnsDeps: [],
+      useInstanceAfterData: [],
+      visibleColumns: [],
+      visibleColumnsDeps: [],
+      headerGroups: [],
+      headerGroupsDeps: [],
+      useInstanceBeforeDimensions: [],
+      useInstance: [],
+      prepareRow: [],
+      getTableProps: [defaultGetTableProps],
+      getTableBodyProps: [defaultGetTableBodyProps],
+      getHeaderGroupProps: [defaultGetHeaderGroupProps],
+      getFooterGroupProps: [defaultGetFooterGroupProps],
+      getHeaderProps: [defaultGetHeaderProps],
+      getFooterProps: [defaultGetFooterProps],
+      getRowProps: [defaultGetRowProps],
+      getCellProps: [defaultGetCellProps],
+      useFinalInstance: []
+    };
+  }
+
+  actions.resetHiddenColumns = 'resetHiddenColumns';
+  actions.toggleHideColumn = 'toggleHideColumn';
+  actions.setHiddenColumns = 'setHiddenColumns';
+  actions.toggleHideAllColumns = 'toggleHideAllColumns';
+  var useColumnVisibility = function useColumnVisibility(hooks) {
+    hooks.getToggleHiddenProps = [defaultGetToggleHiddenProps];
+    hooks.getToggleHideAllColumnsProps = [defaultGetToggleHideAllColumnsProps];
+    hooks.stateReducers.push(reducer);
+    hooks.useInstanceBeforeDimensions.push(useInstanceBeforeDimensions);
+    hooks.headerGroupsDeps.push(function (deps, _ref) {
+      var instance = _ref.instance;
+      return [].concat(deps, [instance.state.hiddenColumns]);
+    });
+    hooks.useInstance.push(useInstance);
+  };
+  useColumnVisibility.pluginName = 'useColumnVisibility';
+
+  var defaultGetToggleHiddenProps = function defaultGetToggleHiddenProps(props, _ref2) {
+    var column = _ref2.column;
+    return [props, {
+      onChange: function onChange(e) {
+        column.toggleHidden(!e.target.checked);
+      },
+      style: {
+        cursor: 'pointer'
+      },
+      checked: column.isVisible,
+      title: 'Toggle Column Visible'
+    }];
+  };
+
+  var defaultGetToggleHideAllColumnsProps = function defaultGetToggleHideAllColumnsProps(props, _ref3) {
+    var instance = _ref3.instance;
+    return [props, {
+      onChange: function onChange(e) {
+        instance.toggleHideAllColumns(!e.target.checked);
+      },
+      style: {
+        cursor: 'pointer'
+      },
+      checked: !instance.allColumnsHidden && !instance.state.hiddenColumns.length,
+      title: 'Toggle All Columns Hidden',
+      indeterminate: !instance.allColumnsHidden && instance.state.hiddenColumns.length
+    }];
+  };
+
+  function reducer(state, action, previousState, instance) {
+    if (action.type === actions.init) {
+      return _extends({
+        hiddenColumns: []
+      }, state);
+    }
+
+    if (action.type === actions.resetHiddenColumns) {
+      return _extends({}, state, {
+        hiddenColumns: instance.initialState.hiddenColumns || []
+      });
+    }
+
+    if (action.type === actions.toggleHideColumn) {
+      var should = typeof action.value !== 'undefined' ? action.value : !state.hiddenColumns.includes(action.columnId);
+      var hiddenColumns = should ? [].concat(state.hiddenColumns, [action.columnId]) : state.hiddenColumns.filter(function (d) {
+        return d !== action.columnId;
+      });
+      return _extends({}, state, {
+        hiddenColumns: hiddenColumns
+      });
+    }
+
+    if (action.type === actions.setHiddenColumns) {
+      return _extends({}, state, {
+        hiddenColumns: functionalUpdate(action.value, state.hiddenColumns)
+      });
+    }
+
+    if (action.type === actions.toggleHideAllColumns) {
+      var shouldAll = typeof action.value !== 'undefined' ? action.value : !state.hiddenColumns.length;
+      return _extends({}, state, {
+        hiddenColumns: shouldAll ? instance.allColumns.map(function (d) {
+          return d.id;
+        }) : []
+      });
+    }
+  }
+
+  function useInstanceBeforeDimensions(instance) {
+    var headers = instance.headers,
+        hiddenColumns = instance.state.hiddenColumns;
+    var isMountedRef = React.useRef(false);
+
+    if (!isMountedRef.current) ;
+
+    var handleColumn = function handleColumn(column, parentVisible) {
+      column.isVisible = parentVisible && !hiddenColumns.includes(column.id);
+      var totalVisibleHeaderCount = 0;
+
+      if (column.headers && column.headers.length) {
+        column.headers.forEach(function (subColumn) {
+          return totalVisibleHeaderCount += handleColumn(subColumn, column.isVisible);
+        });
+      } else {
+        totalVisibleHeaderCount = column.isVisible ? 1 : 0;
+      }
+
+      column.totalVisibleHeaderCount = totalVisibleHeaderCount;
+      return totalVisibleHeaderCount;
+    };
+
+    var totalVisibleHeaderCount = 0;
+    headers.forEach(function (subHeader) {
+      return totalVisibleHeaderCount += handleColumn(subHeader, true);
+    });
+  }
+
+  function useInstance(instance) {
+    var columns = instance.columns,
+        flatHeaders = instance.flatHeaders,
+        dispatch = instance.dispatch,
+        allColumns = instance.allColumns,
+        getHooks = instance.getHooks,
+        hiddenColumns = instance.state.hiddenColumns,
+        _instance$autoResetHi = instance.autoResetHiddenColumns,
+        autoResetHiddenColumns = _instance$autoResetHi === void 0 ? true : _instance$autoResetHi;
+    var getInstance = useGetLatest(instance);
+    var allColumnsHidden = allColumns.length === hiddenColumns.length;
+    var toggleHideColumn = React.useCallback(function (columnId, value) {
+      return dispatch({
+        type: actions.toggleHideColumn,
+        columnId: columnId,
+        value: value
+      });
+    }, [dispatch]);
+    var setHiddenColumns = React.useCallback(function (value) {
+      return dispatch({
+        type: actions.setHiddenColumns,
+        value: value
+      });
+    }, [dispatch]);
+    var toggleHideAllColumns = React.useCallback(function (value) {
+      return dispatch({
+        type: actions.toggleHideAllColumns,
+        value: value
+      });
+    }, [dispatch]);
+    var getToggleHideAllColumnsProps = makePropGetter(getHooks().getToggleHideAllColumnsProps, {
+      instance: getInstance()
+    });
+    flatHeaders.forEach(function (column) {
+      column.toggleHidden = function (value) {
+        dispatch({
+          type: actions.toggleHideColumn,
+          columnId: column.id,
+          value: value
+        });
+      };
+
+      column.getToggleHiddenProps = makePropGetter(getHooks().getToggleHiddenProps, {
+        instance: getInstance(),
+        column: column
+      });
+    });
+    var getAutoResetHiddenColumns = useGetLatest(autoResetHiddenColumns);
+    useMountedLayoutEffect(function () {
+      if (getAutoResetHiddenColumns()) {
+        dispatch({
+          type: actions.resetHiddenColumns
+        });
+      }
+    }, [dispatch, columns]);
+    Object.assign(instance, {
+      allColumnsHidden: allColumnsHidden,
+      toggleHideColumn: toggleHideColumn,
+      setHiddenColumns: setHiddenColumns,
+      toggleHideAllColumns: toggleHideAllColumns,
+      getToggleHideAllColumnsProps: getToggleHideAllColumnsProps
+    });
+  }
+
+  var defaultInitialState = {};
+  var defaultColumnInstance = {};
+
+  var defaultReducer = function defaultReducer(state, action, prevState) {
+    return state;
+  };
+
+  var defaultGetSubRows = function defaultGetSubRows(row, index) {
+    return row.subRows || [];
+  };
+
+  var defaultGetRowId = function defaultGetRowId(row, index, parent) {
+    return "" + (parent ? [parent.id, index].join('.') : index);
+  };
+
+  var defaultUseControlledState = function defaultUseControlledState(d) {
+    return d;
+  };
+
+  function applyDefaults(props) {
+    var _props$initialState = props.initialState,
+        initialState = _props$initialState === void 0 ? defaultInitialState : _props$initialState,
+        _props$defaultColumn = props.defaultColumn,
+        defaultColumn = _props$defaultColumn === void 0 ? defaultColumnInstance : _props$defaultColumn,
+        _props$getSubRows = props.getSubRows,
+        getSubRows = _props$getSubRows === void 0 ? defaultGetSubRows : _props$getSubRows,
+        _props$getRowId = props.getRowId,
+        getRowId = _props$getRowId === void 0 ? defaultGetRowId : _props$getRowId,
+        _props$stateReducer = props.stateReducer,
+        stateReducer = _props$stateReducer === void 0 ? defaultReducer : _props$stateReducer,
+        _props$useControlledS = props.useControlledState,
+        useControlledState = _props$useControlledS === void 0 ? defaultUseControlledState : _props$useControlledS,
+        rest = _objectWithoutPropertiesLoose(props, ["initialState", "defaultColumn", "getSubRows", "getRowId", "stateReducer", "useControlledState"]);
+
+    return _extends({}, rest, {
+      initialState: initialState,
+      defaultColumn: defaultColumn,
+      getSubRows: getSubRows,
+      getRowId: getRowId,
+      stateReducer: stateReducer,
+      useControlledState: useControlledState
+    });
+  }
+
+  var useTable = function useTable(props) {
+    for (var _len = arguments.length, plugins = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      plugins[_key - 1] = arguments[_key];
+    }
+
+    // Apply default props
+    props = applyDefaults(props); // Add core plugins
+
+    plugins = [useColumnVisibility].concat(plugins); // Create the table instance
+
+    var instanceRef = React.useRef({}); // Create a getter for the instance (helps avoid a lot of potential memory leaks)
+
+    var getInstance = useGetLatest(instanceRef.current); // Assign the props, plugins and hooks to the instance
+
+    Object.assign(getInstance(), _extends({}, props, {
+      plugins: plugins,
+      hooks: makeDefaultPluginHooks()
+    })); // Allow plugins to register hooks as early as possible
+
+    plugins.filter(Boolean).forEach(function (plugin) {
+      plugin(getInstance().hooks);
+    }); // Consume all hooks and make a getter for them
+
+    var getHooks = useGetLatest(getInstance().hooks);
+    getInstance().getHooks = getHooks;
+    delete getInstance().hooks; // Allow useOptions hooks to modify the options coming into the table
+
+    Object.assign(getInstance(), reduceHooks(getHooks().useOptions, applyDefaults(props)));
+
+    var _getInstance = getInstance(),
+        data = _getInstance.data,
+        userColumns = _getInstance.columns,
+        initialState = _getInstance.initialState,
+        defaultColumn = _getInstance.defaultColumn,
+        getSubRows = _getInstance.getSubRows,
+        getRowId = _getInstance.getRowId,
+        stateReducer = _getInstance.stateReducer,
+        useControlledState = _getInstance.useControlledState; // Setup user reducer ref
+
+
+    var getStateReducer = useGetLatest(stateReducer); // Build the reducer
+
+    var reducer = React.useCallback(function (state, action) {
+      // Detect invalid actions
+      if (!action.type) {
+        console.info({
+          action: action
+        });
+        throw new Error('Unknown Action 👆');
+      } // Reduce the state from all plugin reducers
+
+
+      return [].concat(getHooks().stateReducers, Array.isArray(getStateReducer()) ? getStateReducer() : [getStateReducer()]).reduce(function (s, handler) {
+        return handler(s, action, state, getInstance()) || s;
+      }, state);
+    }, [getHooks, getStateReducer, getInstance]); // Start the reducer
+
+    var _React$useReducer = React.useReducer(reducer, undefined, function () {
+      return reducer(initialState, {
+        type: actions.init
+      });
+    }),
+        reducerState = _React$useReducer[0],
+        dispatch = _React$useReducer[1]; // Allow the user to control the final state with hooks
+
+
+    var state = reduceHooks([].concat(getHooks().useControlledState, [useControlledState]), reducerState, {
+      instance: getInstance()
+    });
+    Object.assign(getInstance(), {
+      state: state,
+      dispatch: dispatch
+    }); // Decorate All the columns
+
+    var columns = React.useMemo(function () {
+      return linkColumnStructure(reduceHooks(getHooks().columns, userColumns, {
+        instance: getInstance()
+      }));
+    }, [getHooks, getInstance, userColumns].concat(reduceHooks(getHooks().columnsDeps, [], {
+      instance: getInstance()
+    })));
+    getInstance().columns = columns; // Get the flat list of all columns and allow hooks to decorate
+    // those columns (and trigger this memoization via deps)
+
+    var allColumns = React.useMemo(function () {
+      return reduceHooks(getHooks().allColumns, flattenColumns(columns), {
+        instance: getInstance()
+      }).map(assignColumnAccessor);
+    }, [columns, getHooks, getInstance].concat(reduceHooks(getHooks().allColumnsDeps, [], {
+      instance: getInstance()
+    })));
+    getInstance().allColumns = allColumns; // Access the row model using initial columns
+
+    var _React$useMemo = React.useMemo(function () {
+      var rows = [];
+      var flatRows = [];
+      var rowsById = {};
+      var allColumnsQueue = [].concat(allColumns);
+
+      while (allColumnsQueue.length) {
+        var column = allColumnsQueue.shift();
+        accessRowsForColumn({
+          data: data,
+          rows: rows,
+          flatRows: flatRows,
+          rowsById: rowsById,
+          column: column,
+          getRowId: getRowId,
+          getSubRows: getSubRows,
+          accessValueHooks: getHooks().accessValue,
+          getInstance: getInstance
+        });
+      }
+
+      return [rows, flatRows, rowsById];
+    }, [allColumns, data, getRowId, getSubRows, getHooks, getInstance]),
+        rows = _React$useMemo[0],
+        flatRows = _React$useMemo[1],
+        rowsById = _React$useMemo[2];
+
+    Object.assign(getInstance(), {
+      rows: rows,
+      initialRows: [].concat(rows),
+      flatRows: flatRows,
+      rowsById: rowsById // materializedColumns,
+
+    });
+    loopHooks(getHooks().useInstanceAfterData, getInstance()); // Get the flat list of all columns AFTER the rows
+    // have been access, and allow hooks to decorate
+    // those columns (and trigger this memoization via deps)
+
+    var visibleColumns = React.useMemo(function () {
+      return reduceHooks(getHooks().visibleColumns, allColumns, {
+        instance: getInstance()
+      }).map(function (d) {
+        return decorateColumn(d, defaultColumn);
+      });
+    }, [getHooks, allColumns, getInstance, defaultColumn].concat(reduceHooks(getHooks().visibleColumnsDeps, [], {
+      instance: getInstance()
+    }))); // Combine new visible columns with all columns
+
+    allColumns = React.useMemo(function () {
+      var columns = [].concat(visibleColumns);
+      allColumns.forEach(function (column) {
+        if (!columns.find(function (d) {
+          return d.id === column.id;
+        })) {
+          columns.push(column);
+        }
+      });
+      return columns;
+    }, [allColumns, visibleColumns]);
+    getInstance().allColumns = allColumns;
 
     {
-      if (hasOwnProperty.call(props, 'key')) {
-        var componentName = getComponentNameFromType(type);
-        var keys = Object.keys(props).filter(function (k) {
-          return k !== 'key';
-        });
-        var beforeExample = keys.length > 0 ? '{key: someKey, ' + keys.join(': ..., ') + ': ...}' : '{key: someKey}';
+      var duplicateColumns = allColumns.filter(function (column, i) {
+        return allColumns.findIndex(function (d) {
+          return d.id === column.id;
+        }) !== i;
+      });
 
-        if (!didWarnAboutKeySpread[componentName + beforeExample]) {
-          var afterExample = keys.length > 0 ? '{' + keys.join(': ..., ') + ': ...}' : '{}';
+      if (duplicateColumns.length) {
+        console.info(allColumns);
+        throw new Error("Duplicate columns were found with ids: \"" + duplicateColumns.map(function (d) {
+          return d.id;
+        }).join(', ') + "\" in the columns array above");
+      }
+    } // Make the headerGroups
 
-          error('A props object containing a "key" prop is being spread into JSX:\n' + '  let props = %s;\n' + '  <%s {...props} />\n' + 'React keys must be passed directly to JSX without using spread:\n' + '  let props = %s;\n' + '  <%s key={someKey} {...props} />', beforeExample, componentName, afterExample, componentName);
 
-          didWarnAboutKeySpread[componentName + beforeExample] = true;
+    var headerGroups = React.useMemo(function () {
+      return reduceHooks(getHooks().headerGroups, makeHeaderGroups(visibleColumns, defaultColumn), getInstance());
+    }, [getHooks, visibleColumns, defaultColumn, getInstance].concat(reduceHooks(getHooks().headerGroupsDeps, [], {
+      instance: getInstance()
+    })));
+    getInstance().headerGroups = headerGroups; // Get the first level of headers
+
+    var headers = React.useMemo(function () {
+      return headerGroups.length ? headerGroups[0].headers : [];
+    }, [headerGroups]);
+    getInstance().headers = headers; // Provide a flat header list for utilities
+
+    getInstance().flatHeaders = headerGroups.reduce(function (all, headerGroup) {
+      return [].concat(all, headerGroup.headers);
+    }, []);
+    loopHooks(getHooks().useInstanceBeforeDimensions, getInstance()); // Filter columns down to visible ones
+
+    var visibleColumnsDep = visibleColumns.filter(function (d) {
+      return d.isVisible;
+    }).map(function (d) {
+      return d.id;
+    }).sort().join('_');
+    visibleColumns = React.useMemo(function () {
+      return visibleColumns.filter(function (d) {
+        return d.isVisible;
+      });
+    }, // eslint-disable-next-line react-hooks/exhaustive-deps
+    [visibleColumns, visibleColumnsDep]);
+    getInstance().visibleColumns = visibleColumns; // Header Visibility is needed by this point
+
+    var _calculateHeaderWidth = calculateHeaderWidths(headers),
+        totalColumnsMinWidth = _calculateHeaderWidth[0],
+        totalColumnsWidth = _calculateHeaderWidth[1],
+        totalColumnsMaxWidth = _calculateHeaderWidth[2];
+
+    getInstance().totalColumnsMinWidth = totalColumnsMinWidth;
+    getInstance().totalColumnsWidth = totalColumnsWidth;
+    getInstance().totalColumnsMaxWidth = totalColumnsMaxWidth;
+    loopHooks(getHooks().useInstance, getInstance()) // Each materialized header needs to be assigned a render function and other
+    // prop getter properties here.
+    ;
+    [].concat(getInstance().flatHeaders, getInstance().allColumns).forEach(function (column) {
+      // Give columns/headers rendering power
+      column.render = makeRenderer(getInstance(), column); // Give columns/headers a default getHeaderProps
+
+      column.getHeaderProps = makePropGetter(getHooks().getHeaderProps, {
+        instance: getInstance(),
+        column: column
+      }); // Give columns/headers a default getFooterProps
+
+      column.getFooterProps = makePropGetter(getHooks().getFooterProps, {
+        instance: getInstance(),
+        column: column
+      });
+    });
+    getInstance().headerGroups = React.useMemo(function () {
+      return headerGroups.filter(function (headerGroup, i) {
+        // Filter out any headers and headerGroups that don't have visible columns
+        headerGroup.headers = headerGroup.headers.filter(function (column) {
+          var recurse = function recurse(headers) {
+            return headers.filter(function (column) {
+              if (column.headers) {
+                return recurse(column.headers);
+              }
+
+              return column.isVisible;
+            }).length;
+          };
+
+          if (column.headers) {
+            return recurse(column.headers);
+          }
+
+          return column.isVisible;
+        }); // Give headerGroups getRowProps
+
+        if (headerGroup.headers.length) {
+          headerGroup.getHeaderGroupProps = makePropGetter(getHooks().getHeaderGroupProps, {
+            instance: getInstance(),
+            headerGroup: headerGroup,
+            index: i
+          });
+          headerGroup.getFooterGroupProps = makePropGetter(getHooks().getFooterGroupProps, {
+            instance: getInstance(),
+            headerGroup: headerGroup,
+            index: i
+          });
+          return true;
         }
+
+        return false;
+      });
+    }, [headerGroups, getInstance, getHooks]);
+    getInstance().footerGroups = [].concat(getInstance().headerGroups).reverse(); // The prepareRow function is absolutely necessary and MUST be called on
+    // any rows the user wishes to be displayed.
+
+    getInstance().prepareRow = React.useCallback(function (row) {
+      row.getRowProps = makePropGetter(getHooks().getRowProps, {
+        instance: getInstance(),
+        row: row
+      }); // Build the visible cells for each row
+
+      row.allCells = allColumns.map(function (column) {
+        var value = row.values[column.id];
+        var cell = {
+          column: column,
+          row: row,
+          value: value
+        }; // Give each cell a getCellProps base
+
+        cell.getCellProps = makePropGetter(getHooks().getCellProps, {
+          instance: getInstance(),
+          cell: cell
+        }); // Give each cell a renderer function (supports multiple renderers)
+
+        cell.render = makeRenderer(getInstance(), column, {
+          row: row,
+          cell: cell,
+          value: value
+        });
+        return cell;
+      });
+      row.cells = visibleColumns.map(function (column) {
+        return row.allCells.find(function (cell) {
+          return cell.column.id === column.id;
+        });
+      }); // need to apply any row specific hooks (useExpanded requires this)
+
+      loopHooks(getHooks().prepareRow, row, {
+        instance: getInstance()
+      });
+    }, [getHooks, getInstance, allColumns, visibleColumns]);
+    getInstance().getTableProps = makePropGetter(getHooks().getTableProps, {
+      instance: getInstance()
+    });
+    getInstance().getTableBodyProps = makePropGetter(getHooks().getTableBodyProps, {
+      instance: getInstance()
+    });
+    loopHooks(getHooks().useFinalInstance, getInstance());
+    return getInstance();
+  };
+
+  function calculateHeaderWidths(headers, left) {
+    if (left === void 0) {
+      left = 0;
+    }
+
+    var sumTotalMinWidth = 0;
+    var sumTotalWidth = 0;
+    var sumTotalMaxWidth = 0;
+    var sumTotalFlexWidth = 0;
+    headers.forEach(function (header) {
+      var subHeaders = header.headers;
+      header.totalLeft = left;
+
+      if (subHeaders && subHeaders.length) {
+        var _calculateHeaderWidth2 = calculateHeaderWidths(subHeaders, left),
+            totalMinWidth = _calculateHeaderWidth2[0],
+            totalWidth = _calculateHeaderWidth2[1],
+            totalMaxWidth = _calculateHeaderWidth2[2],
+            totalFlexWidth = _calculateHeaderWidth2[3];
+
+        header.totalMinWidth = totalMinWidth;
+        header.totalWidth = totalWidth;
+        header.totalMaxWidth = totalMaxWidth;
+        header.totalFlexWidth = totalFlexWidth;
+      } else {
+        header.totalMinWidth = header.minWidth;
+        header.totalWidth = Math.min(Math.max(header.minWidth, header.width), header.maxWidth);
+        header.totalMaxWidth = header.maxWidth;
+        header.totalFlexWidth = header.canResize ? header.totalWidth : 0;
+      }
+
+      if (header.isVisible) {
+        left += header.totalWidth;
+        sumTotalMinWidth += header.totalMinWidth;
+        sumTotalWidth += header.totalWidth;
+        sumTotalMaxWidth += header.totalMaxWidth;
+        sumTotalFlexWidth += header.totalFlexWidth;
+      }
+    });
+    return [sumTotalMinWidth, sumTotalWidth, sumTotalMaxWidth, sumTotalFlexWidth];
+  }
+
+  function accessRowsForColumn(_ref) {
+    var data = _ref.data,
+        rows = _ref.rows,
+        flatRows = _ref.flatRows,
+        rowsById = _ref.rowsById,
+        column = _ref.column,
+        getRowId = _ref.getRowId,
+        getSubRows = _ref.getSubRows,
+        accessValueHooks = _ref.accessValueHooks,
+        getInstance = _ref.getInstance;
+
+    // Access the row's data column-by-column
+    // We do it this way so we can incrementally add materialized
+    // columns after the first pass and avoid excessive looping
+    var accessRow = function accessRow(originalRow, rowIndex, depth, parent, parentRows) {
+      if (depth === void 0) {
+        depth = 0;
+      }
+
+      // Keep the original reference around
+      var original = originalRow;
+      var id = getRowId(originalRow, rowIndex, parent);
+      var row = rowsById[id]; // If the row hasn't been created, let's make it
+
+      if (!row) {
+        row = {
+          id: id,
+          original: original,
+          index: rowIndex,
+          depth: depth,
+          cells: [{}] // This is a dummy cell
+
+        }; // Override common array functions (and the dummy cell's getCellProps function)
+        // to show an error if it is accessed without calling prepareRow
+
+        row.cells.map = unpreparedAccessWarning;
+        row.cells.filter = unpreparedAccessWarning;
+        row.cells.forEach = unpreparedAccessWarning;
+        row.cells[0].getCellProps = unpreparedAccessWarning; // Create the cells and values
+
+        row.values = {}; // Push this row into the parentRows array
+
+        parentRows.push(row); // Keep track of every row in a flat array
+
+        flatRows.push(row); // Also keep track of every row by its ID
+
+        rowsById[id] = row; // Get the original subrows
+
+        row.originalSubRows = getSubRows(originalRow, rowIndex); // Then recursively access them
+
+        if (row.originalSubRows) {
+          var subRows = [];
+          row.originalSubRows.forEach(function (d, i) {
+            return accessRow(d, i, depth + 1, row, subRows);
+          }); // Keep the new subRows array on the row
+
+          row.subRows = subRows;
+        }
+      } else if (row.subRows) {
+        // If the row exists, then it's already been accessed
+        // Keep recursing, but don't worry about passing the
+        // accumlator array (those rows already exist)
+        row.originalSubRows.forEach(function (d, i) {
+          return accessRow(d, i, depth + 1, row);
+        });
+      } // If the column has an accessor, use it to get a value
+
+
+      if (column.accessor) {
+        row.values[column.id] = column.accessor(originalRow, rowIndex, row, parentRows, data);
+      } // Allow plugins to manipulate the column value
+
+
+      row.values[column.id] = reduceHooks(accessValueHooks, row.values[column.id], {
+        row: row,
+        column: column,
+        instance: getInstance()
+      }, true);
+    };
+
+    data.forEach(function (originalRow, rowIndex) {
+      return accessRow(originalRow, rowIndex, 0, undefined, rows);
+    });
+  }
+
+  actions.resetExpanded = 'resetExpanded';
+  actions.toggleRowExpanded = 'toggleRowExpanded';
+  actions.toggleAllRowsExpanded = 'toggleAllRowsExpanded';
+  var useExpanded = function useExpanded(hooks) {
+    hooks.getToggleAllRowsExpandedProps = [defaultGetToggleAllRowsExpandedProps];
+    hooks.getToggleRowExpandedProps = [defaultGetToggleRowExpandedProps];
+    hooks.stateReducers.push(reducer$1);
+    hooks.useInstance.push(useInstance$1);
+    hooks.prepareRow.push(prepareRow);
+  };
+  useExpanded.pluginName = 'useExpanded';
+
+  var defaultGetToggleAllRowsExpandedProps = function defaultGetToggleAllRowsExpandedProps(props, _ref) {
+    var instance = _ref.instance;
+    return [props, {
+      onClick: function onClick(e) {
+        instance.toggleAllRowsExpanded();
+      },
+      style: {
+        cursor: 'pointer'
+      },
+      title: 'Toggle All Rows Expanded'
+    }];
+  };
+
+  var defaultGetToggleRowExpandedProps = function defaultGetToggleRowExpandedProps(props, _ref2) {
+    var row = _ref2.row;
+    return [props, {
+      onClick: function onClick() {
+        row.toggleRowExpanded();
+      },
+      style: {
+        cursor: 'pointer'
+      },
+      title: 'Toggle Row Expanded'
+    }];
+  }; // Reducer
+
+
+  function reducer$1(state, action, previousState, instance) {
+    if (action.type === actions.init) {
+      return _extends({
+        expanded: {}
+      }, state);
+    }
+
+    if (action.type === actions.resetExpanded) {
+      return _extends({}, state, {
+        expanded: instance.initialState.expanded || {}
+      });
+    }
+
+    if (action.type === actions.toggleAllRowsExpanded) {
+      var value = action.value;
+      var rowsById = instance.rowsById;
+      var isAllRowsExpanded = Object.keys(rowsById).length === Object.keys(state.expanded).length;
+      var expandAll = typeof value !== 'undefined' ? value : !isAllRowsExpanded;
+
+      if (expandAll) {
+        var expanded = {};
+        Object.keys(rowsById).forEach(function (rowId) {
+          expanded[rowId] = true;
+        });
+        return _extends({}, state, {
+          expanded: expanded
+        });
+      }
+
+      return _extends({}, state, {
+        expanded: {}
+      });
+    }
+
+    if (action.type === actions.toggleRowExpanded) {
+      var id = action.id,
+          setExpanded = action.value;
+      var exists = state.expanded[id];
+      var shouldExist = typeof setExpanded !== 'undefined' ? setExpanded : !exists;
+
+      if (!exists && shouldExist) {
+        var _extends2;
+
+        return _extends({}, state, {
+          expanded: _extends({}, state.expanded, (_extends2 = {}, _extends2[id] = true, _extends2))
+        });
+      } else if (exists && !shouldExist) {
+        var _state$expanded = state.expanded,
+            _ = _state$expanded[id],
+            rest = _objectWithoutPropertiesLoose(_state$expanded, [id].map(_toPropertyKey));
+
+        return _extends({}, state, {
+          expanded: rest
+        });
+      } else {
+        return state;
+      }
+    }
+  }
+
+  function useInstance$1(instance) {
+    var data = instance.data,
+        rows = instance.rows,
+        rowsById = instance.rowsById,
+        _instance$manualExpan = instance.manualExpandedKey,
+        manualExpandedKey = _instance$manualExpan === void 0 ? 'expanded' : _instance$manualExpan,
+        _instance$paginateExp = instance.paginateExpandedRows,
+        paginateExpandedRows = _instance$paginateExp === void 0 ? true : _instance$paginateExp,
+        _instance$expandSubRo = instance.expandSubRows,
+        expandSubRows = _instance$expandSubRo === void 0 ? true : _instance$expandSubRo,
+        _instance$autoResetEx = instance.autoResetExpanded,
+        autoResetExpanded = _instance$autoResetEx === void 0 ? true : _instance$autoResetEx,
+        getHooks = instance.getHooks,
+        plugins = instance.plugins,
+        expanded = instance.state.expanded,
+        dispatch = instance.dispatch;
+    ensurePluginOrder(plugins, ['useSortBy', 'useGroupBy', 'usePivotColumns', 'useGlobalFilter'], 'useExpanded');
+    var getAutoResetExpanded = useGetLatest(autoResetExpanded);
+    var isAllRowsExpanded = Boolean(Object.keys(rowsById).length && Object.keys(expanded).length);
+
+    if (isAllRowsExpanded) {
+      if (Object.keys(rowsById).some(function (id) {
+        return !expanded[id];
+      })) {
+        isAllRowsExpanded = false;
+      }
+    } // Bypass any effects from firing when this changes
+
+
+    useMountedLayoutEffect(function () {
+      if (getAutoResetExpanded()) {
+        dispatch({
+          type: actions.resetExpanded
+        });
+      }
+    }, [dispatch, data]);
+    var toggleRowExpanded = React.useCallback(function (id, value) {
+      dispatch({
+        type: actions.toggleRowExpanded,
+        id: id,
+        value: value
+      });
+    }, [dispatch]);
+    var toggleAllRowsExpanded = React.useCallback(function (value) {
+      return dispatch({
+        type: actions.toggleAllRowsExpanded,
+        value: value
+      });
+    }, [dispatch]);
+    var expandedRows = React.useMemo(function () {
+      if (paginateExpandedRows) {
+        return expandRows(rows, {
+          manualExpandedKey: manualExpandedKey,
+          expanded: expanded,
+          expandSubRows: expandSubRows
+        });
+      }
+
+      return rows;
+    }, [paginateExpandedRows, rows, manualExpandedKey, expanded, expandSubRows]);
+    var expandedDepth = React.useMemo(function () {
+      return findExpandedDepth(expanded);
+    }, [expanded]);
+    var getInstance = useGetLatest(instance);
+    var getToggleAllRowsExpandedProps = makePropGetter(getHooks().getToggleAllRowsExpandedProps, {
+      instance: getInstance()
+    });
+    Object.assign(instance, {
+      preExpandedRows: rows,
+      expandedRows: expandedRows,
+      rows: expandedRows,
+      expandedDepth: expandedDepth,
+      isAllRowsExpanded: isAllRowsExpanded,
+      toggleRowExpanded: toggleRowExpanded,
+      toggleAllRowsExpanded: toggleAllRowsExpanded,
+      getToggleAllRowsExpandedProps: getToggleAllRowsExpandedProps
+    });
+  }
+
+  function prepareRow(row, _ref3) {
+    var getHooks = _ref3.instance.getHooks,
+        instance = _ref3.instance;
+
+    row.toggleRowExpanded = function (set) {
+      return instance.toggleRowExpanded(row.id, set);
+    };
+
+    row.getToggleRowExpandedProps = makePropGetter(getHooks().getToggleRowExpandedProps, {
+      instance: instance,
+      row: row
+    });
+  }
+
+  function findExpandedDepth(expanded) {
+    var maxDepth = 0;
+    Object.keys(expanded).forEach(function (id) {
+      var splitId = id.split('.');
+      maxDepth = Math.max(maxDepth, splitId.length);
+    });
+    return maxDepth;
+  }
+
+  var text = function text(rows, ids, filterValue) {
+    rows = rows.filter(function (row) {
+      return ids.some(function (id) {
+        var rowValue = row.values[id];
+        return String(rowValue).toLowerCase().includes(String(filterValue).toLowerCase());
+      });
+    });
+    return rows;
+  };
+
+  text.autoRemove = function (val) {
+    return !val;
+  };
+
+  var exactText = function exactText(rows, ids, filterValue) {
+    return rows.filter(function (row) {
+      return ids.some(function (id) {
+        var rowValue = row.values[id];
+        return rowValue !== undefined ? String(rowValue).toLowerCase() === String(filterValue).toLowerCase() : true;
+      });
+    });
+  };
+
+  exactText.autoRemove = function (val) {
+    return !val;
+  };
+
+  var exactTextCase = function exactTextCase(rows, ids, filterValue) {
+    return rows.filter(function (row) {
+      return ids.some(function (id) {
+        var rowValue = row.values[id];
+        return rowValue !== undefined ? String(rowValue) === String(filterValue) : true;
+      });
+    });
+  };
+
+  exactTextCase.autoRemove = function (val) {
+    return !val;
+  };
+
+  var includes = function includes(rows, ids, filterValue) {
+    return rows.filter(function (row) {
+      return ids.some(function (id) {
+        var rowValue = row.values[id];
+        return rowValue.includes(filterValue);
+      });
+    });
+  };
+
+  includes.autoRemove = function (val) {
+    return !val || !val.length;
+  };
+
+  var includesAll = function includesAll(rows, ids, filterValue) {
+    return rows.filter(function (row) {
+      return ids.some(function (id) {
+        var rowValue = row.values[id];
+        return rowValue && rowValue.length && filterValue.every(function (val) {
+          return rowValue.includes(val);
+        });
+      });
+    });
+  };
+
+  includesAll.autoRemove = function (val) {
+    return !val || !val.length;
+  };
+
+  var includesSome = function includesSome(rows, ids, filterValue) {
+    return rows.filter(function (row) {
+      return ids.some(function (id) {
+        var rowValue = row.values[id];
+        return rowValue && rowValue.length && filterValue.some(function (val) {
+          return rowValue.includes(val);
+        });
+      });
+    });
+  };
+
+  includesSome.autoRemove = function (val) {
+    return !val || !val.length;
+  };
+
+  var includesValue = function includesValue(rows, ids, filterValue) {
+    return rows.filter(function (row) {
+      return ids.some(function (id) {
+        var rowValue = row.values[id];
+        return filterValue.includes(rowValue);
+      });
+    });
+  };
+
+  includesValue.autoRemove = function (val) {
+    return !val || !val.length;
+  };
+
+  var exact = function exact(rows, ids, filterValue) {
+    return rows.filter(function (row) {
+      return ids.some(function (id) {
+        var rowValue = row.values[id];
+        return rowValue === filterValue;
+      });
+    });
+  };
+
+  exact.autoRemove = function (val) {
+    return typeof val === 'undefined';
+  };
+
+  var equals = function equals(rows, ids, filterValue) {
+    return rows.filter(function (row) {
+      return ids.some(function (id) {
+        var rowValue = row.values[id]; // eslint-disable-next-line eqeqeq
+
+        return rowValue == filterValue;
+      });
+    });
+  };
+
+  equals.autoRemove = function (val) {
+    return val == null;
+  };
+
+  var between = function between(rows, ids, filterValue) {
+    var _ref = filterValue || [],
+        min = _ref[0],
+        max = _ref[1];
+
+    min = typeof min === 'number' ? min : -Infinity;
+    max = typeof max === 'number' ? max : Infinity;
+
+    if (min > max) {
+      var temp = min;
+      min = max;
+      max = temp;
+    }
+
+    return rows.filter(function (row) {
+      return ids.some(function (id) {
+        var rowValue = row.values[id];
+        return rowValue >= min && rowValue <= max;
+      });
+    });
+  };
+
+  between.autoRemove = function (val) {
+    return !val || typeof val[0] !== 'number' && typeof val[1] !== 'number';
+  };
+
+  var filterTypes = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    text: text,
+    exactText: exactText,
+    exactTextCase: exactTextCase,
+    includes: includes,
+    includesAll: includesAll,
+    includesSome: includesSome,
+    includesValue: includesValue,
+    exact: exact,
+    equals: equals,
+    between: between
+  });
+
+  actions.resetFilters = 'resetFilters';
+  actions.setFilter = 'setFilter';
+  actions.setAllFilters = 'setAllFilters';
+  var useFilters = function useFilters(hooks) {
+    hooks.stateReducers.push(reducer$2);
+    hooks.useInstance.push(useInstance$2);
+  };
+  useFilters.pluginName = 'useFilters';
+
+  function reducer$2(state, action, previousState, instance) {
+    if (action.type === actions.init) {
+      return _extends({
+        filters: []
+      }, state);
+    }
+
+    if (action.type === actions.resetFilters) {
+      return _extends({}, state, {
+        filters: instance.initialState.filters || []
+      });
+    }
+
+    if (action.type === actions.setFilter) {
+      var columnId = action.columnId,
+          filterValue = action.filterValue;
+      var allColumns = instance.allColumns,
+          userFilterTypes = instance.filterTypes;
+      var column = allColumns.find(function (d) {
+        return d.id === columnId;
+      });
+
+      if (!column) {
+        throw new Error("React-Table: Could not find a column with id: " + columnId);
+      }
+
+      var filterMethod = getFilterMethod(column.filter, userFilterTypes || {}, filterTypes);
+      var previousfilter = state.filters.find(function (d) {
+        return d.id === columnId;
+      });
+      var newFilter = functionalUpdate(filterValue, previousfilter && previousfilter.value); //
+
+      if (shouldAutoRemoveFilter(filterMethod.autoRemove, newFilter, column)) {
+        return _extends({}, state, {
+          filters: state.filters.filter(function (d) {
+            return d.id !== columnId;
+          })
+        });
+      }
+
+      if (previousfilter) {
+        return _extends({}, state, {
+          filters: state.filters.map(function (d) {
+            if (d.id === columnId) {
+              return {
+                id: columnId,
+                value: newFilter
+              };
+            }
+
+            return d;
+          })
+        });
+      }
+
+      return _extends({}, state, {
+        filters: [].concat(state.filters, [{
+          id: columnId,
+          value: newFilter
+        }])
+      });
+    }
+
+    if (action.type === actions.setAllFilters) {
+      var filters = action.filters;
+      var _allColumns = instance.allColumns,
+          _userFilterTypes = instance.filterTypes;
+      return _extends({}, state, {
+        // Filter out undefined values
+        filters: functionalUpdate(filters, state.filters).filter(function (filter) {
+          var column = _allColumns.find(function (d) {
+            return d.id === filter.id;
+          });
+
+          var filterMethod = getFilterMethod(column.filter, _userFilterTypes || {}, filterTypes);
+
+          if (shouldAutoRemoveFilter(filterMethod.autoRemove, filter.value, column)) {
+            return false;
+          }
+
+          return true;
+        })
+      });
+    }
+  }
+
+  function useInstance$2(instance) {
+    var data = instance.data,
+        rows = instance.rows,
+        flatRows = instance.flatRows,
+        rowsById = instance.rowsById,
+        allColumns = instance.allColumns,
+        userFilterTypes = instance.filterTypes,
+        manualFilters = instance.manualFilters,
+        _instance$defaultCanF = instance.defaultCanFilter,
+        defaultCanFilter = _instance$defaultCanF === void 0 ? false : _instance$defaultCanF,
+        disableFilters = instance.disableFilters,
+        filters = instance.state.filters,
+        dispatch = instance.dispatch,
+        _instance$autoResetFi = instance.autoResetFilters,
+        autoResetFilters = _instance$autoResetFi === void 0 ? true : _instance$autoResetFi;
+    var setFilter = React.useCallback(function (columnId, filterValue) {
+      dispatch({
+        type: actions.setFilter,
+        columnId: columnId,
+        filterValue: filterValue
+      });
+    }, [dispatch]);
+    var setAllFilters = React.useCallback(function (filters) {
+      dispatch({
+        type: actions.setAllFilters,
+        filters: filters
+      });
+    }, [dispatch]);
+    allColumns.forEach(function (column) {
+      var id = column.id,
+          accessor = column.accessor,
+          columnDefaultCanFilter = column.defaultCanFilter,
+          columnDisableFilters = column.disableFilters; // Determine if a column is filterable
+
+      column.canFilter = accessor ? getFirstDefined(columnDisableFilters === true ? false : undefined, disableFilters === true ? false : undefined, true) : getFirstDefined(columnDefaultCanFilter, defaultCanFilter, false); // Provide the column a way of updating the filter value
+
+      column.setFilter = function (val) {
+        return setFilter(column.id, val);
+      }; // Provide the current filter value to the column for
+      // convenience
+
+
+      var found = filters.find(function (d) {
+        return d.id === id;
+      });
+      column.filterValue = found && found.value;
+    });
+
+    var _React$useMemo = React.useMemo(function () {
+      if (manualFilters || !filters.length) {
+        return [rows, flatRows, rowsById];
+      }
+
+      var filteredFlatRows = [];
+      var filteredRowsById = {}; // Filters top level and nested rows
+
+      var filterRows = function filterRows(rows, depth) {
+        if (depth === void 0) {
+          depth = 0;
+        }
+
+        var filteredRows = rows;
+        filteredRows = filters.reduce(function (filteredSoFar, _ref) {
+          var columnId = _ref.id,
+              filterValue = _ref.value;
+          // Find the filters column
+          var column = allColumns.find(function (d) {
+            return d.id === columnId;
+          });
+
+          if (!column) {
+            return filteredSoFar;
+          }
+
+          if (depth === 0) {
+            column.preFilteredRows = filteredSoFar;
+          }
+
+          var filterMethod = getFilterMethod(column.filter, userFilterTypes || {}, filterTypes);
+
+          if (!filterMethod) {
+            console.warn("Could not find a valid 'column.filter' for column with the ID: " + column.id + ".");
+            return filteredSoFar;
+          } // Pass the rows, id, filterValue and column to the filterMethod
+          // to get the filtered rows back
+
+
+          column.filteredRows = filterMethod(filteredSoFar, [columnId], filterValue);
+          return column.filteredRows;
+        }, rows); // Apply the filter to any subRows
+        // We technically could do this recursively in the above loop,
+        // but that would severely hinder the API for the user, since they
+        // would be required to do that recursion in some scenarios
+
+        filteredRows.forEach(function (row) {
+          filteredFlatRows.push(row);
+          filteredRowsById[row.id] = row;
+
+          if (!row.subRows) {
+            return;
+          }
+
+          row.subRows = row.subRows && row.subRows.length > 0 ? filterRows(row.subRows, depth + 1) : row.subRows;
+        });
+        return filteredRows;
+      };
+
+      return [filterRows(rows), filteredFlatRows, filteredRowsById];
+    }, [manualFilters, filters, rows, flatRows, rowsById, allColumns, userFilterTypes]),
+        filteredRows = _React$useMemo[0],
+        filteredFlatRows = _React$useMemo[1],
+        filteredRowsById = _React$useMemo[2];
+
+    React.useMemo(function () {
+      // Now that each filtered column has it's partially filtered rows,
+      // lets assign the final filtered rows to all of the other columns
+      var nonFilteredColumns = allColumns.filter(function (column) {
+        return !filters.find(function (d) {
+          return d.id === column.id;
+        });
+      }); // This essentially enables faceted filter options to be built easily
+      // using every column's preFilteredRows value
+
+      nonFilteredColumns.forEach(function (column) {
+        column.preFilteredRows = filteredRows;
+        column.filteredRows = filteredRows;
+      });
+    }, [filteredRows, filters, allColumns]);
+    var getAutoResetFilters = useGetLatest(autoResetFilters);
+    useMountedLayoutEffect(function () {
+      if (getAutoResetFilters()) {
+        dispatch({
+          type: actions.resetFilters
+        });
+      }
+    }, [dispatch, manualFilters ? null : data]);
+    Object.assign(instance, {
+      preFilteredRows: rows,
+      preFilteredFlatRows: flatRows,
+      preFilteredRowsById: rowsById,
+      filteredRows: filteredRows,
+      filteredFlatRows: filteredFlatRows,
+      filteredRowsById: filteredRowsById,
+      rows: filteredRows,
+      flatRows: filteredFlatRows,
+      rowsById: filteredRowsById,
+      setFilter: setFilter,
+      setAllFilters: setAllFilters
+    });
+  }
+
+  actions.resetGlobalFilter = 'resetGlobalFilter';
+  actions.setGlobalFilter = 'setGlobalFilter';
+  var useGlobalFilter = function useGlobalFilter(hooks) {
+    hooks.stateReducers.push(reducer$3);
+    hooks.useInstance.push(useInstance$3);
+  };
+  useGlobalFilter.pluginName = 'useGlobalFilter';
+
+  function reducer$3(state, action, previousState, instance) {
+    if (action.type === actions.resetGlobalFilter) {
+      return _extends({}, state, {
+        globalFilter: instance.initialState.globalFilter || undefined
+      });
+    }
+
+    if (action.type === actions.setGlobalFilter) {
+      var filterValue = action.filterValue;
+      var userFilterTypes = instance.userFilterTypes;
+      var filterMethod = getFilterMethod(instance.globalFilter, userFilterTypes || {}, filterTypes);
+      var newFilter = functionalUpdate(filterValue, state.globalFilter); //
+
+      if (shouldAutoRemoveFilter(filterMethod.autoRemove, newFilter)) {
+        var globalFilter = state.globalFilter,
+            stateWithoutGlobalFilter = _objectWithoutPropertiesLoose(state, ["globalFilter"]);
+
+        return stateWithoutGlobalFilter;
+      }
+
+      return _extends({}, state, {
+        globalFilter: newFilter
+      });
+    }
+  }
+
+  function useInstance$3(instance) {
+    var data = instance.data,
+        rows = instance.rows,
+        flatRows = instance.flatRows,
+        rowsById = instance.rowsById,
+        allColumns = instance.allColumns,
+        userFilterTypes = instance.filterTypes,
+        globalFilter = instance.globalFilter,
+        manualGlobalFilter = instance.manualGlobalFilter,
+        globalFilterValue = instance.state.globalFilter,
+        dispatch = instance.dispatch,
+        _instance$autoResetGl = instance.autoResetGlobalFilter,
+        autoResetGlobalFilter = _instance$autoResetGl === void 0 ? true : _instance$autoResetGl,
+        disableGlobalFilter = instance.disableGlobalFilter;
+    var setGlobalFilter = React.useCallback(function (filterValue) {
+      dispatch({
+        type: actions.setGlobalFilter,
+        filterValue: filterValue
+      });
+    }, [dispatch]); // TODO: Create a filter cache for incremental high speed multi-filtering
+    // This gets pretty complicated pretty fast, since you have to maintain a
+    // cache for each row group (top-level rows, and each row's recursive subrows)
+    // This would make multi-filtering a lot faster though. Too far?
+
+    var _React$useMemo = React.useMemo(function () {
+      if (manualGlobalFilter || typeof globalFilterValue === 'undefined') {
+        return [rows, flatRows, rowsById];
+      }
+
+      var filteredFlatRows = [];
+      var filteredRowsById = {};
+      var filterMethod = getFilterMethod(globalFilter, userFilterTypes || {}, filterTypes);
+
+      if (!filterMethod) {
+        console.warn("Could not find a valid 'globalFilter' option.");
+        return rows;
+      }
+
+      allColumns.forEach(function (column) {
+        var columnDisableGlobalFilter = column.disableGlobalFilter;
+        column.canFilter = getFirstDefined(columnDisableGlobalFilter === true ? false : undefined, disableGlobalFilter === true ? false : undefined, true);
+      });
+      var filterableColumns = allColumns.filter(function (c) {
+        return c.canFilter === true;
+      }); // Filters top level and nested rows
+
+      var filterRows = function filterRows(filteredRows) {
+        filteredRows = filterMethod(filteredRows, filterableColumns.map(function (d) {
+          return d.id;
+        }), globalFilterValue);
+        filteredRows.forEach(function (row) {
+          filteredFlatRows.push(row);
+          filteredRowsById[row.id] = row;
+          row.subRows = row.subRows && row.subRows.length ? filterRows(row.subRows) : row.subRows;
+        });
+        return filteredRows;
+      };
+
+      return [filterRows(rows), filteredFlatRows, filteredRowsById];
+    }, [manualGlobalFilter, globalFilterValue, globalFilter, userFilterTypes, allColumns, rows, flatRows, rowsById, disableGlobalFilter]),
+        globalFilteredRows = _React$useMemo[0],
+        globalFilteredFlatRows = _React$useMemo[1],
+        globalFilteredRowsById = _React$useMemo[2];
+
+    var getAutoResetGlobalFilter = useGetLatest(autoResetGlobalFilter);
+    useMountedLayoutEffect(function () {
+      if (getAutoResetGlobalFilter()) {
+        dispatch({
+          type: actions.resetGlobalFilter
+        });
+      }
+    }, [dispatch, manualGlobalFilter ? null : data]);
+    Object.assign(instance, {
+      preGlobalFilteredRows: rows,
+      preGlobalFilteredFlatRows: flatRows,
+      preGlobalFilteredRowsById: rowsById,
+      globalFilteredRows: globalFilteredRows,
+      globalFilteredFlatRows: globalFilteredFlatRows,
+      globalFilteredRowsById: globalFilteredRowsById,
+      rows: globalFilteredRows,
+      flatRows: globalFilteredFlatRows,
+      rowsById: globalFilteredRowsById,
+      setGlobalFilter: setGlobalFilter,
+      disableGlobalFilter: disableGlobalFilter
+    });
+  }
+
+  function sum(values, aggregatedValues) {
+    // It's faster to just add the aggregations together instead of
+    // process leaf nodes individually
+    return aggregatedValues.reduce(function (sum, next) {
+      return sum + (typeof next === 'number' ? next : 0);
+    }, 0);
+  }
+  function min(values) {
+    var min = values[0] || 0;
+    values.forEach(function (value) {
+      if (typeof value === 'number') {
+        min = Math.min(min, value);
+      }
+    });
+    return min;
+  }
+  function max(values) {
+    var max = values[0] || 0;
+    values.forEach(function (value) {
+      if (typeof value === 'number') {
+        max = Math.max(max, value);
+      }
+    });
+    return max;
+  }
+  function minMax(values) {
+    var min = values[0] || 0;
+    var max = values[0] || 0;
+    values.forEach(function (value) {
+      if (typeof value === 'number') {
+        min = Math.min(min, value);
+        max = Math.max(max, value);
+      }
+    });
+    return min + ".." + max;
+  }
+  function average(values) {
+    return sum(null, values) / values.length;
+  }
+  function median(values) {
+    if (!values.length) {
+      return null;
+    }
+
+    var mid = Math.floor(values.length / 2);
+    var nums = [].concat(values).sort(function (a, b) {
+      return a - b;
+    });
+    return values.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
+  }
+  function unique(values) {
+    return Array.from(new Set(values).values());
+  }
+  function uniqueCount(values) {
+    return new Set(values).size;
+  }
+  function count(values) {
+    return values.length;
+  }
+
+  var aggregations = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    sum: sum,
+    min: min,
+    max: max,
+    minMax: minMax,
+    average: average,
+    median: median,
+    unique: unique,
+    uniqueCount: uniqueCount,
+    count: count
+  });
+
+  var emptyArray = [];
+  var emptyObject = {}; // Actions
+
+  actions.resetGroupBy = 'resetGroupBy';
+  actions.setGroupBy = 'setGroupBy';
+  actions.toggleGroupBy = 'toggleGroupBy';
+  var useGroupBy = function useGroupBy(hooks) {
+    hooks.getGroupByToggleProps = [defaultGetGroupByToggleProps];
+    hooks.stateReducers.push(reducer$4);
+    hooks.visibleColumnsDeps.push(function (deps, _ref) {
+      var instance = _ref.instance;
+      return [].concat(deps, [instance.state.groupBy]);
+    });
+    hooks.visibleColumns.push(visibleColumns);
+    hooks.useInstance.push(useInstance$4);
+    hooks.prepareRow.push(prepareRow$1);
+  };
+  useGroupBy.pluginName = 'useGroupBy';
+
+  var defaultGetGroupByToggleProps = function defaultGetGroupByToggleProps(props, _ref2) {
+    var header = _ref2.header;
+    return [props, {
+      onClick: header.canGroupBy ? function (e) {
+        e.persist();
+        header.toggleGroupBy();
+      } : undefined,
+      style: {
+        cursor: header.canGroupBy ? 'pointer' : undefined
+      },
+      title: 'Toggle GroupBy'
+    }];
+  }; // Reducer
+
+
+  function reducer$4(state, action, previousState, instance) {
+    if (action.type === actions.init) {
+      return _extends({
+        groupBy: []
+      }, state);
+    }
+
+    if (action.type === actions.resetGroupBy) {
+      return _extends({}, state, {
+        groupBy: instance.initialState.groupBy || []
+      });
+    }
+
+    if (action.type === actions.setGroupBy) {
+      var value = action.value;
+      return _extends({}, state, {
+        groupBy: value
+      });
+    }
+
+    if (action.type === actions.toggleGroupBy) {
+      var columnId = action.columnId,
+          setGroupBy = action.value;
+      var resolvedGroupBy = typeof setGroupBy !== 'undefined' ? setGroupBy : !state.groupBy.includes(columnId);
+
+      if (resolvedGroupBy) {
+        return _extends({}, state, {
+          groupBy: [].concat(state.groupBy, [columnId])
+        });
+      }
+
+      return _extends({}, state, {
+        groupBy: state.groupBy.filter(function (d) {
+          return d !== columnId;
+        })
+      });
+    }
+  }
+
+  function visibleColumns(columns, _ref3) {
+    var groupBy = _ref3.instance.state.groupBy;
+    // Sort grouped columns to the start of the column list
+    // before the headers are built
+    var groupByColumns = groupBy.map(function (g) {
+      return columns.find(function (col) {
+        return col.id === g;
+      });
+    }).filter(Boolean);
+    var nonGroupByColumns = columns.filter(function (col) {
+      return !groupBy.includes(col.id);
+    });
+    columns = [].concat(groupByColumns, nonGroupByColumns);
+    columns.forEach(function (column) {
+      column.isGrouped = groupBy.includes(column.id);
+      column.groupedIndex = groupBy.indexOf(column.id);
+    });
+    return columns;
+  }
+
+  var defaultUserAggregations = {};
+
+  function useInstance$4(instance) {
+    var data = instance.data,
+        rows = instance.rows,
+        flatRows = instance.flatRows,
+        rowsById = instance.rowsById,
+        allColumns = instance.allColumns,
+        flatHeaders = instance.flatHeaders,
+        _instance$groupByFn = instance.groupByFn,
+        groupByFn = _instance$groupByFn === void 0 ? defaultGroupByFn : _instance$groupByFn,
+        manualGroupBy = instance.manualGroupBy,
+        _instance$aggregation = instance.aggregations,
+        userAggregations = _instance$aggregation === void 0 ? defaultUserAggregations : _instance$aggregation,
+        plugins = instance.plugins,
+        groupBy = instance.state.groupBy,
+        dispatch = instance.dispatch,
+        _instance$autoResetGr = instance.autoResetGroupBy,
+        autoResetGroupBy = _instance$autoResetGr === void 0 ? true : _instance$autoResetGr,
+        disableGroupBy = instance.disableGroupBy,
+        defaultCanGroupBy = instance.defaultCanGroupBy,
+        getHooks = instance.getHooks;
+    ensurePluginOrder(plugins, ['useColumnOrder', 'useFilters'], 'useGroupBy');
+    var getInstance = useGetLatest(instance);
+    allColumns.forEach(function (column) {
+      var accessor = column.accessor,
+          defaultColumnGroupBy = column.defaultGroupBy,
+          columnDisableGroupBy = column.disableGroupBy;
+      column.canGroupBy = accessor ? getFirstDefined(column.canGroupBy, columnDisableGroupBy === true ? false : undefined, disableGroupBy === true ? false : undefined, true) : getFirstDefined(column.canGroupBy, defaultColumnGroupBy, defaultCanGroupBy, false);
+
+      if (column.canGroupBy) {
+        column.toggleGroupBy = function () {
+          return instance.toggleGroupBy(column.id);
+        };
+      }
+
+      column.Aggregated = column.Aggregated || column.Cell;
+    });
+    var toggleGroupBy = React.useCallback(function (columnId, value) {
+      dispatch({
+        type: actions.toggleGroupBy,
+        columnId: columnId,
+        value: value
+      });
+    }, [dispatch]);
+    var setGroupBy = React.useCallback(function (value) {
+      dispatch({
+        type: actions.setGroupBy,
+        value: value
+      });
+    }, [dispatch]);
+    flatHeaders.forEach(function (header) {
+      header.getGroupByToggleProps = makePropGetter(getHooks().getGroupByToggleProps, {
+        instance: getInstance(),
+        header: header
+      });
+    });
+
+    var _React$useMemo = React.useMemo(function () {
+      if (manualGroupBy || !groupBy.length) {
+        return [rows, flatRows, rowsById, emptyArray, emptyObject, flatRows, rowsById];
+      } // Ensure that the list of filtered columns exist
+
+
+      var existingGroupBy = groupBy.filter(function (g) {
+        return allColumns.find(function (col) {
+          return col.id === g;
+        });
+      }); // Find the columns that can or are aggregating
+      // Uses each column to aggregate rows into a single value
+
+      var aggregateRowsToValues = function aggregateRowsToValues(leafRows, groupedRows, depth) {
+        var values = {};
+        allColumns.forEach(function (column) {
+          // Don't aggregate columns that are in the groupBy
+          if (existingGroupBy.includes(column.id)) {
+            values[column.id] = groupedRows[0] ? groupedRows[0].values[column.id] : null;
+            return;
+          } // Aggregate the values
+
+
+          var aggregateFn = typeof column.aggregate === 'function' ? column.aggregate : userAggregations[column.aggregate] || aggregations[column.aggregate];
+
+          if (aggregateFn) {
+            // Get the columnValues to aggregate
+            var groupedValues = groupedRows.map(function (row) {
+              return row.values[column.id];
+            }); // Get the columnValues to aggregate
+
+            var leafValues = leafRows.map(function (row) {
+              var columnValue = row.values[column.id];
+
+              if (!depth && column.aggregateValue) {
+                var aggregateValueFn = typeof column.aggregateValue === 'function' ? column.aggregateValue : userAggregations[column.aggregateValue] || aggregations[column.aggregateValue];
+
+                if (!aggregateValueFn) {
+                  console.info({
+                    column: column
+                  });
+                  throw new Error("React Table: Invalid column.aggregateValue option for column listed above");
+                }
+
+                columnValue = aggregateValueFn(columnValue, row, column);
+              }
+
+              return columnValue;
+            });
+            values[column.id] = aggregateFn(leafValues, groupedValues);
+          } else if (column.aggregate) {
+            console.info({
+              column: column
+            });
+            throw new Error("React Table: Invalid column.aggregate option for column listed above");
+          } else {
+            values[column.id] = null;
+          }
+        });
+        return values;
+      };
+
+      var groupedFlatRows = [];
+      var groupedRowsById = {};
+      var onlyGroupedFlatRows = [];
+      var onlyGroupedRowsById = {};
+      var nonGroupedFlatRows = [];
+      var nonGroupedRowsById = {}; // Recursively group the data
+
+      var groupUpRecursively = function groupUpRecursively(rows, depth, parentId) {
+        if (depth === void 0) {
+          depth = 0;
+        }
+
+        // This is the last level, just return the rows
+        if (depth === existingGroupBy.length) {
+          return rows.map(function (row) {
+            return _extends({}, row, {
+              depth: depth
+            });
+          });
+        }
+
+        var columnId = existingGroupBy[depth]; // Group the rows together for this level
+
+        var rowGroupsMap = groupByFn(rows, columnId); // Peform aggregations for each group
+
+        var aggregatedGroupedRows = Object.entries(rowGroupsMap).map(function (_ref4, index) {
+          var groupByVal = _ref4[0],
+              groupedRows = _ref4[1];
+          var id = columnId + ":" + groupByVal;
+          id = parentId ? parentId + ">" + id : id; // First, Recurse to group sub rows before aggregation
+
+          var subRows = groupUpRecursively(groupedRows, depth + 1, id); // Flatten the leaf rows of the rows in this group
+
+          var leafRows = depth ? flattenBy(groupedRows, 'leafRows') : groupedRows;
+          var values = aggregateRowsToValues(leafRows, groupedRows, depth);
+          var row = {
+            id: id,
+            isGrouped: true,
+            groupByID: columnId,
+            groupByVal: groupByVal,
+            values: values,
+            subRows: subRows,
+            leafRows: leafRows,
+            depth: depth,
+            index: index
+          };
+          subRows.forEach(function (subRow) {
+            groupedFlatRows.push(subRow);
+            groupedRowsById[subRow.id] = subRow;
+
+            if (subRow.isGrouped) {
+              onlyGroupedFlatRows.push(subRow);
+              onlyGroupedRowsById[subRow.id] = subRow;
+            } else {
+              nonGroupedFlatRows.push(subRow);
+              nonGroupedRowsById[subRow.id] = subRow;
+            }
+          });
+          return row;
+        });
+        return aggregatedGroupedRows;
+      };
+
+      var groupedRows = groupUpRecursively(rows);
+      groupedRows.forEach(function (subRow) {
+        groupedFlatRows.push(subRow);
+        groupedRowsById[subRow.id] = subRow;
+
+        if (subRow.isGrouped) {
+          onlyGroupedFlatRows.push(subRow);
+          onlyGroupedRowsById[subRow.id] = subRow;
+        } else {
+          nonGroupedFlatRows.push(subRow);
+          nonGroupedRowsById[subRow.id] = subRow;
+        }
+      }); // Assign the new data
+
+      return [groupedRows, groupedFlatRows, groupedRowsById, onlyGroupedFlatRows, onlyGroupedRowsById, nonGroupedFlatRows, nonGroupedRowsById];
+    }, [manualGroupBy, groupBy, rows, flatRows, rowsById, allColumns, userAggregations, groupByFn]),
+        groupedRows = _React$useMemo[0],
+        groupedFlatRows = _React$useMemo[1],
+        groupedRowsById = _React$useMemo[2],
+        onlyGroupedFlatRows = _React$useMemo[3],
+        onlyGroupedRowsById = _React$useMemo[4],
+        nonGroupedFlatRows = _React$useMemo[5],
+        nonGroupedRowsById = _React$useMemo[6];
+
+    var getAutoResetGroupBy = useGetLatest(autoResetGroupBy);
+    useMountedLayoutEffect(function () {
+      if (getAutoResetGroupBy()) {
+        dispatch({
+          type: actions.resetGroupBy
+        });
+      }
+    }, [dispatch, manualGroupBy ? null : data]);
+    Object.assign(instance, {
+      preGroupedRows: rows,
+      preGroupedFlatRow: flatRows,
+      preGroupedRowsById: rowsById,
+      groupedRows: groupedRows,
+      groupedFlatRows: groupedFlatRows,
+      groupedRowsById: groupedRowsById,
+      onlyGroupedFlatRows: onlyGroupedFlatRows,
+      onlyGroupedRowsById: onlyGroupedRowsById,
+      nonGroupedFlatRows: nonGroupedFlatRows,
+      nonGroupedRowsById: nonGroupedRowsById,
+      rows: groupedRows,
+      flatRows: groupedFlatRows,
+      rowsById: groupedRowsById,
+      toggleGroupBy: toggleGroupBy,
+      setGroupBy: setGroupBy
+    });
+  }
+
+  function prepareRow$1(row) {
+    row.allCells.forEach(function (cell) {
+      var _row$subRows;
+
+      // Grouped cells are in the groupBy and the pivot cell for the row
+      cell.isGrouped = cell.column.isGrouped && cell.column.id === row.groupByID; // Placeholder cells are any columns in the groupBy that are not grouped
+
+      cell.isPlaceholder = !cell.isGrouped && cell.column.isGrouped; // Aggregated cells are not grouped, not repeated, but still have subRows
+
+      cell.isAggregated = !cell.isGrouped && !cell.isPlaceholder && ((_row$subRows = row.subRows) == null ? void 0 : _row$subRows.length);
+    });
+  }
+
+  function defaultGroupByFn(rows, columnId) {
+    return rows.reduce(function (prev, row, i) {
+      // TODO: Might want to implement a key serializer here so
+      // irregular column values can still be grouped if needed?
+      var resKey = "" + row.values[columnId];
+      prev[resKey] = Array.isArray(prev[resKey]) ? prev[resKey] : [];
+      prev[resKey].push(row);
+      return prev;
+    }, {});
+  }
+
+  var reSplitAlphaNumeric = /([0-9]+)/gm; // Mixed sorting is slow, but very inclusive of many edge cases.
+  // It handles numbers, mixed alphanumeric combinations, and even
+  // null, undefined, and Infinity
+
+  var alphanumeric = function alphanumeric(rowA, rowB, columnId) {
+    var _getRowValuesByColumn = getRowValuesByColumnID(rowA, rowB, columnId),
+        a = _getRowValuesByColumn[0],
+        b = _getRowValuesByColumn[1]; // Force to strings (or "" for unsupported types)
+
+
+    a = toString(a);
+    b = toString(b); // Split on number groups, but keep the delimiter
+    // Then remove falsey split values
+
+    a = a.split(reSplitAlphaNumeric).filter(Boolean);
+    b = b.split(reSplitAlphaNumeric).filter(Boolean); // While
+
+    while (a.length && b.length) {
+      var aa = a.shift();
+      var bb = b.shift();
+      var an = parseInt(aa, 10);
+      var bn = parseInt(bb, 10);
+      var combo = [an, bn].sort(); // Both are string
+
+      if (isNaN(combo[0])) {
+        if (aa > bb) {
+          return 1;
+        }
+
+        if (bb > aa) {
+          return -1;
+        }
+
+        continue;
+      } // One is a string, one is a number
+
+
+      if (isNaN(combo[1])) {
+        return isNaN(an) ? -1 : 1;
+      } // Both are numbers
+
+
+      if (an > bn) {
+        return 1;
+      }
+
+      if (bn > an) {
+        return -1;
       }
     }
 
-    if (type === REACT_FRAGMENT_TYPE) {
-      validateFragmentProps(element);
-    } else {
-      validatePropTypes(element);
+    return a.length - b.length;
+  };
+  function datetime(rowA, rowB, columnId) {
+    var _getRowValuesByColumn2 = getRowValuesByColumnID(rowA, rowB, columnId),
+        a = _getRowValuesByColumn2[0],
+        b = _getRowValuesByColumn2[1];
+
+    a = a.getTime();
+    b = b.getTime();
+    return compareBasic(a, b);
+  }
+  function basic(rowA, rowB, columnId) {
+    var _getRowValuesByColumn3 = getRowValuesByColumnID(rowA, rowB, columnId),
+        a = _getRowValuesByColumn3[0],
+        b = _getRowValuesByColumn3[1];
+
+    return compareBasic(a, b);
+  }
+  function string(rowA, rowB, columnId) {
+    var _getRowValuesByColumn4 = getRowValuesByColumnID(rowA, rowB, columnId),
+        a = _getRowValuesByColumn4[0],
+        b = _getRowValuesByColumn4[1];
+
+    a = a.split('').filter(Boolean);
+    b = b.split('').filter(Boolean);
+
+    while (a.length && b.length) {
+      var aa = a.shift();
+      var bb = b.shift();
+      var alower = aa.toLowerCase();
+      var blower = bb.toLowerCase(); // Case insensitive comparison until characters match
+
+      if (alower > blower) {
+        return 1;
+      }
+
+      if (blower > alower) {
+        return -1;
+      } // If lowercase characters are identical
+
+
+      if (aa > bb) {
+        return 1;
+      }
+
+      if (bb > aa) {
+        return -1;
+      }
+
+      continue;
     }
 
-    return element;
+    return a.length - b.length;
   }
-} // These two functions exist to still get child warnings in dev
-// even with the prod transform. This means that jsxDEV is purely
-// opt-in behavior for better messages but that we won't stop
-// giving you warnings if you use production apis.
+  function number(rowA, rowB, columnId) {
+    var _getRowValuesByColumn5 = getRowValuesByColumnID(rowA, rowB, columnId),
+        a = _getRowValuesByColumn5[0],
+        b = _getRowValuesByColumn5[1];
 
-function jsxWithValidationStatic(type, props, key) {
-  {
-    return jsxWithValidation(type, props, key, true);
+    var replaceNonNumeric = /[^0-9.]/gi;
+    a = Number(String(a).replace(replaceNonNumeric, ''));
+    b = Number(String(b).replace(replaceNonNumeric, ''));
+    return compareBasic(a, b);
+  } // Utils
+
+  function compareBasic(a, b) {
+    return a === b ? 0 : a > b ? 1 : -1;
   }
-}
-function jsxWithValidationDynamic(type, props, key) {
-  {
-    return jsxWithValidation(type, props, key, false);
+
+  function getRowValuesByColumnID(row1, row2, columnId) {
+    return [row1.values[columnId], row2.values[columnId]];
   }
-}
 
-var jsx =  jsxWithValidationDynamic ; // we may want to special case jsxs internally to take advantage of static children.
-// for now we can ship identical prod functions
+  function toString(a) {
+    if (typeof a === 'number') {
+      if (isNaN(a) || a === Infinity || a === -Infinity) {
+        return '';
+      }
 
-var jsxs =  jsxWithValidationStatic ;
+      return String(a);
+    }
 
-exports.Fragment = REACT_FRAGMENT_TYPE;
-exports.jsx = jsx;
-exports.jsxs = jsxs;
-  })();
-}
+    if (typeof a === 'string') {
+      return a;
+    }
+
+    return '';
+  }
+
+  var sortTypes = /*#__PURE__*/Object.freeze({
+    __proto__: null,
+    alphanumeric: alphanumeric,
+    datetime: datetime,
+    basic: basic,
+    string: string,
+    number: number
+  });
+
+  actions.resetSortBy = 'resetSortBy';
+  actions.setSortBy = 'setSortBy';
+  actions.toggleSortBy = 'toggleSortBy';
+  actions.clearSortBy = 'clearSortBy';
+  defaultColumn.sortType = 'alphanumeric';
+  defaultColumn.sortDescFirst = false;
+  var useSortBy = function useSortBy(hooks) {
+    hooks.getSortByToggleProps = [defaultGetSortByToggleProps];
+    hooks.stateReducers.push(reducer$5);
+    hooks.useInstance.push(useInstance$5);
+  };
+  useSortBy.pluginName = 'useSortBy';
+
+  var defaultGetSortByToggleProps = function defaultGetSortByToggleProps(props, _ref) {
+    var instance = _ref.instance,
+        column = _ref.column;
+    var _instance$isMultiSort = instance.isMultiSortEvent,
+        isMultiSortEvent = _instance$isMultiSort === void 0 ? function (e) {
+      return e.shiftKey;
+    } : _instance$isMultiSort;
+    return [props, {
+      onClick: column.canSort ? function (e) {
+        e.persist();
+        column.toggleSortBy(undefined, !instance.disableMultiSort && isMultiSortEvent(e));
+      } : undefined,
+      style: {
+        cursor: column.canSort ? 'pointer' : undefined
+      },
+      title: column.canSort ? 'Toggle SortBy' : undefined
+    }];
+  }; // Reducer
+
+
+  function reducer$5(state, action, previousState, instance) {
+    if (action.type === actions.init) {
+      return _extends({
+        sortBy: []
+      }, state);
+    }
+
+    if (action.type === actions.resetSortBy) {
+      return _extends({}, state, {
+        sortBy: instance.initialState.sortBy || []
+      });
+    }
+
+    if (action.type === actions.clearSortBy) {
+      var sortBy = state.sortBy;
+      var newSortBy = sortBy.filter(function (d) {
+        return d.id !== action.columnId;
+      });
+      return _extends({}, state, {
+        sortBy: newSortBy
+      });
+    }
+
+    if (action.type === actions.setSortBy) {
+      var _sortBy = action.sortBy;
+      return _extends({}, state, {
+        sortBy: _sortBy
+      });
+    }
+
+    if (action.type === actions.toggleSortBy) {
+      var columnId = action.columnId,
+          desc = action.desc,
+          multi = action.multi;
+      var allColumns = instance.allColumns,
+          disableMultiSort = instance.disableMultiSort,
+          disableSortRemove = instance.disableSortRemove,
+          disableMultiRemove = instance.disableMultiRemove,
+          _instance$maxMultiSor = instance.maxMultiSortColCount,
+          maxMultiSortColCount = _instance$maxMultiSor === void 0 ? Number.MAX_SAFE_INTEGER : _instance$maxMultiSor;
+      var _sortBy2 = state.sortBy; // Find the column for this columnId
+
+      var column = allColumns.find(function (d) {
+        return d.id === columnId;
+      });
+      var sortDescFirst = column.sortDescFirst; // Find any existing sortBy for this column
+
+      var existingSortBy = _sortBy2.find(function (d) {
+        return d.id === columnId;
+      });
+
+      var existingIndex = _sortBy2.findIndex(function (d) {
+        return d.id === columnId;
+      });
+
+      var hasDescDefined = typeof desc !== 'undefined' && desc !== null;
+      var _newSortBy = []; // What should we do with this sort action?
+
+      var sortAction;
+
+      if (!disableMultiSort && multi) {
+        if (existingSortBy) {
+          sortAction = 'toggle';
+        } else {
+          sortAction = 'add';
+        }
+      } else {
+        // Normal mode
+        if (existingIndex !== _sortBy2.length - 1 || _sortBy2.length !== 1) {
+          sortAction = 'replace';
+        } else if (existingSortBy) {
+          sortAction = 'toggle';
+        } else {
+          sortAction = 'replace';
+        }
+      } // Handle toggle states that will remove the sortBy
+
+
+      if (sortAction === 'toggle' && // Must be toggling
+      !disableSortRemove && // If disableSortRemove, disable in general
+      !hasDescDefined && ( // Must not be setting desc
+      multi ? !disableMultiRemove : true) && ( // If multi, don't allow if disableMultiRemove
+      existingSortBy && // Finally, detect if it should indeed be removed
+      existingSortBy.desc && !sortDescFirst || !existingSortBy.desc && sortDescFirst)) {
+        sortAction = 'remove';
+      }
+
+      if (sortAction === 'replace') {
+        _newSortBy = [{
+          id: columnId,
+          desc: hasDescDefined ? desc : sortDescFirst
+        }];
+      } else if (sortAction === 'add') {
+        _newSortBy = [].concat(_sortBy2, [{
+          id: columnId,
+          desc: hasDescDefined ? desc : sortDescFirst
+        }]); // Take latest n columns
+
+        _newSortBy.splice(0, _newSortBy.length - maxMultiSortColCount);
+      } else if (sortAction === 'toggle') {
+        // This flips (or sets) the
+        _newSortBy = _sortBy2.map(function (d) {
+          if (d.id === columnId) {
+            return _extends({}, d, {
+              desc: hasDescDefined ? desc : !existingSortBy.desc
+            });
+          }
+
+          return d;
+        });
+      } else if (sortAction === 'remove') {
+        _newSortBy = _sortBy2.filter(function (d) {
+          return d.id !== columnId;
+        });
+      }
+
+      return _extends({}, state, {
+        sortBy: _newSortBy
+      });
+    }
+  }
+
+  function useInstance$5(instance) {
+    var data = instance.data,
+        rows = instance.rows,
+        flatRows = instance.flatRows,
+        allColumns = instance.allColumns,
+        _instance$orderByFn = instance.orderByFn,
+        orderByFn = _instance$orderByFn === void 0 ? defaultOrderByFn : _instance$orderByFn,
+        userSortTypes = instance.sortTypes,
+        manualSortBy = instance.manualSortBy,
+        defaultCanSort = instance.defaultCanSort,
+        disableSortBy = instance.disableSortBy,
+        flatHeaders = instance.flatHeaders,
+        sortBy = instance.state.sortBy,
+        dispatch = instance.dispatch,
+        plugins = instance.plugins,
+        getHooks = instance.getHooks,
+        _instance$autoResetSo = instance.autoResetSortBy,
+        autoResetSortBy = _instance$autoResetSo === void 0 ? true : _instance$autoResetSo;
+    ensurePluginOrder(plugins, ['useFilters', 'useGlobalFilter', 'useGroupBy', 'usePivotColumns'], 'useSortBy');
+    var setSortBy = React.useCallback(function (sortBy) {
+      dispatch({
+        type: actions.setSortBy,
+        sortBy: sortBy
+      });
+    }, [dispatch]); // Updates sorting based on a columnId, desc flag and multi flag
+
+    var toggleSortBy = React.useCallback(function (columnId, desc, multi) {
+      dispatch({
+        type: actions.toggleSortBy,
+        columnId: columnId,
+        desc: desc,
+        multi: multi
+      });
+    }, [dispatch]); // use reference to avoid memory leak in #1608
+
+    var getInstance = useGetLatest(instance); // Add the getSortByToggleProps method to columns and headers
+
+    flatHeaders.forEach(function (column) {
+      var accessor = column.accessor,
+          defaultColumnCanSort = column.canSort,
+          columnDisableSortBy = column.disableSortBy,
+          id = column.id;
+      var canSort = accessor ? getFirstDefined(columnDisableSortBy === true ? false : undefined, disableSortBy === true ? false : undefined, true) : getFirstDefined(defaultCanSort, defaultColumnCanSort, false);
+      column.canSort = canSort;
+
+      if (column.canSort) {
+        column.toggleSortBy = function (desc, multi) {
+          return toggleSortBy(column.id, desc, multi);
+        };
+
+        column.clearSortBy = function () {
+          dispatch({
+            type: actions.clearSortBy,
+            columnId: column.id
+          });
+        };
+      }
+
+      column.getSortByToggleProps = makePropGetter(getHooks().getSortByToggleProps, {
+        instance: getInstance(),
+        column: column
+      });
+      var columnSort = sortBy.find(function (d) {
+        return d.id === id;
+      });
+      column.isSorted = !!columnSort;
+      column.sortedIndex = sortBy.findIndex(function (d) {
+        return d.id === id;
+      });
+      column.isSortedDesc = column.isSorted ? columnSort.desc : undefined;
+    });
+
+    var _React$useMemo = React.useMemo(function () {
+      if (manualSortBy || !sortBy.length) {
+        return [rows, flatRows];
+      }
+
+      var sortedFlatRows = []; // Filter out sortBys that correspond to non existing columns
+
+      var availableSortBy = sortBy.filter(function (sort) {
+        return allColumns.find(function (col) {
+          return col.id === sort.id;
+        });
+      });
+
+      var sortData = function sortData(rows) {
+        // Use the orderByFn to compose multiple sortBy's together.
+        // This will also perform a stable sorting using the row index
+        // if needed.
+        var sortedData = orderByFn(rows, availableSortBy.map(function (sort) {
+          // Support custom sorting methods for each column
+          var column = allColumns.find(function (d) {
+            return d.id === sort.id;
+          });
+
+          if (!column) {
+            throw new Error("React-Table: Could not find a column with id: " + sort.id + " while sorting");
+          }
+
+          var sortType = column.sortType; // Look up sortBy functions in this order:
+          // column function
+          // column string lookup on user sortType
+          // column string lookup on built-in sortType
+          // default function
+          // default string lookup on user sortType
+          // default string lookup on built-in sortType
+
+          var sortMethod = isFunction(sortType) || (userSortTypes || {})[sortType] || sortTypes[sortType];
+
+          if (!sortMethod) {
+            throw new Error("React-Table: Could not find a valid sortType of '" + sortType + "' for column '" + sort.id + "'.");
+          } // Return the correct sortFn.
+          // This function should always return in ascending order
+
+
+          return function (a, b) {
+            return sortMethod(a, b, sort.id, sort.desc);
+          };
+        }), // Map the directions
+        availableSortBy.map(function (sort) {
+          // Detect and use the sortInverted option
+          var column = allColumns.find(function (d) {
+            return d.id === sort.id;
+          });
+
+          if (column && column.sortInverted) {
+            return sort.desc;
+          }
+
+          return !sort.desc;
+        })); // If there are sub-rows, sort them
+
+        sortedData.forEach(function (row) {
+          sortedFlatRows.push(row);
+
+          if (!row.subRows || row.subRows.length === 0) {
+            return;
+          }
+
+          row.subRows = sortData(row.subRows);
+        });
+        return sortedData;
+      };
+
+      return [sortData(rows), sortedFlatRows];
+    }, [manualSortBy, sortBy, rows, flatRows, allColumns, orderByFn, userSortTypes]),
+        sortedRows = _React$useMemo[0],
+        sortedFlatRows = _React$useMemo[1];
+
+    var getAutoResetSortBy = useGetLatest(autoResetSortBy);
+    useMountedLayoutEffect(function () {
+      if (getAutoResetSortBy()) {
+        dispatch({
+          type: actions.resetSortBy
+        });
+      }
+    }, [manualSortBy ? null : data]);
+    Object.assign(instance, {
+      preSortedRows: rows,
+      preSortedFlatRows: flatRows,
+      sortedRows: sortedRows,
+      sortedFlatRows: sortedFlatRows,
+      rows: sortedRows,
+      flatRows: sortedFlatRows,
+      setSortBy: setSortBy,
+      toggleSortBy: toggleSortBy
+    });
+  }
+
+  function defaultOrderByFn(arr, funcs, dirs) {
+    return [].concat(arr).sort(function (rowA, rowB) {
+      for (var i = 0; i < funcs.length; i += 1) {
+        var sortFn = funcs[i];
+        var desc = dirs[i] === false || dirs[i] === 'desc';
+        var sortInt = sortFn(rowA, rowB);
+
+        if (sortInt !== 0) {
+          return desc ? -sortInt : sortInt;
+        }
+      }
+
+      return dirs[0] ? rowA.index - rowB.index : rowB.index - rowA.index;
+    });
+  }
+
+  var pluginName = 'usePagination'; // Actions
+
+  actions.resetPage = 'resetPage';
+  actions.gotoPage = 'gotoPage';
+  actions.setPageSize = 'setPageSize';
+  var usePagination = function usePagination(hooks) {
+    hooks.stateReducers.push(reducer$6);
+    hooks.useInstance.push(useInstance$6);
+  };
+  usePagination.pluginName = pluginName;
+
+  function reducer$6(state, action, previousState, instance) {
+    if (action.type === actions.init) {
+      return _extends({
+        pageSize: 10,
+        pageIndex: 0
+      }, state);
+    }
+
+    if (action.type === actions.resetPage) {
+      return _extends({}, state, {
+        pageIndex: instance.initialState.pageIndex || 0
+      });
+    }
+
+    if (action.type === actions.gotoPage) {
+      var pageCount = instance.pageCount,
+          page = instance.page;
+      var newPageIndex = functionalUpdate(action.pageIndex, state.pageIndex);
+      var canNavigate = false;
+
+      if (newPageIndex > state.pageIndex) {
+        // next page
+        canNavigate = pageCount === -1 ? page.length >= state.pageSize : newPageIndex < pageCount;
+      } else if (newPageIndex < state.pageIndex) {
+        // prev page
+        canNavigate = newPageIndex > -1;
+      }
+
+      if (!canNavigate) {
+        return state;
+      }
+
+      return _extends({}, state, {
+        pageIndex: newPageIndex
+      });
+    }
+
+    if (action.type === actions.setPageSize) {
+      var pageSize = action.pageSize;
+      var topRowIndex = state.pageSize * state.pageIndex;
+      var pageIndex = Math.floor(topRowIndex / pageSize);
+      return _extends({}, state, {
+        pageIndex: pageIndex,
+        pageSize: pageSize
+      });
+    }
+  }
+
+  function useInstance$6(instance) {
+    var rows = instance.rows,
+        _instance$autoResetPa = instance.autoResetPage,
+        autoResetPage = _instance$autoResetPa === void 0 ? true : _instance$autoResetPa,
+        _instance$manualExpan = instance.manualExpandedKey,
+        manualExpandedKey = _instance$manualExpan === void 0 ? 'expanded' : _instance$manualExpan,
+        plugins = instance.plugins,
+        userPageCount = instance.pageCount,
+        _instance$paginateExp = instance.paginateExpandedRows,
+        paginateExpandedRows = _instance$paginateExp === void 0 ? true : _instance$paginateExp,
+        _instance$expandSubRo = instance.expandSubRows,
+        expandSubRows = _instance$expandSubRo === void 0 ? true : _instance$expandSubRo,
+        _instance$state = instance.state,
+        pageSize = _instance$state.pageSize,
+        pageIndex = _instance$state.pageIndex,
+        expanded = _instance$state.expanded,
+        globalFilter = _instance$state.globalFilter,
+        filters = _instance$state.filters,
+        groupBy = _instance$state.groupBy,
+        sortBy = _instance$state.sortBy,
+        dispatch = instance.dispatch,
+        data = instance.data,
+        manualPagination = instance.manualPagination;
+    ensurePluginOrder(plugins, ['useGlobalFilter', 'useFilters', 'useGroupBy', 'useSortBy', 'useExpanded'], 'usePagination');
+    var getAutoResetPage = useGetLatest(autoResetPage);
+    useMountedLayoutEffect(function () {
+      if (getAutoResetPage()) {
+        dispatch({
+          type: actions.resetPage
+        });
+      }
+    }, [dispatch, manualPagination ? null : data, globalFilter, filters, groupBy, sortBy]);
+    var pageCount = manualPagination ? userPageCount : Math.ceil(rows.length / pageSize);
+    var pageOptions = React.useMemo(function () {
+      return pageCount > 0 ? [].concat(new Array(pageCount)).fill(null).map(function (d, i) {
+        return i;
+      }) : [];
+    }, [pageCount]);
+    var page = React.useMemo(function () {
+      var page;
+
+      if (manualPagination) {
+        page = rows;
+      } else {
+        var pageStart = pageSize * pageIndex;
+        var pageEnd = pageStart + pageSize;
+        page = rows.slice(pageStart, pageEnd);
+      }
+
+      if (paginateExpandedRows) {
+        return page;
+      }
+
+      return expandRows(page, {
+        manualExpandedKey: manualExpandedKey,
+        expanded: expanded,
+        expandSubRows: expandSubRows
+      });
+    }, [expandSubRows, expanded, manualExpandedKey, manualPagination, pageIndex, pageSize, paginateExpandedRows, rows]);
+    var canPreviousPage = pageIndex > 0;
+    var canNextPage = pageCount === -1 ? page.length >= pageSize : pageIndex < pageCount - 1;
+    var gotoPage = React.useCallback(function (pageIndex) {
+      dispatch({
+        type: actions.gotoPage,
+        pageIndex: pageIndex
+      });
+    }, [dispatch]);
+    var previousPage = React.useCallback(function () {
+      return gotoPage(function (old) {
+        return old - 1;
+      });
+    }, [gotoPage]);
+    var nextPage = React.useCallback(function () {
+      return gotoPage(function (old) {
+        return old + 1;
+      });
+    }, [gotoPage]);
+    var setPageSize = React.useCallback(function (pageSize) {
+      dispatch({
+        type: actions.setPageSize,
+        pageSize: pageSize
+      });
+    }, [dispatch]);
+    Object.assign(instance, {
+      pageOptions: pageOptions,
+      pageCount: pageCount,
+      page: page,
+      canPreviousPage: canPreviousPage,
+      canNextPage: canNextPage,
+      gotoPage: gotoPage,
+      previousPage: previousPage,
+      nextPage: nextPage,
+      setPageSize: setPageSize
+    });
+  }
+
+  actions.resetPivot = 'resetPivot';
+  actions.togglePivot = 'togglePivot';
+  var _UNSTABLE_usePivotColumns = function _UNSTABLE_usePivotColumns(hooks) {
+    hooks.getPivotToggleProps = [defaultGetPivotToggleProps];
+    hooks.stateReducers.push(reducer$7);
+    hooks.useInstanceAfterData.push(useInstanceAfterData);
+    hooks.allColumns.push(allColumns);
+    hooks.accessValue.push(accessValue);
+    hooks.materializedColumns.push(materializedColumns);
+    hooks.materializedColumnsDeps.push(materializedColumnsDeps);
+    hooks.visibleColumns.push(visibleColumns$1);
+    hooks.visibleColumnsDeps.push(visibleColumnsDeps);
+    hooks.useInstance.push(useInstance$7);
+    hooks.prepareRow.push(prepareRow$2);
+  };
+  _UNSTABLE_usePivotColumns.pluginName = 'usePivotColumns';
+  var defaultPivotColumns = [];
+
+  var defaultGetPivotToggleProps = function defaultGetPivotToggleProps(props, _ref) {
+    var header = _ref.header;
+    return [props, {
+      onClick: header.canPivot ? function (e) {
+        e.persist();
+        header.togglePivot();
+      } : undefined,
+      style: {
+        cursor: header.canPivot ? 'pointer' : undefined
+      },
+      title: 'Toggle Pivot'
+    }];
+  }; // Reducer
+
+
+  function reducer$7(state, action, previousState, instance) {
+    if (action.type === actions.init) {
+      return _extends({
+        pivotColumns: defaultPivotColumns
+      }, state);
+    }
+
+    if (action.type === actions.resetPivot) {
+      return _extends({}, state, {
+        pivotColumns: instance.initialState.pivotColumns || defaultPivotColumns
+      });
+    }
+
+    if (action.type === actions.togglePivot) {
+      var columnId = action.columnId,
+          setPivot = action.value;
+      var resolvedPivot = typeof setPivot !== 'undefined' ? setPivot : !state.pivotColumns.includes(columnId);
+
+      if (resolvedPivot) {
+        return _extends({}, state, {
+          pivotColumns: [].concat(state.pivotColumns, [columnId])
+        });
+      }
+
+      return _extends({}, state, {
+        pivotColumns: state.pivotColumns.filter(function (d) {
+          return d !== columnId;
+        })
+      });
+    }
+  }
+
+  function useInstanceAfterData(instance) {
+    instance.allColumns.forEach(function (column) {
+      column.isPivotSource = instance.state.pivotColumns.includes(column.id);
+    });
+  }
+
+  function allColumns(columns, _ref2) {
+    var instance = _ref2.instance;
+    columns.forEach(function (column) {
+      column.isPivotSource = instance.state.pivotColumns.includes(column.id);
+      column.uniqueValues = new Set();
+    });
+    return columns;
+  }
+
+  function accessValue(value, _ref3) {
+    var column = _ref3.column;
+
+    if (column.uniqueValues && typeof value !== 'undefined') {
+      column.uniqueValues.add(value);
+    }
+
+    return value;
+  }
+
+  function materializedColumns(materialized, _ref4) {
+    var instance = _ref4.instance;
+    var allColumns = instance.allColumns,
+        state = instance.state;
+
+    if (!state.pivotColumns.length || !state.groupBy || !state.groupBy.length) {
+      return materialized;
+    }
+
+    var pivotColumns = state.pivotColumns.map(function (id) {
+      return allColumns.find(function (d) {
+        return d.id === id;
+      });
+    }).filter(Boolean);
+    var sourceColumns = allColumns.filter(function (d) {
+      return !d.isPivotSource && !state.groupBy.includes(d.id) && !state.pivotColumns.includes(d.id);
+    });
+
+    var buildPivotColumns = function buildPivotColumns(depth, parent, pivotFilters) {
+      if (depth === void 0) {
+        depth = 0;
+      }
+
+      if (pivotFilters === void 0) {
+        pivotFilters = [];
+      }
+
+      var pivotColumn = pivotColumns[depth];
+
+      if (!pivotColumn) {
+        return sourceColumns.map(function (sourceColumn) {
+          // TODO: We could offer support here for renesting pivoted
+          // columns inside copies of their header groups. For now,
+          // that seems like it would be (1) overkill on nesting, considering
+          // you already get nesting for every pivot level and (2)
+          // really hard. :)
+          return _extends({}, sourceColumn, {
+            canPivot: false,
+            isPivoted: true,
+            parent: parent,
+            depth: depth,
+            id: "" + (parent ? parent.id + "." + sourceColumn.id : sourceColumn.id),
+            accessor: function accessor(originalRow, i, row) {
+              if (pivotFilters.every(function (filter) {
+                return filter(row);
+              })) {
+                return row.values[sourceColumn.id];
+              }
+            }
+          });
+        });
+      }
+
+      var uniqueValues = Array.from(pivotColumn.uniqueValues).sort();
+      return uniqueValues.map(function (uniqueValue) {
+        var columnGroup = _extends({}, pivotColumn, {
+          Header: pivotColumn.PivotHeader || typeof pivotColumn.header === 'string' ? pivotColumn.Header + ": " + uniqueValue : uniqueValue,
+          isPivotGroup: true,
+          parent: parent,
+          depth: depth,
+          id: parent ? parent.id + "." + pivotColumn.id + "." + uniqueValue : pivotColumn.id + "." + uniqueValue,
+          pivotValue: uniqueValue
+        });
+
+        columnGroup.columns = buildPivotColumns(depth + 1, columnGroup, [].concat(pivotFilters, [function (row) {
+          return row.values[pivotColumn.id] === uniqueValue;
+        }]));
+        return columnGroup;
+      });
+    };
+
+    var newMaterialized = flattenColumns(buildPivotColumns());
+    return [].concat(materialized, newMaterialized);
+  }
+
+  function materializedColumnsDeps(deps, _ref5) {
+    var _ref5$instance$state = _ref5.instance.state,
+        pivotColumns = _ref5$instance$state.pivotColumns,
+        groupBy = _ref5$instance$state.groupBy;
+    return [].concat(deps, [pivotColumns, groupBy]);
+  }
+
+  function visibleColumns$1(visibleColumns, _ref6) {
+    var state = _ref6.instance.state;
+    visibleColumns = visibleColumns.filter(function (d) {
+      return !d.isPivotSource;
+    });
+
+    if (state.pivotColumns.length && state.groupBy && state.groupBy.length) {
+      visibleColumns = visibleColumns.filter(function (column) {
+        return column.isGrouped || column.isPivoted;
+      });
+    }
+
+    return visibleColumns;
+  }
+
+  function visibleColumnsDeps(deps, _ref7) {
+    var instance = _ref7.instance;
+    return [].concat(deps, [instance.state.pivotColumns, instance.state.groupBy]);
+  }
+
+  function useInstance$7(instance) {
+    var columns = instance.columns,
+        allColumns = instance.allColumns,
+        flatHeaders = instance.flatHeaders,
+        getHooks = instance.getHooks,
+        plugins = instance.plugins,
+        dispatch = instance.dispatch,
+        _instance$autoResetPi = instance.autoResetPivot,
+        autoResetPivot = _instance$autoResetPi === void 0 ? true : _instance$autoResetPi,
+        manaulPivot = instance.manaulPivot,
+        disablePivot = instance.disablePivot,
+        defaultCanPivot = instance.defaultCanPivot;
+    ensurePluginOrder(plugins, ['useGroupBy'], 'usePivotColumns');
+    var getInstance = useGetLatest(instance);
+    allColumns.forEach(function (column) {
+      var accessor = column.accessor,
+          defaultColumnPivot = column.defaultPivot,
+          columnDisablePivot = column.disablePivot;
+      column.canPivot = accessor ? getFirstDefined(column.canPivot, columnDisablePivot === true ? false : undefined, disablePivot === true ? false : undefined, true) : getFirstDefined(column.canPivot, defaultColumnPivot, defaultCanPivot, false);
+
+      if (column.canPivot) {
+        column.togglePivot = function () {
+          return instance.togglePivot(column.id);
+        };
+      }
+
+      column.Aggregated = column.Aggregated || column.Cell;
+    });
+
+    var togglePivot = function togglePivot(columnId, value) {
+      dispatch({
+        type: actions.togglePivot,
+        columnId: columnId,
+        value: value
+      });
+    };
+
+    flatHeaders.forEach(function (header) {
+      header.getPivotToggleProps = makePropGetter(getHooks().getPivotToggleProps, {
+        instance: getInstance(),
+        header: header
+      });
+    });
+    var getAutoResetPivot = useGetLatest(autoResetPivot);
+    useMountedLayoutEffect(function () {
+      if (getAutoResetPivot()) {
+        dispatch({
+          type: actions.resetPivot
+        });
+      }
+    }, [dispatch, manaulPivot ? null : columns]);
+    Object.assign(instance, {
+      togglePivot: togglePivot
+    });
+  }
+
+  function prepareRow$2(row) {
+    row.allCells.forEach(function (cell) {
+      // Grouped cells are in the pivotColumns and the pivot cell for the row
+      cell.isPivoted = cell.column.isPivoted;
+    });
+  }
+
+  var pluginName$1 = 'useRowSelect'; // Actions
+
+  actions.resetSelectedRows = 'resetSelectedRows';
+  actions.toggleAllRowsSelected = 'toggleAllRowsSelected';
+  actions.toggleRowSelected = 'toggleRowSelected';
+  actions.toggleAllPageRowsSelected = 'toggleAllPageRowsSelected';
+  var useRowSelect = function useRowSelect(hooks) {
+    hooks.getToggleRowSelectedProps = [defaultGetToggleRowSelectedProps];
+    hooks.getToggleAllRowsSelectedProps = [defaultGetToggleAllRowsSelectedProps];
+    hooks.getToggleAllPageRowsSelectedProps = [defaultGetToggleAllPageRowsSelectedProps];
+    hooks.stateReducers.push(reducer$8);
+    hooks.useInstance.push(useInstance$8);
+    hooks.prepareRow.push(prepareRow$3);
+  };
+  useRowSelect.pluginName = pluginName$1;
+
+  var defaultGetToggleRowSelectedProps = function defaultGetToggleRowSelectedProps(props, _ref) {
+    var instance = _ref.instance,
+        row = _ref.row;
+    var _instance$manualRowSe = instance.manualRowSelectedKey,
+        manualRowSelectedKey = _instance$manualRowSe === void 0 ? 'isSelected' : _instance$manualRowSe;
+    var checked = false;
+
+    if (row.original && row.original[manualRowSelectedKey]) {
+      checked = true;
+    } else {
+      checked = row.isSelected;
+    }
+
+    return [props, {
+      onChange: function onChange(e) {
+        row.toggleRowSelected(e.target.checked);
+      },
+      style: {
+        cursor: 'pointer'
+      },
+      checked: checked,
+      title: 'Toggle Row Selected',
+      indeterminate: row.isSomeSelected
+    }];
+  };
+
+  var defaultGetToggleAllRowsSelectedProps = function defaultGetToggleAllRowsSelectedProps(props, _ref2) {
+    var instance = _ref2.instance;
+    return [props, {
+      onChange: function onChange(e) {
+        instance.toggleAllRowsSelected(e.target.checked);
+      },
+      style: {
+        cursor: 'pointer'
+      },
+      checked: instance.isAllRowsSelected,
+      title: 'Toggle All Rows Selected',
+      indeterminate: Boolean(!instance.isAllRowsSelected && Object.keys(instance.state.selectedRowIds).length)
+    }];
+  };
+
+  var defaultGetToggleAllPageRowsSelectedProps = function defaultGetToggleAllPageRowsSelectedProps(props, _ref3) {
+    var instance = _ref3.instance;
+    return [props, {
+      onChange: function onChange(e) {
+        instance.toggleAllPageRowsSelected(e.target.checked);
+      },
+      style: {
+        cursor: 'pointer'
+      },
+      checked: instance.isAllPageRowsSelected,
+      title: 'Toggle All Current Page Rows Selected',
+      indeterminate: Boolean(!instance.isAllPageRowsSelected && instance.page.some(function (_ref4) {
+        var id = _ref4.id;
+        return instance.state.selectedRowIds[id];
+      }))
+    }];
+  }; // eslint-disable-next-line max-params
+
+
+  function reducer$8(state, action, previousState, instance) {
+    if (action.type === actions.init) {
+      return _extends({
+        selectedRowIds: {}
+      }, state);
+    }
+
+    if (action.type === actions.resetSelectedRows) {
+      return _extends({}, state, {
+        selectedRowIds: instance.initialState.selectedRowIds || {}
+      });
+    }
+
+    if (action.type === actions.toggleAllRowsSelected) {
+      var setSelected = action.value;
+      var isAllRowsSelected = instance.isAllRowsSelected,
+          rowsById = instance.rowsById,
+          _instance$nonGroupedR = instance.nonGroupedRowsById,
+          nonGroupedRowsById = _instance$nonGroupedR === void 0 ? rowsById : _instance$nonGroupedR;
+      var selectAll = typeof setSelected !== 'undefined' ? setSelected : !isAllRowsSelected; // Only remove/add the rows that are visible on the screen
+      //  Leave all the other rows that are selected alone.
+
+      var selectedRowIds = Object.assign({}, state.selectedRowIds);
+
+      if (selectAll) {
+        Object.keys(nonGroupedRowsById).forEach(function (rowId) {
+          selectedRowIds[rowId] = true;
+        });
+      } else {
+        Object.keys(nonGroupedRowsById).forEach(function (rowId) {
+          delete selectedRowIds[rowId];
+        });
+      }
+
+      return _extends({}, state, {
+        selectedRowIds: selectedRowIds
+      });
+    }
+
+    if (action.type === actions.toggleRowSelected) {
+      var id = action.id,
+          _setSelected = action.value;
+      var _rowsById = instance.rowsById,
+          _instance$selectSubRo = instance.selectSubRows,
+          selectSubRows = _instance$selectSubRo === void 0 ? true : _instance$selectSubRo,
+          getSubRows = instance.getSubRows;
+      var isSelected = state.selectedRowIds[id];
+      var shouldExist = typeof _setSelected !== 'undefined' ? _setSelected : !isSelected;
+
+      if (isSelected === shouldExist) {
+        return state;
+      }
+
+      var newSelectedRowIds = _extends({}, state.selectedRowIds);
+
+      var handleRowById = function handleRowById(id) {
+        var row = _rowsById[id];
+
+        if (row) {
+          if (!row.isGrouped) {
+            if (shouldExist) {
+              newSelectedRowIds[id] = true;
+            } else {
+              delete newSelectedRowIds[id];
+            }
+          }
+
+          if (selectSubRows && getSubRows(row)) {
+            return getSubRows(row).forEach(function (row) {
+              return handleRowById(row.id);
+            });
+          }
+        }
+      };
+
+      handleRowById(id);
+      return _extends({}, state, {
+        selectedRowIds: newSelectedRowIds
+      });
+    }
+
+    if (action.type === actions.toggleAllPageRowsSelected) {
+      var _setSelected2 = action.value;
+
+      var page = instance.page,
+          _rowsById2 = instance.rowsById,
+          _instance$selectSubRo2 = instance.selectSubRows,
+          _selectSubRows = _instance$selectSubRo2 === void 0 ? true : _instance$selectSubRo2,
+          isAllPageRowsSelected = instance.isAllPageRowsSelected,
+          _getSubRows = instance.getSubRows;
+
+      var _selectAll = typeof _setSelected2 !== 'undefined' ? _setSelected2 : !isAllPageRowsSelected;
+
+      var _newSelectedRowIds = _extends({}, state.selectedRowIds);
+
+      var _handleRowById = function _handleRowById(id) {
+        var row = _rowsById2[id];
+
+        if (!row.isGrouped) {
+          if (_selectAll) {
+            _newSelectedRowIds[id] = true;
+          } else {
+            delete _newSelectedRowIds[id];
+          }
+        }
+
+        if (_selectSubRows && _getSubRows(row)) {
+          return _getSubRows(row).forEach(function (row) {
+            return _handleRowById(row.id);
+          });
+        }
+      };
+
+      page.forEach(function (row) {
+        return _handleRowById(row.id);
+      });
+      return _extends({}, state, {
+        selectedRowIds: _newSelectedRowIds
+      });
+    }
+
+    return state;
+  }
+
+  function useInstance$8(instance) {
+    var data = instance.data,
+        rows = instance.rows,
+        getHooks = instance.getHooks,
+        plugins = instance.plugins,
+        rowsById = instance.rowsById,
+        _instance$nonGroupedR2 = instance.nonGroupedRowsById,
+        nonGroupedRowsById = _instance$nonGroupedR2 === void 0 ? rowsById : _instance$nonGroupedR2,
+        _instance$autoResetSe = instance.autoResetSelectedRows,
+        autoResetSelectedRows = _instance$autoResetSe === void 0 ? true : _instance$autoResetSe,
+        selectedRowIds = instance.state.selectedRowIds,
+        _instance$selectSubRo3 = instance.selectSubRows,
+        selectSubRows = _instance$selectSubRo3 === void 0 ? true : _instance$selectSubRo3,
+        dispatch = instance.dispatch,
+        page = instance.page,
+        getSubRows = instance.getSubRows;
+    ensurePluginOrder(plugins, ['useFilters', 'useGroupBy', 'useSortBy', 'useExpanded', 'usePagination'], 'useRowSelect');
+    var selectedFlatRows = React.useMemo(function () {
+      var selectedFlatRows = [];
+      rows.forEach(function (row) {
+        var isSelected = selectSubRows ? getRowIsSelected(row, selectedRowIds, getSubRows) : !!selectedRowIds[row.id];
+        row.isSelected = !!isSelected;
+        row.isSomeSelected = isSelected === null;
+
+        if (isSelected) {
+          selectedFlatRows.push(row);
+        }
+      });
+      return selectedFlatRows;
+    }, [rows, selectSubRows, selectedRowIds, getSubRows]);
+    var isAllRowsSelected = Boolean(Object.keys(nonGroupedRowsById).length && Object.keys(selectedRowIds).length);
+    var isAllPageRowsSelected = isAllRowsSelected;
+
+    if (isAllRowsSelected) {
+      if (Object.keys(nonGroupedRowsById).some(function (id) {
+        return !selectedRowIds[id];
+      })) {
+        isAllRowsSelected = false;
+      }
+    }
+
+    if (!isAllRowsSelected) {
+      if (page && page.length && page.some(function (_ref5) {
+        var id = _ref5.id;
+        return !selectedRowIds[id];
+      })) {
+        isAllPageRowsSelected = false;
+      }
+    }
+
+    var getAutoResetSelectedRows = useGetLatest(autoResetSelectedRows);
+    useMountedLayoutEffect(function () {
+      if (getAutoResetSelectedRows()) {
+        dispatch({
+          type: actions.resetSelectedRows
+        });
+      }
+    }, [dispatch, data]);
+    var toggleAllRowsSelected = React.useCallback(function (value) {
+      return dispatch({
+        type: actions.toggleAllRowsSelected,
+        value: value
+      });
+    }, [dispatch]);
+    var toggleAllPageRowsSelected = React.useCallback(function (value) {
+      return dispatch({
+        type: actions.toggleAllPageRowsSelected,
+        value: value
+      });
+    }, [dispatch]);
+    var toggleRowSelected = React.useCallback(function (id, value) {
+      return dispatch({
+        type: actions.toggleRowSelected,
+        id: id,
+        value: value
+      });
+    }, [dispatch]);
+    var getInstance = useGetLatest(instance);
+    var getToggleAllRowsSelectedProps = makePropGetter(getHooks().getToggleAllRowsSelectedProps, {
+      instance: getInstance()
+    });
+    var getToggleAllPageRowsSelectedProps = makePropGetter(getHooks().getToggleAllPageRowsSelectedProps, {
+      instance: getInstance()
+    });
+    Object.assign(instance, {
+      selectedFlatRows: selectedFlatRows,
+      isAllRowsSelected: isAllRowsSelected,
+      isAllPageRowsSelected: isAllPageRowsSelected,
+      toggleRowSelected: toggleRowSelected,
+      toggleAllRowsSelected: toggleAllRowsSelected,
+      getToggleAllRowsSelectedProps: getToggleAllRowsSelectedProps,
+      getToggleAllPageRowsSelectedProps: getToggleAllPageRowsSelectedProps,
+      toggleAllPageRowsSelected: toggleAllPageRowsSelected
+    });
+  }
+
+  function prepareRow$3(row, _ref6) {
+    var instance = _ref6.instance;
+
+    row.toggleRowSelected = function (set) {
+      return instance.toggleRowSelected(row.id, set);
+    };
+
+    row.getToggleRowSelectedProps = makePropGetter(instance.getHooks().getToggleRowSelectedProps, {
+      instance: instance,
+      row: row
+    });
+  }
+
+  function getRowIsSelected(row, selectedRowIds, getSubRows) {
+    if (selectedRowIds[row.id]) {
+      return true;
+    }
+
+    var subRows = getSubRows(row);
+
+    if (subRows && subRows.length) {
+      var allChildrenSelected = true;
+      var someSelected = false;
+      subRows.forEach(function (subRow) {
+        // Bail out early if we know both of these
+        if (someSelected && !allChildrenSelected) {
+          return;
+        }
+
+        if (getRowIsSelected(subRow, selectedRowIds, getSubRows)) {
+          someSelected = true;
+        } else {
+          allChildrenSelected = false;
+        }
+      });
+      return allChildrenSelected ? true : someSelected ? null : false;
+    }
+
+    return false;
+  }
+
+  var defaultInitialRowStateAccessor = function defaultInitialRowStateAccessor(row) {
+    return {};
+  };
+
+  var defaultInitialCellStateAccessor = function defaultInitialCellStateAccessor(cell) {
+    return {};
+  }; // Actions
+
+
+  actions.setRowState = 'setRowState';
+  actions.setCellState = 'setCellState';
+  actions.resetRowState = 'resetRowState';
+  var useRowState = function useRowState(hooks) {
+    hooks.stateReducers.push(reducer$9);
+    hooks.useInstance.push(useInstance$9);
+    hooks.prepareRow.push(prepareRow$4);
+  };
+  useRowState.pluginName = 'useRowState';
+
+  function reducer$9(state, action, previousState, instance) {
+    var _instance$initialRowS = instance.initialRowStateAccessor,
+        initialRowStateAccessor = _instance$initialRowS === void 0 ? defaultInitialRowStateAccessor : _instance$initialRowS,
+        _instance$initialCell = instance.initialCellStateAccessor,
+        initialCellStateAccessor = _instance$initialCell === void 0 ? defaultInitialCellStateAccessor : _instance$initialCell,
+        rowsById = instance.rowsById;
+
+    if (action.type === actions.init) {
+      return _extends({
+        rowState: {}
+      }, state);
+    }
+
+    if (action.type === actions.resetRowState) {
+      return _extends({}, state, {
+        rowState: instance.initialState.rowState || {}
+      });
+    }
+
+    if (action.type === actions.setRowState) {
+      var _extends2;
+
+      var rowId = action.rowId,
+          value = action.value;
+      var oldRowState = typeof state.rowState[rowId] !== 'undefined' ? state.rowState[rowId] : initialRowStateAccessor(rowsById[rowId]);
+      return _extends({}, state, {
+        rowState: _extends({}, state.rowState, (_extends2 = {}, _extends2[rowId] = functionalUpdate(value, oldRowState), _extends2))
+      });
+    }
+
+    if (action.type === actions.setCellState) {
+      var _oldRowState$cellStat, _rowsById$_rowId, _rowsById$_rowId$cell, _extends3, _extends4;
+
+      var _rowId = action.rowId,
+          columnId = action.columnId,
+          _value = action.value;
+
+      var _oldRowState = typeof state.rowState[_rowId] !== 'undefined' ? state.rowState[_rowId] : initialRowStateAccessor(rowsById[_rowId]);
+
+      var oldCellState = typeof (_oldRowState == null ? void 0 : (_oldRowState$cellStat = _oldRowState.cellState) == null ? void 0 : _oldRowState$cellStat[columnId]) !== 'undefined' ? _oldRowState.cellState[columnId] : initialCellStateAccessor((_rowsById$_rowId = rowsById[_rowId]) == null ? void 0 : (_rowsById$_rowId$cell = _rowsById$_rowId.cells) == null ? void 0 : _rowsById$_rowId$cell.find(function (cell) {
+        return cell.column.id === columnId;
+      }));
+      return _extends({}, state, {
+        rowState: _extends({}, state.rowState, (_extends4 = {}, _extends4[_rowId] = _extends({}, _oldRowState, {
+          cellState: _extends({}, _oldRowState.cellState || {}, (_extends3 = {}, _extends3[columnId] = functionalUpdate(_value, oldCellState), _extends3))
+        }), _extends4))
+      });
+    }
+  }
+
+  function useInstance$9(instance) {
+    var _instance$autoResetRo = instance.autoResetRowState,
+        autoResetRowState = _instance$autoResetRo === void 0 ? true : _instance$autoResetRo,
+        data = instance.data,
+        dispatch = instance.dispatch;
+    var setRowState = React.useCallback(function (rowId, value) {
+      return dispatch({
+        type: actions.setRowState,
+        rowId: rowId,
+        value: value
+      });
+    }, [dispatch]);
+    var setCellState = React.useCallback(function (rowId, columnId, value) {
+      return dispatch({
+        type: actions.setCellState,
+        rowId: rowId,
+        columnId: columnId,
+        value: value
+      });
+    }, [dispatch]);
+    var getAutoResetRowState = useGetLatest(autoResetRowState);
+    useMountedLayoutEffect(function () {
+      if (getAutoResetRowState()) {
+        dispatch({
+          type: actions.resetRowState
+        });
+      }
+    }, [data]);
+    Object.assign(instance, {
+      setRowState: setRowState,
+      setCellState: setCellState
+    });
+  }
+
+  function prepareRow$4(row, _ref) {
+    var instance = _ref.instance;
+    var _instance$initialRowS2 = instance.initialRowStateAccessor,
+        initialRowStateAccessor = _instance$initialRowS2 === void 0 ? defaultInitialRowStateAccessor : _instance$initialRowS2,
+        _instance$initialCell2 = instance.initialCellStateAccessor,
+        initialCellStateAccessor = _instance$initialCell2 === void 0 ? defaultInitialCellStateAccessor : _instance$initialCell2,
+        rowState = instance.state.rowState;
+
+    if (row) {
+      row.state = typeof rowState[row.id] !== 'undefined' ? rowState[row.id] : initialRowStateAccessor(row);
+
+      row.setState = function (updater) {
+        return instance.setRowState(row.id, updater);
+      };
+
+      row.cells.forEach(function (cell) {
+        if (!row.state.cellState) {
+          row.state.cellState = {};
+        }
+
+        cell.state = typeof row.state.cellState[cell.column.id] !== 'undefined' ? row.state.cellState[cell.column.id] : initialCellStateAccessor(cell);
+
+        cell.setState = function (updater) {
+          return instance.setCellState(row.id, cell.column.id, updater);
+        };
+      });
+    }
+  }
+
+  actions.resetColumnOrder = 'resetColumnOrder';
+  actions.setColumnOrder = 'setColumnOrder';
+  var useColumnOrder = function useColumnOrder(hooks) {
+    hooks.stateReducers.push(reducer$a);
+    hooks.visibleColumnsDeps.push(function (deps, _ref) {
+      var instance = _ref.instance;
+      return [].concat(deps, [instance.state.columnOrder]);
+    });
+    hooks.visibleColumns.push(visibleColumns$2);
+    hooks.useInstance.push(useInstance$a);
+  };
+  useColumnOrder.pluginName = 'useColumnOrder';
+
+  function reducer$a(state, action, previousState, instance) {
+    if (action.type === actions.init) {
+      return _extends({
+        columnOrder: []
+      }, state);
+    }
+
+    if (action.type === actions.resetColumnOrder) {
+      return _extends({}, state, {
+        columnOrder: instance.initialState.columnOrder || []
+      });
+    }
+
+    if (action.type === actions.setColumnOrder) {
+      return _extends({}, state, {
+        columnOrder: functionalUpdate(action.columnOrder, state.columnOrder)
+      });
+    }
+  }
+
+  function visibleColumns$2(columns, _ref2) {
+    var columnOrder = _ref2.instance.state.columnOrder;
+
+    // If there is no order, return the normal columns
+    if (!columnOrder || !columnOrder.length) {
+      return columns;
+    }
+
+    var columnOrderCopy = [].concat(columnOrder); // If there is an order, make a copy of the columns
+
+    var columnsCopy = [].concat(columns); // And make a new ordered array of the columns
+
+    var columnsInOrder = []; // Loop over the columns and place them in order into the new array
+
+    var _loop = function _loop() {
+      var targetColumnId = columnOrderCopy.shift();
+      var foundIndex = columnsCopy.findIndex(function (d) {
+        return d.id === targetColumnId;
+      });
+
+      if (foundIndex > -1) {
+        columnsInOrder.push(columnsCopy.splice(foundIndex, 1)[0]);
+      }
+    };
+
+    while (columnsCopy.length && columnOrderCopy.length) {
+      _loop();
+    } // If there are any columns left, add them to the end
+
+
+    return [].concat(columnsInOrder, columnsCopy);
+  }
+
+  function useInstance$a(instance) {
+    var dispatch = instance.dispatch;
+    instance.setColumnOrder = React.useCallback(function (columnOrder) {
+      return dispatch({
+        type: actions.setColumnOrder,
+        columnOrder: columnOrder
+      });
+    }, [dispatch]);
+  }
+
+  defaultColumn.canResize = true; // Actions
+
+  actions.columnStartResizing = 'columnStartResizing';
+  actions.columnResizing = 'columnResizing';
+  actions.columnDoneResizing = 'columnDoneResizing';
+  actions.resetResize = 'resetResize';
+  var useResizeColumns = function useResizeColumns(hooks) {
+    hooks.getResizerProps = [defaultGetResizerProps];
+    hooks.getHeaderProps.push({
+      style: {
+        position: 'relative'
+      }
+    });
+    hooks.stateReducers.push(reducer$b);
+    hooks.useInstance.push(useInstance$b);
+    hooks.useInstanceBeforeDimensions.push(useInstanceBeforeDimensions$1);
+  };
+
+  var defaultGetResizerProps = function defaultGetResizerProps(props, _ref) {
+    var instance = _ref.instance,
+        header = _ref.header;
+    var dispatch = instance.dispatch;
+
+    var onResizeStart = function onResizeStart(e, header) {
+      var isTouchEvent = false;
+
+      if (e.type === 'touchstart') {
+        // lets not respond to multiple touches (e.g. 2 or 3 fingers)
+        if (e.touches && e.touches.length > 1) {
+          return;
+        }
+
+        isTouchEvent = true;
+      }
+
+      var headersToResize = getLeafHeaders(header);
+      var headerIdWidths = headersToResize.map(function (d) {
+        return [d.id, d.totalWidth];
+      });
+      var clientX = isTouchEvent ? Math.round(e.touches[0].clientX) : e.clientX;
+      var raf;
+      var mostRecentClientX;
+
+      var dispatchEnd = function dispatchEnd() {
+        window.cancelAnimationFrame(raf);
+        raf = null;
+        dispatch({
+          type: actions.columnDoneResizing
+        });
+      };
+
+      var dispatchMove = function dispatchMove() {
+        window.cancelAnimationFrame(raf);
+        raf = null;
+        dispatch({
+          type: actions.columnResizing,
+          clientX: mostRecentClientX
+        });
+      };
+
+      var scheduleDispatchMoveOnNextAnimationFrame = function scheduleDispatchMoveOnNextAnimationFrame(clientXPos) {
+        mostRecentClientX = clientXPos;
+
+        if (!raf) {
+          raf = window.requestAnimationFrame(dispatchMove);
+        }
+      };
+
+      var handlersAndEvents = {
+        mouse: {
+          moveEvent: 'mousemove',
+          moveHandler: function moveHandler(e) {
+            return scheduleDispatchMoveOnNextAnimationFrame(e.clientX);
+          },
+          upEvent: 'mouseup',
+          upHandler: function upHandler(e) {
+            document.removeEventListener('mousemove', handlersAndEvents.mouse.moveHandler);
+            document.removeEventListener('mouseup', handlersAndEvents.mouse.upHandler);
+            dispatchEnd();
+          }
+        },
+        touch: {
+          moveEvent: 'touchmove',
+          moveHandler: function moveHandler(e) {
+            if (e.cancelable) {
+              e.preventDefault();
+              e.stopPropagation();
+            }
+
+            scheduleDispatchMoveOnNextAnimationFrame(e.touches[0].clientX);
+            return false;
+          },
+          upEvent: 'touchend',
+          upHandler: function upHandler(e) {
+            document.removeEventListener(handlersAndEvents.touch.moveEvent, handlersAndEvents.touch.moveHandler);
+            document.removeEventListener(handlersAndEvents.touch.upEvent, handlersAndEvents.touch.moveHandler);
+            dispatchEnd();
+          }
+        }
+      };
+      var events = isTouchEvent ? handlersAndEvents.touch : handlersAndEvents.mouse;
+      var passiveIfSupported = passiveEventSupported() ? {
+        passive: false
+      } : false;
+      document.addEventListener(events.moveEvent, events.moveHandler, passiveIfSupported);
+      document.addEventListener(events.upEvent, events.upHandler, passiveIfSupported);
+      dispatch({
+        type: actions.columnStartResizing,
+        columnId: header.id,
+        columnWidth: header.totalWidth,
+        headerIdWidths: headerIdWidths,
+        clientX: clientX
+      });
+    };
+
+    return [props, {
+      onMouseDown: function onMouseDown(e) {
+        return e.persist() || onResizeStart(e, header);
+      },
+      onTouchStart: function onTouchStart(e) {
+        return e.persist() || onResizeStart(e, header);
+      },
+      style: {
+        cursor: 'col-resize'
+      },
+      draggable: false,
+      role: 'separator'
+    }];
+  };
+
+  useResizeColumns.pluginName = 'useResizeColumns';
+
+  function reducer$b(state, action) {
+    if (action.type === actions.init) {
+      return _extends({
+        columnResizing: {
+          columnWidths: {}
+        }
+      }, state);
+    }
+
+    if (action.type === actions.resetResize) {
+      return _extends({}, state, {
+        columnResizing: {
+          columnWidths: {}
+        }
+      });
+    }
+
+    if (action.type === actions.columnStartResizing) {
+      var clientX = action.clientX,
+          columnId = action.columnId,
+          columnWidth = action.columnWidth,
+          headerIdWidths = action.headerIdWidths;
+      return _extends({}, state, {
+        columnResizing: _extends({}, state.columnResizing, {
+          startX: clientX,
+          headerIdWidths: headerIdWidths,
+          columnWidth: columnWidth,
+          isResizingColumn: columnId
+        })
+      });
+    }
+
+    if (action.type === actions.columnResizing) {
+      var _clientX = action.clientX;
+
+      var _state$columnResizing = state.columnResizing,
+          startX = _state$columnResizing.startX,
+          _columnWidth = _state$columnResizing.columnWidth,
+          _state$columnResizing2 = _state$columnResizing.headerIdWidths,
+          _headerIdWidths = _state$columnResizing2 === void 0 ? [] : _state$columnResizing2;
+
+      var deltaX = _clientX - startX;
+      var percentageDeltaX = deltaX / _columnWidth;
+      var newColumnWidths = {};
+
+      _headerIdWidths.forEach(function (_ref2) {
+        var headerId = _ref2[0],
+            headerWidth = _ref2[1];
+        newColumnWidths[headerId] = Math.max(headerWidth + headerWidth * percentageDeltaX, 0);
+      });
+
+      return _extends({}, state, {
+        columnResizing: _extends({}, state.columnResizing, {
+          columnWidths: _extends({}, state.columnResizing.columnWidths, {}, newColumnWidths)
+        })
+      });
+    }
+
+    if (action.type === actions.columnDoneResizing) {
+      return _extends({}, state, {
+        columnResizing: _extends({}, state.columnResizing, {
+          startX: null,
+          isResizingColumn: null
+        })
+      });
+    }
+  }
+
+  var useInstanceBeforeDimensions$1 = function useInstanceBeforeDimensions(instance) {
+    var flatHeaders = instance.flatHeaders,
+        disableResizing = instance.disableResizing,
+        getHooks = instance.getHooks,
+        columnResizing = instance.state.columnResizing;
+    var getInstance = useGetLatest(instance);
+    flatHeaders.forEach(function (header) {
+      var canResize = getFirstDefined(header.disableResizing === true ? false : undefined, disableResizing === true ? false : undefined, true);
+      header.canResize = canResize;
+      header.width = columnResizing.columnWidths[header.id] || header.originalWidth || header.width;
+      header.isResizing = columnResizing.isResizingColumn === header.id;
+
+      if (canResize) {
+        header.getResizerProps = makePropGetter(getHooks().getResizerProps, {
+          instance: getInstance(),
+          header: header
+        });
+      }
+    });
+  };
+
+  function useInstance$b(instance) {
+    var plugins = instance.plugins,
+        dispatch = instance.dispatch,
+        _instance$autoResetRe = instance.autoResetResize,
+        autoResetResize = _instance$autoResetRe === void 0 ? true : _instance$autoResetRe,
+        columns = instance.columns;
+    ensurePluginOrder(plugins, ['useAbsoluteLayout'], 'useResizeColumns');
+    var getAutoResetResize = useGetLatest(autoResetResize);
+    useMountedLayoutEffect(function () {
+      if (getAutoResetResize()) {
+        dispatch({
+          type: actions.resetResize
+        });
+      }
+    }, [columns]);
+    var resetResizing = React.useCallback(function () {
+      return dispatch({
+        type: actions.resetResize
+      });
+    }, [dispatch]);
+    Object.assign(instance, {
+      resetResizing: resetResizing
+    });
+  }
+
+  function getLeafHeaders(header) {
+    var leafHeaders = [];
+
+    var recurseHeader = function recurseHeader(header) {
+      if (header.columns && header.columns.length) {
+        header.columns.map(recurseHeader);
+      }
+
+      leafHeaders.push(header);
+    };
+
+    recurseHeader(header);
+    return leafHeaders;
+  }
+
+  var cellStyles = {
+    position: 'absolute',
+    top: 0
+  };
+  var useAbsoluteLayout = function useAbsoluteLayout(hooks) {
+    hooks.getTableBodyProps.push(getRowStyles);
+    hooks.getRowProps.push(getRowStyles);
+    hooks.getHeaderGroupProps.push(getRowStyles);
+    hooks.getFooterGroupProps.push(getRowStyles);
+    hooks.getHeaderProps.push(function (props, _ref) {
+      var column = _ref.column;
+      return [props, {
+        style: _extends({}, cellStyles, {
+          left: column.totalLeft + "px",
+          width: column.totalWidth + "px"
+        })
+      }];
+    });
+    hooks.getCellProps.push(function (props, _ref2) {
+      var cell = _ref2.cell;
+      return [props, {
+        style: _extends({}, cellStyles, {
+          left: cell.column.totalLeft + "px",
+          width: cell.column.totalWidth + "px"
+        })
+      }];
+    });
+    hooks.getFooterProps.push(function (props, _ref3) {
+      var column = _ref3.column;
+      return [props, {
+        style: _extends({}, cellStyles, {
+          left: column.totalLeft + "px",
+          width: column.totalWidth + "px"
+        })
+      }];
+    });
+  };
+  useAbsoluteLayout.pluginName = 'useAbsoluteLayout';
+
+  var getRowStyles = function getRowStyles(props, _ref4) {
+    var instance = _ref4.instance;
+    return [props, {
+      style: {
+        position: 'relative',
+        width: instance.totalColumnsWidth + "px"
+      }
+    }];
+  };
+
+  var cellStyles$1 = {
+    display: 'inline-block',
+    boxSizing: 'border-box'
+  };
+
+  var getRowStyles$1 = function getRowStyles(props, _ref) {
+    var instance = _ref.instance;
+    return [props, {
+      style: {
+        display: 'flex',
+        width: instance.totalColumnsWidth + "px"
+      }
+    }];
+  };
+
+  var useBlockLayout = function useBlockLayout(hooks) {
+    hooks.getRowProps.push(getRowStyles$1);
+    hooks.getHeaderGroupProps.push(getRowStyles$1);
+    hooks.getFooterGroupProps.push(getRowStyles$1);
+    hooks.getHeaderProps.push(function (props, _ref2) {
+      var column = _ref2.column;
+      return [props, {
+        style: _extends({}, cellStyles$1, {
+          width: column.totalWidth + "px"
+        })
+      }];
+    });
+    hooks.getCellProps.push(function (props, _ref3) {
+      var cell = _ref3.cell;
+      return [props, {
+        style: _extends({}, cellStyles$1, {
+          width: cell.column.totalWidth + "px"
+        })
+      }];
+    });
+    hooks.getFooterProps.push(function (props, _ref4) {
+      var column = _ref4.column;
+      return [props, {
+        style: _extends({}, cellStyles$1, {
+          width: column.totalWidth + "px"
+        })
+      }];
+    });
+  };
+  useBlockLayout.pluginName = 'useBlockLayout';
+
+  function useFlexLayout(hooks) {
+    hooks.getTableProps.push(getTableProps);
+    hooks.getRowProps.push(getRowStyles$2);
+    hooks.getHeaderGroupProps.push(getRowStyles$2);
+    hooks.getFooterGroupProps.push(getRowStyles$2);
+    hooks.getHeaderProps.push(getHeaderProps);
+    hooks.getCellProps.push(getCellProps);
+    hooks.getFooterProps.push(getFooterProps);
+  }
+  useFlexLayout.pluginName = 'useFlexLayout';
+
+  var getTableProps = function getTableProps(props, _ref) {
+    var instance = _ref.instance;
+    return [props, {
+      style: {
+        minWidth: instance.totalColumnsMinWidth + "px"
+      }
+    }];
+  };
+
+  var getRowStyles$2 = function getRowStyles(props, _ref2) {
+    var instance = _ref2.instance;
+    return [props, {
+      style: {
+        display: 'flex',
+        flex: '1 0 auto',
+        minWidth: instance.totalColumnsMinWidth + "px"
+      }
+    }];
+  };
+
+  var getHeaderProps = function getHeaderProps(props, _ref3) {
+    var column = _ref3.column;
+    return [props, {
+      style: {
+        boxSizing: 'border-box',
+        flex: column.totalFlexWidth ? column.totalFlexWidth + " 0 auto" : undefined,
+        minWidth: column.totalMinWidth + "px",
+        width: column.totalWidth + "px"
+      }
+    }];
+  };
+
+  var getCellProps = function getCellProps(props, _ref4) {
+    var cell = _ref4.cell;
+    return [props, {
+      style: {
+        boxSizing: 'border-box',
+        flex: cell.column.totalFlexWidth + " 0 auto",
+        minWidth: cell.column.totalMinWidth + "px",
+        width: cell.column.totalWidth + "px"
+      }
+    }];
+  };
+
+  var getFooterProps = function getFooterProps(props, _ref5) {
+    var column = _ref5.column;
+    return [props, {
+      style: {
+        boxSizing: 'border-box',
+        flex: column.totalFlexWidth ? column.totalFlexWidth + " 0 auto" : undefined,
+        minWidth: column.totalMinWidth + "px",
+        width: column.totalWidth + "px"
+      }
+    }];
+  };
+
+  actions.columnStartResizing = 'columnStartResizing';
+  actions.columnResizing = 'columnResizing';
+  actions.columnDoneResizing = 'columnDoneResizing';
+  actions.resetResize = 'resetResize';
+  function useGridLayout(hooks) {
+    hooks.stateReducers.push(reducer$c);
+    hooks.getTableProps.push(getTableProps$1);
+    hooks.getHeaderProps.push(getHeaderProps$1);
+    hooks.getRowProps.push(getRowProps);
+  }
+  useGridLayout.pluginName = 'useGridLayout';
+
+  var getTableProps$1 = function getTableProps(props, _ref) {
+    var instance = _ref.instance;
+    var gridTemplateColumns = instance.visibleColumns.map(function (column) {
+      var _instance$state$colum;
+
+      if (instance.state.gridLayout.columnWidths[column.id]) return instance.state.gridLayout.columnWidths[column.id] + "px"; // When resizing, lock the width of all unset columns
+      // instead of using user-provided width or defaultColumn width,
+      // which could potentially be 'auto' or 'fr' units that don't scale linearly
+
+      if ((_instance$state$colum = instance.state.columnResizing) == null ? void 0 : _instance$state$colum.isResizingColumn) return instance.state.gridLayout.startWidths[column.id] + "px";
+      if (typeof column.width === 'number') return column.width + "px";
+      return column.width;
+    });
+    return [props, {
+      style: {
+        display: "grid",
+        gridTemplateColumns: gridTemplateColumns.join(" ")
+      }
+    }];
+  };
+
+  var getHeaderProps$1 = function getHeaderProps(props, _ref2) {
+    var column = _ref2.column;
+    return [props, {
+      id: "header-cell-" + column.id,
+      style: {
+        position: "sticky",
+        //enables a scroll wrapper to be placed around the table and have sticky headers
+        gridColumn: "span " + column.totalVisibleHeaderCount
+      }
+    }];
+  };
+
+  var getRowProps = function getRowProps(props, _ref3) {
+    var row = _ref3.row;
+
+    if (row.isExpanded) {
+      return [props, {
+        style: {
+          gridColumn: "1 / " + (row.cells.length + 1)
+        }
+      }];
+    }
+
+    return [props, {}];
+  };
+
+  function reducer$c(state, action, previousState, instance) {
+    if (action.type === actions.init) {
+      return _extends({
+        gridLayout: {
+          columnWidths: {}
+        }
+      }, state);
+    }
+
+    if (action.type === actions.resetResize) {
+      return _extends({}, state, {
+        gridLayout: {
+          columnWidths: {}
+        }
+      });
+    }
+
+    if (action.type === actions.columnStartResizing) {
+      var columnId = action.columnId,
+          headerIdWidths = action.headerIdWidths;
+      var columnWidth = getElementWidth(columnId);
+
+      if (columnWidth !== undefined) {
+        var startWidths = instance.visibleColumns.reduce(function (acc, column) {
+          var _extends2;
+
+          return _extends({}, acc, (_extends2 = {}, _extends2[column.id] = getElementWidth(column.id), _extends2));
+        }, {});
+        var minWidths = instance.visibleColumns.reduce(function (acc, column) {
+          var _extends3;
+
+          return _extends({}, acc, (_extends3 = {}, _extends3[column.id] = column.minWidth, _extends3));
+        }, {});
+        var maxWidths = instance.visibleColumns.reduce(function (acc, column) {
+          var _extends4;
+
+          return _extends({}, acc, (_extends4 = {}, _extends4[column.id] = column.maxWidth, _extends4));
+        }, {});
+        var headerIdGridWidths = headerIdWidths.map(function (_ref4) {
+          var headerId = _ref4[0];
+          return [headerId, getElementWidth(headerId)];
+        });
+        return _extends({}, state, {
+          gridLayout: _extends({}, state.gridLayout, {
+            startWidths: startWidths,
+            minWidths: minWidths,
+            maxWidths: maxWidths,
+            headerIdGridWidths: headerIdGridWidths,
+            columnWidth: columnWidth
+          })
+        });
+      } else {
+        return state;
+      }
+    }
+
+    if (action.type === actions.columnResizing) {
+      var clientX = action.clientX;
+      var startX = state.columnResizing.startX;
+
+      var _state$gridLayout = state.gridLayout,
+          _columnWidth = _state$gridLayout.columnWidth,
+          _minWidths = _state$gridLayout.minWidths,
+          _maxWidths = _state$gridLayout.maxWidths,
+          _state$gridLayout$hea = _state$gridLayout.headerIdGridWidths,
+          _headerIdGridWidths = _state$gridLayout$hea === void 0 ? [] : _state$gridLayout$hea;
+
+      var deltaX = clientX - startX;
+      var percentageDeltaX = deltaX / _columnWidth;
+      var newColumnWidths = {};
+
+      _headerIdGridWidths.forEach(function (_ref5) {
+        var headerId = _ref5[0],
+            headerWidth = _ref5[1];
+        newColumnWidths[headerId] = Math.min(Math.max(_minWidths[headerId], headerWidth + headerWidth * percentageDeltaX), _maxWidths[headerId]);
+      });
+
+      return _extends({}, state, {
+        gridLayout: _extends({}, state.gridLayout, {
+          columnWidths: _extends({}, state.gridLayout.columnWidths, {}, newColumnWidths)
+        })
+      });
+    }
+
+    if (action.type === actions.columnDoneResizing) {
+      return _extends({}, state, {
+        gridLayout: _extends({}, state.gridLayout, {
+          startWidths: {},
+          minWidths: {},
+          maxWidths: {}
+        })
+      });
+    }
+  }
+
+  function getElementWidth(columnId) {
+    var _document$getElementB;
+
+    var width = (_document$getElementB = document.getElementById("header-cell-" + columnId)) == null ? void 0 : _document$getElementB.offsetWidth;
+
+    if (width !== undefined) {
+      return width;
+    }
+  }
+
+  exports._UNSTABLE_usePivotColumns = _UNSTABLE_usePivotColumns;
+  exports.actions = actions;
+  exports.defaultColumn = defaultColumn;
+  exports.defaultGroupByFn = defaultGroupByFn;
+  exports.defaultOrderByFn = defaultOrderByFn;
+  exports.defaultRenderer = defaultRenderer;
+  exports.emptyRenderer = emptyRenderer;
+  exports.ensurePluginOrder = ensurePluginOrder;
+  exports.flexRender = flexRender;
+  exports.functionalUpdate = functionalUpdate;
+  exports.loopHooks = loopHooks;
+  exports.makePropGetter = makePropGetter;
+  exports.makeRenderer = makeRenderer;
+  exports.reduceHooks = reduceHooks;
+  exports.safeUseLayoutEffect = safeUseLayoutEffect;
+  exports.useAbsoluteLayout = useAbsoluteLayout;
+  exports.useAsyncDebounce = useAsyncDebounce;
+  exports.useBlockLayout = useBlockLayout;
+  exports.useColumnOrder = useColumnOrder;
+  exports.useExpanded = useExpanded;
+  exports.useFilters = useFilters;
+  exports.useFlexLayout = useFlexLayout;
+  exports.useGetLatest = useGetLatest;
+  exports.useGlobalFilter = useGlobalFilter;
+  exports.useGridLayout = useGridLayout;
+  exports.useGroupBy = useGroupBy;
+  exports.useMountedLayoutEffect = useMountedLayoutEffect;
+  exports.usePagination = usePagination;
+  exports.useResizeColumns = useResizeColumns;
+  exports.useRowSelect = useRowSelect;
+  exports.useRowState = useRowState;
+  exports.useSortBy = useSortBy;
+  exports.useTable = useTable;
+
+  Object.defineProperty(exports, '__esModule', { value: true });
+
+})));
+//# sourceMappingURL=react-table.development.js.map
 
 
 /***/ }),
 
-/***/ "./node_modules/react/jsx-runtime.js":
+/***/ "./node_modules/react-table/index.js":
 /*!*******************************************!*\
-  !*** ./node_modules/react/jsx-runtime.js ***!
+  !*** ./node_modules/react-table/index.js ***!
   \*******************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-"use strict";
-
-
 if (false) {} else {
-  module.exports = __webpack_require__(/*! ./cjs/react-jsx-runtime.development.js */ "./node_modules/react/cjs/react-jsx-runtime.development.js");
+  module.exports = __webpack_require__(/*! ./dist/react-table.development.js */ "./node_modules/react-table/dist/react-table.development.js")
 }
 
 
@@ -16206,6 +19490,17 @@ module.exports = window["ReactDOM"];
 
 /***/ }),
 
+/***/ "react/jsx-runtime":
+/*!**********************************!*\
+  !*** external "ReactJSXRuntime" ***!
+  \**********************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = window["ReactJSXRuntime"];
+
+/***/ }),
+
 /***/ "@wordpress/api-fetch":
 /*!**********************************!*\
   !*** external ["wp","apiFetch"] ***!
@@ -16475,6 +19770,3662 @@ function _typeof(o) {
 
 /***/ }),
 
+/***/ "./node_modules/date-fns/_lib/addLeadingZeros.mjs":
+/*!********************************************************!*\
+  !*** ./node_modules/date-fns/_lib/addLeadingZeros.mjs ***!
+  \********************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   addLeadingZeros: () => (/* binding */ addLeadingZeros)
+/* harmony export */ });
+function addLeadingZeros(number, targetLength) {
+  const sign = number < 0 ? "-" : "";
+  const output = Math.abs(number).toString().padStart(targetLength, "0");
+  return sign + output;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/_lib/defaultOptions.mjs":
+/*!*******************************************************!*\
+  !*** ./node_modules/date-fns/_lib/defaultOptions.mjs ***!
+  \*******************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getDefaultOptions: () => (/* binding */ getDefaultOptions),
+/* harmony export */   setDefaultOptions: () => (/* binding */ setDefaultOptions)
+/* harmony export */ });
+let defaultOptions = {};
+
+function getDefaultOptions() {
+  return defaultOptions;
+}
+
+function setDefaultOptions(newOptions) {
+  defaultOptions = newOptions;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/_lib/format/formatters.mjs":
+/*!**********************************************************!*\
+  !*** ./node_modules/date-fns/_lib/format/formatters.mjs ***!
+  \**********************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   formatters: () => (/* binding */ formatters)
+/* harmony export */ });
+/* harmony import */ var _getDayOfYear_mjs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../../getDayOfYear.mjs */ "./node_modules/date-fns/getDayOfYear.mjs");
+/* harmony import */ var _getISOWeek_mjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../../getISOWeek.mjs */ "./node_modules/date-fns/getISOWeek.mjs");
+/* harmony import */ var _getISOWeekYear_mjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../getISOWeekYear.mjs */ "./node_modules/date-fns/getISOWeekYear.mjs");
+/* harmony import */ var _getWeek_mjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../getWeek.mjs */ "./node_modules/date-fns/getWeek.mjs");
+/* harmony import */ var _getWeekYear_mjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../getWeekYear.mjs */ "./node_modules/date-fns/getWeekYear.mjs");
+/* harmony import */ var _addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../addLeadingZeros.mjs */ "./node_modules/date-fns/_lib/addLeadingZeros.mjs");
+/* harmony import */ var _lightFormatters_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./lightFormatters.mjs */ "./node_modules/date-fns/_lib/format/lightFormatters.mjs");
+
+
+
+
+
+
+
+
+const dayPeriodEnum = {
+  am: "am",
+  pm: "pm",
+  midnight: "midnight",
+  noon: "noon",
+  morning: "morning",
+  afternoon: "afternoon",
+  evening: "evening",
+  night: "night",
+};
+
+/*
+ * |     | Unit                           |     | Unit                           |
+ * |-----|--------------------------------|-----|--------------------------------|
+ * |  a  | AM, PM                         |  A* | Milliseconds in day            |
+ * |  b  | AM, PM, noon, midnight         |  B  | Flexible day period            |
+ * |  c  | Stand-alone local day of week  |  C* | Localized hour w/ day period   |
+ * |  d  | Day of month                   |  D  | Day of year                    |
+ * |  e  | Local day of week              |  E  | Day of week                    |
+ * |  f  |                                |  F* | Day of week in month           |
+ * |  g* | Modified Julian day            |  G  | Era                            |
+ * |  h  | Hour [1-12]                    |  H  | Hour [0-23]                    |
+ * |  i! | ISO day of week                |  I! | ISO week of year               |
+ * |  j* | Localized hour w/ day period   |  J* | Localized hour w/o day period  |
+ * |  k  | Hour [1-24]                    |  K  | Hour [0-11]                    |
+ * |  l* | (deprecated)                   |  L  | Stand-alone month              |
+ * |  m  | Minute                         |  M  | Month                          |
+ * |  n  |                                |  N  |                                |
+ * |  o! | Ordinal number modifier        |  O  | Timezone (GMT)                 |
+ * |  p! | Long localized time            |  P! | Long localized date            |
+ * |  q  | Stand-alone quarter            |  Q  | Quarter                        |
+ * |  r* | Related Gregorian year         |  R! | ISO week-numbering year        |
+ * |  s  | Second                         |  S  | Fraction of second             |
+ * |  t! | Seconds timestamp              |  T! | Milliseconds timestamp         |
+ * |  u  | Extended year                  |  U* | Cyclic year                    |
+ * |  v* | Timezone (generic non-locat.)  |  V* | Timezone (location)            |
+ * |  w  | Local week of year             |  W* | Week of month                  |
+ * |  x  | Timezone (ISO-8601 w/o Z)      |  X  | Timezone (ISO-8601)            |
+ * |  y  | Year (abs)                     |  Y  | Local week-numbering year      |
+ * |  z  | Timezone (specific non-locat.) |  Z* | Timezone (aliases)             |
+ *
+ * Letters marked by * are not implemented but reserved by Unicode standard.
+ *
+ * Letters marked by ! are non-standard, but implemented by date-fns:
+ * - `o` modifies the previous token to turn it into an ordinal (see `format` docs)
+ * - `i` is ISO day of week. For `i` and `ii` is returns numeric ISO week days,
+ *   i.e. 7 for Sunday, 1 for Monday, etc.
+ * - `I` is ISO week of year, as opposed to `w` which is local week of year.
+ * - `R` is ISO week-numbering year, as opposed to `Y` which is local week-numbering year.
+ *   `R` is supposed to be used in conjunction with `I` and `i`
+ *   for universal ISO week-numbering date, whereas
+ *   `Y` is supposed to be used in conjunction with `w` and `e`
+ *   for week-numbering date specific to the locale.
+ * - `P` is long localized date format
+ * - `p` is long localized time format
+ */
+
+const formatters = {
+  // Era
+  G: function (date, token, localize) {
+    const era = date.getFullYear() > 0 ? 1 : 0;
+    switch (token) {
+      // AD, BC
+      case "G":
+      case "GG":
+      case "GGG":
+        return localize.era(era, { width: "abbreviated" });
+      // A, B
+      case "GGGGG":
+        return localize.era(era, { width: "narrow" });
+      // Anno Domini, Before Christ
+      case "GGGG":
+      default:
+        return localize.era(era, { width: "wide" });
+    }
+  },
+
+  // Year
+  y: function (date, token, localize) {
+    // Ordinal number
+    if (token === "yo") {
+      const signedYear = date.getFullYear();
+      // Returns 1 for 1 BC (which is year 0 in JavaScript)
+      const year = signedYear > 0 ? signedYear : 1 - signedYear;
+      return localize.ordinalNumber(year, { unit: "year" });
+    }
+
+    return _lightFormatters_mjs__WEBPACK_IMPORTED_MODULE_0__.lightFormatters.y(date, token);
+  },
+
+  // Local week-numbering year
+  Y: function (date, token, localize, options) {
+    const signedWeekYear = (0,_getWeekYear_mjs__WEBPACK_IMPORTED_MODULE_1__.getWeekYear)(date, options);
+    // Returns 1 for 1 BC (which is year 0 in JavaScript)
+    const weekYear = signedWeekYear > 0 ? signedWeekYear : 1 - signedWeekYear;
+
+    // Two digit year
+    if (token === "YY") {
+      const twoDigitYear = weekYear % 100;
+      return (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_2__.addLeadingZeros)(twoDigitYear, 2);
+    }
+
+    // Ordinal number
+    if (token === "Yo") {
+      return localize.ordinalNumber(weekYear, { unit: "year" });
+    }
+
+    // Padding
+    return (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_2__.addLeadingZeros)(weekYear, token.length);
+  },
+
+  // ISO week-numbering year
+  R: function (date, token) {
+    const isoWeekYear = (0,_getISOWeekYear_mjs__WEBPACK_IMPORTED_MODULE_3__.getISOWeekYear)(date);
+
+    // Padding
+    return (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_2__.addLeadingZeros)(isoWeekYear, token.length);
+  },
+
+  // Extended year. This is a single number designating the year of this calendar system.
+  // The main difference between `y` and `u` localizers are B.C. years:
+  // | Year | `y` | `u` |
+  // |------|-----|-----|
+  // | AC 1 |   1 |   1 |
+  // | BC 1 |   1 |   0 |
+  // | BC 2 |   2 |  -1 |
+  // Also `yy` always returns the last two digits of a year,
+  // while `uu` pads single digit years to 2 characters and returns other years unchanged.
+  u: function (date, token) {
+    const year = date.getFullYear();
+    return (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_2__.addLeadingZeros)(year, token.length);
+  },
+
+  // Quarter
+  Q: function (date, token, localize) {
+    const quarter = Math.ceil((date.getMonth() + 1) / 3);
+    switch (token) {
+      // 1, 2, 3, 4
+      case "Q":
+        return String(quarter);
+      // 01, 02, 03, 04
+      case "QQ":
+        return (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_2__.addLeadingZeros)(quarter, 2);
+      // 1st, 2nd, 3rd, 4th
+      case "Qo":
+        return localize.ordinalNumber(quarter, { unit: "quarter" });
+      // Q1, Q2, Q3, Q4
+      case "QQQ":
+        return localize.quarter(quarter, {
+          width: "abbreviated",
+          context: "formatting",
+        });
+      // 1, 2, 3, 4 (narrow quarter; could be not numerical)
+      case "QQQQQ":
+        return localize.quarter(quarter, {
+          width: "narrow",
+          context: "formatting",
+        });
+      // 1st quarter, 2nd quarter, ...
+      case "QQQQ":
+      default:
+        return localize.quarter(quarter, {
+          width: "wide",
+          context: "formatting",
+        });
+    }
+  },
+
+  // Stand-alone quarter
+  q: function (date, token, localize) {
+    const quarter = Math.ceil((date.getMonth() + 1) / 3);
+    switch (token) {
+      // 1, 2, 3, 4
+      case "q":
+        return String(quarter);
+      // 01, 02, 03, 04
+      case "qq":
+        return (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_2__.addLeadingZeros)(quarter, 2);
+      // 1st, 2nd, 3rd, 4th
+      case "qo":
+        return localize.ordinalNumber(quarter, { unit: "quarter" });
+      // Q1, Q2, Q3, Q4
+      case "qqq":
+        return localize.quarter(quarter, {
+          width: "abbreviated",
+          context: "standalone",
+        });
+      // 1, 2, 3, 4 (narrow quarter; could be not numerical)
+      case "qqqqq":
+        return localize.quarter(quarter, {
+          width: "narrow",
+          context: "standalone",
+        });
+      // 1st quarter, 2nd quarter, ...
+      case "qqqq":
+      default:
+        return localize.quarter(quarter, {
+          width: "wide",
+          context: "standalone",
+        });
+    }
+  },
+
+  // Month
+  M: function (date, token, localize) {
+    const month = date.getMonth();
+    switch (token) {
+      case "M":
+      case "MM":
+        return _lightFormatters_mjs__WEBPACK_IMPORTED_MODULE_0__.lightFormatters.M(date, token);
+      // 1st, 2nd, ..., 12th
+      case "Mo":
+        return localize.ordinalNumber(month + 1, { unit: "month" });
+      // Jan, Feb, ..., Dec
+      case "MMM":
+        return localize.month(month, {
+          width: "abbreviated",
+          context: "formatting",
+        });
+      // J, F, ..., D
+      case "MMMMM":
+        return localize.month(month, {
+          width: "narrow",
+          context: "formatting",
+        });
+      // January, February, ..., December
+      case "MMMM":
+      default:
+        return localize.month(month, { width: "wide", context: "formatting" });
+    }
+  },
+
+  // Stand-alone month
+  L: function (date, token, localize) {
+    const month = date.getMonth();
+    switch (token) {
+      // 1, 2, ..., 12
+      case "L":
+        return String(month + 1);
+      // 01, 02, ..., 12
+      case "LL":
+        return (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_2__.addLeadingZeros)(month + 1, 2);
+      // 1st, 2nd, ..., 12th
+      case "Lo":
+        return localize.ordinalNumber(month + 1, { unit: "month" });
+      // Jan, Feb, ..., Dec
+      case "LLL":
+        return localize.month(month, {
+          width: "abbreviated",
+          context: "standalone",
+        });
+      // J, F, ..., D
+      case "LLLLL":
+        return localize.month(month, {
+          width: "narrow",
+          context: "standalone",
+        });
+      // January, February, ..., December
+      case "LLLL":
+      default:
+        return localize.month(month, { width: "wide", context: "standalone" });
+    }
+  },
+
+  // Local week of year
+  w: function (date, token, localize, options) {
+    const week = (0,_getWeek_mjs__WEBPACK_IMPORTED_MODULE_4__.getWeek)(date, options);
+
+    if (token === "wo") {
+      return localize.ordinalNumber(week, { unit: "week" });
+    }
+
+    return (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_2__.addLeadingZeros)(week, token.length);
+  },
+
+  // ISO week of year
+  I: function (date, token, localize) {
+    const isoWeek = (0,_getISOWeek_mjs__WEBPACK_IMPORTED_MODULE_5__.getISOWeek)(date);
+
+    if (token === "Io") {
+      return localize.ordinalNumber(isoWeek, { unit: "week" });
+    }
+
+    return (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_2__.addLeadingZeros)(isoWeek, token.length);
+  },
+
+  // Day of the month
+  d: function (date, token, localize) {
+    if (token === "do") {
+      return localize.ordinalNumber(date.getDate(), { unit: "date" });
+    }
+
+    return _lightFormatters_mjs__WEBPACK_IMPORTED_MODULE_0__.lightFormatters.d(date, token);
+  },
+
+  // Day of year
+  D: function (date, token, localize) {
+    const dayOfYear = (0,_getDayOfYear_mjs__WEBPACK_IMPORTED_MODULE_6__.getDayOfYear)(date);
+
+    if (token === "Do") {
+      return localize.ordinalNumber(dayOfYear, { unit: "dayOfYear" });
+    }
+
+    return (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_2__.addLeadingZeros)(dayOfYear, token.length);
+  },
+
+  // Day of week
+  E: function (date, token, localize) {
+    const dayOfWeek = date.getDay();
+    switch (token) {
+      // Tue
+      case "E":
+      case "EE":
+      case "EEE":
+        return localize.day(dayOfWeek, {
+          width: "abbreviated",
+          context: "formatting",
+        });
+      // T
+      case "EEEEE":
+        return localize.day(dayOfWeek, {
+          width: "narrow",
+          context: "formatting",
+        });
+      // Tu
+      case "EEEEEE":
+        return localize.day(dayOfWeek, {
+          width: "short",
+          context: "formatting",
+        });
+      // Tuesday
+      case "EEEE":
+      default:
+        return localize.day(dayOfWeek, {
+          width: "wide",
+          context: "formatting",
+        });
+    }
+  },
+
+  // Local day of week
+  e: function (date, token, localize, options) {
+    const dayOfWeek = date.getDay();
+    const localDayOfWeek = (dayOfWeek - options.weekStartsOn + 8) % 7 || 7;
+    switch (token) {
+      // Numerical value (Nth day of week with current locale or weekStartsOn)
+      case "e":
+        return String(localDayOfWeek);
+      // Padded numerical value
+      case "ee":
+        return (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_2__.addLeadingZeros)(localDayOfWeek, 2);
+      // 1st, 2nd, ..., 7th
+      case "eo":
+        return localize.ordinalNumber(localDayOfWeek, { unit: "day" });
+      case "eee":
+        return localize.day(dayOfWeek, {
+          width: "abbreviated",
+          context: "formatting",
+        });
+      // T
+      case "eeeee":
+        return localize.day(dayOfWeek, {
+          width: "narrow",
+          context: "formatting",
+        });
+      // Tu
+      case "eeeeee":
+        return localize.day(dayOfWeek, {
+          width: "short",
+          context: "formatting",
+        });
+      // Tuesday
+      case "eeee":
+      default:
+        return localize.day(dayOfWeek, {
+          width: "wide",
+          context: "formatting",
+        });
+    }
+  },
+
+  // Stand-alone local day of week
+  c: function (date, token, localize, options) {
+    const dayOfWeek = date.getDay();
+    const localDayOfWeek = (dayOfWeek - options.weekStartsOn + 8) % 7 || 7;
+    switch (token) {
+      // Numerical value (same as in `e`)
+      case "c":
+        return String(localDayOfWeek);
+      // Padded numerical value
+      case "cc":
+        return (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_2__.addLeadingZeros)(localDayOfWeek, token.length);
+      // 1st, 2nd, ..., 7th
+      case "co":
+        return localize.ordinalNumber(localDayOfWeek, { unit: "day" });
+      case "ccc":
+        return localize.day(dayOfWeek, {
+          width: "abbreviated",
+          context: "standalone",
+        });
+      // T
+      case "ccccc":
+        return localize.day(dayOfWeek, {
+          width: "narrow",
+          context: "standalone",
+        });
+      // Tu
+      case "cccccc":
+        return localize.day(dayOfWeek, {
+          width: "short",
+          context: "standalone",
+        });
+      // Tuesday
+      case "cccc":
+      default:
+        return localize.day(dayOfWeek, {
+          width: "wide",
+          context: "standalone",
+        });
+    }
+  },
+
+  // ISO day of week
+  i: function (date, token, localize) {
+    const dayOfWeek = date.getDay();
+    const isoDayOfWeek = dayOfWeek === 0 ? 7 : dayOfWeek;
+    switch (token) {
+      // 2
+      case "i":
+        return String(isoDayOfWeek);
+      // 02
+      case "ii":
+        return (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_2__.addLeadingZeros)(isoDayOfWeek, token.length);
+      // 2nd
+      case "io":
+        return localize.ordinalNumber(isoDayOfWeek, { unit: "day" });
+      // Tue
+      case "iii":
+        return localize.day(dayOfWeek, {
+          width: "abbreviated",
+          context: "formatting",
+        });
+      // T
+      case "iiiii":
+        return localize.day(dayOfWeek, {
+          width: "narrow",
+          context: "formatting",
+        });
+      // Tu
+      case "iiiiii":
+        return localize.day(dayOfWeek, {
+          width: "short",
+          context: "formatting",
+        });
+      // Tuesday
+      case "iiii":
+      default:
+        return localize.day(dayOfWeek, {
+          width: "wide",
+          context: "formatting",
+        });
+    }
+  },
+
+  // AM or PM
+  a: function (date, token, localize) {
+    const hours = date.getHours();
+    const dayPeriodEnumValue = hours / 12 >= 1 ? "pm" : "am";
+
+    switch (token) {
+      case "a":
+      case "aa":
+        return localize.dayPeriod(dayPeriodEnumValue, {
+          width: "abbreviated",
+          context: "formatting",
+        });
+      case "aaa":
+        return localize
+          .dayPeriod(dayPeriodEnumValue, {
+            width: "abbreviated",
+            context: "formatting",
+          })
+          .toLowerCase();
+      case "aaaaa":
+        return localize.dayPeriod(dayPeriodEnumValue, {
+          width: "narrow",
+          context: "formatting",
+        });
+      case "aaaa":
+      default:
+        return localize.dayPeriod(dayPeriodEnumValue, {
+          width: "wide",
+          context: "formatting",
+        });
+    }
+  },
+
+  // AM, PM, midnight, noon
+  b: function (date, token, localize) {
+    const hours = date.getHours();
+    let dayPeriodEnumValue;
+    if (hours === 12) {
+      dayPeriodEnumValue = dayPeriodEnum.noon;
+    } else if (hours === 0) {
+      dayPeriodEnumValue = dayPeriodEnum.midnight;
+    } else {
+      dayPeriodEnumValue = hours / 12 >= 1 ? "pm" : "am";
+    }
+
+    switch (token) {
+      case "b":
+      case "bb":
+        return localize.dayPeriod(dayPeriodEnumValue, {
+          width: "abbreviated",
+          context: "formatting",
+        });
+      case "bbb":
+        return localize
+          .dayPeriod(dayPeriodEnumValue, {
+            width: "abbreviated",
+            context: "formatting",
+          })
+          .toLowerCase();
+      case "bbbbb":
+        return localize.dayPeriod(dayPeriodEnumValue, {
+          width: "narrow",
+          context: "formatting",
+        });
+      case "bbbb":
+      default:
+        return localize.dayPeriod(dayPeriodEnumValue, {
+          width: "wide",
+          context: "formatting",
+        });
+    }
+  },
+
+  // in the morning, in the afternoon, in the evening, at night
+  B: function (date, token, localize) {
+    const hours = date.getHours();
+    let dayPeriodEnumValue;
+    if (hours >= 17) {
+      dayPeriodEnumValue = dayPeriodEnum.evening;
+    } else if (hours >= 12) {
+      dayPeriodEnumValue = dayPeriodEnum.afternoon;
+    } else if (hours >= 4) {
+      dayPeriodEnumValue = dayPeriodEnum.morning;
+    } else {
+      dayPeriodEnumValue = dayPeriodEnum.night;
+    }
+
+    switch (token) {
+      case "B":
+      case "BB":
+      case "BBB":
+        return localize.dayPeriod(dayPeriodEnumValue, {
+          width: "abbreviated",
+          context: "formatting",
+        });
+      case "BBBBB":
+        return localize.dayPeriod(dayPeriodEnumValue, {
+          width: "narrow",
+          context: "formatting",
+        });
+      case "BBBB":
+      default:
+        return localize.dayPeriod(dayPeriodEnumValue, {
+          width: "wide",
+          context: "formatting",
+        });
+    }
+  },
+
+  // Hour [1-12]
+  h: function (date, token, localize) {
+    if (token === "ho") {
+      let hours = date.getHours() % 12;
+      if (hours === 0) hours = 12;
+      return localize.ordinalNumber(hours, { unit: "hour" });
+    }
+
+    return _lightFormatters_mjs__WEBPACK_IMPORTED_MODULE_0__.lightFormatters.h(date, token);
+  },
+
+  // Hour [0-23]
+  H: function (date, token, localize) {
+    if (token === "Ho") {
+      return localize.ordinalNumber(date.getHours(), { unit: "hour" });
+    }
+
+    return _lightFormatters_mjs__WEBPACK_IMPORTED_MODULE_0__.lightFormatters.H(date, token);
+  },
+
+  // Hour [0-11]
+  K: function (date, token, localize) {
+    const hours = date.getHours() % 12;
+
+    if (token === "Ko") {
+      return localize.ordinalNumber(hours, { unit: "hour" });
+    }
+
+    return (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_2__.addLeadingZeros)(hours, token.length);
+  },
+
+  // Hour [1-24]
+  k: function (date, token, localize) {
+    let hours = date.getHours();
+    if (hours === 0) hours = 24;
+
+    if (token === "ko") {
+      return localize.ordinalNumber(hours, { unit: "hour" });
+    }
+
+    return (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_2__.addLeadingZeros)(hours, token.length);
+  },
+
+  // Minute
+  m: function (date, token, localize) {
+    if (token === "mo") {
+      return localize.ordinalNumber(date.getMinutes(), { unit: "minute" });
+    }
+
+    return _lightFormatters_mjs__WEBPACK_IMPORTED_MODULE_0__.lightFormatters.m(date, token);
+  },
+
+  // Second
+  s: function (date, token, localize) {
+    if (token === "so") {
+      return localize.ordinalNumber(date.getSeconds(), { unit: "second" });
+    }
+
+    return _lightFormatters_mjs__WEBPACK_IMPORTED_MODULE_0__.lightFormatters.s(date, token);
+  },
+
+  // Fraction of second
+  S: function (date, token) {
+    return _lightFormatters_mjs__WEBPACK_IMPORTED_MODULE_0__.lightFormatters.S(date, token);
+  },
+
+  // Timezone (ISO-8601. If offset is 0, output is always `'Z'`)
+  X: function (date, token, _localize) {
+    const timezoneOffset = date.getTimezoneOffset();
+
+    if (timezoneOffset === 0) {
+      return "Z";
+    }
+
+    switch (token) {
+      // Hours and optional minutes
+      case "X":
+        return formatTimezoneWithOptionalMinutes(timezoneOffset);
+
+      // Hours, minutes and optional seconds without `:` delimiter
+      // Note: neither ISO-8601 nor JavaScript supports seconds in timezone offsets
+      // so this token always has the same output as `XX`
+      case "XXXX":
+      case "XX": // Hours and minutes without `:` delimiter
+        return formatTimezone(timezoneOffset);
+
+      // Hours, minutes and optional seconds with `:` delimiter
+      // Note: neither ISO-8601 nor JavaScript supports seconds in timezone offsets
+      // so this token always has the same output as `XXX`
+      case "XXXXX":
+      case "XXX": // Hours and minutes with `:` delimiter
+      default:
+        return formatTimezone(timezoneOffset, ":");
+    }
+  },
+
+  // Timezone (ISO-8601. If offset is 0, output is `'+00:00'` or equivalent)
+  x: function (date, token, _localize) {
+    const timezoneOffset = date.getTimezoneOffset();
+
+    switch (token) {
+      // Hours and optional minutes
+      case "x":
+        return formatTimezoneWithOptionalMinutes(timezoneOffset);
+
+      // Hours, minutes and optional seconds without `:` delimiter
+      // Note: neither ISO-8601 nor JavaScript supports seconds in timezone offsets
+      // so this token always has the same output as `xx`
+      case "xxxx":
+      case "xx": // Hours and minutes without `:` delimiter
+        return formatTimezone(timezoneOffset);
+
+      // Hours, minutes and optional seconds with `:` delimiter
+      // Note: neither ISO-8601 nor JavaScript supports seconds in timezone offsets
+      // so this token always has the same output as `xxx`
+      case "xxxxx":
+      case "xxx": // Hours and minutes with `:` delimiter
+      default:
+        return formatTimezone(timezoneOffset, ":");
+    }
+  },
+
+  // Timezone (GMT)
+  O: function (date, token, _localize) {
+    const timezoneOffset = date.getTimezoneOffset();
+
+    switch (token) {
+      // Short
+      case "O":
+      case "OO":
+      case "OOO":
+        return "GMT" + formatTimezoneShort(timezoneOffset, ":");
+      // Long
+      case "OOOO":
+      default:
+        return "GMT" + formatTimezone(timezoneOffset, ":");
+    }
+  },
+
+  // Timezone (specific non-location)
+  z: function (date, token, _localize) {
+    const timezoneOffset = date.getTimezoneOffset();
+
+    switch (token) {
+      // Short
+      case "z":
+      case "zz":
+      case "zzz":
+        return "GMT" + formatTimezoneShort(timezoneOffset, ":");
+      // Long
+      case "zzzz":
+      default:
+        return "GMT" + formatTimezone(timezoneOffset, ":");
+    }
+  },
+
+  // Seconds timestamp
+  t: function (date, token, _localize) {
+    const timestamp = Math.trunc(date.getTime() / 1000);
+    return (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_2__.addLeadingZeros)(timestamp, token.length);
+  },
+
+  // Milliseconds timestamp
+  T: function (date, token, _localize) {
+    const timestamp = date.getTime();
+    return (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_2__.addLeadingZeros)(timestamp, token.length);
+  },
+};
+
+function formatTimezoneShort(offset, delimiter = "") {
+  const sign = offset > 0 ? "-" : "+";
+  const absOffset = Math.abs(offset);
+  const hours = Math.trunc(absOffset / 60);
+  const minutes = absOffset % 60;
+  if (minutes === 0) {
+    return sign + String(hours);
+  }
+  return sign + String(hours) + delimiter + (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_2__.addLeadingZeros)(minutes, 2);
+}
+
+function formatTimezoneWithOptionalMinutes(offset, delimiter) {
+  if (offset % 60 === 0) {
+    const sign = offset > 0 ? "-" : "+";
+    return sign + (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_2__.addLeadingZeros)(Math.abs(offset) / 60, 2);
+  }
+  return formatTimezone(offset, delimiter);
+}
+
+function formatTimezone(offset, delimiter = "") {
+  const sign = offset > 0 ? "-" : "+";
+  const absOffset = Math.abs(offset);
+  const hours = (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_2__.addLeadingZeros)(Math.trunc(absOffset / 60), 2);
+  const minutes = (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_2__.addLeadingZeros)(absOffset % 60, 2);
+  return sign + hours + delimiter + minutes;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/_lib/format/lightFormatters.mjs":
+/*!***************************************************************!*\
+  !*** ./node_modules/date-fns/_lib/format/lightFormatters.mjs ***!
+  \***************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   lightFormatters: () => (/* binding */ lightFormatters)
+/* harmony export */ });
+/* harmony import */ var _addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../addLeadingZeros.mjs */ "./node_modules/date-fns/_lib/addLeadingZeros.mjs");
+
+
+/*
+ * |     | Unit                           |     | Unit                           |
+ * |-----|--------------------------------|-----|--------------------------------|
+ * |  a  | AM, PM                         |  A* |                                |
+ * |  d  | Day of month                   |  D  |                                |
+ * |  h  | Hour [1-12]                    |  H  | Hour [0-23]                    |
+ * |  m  | Minute                         |  M  | Month                          |
+ * |  s  | Second                         |  S  | Fraction of second             |
+ * |  y  | Year (abs)                     |  Y  |                                |
+ *
+ * Letters marked by * are not implemented but reserved by Unicode standard.
+ */
+
+const lightFormatters = {
+  // Year
+  y(date, token) {
+    // From http://www.unicode.org/reports/tr35/tr35-31/tr35-dates.html#Date_Format_tokens
+    // | Year     |     y | yy |   yyy |  yyyy | yyyyy |
+    // |----------|-------|----|-------|-------|-------|
+    // | AD 1     |     1 | 01 |   001 |  0001 | 00001 |
+    // | AD 12    |    12 | 12 |   012 |  0012 | 00012 |
+    // | AD 123   |   123 | 23 |   123 |  0123 | 00123 |
+    // | AD 1234  |  1234 | 34 |  1234 |  1234 | 01234 |
+    // | AD 12345 | 12345 | 45 | 12345 | 12345 | 12345 |
+
+    const signedYear = date.getFullYear();
+    // Returns 1 for 1 BC (which is year 0 in JavaScript)
+    const year = signedYear > 0 ? signedYear : 1 - signedYear;
+    return (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_0__.addLeadingZeros)(token === "yy" ? year % 100 : year, token.length);
+  },
+
+  // Month
+  M(date, token) {
+    const month = date.getMonth();
+    return token === "M" ? String(month + 1) : (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_0__.addLeadingZeros)(month + 1, 2);
+  },
+
+  // Day of the month
+  d(date, token) {
+    return (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_0__.addLeadingZeros)(date.getDate(), token.length);
+  },
+
+  // AM or PM
+  a(date, token) {
+    const dayPeriodEnumValue = date.getHours() / 12 >= 1 ? "pm" : "am";
+
+    switch (token) {
+      case "a":
+      case "aa":
+        return dayPeriodEnumValue.toUpperCase();
+      case "aaa":
+        return dayPeriodEnumValue;
+      case "aaaaa":
+        return dayPeriodEnumValue[0];
+      case "aaaa":
+      default:
+        return dayPeriodEnumValue === "am" ? "a.m." : "p.m.";
+    }
+  },
+
+  // Hour [1-12]
+  h(date, token) {
+    return (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_0__.addLeadingZeros)(date.getHours() % 12 || 12, token.length);
+  },
+
+  // Hour [0-23]
+  H(date, token) {
+    return (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_0__.addLeadingZeros)(date.getHours(), token.length);
+  },
+
+  // Minute
+  m(date, token) {
+    return (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_0__.addLeadingZeros)(date.getMinutes(), token.length);
+  },
+
+  // Second
+  s(date, token) {
+    return (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_0__.addLeadingZeros)(date.getSeconds(), token.length);
+  },
+
+  // Fraction of second
+  S(date, token) {
+    const numberOfDigits = token.length;
+    const milliseconds = date.getMilliseconds();
+    const fractionalSeconds = Math.trunc(
+      milliseconds * Math.pow(10, numberOfDigits - 3),
+    );
+    return (0,_addLeadingZeros_mjs__WEBPACK_IMPORTED_MODULE_0__.addLeadingZeros)(fractionalSeconds, token.length);
+  },
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/_lib/format/longFormatters.mjs":
+/*!**************************************************************!*\
+  !*** ./node_modules/date-fns/_lib/format/longFormatters.mjs ***!
+  \**************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   longFormatters: () => (/* binding */ longFormatters)
+/* harmony export */ });
+const dateLongFormatter = (pattern, formatLong) => {
+  switch (pattern) {
+    case "P":
+      return formatLong.date({ width: "short" });
+    case "PP":
+      return formatLong.date({ width: "medium" });
+    case "PPP":
+      return formatLong.date({ width: "long" });
+    case "PPPP":
+    default:
+      return formatLong.date({ width: "full" });
+  }
+};
+
+const timeLongFormatter = (pattern, formatLong) => {
+  switch (pattern) {
+    case "p":
+      return formatLong.time({ width: "short" });
+    case "pp":
+      return formatLong.time({ width: "medium" });
+    case "ppp":
+      return formatLong.time({ width: "long" });
+    case "pppp":
+    default:
+      return formatLong.time({ width: "full" });
+  }
+};
+
+const dateTimeLongFormatter = (pattern, formatLong) => {
+  const matchResult = pattern.match(/(P+)(p+)?/) || [];
+  const datePattern = matchResult[1];
+  const timePattern = matchResult[2];
+
+  if (!timePattern) {
+    return dateLongFormatter(pattern, formatLong);
+  }
+
+  let dateTimeFormat;
+
+  switch (datePattern) {
+    case "P":
+      dateTimeFormat = formatLong.dateTime({ width: "short" });
+      break;
+    case "PP":
+      dateTimeFormat = formatLong.dateTime({ width: "medium" });
+      break;
+    case "PPP":
+      dateTimeFormat = formatLong.dateTime({ width: "long" });
+      break;
+    case "PPPP":
+    default:
+      dateTimeFormat = formatLong.dateTime({ width: "full" });
+      break;
+  }
+
+  return dateTimeFormat
+    .replace("{{date}}", dateLongFormatter(datePattern, formatLong))
+    .replace("{{time}}", timeLongFormatter(timePattern, formatLong));
+};
+
+const longFormatters = {
+  p: timeLongFormatter,
+  P: dateTimeLongFormatter,
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/_lib/getTimezoneOffsetInMilliseconds.mjs":
+/*!************************************************************************!*\
+  !*** ./node_modules/date-fns/_lib/getTimezoneOffsetInMilliseconds.mjs ***!
+  \************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   getTimezoneOffsetInMilliseconds: () => (/* binding */ getTimezoneOffsetInMilliseconds)
+/* harmony export */ });
+/* harmony import */ var _toDate_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../toDate.mjs */ "./node_modules/date-fns/toDate.mjs");
+
+
+/**
+ * Google Chrome as of 67.0.3396.87 introduced timezones with offset that includes seconds.
+ * They usually appear for dates that denote time before the timezones were introduced
+ * (e.g. for 'Europe/Prague' timezone the offset is GMT+00:57:44 before 1 October 1891
+ * and GMT+01:00:00 after that date)
+ *
+ * Date#getTimezoneOffset returns the offset in minutes and would return 57 for the example above,
+ * which would lead to incorrect calculations.
+ *
+ * This function returns the timezone offset in milliseconds that takes seconds in account.
+ */
+function getTimezoneOffsetInMilliseconds(date) {
+  const _date = (0,_toDate_mjs__WEBPACK_IMPORTED_MODULE_0__.toDate)(date);
+  const utcDate = new Date(
+    Date.UTC(
+      _date.getFullYear(),
+      _date.getMonth(),
+      _date.getDate(),
+      _date.getHours(),
+      _date.getMinutes(),
+      _date.getSeconds(),
+      _date.getMilliseconds(),
+    ),
+  );
+  utcDate.setUTCFullYear(_date.getFullYear());
+  return +date - +utcDate;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/_lib/protectedTokens.mjs":
+/*!********************************************************!*\
+  !*** ./node_modules/date-fns/_lib/protectedTokens.mjs ***!
+  \********************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   isProtectedDayOfYearToken: () => (/* binding */ isProtectedDayOfYearToken),
+/* harmony export */   isProtectedWeekYearToken: () => (/* binding */ isProtectedWeekYearToken),
+/* harmony export */   warnOrThrowProtectedError: () => (/* binding */ warnOrThrowProtectedError)
+/* harmony export */ });
+const dayOfYearTokenRE = /^D+$/;
+const weekYearTokenRE = /^Y+$/;
+
+const throwTokens = ["D", "DD", "YY", "YYYY"];
+
+function isProtectedDayOfYearToken(token) {
+  return dayOfYearTokenRE.test(token);
+}
+
+function isProtectedWeekYearToken(token) {
+  return weekYearTokenRE.test(token);
+}
+
+function warnOrThrowProtectedError(token, format, input) {
+  const _message = message(token, format, input);
+  console.warn(_message);
+  if (throwTokens.includes(token)) throw new RangeError(_message);
+}
+
+function message(token, format, input) {
+  const subject = token[0] === "Y" ? "years" : "days of the month";
+  return `Use \`${token.toLowerCase()}\` instead of \`${token}\` (in \`${format}\`) for formatting ${subject} to the input \`${input}\`; see: https://github.com/date-fns/date-fns/blob/master/docs/unicodeTokens.md`;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/constants.mjs":
+/*!*********************************************!*\
+  !*** ./node_modules/date-fns/constants.mjs ***!
+  \*********************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   daysInWeek: () => (/* binding */ daysInWeek),
+/* harmony export */   daysInYear: () => (/* binding */ daysInYear),
+/* harmony export */   maxTime: () => (/* binding */ maxTime),
+/* harmony export */   millisecondsInDay: () => (/* binding */ millisecondsInDay),
+/* harmony export */   millisecondsInHour: () => (/* binding */ millisecondsInHour),
+/* harmony export */   millisecondsInMinute: () => (/* binding */ millisecondsInMinute),
+/* harmony export */   millisecondsInSecond: () => (/* binding */ millisecondsInSecond),
+/* harmony export */   millisecondsInWeek: () => (/* binding */ millisecondsInWeek),
+/* harmony export */   minTime: () => (/* binding */ minTime),
+/* harmony export */   minutesInDay: () => (/* binding */ minutesInDay),
+/* harmony export */   minutesInHour: () => (/* binding */ minutesInHour),
+/* harmony export */   minutesInMonth: () => (/* binding */ minutesInMonth),
+/* harmony export */   minutesInYear: () => (/* binding */ minutesInYear),
+/* harmony export */   monthsInQuarter: () => (/* binding */ monthsInQuarter),
+/* harmony export */   monthsInYear: () => (/* binding */ monthsInYear),
+/* harmony export */   quartersInYear: () => (/* binding */ quartersInYear),
+/* harmony export */   secondsInDay: () => (/* binding */ secondsInDay),
+/* harmony export */   secondsInHour: () => (/* binding */ secondsInHour),
+/* harmony export */   secondsInMinute: () => (/* binding */ secondsInMinute),
+/* harmony export */   secondsInMonth: () => (/* binding */ secondsInMonth),
+/* harmony export */   secondsInQuarter: () => (/* binding */ secondsInQuarter),
+/* harmony export */   secondsInWeek: () => (/* binding */ secondsInWeek),
+/* harmony export */   secondsInYear: () => (/* binding */ secondsInYear)
+/* harmony export */ });
+/**
+ * @module constants
+ * @summary Useful constants
+ * @description
+ * Collection of useful date constants.
+ *
+ * The constants could be imported from `date-fns/constants`:
+ *
+ * ```ts
+ * import { maxTime, minTime } from "./constants/date-fns/constants";
+ *
+ * function isAllowedTime(time) {
+ *   return time <= maxTime && time >= minTime;
+ * }
+ * ```
+ */
+
+/**
+ * @constant
+ * @name daysInWeek
+ * @summary Days in 1 week.
+ */
+const daysInWeek = 7;
+
+/**
+ * @constant
+ * @name daysInYear
+ * @summary Days in 1 year.
+ *
+ * @description
+ * How many days in a year.
+ *
+ * One years equals 365.2425 days according to the formula:
+ *
+ * > Leap year occures every 4 years, except for years that are divisable by 100 and not divisable by 400.
+ * > 1 mean year = (365+1/4-1/100+1/400) days = 365.2425 days
+ */
+const daysInYear = 365.2425;
+
+/**
+ * @constant
+ * @name maxTime
+ * @summary Maximum allowed time.
+ *
+ * @example
+ * import { maxTime } from "./constants/date-fns/constants";
+ *
+ * const isValid = 8640000000000001 <= maxTime;
+ * //=> false
+ *
+ * new Date(8640000000000001);
+ * //=> Invalid Date
+ */
+const maxTime = Math.pow(10, 8) * 24 * 60 * 60 * 1000;
+
+/**
+ * @constant
+ * @name minTime
+ * @summary Minimum allowed time.
+ *
+ * @example
+ * import { minTime } from "./constants/date-fns/constants";
+ *
+ * const isValid = -8640000000000001 >= minTime;
+ * //=> false
+ *
+ * new Date(-8640000000000001)
+ * //=> Invalid Date
+ */
+const minTime = -maxTime;
+
+/**
+ * @constant
+ * @name millisecondsInWeek
+ * @summary Milliseconds in 1 week.
+ */
+const millisecondsInWeek = 604800000;
+
+/**
+ * @constant
+ * @name millisecondsInDay
+ * @summary Milliseconds in 1 day.
+ */
+const millisecondsInDay = 86400000;
+
+/**
+ * @constant
+ * @name millisecondsInMinute
+ * @summary Milliseconds in 1 minute
+ */
+const millisecondsInMinute = 60000;
+
+/**
+ * @constant
+ * @name millisecondsInHour
+ * @summary Milliseconds in 1 hour
+ */
+const millisecondsInHour = 3600000;
+
+/**
+ * @constant
+ * @name millisecondsInSecond
+ * @summary Milliseconds in 1 second
+ */
+const millisecondsInSecond = 1000;
+
+/**
+ * @constant
+ * @name minutesInYear
+ * @summary Minutes in 1 year.
+ */
+const minutesInYear = 525600;
+
+/**
+ * @constant
+ * @name minutesInMonth
+ * @summary Minutes in 1 month.
+ */
+const minutesInMonth = 43200;
+
+/**
+ * @constant
+ * @name minutesInDay
+ * @summary Minutes in 1 day.
+ */
+const minutesInDay = 1440;
+
+/**
+ * @constant
+ * @name minutesInHour
+ * @summary Minutes in 1 hour.
+ */
+const minutesInHour = 60;
+
+/**
+ * @constant
+ * @name monthsInQuarter
+ * @summary Months in 1 quarter.
+ */
+const monthsInQuarter = 3;
+
+/**
+ * @constant
+ * @name monthsInYear
+ * @summary Months in 1 year.
+ */
+const monthsInYear = 12;
+
+/**
+ * @constant
+ * @name quartersInYear
+ * @summary Quarters in 1 year
+ */
+const quartersInYear = 4;
+
+/**
+ * @constant
+ * @name secondsInHour
+ * @summary Seconds in 1 hour.
+ */
+const secondsInHour = 3600;
+
+/**
+ * @constant
+ * @name secondsInMinute
+ * @summary Seconds in 1 minute.
+ */
+const secondsInMinute = 60;
+
+/**
+ * @constant
+ * @name secondsInDay
+ * @summary Seconds in 1 day.
+ */
+const secondsInDay = secondsInHour * 24;
+
+/**
+ * @constant
+ * @name secondsInWeek
+ * @summary Seconds in 1 week.
+ */
+const secondsInWeek = secondsInDay * 7;
+
+/**
+ * @constant
+ * @name secondsInYear
+ * @summary Seconds in 1 year.
+ */
+const secondsInYear = secondsInDay * daysInYear;
+
+/**
+ * @constant
+ * @name secondsInMonth
+ * @summary Seconds in 1 month
+ */
+const secondsInMonth = secondsInYear / 12;
+
+/**
+ * @constant
+ * @name secondsInQuarter
+ * @summary Seconds in 1 quarter.
+ */
+const secondsInQuarter = secondsInMonth * 3;
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/constructFrom.mjs":
+/*!*************************************************!*\
+  !*** ./node_modules/date-fns/constructFrom.mjs ***!
+  \*************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   constructFrom: () => (/* binding */ constructFrom),
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/**
+ * @name constructFrom
+ * @category Generic Helpers
+ * @summary Constructs a date using the reference date and the value
+ *
+ * @description
+ * The function constructs a new date using the constructor from the reference
+ * date and the given value. It helps to build generic functions that accept
+ * date extensions.
+ *
+ * It defaults to `Date` if the passed reference date is a number or a string.
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param date - The reference date to take constructor from
+ * @param value - The value to create the date
+ *
+ * @returns Date initialized using the given date and value
+ *
+ * @example
+ * import { constructFrom } from 'date-fns'
+ *
+ * // A function that clones a date preserving the original type
+ * function cloneDate<DateType extends Date(date: DateType): DateType {
+ *   return constructFrom(
+ *     date, // Use contrustor from the given date
+ *     date.getTime() // Use the date value to create a new date
+ *   )
+ * }
+ */
+function constructFrom(date, value) {
+  if (date instanceof Date) {
+    return new date.constructor(value);
+  } else {
+    return new Date(value);
+  }
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (constructFrom);
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/differenceInCalendarDays.mjs":
+/*!************************************************************!*\
+  !*** ./node_modules/date-fns/differenceInCalendarDays.mjs ***!
+  \************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   differenceInCalendarDays: () => (/* binding */ differenceInCalendarDays)
+/* harmony export */ });
+/* harmony import */ var _constants_mjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./constants.mjs */ "./node_modules/date-fns/constants.mjs");
+/* harmony import */ var _startOfDay_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./startOfDay.mjs */ "./node_modules/date-fns/startOfDay.mjs");
+/* harmony import */ var _lib_getTimezoneOffsetInMilliseconds_mjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./_lib/getTimezoneOffsetInMilliseconds.mjs */ "./node_modules/date-fns/_lib/getTimezoneOffsetInMilliseconds.mjs");
+
+
+
+
+/**
+ * @name differenceInCalendarDays
+ * @category Day Helpers
+ * @summary Get the number of calendar days between the given dates.
+ *
+ * @description
+ * Get the number of calendar days between the given dates. This means that the times are removed
+ * from the dates and then the difference in days is calculated.
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param dateLeft - The later date
+ * @param dateRight - The earlier date
+ *
+ * @returns The number of calendar days
+ *
+ * @example
+ * // How many calendar days are between
+ * // 2 July 2011 23:00:00 and 2 July 2012 00:00:00?
+ * const result = differenceInCalendarDays(
+ *   new Date(2012, 6, 2, 0, 0),
+ *   new Date(2011, 6, 2, 23, 0)
+ * )
+ * //=> 366
+ * // How many calendar days are between
+ * // 2 July 2011 23:59:00 and 3 July 2011 00:01:00?
+ * const result = differenceInCalendarDays(
+ *   new Date(2011, 6, 3, 0, 1),
+ *   new Date(2011, 6, 2, 23, 59)
+ * )
+ * //=> 1
+ */
+function differenceInCalendarDays(dateLeft, dateRight) {
+  const startOfDayLeft = (0,_startOfDay_mjs__WEBPACK_IMPORTED_MODULE_0__.startOfDay)(dateLeft);
+  const startOfDayRight = (0,_startOfDay_mjs__WEBPACK_IMPORTED_MODULE_0__.startOfDay)(dateRight);
+
+  const timestampLeft =
+    +startOfDayLeft - (0,_lib_getTimezoneOffsetInMilliseconds_mjs__WEBPACK_IMPORTED_MODULE_1__.getTimezoneOffsetInMilliseconds)(startOfDayLeft);
+  const timestampRight =
+    +startOfDayRight - (0,_lib_getTimezoneOffsetInMilliseconds_mjs__WEBPACK_IMPORTED_MODULE_1__.getTimezoneOffsetInMilliseconds)(startOfDayRight);
+
+  // Round the number of days to the nearest integer because the number of
+  // milliseconds in a day is not constant (e.g. it's different in the week of
+  // the daylight saving time clock shift).
+  return Math.round((timestampLeft - timestampRight) / _constants_mjs__WEBPACK_IMPORTED_MODULE_2__.millisecondsInDay);
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (differenceInCalendarDays);
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/format.mjs":
+/*!******************************************!*\
+  !*** ./node_modules/date-fns/format.mjs ***!
+  \******************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   format: () => (/* binding */ format),
+/* harmony export */   formatDate: () => (/* binding */ format),
+/* harmony export */   formatters: () => (/* reexport safe */ _lib_format_formatters_mjs__WEBPACK_IMPORTED_MODULE_0__.formatters),
+/* harmony export */   longFormatters: () => (/* reexport safe */ _lib_format_longFormatters_mjs__WEBPACK_IMPORTED_MODULE_1__.longFormatters)
+/* harmony export */ });
+/* harmony import */ var _lib_defaultLocale_mjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./_lib/defaultLocale.mjs */ "./node_modules/date-fns/locale/en-US.mjs");
+/* harmony import */ var _lib_defaultOptions_mjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./_lib/defaultOptions.mjs */ "./node_modules/date-fns/_lib/defaultOptions.mjs");
+/* harmony import */ var _lib_format_formatters_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_lib/format/formatters.mjs */ "./node_modules/date-fns/_lib/format/formatters.mjs");
+/* harmony import */ var _lib_format_longFormatters_mjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./_lib/format/longFormatters.mjs */ "./node_modules/date-fns/_lib/format/longFormatters.mjs");
+/* harmony import */ var _lib_protectedTokens_mjs__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./_lib/protectedTokens.mjs */ "./node_modules/date-fns/_lib/protectedTokens.mjs");
+/* harmony import */ var _isValid_mjs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./isValid.mjs */ "./node_modules/date-fns/isValid.mjs");
+/* harmony import */ var _toDate_mjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./toDate.mjs */ "./node_modules/date-fns/toDate.mjs");
+
+
+
+
+
+
+
+
+// Rexports of internal for libraries to use.
+// See: https://github.com/date-fns/date-fns/issues/3638#issuecomment-1877082874
+
+
+// This RegExp consists of three parts separated by `|`:
+// - [yYQqMLwIdDecihHKkms]o matches any available ordinal number token
+//   (one of the certain letters followed by `o`)
+// - (\w)\1* matches any sequences of the same letter
+// - '' matches two quote characters in a row
+// - '(''|[^'])+('|$) matches anything surrounded by two quote characters ('),
+//   except a single quote symbol, which ends the sequence.
+//   Two quote characters do not end the sequence.
+//   If there is no matching single quote
+//   then the sequence will continue until the end of the string.
+// - . matches any single character unmatched by previous parts of the RegExps
+const formattingTokensRegExp =
+  /[yYQqMLwIdDecihHKkms]o|(\w)\1*|''|'(''|[^'])+('|$)|./g;
+
+// This RegExp catches symbols escaped by quotes, and also
+// sequences of symbols P, p, and the combinations like `PPPPPPPppppp`
+const longFormattingTokensRegExp = /P+p+|P+|p+|''|'(''|[^'])+('|$)|./g;
+
+const escapedStringRegExp = /^'([^]*?)'?$/;
+const doubleQuoteRegExp = /''/g;
+const unescapedLatinCharacterRegExp = /[a-zA-Z]/;
+
+
+
+/**
+ * The {@link format} function options.
+ */
+
+/**
+ * @name format
+ * @alias formatDate
+ * @category Common Helpers
+ * @summary Format the date.
+ *
+ * @description
+ * Return the formatted date string in the given format. The result may vary by locale.
+ *
+ * > ⚠️ Please note that the `format` tokens differ from Moment.js and other libraries.
+ * > See: https://github.com/date-fns/date-fns/blob/master/docs/unicodeTokens.md
+ *
+ * The characters wrapped between two single quotes characters (') are escaped.
+ * Two single quotes in a row, whether inside or outside a quoted sequence, represent a 'real' single quote.
+ * (see the last example)
+ *
+ * Format of the string is based on Unicode Technical Standard #35:
+ * https://www.unicode.org/reports/tr35/tr35-dates.html#Date_Field_Symbol_Table
+ * with a few additions (see note 7 below the table).
+ *
+ * Accepted patterns:
+ * | Unit                            | Pattern | Result examples                   | Notes |
+ * |---------------------------------|---------|-----------------------------------|-------|
+ * | Era                             | G..GGG  | AD, BC                            |       |
+ * |                                 | GGGG    | Anno Domini, Before Christ        | 2     |
+ * |                                 | GGGGG   | A, B                              |       |
+ * | Calendar year                   | y       | 44, 1, 1900, 2017                 | 5     |
+ * |                                 | yo      | 44th, 1st, 0th, 17th              | 5,7   |
+ * |                                 | yy      | 44, 01, 00, 17                    | 5     |
+ * |                                 | yyy     | 044, 001, 1900, 2017              | 5     |
+ * |                                 | yyyy    | 0044, 0001, 1900, 2017            | 5     |
+ * |                                 | yyyyy   | ...                               | 3,5   |
+ * | Local week-numbering year       | Y       | 44, 1, 1900, 2017                 | 5     |
+ * |                                 | Yo      | 44th, 1st, 1900th, 2017th         | 5,7   |
+ * |                                 | YY      | 44, 01, 00, 17                    | 5,8   |
+ * |                                 | YYY     | 044, 001, 1900, 2017              | 5     |
+ * |                                 | YYYY    | 0044, 0001, 1900, 2017            | 5,8   |
+ * |                                 | YYYYY   | ...                               | 3,5   |
+ * | ISO week-numbering year         | R       | -43, 0, 1, 1900, 2017             | 5,7   |
+ * |                                 | RR      | -43, 00, 01, 1900, 2017           | 5,7   |
+ * |                                 | RRR     | -043, 000, 001, 1900, 2017        | 5,7   |
+ * |                                 | RRRR    | -0043, 0000, 0001, 1900, 2017     | 5,7   |
+ * |                                 | RRRRR   | ...                               | 3,5,7 |
+ * | Extended year                   | u       | -43, 0, 1, 1900, 2017             | 5     |
+ * |                                 | uu      | -43, 01, 1900, 2017               | 5     |
+ * |                                 | uuu     | -043, 001, 1900, 2017             | 5     |
+ * |                                 | uuuu    | -0043, 0001, 1900, 2017           | 5     |
+ * |                                 | uuuuu   | ...                               | 3,5   |
+ * | Quarter (formatting)            | Q       | 1, 2, 3, 4                        |       |
+ * |                                 | Qo      | 1st, 2nd, 3rd, 4th                | 7     |
+ * |                                 | QQ      | 01, 02, 03, 04                    |       |
+ * |                                 | QQQ     | Q1, Q2, Q3, Q4                    |       |
+ * |                                 | QQQQ    | 1st quarter, 2nd quarter, ...     | 2     |
+ * |                                 | QQQQQ   | 1, 2, 3, 4                        | 4     |
+ * | Quarter (stand-alone)           | q       | 1, 2, 3, 4                        |       |
+ * |                                 | qo      | 1st, 2nd, 3rd, 4th                | 7     |
+ * |                                 | qq      | 01, 02, 03, 04                    |       |
+ * |                                 | qqq     | Q1, Q2, Q3, Q4                    |       |
+ * |                                 | qqqq    | 1st quarter, 2nd quarter, ...     | 2     |
+ * |                                 | qqqqq   | 1, 2, 3, 4                        | 4     |
+ * | Month (formatting)              | M       | 1, 2, ..., 12                     |       |
+ * |                                 | Mo      | 1st, 2nd, ..., 12th               | 7     |
+ * |                                 | MM      | 01, 02, ..., 12                   |       |
+ * |                                 | MMM     | Jan, Feb, ..., Dec                |       |
+ * |                                 | MMMM    | January, February, ..., December  | 2     |
+ * |                                 | MMMMM   | J, F, ..., D                      |       |
+ * | Month (stand-alone)             | L       | 1, 2, ..., 12                     |       |
+ * |                                 | Lo      | 1st, 2nd, ..., 12th               | 7     |
+ * |                                 | LL      | 01, 02, ..., 12                   |       |
+ * |                                 | LLL     | Jan, Feb, ..., Dec                |       |
+ * |                                 | LLLL    | January, February, ..., December  | 2     |
+ * |                                 | LLLLL   | J, F, ..., D                      |       |
+ * | Local week of year              | w       | 1, 2, ..., 53                     |       |
+ * |                                 | wo      | 1st, 2nd, ..., 53th               | 7     |
+ * |                                 | ww      | 01, 02, ..., 53                   |       |
+ * | ISO week of year                | I       | 1, 2, ..., 53                     | 7     |
+ * |                                 | Io      | 1st, 2nd, ..., 53th               | 7     |
+ * |                                 | II      | 01, 02, ..., 53                   | 7     |
+ * | Day of month                    | d       | 1, 2, ..., 31                     |       |
+ * |                                 | do      | 1st, 2nd, ..., 31st               | 7     |
+ * |                                 | dd      | 01, 02, ..., 31                   |       |
+ * | Day of year                     | D       | 1, 2, ..., 365, 366               | 9     |
+ * |                                 | Do      | 1st, 2nd, ..., 365th, 366th       | 7     |
+ * |                                 | DD      | 01, 02, ..., 365, 366             | 9     |
+ * |                                 | DDD     | 001, 002, ..., 365, 366           |       |
+ * |                                 | DDDD    | ...                               | 3     |
+ * | Day of week (formatting)        | E..EEE  | Mon, Tue, Wed, ..., Sun           |       |
+ * |                                 | EEEE    | Monday, Tuesday, ..., Sunday      | 2     |
+ * |                                 | EEEEE   | M, T, W, T, F, S, S               |       |
+ * |                                 | EEEEEE  | Mo, Tu, We, Th, Fr, Sa, Su        |       |
+ * | ISO day of week (formatting)    | i       | 1, 2, 3, ..., 7                   | 7     |
+ * |                                 | io      | 1st, 2nd, ..., 7th                | 7     |
+ * |                                 | ii      | 01, 02, ..., 07                   | 7     |
+ * |                                 | iii     | Mon, Tue, Wed, ..., Sun           | 7     |
+ * |                                 | iiii    | Monday, Tuesday, ..., Sunday      | 2,7   |
+ * |                                 | iiiii   | M, T, W, T, F, S, S               | 7     |
+ * |                                 | iiiiii  | Mo, Tu, We, Th, Fr, Sa, Su        | 7     |
+ * | Local day of week (formatting)  | e       | 2, 3, 4, ..., 1                   |       |
+ * |                                 | eo      | 2nd, 3rd, ..., 1st                | 7     |
+ * |                                 | ee      | 02, 03, ..., 01                   |       |
+ * |                                 | eee     | Mon, Tue, Wed, ..., Sun           |       |
+ * |                                 | eeee    | Monday, Tuesday, ..., Sunday      | 2     |
+ * |                                 | eeeee   | M, T, W, T, F, S, S               |       |
+ * |                                 | eeeeee  | Mo, Tu, We, Th, Fr, Sa, Su        |       |
+ * | Local day of week (stand-alone) | c       | 2, 3, 4, ..., 1                   |       |
+ * |                                 | co      | 2nd, 3rd, ..., 1st                | 7     |
+ * |                                 | cc      | 02, 03, ..., 01                   |       |
+ * |                                 | ccc     | Mon, Tue, Wed, ..., Sun           |       |
+ * |                                 | cccc    | Monday, Tuesday, ..., Sunday      | 2     |
+ * |                                 | ccccc   | M, T, W, T, F, S, S               |       |
+ * |                                 | cccccc  | Mo, Tu, We, Th, Fr, Sa, Su        |       |
+ * | AM, PM                          | a..aa   | AM, PM                            |       |
+ * |                                 | aaa     | am, pm                            |       |
+ * |                                 | aaaa    | a.m., p.m.                        | 2     |
+ * |                                 | aaaaa   | a, p                              |       |
+ * | AM, PM, noon, midnight          | b..bb   | AM, PM, noon, midnight            |       |
+ * |                                 | bbb     | am, pm, noon, midnight            |       |
+ * |                                 | bbbb    | a.m., p.m., noon, midnight        | 2     |
+ * |                                 | bbbbb   | a, p, n, mi                       |       |
+ * | Flexible day period             | B..BBB  | at night, in the morning, ...     |       |
+ * |                                 | BBBB    | at night, in the morning, ...     | 2     |
+ * |                                 | BBBBB   | at night, in the morning, ...     |       |
+ * | Hour [1-12]                     | h       | 1, 2, ..., 11, 12                 |       |
+ * |                                 | ho      | 1st, 2nd, ..., 11th, 12th         | 7     |
+ * |                                 | hh      | 01, 02, ..., 11, 12               |       |
+ * | Hour [0-23]                     | H       | 0, 1, 2, ..., 23                  |       |
+ * |                                 | Ho      | 0th, 1st, 2nd, ..., 23rd          | 7     |
+ * |                                 | HH      | 00, 01, 02, ..., 23               |       |
+ * | Hour [0-11]                     | K       | 1, 2, ..., 11, 0                  |       |
+ * |                                 | Ko      | 1st, 2nd, ..., 11th, 0th          | 7     |
+ * |                                 | KK      | 01, 02, ..., 11, 00               |       |
+ * | Hour [1-24]                     | k       | 24, 1, 2, ..., 23                 |       |
+ * |                                 | ko      | 24th, 1st, 2nd, ..., 23rd         | 7     |
+ * |                                 | kk      | 24, 01, 02, ..., 23               |       |
+ * | Minute                          | m       | 0, 1, ..., 59                     |       |
+ * |                                 | mo      | 0th, 1st, ..., 59th               | 7     |
+ * |                                 | mm      | 00, 01, ..., 59                   |       |
+ * | Second                          | s       | 0, 1, ..., 59                     |       |
+ * |                                 | so      | 0th, 1st, ..., 59th               | 7     |
+ * |                                 | ss      | 00, 01, ..., 59                   |       |
+ * | Fraction of second              | S       | 0, 1, ..., 9                      |       |
+ * |                                 | SS      | 00, 01, ..., 99                   |       |
+ * |                                 | SSS     | 000, 001, ..., 999                |       |
+ * |                                 | SSSS    | ...                               | 3     |
+ * | Timezone (ISO-8601 w/ Z)        | X       | -08, +0530, Z                     |       |
+ * |                                 | XX      | -0800, +0530, Z                   |       |
+ * |                                 | XXX     | -08:00, +05:30, Z                 |       |
+ * |                                 | XXXX    | -0800, +0530, Z, +123456          | 2     |
+ * |                                 | XXXXX   | -08:00, +05:30, Z, +12:34:56      |       |
+ * | Timezone (ISO-8601 w/o Z)       | x       | -08, +0530, +00                   |       |
+ * |                                 | xx      | -0800, +0530, +0000               |       |
+ * |                                 | xxx     | -08:00, +05:30, +00:00            | 2     |
+ * |                                 | xxxx    | -0800, +0530, +0000, +123456      |       |
+ * |                                 | xxxxx   | -08:00, +05:30, +00:00, +12:34:56 |       |
+ * | Timezone (GMT)                  | O...OOO | GMT-8, GMT+5:30, GMT+0            |       |
+ * |                                 | OOOO    | GMT-08:00, GMT+05:30, GMT+00:00   | 2     |
+ * | Timezone (specific non-locat.)  | z...zzz | GMT-8, GMT+5:30, GMT+0            | 6     |
+ * |                                 | zzzz    | GMT-08:00, GMT+05:30, GMT+00:00   | 2,6   |
+ * | Seconds timestamp               | t       | 512969520                         | 7     |
+ * |                                 | tt      | ...                               | 3,7   |
+ * | Milliseconds timestamp          | T       | 512969520900                      | 7     |
+ * |                                 | TT      | ...                               | 3,7   |
+ * | Long localized date             | P       | 04/29/1453                        | 7     |
+ * |                                 | PP      | Apr 29, 1453                      | 7     |
+ * |                                 | PPP     | April 29th, 1453                  | 7     |
+ * |                                 | PPPP    | Friday, April 29th, 1453          | 2,7   |
+ * | Long localized time             | p       | 12:00 AM                          | 7     |
+ * |                                 | pp      | 12:00:00 AM                       | 7     |
+ * |                                 | ppp     | 12:00:00 AM GMT+2                 | 7     |
+ * |                                 | pppp    | 12:00:00 AM GMT+02:00             | 2,7   |
+ * | Combination of date and time    | Pp      | 04/29/1453, 12:00 AM              | 7     |
+ * |                                 | PPpp    | Apr 29, 1453, 12:00:00 AM         | 7     |
+ * |                                 | PPPppp  | April 29th, 1453 at ...           | 7     |
+ * |                                 | PPPPpppp| Friday, April 29th, 1453 at ...   | 2,7   |
+ * Notes:
+ * 1. "Formatting" units (e.g. formatting quarter) in the default en-US locale
+ *    are the same as "stand-alone" units, but are different in some languages.
+ *    "Formatting" units are declined according to the rules of the language
+ *    in the context of a date. "Stand-alone" units are always nominative singular:
+ *
+ *    `format(new Date(2017, 10, 6), 'do LLLL', {locale: cs}) //=> '6. listopad'`
+ *
+ *    `format(new Date(2017, 10, 6), 'do MMMM', {locale: cs}) //=> '6. listopadu'`
+ *
+ * 2. Any sequence of the identical letters is a pattern, unless it is escaped by
+ *    the single quote characters (see below).
+ *    If the sequence is longer than listed in table (e.g. `EEEEEEEEEEE`)
+ *    the output will be the same as default pattern for this unit, usually
+ *    the longest one (in case of ISO weekdays, `EEEE`). Default patterns for units
+ *    are marked with "2" in the last column of the table.
+ *
+ *    `format(new Date(2017, 10, 6), 'MMM') //=> 'Nov'`
+ *
+ *    `format(new Date(2017, 10, 6), 'MMMM') //=> 'November'`
+ *
+ *    `format(new Date(2017, 10, 6), 'MMMMM') //=> 'N'`
+ *
+ *    `format(new Date(2017, 10, 6), 'MMMMMM') //=> 'November'`
+ *
+ *    `format(new Date(2017, 10, 6), 'MMMMMMM') //=> 'November'`
+ *
+ * 3. Some patterns could be unlimited length (such as `yyyyyyyy`).
+ *    The output will be padded with zeros to match the length of the pattern.
+ *
+ *    `format(new Date(2017, 10, 6), 'yyyyyyyy') //=> '00002017'`
+ *
+ * 4. `QQQQQ` and `qqqqq` could be not strictly numerical in some locales.
+ *    These tokens represent the shortest form of the quarter.
+ *
+ * 5. The main difference between `y` and `u` patterns are B.C. years:
+ *
+ *    | Year | `y` | `u` |
+ *    |------|-----|-----|
+ *    | AC 1 |   1 |   1 |
+ *    | BC 1 |   1 |   0 |
+ *    | BC 2 |   2 |  -1 |
+ *
+ *    Also `yy` always returns the last two digits of a year,
+ *    while `uu` pads single digit years to 2 characters and returns other years unchanged:
+ *
+ *    | Year | `yy` | `uu` |
+ *    |------|------|------|
+ *    | 1    |   01 |   01 |
+ *    | 14   |   14 |   14 |
+ *    | 376  |   76 |  376 |
+ *    | 1453 |   53 | 1453 |
+ *
+ *    The same difference is true for local and ISO week-numbering years (`Y` and `R`),
+ *    except local week-numbering years are dependent on `options.weekStartsOn`
+ *    and `options.firstWeekContainsDate` (compare [getISOWeekYear](https://date-fns.org/docs/getISOWeekYear)
+ *    and [getWeekYear](https://date-fns.org/docs/getWeekYear)).
+ *
+ * 6. Specific non-location timezones are currently unavailable in `date-fns`,
+ *    so right now these tokens fall back to GMT timezones.
+ *
+ * 7. These patterns are not in the Unicode Technical Standard #35:
+ *    - `i`: ISO day of week
+ *    - `I`: ISO week of year
+ *    - `R`: ISO week-numbering year
+ *    - `t`: seconds timestamp
+ *    - `T`: milliseconds timestamp
+ *    - `o`: ordinal number modifier
+ *    - `P`: long localized date
+ *    - `p`: long localized time
+ *
+ * 8. `YY` and `YYYY` tokens represent week-numbering years but they are often confused with years.
+ *    You should enable `options.useAdditionalWeekYearTokens` to use them. See: https://github.com/date-fns/date-fns/blob/master/docs/unicodeTokens.md
+ *
+ * 9. `D` and `DD` tokens represent days of the year but they are often confused with days of the month.
+ *    You should enable `options.useAdditionalDayOfYearTokens` to use them. See: https://github.com/date-fns/date-fns/blob/master/docs/unicodeTokens.md
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param date - The original date
+ * @param format - The string of tokens
+ * @param options - An object with options
+ *
+ * @returns The formatted date string
+ *
+ * @throws `date` must not be Invalid Date
+ * @throws `options.locale` must contain `localize` property
+ * @throws `options.locale` must contain `formatLong` property
+ * @throws use `yyyy` instead of `YYYY` for formatting years using [format provided] to the input [input provided]; see: https://github.com/date-fns/date-fns/blob/master/docs/unicodeTokens.md
+ * @throws use `yy` instead of `YY` for formatting years using [format provided] to the input [input provided]; see: https://github.com/date-fns/date-fns/blob/master/docs/unicodeTokens.md
+ * @throws use `d` instead of `D` for formatting days of the month using [format provided] to the input [input provided]; see: https://github.com/date-fns/date-fns/blob/master/docs/unicodeTokens.md
+ * @throws use `dd` instead of `DD` for formatting days of the month using [format provided] to the input [input provided]; see: https://github.com/date-fns/date-fns/blob/master/docs/unicodeTokens.md
+ * @throws format string contains an unescaped latin alphabet character
+ *
+ * @example
+ * // Represent 11 February 2014 in middle-endian format:
+ * const result = format(new Date(2014, 1, 11), 'MM/dd/yyyy')
+ * //=> '02/11/2014'
+ *
+ * @example
+ * // Represent 2 July 2014 in Esperanto:
+ * import { eoLocale } from 'date-fns/locale/eo'
+ * const result = format(new Date(2014, 6, 2), "do 'de' MMMM yyyy", {
+ *   locale: eoLocale
+ * })
+ * //=> '2-a de julio 2014'
+ *
+ * @example
+ * // Escape string by single quote characters:
+ * const result = format(new Date(2014, 6, 2, 15), "h 'o''clock'")
+ * //=> "3 o'clock"
+ */
+function format(date, formatStr, options) {
+  const defaultOptions = (0,_lib_defaultOptions_mjs__WEBPACK_IMPORTED_MODULE_2__.getDefaultOptions)();
+  const locale = options?.locale ?? defaultOptions.locale ?? _lib_defaultLocale_mjs__WEBPACK_IMPORTED_MODULE_3__.enUS;
+
+  const firstWeekContainsDate =
+    options?.firstWeekContainsDate ??
+    options?.locale?.options?.firstWeekContainsDate ??
+    defaultOptions.firstWeekContainsDate ??
+    defaultOptions.locale?.options?.firstWeekContainsDate ??
+    1;
+
+  const weekStartsOn =
+    options?.weekStartsOn ??
+    options?.locale?.options?.weekStartsOn ??
+    defaultOptions.weekStartsOn ??
+    defaultOptions.locale?.options?.weekStartsOn ??
+    0;
+
+  const originalDate = (0,_toDate_mjs__WEBPACK_IMPORTED_MODULE_4__.toDate)(date);
+
+  if (!(0,_isValid_mjs__WEBPACK_IMPORTED_MODULE_5__.isValid)(originalDate)) {
+    throw new RangeError("Invalid time value");
+  }
+
+  let parts = formatStr
+    .match(longFormattingTokensRegExp)
+    .map((substring) => {
+      const firstCharacter = substring[0];
+      if (firstCharacter === "p" || firstCharacter === "P") {
+        const longFormatter = _lib_format_longFormatters_mjs__WEBPACK_IMPORTED_MODULE_1__.longFormatters[firstCharacter];
+        return longFormatter(substring, locale.formatLong);
+      }
+      return substring;
+    })
+    .join("")
+    .match(formattingTokensRegExp)
+    .map((substring) => {
+      // Replace two single quote characters with one single quote character
+      if (substring === "''") {
+        return { isToken: false, value: "'" };
+      }
+
+      const firstCharacter = substring[0];
+      if (firstCharacter === "'") {
+        return { isToken: false, value: cleanEscapedString(substring) };
+      }
+
+      if (_lib_format_formatters_mjs__WEBPACK_IMPORTED_MODULE_0__.formatters[firstCharacter]) {
+        return { isToken: true, value: substring };
+      }
+
+      if (firstCharacter.match(unescapedLatinCharacterRegExp)) {
+        throw new RangeError(
+          "Format string contains an unescaped latin alphabet character `" +
+            firstCharacter +
+            "`",
+        );
+      }
+
+      return { isToken: false, value: substring };
+    });
+
+  // invoke localize preprocessor (only for french locales at the moment)
+  if (locale.localize.preprocessor) {
+    parts = locale.localize.preprocessor(originalDate, parts);
+  }
+
+  const formatterOptions = {
+    firstWeekContainsDate,
+    weekStartsOn,
+    locale,
+  };
+
+  return parts
+    .map((part) => {
+      if (!part.isToken) return part.value;
+
+      const token = part.value;
+
+      if (
+        (!options?.useAdditionalWeekYearTokens &&
+          (0,_lib_protectedTokens_mjs__WEBPACK_IMPORTED_MODULE_6__.isProtectedWeekYearToken)(token)) ||
+        (!options?.useAdditionalDayOfYearTokens &&
+          (0,_lib_protectedTokens_mjs__WEBPACK_IMPORTED_MODULE_6__.isProtectedDayOfYearToken)(token))
+      ) {
+        (0,_lib_protectedTokens_mjs__WEBPACK_IMPORTED_MODULE_6__.warnOrThrowProtectedError)(token, formatStr, String(date));
+      }
+
+      const formatter = _lib_format_formatters_mjs__WEBPACK_IMPORTED_MODULE_0__.formatters[token[0]];
+      return formatter(originalDate, token, locale.localize, formatterOptions);
+    })
+    .join("");
+}
+
+function cleanEscapedString(input) {
+  const matched = input.match(escapedStringRegExp);
+
+  if (!matched) {
+    return input;
+  }
+
+  return matched[1].replace(doubleQuoteRegExp, "'");
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (format);
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/getDayOfYear.mjs":
+/*!************************************************!*\
+  !*** ./node_modules/date-fns/getDayOfYear.mjs ***!
+  \************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   getDayOfYear: () => (/* binding */ getDayOfYear)
+/* harmony export */ });
+/* harmony import */ var _differenceInCalendarDays_mjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./differenceInCalendarDays.mjs */ "./node_modules/date-fns/differenceInCalendarDays.mjs");
+/* harmony import */ var _startOfYear_mjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./startOfYear.mjs */ "./node_modules/date-fns/startOfYear.mjs");
+/* harmony import */ var _toDate_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./toDate.mjs */ "./node_modules/date-fns/toDate.mjs");
+
+
+
+
+/**
+ * @name getDayOfYear
+ * @category Day Helpers
+ * @summary Get the day of the year of the given date.
+ *
+ * @description
+ * Get the day of the year of the given date.
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param date - The given date
+ *
+ * @returns The day of year
+ *
+ * @example
+ * // Which day of the year is 2 July 2014?
+ * const result = getDayOfYear(new Date(2014, 6, 2))
+ * //=> 183
+ */
+function getDayOfYear(date) {
+  const _date = (0,_toDate_mjs__WEBPACK_IMPORTED_MODULE_0__.toDate)(date);
+  const diff = (0,_differenceInCalendarDays_mjs__WEBPACK_IMPORTED_MODULE_1__.differenceInCalendarDays)(_date, (0,_startOfYear_mjs__WEBPACK_IMPORTED_MODULE_2__.startOfYear)(_date));
+  const dayOfYear = diff + 1;
+  return dayOfYear;
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getDayOfYear);
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/getISOWeek.mjs":
+/*!**********************************************!*\
+  !*** ./node_modules/date-fns/getISOWeek.mjs ***!
+  \**********************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   getISOWeek: () => (/* binding */ getISOWeek)
+/* harmony export */ });
+/* harmony import */ var _constants_mjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./constants.mjs */ "./node_modules/date-fns/constants.mjs");
+/* harmony import */ var _startOfISOWeek_mjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./startOfISOWeek.mjs */ "./node_modules/date-fns/startOfISOWeek.mjs");
+/* harmony import */ var _startOfISOWeekYear_mjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./startOfISOWeekYear.mjs */ "./node_modules/date-fns/startOfISOWeekYear.mjs");
+/* harmony import */ var _toDate_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./toDate.mjs */ "./node_modules/date-fns/toDate.mjs");
+
+
+
+
+
+/**
+ * @name getISOWeek
+ * @category ISO Week Helpers
+ * @summary Get the ISO week of the given date.
+ *
+ * @description
+ * Get the ISO week of the given date.
+ *
+ * ISO week-numbering year: http://en.wikipedia.org/wiki/ISO_week_date
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param date - The given date
+ *
+ * @returns The ISO week
+ *
+ * @example
+ * // Which week of the ISO-week numbering year is 2 January 2005?
+ * const result = getISOWeek(new Date(2005, 0, 2))
+ * //=> 53
+ */
+function getISOWeek(date) {
+  const _date = (0,_toDate_mjs__WEBPACK_IMPORTED_MODULE_0__.toDate)(date);
+  const diff = +(0,_startOfISOWeek_mjs__WEBPACK_IMPORTED_MODULE_1__.startOfISOWeek)(_date) - +(0,_startOfISOWeekYear_mjs__WEBPACK_IMPORTED_MODULE_2__.startOfISOWeekYear)(_date);
+
+  // Round the number of weeks to the nearest integer because the number of
+  // milliseconds in a week is not constant (e.g. it's different in the week of
+  // the daylight saving time clock shift).
+  return Math.round(diff / _constants_mjs__WEBPACK_IMPORTED_MODULE_3__.millisecondsInWeek) + 1;
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getISOWeek);
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/getISOWeekYear.mjs":
+/*!**************************************************!*\
+  !*** ./node_modules/date-fns/getISOWeekYear.mjs ***!
+  \**************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   getISOWeekYear: () => (/* binding */ getISOWeekYear)
+/* harmony export */ });
+/* harmony import */ var _constructFrom_mjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./constructFrom.mjs */ "./node_modules/date-fns/constructFrom.mjs");
+/* harmony import */ var _startOfISOWeek_mjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./startOfISOWeek.mjs */ "./node_modules/date-fns/startOfISOWeek.mjs");
+/* harmony import */ var _toDate_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./toDate.mjs */ "./node_modules/date-fns/toDate.mjs");
+
+
+
+
+/**
+ * @name getISOWeekYear
+ * @category ISO Week-Numbering Year Helpers
+ * @summary Get the ISO week-numbering year of the given date.
+ *
+ * @description
+ * Get the ISO week-numbering year of the given date,
+ * which always starts 3 days before the year's first Thursday.
+ *
+ * ISO week-numbering year: http://en.wikipedia.org/wiki/ISO_week_date
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param date - The given date
+ *
+ * @returns The ISO week-numbering year
+ *
+ * @example
+ * // Which ISO-week numbering year is 2 January 2005?
+ * const result = getISOWeekYear(new Date(2005, 0, 2))
+ * //=> 2004
+ */
+function getISOWeekYear(date) {
+  const _date = (0,_toDate_mjs__WEBPACK_IMPORTED_MODULE_0__.toDate)(date);
+  const year = _date.getFullYear();
+
+  const fourthOfJanuaryOfNextYear = (0,_constructFrom_mjs__WEBPACK_IMPORTED_MODULE_1__.constructFrom)(date, 0);
+  fourthOfJanuaryOfNextYear.setFullYear(year + 1, 0, 4);
+  fourthOfJanuaryOfNextYear.setHours(0, 0, 0, 0);
+  const startOfNextYear = (0,_startOfISOWeek_mjs__WEBPACK_IMPORTED_MODULE_2__.startOfISOWeek)(fourthOfJanuaryOfNextYear);
+
+  const fourthOfJanuaryOfThisYear = (0,_constructFrom_mjs__WEBPACK_IMPORTED_MODULE_1__.constructFrom)(date, 0);
+  fourthOfJanuaryOfThisYear.setFullYear(year, 0, 4);
+  fourthOfJanuaryOfThisYear.setHours(0, 0, 0, 0);
+  const startOfThisYear = (0,_startOfISOWeek_mjs__WEBPACK_IMPORTED_MODULE_2__.startOfISOWeek)(fourthOfJanuaryOfThisYear);
+
+  if (_date.getTime() >= startOfNextYear.getTime()) {
+    return year + 1;
+  } else if (_date.getTime() >= startOfThisYear.getTime()) {
+    return year;
+  } else {
+    return year - 1;
+  }
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getISOWeekYear);
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/getWeek.mjs":
+/*!*******************************************!*\
+  !*** ./node_modules/date-fns/getWeek.mjs ***!
+  \*******************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   getWeek: () => (/* binding */ getWeek)
+/* harmony export */ });
+/* harmony import */ var _constants_mjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./constants.mjs */ "./node_modules/date-fns/constants.mjs");
+/* harmony import */ var _startOfWeek_mjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./startOfWeek.mjs */ "./node_modules/date-fns/startOfWeek.mjs");
+/* harmony import */ var _startOfWeekYear_mjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./startOfWeekYear.mjs */ "./node_modules/date-fns/startOfWeekYear.mjs");
+/* harmony import */ var _toDate_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./toDate.mjs */ "./node_modules/date-fns/toDate.mjs");
+
+
+
+
+
+/**
+ * The {@link getWeek} function options.
+ */
+
+/**
+ * @name getWeek
+ * @category Week Helpers
+ * @summary Get the local week index of the given date.
+ *
+ * @description
+ * Get the local week index of the given date.
+ * The exact calculation depends on the values of
+ * `options.weekStartsOn` (which is the index of the first day of the week)
+ * and `options.firstWeekContainsDate` (which is the day of January, which is always in
+ * the first week of the week-numbering year)
+ *
+ * Week numbering: https://en.wikipedia.org/wiki/Week#The_ISO_week_date_system
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param date - The given date
+ * @param options - An object with options
+ *
+ * @returns The week
+ *
+ * @example
+ * // Which week of the local week numbering year is 2 January 2005 with default options?
+ * const result = getWeek(new Date(2005, 0, 2))
+ * //=> 2
+ *
+ * @example
+ * // Which week of the local week numbering year is 2 January 2005,
+ * // if Monday is the first day of the week,
+ * // and the first week of the year always contains 4 January?
+ * const result = getWeek(new Date(2005, 0, 2), {
+ *   weekStartsOn: 1,
+ *   firstWeekContainsDate: 4
+ * })
+ * //=> 53
+ */
+
+function getWeek(date, options) {
+  const _date = (0,_toDate_mjs__WEBPACK_IMPORTED_MODULE_0__.toDate)(date);
+  const diff = +(0,_startOfWeek_mjs__WEBPACK_IMPORTED_MODULE_1__.startOfWeek)(_date, options) - +(0,_startOfWeekYear_mjs__WEBPACK_IMPORTED_MODULE_2__.startOfWeekYear)(_date, options);
+
+  // Round the number of weeks to the nearest integer because the number of
+  // milliseconds in a week is not constant (e.g. it's different in the week of
+  // the daylight saving time clock shift).
+  return Math.round(diff / _constants_mjs__WEBPACK_IMPORTED_MODULE_3__.millisecondsInWeek) + 1;
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getWeek);
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/getWeekYear.mjs":
+/*!***********************************************!*\
+  !*** ./node_modules/date-fns/getWeekYear.mjs ***!
+  \***********************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   getWeekYear: () => (/* binding */ getWeekYear)
+/* harmony export */ });
+/* harmony import */ var _constructFrom_mjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./constructFrom.mjs */ "./node_modules/date-fns/constructFrom.mjs");
+/* harmony import */ var _startOfWeek_mjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./startOfWeek.mjs */ "./node_modules/date-fns/startOfWeek.mjs");
+/* harmony import */ var _toDate_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./toDate.mjs */ "./node_modules/date-fns/toDate.mjs");
+/* harmony import */ var _lib_defaultOptions_mjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./_lib/defaultOptions.mjs */ "./node_modules/date-fns/_lib/defaultOptions.mjs");
+
+
+
+
+
+/**
+ * The {@link getWeekYear} function options.
+ */
+
+/**
+ * @name getWeekYear
+ * @category Week-Numbering Year Helpers
+ * @summary Get the local week-numbering year of the given date.
+ *
+ * @description
+ * Get the local week-numbering year of the given date.
+ * The exact calculation depends on the values of
+ * `options.weekStartsOn` (which is the index of the first day of the week)
+ * and `options.firstWeekContainsDate` (which is the day of January, which is always in
+ * the first week of the week-numbering year)
+ *
+ * Week numbering: https://en.wikipedia.org/wiki/Week#The_ISO_week_date_system
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param date - The given date
+ * @param options - An object with options.
+ *
+ * @returns The local week-numbering year
+ *
+ * @example
+ * // Which week numbering year is 26 December 2004 with the default settings?
+ * const result = getWeekYear(new Date(2004, 11, 26))
+ * //=> 2005
+ *
+ * @example
+ * // Which week numbering year is 26 December 2004 if week starts on Saturday?
+ * const result = getWeekYear(new Date(2004, 11, 26), { weekStartsOn: 6 })
+ * //=> 2004
+ *
+ * @example
+ * // Which week numbering year is 26 December 2004 if the first week contains 4 January?
+ * const result = getWeekYear(new Date(2004, 11, 26), { firstWeekContainsDate: 4 })
+ * //=> 2004
+ */
+function getWeekYear(date, options) {
+  const _date = (0,_toDate_mjs__WEBPACK_IMPORTED_MODULE_0__.toDate)(date);
+  const year = _date.getFullYear();
+
+  const defaultOptions = (0,_lib_defaultOptions_mjs__WEBPACK_IMPORTED_MODULE_1__.getDefaultOptions)();
+  const firstWeekContainsDate =
+    options?.firstWeekContainsDate ??
+    options?.locale?.options?.firstWeekContainsDate ??
+    defaultOptions.firstWeekContainsDate ??
+    defaultOptions.locale?.options?.firstWeekContainsDate ??
+    1;
+
+  const firstWeekOfNextYear = (0,_constructFrom_mjs__WEBPACK_IMPORTED_MODULE_2__.constructFrom)(date, 0);
+  firstWeekOfNextYear.setFullYear(year + 1, 0, firstWeekContainsDate);
+  firstWeekOfNextYear.setHours(0, 0, 0, 0);
+  const startOfNextYear = (0,_startOfWeek_mjs__WEBPACK_IMPORTED_MODULE_3__.startOfWeek)(firstWeekOfNextYear, options);
+
+  const firstWeekOfThisYear = (0,_constructFrom_mjs__WEBPACK_IMPORTED_MODULE_2__.constructFrom)(date, 0);
+  firstWeekOfThisYear.setFullYear(year, 0, firstWeekContainsDate);
+  firstWeekOfThisYear.setHours(0, 0, 0, 0);
+  const startOfThisYear = (0,_startOfWeek_mjs__WEBPACK_IMPORTED_MODULE_3__.startOfWeek)(firstWeekOfThisYear, options);
+
+  if (_date.getTime() >= startOfNextYear.getTime()) {
+    return year + 1;
+  } else if (_date.getTime() >= startOfThisYear.getTime()) {
+    return year;
+  } else {
+    return year - 1;
+  }
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (getWeekYear);
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/isDate.mjs":
+/*!******************************************!*\
+  !*** ./node_modules/date-fns/isDate.mjs ***!
+  \******************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   isDate: () => (/* binding */ isDate)
+/* harmony export */ });
+/**
+ * @name isDate
+ * @category Common Helpers
+ * @summary Is the given value a date?
+ *
+ * @description
+ * Returns true if the given value is an instance of Date. The function works for dates transferred across iframes.
+ *
+ * @param value - The value to check
+ *
+ * @returns True if the given value is a date
+ *
+ * @example
+ * // For a valid date:
+ * const result = isDate(new Date())
+ * //=> true
+ *
+ * @example
+ * // For an invalid date:
+ * const result = isDate(new Date(NaN))
+ * //=> true
+ *
+ * @example
+ * // For some value:
+ * const result = isDate('2014-02-31')
+ * //=> false
+ *
+ * @example
+ * // For an object:
+ * const result = isDate({})
+ * //=> false
+ */
+function isDate(value) {
+  return (
+    value instanceof Date ||
+    (typeof value === "object" &&
+      Object.prototype.toString.call(value) === "[object Date]")
+  );
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (isDate);
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/isValid.mjs":
+/*!*******************************************!*\
+  !*** ./node_modules/date-fns/isValid.mjs ***!
+  \*******************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   isValid: () => (/* binding */ isValid)
+/* harmony export */ });
+/* harmony import */ var _isDate_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./isDate.mjs */ "./node_modules/date-fns/isDate.mjs");
+/* harmony import */ var _toDate_mjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./toDate.mjs */ "./node_modules/date-fns/toDate.mjs");
+
+
+
+/**
+ * @name isValid
+ * @category Common Helpers
+ * @summary Is the given date valid?
+ *
+ * @description
+ * Returns false if argument is Invalid Date and true otherwise.
+ * Argument is converted to Date using `toDate`. See [toDate](https://date-fns.org/docs/toDate)
+ * Invalid Date is a Date, whose time value is NaN.
+ *
+ * Time value of Date: http://es5.github.io/#x15.9.1.1
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param date - The date to check
+ *
+ * @returns The date is valid
+ *
+ * @example
+ * // For the valid date:
+ * const result = isValid(new Date(2014, 1, 31))
+ * //=> true
+ *
+ * @example
+ * // For the value, convertable into a date:
+ * const result = isValid(1393804800000)
+ * //=> true
+ *
+ * @example
+ * // For the invalid date:
+ * const result = isValid(new Date(''))
+ * //=> false
+ */
+function isValid(date) {
+  if (!(0,_isDate_mjs__WEBPACK_IMPORTED_MODULE_0__.isDate)(date) && typeof date !== "number") {
+    return false;
+  }
+  const _date = (0,_toDate_mjs__WEBPACK_IMPORTED_MODULE_1__.toDate)(date);
+  return !isNaN(Number(_date));
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (isValid);
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/locale/_lib/buildFormatLongFn.mjs":
+/*!*****************************************************************!*\
+  !*** ./node_modules/date-fns/locale/_lib/buildFormatLongFn.mjs ***!
+  \*****************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   buildFormatLongFn: () => (/* binding */ buildFormatLongFn)
+/* harmony export */ });
+function buildFormatLongFn(args) {
+  return (options = {}) => {
+    // TODO: Remove String()
+    const width = options.width ? String(options.width) : args.defaultWidth;
+    const format = args.formats[width] || args.formats[args.defaultWidth];
+    return format;
+  };
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/locale/_lib/buildLocalizeFn.mjs":
+/*!***************************************************************!*\
+  !*** ./node_modules/date-fns/locale/_lib/buildLocalizeFn.mjs ***!
+  \***************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   buildLocalizeFn: () => (/* binding */ buildLocalizeFn)
+/* harmony export */ });
+/* eslint-disable no-unused-vars */
+
+/**
+ * The localize function argument callback which allows to convert raw value to
+ * the actual type.
+ *
+ * @param value - The value to convert
+ *
+ * @returns The converted value
+ */
+
+/**
+ * The map of localized values for each width.
+ */
+
+/**
+ * The index type of the locale unit value. It types conversion of units of
+ * values that don't start at 0 (i.e. quarters).
+ */
+
+/**
+ * Converts the unit value to the tuple of values.
+ */
+
+/**
+ * The tuple of localized era values. The first element represents BC,
+ * the second element represents AD.
+ */
+
+/**
+ * The tuple of localized quarter values. The first element represents Q1.
+ */
+
+/**
+ * The tuple of localized day values. The first element represents Sunday.
+ */
+
+/**
+ * The tuple of localized month values. The first element represents January.
+ */
+
+function buildLocalizeFn(args) {
+  return (value, options) => {
+    const context = options?.context ? String(options.context) : "standalone";
+
+    let valuesArray;
+    if (context === "formatting" && args.formattingValues) {
+      const defaultWidth = args.defaultFormattingWidth || args.defaultWidth;
+      const width = options?.width ? String(options.width) : defaultWidth;
+
+      valuesArray =
+        args.formattingValues[width] || args.formattingValues[defaultWidth];
+    } else {
+      const defaultWidth = args.defaultWidth;
+      const width = options?.width ? String(options.width) : args.defaultWidth;
+
+      valuesArray = args.values[width] || args.values[defaultWidth];
+    }
+    const index = args.argumentCallback ? args.argumentCallback(value) : value;
+
+    // @ts-expect-error - For some reason TypeScript just don't want to match it, no matter how hard we try. I challenge you to try to remove it!
+    return valuesArray[index];
+  };
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/locale/_lib/buildMatchFn.mjs":
+/*!************************************************************!*\
+  !*** ./node_modules/date-fns/locale/_lib/buildMatchFn.mjs ***!
+  \************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   buildMatchFn: () => (/* binding */ buildMatchFn)
+/* harmony export */ });
+function buildMatchFn(args) {
+  return (string, options = {}) => {
+    const width = options.width;
+
+    const matchPattern =
+      (width && args.matchPatterns[width]) ||
+      args.matchPatterns[args.defaultMatchWidth];
+    const matchResult = string.match(matchPattern);
+
+    if (!matchResult) {
+      return null;
+    }
+    const matchedString = matchResult[0];
+
+    const parsePatterns =
+      (width && args.parsePatterns[width]) ||
+      args.parsePatterns[args.defaultParseWidth];
+
+    const key = Array.isArray(parsePatterns)
+      ? findIndex(parsePatterns, (pattern) => pattern.test(matchedString))
+      : // eslint-disable-next-line @typescript-eslint/no-explicit-any -- I challange you to fix the type
+        findKey(parsePatterns, (pattern) => pattern.test(matchedString));
+
+    let value;
+
+    value = args.valueCallback ? args.valueCallback(key) : key;
+    value = options.valueCallback
+      ? // eslint-disable-next-line @typescript-eslint/no-explicit-any -- I challange you to fix the type
+        options.valueCallback(value)
+      : value;
+
+    const rest = string.slice(matchedString.length);
+
+    return { value, rest };
+  };
+}
+
+function findKey(object, predicate) {
+  for (const key in object) {
+    if (
+      Object.prototype.hasOwnProperty.call(object, key) &&
+      predicate(object[key])
+    ) {
+      return key;
+    }
+  }
+  return undefined;
+}
+
+function findIndex(array, predicate) {
+  for (let key = 0; key < array.length; key++) {
+    if (predicate(array[key])) {
+      return key;
+    }
+  }
+  return undefined;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/locale/_lib/buildMatchPatternFn.mjs":
+/*!*******************************************************************!*\
+  !*** ./node_modules/date-fns/locale/_lib/buildMatchPatternFn.mjs ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   buildMatchPatternFn: () => (/* binding */ buildMatchPatternFn)
+/* harmony export */ });
+function buildMatchPatternFn(args) {
+  return (string, options = {}) => {
+    const matchResult = string.match(args.matchPattern);
+    if (!matchResult) return null;
+    const matchedString = matchResult[0];
+
+    const parseResult = string.match(args.parsePattern);
+    if (!parseResult) return null;
+    let value = args.valueCallback
+      ? args.valueCallback(parseResult[0])
+      : parseResult[0];
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any -- I challange you to fix the type
+    value = options.valueCallback ? options.valueCallback(value) : value;
+
+    const rest = string.slice(matchedString.length);
+
+    return { value, rest };
+  };
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/locale/en-US.mjs":
+/*!************************************************!*\
+  !*** ./node_modules/date-fns/locale/en-US.mjs ***!
+  \************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   enUS: () => (/* binding */ enUS)
+/* harmony export */ });
+/* harmony import */ var _en_US_lib_formatDistance_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./en-US/_lib/formatDistance.mjs */ "./node_modules/date-fns/locale/en-US/_lib/formatDistance.mjs");
+/* harmony import */ var _en_US_lib_formatLong_mjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./en-US/_lib/formatLong.mjs */ "./node_modules/date-fns/locale/en-US/_lib/formatLong.mjs");
+/* harmony import */ var _en_US_lib_formatRelative_mjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./en-US/_lib/formatRelative.mjs */ "./node_modules/date-fns/locale/en-US/_lib/formatRelative.mjs");
+/* harmony import */ var _en_US_lib_localize_mjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./en-US/_lib/localize.mjs */ "./node_modules/date-fns/locale/en-US/_lib/localize.mjs");
+/* harmony import */ var _en_US_lib_match_mjs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./en-US/_lib/match.mjs */ "./node_modules/date-fns/locale/en-US/_lib/match.mjs");
+
+
+
+
+
+
+/**
+ * @category Locales
+ * @summary English locale (United States).
+ * @language English
+ * @iso-639-2 eng
+ * @author Sasha Koss [@kossnocorp](https://github.com/kossnocorp)
+ * @author Lesha Koss [@leshakoss](https://github.com/leshakoss)
+ */
+const enUS = {
+  code: "en-US",
+  formatDistance: _en_US_lib_formatDistance_mjs__WEBPACK_IMPORTED_MODULE_0__.formatDistance,
+  formatLong: _en_US_lib_formatLong_mjs__WEBPACK_IMPORTED_MODULE_1__.formatLong,
+  formatRelative: _en_US_lib_formatRelative_mjs__WEBPACK_IMPORTED_MODULE_2__.formatRelative,
+  localize: _en_US_lib_localize_mjs__WEBPACK_IMPORTED_MODULE_3__.localize,
+  match: _en_US_lib_match_mjs__WEBPACK_IMPORTED_MODULE_4__.match,
+  options: {
+    weekStartsOn: 0 /* Sunday */,
+    firstWeekContainsDate: 1,
+  },
+};
+
+// Fallback for modularized imports:
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (enUS);
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/locale/en-US/_lib/formatDistance.mjs":
+/*!********************************************************************!*\
+  !*** ./node_modules/date-fns/locale/en-US/_lib/formatDistance.mjs ***!
+  \********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   formatDistance: () => (/* binding */ formatDistance)
+/* harmony export */ });
+const formatDistanceLocale = {
+  lessThanXSeconds: {
+    one: "less than a second",
+    other: "less than {{count}} seconds",
+  },
+
+  xSeconds: {
+    one: "1 second",
+    other: "{{count}} seconds",
+  },
+
+  halfAMinute: "half a minute",
+
+  lessThanXMinutes: {
+    one: "less than a minute",
+    other: "less than {{count}} minutes",
+  },
+
+  xMinutes: {
+    one: "1 minute",
+    other: "{{count}} minutes",
+  },
+
+  aboutXHours: {
+    one: "about 1 hour",
+    other: "about {{count}} hours",
+  },
+
+  xHours: {
+    one: "1 hour",
+    other: "{{count}} hours",
+  },
+
+  xDays: {
+    one: "1 day",
+    other: "{{count}} days",
+  },
+
+  aboutXWeeks: {
+    one: "about 1 week",
+    other: "about {{count}} weeks",
+  },
+
+  xWeeks: {
+    one: "1 week",
+    other: "{{count}} weeks",
+  },
+
+  aboutXMonths: {
+    one: "about 1 month",
+    other: "about {{count}} months",
+  },
+
+  xMonths: {
+    one: "1 month",
+    other: "{{count}} months",
+  },
+
+  aboutXYears: {
+    one: "about 1 year",
+    other: "about {{count}} years",
+  },
+
+  xYears: {
+    one: "1 year",
+    other: "{{count}} years",
+  },
+
+  overXYears: {
+    one: "over 1 year",
+    other: "over {{count}} years",
+  },
+
+  almostXYears: {
+    one: "almost 1 year",
+    other: "almost {{count}} years",
+  },
+};
+
+const formatDistance = (token, count, options) => {
+  let result;
+
+  const tokenValue = formatDistanceLocale[token];
+  if (typeof tokenValue === "string") {
+    result = tokenValue;
+  } else if (count === 1) {
+    result = tokenValue.one;
+  } else {
+    result = tokenValue.other.replace("{{count}}", count.toString());
+  }
+
+  if (options?.addSuffix) {
+    if (options.comparison && options.comparison > 0) {
+      return "in " + result;
+    } else {
+      return result + " ago";
+    }
+  }
+
+  return result;
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/locale/en-US/_lib/formatLong.mjs":
+/*!****************************************************************!*\
+  !*** ./node_modules/date-fns/locale/en-US/_lib/formatLong.mjs ***!
+  \****************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   formatLong: () => (/* binding */ formatLong)
+/* harmony export */ });
+/* harmony import */ var _lib_buildFormatLongFn_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../_lib/buildFormatLongFn.mjs */ "./node_modules/date-fns/locale/_lib/buildFormatLongFn.mjs");
+
+
+const dateFormats = {
+  full: "EEEE, MMMM do, y",
+  long: "MMMM do, y",
+  medium: "MMM d, y",
+  short: "MM/dd/yyyy",
+};
+
+const timeFormats = {
+  full: "h:mm:ss a zzzz",
+  long: "h:mm:ss a z",
+  medium: "h:mm:ss a",
+  short: "h:mm a",
+};
+
+const dateTimeFormats = {
+  full: "{{date}} 'at' {{time}}",
+  long: "{{date}} 'at' {{time}}",
+  medium: "{{date}}, {{time}}",
+  short: "{{date}}, {{time}}",
+};
+
+const formatLong = {
+  date: (0,_lib_buildFormatLongFn_mjs__WEBPACK_IMPORTED_MODULE_0__.buildFormatLongFn)({
+    formats: dateFormats,
+    defaultWidth: "full",
+  }),
+
+  time: (0,_lib_buildFormatLongFn_mjs__WEBPACK_IMPORTED_MODULE_0__.buildFormatLongFn)({
+    formats: timeFormats,
+    defaultWidth: "full",
+  }),
+
+  dateTime: (0,_lib_buildFormatLongFn_mjs__WEBPACK_IMPORTED_MODULE_0__.buildFormatLongFn)({
+    formats: dateTimeFormats,
+    defaultWidth: "full",
+  }),
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/locale/en-US/_lib/formatRelative.mjs":
+/*!********************************************************************!*\
+  !*** ./node_modules/date-fns/locale/en-US/_lib/formatRelative.mjs ***!
+  \********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   formatRelative: () => (/* binding */ formatRelative)
+/* harmony export */ });
+const formatRelativeLocale = {
+  lastWeek: "'last' eeee 'at' p",
+  yesterday: "'yesterday at' p",
+  today: "'today at' p",
+  tomorrow: "'tomorrow at' p",
+  nextWeek: "eeee 'at' p",
+  other: "P",
+};
+
+const formatRelative = (token, _date, _baseDate, _options) =>
+  formatRelativeLocale[token];
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/locale/en-US/_lib/localize.mjs":
+/*!**************************************************************!*\
+  !*** ./node_modules/date-fns/locale/en-US/_lib/localize.mjs ***!
+  \**************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   localize: () => (/* binding */ localize)
+/* harmony export */ });
+/* harmony import */ var _lib_buildLocalizeFn_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../_lib/buildLocalizeFn.mjs */ "./node_modules/date-fns/locale/_lib/buildLocalizeFn.mjs");
+
+
+const eraValues = {
+  narrow: ["B", "A"],
+  abbreviated: ["BC", "AD"],
+  wide: ["Before Christ", "Anno Domini"],
+};
+
+const quarterValues = {
+  narrow: ["1", "2", "3", "4"],
+  abbreviated: ["Q1", "Q2", "Q3", "Q4"],
+  wide: ["1st quarter", "2nd quarter", "3rd quarter", "4th quarter"],
+};
+
+// Note: in English, the names of days of the week and months are capitalized.
+// If you are making a new locale based on this one, check if the same is true for the language you're working on.
+// Generally, formatted dates should look like they are in the middle of a sentence,
+// e.g. in Spanish language the weekdays and months should be in the lowercase.
+const monthValues = {
+  narrow: ["J", "F", "M", "A", "M", "J", "J", "A", "S", "O", "N", "D"],
+  abbreviated: [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ],
+
+  wide: [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ],
+};
+
+const dayValues = {
+  narrow: ["S", "M", "T", "W", "T", "F", "S"],
+  short: ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"],
+  abbreviated: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+  wide: [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ],
+};
+
+const dayPeriodValues = {
+  narrow: {
+    am: "a",
+    pm: "p",
+    midnight: "mi",
+    noon: "n",
+    morning: "morning",
+    afternoon: "afternoon",
+    evening: "evening",
+    night: "night",
+  },
+  abbreviated: {
+    am: "AM",
+    pm: "PM",
+    midnight: "midnight",
+    noon: "noon",
+    morning: "morning",
+    afternoon: "afternoon",
+    evening: "evening",
+    night: "night",
+  },
+  wide: {
+    am: "a.m.",
+    pm: "p.m.",
+    midnight: "midnight",
+    noon: "noon",
+    morning: "morning",
+    afternoon: "afternoon",
+    evening: "evening",
+    night: "night",
+  },
+};
+
+const formattingDayPeriodValues = {
+  narrow: {
+    am: "a",
+    pm: "p",
+    midnight: "mi",
+    noon: "n",
+    morning: "in the morning",
+    afternoon: "in the afternoon",
+    evening: "in the evening",
+    night: "at night",
+  },
+  abbreviated: {
+    am: "AM",
+    pm: "PM",
+    midnight: "midnight",
+    noon: "noon",
+    morning: "in the morning",
+    afternoon: "in the afternoon",
+    evening: "in the evening",
+    night: "at night",
+  },
+  wide: {
+    am: "a.m.",
+    pm: "p.m.",
+    midnight: "midnight",
+    noon: "noon",
+    morning: "in the morning",
+    afternoon: "in the afternoon",
+    evening: "in the evening",
+    night: "at night",
+  },
+};
+
+const ordinalNumber = (dirtyNumber, _options) => {
+  const number = Number(dirtyNumber);
+
+  // If ordinal numbers depend on context, for example,
+  // if they are different for different grammatical genders,
+  // use `options.unit`.
+  //
+  // `unit` can be 'year', 'quarter', 'month', 'week', 'date', 'dayOfYear',
+  // 'day', 'hour', 'minute', 'second'.
+
+  const rem100 = number % 100;
+  if (rem100 > 20 || rem100 < 10) {
+    switch (rem100 % 10) {
+      case 1:
+        return number + "st";
+      case 2:
+        return number + "nd";
+      case 3:
+        return number + "rd";
+    }
+  }
+  return number + "th";
+};
+
+const localize = {
+  ordinalNumber,
+
+  era: (0,_lib_buildLocalizeFn_mjs__WEBPACK_IMPORTED_MODULE_0__.buildLocalizeFn)({
+    values: eraValues,
+    defaultWidth: "wide",
+  }),
+
+  quarter: (0,_lib_buildLocalizeFn_mjs__WEBPACK_IMPORTED_MODULE_0__.buildLocalizeFn)({
+    values: quarterValues,
+    defaultWidth: "wide",
+    argumentCallback: (quarter) => quarter - 1,
+  }),
+
+  month: (0,_lib_buildLocalizeFn_mjs__WEBPACK_IMPORTED_MODULE_0__.buildLocalizeFn)({
+    values: monthValues,
+    defaultWidth: "wide",
+  }),
+
+  day: (0,_lib_buildLocalizeFn_mjs__WEBPACK_IMPORTED_MODULE_0__.buildLocalizeFn)({
+    values: dayValues,
+    defaultWidth: "wide",
+  }),
+
+  dayPeriod: (0,_lib_buildLocalizeFn_mjs__WEBPACK_IMPORTED_MODULE_0__.buildLocalizeFn)({
+    values: dayPeriodValues,
+    defaultWidth: "wide",
+    formattingValues: formattingDayPeriodValues,
+    defaultFormattingWidth: "wide",
+  }),
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/locale/en-US/_lib/match.mjs":
+/*!***********************************************************!*\
+  !*** ./node_modules/date-fns/locale/en-US/_lib/match.mjs ***!
+  \***********************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   match: () => (/* binding */ match)
+/* harmony export */ });
+/* harmony import */ var _lib_buildMatchFn_mjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../_lib/buildMatchFn.mjs */ "./node_modules/date-fns/locale/_lib/buildMatchFn.mjs");
+/* harmony import */ var _lib_buildMatchPatternFn_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../_lib/buildMatchPatternFn.mjs */ "./node_modules/date-fns/locale/_lib/buildMatchPatternFn.mjs");
+
+
+
+const matchOrdinalNumberPattern = /^(\d+)(th|st|nd|rd)?/i;
+const parseOrdinalNumberPattern = /\d+/i;
+
+const matchEraPatterns = {
+  narrow: /^(b|a)/i,
+  abbreviated: /^(b\.?\s?c\.?|b\.?\s?c\.?\s?e\.?|a\.?\s?d\.?|c\.?\s?e\.?)/i,
+  wide: /^(before christ|before common era|anno domini|common era)/i,
+};
+const parseEraPatterns = {
+  any: [/^b/i, /^(a|c)/i],
+};
+
+const matchQuarterPatterns = {
+  narrow: /^[1234]/i,
+  abbreviated: /^q[1234]/i,
+  wide: /^[1234](th|st|nd|rd)? quarter/i,
+};
+const parseQuarterPatterns = {
+  any: [/1/i, /2/i, /3/i, /4/i],
+};
+
+const matchMonthPatterns = {
+  narrow: /^[jfmasond]/i,
+  abbreviated: /^(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)/i,
+  wide: /^(january|february|march|april|may|june|july|august|september|october|november|december)/i,
+};
+const parseMonthPatterns = {
+  narrow: [
+    /^j/i,
+    /^f/i,
+    /^m/i,
+    /^a/i,
+    /^m/i,
+    /^j/i,
+    /^j/i,
+    /^a/i,
+    /^s/i,
+    /^o/i,
+    /^n/i,
+    /^d/i,
+  ],
+
+  any: [
+    /^ja/i,
+    /^f/i,
+    /^mar/i,
+    /^ap/i,
+    /^may/i,
+    /^jun/i,
+    /^jul/i,
+    /^au/i,
+    /^s/i,
+    /^o/i,
+    /^n/i,
+    /^d/i,
+  ],
+};
+
+const matchDayPatterns = {
+  narrow: /^[smtwf]/i,
+  short: /^(su|mo|tu|we|th|fr|sa)/i,
+  abbreviated: /^(sun|mon|tue|wed|thu|fri|sat)/i,
+  wide: /^(sunday|monday|tuesday|wednesday|thursday|friday|saturday)/i,
+};
+const parseDayPatterns = {
+  narrow: [/^s/i, /^m/i, /^t/i, /^w/i, /^t/i, /^f/i, /^s/i],
+  any: [/^su/i, /^m/i, /^tu/i, /^w/i, /^th/i, /^f/i, /^sa/i],
+};
+
+const matchDayPeriodPatterns = {
+  narrow: /^(a|p|mi|n|(in the|at) (morning|afternoon|evening|night))/i,
+  any: /^([ap]\.?\s?m\.?|midnight|noon|(in the|at) (morning|afternoon|evening|night))/i,
+};
+const parseDayPeriodPatterns = {
+  any: {
+    am: /^a/i,
+    pm: /^p/i,
+    midnight: /^mi/i,
+    noon: /^no/i,
+    morning: /morning/i,
+    afternoon: /afternoon/i,
+    evening: /evening/i,
+    night: /night/i,
+  },
+};
+
+const match = {
+  ordinalNumber: (0,_lib_buildMatchPatternFn_mjs__WEBPACK_IMPORTED_MODULE_0__.buildMatchPatternFn)({
+    matchPattern: matchOrdinalNumberPattern,
+    parsePattern: parseOrdinalNumberPattern,
+    valueCallback: (value) => parseInt(value, 10),
+  }),
+
+  era: (0,_lib_buildMatchFn_mjs__WEBPACK_IMPORTED_MODULE_1__.buildMatchFn)({
+    matchPatterns: matchEraPatterns,
+    defaultMatchWidth: "wide",
+    parsePatterns: parseEraPatterns,
+    defaultParseWidth: "any",
+  }),
+
+  quarter: (0,_lib_buildMatchFn_mjs__WEBPACK_IMPORTED_MODULE_1__.buildMatchFn)({
+    matchPatterns: matchQuarterPatterns,
+    defaultMatchWidth: "wide",
+    parsePatterns: parseQuarterPatterns,
+    defaultParseWidth: "any",
+    valueCallback: (index) => index + 1,
+  }),
+
+  month: (0,_lib_buildMatchFn_mjs__WEBPACK_IMPORTED_MODULE_1__.buildMatchFn)({
+    matchPatterns: matchMonthPatterns,
+    defaultMatchWidth: "wide",
+    parsePatterns: parseMonthPatterns,
+    defaultParseWidth: "any",
+  }),
+
+  day: (0,_lib_buildMatchFn_mjs__WEBPACK_IMPORTED_MODULE_1__.buildMatchFn)({
+    matchPatterns: matchDayPatterns,
+    defaultMatchWidth: "wide",
+    parsePatterns: parseDayPatterns,
+    defaultParseWidth: "any",
+  }),
+
+  dayPeriod: (0,_lib_buildMatchFn_mjs__WEBPACK_IMPORTED_MODULE_1__.buildMatchFn)({
+    matchPatterns: matchDayPeriodPatterns,
+    defaultMatchWidth: "any",
+    parsePatterns: parseDayPeriodPatterns,
+    defaultParseWidth: "any",
+  }),
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/startOfDay.mjs":
+/*!**********************************************!*\
+  !*** ./node_modules/date-fns/startOfDay.mjs ***!
+  \**********************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   startOfDay: () => (/* binding */ startOfDay)
+/* harmony export */ });
+/* harmony import */ var _toDate_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./toDate.mjs */ "./node_modules/date-fns/toDate.mjs");
+
+
+/**
+ * @name startOfDay
+ * @category Day Helpers
+ * @summary Return the start of a day for the given date.
+ *
+ * @description
+ * Return the start of a day for the given date.
+ * The result will be in the local timezone.
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param date - The original date
+ *
+ * @returns The start of a day
+ *
+ * @example
+ * // The start of a day for 2 September 2014 11:55:00:
+ * const result = startOfDay(new Date(2014, 8, 2, 11, 55, 0))
+ * //=> Tue Sep 02 2014 00:00:00
+ */
+function startOfDay(date) {
+  const _date = (0,_toDate_mjs__WEBPACK_IMPORTED_MODULE_0__.toDate)(date);
+  _date.setHours(0, 0, 0, 0);
+  return _date;
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (startOfDay);
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/startOfISOWeek.mjs":
+/*!**************************************************!*\
+  !*** ./node_modules/date-fns/startOfISOWeek.mjs ***!
+  \**************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   startOfISOWeek: () => (/* binding */ startOfISOWeek)
+/* harmony export */ });
+/* harmony import */ var _startOfWeek_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./startOfWeek.mjs */ "./node_modules/date-fns/startOfWeek.mjs");
+
+
+/**
+ * @name startOfISOWeek
+ * @category ISO Week Helpers
+ * @summary Return the start of an ISO week for the given date.
+ *
+ * @description
+ * Return the start of an ISO week for the given date.
+ * The result will be in the local timezone.
+ *
+ * ISO week-numbering year: http://en.wikipedia.org/wiki/ISO_week_date
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param date - The original date
+ *
+ * @returns The start of an ISO week
+ *
+ * @example
+ * // The start of an ISO week for 2 September 2014 11:55:00:
+ * const result = startOfISOWeek(new Date(2014, 8, 2, 11, 55, 0))
+ * //=> Mon Sep 01 2014 00:00:00
+ */
+function startOfISOWeek(date) {
+  return (0,_startOfWeek_mjs__WEBPACK_IMPORTED_MODULE_0__.startOfWeek)(date, { weekStartsOn: 1 });
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (startOfISOWeek);
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/startOfISOWeekYear.mjs":
+/*!******************************************************!*\
+  !*** ./node_modules/date-fns/startOfISOWeekYear.mjs ***!
+  \******************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   startOfISOWeekYear: () => (/* binding */ startOfISOWeekYear)
+/* harmony export */ });
+/* harmony import */ var _getISOWeekYear_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./getISOWeekYear.mjs */ "./node_modules/date-fns/getISOWeekYear.mjs");
+/* harmony import */ var _startOfISOWeek_mjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./startOfISOWeek.mjs */ "./node_modules/date-fns/startOfISOWeek.mjs");
+/* harmony import */ var _constructFrom_mjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./constructFrom.mjs */ "./node_modules/date-fns/constructFrom.mjs");
+
+
+
+
+/**
+ * @name startOfISOWeekYear
+ * @category ISO Week-Numbering Year Helpers
+ * @summary Return the start of an ISO week-numbering year for the given date.
+ *
+ * @description
+ * Return the start of an ISO week-numbering year,
+ * which always starts 3 days before the year's first Thursday.
+ * The result will be in the local timezone.
+ *
+ * ISO week-numbering year: http://en.wikipedia.org/wiki/ISO_week_date
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param date - The original date
+ *
+ * @returns The start of an ISO week-numbering year
+ *
+ * @example
+ * // The start of an ISO week-numbering year for 2 July 2005:
+ * const result = startOfISOWeekYear(new Date(2005, 6, 2))
+ * //=> Mon Jan 03 2005 00:00:00
+ */
+function startOfISOWeekYear(date) {
+  const year = (0,_getISOWeekYear_mjs__WEBPACK_IMPORTED_MODULE_0__.getISOWeekYear)(date);
+  const fourthOfJanuary = (0,_constructFrom_mjs__WEBPACK_IMPORTED_MODULE_1__.constructFrom)(date, 0);
+  fourthOfJanuary.setFullYear(year, 0, 4);
+  fourthOfJanuary.setHours(0, 0, 0, 0);
+  return (0,_startOfISOWeek_mjs__WEBPACK_IMPORTED_MODULE_2__.startOfISOWeek)(fourthOfJanuary);
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (startOfISOWeekYear);
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/startOfWeek.mjs":
+/*!***********************************************!*\
+  !*** ./node_modules/date-fns/startOfWeek.mjs ***!
+  \***********************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   startOfWeek: () => (/* binding */ startOfWeek)
+/* harmony export */ });
+/* harmony import */ var _toDate_mjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./toDate.mjs */ "./node_modules/date-fns/toDate.mjs");
+/* harmony import */ var _lib_defaultOptions_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_lib/defaultOptions.mjs */ "./node_modules/date-fns/_lib/defaultOptions.mjs");
+
+
+
+/**
+ * The {@link startOfWeek} function options.
+ */
+
+/**
+ * @name startOfWeek
+ * @category Week Helpers
+ * @summary Return the start of a week for the given date.
+ *
+ * @description
+ * Return the start of a week for the given date.
+ * The result will be in the local timezone.
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param date - The original date
+ * @param options - An object with options
+ *
+ * @returns The start of a week
+ *
+ * @example
+ * // The start of a week for 2 September 2014 11:55:00:
+ * const result = startOfWeek(new Date(2014, 8, 2, 11, 55, 0))
+ * //=> Sun Aug 31 2014 00:00:00
+ *
+ * @example
+ * // If the week starts on Monday, the start of the week for 2 September 2014 11:55:00:
+ * const result = startOfWeek(new Date(2014, 8, 2, 11, 55, 0), { weekStartsOn: 1 })
+ * //=> Mon Sep 01 2014 00:00:00
+ */
+function startOfWeek(date, options) {
+  const defaultOptions = (0,_lib_defaultOptions_mjs__WEBPACK_IMPORTED_MODULE_0__.getDefaultOptions)();
+  const weekStartsOn =
+    options?.weekStartsOn ??
+    options?.locale?.options?.weekStartsOn ??
+    defaultOptions.weekStartsOn ??
+    defaultOptions.locale?.options?.weekStartsOn ??
+    0;
+
+  const _date = (0,_toDate_mjs__WEBPACK_IMPORTED_MODULE_1__.toDate)(date);
+  const day = _date.getDay();
+  const diff = (day < weekStartsOn ? 7 : 0) + day - weekStartsOn;
+
+  _date.setDate(_date.getDate() - diff);
+  _date.setHours(0, 0, 0, 0);
+  return _date;
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (startOfWeek);
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/startOfWeekYear.mjs":
+/*!***************************************************!*\
+  !*** ./node_modules/date-fns/startOfWeekYear.mjs ***!
+  \***************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   startOfWeekYear: () => (/* binding */ startOfWeekYear)
+/* harmony export */ });
+/* harmony import */ var _constructFrom_mjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./constructFrom.mjs */ "./node_modules/date-fns/constructFrom.mjs");
+/* harmony import */ var _getWeekYear_mjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./getWeekYear.mjs */ "./node_modules/date-fns/getWeekYear.mjs");
+/* harmony import */ var _startOfWeek_mjs__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./startOfWeek.mjs */ "./node_modules/date-fns/startOfWeek.mjs");
+/* harmony import */ var _lib_defaultOptions_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./_lib/defaultOptions.mjs */ "./node_modules/date-fns/_lib/defaultOptions.mjs");
+
+
+
+
+
+/**
+ * The {@link startOfWeekYear} function options.
+ */
+
+/**
+ * @name startOfWeekYear
+ * @category Week-Numbering Year Helpers
+ * @summary Return the start of a local week-numbering year for the given date.
+ *
+ * @description
+ * Return the start of a local week-numbering year.
+ * The exact calculation depends on the values of
+ * `options.weekStartsOn` (which is the index of the first day of the week)
+ * and `options.firstWeekContainsDate` (which is the day of January, which is always in
+ * the first week of the week-numbering year)
+ *
+ * Week numbering: https://en.wikipedia.org/wiki/Week#The_ISO_week_date_system
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param date - The original date
+ * @param options - An object with options
+ *
+ * @returns The start of a week-numbering year
+ *
+ * @example
+ * // The start of an a week-numbering year for 2 July 2005 with default settings:
+ * const result = startOfWeekYear(new Date(2005, 6, 2))
+ * //=> Sun Dec 26 2004 00:00:00
+ *
+ * @example
+ * // The start of a week-numbering year for 2 July 2005
+ * // if Monday is the first day of week
+ * // and 4 January is always in the first week of the year:
+ * const result = startOfWeekYear(new Date(2005, 6, 2), {
+ *   weekStartsOn: 1,
+ *   firstWeekContainsDate: 4
+ * })
+ * //=> Mon Jan 03 2005 00:00:00
+ */
+function startOfWeekYear(date, options) {
+  const defaultOptions = (0,_lib_defaultOptions_mjs__WEBPACK_IMPORTED_MODULE_0__.getDefaultOptions)();
+  const firstWeekContainsDate =
+    options?.firstWeekContainsDate ??
+    options?.locale?.options?.firstWeekContainsDate ??
+    defaultOptions.firstWeekContainsDate ??
+    defaultOptions.locale?.options?.firstWeekContainsDate ??
+    1;
+
+  const year = (0,_getWeekYear_mjs__WEBPACK_IMPORTED_MODULE_1__.getWeekYear)(date, options);
+  const firstWeek = (0,_constructFrom_mjs__WEBPACK_IMPORTED_MODULE_2__.constructFrom)(date, 0);
+  firstWeek.setFullYear(year, 0, firstWeekContainsDate);
+  firstWeek.setHours(0, 0, 0, 0);
+  const _date = (0,_startOfWeek_mjs__WEBPACK_IMPORTED_MODULE_3__.startOfWeek)(firstWeek, options);
+  return _date;
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (startOfWeekYear);
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/startOfYear.mjs":
+/*!***********************************************!*\
+  !*** ./node_modules/date-fns/startOfYear.mjs ***!
+  \***********************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   startOfYear: () => (/* binding */ startOfYear)
+/* harmony export */ });
+/* harmony import */ var _toDate_mjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./toDate.mjs */ "./node_modules/date-fns/toDate.mjs");
+/* harmony import */ var _constructFrom_mjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./constructFrom.mjs */ "./node_modules/date-fns/constructFrom.mjs");
+
+
+
+/**
+ * @name startOfYear
+ * @category Year Helpers
+ * @summary Return the start of a year for the given date.
+ *
+ * @description
+ * Return the start of a year for the given date.
+ * The result will be in the local timezone.
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param date - The original date
+ *
+ * @returns The start of a year
+ *
+ * @example
+ * // The start of a year for 2 September 2014 11:55:00:
+ * const result = startOfYear(new Date(2014, 8, 2, 11, 55, 00))
+ * //=> Wed Jan 01 2014 00:00:00
+ */
+function startOfYear(date) {
+  const cleanDate = (0,_toDate_mjs__WEBPACK_IMPORTED_MODULE_0__.toDate)(date);
+  const _date = (0,_constructFrom_mjs__WEBPACK_IMPORTED_MODULE_1__.constructFrom)(date, 0);
+  _date.setFullYear(cleanDate.getFullYear(), 0, 1);
+  _date.setHours(0, 0, 0, 0);
+  return _date;
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (startOfYear);
+
+
+/***/ }),
+
+/***/ "./node_modules/date-fns/toDate.mjs":
+/*!******************************************!*\
+  !*** ./node_modules/date-fns/toDate.mjs ***!
+  \******************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__),
+/* harmony export */   toDate: () => (/* binding */ toDate)
+/* harmony export */ });
+/**
+ * @name toDate
+ * @category Common Helpers
+ * @summary Convert the given argument to an instance of Date.
+ *
+ * @description
+ * Convert the given argument to an instance of Date.
+ *
+ * If the argument is an instance of Date, the function returns its clone.
+ *
+ * If the argument is a number, it is treated as a timestamp.
+ *
+ * If the argument is none of the above, the function returns Invalid Date.
+ *
+ * **Note**: *all* Date arguments passed to any *date-fns* function is processed by `toDate`.
+ *
+ * @typeParam DateType - The `Date` type, the function operates on. Gets inferred from passed arguments. Allows to use extensions like [`UTCDate`](https://github.com/date-fns/utc).
+ *
+ * @param argument - The value to convert
+ *
+ * @returns The parsed date in the local time zone
+ *
+ * @example
+ * // Clone the date:
+ * const result = toDate(new Date(2014, 1, 11, 11, 30, 30))
+ * //=> Tue Feb 11 2014 11:30:30
+ *
+ * @example
+ * // Convert the timestamp to date:
+ * const result = toDate(1392098430000)
+ * //=> Tue Feb 11 2014 11:30:30
+ */
+function toDate(argument) {
+  const argStr = Object.prototype.toString.call(argument);
+
+  // Clone the date
+  if (
+    argument instanceof Date ||
+    (typeof argument === "object" && argStr === "[object Date]")
+  ) {
+    // Prevent the date to lose the milliseconds when passed to new Date() in IE10
+    return new argument.constructor(+argument);
+  } else if (
+    typeof argument === "number" ||
+    argStr === "[object Number]" ||
+    typeof argument === "string" ||
+    argStr === "[object String]"
+  ) {
+    // TODO: Can we get rid of as?
+    return new Date(argument);
+  } else {
+    // TODO: Can we get rid of as?
+    return new Date(NaN);
+  }
+}
+
+// Fallback for modularized imports:
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (toDate);
+
+
+/***/ }),
+
 /***/ "./node_modules/tiny-invariant/dist/esm/tiny-invariant.js":
 /*!****************************************************************!*\
   !*** ./node_modules/tiny-invariant/dist/esm/tiny-invariant.js ***!
@@ -16525,7 +23476,7 @@ function invariant(condition, message) {
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;

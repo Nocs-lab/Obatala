@@ -1,21 +1,18 @@
-import { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Panel,
     PanelHeader,
     Spinner,
     Notice,
-    __experimentalConfirmDialog as ConfirmDialog
 } from '@wordpress/components';
-import { fetchProcessTypes, saveProcessType, deleteProcessType } from '../api/apiRequests';
+import { fetchProcessTypes, saveProcessType, deleteProcessType, updateProcessTypeMeta } from '../api/apiRequests';
 import ProcessTypeForm from './ProcessTypeManager/ProcessTypeForm';
 import ProcessTypeList from './ProcessTypeManager/ProcessTypeList';
-import Reducer, { initialState } from '../redux/reducer';
 
 const ProcessTypeManager = () => {
     const [processTypes, setProcessTypes] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [editingProcessType, setEditingProcessType] = useState(null);
-    const [state, dispatch] = useReducer(Reducer, initialState);
     const [notice, setNotice] = useState(null);
 
     useEffect(() => {
@@ -77,14 +74,6 @@ const ProcessTypeManager = () => {
         window.location.href = `?page=process-type-editor&process_type_id=${id}`;
     };
 
-    const handleConfirmDeleteType = (id) => {
-        dispatch({ type: 'OPEN_MODAL_PROCESS_TYPE', payload: id });
-    };
-
-    const handleCancel = () => {
-        dispatch({ type: 'CLOSE_MODAL' });
-    };
-
     if (isLoading) {
         return <Spinner />;
     }
@@ -95,23 +84,10 @@ const ProcessTypeManager = () => {
             <h2>Process Type Manager</h2>
             <div className="panel-container">
                 <main>
-                    <ConfirmDialog
-                        isOpen={state.isOpen}
-                        onConfirm={() => {
-                            if (state.deleteProcessType) {
-                                handleDeleteProcessType(state.deleteProcessType);
-                            }
-                            dispatch({ type: 'CLOSE_MODAL' });
-                        }}
-                        onCancel={handleCancel}
-                    >
-                        Are you sure you want to delete this Process Type?
-                    </ConfirmDialog>
-
                     <ProcessTypeList
                         processTypes={processTypes}
                         onEdit={handleEditProcessType}
-                        onDelete={handleConfirmDeleteType}
+                        onDelete={handleDeleteProcessType}
                     />
                 </main>
                 <aside>

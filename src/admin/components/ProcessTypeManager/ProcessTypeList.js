@@ -1,71 +1,150 @@
-import React from 'react';
-import { Button, Icon, Tooltip, Card, CardBody, CardHeader, CardFooter, Notice, Panel, PanelHeader, PanelRow } from "@wordpress/components";
-import { edit, trash } from "@wordpress/icons";
+import React, { useState, useMemo } from 'react';
+import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
+import { Button, Icon, Tooltip, Panel, PanelHeader, Notice, TextControl } from '@wordpress/components';
+import { edit, trash, yes, no } from '@wordpress/icons';
+import { format } from 'date-fns';
 
 const ProcessTypeList = ({ processTypes, onEdit, onDelete }) => {
+    const columns = useMemo(() => [
+        {
+            Header: 'Title',
+            accessor: 'title.rendered',
+        },
+        {
+            Header: 'Description',
+            accessor: 'description',
+        },
+        {
+            Header: 'Created At',
+            accessor: 'date',
+            Cell: ({ value }) => format(new Date(value), 'MM/dd/yyyy'),
+        },
+        {
+            Header: 'Number of Steps',
+            accessor: 'meta.step_order',
+            Cell: ({ value }) => (value ? value.length : 0),
+        },
+        {
+            Header: 'Actions',
+            accessor: 'id',
+            Cell: ({ row }) => (
+                <div className="actions">
+                    <Tooltip text="Edit">
+                        <Button
+                            icon={<Icon icon={edit} />}
+                            onClick={() => onEdit(row.original.id)}
+                        />
+                    </Tooltip>
+                    <Tooltip text="Delete">
+                        <Button
+                            icon={<Icon icon={trash} />}
+                            onClick={() => onDelete(row.original.id)}
+                        />
+                    </Tooltip>
+                </div>
+            ),
+        },
+    ], [onEdit, onDelete]);
+
+    const data = useMemo(() => processTypes, [processTypes]);
+
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        page,
+        prepareRow,
+        canPreviousPage,
+        canNextPage,
+        pageOptions,
+        state: { pageIndex, globalFilter },
+        nextPage,
+        previousPage,
+        setPageSize,
+        setGlobalFilter,
+    } = useTable(
+        {
+            columns,
+            data,
+            initialState: { pageIndex: 0, pageSize: 10 },
+        },
+        useGlobalFilter,
+        useSortBy,
+        usePagination
+    );
+
     return (
         <Panel>
             <PanelHeader>Existing Process Types</PanelHeader>
-            <PanelRow>
-                {processTypes.length > 0 ? (
-                    <div className="card-container">
-                        {processTypes.map((type) => (
-                            <Card key={type.id}>
-                                <CardHeader>
-                                    <h4 className="card-title">{type.title.rendered}</h4>
-                                </CardHeader>
-                                <CardBody>
-                                    <dl className="description-list">
-                                        <div className="list-item">
-                                            <dt>Description:</dt>
-                                            <dd>
-                                                {type.description ? type.description.split('\n').map((item, key) => (
-                                                    <span key={key}>{item}<br /></span>
-                                                )) : "-"}
-                                            </dd>
-                                        </div>
-                                    </dl>
-
-                                    <p className={type.accept_attachments ? "check true" : "check false"}>
-                                        {!type.accept_attachments && (
-                                            <span className="visually-hidden">Not</span>
-                                        )}{" "}
-                                        Accept attachments
-                                    </p>
-                                    <p className={type.accept_tainacan_items ? "check true" : "check false"}>
-                                        {!type.accept_tainacan_items && (
-                                            <span className="visually-hidden">Not</span>
-                                        )}{" "}
-                                        Accept Tainacan items
-                                    </p>
-                                    <p className={type.generate_tainacan_items ? "check true" : "check false"}>
-                                        {!type.generate_tainacan_items && (
-                                            <span className="visually-hidden">Not</span>
-                                        )}{" "}
-                                        Generate Tainacan items
-                                    </p>
-                                </CardBody>
-                                <CardFooter>
-                                    <Tooltip text="Edit">
-                                        <Button
-                                            icon={<Icon icon={edit} />}
-                                            onClick={() => onEdit(type.id)}
-                                        />
-                                    </Tooltip>
-                                    <Tooltip text="Delete">
-                                        <Button
-                                            icon={<Icon icon={trash} />}
-                                            onClick={() => onDelete(type.id)}
-                                        />
-                                    </Tooltip>
-                                </CardFooter>
-                            </Card>
-                        ))}
+            <TextControl
+                value={globalFilter || ''}
+                onChange={value => setGlobalFilter(value)}
+                placeholder="Search..."
+            />
+            {processTypes.length > 0 ? (
+                <>
+                    <table {...getTableProps()} className="wp-list-table widefat fixed striped table-view-list">
+                        <thead>
+                            {headerGroups.map(headerGroup => {
+                                const { key: headerGroupKey, ...headerGroupProps } = headerGroup.getHeaderGroupProps();
+                                return (
+                                    <tr key={headerGroupKey} {...headerGroupProps}>
+                                        {headerGroup.headers.map(column => {
+                                            const { key: columnKey, ...columnProps } = column.getHeaderProps(column.getSortByToggleProps());
+                                            return (
+                                                <th key={columnKey} {...columnProps}>
+                                                    {column.render('Header')}
+                                                    <span>
+                                                        {column.isSorted
+                                                            ? column.isSortedDesc
+                                                                ? ' 🔽'
+                                                                : ' 🔼'
+                                                            : ''}
+                                                    </span>
+                                                </th>
+                                            );
+                                        })}
+                                    </tr>
+                                );
+                            })}
+                        </thead>
+                        <tbody {...getTableBodyProps()}>
+                            {page.map(row => {
+                                prepareRow(row);
+                                const { key: rowKey, ...rowProps } = row.getRowProps();
+                                return (
+                                    <tr key={rowKey} {...rowProps}>
+                                        {row.cells.map(cell => {
+                                            const { key: cellKey, ...cellProps } = cell.getCellProps();
+                                            return (
+                                                <td key={cellKey} {...cellProps}>
+                                                    {cell.render('Cell')}
+                                                </td>
+                                            );
+                                        })}
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                    <div className="pagination">
+                        <Button onClick={() => previousPage()} disabled={!canPreviousPage}>
+                            Previous
+                        </Button>
+                        <span>
+                            Page{' '}
+                            <strong>
+                                {pageIndex + 1} of {pageOptions.length}
+                            </strong>{' '}
+                        </span>
+                        <Button onClick={() => nextPage()} disabled={!canNextPage}>
+                            Next
+                        </Button>
                     </div>
-                ) : (
-                    <Notice isDismissible={false} status="warning">No existing process types.</Notice>
-                )}
-            </PanelRow>
+                </>
+            ) : (
+                <Notice isDismissible={false} status="warning">No existing process types.</Notice>
+            )}
         </Panel>
     );
 };
