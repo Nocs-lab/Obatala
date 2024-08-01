@@ -51,11 +51,20 @@ class AdminMenu {
                 'show_in_menu' => true
             ],
             [
-                'parent_slug' => 'obatala-main', // Permitir acesso direto
+                'parent_slug' => 'obatala-main',
                 'title' => 'Process Type Editor',
                 'menu_title' => 'Process Type Editor',
                 'capability' => 'manage_options',
                 'slug' => 'process-type-editor',
+                'callback' => 'render_page',
+                'show_in_menu' => true
+            ],
+            [
+                'parent_slug' => 'obatala-main', // Permitir acesso direto
+                'title' => 'Process Step Editor',
+                'menu_title' => 'Process Step Editor',
+                'capability' => 'manage_options',
+                'slug' => 'process-step-editor',
                 'callback' => 'render_page',
                 'show_in_menu' => true
             ]

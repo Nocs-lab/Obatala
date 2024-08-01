@@ -14,7 +14,8 @@ class Enqueuer {
         'obatala_page_process-type-manager' => 'process-type-manager',
         'obatala_page_process-viewer' => 'process-viewer',
         'obatala_page_process-step-manager' => 'process-step-manager',
-        'obatala_page_process-type-editor' => 'process-type-editor'
+        'obatala_page_process-type-editor' => 'process-type-editor',
+        'obatala_page_process-step-editor' => 'process-step-editor'
     ];
 
     public static function init() {

@@ -61,7 +61,9 @@ class ProcessStepCustomFields extends ObatalaAPI {
         delete_post_meta($post_id, 'process_type');
 
         if (!empty($value)) {
-            add_post_meta($post_id, 'process_type', $value);
+            foreach ($value as $type) {
+                add_post_meta($post_id, 'process_type', $type);
+            }
         }
         return true;
     }

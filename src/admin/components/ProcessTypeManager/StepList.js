@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Button, Tooltip, Notice, Icon } from '@wordpress/components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import apiFetch from '@wordpress/api-fetch';
-import { trash } from '@wordpress/icons';
+import { trash, edit } from '@wordpress/icons';
 
 const StepList = ({ processTypeId, stepOrder = [], onNotice }) => {
     const [stepsState, setStepsState] = useState([]);
@@ -11,7 +11,7 @@ const StepList = ({ processTypeId, stepOrder = [], onNotice }) => {
         if (stepOrder.length > 0) {
             apiFetch({ path: `/obatala/v1/process_step?include=${stepOrder.join(',')}` })
                 .then((stepsData) => {
-                    const orderedSteps = stepOrder.map((stepId, index) => ({...stepsData.find((step) => step.id === stepId), orderIndex: index})).filter(Boolean);
+                    const orderedSteps = stepOrder.map((stepId, index) => ({ ...stepsData.find((step) => step.id === stepId), orderIndex: index })).filter(Boolean);
                     setStepsState(orderedSteps);
                 })
                 .catch((error) => {
@@ -89,13 +89,21 @@ const StepList = ({ processTypeId, stepOrder = [], onNotice }) => {
                                                     <span className="step-number">{index + 1}</span>
                                                 </div>
                                                 <div className="step-title">{step.title.rendered}</div>
-                                                <Tooltip text="Delete Step">
-                                                    <Button
-                                                        isDestructive
-                                                        icon={<Icon icon={trash} />}
-                                                        onClick={() => handleDeleteStep(index)}
-                                                    />
-                                                </Tooltip>
+                                                <div className="step-actions">
+                                                    <Tooltip text="Edit Step">
+                                                        <Button
+                                                            icon={<Icon icon={edit} />}
+                                                            onClick={() => window.location.href = `?page=process-step-editor&step_id=${step.id}`}
+                                                        />
+                                                    </Tooltip>
+                                                    <Tooltip text="Delete Step">
+                                                        <Button
+                                                            isDestructive
+                                                            icon={<Icon icon={trash} />}
+                                                            onClick={() => handleDeleteStep(index)}
+                                                        />
+                                                    </Tooltip>
+                                                </div>
                                             </li>
                                         )}
                                     </Draggable>
