@@ -44,7 +44,7 @@ const ProcessStage = ({ process, onCancelEdit }) => {
             return;
         }
 
-        apiFetch({ path: `/wp/v2/process_step?parent_process=${processTypeId}&per_page=100&_embed` })
+        apiFetch({ path: `/obatala/v1/process_step?parent_process=${processTypeId}&per_page=100&_embed` })
             .then(data => {
                 const stages = data.map((stage, index) => ({
                     id: stage.id,
@@ -69,7 +69,7 @@ const ProcessStage = ({ process, onCancelEdit }) => {
     };
 
     const fetchComments = (stageId) => {
-        apiFetch({ path: `/wp/v2/comments?post=${process.id}&meta_key=stage_id&meta_value=${stageId}&per_page=100&_embed` })
+        apiFetch({ path: `/obatala/v1/comments?post=${process.id}&meta_key=stage_id&meta_value=${stageId}&per_page=100&_embed` })
             .then(data => {
                 const sortedComments = data.sort((a, b) => new Date(a.date) - new Date(b.date));
                 setComments(sortedComments);
@@ -80,7 +80,7 @@ const ProcessStage = ({ process, onCancelEdit }) => {
     };
 
     const fetchAttachments = () => {
-        apiFetch({ path: `/wp/v2/media?parent=${process.id}&per_page=100&_embed` })
+        apiFetch({ path: `/obatala/v1/media?parent=${process.id}&per_page=100&_embed` })
             .then(data => {
                 setAttachments(data);
             })
@@ -104,7 +104,7 @@ const ProcessStage = ({ process, onCancelEdit }) => {
             },
         };
 
-        apiFetch({ path: `/wp/v2/comments`, method: 'POST', data: commentData })
+        apiFetch({ path: `/obatala/v1/comments`, method: 'POST', data: commentData })
             .then(savedComment => {
                 setComments([...comments, savedComment].sort((a, b) => new Date(a.date) - new Date(b.date)));
                 setNewComment('');
@@ -121,7 +121,7 @@ const ProcessStage = ({ process, onCancelEdit }) => {
         formData.append('post', process.id);
 
         apiFetch({
-            path: `/wp/v2/media`,
+            path: `/obatala/v1/media`,
             method: 'POST',
             body: formData,
         }).then(savedFile => {
@@ -154,7 +154,7 @@ const ProcessStage = ({ process, onCancelEdit }) => {
 
     const updateCurrentStage = (stageId) => {
         apiFetch({
-            path: `/wp/v2/process_obatala/${process.id}`,
+            path: `/obatala/v1/process_obatala/${process.id}`,
             method: 'PUT',
             data: { current_stage: stageId },
         }).then(() => {

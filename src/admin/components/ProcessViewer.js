@@ -1,13 +1,15 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Spinner, Notice, Panel, PanelHeader, PanelBody, PanelRow } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
+import MetroNavigation from './ProcessManager/MetroNavigation';
+import MetaFieldInputs from './ProcessManager/MetaFieldInputs';
+import CommentForm from './ProcessManager/CommentForm';
 
 const ProcessViewer = () => {
     const [process, setProcess] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [processTypes, setProcessTypes] = useState([]);
-    const [processSteps, setProcessSteps] = useState([]);
+    const [currentStep, setCurrentStep] = useState(0);
 
     const getProcessIdFromUrl = () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -18,8 +20,6 @@ const ProcessViewer = () => {
         const processId = getProcessIdFromUrl();
         if (processId) {
             fetchProcess(processId);
-            fetchProcessTypes();
-            fetchProcessSteps();
         } else {
             setError('No process ID found in the URL.');
             setIsLoading(false);
@@ -28,7 +28,7 @@ const ProcessViewer = () => {
 
     const fetchProcess = (processId) => {
         setIsLoading(true);
-        apiFetch({ path: `/wp/v2/process_obatala/${processId}?_embed` })
+        apiFetch({ path: `/obatala/v1/process_obatala/${processId}?_embed` })
             .then(data => {
                 setProcess(data);
                 setIsLoading(false);
@@ -36,32 +36,6 @@ const ProcessViewer = () => {
             .catch(error => {
                 console.error('Error fetching process:', error);
                 setError('Error fetching process details.');
-                setIsLoading(false);
-            });
-    };
-
-    const fetchProcessTypes = () => {
-        setIsLoading(true);
-        apiFetch({ path: `/wp/v2/process_type?per_page=100&_embed` })
-            .then(data => {
-                setProcessTypes(data);
-                setIsLoading(false);
-            })
-            .catch(error => {
-                console.error('Error fetching process types:', error);
-                setIsLoading(false);
-            });
-    };
-
-    const fetchProcessSteps = () => {
-        setIsLoading(true);
-        apiFetch({ path: `/wp/v2/process_step?per_page=100&_embed` })
-            .then(data => {
-                setProcessSteps(data);
-                setIsLoading(false);
-            })
-            .catch(error => {
-                console.error('Error fetching process steps:', error);
                 setIsLoading(false);
             });
     };
@@ -78,59 +52,60 @@ const ProcessViewer = () => {
         return <Notice status="warning" isDismissible={false}>No process found.</Notice>;
     }
 
-    // Filtrar as etapas pelo tipo de processo atual
-    const filteredSteps = processSteps
-    .filter(step => {
-        const stepProcessTypes = Array.isArray(step.process_type) ? step.process_type.map(Number) : [];
-        // Verifica se a etapa pertence ao tipo de processo atual
-        return stepProcessTypes.includes(Number(process.process_type));
-    })
-    .sort((a, b) => {
-        // Obtém o índice do tipo de processo atual
-        const currentProcessTypeId = process.process_type;
-        const indexA = a.step_order[currentProcessTypeId] || 0;
-        const indexB = b.step_order[currentProcessTypeId] || 0;
+    const orderedSteps = process.meta.step_order.map(order => {
+        const step = process.meta.step_order.find(s => s.step_id === order.step_id);
+        return { ...step, meta_fields: order.meta_fields || [] };
+    });
 
-        return indexA - indexB;
-      });
-
-    console.log('Process Type ID:', Number(process.process_type));
-    console.log('Filtered Steps:', filteredSteps);
-
+    const options = orderedSteps.map(step => ({ label: `Step ${step.step_id}`, value: step.step_id }));
 
     return (
         <div>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Viewer</span>
-            <h2>{process.process_type ? 'Process type title' : ''}: {process.title.rendered}</h2>
+            <h2>{process.process_type ? 'Process type title' : ''}: {process.title?.rendered}</h2>
             <div className="badge-container">
-                <span className="badge success">{process.status}</span>
-                <span className="badge">Current step</span>
+                <span className={`badge ${process.status === 'completed' ? 'success' : 'warning'}`}>
+                    {process.status}
+                </span>
+                {orderedSteps[currentStep] && (
+                    <span className="badge">
+                        Current step: {orderedSteps[currentStep]?.step_id || 'Unknown Step'}
+                    </span>
+                )}
             </div>
+
+            <MetroNavigation
+                options={options}
+                currentStep={currentStep}
+                onStepChange={(newStep) => setCurrentStep(newStep)}
+            />
 
             <div className="panel-container">
                 <main className="counter-container">
-                    {filteredSteps.length > 0 ? (
-                        filteredSteps.map((step, index) => (
-                            <Panel key={step.id} className="counter-item">
-                                <PanelHeader>{step.title.rendered}<span className="badge success">Completed</span><small>Completed at 21/04/2024 by João Silva</small></PanelHeader>
-                                <PanelBody title="History" initialOpen={false}>
-                                    <PanelRow>
-                                        {/* Renderizar histórico aqui, se houver */}
-                                    </PanelRow>
-                                </PanelBody>
-                                <PanelBody title="Comments" initialOpen={false}>
-                                    <PanelRow>
-                                        {/* Renderizar comentários aqui, se houver */}
-                                    </PanelRow>
-                                </PanelBody>
-                            </Panel>
-                        ))
+                    {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
+                        <Panel key={`${orderedSteps[currentStep].step_id}-${currentStep}`} className="counter-item">
+                            <PanelHeader>{`Step ${orderedSteps[currentStep].step_id}`}</PanelHeader>
+                            <PanelBody>
+                                <PanelRow className="panel-row">
+                                    <ul className="meta-fields-list">
+                                        {Array.isArray(orderedSteps[currentStep].meta_fields) ? orderedSteps[currentStep].meta_fields.map((field, idx) => (
+                                            <li key={`${orderedSteps[currentStep].step_id}-meta-${idx}`} className="meta-field-item">
+                                                <MetaFieldInputs field={field} />
+                                            </li>
+                                        )) : null}
+                                    </ul>
+                                    <div className="comment-form-wrapper">
+                                        <CommentForm stepId={orderedSteps[currentStep].step_id} />
+                                    </div>
+                                </PanelRow>
+                            </PanelBody>
+                        </Panel>
                     ) : (
                         <Notice status="warning" isDismissible={false}>No steps found for this process type.</Notice>
                     )}
                 </main>
             </div>
-        </div>
+        </div>  
     );
 };
 

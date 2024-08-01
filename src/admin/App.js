@@ -1,8 +1,10 @@
-import { render } from "@wordpress/element";
+import { createRoot } from "react-dom/client";
 import ProcessManager from "./components/ProcessManager";
 import ProcessTypeManager from "./components/ProcessTypeManager";
 import ProcessStepManager from './components/ProcessStepManager';
 import ProcessViewer from './components/ProcessViewer';
+import ProcessTypeEditor from './components/ProcessTypeEditor';
+import ProcessStepEditor from './components/ProcessStepEditor';
 
 // Função para navegar para o ProcessViewer ao selecionar um processo
 const navigateToProcessViewer = (processId) => {
@@ -16,28 +18,42 @@ document.addEventListener("DOMContentLoaded", () => {
   const processTypeElement = document.getElementById("process-type-manager");
   const processStepElement = document.getElementById("process-step-manager");
   const processViewerElement = document.getElementById("process-viewer");
+  const processTypeEditorElement = document.getElementById("process-type-editor");
+  const processStepEditorElement = document.getElementById("process-step-editor");
 
   // Verifica se o elemento com o ID 'process-manager' existe
   // Se existir, renderiza o componente ProcessManager dentro deste elemento
   if (processElement) {
-    render(<ProcessManager onSelectProcess={navigateToProcessViewer} />, processElement);
+    createRoot(processElement).render(<ProcessManager onSelectProcess={navigateToProcessViewer} />);
   }
 
   // Verifica se o elemento com o ID 'process-type-manager' existe
   // Se existir, renderiza o componente ProcessTypeManager dentro deste elemento
   if (processTypeElement) {
-    render(<ProcessTypeManager />, processTypeElement);
+    createRoot(processTypeElement).render(<ProcessTypeManager />);
   }
 
   // Verifica se o elemento com o ID 'process-step-manager' existe
   // Se existir, renderiza o componente ProcessStepManager dentro deste elemento
   if (processStepElement) {
-    render(<ProcessStepManager />, processStepElement);
+    createRoot(processStepElement).render(<ProcessStepManager />);
   }
 
   // Verifica se o elemento com o ID 'process-viewer' existe
   // Se existir, renderiza o componente ProcessViewer dentro deste elemento
   if (processViewerElement) {
-    render(<ProcessViewer />, processViewerElement);
+    createRoot(processViewerElement).render(<ProcessViewer />);
+  }
+
+  // Verifica se o elemento com o ID 'process-type-editor' existe
+  // Se existir, renderiza o componente ProcessTypeEditor dentro deste elemento
+  if (processTypeEditorElement) {
+    createRoot(processTypeEditorElement).render(<ProcessTypeEditor />);
+  }
+
+  // Verifica se o elemento com o ID 'process-step-editor' existe
+  // Se existir, renderiza o componente ProcessStepEditor dentro deste elemento
+  if (processStepEditorElement) {
+    createRoot(processStepEditorElement).render(<ProcessStepEditor />);
   }
 });

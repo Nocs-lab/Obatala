@@ -3,82 +3,44 @@ namespace Obatala\Api;
 
 defined('ABSPATH') || exit;
 
-class ProcessStepCustomFields {
-    
-    public static function register() {
-        register_rest_field('process_step', 'process_type', [
-            'get_callback' => function($object) {
-                $value = get_post_meta($object['id'], 'process_type', true);
-                return is_array($value) ? $value : [];
-            },
+class ProcessStepCustomFields extends ObatalaAPI {
 
-            'update_callback' => function($value, $object) {
-            
-                delete_post_meta($object->ID, 'process_type');
-
-                if (!empty($value)) {
-                    add_post_meta($object->ID, 'process_type', $value);
-                }
-                return true;
-            },
-
-            'schema' => [
-                'type' => 'array',
-                'description' => 'Process Type ID',
-                'context' => ['view', 'edit'],
-                'items' => [
-                    'type' => 'integer'
-                ],
-            ],
-        ]);
-    
-
-        register_rest_field('process_step', 'parent_process', [
-            'get_callback' => function($object) {
-                return get_post_meta($object['id'], 'parent_process', true);
-            },
-            'update_callback' => function($value, $object) {
-                return update_post_meta($object->ID, 'parent_process', $value);
-            },
-            'schema' => [
-                'type' => 'integer',
-                'description' => 'Parent Process ID',
-                'context' => ['view', 'edit'],
-            ],
+    public function register_routes() {
+        $this->add_route('process_step/(?P<id>\d+)/meta', [
+            'methods' => 'GET',
+            'callback' => [$this, 'get_meta'],
+            'permission_callback' => '__return_true',
         ]);
 
-        register_rest_field('process_step', 'step_order', [
-            'get_callback' => function($object) {
-                $meta = get_post_meta($object['id'], 'step_order', true);
-                return is_array($meta) ? $meta : [];
-            },
-            'update_callback' => function($value, $object) {
-            if (is_array($value)) {
-                return update_post_meta($object->ID, 'step_order', $value);
-            }
-            return false;
-        },
-        'schema' => [
-            'type' => 'object',
-            'description' => 'Order of the Step per Process Type',
-            'context' => ['view', 'edit'],
-            'items' => [
-                'type' => 'integer'
+        $this->add_route('process_step/(?P<id>\d+)/meta', [
+            'methods' => 'POST',
+            'callback' => [$this, 'update_meta'],
+            'permission_callback' => '__return_true',
+            'args' => [
+                'meta_fields' => [
+                    'required' => true,
+                    'validate_callback' => function($param, $request, $key) {
+                        return is_array($param);
+                    }
+                ]
             ]
-        ],
         ]);
     }
 
-    public static function add_custom_filters($args, $request) {
-        if (isset($request['parent_process'])) {
-            $args['meta_query'] = [
-                [
-                    'key' => 'parent_process',
-                    'value' => $request['parent_process'],
-                    'compare' => '='
-                ]
-            ];
-        }
-        return $args;
+    public function get_meta($request) {
+        $post_id = (int) $request['id'];
+        $meta = get_post_meta($post_id, 'meta_fields', true);
+        return is_array($meta) ? $meta : [];
+    }
+
+    public function update_meta($request) {
+        $post_id = (int) $request['id'];
+        $meta_fields = $request['meta_fields'];
+        update_post_meta($post_id, 'meta_fields', $meta_fields);
+        return true;
+    }
+
+    public function register() {
+        parent::register();
     }
 }

@@ -42,20 +42,27 @@ class ProcessStepCollection {
             'menu_position'      => 99,
             'supports'           => array('title', 'comments'),
             'show_in_rest'       => true,
-            'menu_icon'               => 'dashicons-media-document'
+            'menu_icon'          => 'dashicons-media-document'
         );
 
         register_post_type(self::get_post_type(), $args);
     }
 
-   public static function register_process_step_meta() {
+    public static function register_process_step_meta() {
         register_post_meta('process_step', 'process_type', [
             'type' => 'array',
             'description' => 'Process Type ID',
             'single' => false,
-            'show_in_rest' => true,
+            'show_in_rest' => [
+                'schema' => [
+                    'type' => 'array',
+                    'items' => [
+                        'type' => 'integer'
+                    ],
+                ],
+            ],
         ]);
-    
+
         register_post_meta('process_step', 'parent_process', [
             'type' => 'integer',
             'description' => 'Parent Process ID',
@@ -63,15 +70,8 @@ class ProcessStepCollection {
             'show_in_rest' => true,
         ]);
 
-        register_post_meta('process_step', 'step_order', [
-            'type' => 'object',
-            'description' => 'Order of the Step',
-            'single' => true,
-            'show_in_rest' => true,
-            'default' => []
-        ]);
     }
-    
+
     public static function init() {
         self::register_post_type();
         self::register_process_step_meta();
