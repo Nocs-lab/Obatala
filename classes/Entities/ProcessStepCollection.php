@@ -70,25 +70,6 @@ class ProcessStepCollection {
             'show_in_rest' => true,
         ]);
 
-        register_post_meta('process_step', 'step_order', [
-            'type' => 'object',
-            'description' => 'Order of the Step',
-            'single' => true,
-            'show_in_rest' => [
-                'schema' => [
-                    'type' => 'object',
-                    'properties' => [
-                        'step' => [
-                            'type' => 'integer',
-                        ],
-                        'order' => [
-                            'type' => 'integer',
-                        ],
-                    ],
-                ],
-            ],
-            'default' => []
-        ]);
     }
 
     public static function init() {

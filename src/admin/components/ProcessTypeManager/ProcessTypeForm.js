@@ -32,9 +32,9 @@ const ProcessTypeForm = ({ onSave, onCancel, editingProcessType }) => {
             accept_attachments: acceptAttachments,
             accept_tainacan_items: acceptTainacanItems,
             generate_tainacan_items: generateTainacanItems,
+            step_order: editingProcessType ? editingProcessType.step_order : []
         };
 
-        console.log('Saving process type:', processType); // Log para verificar os dados
         onSave(processType);
 
         if (!editingProcessType) {
@@ -52,11 +52,7 @@ const ProcessTypeForm = ({ onSave, onCancel, editingProcessType }) => {
 
     const handleCancel = () => {
         onCancel();
-        setProcessTypeName('');
-        setProcessTypeDescription('');
-        setAcceptAttachments(false);
-        setAcceptTainacanItems(false);
-        setGenerateTainacanItems(false);
+        handleResetForm();
     };
 
     return (
@@ -64,7 +60,7 @@ const ProcessTypeForm = ({ onSave, onCancel, editingProcessType }) => {
             <PanelRow>
                 {notice && (
                 <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                    {notice.message}
+                    {notice.message} 
                 </Notice>
                 )}
                 <TextControl

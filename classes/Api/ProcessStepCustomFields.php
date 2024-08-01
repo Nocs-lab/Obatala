@@ -1,5 +1,4 @@
 <?php
-
 namespace Obatala\Api;
 
 defined('ABSPATH') || exit;
@@ -48,26 +47,6 @@ class ProcessStepCustomFields extends ObatalaAPI {
                 ]
             ]
         ]);
-
-        $this->add_route('process_step/(?P<id>\d+)/step_order', [
-            'methods' => 'GET',
-            'callback' => [$this, 'get_step_order'],
-            'permission_callback' => '__return_true',
-        ]);
-
-        $this->add_route('process_step/(?P<id>\d+)/step_order', [
-            'methods' => 'POST',
-            'callback' => [$this, 'update_step_order'],
-            'permission_callback' => '__return_true',
-            'args' => [
-                'step_order' => [
-                    'required' => true,
-                    'validate_callback' => function($param, $request, $key) {
-                        return is_array($param);
-                    }
-                ]
-            ]
-        ]);
     }
 
     public function get_process_type($request) {
@@ -96,21 +75,6 @@ class ProcessStepCustomFields extends ObatalaAPI {
         $post_id = (int) $request['id'];
         $value = $request['parent_process'];
         return update_post_meta($post_id, 'parent_process', $value);
-    }
-
-    public function get_step_order($request) {
-        $post_id = (int) $request['id'];
-        $meta = get_post_meta($post_id, 'step_order', true);
-        return is_array($meta) ? $meta : [];
-    }
-
-    public function update_step_order($request) {
-        $post_id = (int) $request['id'];
-        $value = $request['step_order'];
-        if (is_array($value)) {
-            return update_post_meta($post_id, 'step_order', $value);
-        }
-        return false;
     }
 
     public function register() {

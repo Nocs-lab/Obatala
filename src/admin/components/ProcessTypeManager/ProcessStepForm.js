@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, ComboboxControl, SelectControl, PanelBody, PanelRow, Notice, Icon } from '@wordpress/components';
 import { closeSmall } from '@wordpress/icons';
 
-const ProcessStepForm = ({ processTypes, processSteps, onAddStep }) => {
+const ProcessStepForm = ({ processTypes = [], processSteps = [], onAddStep }) => {
     const [selectedProcessType, setSelectedProcessType] = useState('');
     const [selectedSteps, setSelectedSteps] = useState([]);
     const [stepInputValue, setStepInputValue] = useState('');
@@ -14,17 +14,8 @@ const ProcessStepForm = ({ processTypes, processSteps, onAddStep }) => {
             return;
         }
 
-        const stepsToAdd = selectedSteps.map(stepId => {
-            const step = processSteps.find(step => step.id === stepId);
-            return {
-                id: step.id,
-                title: step.title.rendered,
-                status: 'publish',
-                process_type: selectedProcessType,
-            };
-        });
-
-        onAddStep(stepsToAdd);
+        // Chama a função onAddStep passada como prop
+        onAddStep(selectedProcessType, selectedSteps);
         setSelectedSteps([]);
         setNotice({ status: 'success', message: 'Steps added successfully.' });
     };
@@ -41,7 +32,7 @@ const ProcessStepForm = ({ processTypes, processSteps, onAddStep }) => {
     };
 
     return (
-        <PanelBody title="Add a Process Type Step" initialOpen={true}>
+        <PanelBody title="Add a Step to a Process Type" initialOpen={true}>
             <PanelRow>
                 {notice && (
                     <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>

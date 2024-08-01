@@ -1,5 +1,4 @@
 <?php
-
 namespace Obatala\Entities;
 
 defined('ABSPATH') || exit;
@@ -75,6 +74,21 @@ class ProcessTypeCollection {
             'description' => 'Process Type Description',
             'single' => true,
             'show_in_rest' => true,
+        ]);
+
+        register_post_meta('process_type', 'step_order', [
+            'type' => 'array',
+            'description' => 'Order of the Steps',
+            'single' => true,
+            'show_in_rest' => [
+                'schema' => [
+                    'type' => 'array',
+                    'items' => [
+                        'type' => 'integer',
+                    ],
+                ],
+            ],
+            'default' => []
         ]);
     }
 

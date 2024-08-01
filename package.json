@@ -27,6 +27,8 @@
         "@wordpress/scripts": "^27.8.0"
     },
     "dependencies": {
-        "@wordpress/icons": "^10.0.0"
+        "@wordpress/icons": "^10.0.0",
+        "react-beautiful-dnd": "^13.1.1",
+        "react-router-dom": "^6.25.1"
     }
 }

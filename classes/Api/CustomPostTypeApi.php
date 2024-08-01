@@ -30,7 +30,21 @@ class CustomPostTypeApi extends ObatalaAPI {
         register_rest_route(self::NAMESPACE, '/' . $post_type, [
             [
                 'methods' => WP_REST_Server::READABLE,
-                'callback' => [$controller, 'get_items'],
+                'callback' => function($request) use ($controller, $post_type) {
+                    $response = $controller->get_items($request);
+                    if (!is_wp_error($response)) {
+                        $data = $response->get_data();
+                        foreach ($data as &$item) {
+                            $meta = get_post_meta($item['id']);
+                            if (isset($meta['step_order'])) {
+                                $meta['step_order'] = maybe_unserialize($meta['step_order'][0]);
+                            }
+                            $item['meta'] = $meta;
+                        }
+                        $response->set_data($data);
+                    }
+                    return $response;
+                },
                 'permission_callback' => [$controller, 'get_items_permissions_check'],
                 'args' => $controller->get_collection_params(),
             ],
@@ -46,7 +60,19 @@ class CustomPostTypeApi extends ObatalaAPI {
         register_rest_route(self::NAMESPACE, '/' . $post_type . '/(?P<id>[\d]+)', [
             [
                 'methods' => WP_REST_Server::READABLE,
-                'callback' => [$controller, 'get_item'],
+                'callback' => function($request) use ($controller, $post_type) {
+                    $response = $controller->get_item($request);
+                    if (!is_wp_error($response)) {
+                        $data = $response->get_data();
+                        $meta = get_post_meta($data['id']);
+                        if (isset($meta['step_order'])) {
+                            $meta['step_order'] = maybe_unserialize($meta['step_order'][0]);
+                        }
+                        $data['meta'] = $meta;
+                        $response->set_data($data);
+                    }
+                    return $response;
+                },
                 'permission_callback' => [$controller, 'get_item_permissions_check'],
                 'args' => [
                     'context' => [
@@ -80,3 +106,4 @@ class CustomPostTypeApi extends ObatalaAPI {
         ]);
     }
 }
+

@@ -3,6 +3,7 @@ import ProcessManager from "./components/ProcessManager";
 import ProcessTypeManager from "./components/ProcessTypeManager";
 import ProcessStepManager from './components/ProcessStepManager';
 import ProcessViewer from './components/ProcessViewer';
+import ProcessTypeEditor from './components/ProcessTypeEditor';
 
 // Função para navegar para o ProcessViewer ao selecionar um processo
 const navigateToProcessViewer = (processId) => {
@@ -16,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const processTypeElement = document.getElementById("process-type-manager");
   const processStepElement = document.getElementById("process-step-manager");
   const processViewerElement = document.getElementById("process-viewer");
+  const processTypeEditorElement = document.getElementById("process-type-editor");
 
   // Verifica se o elemento com o ID 'process-manager' existe
   // Se existir, renderiza o componente ProcessManager dentro deste elemento
@@ -39,5 +41,11 @@ document.addEventListener("DOMContentLoaded", () => {
   // Se existir, renderiza o componente ProcessViewer dentro deste elemento
   if (processViewerElement) {
     createRoot(processViewerElement).render(<ProcessViewer />);
+  }
+
+  // Verifica se o elemento com o ID 'process-type-editor' existe
+  // Se existir, renderiza o componente ProcessTypeEditor dentro deste elemento
+  if (processTypeEditorElement) {
+    createRoot(processTypeEditorElement).render(<ProcessTypeEditor />);
   }
 });

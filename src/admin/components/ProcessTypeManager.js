@@ -6,22 +6,13 @@ import {
     Notice,
     __experimentalConfirmDialog as ConfirmDialog
 } from '@wordpress/components';
-import {
-    fetchProcessTypes,
-    fetchProcessSteps,
-    saveProcessType,
-    deleteProcessType,
-    updateProcessStep,
-    checkLinkedProcesses
-} from '../api/apiRequests'; // Supondo que as funções de API estejam neste arquivo
+import { fetchProcessTypes, saveProcessType, deleteProcessType } from '../api/apiRequests';
 import ProcessTypeForm from './ProcessTypeManager/ProcessTypeForm';
 import ProcessTypeList from './ProcessTypeManager/ProcessTypeList';
-import ProcessStepForm from './ProcessTypeManager/ProcessStepForm';
 import Reducer, { initialState } from '../redux/reducer';
 
 const ProcessTypeManager = () => {
     const [processTypes, setProcessTypes] = useState([]);
-    const [processSteps, setProcessSteps] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [editingProcessType, setEditingProcessType] = useState(null);
     const [state, dispatch] = useReducer(Reducer, initialState);
@@ -29,126 +20,65 @@ const ProcessTypeManager = () => {
 
     useEffect(() => {
         loadProcessTypes();
-        loadProcessSteps();
     }, []);
 
-    const loadProcessTypes = async () => {
+    const loadProcessTypes = () => {
+        setIsLoading(true);
+        fetchProcessTypes()
+            .then(data => {
+                const sortedProcessTypes = data.sort((a, b) => a.title.rendered.localeCompare(b.title.rendered));
+                setProcessTypes(sortedProcessTypes);
+                setIsLoading(false);
+            })
+            .catch(error => {
+                console.error('Error fetching process types:', error);
+                setIsLoading(false);
+            });
+    };
+
+    const handleSaveProcessType = async (processType) => {
         setIsLoading(true);
         try {
-            const data = await fetchProcessTypes();
-            setProcessTypes(data);
+            let savedProcessType;
+            if (editingProcessType) {
+                savedProcessType = await saveProcessType(processType, editingProcessType);
+            } else {
+                savedProcessType = await saveProcessType(processType);
+            }
+            const meta = {
+                accept_attachments: processType.accept_attachments,
+                accept_tainacan_items: processType.accept_tainacan_items,
+                generate_tainacan_items: processType.generate_tainacan_items,
+                description: processType.description,
+            };
+            await updateProcessTypeMeta(savedProcessType.id, meta);
+            setNotice({ status: 'success', message: 'Process type saved successfully.' });
+            setEditingProcessType(null);
+            loadProcessTypes();
         } catch (error) {
-            setNotice({ status: 'error', message: 'Error fetching process types.' });
-        } finally {
+            console.error('Error saving process type:', error);
+            setNotice({ status: 'error', message: 'Error saving process type.' });
             setIsLoading(false);
         }
     };
 
-    const loadProcessSteps = async () => {
-        try {
-            const data = await fetchProcessSteps();
-            setProcessSteps(data);
-        } catch (error) {
-            setNotice({ status: 'error', message: 'Error fetching process steps.' });
-        }
+    const handleDeleteProcessType = (id) => {
+        deleteProcessType(id)
+            .then(() => {
+                const updatedProcessTypes = processTypes.filter(type => type.id !== id);
+                setProcessTypes(updatedProcessTypes);
+            })
+            .catch(error => {
+                console.error('Error deleting process type:', error);
+            });
     };
 
-    const handleSaveProcessType = async (processType) => {
-        try {
-            if (editingProcessType) {
-                const updatedProcessType = await saveProcessType(editingProcessType.id, processType);
-                setProcessTypes((prevProcessTypes) =>
-                    prevProcessTypes.map((type) => (type.id === updatedProcessType.id ? updatedProcessType : type))
-                );
-                setEditingProcessType(null);
-            } else {
-                await saveProcessType(null, processType);
-                loadProcessTypes();
-            }
-        } catch (error) {
-            setNotice({ status: 'error', message: 'Error saving process type.' });
-        }
-    };
-
-    const handleDeleteProcessType = async (id) => {
-        try {
-            await deleteProcessType(id);
-            setProcessTypes((prevProcessTypes) => prevProcessTypes.filter((type) => type.id !== id));
-        } catch (error) {
-            setNotice({ status: 'error', message: 'Error deleting process type.' });
-        }
-    };
-
-    const handleEditProcessType = (processType) => {
-        setEditingProcessType(processType);
-    };
-
-    const handleAddProcessStep = async (steps) => {
-        try {
-            for (const step of steps) {
-                const { id, process_type } = step;
-                const existingStep = processSteps.find((existing) => existing.id === id);
-                if (!existingStep) {
-                    setNotice({ status: 'error', message: `Step not found: ${id}` });
-                    continue;
-                }
-
-                const currentProcessTypes = Array.isArray(existingStep.process_type)
-                    ? existingStep.process_type.map(Number)
-                    : [];
-                const newProcessType = Number(process_type);
-
-                if (currentProcessTypes.includes(newProcessType)) {
-                    setNotice({ status: 'error', message: 'Step is already linked to this Process Type.' });
-                    continue;
-                }
-
-                const updatedProcessTypes = [...currentProcessTypes, newProcessType];
-                await updateProcessStep(id, { process_type: updatedProcessTypes });
-                setProcessSteps((prevProcessSteps) =>
-                    prevProcessSteps.map((s) => (s.id === id ? { ...s, process_type: updatedProcessTypes } : s))
-                );
-            }
-        } catch (error) {
-            setNotice({ status: 'error', message: 'Error updating process step.' });
-        }
-    };
-
-    const handleUpdatedProcessStep = async () => {
-        const { stepId, typeId } = state.deleteStep;
-        try {
-            const existingStep = processSteps.find((step) => step.id === stepId);
-            if (!existingStep) {
-                setNotice({ status: 'error', message: `Step not found: ${stepId}` });
-                return;
-            }
-
-            const hasLinkedProcesses = await checkLinkedProcesses(typeId);
-            if (hasLinkedProcesses) {
-                setNotice({ status: 'error', message: 'Cannot delete step as it is linked to a process type in use.' });
-                return;
-            }
-
-            const stepProcessTypes = Array.isArray(existingStep.process_type)
-                ? existingStep.process_type.map(Number)
-                : [];
-            const updatedProcessTypes = stepProcessTypes.filter((id) => id !== typeId);
-
-            await updateProcessStep(stepId, { process_type: updatedProcessTypes });
-            setProcessSteps((prevProcessSteps) =>
-                prevProcessSteps.map((step) => (step.id === stepId ? { ...step, process_type: updatedProcessTypes } : step))
-            );
-        } catch (error) {
-            setNotice({ status: 'error', message: 'Error updating process step.' });
-        }
+    const handleEditProcessType = (id) => {
+        window.location.href = `?page=process-type-editor&process_type_id=${id}`;
     };
 
     const handleConfirmDeleteType = (id) => {
         dispatch({ type: 'OPEN_MODAL_PROCESS_TYPE', payload: id });
-    };
-
-    const handleConfirmDeleteStep = (stepId, typeId) => {
-        dispatch({ type: 'OPEN_MODAL_STEP', payload: { stepId, typeId } });
     };
 
     const handleCancel = () => {
@@ -170,41 +100,29 @@ const ProcessTypeManager = () => {
                         onConfirm={() => {
                             if (state.deleteProcessType) {
                                 handleDeleteProcessType(state.deleteProcessType);
-                            } else if (state.deleteStep) {
-                                handleUpdatedProcessStep();
                             }
                             dispatch({ type: 'CLOSE_MODAL' });
                         }}
                         onCancel={handleCancel}
                     >
-                        Are you sure you want to delete this {state.deleteProcessType ? 'Process Type' : 'Step'}?
+                        Are you sure you want to delete this Process Type?
                     </ConfirmDialog>
+
                     <ProcessTypeList
                         processTypes={processTypes}
-                        processSteps={processSteps}
                         onEdit={handleEditProcessType}
                         onDelete={handleConfirmDeleteType}
-                        onDeleteStep={handleConfirmDeleteStep}
                     />
                 </main>
                 <aside>
                     <Panel>
                         <PanelHeader>Managing process types</PanelHeader>
-                        <ProcessTypeForm
-                            onSave={handleSaveProcessType}
-                            onCancel={() => setEditingProcessType(null)}
-                            editingProcessType={editingProcessType}
-                        />
+                        <ProcessTypeForm onSave={handleSaveProcessType} onCancel={() => setEditingProcessType(null)} editingProcessType={editingProcessType} />
                         {notice && (
                             <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
                                 {notice.message}
                             </Notice>
                         )}
-                        <ProcessStepForm
-                            processTypes={processTypes}
-                            processSteps={processSteps}
-                            onAddStep={handleAddProcessStep}
-                        />
                     </Panel>
                 </aside>
             </div>

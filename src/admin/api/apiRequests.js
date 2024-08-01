@@ -1,32 +1,64 @@
 import apiFetch from '@wordpress/api-fetch';
 
-export const fetchProcessTypes = async () => {
-    const data = await apiFetch({ path: `/obatala/v1/process_type?per_page=100&_embed` });
-    return data.sort((a, b) => a.title.rendered.localeCompare(b.title.rendered));
+export const fetchProcessTypes = () => {
+    return apiFetch({ path: `/obatala/v1/process_type?per_page=100&_embed` }).then(data => {
+
+        return data.map(item => {
+            return {
+                ...item,
+                accept_attachments: item.meta.accept_attachments[0] === "1",
+                accept_tainacan_items: item.meta.accept_tainacan_items[0] === "1",
+                generate_tainacan_items: item.meta.generate_tainacan_items[0] === "1",
+                description: item.meta.description ? String(item.meta.description[0]) : '',
+                step_order: item.meta.step_order
+            };
+        });
+    });
 };
 
-export const fetchProcessSteps = async () => {
-    const data = await apiFetch({ path: `/obatala/v1/process_step?per_page=100&_embed` });
-    return data.sort((a, b) => a.title.rendered.localeCompare(b.title.rendered));
+// Função para desserializar
+const maybeUnserialize = (data) => {
+    try {
+        return JSON.parse(data);
+    } catch (e) {
+        return [];
+    }
 };
 
-export const saveProcessType = async (id, processType) => {
-    const path = id ? `/obatala/v1/process_type/${id}` : `/obatala/v1/process_type`;
-    const method = id ? 'PUT' : 'POST';
-    const data = await apiFetch({ path, method, data: processType });
-    return data;
+
+
+
+export const fetchProcessSteps = () => {
+    return apiFetch({ path: `/obatala/v1/process_step?per_page=100&_embed` });
 };
 
-export const deleteProcessType = async (id) => {
-    await apiFetch({ path: `/obatala/v1/process_type/${id}`, method: 'DELETE' });
+export const saveProcessType = (processType, editingProcessType) => {
+    const path = editingProcessType ? `/obatala/v1/process_type/${editingProcessType.id}` : `/obatala/v1/process_type`;
+    const method = editingProcessType ? 'PUT' : 'POST';
+    return apiFetch({ path, method, data: processType });
 };
 
-export const updateProcessStep = async (id, processStep) => {
-    const data = await apiFetch({ path: `/obatala/v1/process_step/${id}`, method: 'PUT', data: processStep });
-    return data;
+export const updateProcessTypeMeta = (id, meta) => {
+    
+    return apiFetch({
+        path: `/obatala/v1/process_type/${id}/meta`,
+        method: 'PUT',
+        data: meta
+    });
 };
 
-export const checkLinkedProcesses = async (typeId) => {
-    const allProcesses = await apiFetch({ path: `/obatala/v1/process_obatala?per_page=100` });
-    return allProcesses.some(process => Number(process.process_type) === typeId);
+export const deleteProcessType = (id) => {
+    return apiFetch({ path: `/obatala/v1/process_type/${id}`, method: 'DELETE' });
+};
+
+export const updateProcessStep = (id, processType) => {
+    return apiFetch({
+        path: `/obatala/v1/process_step/${id}`,
+        method: 'PUT',
+        data: { process_type: processType }
+    });
+};
+
+export const fetchProcesses = () => {
+    return apiFetch({ path: `/obatala/v1/process_obatala?per_page=100` });
 };

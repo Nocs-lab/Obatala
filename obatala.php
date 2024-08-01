@@ -47,6 +47,7 @@ class Nocs_ObatalaPlugin {
 	// Prevents unserializing of the plugin instance
 	public function __wakeup() {
 	}
+
 	/**
 	 * Constructor.
 	 */
@@ -61,9 +62,9 @@ class Nocs_ObatalaPlugin {
 		// Load plugin text domain
 		load_plugin_textdomain('obatala', false, plugin_basename(dirname(__FILE__)) . '/languages');
 
-		// Registering admin menus and settings
-		add_action('admin_menu', ['Obatala\Admin\AdminMenu', 'add_admin_pages']);
-		add_action('admin_init', ['Obatala\Admin\SettingsPage', 'register_settings']);
+		// Initialize admin menus and settings
+		\Obatala\Admin\AdminMenu::init();
+		\Obatala\Admin\Enqueuer::init();
 
 		// Register the custom post types and taxonomies
 		add_action('init', ['Obatala\Entities\ProcessCollection', 'init']);
@@ -71,8 +72,9 @@ class Nocs_ObatalaPlugin {
 		add_action('init', ['Obatala\Entities\ProcessTypeCollection', 'init']);
 
 		// Register and enqueue scripts and styles
-		add_action('admin_enqueue_scripts', [$this, 'admin_enqueue_scripts']);
-		add_action('wp_enqueue_scripts', [$this, 'enqueue_scripts']);
+		// Register and enqueue scripts and styles
+		\Obatala\Admin\Enqueuer::init();
+
 
 		// Register REST API fields
 		$this->register_api_endpoints();
@@ -82,14 +84,14 @@ class Nocs_ObatalaPlugin {
 	 * Register API endpoints
 	 */
 	private function register_api_endpoints() {
+		$custom_post_type_api = new \Obatala\Api\CustomPostTypeApi();
+		$custom_post_type_api->register();
+		
 		$process_custom_fields = new \Obatala\Api\ProcessCustomFields();
 		$process_custom_fields->register();
 
 		$custom_metadata_api = new \Obatala\Api\StepMetadataApi();
 		$custom_metadata_api->register();
-
-		$custom_post_type_api = new \Obatala\Api\CustomPostTypeApi();
-		$custom_post_type_api->register();
 
 		$process_step_custom_fields = new \Obatala\Api\ProcessStepCustomFields();
 		$process_step_custom_fields->register();
@@ -98,14 +100,13 @@ class Nocs_ObatalaPlugin {
 		$process_type_custom_fields->register();
 	}
 
-	public function enqueue_scripts() {
-	}
 
-	public function admin_enqueue_scripts($hook) {
-		\Obatala\Admin\Enqueuer::enqueue_admin_scripts($hook);
-	}
 
+	/**
+	 * Install the plugin
+	 */
 	public function install() {
+		// Check if Tainacan plugin is active, if not, deactivate this plugin
 		if (!in_array('tainacan/tainacan.php', apply_filters('active_plugins', get_option('active_plugins')))) {
 			deactivate_plugins(plugin_basename(__FILE__));
 			wp_die(
@@ -115,5 +116,6 @@ class Nocs_ObatalaPlugin {
 	}
 }
 
+// Initialize the plugin
 Nocs_ObatalaPlugin::get_instance();
 register_activation_hook(__FILE__, [Nocs_ObatalaPlugin::get_instance(), 'install']);

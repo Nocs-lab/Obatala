@@ -9,45 +9,41 @@ if (!defined('ABSPATH')) {
 
 // Define a classe Enqueuer
 class Enqueuer {
-    // Propriedade estática que mapeia as páginas de administração aos seus IDs
     private static $pages = [
         'obatala_page_process-manager' => 'process-manager',
         'obatala_page_process-type-manager' => 'process-type-manager',
         'obatala_page_process-viewer' => 'process-viewer',
         'obatala_page_process-step-manager' => 'process-step-manager',
-        // Adicione mais páginas conforme necessário
+        'obatala_page_process-type-editor' => 'process-type-editor'
     ];
 
-    // Método estático para enfileirar scripts e estilos de administração
+    public static function init() {
+        add_action('admin_enqueue_scripts', [self::class, 'enqueue_admin_scripts']);
+    }
+
     public static function enqueue_admin_scripts($hook) {
-        // Verifica se a página atual está no array $pages
         if (array_key_exists($hook, self::$pages)) {
-            // Log de depuração indicando que os scripts estão sendo enfileirados para a página atual
             error_log("Enqueueing scripts for $hook");
 
-            // Inclui o arquivo de dependências gerado pelo Webpack
             $asset_file = include OBATALA_PLUGIN_DIR . 'build/index.asset.php';
 
-            // Registra o script de administração
             wp_register_script(
-                'obatala-admin-scripts', // Nome do script
-                OBATALA_PLUGIN_URL . 'build/index.js', // URL do script
-                array_merge($asset_file['dependencies']), // Dependências do script
-                $asset_file['version'], // Versão do script
-                true // Carregar no footer
+                'obatala-admin-scripts',
+                OBATALA_PLUGIN_URL . 'build/index.js',
+                array_merge($asset_file['dependencies']),
+                $asset_file['version'],
+                true
             );
-            // Enfileira o script de administração
             wp_enqueue_script('obatala-admin-scripts');
 
-            // Registra o estilo de administração
             wp_register_style(
-                'obatala-admin-styles', // Nome do estilo
-                OBATALA_PLUGIN_URL . 'css/style.css', // URL do estilo
-                ['wp-components'], // Dependências do estilo
-                $asset_file['version'] // Versão do estilo
+                'obatala-admin-styles',
+                OBATALA_PLUGIN_URL . 'css/style.css',
+                ['wp-components'],
+                $asset_file['version']
             );
-            // Enfileira o estilo de administração
             wp_enqueue_style('obatala-admin-styles');
         }
     }
 }
+
