@@ -1,17 +1,18 @@
 import { useState, useEffect } from 'react';
-import { Spinner, Button, SelectControl, TextControl, Notice, Panel, PanelHeader, PanelRow } from '@wordpress/components';
+import { Spinner, Button, Notice, Panel, PanelHeader, PanelRow } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
+import ProcessCreator from './ProcessManager/ProcessCreator';
 
 const ProcessManager = ({ onSelectProcess }) => {
     const [processTypes, setProcessTypes] = useState([]);
+    const [processSteps, setProcessSteps] = useState([]);
     const [processes, setProcesses] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [newProcessTitle, setNewProcessTitle] = useState('');
-    const [newProcessType, setNewProcessType] = useState('');
     const [selectedProcessId, setSelectedProcessId] = useState(null);
 
     useEffect(() => {
         fetchProcessTypes();
+        fetchProcessSteps();
         fetchProcesses();
     }, []);
 
@@ -23,6 +24,17 @@ const ProcessManager = ({ onSelectProcess }) => {
             })
             .catch(error => {
                 console.error('Error fetching process types:', error);
+            });
+    };
+
+    const fetchProcessSteps = () => {
+        apiFetch({ path: `/obatala/v1/process_step?per_page=100&_embed` })
+            .then(data => {
+                const sortedProcessSteps = data.sort((a, b) => a.title.rendered.localeCompare(b.title.rendered));
+                setProcessSteps(sortedProcessSteps);
+            })
+            .catch(error => {
+                console.error('Error fetching process steps:', error);
             });
     };
 
@@ -40,29 +52,8 @@ const ProcessManager = ({ onSelectProcess }) => {
             });
     };
 
-    const handleCreateProcess = () => {
-        if (!newProcessTitle || !newProcessType) {
-            alert('Please provide a title and select a process type.');
-            return;
-        }
-
-        const newProcess = {
-            title: newProcessTitle,
-            status: 'publish',
-            type: 'process_obatala',
-            process_type: newProcessType,
-            current_stage: null,
-        };
-
-        apiFetch({ path: `/obatala/v1/process_obatala`, method: 'POST', data: newProcess })
-            .then(savedProcess => {
-                setProcesses([...processes, savedProcess]);
-                setNewProcessTitle('');
-                setNewProcessType('');
-            })
-            .catch(error => {
-                console.error('Error creating process:', error);
-            });
+    const handleProcessCreated = (newProcess) => {
+        setProcesses([...processes, newProcess]);
     };
 
     const handleSelectProcess = (processId) => {
@@ -95,9 +86,11 @@ const ProcessManager = ({ onSelectProcess }) => {
                                     </thead>
                                     <tbody>
                                         {processes.map(process => {
-                                            const processTypeFiltered = processTypes.find(processType => {
-                                                return processType.id == process.process_type;
+                                            console.log(process); // Adiciona log para verificar os dados
+                                            const processTypeFiltered = processSteps.find(step => {
+                                                return step.id == process.process_type;
                                             });
+                                            console.log(processTypeFiltered); // Adiciona log para verificar os dados
                                             return (
                                                 <tr key={process.id}>
                                                     <td>{process.title.rendered}</td>
@@ -120,26 +113,7 @@ const ProcessManager = ({ onSelectProcess }) => {
                     </Panel>
                 </main>
                 <aside>
-                    <Panel>
-                        <PanelHeader>Create Process</PanelHeader>
-                        <PanelRow>
-                            <TextControl
-                                label="Process Title"
-                                value={newProcessTitle}
-                                onChange={(value) => setNewProcessTitle(value)}
-                            />
-                            <SelectControl
-                                label="Process Type"
-                                value={newProcessType}
-                                options={[
-                                    { label: 'Select a process type...', value: '' },
-                                    ...processTypes.map(type => ({ label: type.title.rendered, value: type.id }))
-                                ]}
-                                onChange={(value) => setNewProcessType(value)}
-                            />
-                            <Button isPrimary onClick={handleCreateProcess}>Create Process</Button>
-                        </PanelRow>
-                    </Panel>
+                    <ProcessCreator processTypes={processTypes} onProcessCreated={handleProcessCreated} />
                 </aside>
             </div>
             {selectedProcessId && (
