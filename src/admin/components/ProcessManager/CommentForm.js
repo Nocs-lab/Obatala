@@ -85,59 +85,6 @@ const CommentForm = ({ stepId }) => {
                 </div>
             )}
 
-            <style>{`
-                .comment-form {
-                    margin-top: 20px;
-                    max-width: 600px;
-                    margin: auto;
-                }
-                .comment-input {
-                    display: flex;
-                    flex-direction: column;
-                }
-                .comment-input button {
-                    margin-top: 10px;
-                }
-                .comments-list {
-                    margin-top: 20px;
-                    padding: 10px;
-                    border: 1px solid #ddd;
-                    border-radius: 8px;
-                    background-color: #f9f9f9;
-                    max-height: 400px;
-                    overflow-y: auto;
-                }
-                .chat-messages {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 10px;
-                }
-                .chat-message {
-                    padding: 10px;
-                    border-radius: 15px;
-                    max-width: 70%;
-                    position: relative;
-                    word-wrap: break-word;
-                }
-                .chat-message.sent {
-                    background-color: #e1ffc7;
-                    align-self: flex-end;
-                }
-                .chat-message.received {
-                    background-color: #fff;
-                    align-self: flex-start;
-                }
-                .message-content {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 5px;
-                }
-                .message-date {
-                    font-size: 0.8em;
-                    color: #666;
-                    text-align: right;
-                }
-            `}</style>
         </div>
     );
 };

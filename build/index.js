@@ -227,13 +227,11 @@ const fetchProcessTypes = () => {
   return _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_0___default()({
     path: `/obatala/v1/process_type?per_page=100&_embed`
   }).then(data => {
+    console.log('Fetched process types:', data); // Adiciona log para verificar os dados
     return data.map(item => {
       return {
         ...item,
-        accept_attachments: item.meta.accept_attachments[0] === "1",
-        accept_tainacan_items: item.meta.accept_tainacan_items[0] === "1",
-        generate_tainacan_items: item.meta.generate_tainacan_items[0] === "1",
-        description: item.meta.description ? String(item.meta.description[0]) : '',
+        description: item.meta.description ? String(item.meta.description) : '',
         step_order: item.meta.step_order
       };
     });
@@ -568,60 +566,6 @@ const CommentForm = ({
           })
         }, comment.id))
       })]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("style", {
-      children: `
-                .comment-form {
-                    margin-top: 20px;
-                    max-width: 600px;
-                    margin: auto;
-                }
-                .comment-input {
-                    display: flex;
-                    flex-direction: column;
-                }
-                .comment-input button {
-                    margin-top: 10px;
-                }
-                .comments-list {
-                    margin-top: 20px;
-                    padding: 10px;
-                    border: 1px solid #ddd;
-                    border-radius: 8px;
-                    background-color: #f9f9f9;
-                    max-height: 400px;
-                    overflow-y: auto;
-                }
-                .chat-messages {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 10px;
-                }
-                .chat-message {
-                    padding: 10px;
-                    border-radius: 15px;
-                    max-width: 70%;
-                    position: relative;
-                    word-wrap: break-word;
-                }
-                .chat-message.sent {
-                    background-color: #e1ffc7;
-                    align-self: flex-end;
-                }
-                .chat-message.received {
-                    background-color: #fff;
-                    align-self: flex-start;
-                }
-                .message-content {
-                    display: flex;
-                    flex-direction: column;
-                    gap: 5px;
-                }
-                .message-date {
-                    font-size: 0.8em;
-                    color: #666;
-                    text-align: right;
-                }
-            `
     })]
   });
 };
@@ -947,8 +891,7 @@ const ProcessCreator = ({
         path: `/obatala/v1/process_obatala/${savedProcess.id}/meta`,
         method: 'POST',
         data: {
-          step_order: stepOrderWithMeta,
-          process_type: selectedProcessType.id
+          step_order: stepOrderWithMeta
         }
       });
       onProcessCreated(savedProcess);
@@ -1777,28 +1720,19 @@ const ProcessTypeEditor = () => {
   const handleSave = async updatedProcessType => {
     setIsLoading(true);
     try {
+      const updatedData = {
+        ...updatedProcessType,
+        meta: {
+          ...updatedProcessType.meta,
+          step_order: stepOrder
+        }
+      };
       const savedType = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
         path: `/obatala/v1/process_type/${id}`,
         method: 'PUT',
-        data: updatedProcessType
+        data: updatedData
       });
-      const meta = {
-        description: updatedProcessType.meta.description.toString(),
-        accept_attachments: updatedProcessType.meta.accept_attachments,
-        accept_tainacan_items: updatedProcessType.meta.accept_tainacan_items,
-        generate_tainacan_items: updatedProcessType.meta.generate_tainacan_items,
-        step_order: stepOrder
-      };
-      await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-        path: `/obatala/v1/process_type/${id}/meta`,
-        method: 'PUT',
-        data: meta
-      });
-      setProcessType(prevType => ({
-        ...prevType,
-        title: savedType.title,
-        meta
-      }));
+      setProcessType(savedType);
       setNotice({
         status: 'success',
         message: 'Process type and meta updated successfully.'
@@ -1882,10 +1816,6 @@ const ProcessTypeEditor = () => {
         children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, {
             children: "Editing process type"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_ProcessTypeManager_ProcessTypeForm__WEBPACK_IMPORTED_MODULE_3__["default"], {
-            onSave: handleSave,
-            editingProcessType: processType,
-            onCancel: () => {/* Handle cancel if necessary */}
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_ProcessTypeManager_ProcessStepForm__WEBPACK_IMPORTED_MODULE_4__["default"], {
             onAddStep: handleAddProcessStep
           })]
@@ -2177,9 +2107,9 @@ const ProcessTypeForm = ({
     if (editingProcessType) {
       setTitle(editingProcessType.title.rendered || '');
       setDescription(editingProcessType.meta.description || '');
-      setAcceptAttachments(!!editingProcessType.meta.accept_attachments[0]);
-      setAcceptTainacanItems(!!editingProcessType.meta.accept_tainacan_items[0]);
-      setGenerateTainacanItems(!!editingProcessType.meta.generate_tainacan_items[0]);
+      setAcceptAttachments(!!editingProcessType.meta.accept_attachments);
+      setAcceptTainacanItems(!!editingProcessType.meta.accept_tainacan_items);
+      setGenerateTainacanItems(!!editingProcessType.meta.generate_tainacan_items);
     }
   }, [editingProcessType]);
   const handleSave = async event => {
@@ -2193,6 +2123,7 @@ const ProcessTypeForm = ({
     }
     const updatedProcessType = {
       title,
+      status: 'publish',
       meta: {
         description,
         accept_attachments: acceptAttachments,
@@ -2736,14 +2667,20 @@ const ProcessViewer = () => {
             children: `Step ${orderedSteps[currentStep].step_id}`
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
             children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
+              className: "panel-row",
               children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("ul", {
+                className: "meta-fields-list",
                 children: Array.isArray(orderedSteps[currentStep].meta_fields) ? orderedSteps[currentStep].meta_fields.map((field, idx) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("li", {
+                  className: "meta-field-item",
                   children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_ProcessManager_MetaFieldInputs__WEBPACK_IMPORTED_MODULE_4__["default"], {
                     field: field
                   })
                 }, `${orderedSteps[currentStep].step_id}-meta-${idx}`)) : null
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_ProcessManager_CommentForm__WEBPACK_IMPORTED_MODULE_5__["default"], {
-                stepId: orderedSteps[currentStep].step_id
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("div", {
+                className: "comment-form-wrapper",
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_ProcessManager_CommentForm__WEBPACK_IMPORTED_MODULE_5__["default"], {
+                  stepId: orderedSteps[currentStep].step_id
+                })
               })]
             })
           })]

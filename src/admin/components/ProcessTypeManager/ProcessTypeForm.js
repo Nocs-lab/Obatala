@@ -13,9 +13,9 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
         if (editingProcessType) {
             setTitle(editingProcessType.title.rendered || '');
             setDescription(editingProcessType.meta.description || '');
-            setAcceptAttachments(!!editingProcessType.meta.accept_attachments[0]);
-            setAcceptTainacanItems(!!editingProcessType.meta.accept_tainacan_items[0]);
-            setGenerateTainacanItems(!!editingProcessType.meta.generate_tainacan_items[0]);
+            setAcceptAttachments(!!editingProcessType.meta.accept_attachments);
+            setAcceptTainacanItems(!!editingProcessType.meta.accept_tainacan_items);
+            setGenerateTainacanItems(!!editingProcessType.meta.generate_tainacan_items);
         }
     }, [editingProcessType]);
 
@@ -29,6 +29,7 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
 
         const updatedProcessType = {
             title,
+            status: 'publish',
             meta: {
                 description,
                 accept_attachments: acceptAttachments,

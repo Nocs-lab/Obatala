@@ -86,15 +86,17 @@ const ProcessViewer = () => {
                         <Panel key={`${orderedSteps[currentStep].step_id}-${currentStep}`} className="counter-item">
                             <PanelHeader>{`Step ${orderedSteps[currentStep].step_id}`}</PanelHeader>
                             <PanelBody>
-                                <PanelRow>
-                                    <ul>
+                                <PanelRow className="panel-row">
+                                    <ul className="meta-fields-list">
                                         {Array.isArray(orderedSteps[currentStep].meta_fields) ? orderedSteps[currentStep].meta_fields.map((field, idx) => (
-                                            <li key={`${orderedSteps[currentStep].step_id}-meta-${idx}`}>
+                                            <li key={`${orderedSteps[currentStep].step_id}-meta-${idx}`} className="meta-field-item">
                                                 <MetaFieldInputs field={field} />
                                             </li>
                                         )) : null}
                                     </ul>
-                                    <CommentForm stepId={orderedSteps[currentStep].step_id} />
+                                    <div className="comment-form-wrapper">
+                                        <CommentForm stepId={orderedSteps[currentStep].step_id} />
+                                    </div>
                                 </PanelRow>
                             </PanelBody>
                         </Panel>

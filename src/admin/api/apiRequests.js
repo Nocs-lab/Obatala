@@ -2,14 +2,11 @@ import apiFetch from '@wordpress/api-fetch';
 
 export const fetchProcessTypes = () => {
     return apiFetch({ path: `/obatala/v1/process_type?per_page=100&_embed` }).then(data => {
-
+        console.log('Fetched process types:', data); // Adiciona log para verificar os dados
         return data.map(item => {
             return {
                 ...item,
-                accept_attachments: item.meta.accept_attachments[0] === "1",
-                accept_tainacan_items: item.meta.accept_tainacan_items[0] === "1",
-                generate_tainacan_items: item.meta.generate_tainacan_items[0] === "1",
-                description: item.meta.description ? String(item.meta.description[0]) : '',
+                description: item.meta.description ? String(item.meta.description) : '',
                 step_order: item.meta.step_order
             };
         });

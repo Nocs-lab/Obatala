@@ -33,31 +33,21 @@ const ProcessTypeEditor = () => {
     const handleSave = async (updatedProcessType) => {
         setIsLoading(true);
         try {
+            const updatedData = {
+                ...updatedProcessType,
+                meta: {
+                    ...updatedProcessType.meta,
+                    step_order: stepOrder,
+                },
+            };
+
             const savedType = await apiFetch({
                 path: `/obatala/v1/process_type/${id}`,
                 method: 'PUT',
-                data: updatedProcessType
+                data: updatedData
             });
 
-            const meta = {
-                description: updatedProcessType.meta.description.toString(),
-                accept_attachments: updatedProcessType.meta.accept_attachments,
-                accept_tainacan_items: updatedProcessType.meta.accept_tainacan_items,
-                generate_tainacan_items: updatedProcessType.meta.generate_tainacan_items,
-                step_order: stepOrder,
-            };
-
-            await apiFetch({
-                path: `/obatala/v1/process_type/${id}/meta`,
-                method: 'PUT',
-                data: meta
-            });
-
-            setProcessType(prevType => ({
-                ...prevType,
-                title: savedType.title,
-                meta
-            }));
+            setProcessType(savedType);
 
             setNotice({ status: 'success', message: 'Process type and meta updated successfully.' });
         } catch (error) {
@@ -127,11 +117,7 @@ const ProcessTypeEditor = () => {
                 <aside>
                     <Panel>
                         <PanelHeader>Editing process type</PanelHeader>
-                        <ProcessTypeForm 
-                            onSave={handleSave} 
-                            editingProcessType={processType} 
-                            onCancel={() => { /* Handle cancel if necessary */ }} 
-                        />
+                        
                         <ProcessStepForm 
                             onAddStep={handleAddProcessStep} 
                         />
