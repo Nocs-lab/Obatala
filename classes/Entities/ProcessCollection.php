@@ -40,7 +40,7 @@ class ProcessCollection {
             'has_archive'        => true,
             'hierarchical'       => true,
             'menu_position'      => 99,
-            'supports'           => array('title', 'editor', 'author', 'comments'),
+            'supports'           => array('title', 'author', 'comments'),
             'show_in_rest'       => true,
             'menu_icon'               => 'dashicons-media-document'
         );

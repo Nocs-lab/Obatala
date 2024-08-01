@@ -440,98 +440,119 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
-/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _ProcessStepManager_MetadataCreator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ProcessStepManager/MetadataCreator */ "./src/admin/components/ProcessStepManager/MetadataCreator.js");
+/* harmony import */ var _ProcessStepManager_MetaFieldList__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ProcessStepManager/MetaFieldList */ "./src/admin/components/ProcessStepManager/MetaFieldList.js");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__);
+
+
 
 
 
 
 const ProcessStepEditor = () => {
   const params = new URLSearchParams(window.location.search);
-  const id = params.get('step_id');
-  const [step, setStep] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
-  const [title, setTitle] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
-  const [description, setDescription] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  const stepId = params.get("step_id");
+  const [stepTitle, setStepTitle] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
   const [notice, setNotice] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   const [isLoading, setIsLoading] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    fetchStepData();
+  }, []);
+  const fetchStepData = () => {
     setIsLoading(true);
-    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-      path: `/obatala/v1/process_step/${id}/`
-    }).then(stepData => {
-      setStep(stepData);
-      setTitle(stepData.title.rendered || '');
-      setDescription(stepData.description || '');
+    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default()({
+      path: `/obatala/v1/process_step/${stepId}`
+    }).then(data => {
+      setStepTitle(data.title.rendered || "");
       setIsLoading(false);
     }).catch(error => {
-      console.error('Error fetching step data:', error);
+      console.error("Error fetching step data:", error);
       setNotice({
-        status: 'error',
-        message: 'Error fetching process step.'
+        status: "error",
+        message: "Error fetching step data."
       });
       setIsLoading(false);
     });
-  }, [id]);
-  const handleSave = async () => {
-    setIsLoading(true);
-    try {
-      const updatedStep = {
-        title,
-        description
-      };
-      await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-        path: `/obatala/v1/process_step/${id}`,
-        method: 'PUT',
-        data: updatedStep
-      });
+  };
+  const handleSaveStep = () => {
+    if (!stepTitle) {
       setNotice({
-        status: 'success',
-        message: 'Process step updated successfully.'
+        status: "error",
+        message: "Step Title field cannot be empty."
       });
-    } catch (error) {
-      setNotice({
-        status: 'error',
-        message: 'Error updating process step.'
-      });
-    } finally {
-      setIsLoading(false);
+      return;
     }
+    const requestData = {
+      title: stepTitle
+    };
+    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_4___default()({
+      path: `/obatala/v1/process_step/${stepId}`,
+      method: "PUT",
+      data: requestData
+    }).then(() => {
+      setNotice({
+        status: "success",
+        message: "Step updated successfully."
+      });
+    }).catch(error => {
+      console.error("Error updating process step:", error);
+      setNotice({
+        status: "error",
+        message: "Error updating process step."
+      });
+    });
+  };
+  const handleMetaFieldAdded = newField => {
+    setNotice({
+      status: "success",
+      message: "Metadata field added successfully."
+    });
+    fetchStepData(); // Atualiza os dados da etapa após adicionar um novo campo de metadados
   };
   if (isLoading) {
-    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, {});
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, {});
   }
-  if (!step) {
-    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
-      children: "Loading..."
-    });
-  }
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, {
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("h3", {
-          children: "Edit Process Step"
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("h2", {
+      children: "Edit Process Step"
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
+      className: "panel-container",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("main", {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
+          children: [notice && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
+            status: notice.status,
+            isDismissible: true,
+            onRemove: () => setNotice(null),
+            children: notice.message
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+            label: "Step Title",
+            value: stepTitle,
+            onChange: value => setStepTitle(value)
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_ProcessStepManager_MetaFieldList__WEBPACK_IMPORTED_MODULE_3__["default"], {
+            stepId: stepId,
+            onNotice: setNotice
+          })]
         })
-      }), notice && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
-        status: notice.status,
-        isDismissible: true,
-        onRemove: () => setNotice(null),
-        children: notice.message
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
-        label: "Title",
-        value: title,
-        onChange: value => setTitle(value)
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
-        label: "Description",
-        value: description,
-        onChange: value => setDescription(value)
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-        isPrimary: true,
-        onClick: handleSave,
-        children: "Save"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("aside", {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
+            title: "Save data",
+            className: "counter-container",
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+              isPrimary: true,
+              onClick: handleSaveStep,
+              children: "Save"
+            })
+          })
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_ProcessStepManager_MetadataCreator__WEBPACK_IMPORTED_MODULE_2__["default"], {
+          stepId: stepId,
+          onMetaFieldAdded: handleMetaFieldAdded
+        })]
       })]
-    })
+    })]
   });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProcessStepEditor);
@@ -753,6 +774,370 @@ const ProcessStepManager = () => {
   });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProcessStepManager);
+
+/***/ }),
+
+/***/ "./src/admin/components/ProcessStepManager/MetaFieldList.js":
+/*!******************************************************************!*\
+  !*** ./src/admin/components/ProcessStepManager/MetaFieldList.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-beautiful-dnd */ "./node_modules/react-beautiful-dnd/dist/react-beautiful-dnd.esm.js");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/trash.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__);
+
+
+
+
+
+
+const MetaFieldList = ({
+  stepId,
+  onNotice
+}) => {
+  const [metaFields, setMetaFields] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+  const [isLoading, setIsLoading] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    fetchMetaFields();
+  }, []);
+  const fetchMetaFields = () => {
+    setIsLoading(true);
+    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+      path: `/obatala/v1/process_step/${stepId}/meta`
+    }).then(data => {
+      const fields = Array.isArray(data) ? data : [data];
+      setMetaFields(fields);
+      setIsLoading(false);
+    }).catch(error => {
+      console.error('Error fetching metadata:', error);
+      onNotice({
+        status: 'error',
+        message: 'Error fetching metadata.'
+      });
+      setIsLoading(false);
+    });
+  };
+  const handleDragEnd = async result => {
+    if (!result.destination) {
+      return;
+    }
+    const reorderedFields = Array.from(metaFields);
+    const [movedField] = reorderedFields.splice(result.source.index, 1);
+    reorderedFields.splice(result.destination.index, 0, movedField);
+    setMetaFields(reorderedFields);
+    try {
+      await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+        path: `/obatala/v1/process_step/${stepId}/meta`,
+        method: 'POST',
+        data: {
+          meta_fields: reorderedFields
+        }
+      });
+      onNotice({
+        status: 'success',
+        message: 'Metadata order updated successfully.'
+      });
+    } catch (error) {
+      console.error('Error updating metadata order:', error);
+      onNotice({
+        status: 'error',
+        message: 'Error updating metadata order.'
+      });
+    }
+  };
+  const handleDeleteField = async index => {
+    const updatedFields = metaFields.filter((_, fieldIndex) => fieldIndex !== index);
+    try {
+      await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+        path: `/obatala/v1/process_step/${stepId}/meta`,
+        method: 'POST',
+        data: {
+          meta_fields: updatedFields
+        }
+      });
+      setMetaFields(updatedFields);
+      onNotice({
+        status: 'success',
+        message: 'Field removed successfully.'
+      });
+    } catch (error) {
+      console.error('Error removing field:', error);
+      onNotice({
+        status: 'error',
+        message: 'Error removing field.'
+      });
+    }
+  };
+  if (isLoading) {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, {});
+  }
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.Fragment, {
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__.DragDropContext, {
+      onDragEnd: handleDragEnd,
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__.Droppable, {
+        droppableId: "meta-fields-list",
+        children: provided => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("ul", {
+          className: "steps-list",
+          ...provided.droppableProps,
+          ref: provided.innerRef,
+          children: [metaFields.length > 0 ? metaFields.map((field, index) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__.Draggable, {
+            draggableId: `${field.title}-${index}`,
+            index: index,
+            children: provided => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("li", {
+              className: "step-card",
+              ref: provided.innerRef,
+              ...provided.draggableProps,
+              ...provided.dragHandleProps,
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CardHeader, {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("h4", {
+                  className: "meta-field-title",
+                  children: field.title
+                })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CardBody, {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("p", {
+                  children: ["Type: ", field.type]
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("p", {
+                  children: ["Value: ", field.value]
+                })]
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CardFooter, {
+                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Tooltip, {
+                  text: "Delete Field",
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+                    isDestructive: true,
+                    icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Icon, {
+                      icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_5__["default"]
+                    }),
+                    onClick: () => handleDeleteField(index)
+                  })
+                })
+              })]
+            })
+          }, `${field.title}-${index}`)) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
+            status: "info",
+            children: "No metadata fields found."
+          }), provided.placeholder]
+        })
+      })
+    })
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MetaFieldList);
+
+/***/ }),
+
+/***/ "./src/admin/components/ProcessStepManager/MetadataCreator.js":
+/*!********************************************************************!*\
+  !*** ./src/admin/components/ProcessStepManager/MetadataCreator.js ***!
+  \********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
+/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__);
+
+
+
+
+const MetadataCreator = ({
+  stepId,
+  onMetaFieldAdded
+}) => {
+  const [fieldTitle, setFieldTitle] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  const [fieldType, setFieldType] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('text');
+  const [fieldValue, setFieldValue] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  const [dateFormat, setDateFormat] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  const [startDate, setStartDate] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const [endDate, setEndDate] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const [notice, setNotice] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const [currentMetaFields, setCurrentMetaFields] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    fetchCurrentMetaFields();
+  }, []);
+  const fetchCurrentMetaFields = () => {
+    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+      path: `/obatala/v1/process_step/${stepId}/meta`
+    }).then(data => {
+      // Garantir que data é um array
+      setCurrentMetaFields(Array.isArray(data) ? data : []);
+    }).catch(error => {
+      console.error('Error fetching current metadata:', error);
+    });
+  };
+  const handleAddMetaField = () => {
+    if (!fieldTitle) {
+      setNotice({
+        status: 'error',
+        message: 'Field title cannot be empty.'
+      });
+      return;
+    }
+    const newField = {
+      title: fieldTitle,
+      type: fieldType,
+      value: fieldValue,
+      ...(fieldType === 'datepicker' && {
+        dateFormat,
+        startDate,
+        endDate
+      })
+    };
+    const updatedFields = [...currentMetaFields, newField];
+    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+      path: `/obatala/v1/process_step/${stepId}/meta`,
+      method: 'POST',
+      data: {
+        meta_fields: updatedFields
+      }
+    }).then(() => {
+      onMetaFieldAdded(newField);
+      setFieldTitle('');
+      setFieldType('text');
+      setFieldValue('');
+      setDateFormat('');
+      setStartDate(null);
+      setEndDate(null);
+      setNotice({
+        status: 'success',
+        message: 'Field added successfully.'
+      });
+      setCurrentMetaFields(updatedFields);
+    }).catch(error => {
+      console.error('Error adding field:', error);
+      setNotice({
+        status: 'error',
+        message: 'Error adding field.'
+      });
+    });
+  };
+  const renderConditionalFields = () => {
+    switch (fieldType) {
+      case 'datepicker':
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.Fragment, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+            label: "Date Format",
+            value: dateFormat,
+            onChange: value => setDateFormat(value),
+            help: "Enter the date format (e.g., YYYY-MM-DD)"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.DateTimePicker, {
+            currentDate: startDate,
+            onChange: date => setStartDate(date),
+            is24Hour: true,
+            __nextRemoveHelpButton: true,
+            __nextRemoveResetButton: true
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.DateTimePicker, {
+            currentDate: endDate,
+            onChange: date => setEndDate(date),
+            is24Hour: true,
+            __nextRemoveHelpButton: true,
+            __nextRemoveResetButton: true
+          })]
+        });
+      case 'upload':
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+          label: "File URL",
+          value: fieldValue,
+          onChange: value => setFieldValue(value),
+          help: "Enter the URL of the file"
+        });
+      case 'number':
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.Fragment, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+            label: "Min Value",
+            type: "number",
+            value: fieldValue,
+            onChange: value => setFieldValue(value)
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+            label: "Max Value",
+            type: "number",
+            value: fieldValue,
+            onChange: value => setFieldValue(value)
+          })]
+        });
+      case 'select':
+      case 'radio':
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+          label: "Options",
+          value: fieldValue,
+          onChange: value => setFieldValue(value),
+          help: "Enter the options separated by commas"
+        });
+      default:
+        return null;
+    }
+  };
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
+    children: [notice && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
+      status: notice.status,
+      isDismissible: true,
+      onRemove: () => setNotice(null),
+      children: notice.message
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
+      title: "Add Metadata Field",
+      className: "counter-container",
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+          label: "Field Title",
+          value: fieldTitle,
+          onChange: value => setFieldTitle(value)
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
+          label: "Field Type",
+          value: fieldType,
+          options: [{
+            label: "Text",
+            value: "text"
+          }, {
+            label: "Date Picker",
+            value: "datepicker"
+          }, {
+            label: "Upload",
+            value: "upload"
+          }, {
+            label: "Number",
+            value: "number"
+          }, {
+            label: "Text Field",
+            value: "textfield"
+          }, {
+            label: "Select",
+            value: "select"
+          }, {
+            label: "Radio",
+            value: "radio"
+          }],
+          onChange: value => setFieldType(value)
+        }), renderConditionalFields(), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+          isPrimary: true,
+          onClick: handleAddMetaField,
+          children: "Add Field"
+        })]
+      })
+    })]
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MetadataCreator);
 
 /***/ }),
 

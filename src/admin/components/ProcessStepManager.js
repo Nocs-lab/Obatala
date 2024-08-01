@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer } from 'react';
-import { Spinner, Button, SelectControl, TextControl, Notice, Panel, PanelHeader, PanelBody, PanelRow, Icon, __experimentalConfirmDialog as ConfirmDialog } from '@wordpress/components';
+import { Spinner, Button, TextControl, Notice, Panel, PanelHeader, PanelBody, PanelRow, Icon, __experimentalConfirmDialog as ConfirmDialog } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { edit, trash } from "@wordpress/icons";
 import Reducer, { initialState } from '../redux/reducer'; 
