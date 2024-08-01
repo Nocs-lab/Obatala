@@ -4,6 +4,8 @@ namespace Obatala\Api;
 
 defined('ABSPATH') || exit;
 
+use WP_REST_Response; // Certifique-se de importar a classe WP_REST_Response
+
 class ProcessCustomFields extends ObatalaAPI {
 
     public function register_routes() {
@@ -57,6 +59,31 @@ class ProcessCustomFields extends ObatalaAPI {
             'callback' => [$this, 'update_meta'],
             'permission_callback' => '__return_true',
         ]);
+        // Rota para obter todos os comentários associados a um step
+        $this->add_route('process_obatala/(?P<id>\d+)/comments', [
+            'methods' => 'GET',
+            'callback' => [$this, 'get_comments'],
+            'permission_callback' => '__return_true',
+        ]);
+
+       
+        // Route to add a comment to the process
+        $this->add_route('process_obatala/(?P<id>\d+)/comment', [
+            'methods' => 'POST',
+            'callback' => [$this, 'add_comment'],
+            'permission_callback' => '__return_true',
+            'args' => [
+                'content' => [
+                    'required' => true,
+                    'validate_callback' => function($param) {
+                        return !empty($param);
+                    }
+                ],
+                'author' => [
+                    'required' => false,
+                ]
+            ]
+        ]);
     }
 
     public function get_current_stage($request) {
@@ -88,5 +115,49 @@ class ProcessCustomFields extends ObatalaAPI {
             update_post_meta($post_id, $key, $value);
         }
         return true;
+    }
+    public function get_comments($request) {
+        $post_id = (int) $request['id'];
+        
+        // Obtém todos os comentários associados ao post
+        $comments = get_comments(['post_id' => $post_id]);
+        
+        if ($comments) {
+            // Se necessário, formatar os comentários para incluir apenas campos relevantes
+            $formatted_comments = array_map(function($comment) {
+                return [
+                    'id' => $comment->comment_ID,
+                    'content' => $comment->comment_content,
+                    'author' => $comment->comment_author,
+                    'date' => $comment->comment_date,
+                ];
+            }, $comments);
+            
+            return $formatted_comments;
+        } else {
+            return new WP_REST_Response('No comments found.', 404);
+        }
+    }
+    
+
+    public function add_comment($request) {
+        $post_id = (int) $request['id'];
+        $content = sanitize_text_field($request['content']);
+        $author = isset($request['author']) ? sanitize_text_field($request['author']) : '';
+
+        $commentdata = [
+            'comment_post_ID' => $post_id,
+            'comment_content' => $content,
+            'comment_author' => $author,
+            'comment_approved' => 1,
+        ];
+
+        $comment_id = wp_insert_comment($commentdata);
+
+        if ($comment_id) {
+            return new WP_REST_Response('Comment added successfully', 200);
+        } else {
+            return new WP_REST_Response('Error adding comment', 500);
+        }
     }
 }

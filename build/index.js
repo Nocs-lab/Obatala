@@ -479,7 +479,26 @@ const CommentForm = ({
   stepId
 }) => {
   const [comment, setComment] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
+  const [comments, setComments] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [notice, setNotice] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    fetchComments();
+  }, [stepId]);
+  const fetchComments = () => {
+    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+      path: `/obatala/v1/process_obatala/${stepId}/comments`,
+      // Atualize o caminho se necessário
+      method: 'GET'
+    }).then(data => {
+      setComments(data);
+    }).catch(error => {
+      console.error('Error fetching comments:', error);
+      setNotice({
+        status: 'error',
+        message: 'Error fetching comments.'
+      });
+    });
+  };
   const handleCommentSubmit = () => {
     if (!comment) {
       setNotice({
@@ -490,11 +509,11 @@ const CommentForm = ({
     }
     const newComment = {
       content: comment,
-      step_id: stepId,
-      status: 'publish'
+      step_id: stepId // Use stepId para vincular o comentário
     };
     _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-      path: `/obatala/v1/process_step/${stepId}/comment`,
+      path: `/obatala/v1/process_obatala/${stepId}/comment`,
+      // Atualize o caminho se necessário
       method: 'POST',
       data: newComment
     }).then(() => {
@@ -503,6 +522,7 @@ const CommentForm = ({
         status: 'success',
         message: 'Comment added successfully.'
       });
+      fetchComments(); // Recarregar os comentários após adicionar um novo
     }).catch(error => {
       console.error('Error adding comment:', error);
       setNotice({
@@ -518,21 +538,88 @@ const CommentForm = ({
       isDismissible: true,
       onRemove: () => setNotice(null),
       children: notice.message
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
-      label: "Add a comment",
-      value: comment,
-      onChange: value => setComment(value)
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-      isPrimary: true,
-      onClick: handleCommentSubmit,
-      children: "Submit Comment"
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+      className: "comment-input",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+        label: "Add a comment",
+        value: comment,
+        onChange: value => setComment(value)
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+        isPrimary: true,
+        onClick: handleCommentSubmit,
+        children: "Submit Comment"
+      })]
+    }), comments.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+      className: "comments-list",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("h3", {
+        children: "Comments:"
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+        className: "chat-messages",
+        children: comments.map(comment => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+          className: `chat-message ${comment.author ? 'received' : 'sent'}`,
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+            className: "message-content",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("strong", {
+              children: [comment.author || 'Anonymous', ":"]
+            }), " ", comment.content, /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+              className: "message-date",
+              children: new Date(comment.date).toLocaleString()
+            })]
+          })
+        }, comment.id))
+      })]
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("style", {
       children: `
                 .comment-form {
                     margin-top: 20px;
+                    max-width: 600px;
+                    margin: auto;
                 }
-                .comment-form button {
+                .comment-input {
+                    display: flex;
+                    flex-direction: column;
+                }
+                .comment-input button {
                     margin-top: 10px;
+                }
+                .comments-list {
+                    margin-top: 20px;
+                    padding: 10px;
+                    border: 1px solid #ddd;
+                    border-radius: 8px;
+                    background-color: #f9f9f9;
+                    max-height: 400px;
+                    overflow-y: auto;
+                }
+                .chat-messages {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 10px;
+                }
+                .chat-message {
+                    padding: 10px;
+                    border-radius: 15px;
+                    max-width: 70%;
+                    position: relative;
+                    word-wrap: break-word;
+                }
+                .chat-message.sent {
+                    background-color: #e1ffc7;
+                    align-self: flex-end;
+                }
+                .chat-message.received {
+                    background-color: #fff;
+                    align-self: flex-start;
+                }
+                .message-content {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 5px;
+                }
+                .message-date {
+                    font-size: 0.8em;
+                    color: #666;
+                    text-align: right;
                 }
             `
     })]

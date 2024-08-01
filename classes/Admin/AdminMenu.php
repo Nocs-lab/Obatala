@@ -125,6 +125,11 @@ class AdminMenu {
     public static function render_main_page() {
         echo '<h1>' . __('Bem-vindo ao Obatala', 'obatala') . '</h1>';
         echo '<p>' . __('Selecione uma opção do submenu para começar.', 'obatala') . '</p>';
+        echo '<style>.wp-admin #toplevel_page_obatala-main .wp-submenu li a[href*="process-viewer"],
+                .wp-admin #toplevel_page_obatala-main .wp-submenu li a[href*="process-step-editor"],
+                .wp-admin #toplevel_page_obatala-main .wp-submenu li a[href*="process-type-editor"] {
+                    display: none;
+                }</style>';
     }
 
     /**

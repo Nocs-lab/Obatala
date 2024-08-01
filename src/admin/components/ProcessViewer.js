@@ -103,7 +103,7 @@ const ProcessViewer = () => {
                     )}
                 </main>
             </div>
-        </div>
+        </div>  
     );
 };
 
