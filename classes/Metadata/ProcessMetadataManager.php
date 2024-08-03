@@ -1,6 +1,7 @@
 <?php
 
 namespace Obatala\Metadata;
+
 class ProcessMetadataManager {
 
     // Prefixo para os metadados
@@ -27,13 +28,19 @@ class ProcessMetadataManager {
             $meta_key = self::$meta_prefix . uniqid();
         } 
 
-       // Sanitizar os dados antes de salvar
+        // Sanitizar os dados antes de salvar
         $sanitized_meta_data = self::sanitize_metadata($meta_data);
 
         // Validar os dados antes de salvar
         if (!self::validate_metadata($sanitized_meta_data)) {
             error_log('Metadados inválidos para etapa ' . $step_id);
             return false; // Dados inválidos, abortar salvamento
+        }
+
+        // Verificar se já existe um metadado duplicado
+        if (self::has_duplicate_metadata($step_id)) {
+            error_log('Metadado duplicado detectado para a etapa ' . $step_id);
+            return false; // Metadado duplicado, abortar salvamento
         }
 
         // Adicionar o dado '_type' que irá identificar o tipo de campo no frontend
@@ -43,7 +50,7 @@ class ProcessMetadataManager {
         $serialized_meta_data = wp_json_encode($sanitized_meta_data);
 
         // Utilizar a função do WordPress para salvar/atualizar o metadado
-        $result = update_post_meta($step_id, $meta_key, $serialized_meta_data);
+        $result = update_post_meta($step_id, sanitize_key($meta_key), $serialized_meta_data);
 
         // Verificar se a operação foi bem sucedida
         if ($result) {
@@ -90,14 +97,19 @@ class ProcessMetadataManager {
      * @return bool True se os dados foram salvos com sucesso, False caso contrário.
      */
     public static function save_step_data($step_id, $process_id) {
+        global $wpdb;
+
         // Recuperar todos os metadados associados a esta etapa
         $meta_data = self::get_metadata($step_id);
 
         // Armazenar os dados da etapa
-        $step_data = $meta_data; // Corrigido para refletir a lógica correta
+        $step_data = $meta_data; 
+        // Preparar consulta SQL
+        $meta_key = 'step_data_' . $step_id;
+        $prepared_query = $wpdb->prepare("UPDATE {$wpdb->postmeta} SET meta_value = %s WHERE post_id = %d AND meta_key = %s", $step_data, $process_id, $meta_key);
 
-        // Salvar os dados da etapa no post_meta do processo
-        return update_post_meta($process_id, 'step_data_' . $step_id, $step_data);
+        // Executar consulta preparada
+        return $wpdb->query($prepared_query);
     }
 
     /**
@@ -130,7 +142,7 @@ class ProcessMetadataManager {
      */
     public static function delete_metadata($step_id, $meta_key) {
         // Remover o metadado específico
-        $result = delete_post_meta($step_id, $meta_key);
+        $result = delete_post_meta($step_id, sanitize_key($meta_key));
 
         if ($result) {
             error_log('Metadado removido com sucesso para a etapa ' . $step_id);
@@ -141,7 +153,7 @@ class ProcessMetadataManager {
         return $result;
     }
 
-     /**
+    /**
      * Renderiza um campo de input com base no tipo especificado.
      *
      * @param string $type O tipo de input (text, datepicker, upload, number, textfield, select, radio).
@@ -202,72 +214,50 @@ class ProcessMetadataManager {
      * @return void
      */
     private static function render_basic_input($type, $args) {
-        $name  = isset($args['name']) ? esc_attr($args['name']) : '';
-        $label = isset($args['label']) ? esc_html($args['label']) : '';
-        $value = isset($args['value']) ? esc_attr($args['value']) : '';
-        $placeholder = isset($args['placeholder']) ? esc_attr($args['placeholder']) : '';
-
-        echo '<label for="' . $name . '">' . $label . '</label><br />';
-        echo '<input type="' . $type . '" id="' . $name . '" name="' . $name . '" value="' . $value . '" placeholder="' . $placeholder . '" />';
-        echo '<br />';
+        echo '<label for="' . esc_attr($args['name']) . '">' . esc_html($args['label']) . '</label>';
+        echo '<input type="' . esc_attr($type) . '" name="' . esc_attr($args['name']) . '" id="' . esc_attr($args['name']) . '" value="' . esc_attr($args['value']) . '">';
     }
 
     /**
      * Método para renderizar textarea.
      *
-     * @param array $args Argumentos para textarea.
+     * @param array $args Argumentos adicionais.
      * @return void
      */
     private static function render_textarea($args) {
-        $name  = isset($args['name']) ? esc_attr($args['name']) : '';
-        $label = isset($args['label']) ? esc_html($args['label']) : '';
-        $value = isset($args['value']) ? esc_textarea($args['value']) : '';
-
-        echo '<label for="' . $name . '">' . $label . '</label><br />';
-        echo '<textarea id="' . $name . '" name="' . $name . '">' . $value . '</textarea>';
-        echo '<br />';
+        echo '<label for="' . esc_attr($args['name']) . '">' . esc_html($args['label']) . '</label>';
+        echo '<textarea name="' . esc_attr($args['name']) . '" id="' . esc_attr($args['name']) . '">' . esc_textarea($args['value']) . '</textarea>';
     }
 
     /**
-     * Método para renderizar select dropdown.
+     * Método para renderizar select.
      *
-     * @param array $args Argumentos para select dropdown.
-     *                    Exemplo: 'options' => array('value1' => 'Label 1', 'value2' => 'Label 2').
+     * @param array $args Argumentos adicionais.
      * @return void
      */
     private static function render_select($args) {
-        $name    = isset($args['name']) ? esc_attr($args['name']) : '';
-        $label   = isset($args['label']) ? esc_html($args['label']) : '';
-        $options = isset($args['options']) && is_array($args['options']) ? $args['options'] : array();
-
-        echo '<label for="' . $name . '">' . $label . '</label><br />';
-        echo '<select id="' . $name . '" name="' . $name . '">';
-        foreach ($options as $value => $label) {
-            echo '<option value="' . esc_attr($value) . '">' . esc_html($label) . '</option>';
+        echo '<label for="' . esc_attr($args['name']) . '">' . esc_html($args['label']) . '</label>';
+        echo '<select name="' . esc_attr($args['name']) . '" id="' . esc_attr($args['name']) . '">';
+        foreach ($args['options'] as $key => $label) {
+            echo '<option value="' . esc_attr($key) . '">' . esc_html($label) . '</option>';
         }
         echo '</select>';
-        echo '<br />';
     }
 
     /**
      * Método para renderizar radio buttons.
      *
-     * @param array $args Argumentos para radio buttons.
-     *                    Exemplo: 'options' => array('value1' => 'Label 1', 'value2' => 'Label 2').
+     * @param array $args Argumentos adicionais.
      * @return void
      */
     private static function render_radio($args) {
-        $name    = isset($args['name']) ? esc_attr($args['name']) : '';
-        $label   = isset($args['label']) ? esc_html($args['label']) : '';
-        $options = isset($args['options']) && is_array($args['options']) ? $args['options'] : array();
-
-        echo '<label>' . $label . '</label><br />';
-        foreach ($options as $value => $label) {
-            echo '<input type="radio" id="' . esc_attr($value) . '" name="' . $name . '" value="' . esc_attr($value) . '">';
-            echo '<label for="' . esc_attr($value) . '">' . esc_html($label) . '</label><br />';
+        echo '<label>' . esc_html($args['label']) . '</label>';
+        foreach ($args['options'] as $key => $label) {
+            echo '<input type="radio" name="' . esc_attr($args['name']) . '" value="' . esc_attr($key) . '">' . esc_html($label);
         }
-        echo '<br />';
     }
+
+    // Outros métodos da classe...
 
     private static function sanitize_metadata($meta_data) {
         $sanitized_data = array();
@@ -306,3 +296,5 @@ class ProcessMetadataManager {
         return true;
     }
 }
+
+
