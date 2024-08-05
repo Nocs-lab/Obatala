@@ -1,5 +1,5 @@
 :root {
-  --primary-50: #eff6ff;
+  --primary-50:  #eff6ff;
   --primary-100: #c4ddfe;
   --primary-200: #91c1fe;
   --primary-300: #5fa4fd;
@@ -11,7 +11,7 @@
   --primary-900: #00132a;
   --primary: var(--primary-800);
 
-  --white: #fff;
+  --white:    #fff;
   --gray-100: #eee;
   --gray-200: #ddd;
   --gray-300: #ccc;
@@ -21,7 +21,7 @@
   --gray-700: #555;
   --gray-800: #333;
   --gray-900: #111;
-  --black: #000;
+  --black:    #000;
 
   --error: #c52233;
   --success: #00a676;
@@ -504,6 +504,21 @@ button .components-spinner {
     transform 0.2s,
     background-color 0.2s;
 }
+.step-item {
+  background-color: var(--primary-50);
+  border: 1px solid var(--primary-100);
+  border-radius: 25px 10px 10px 25px;
+  display: flex;
+  align-items: center;
+  flex-basis: 100%;
+  gap: 1rem;
+}
+.step-item h4 {
+  margin: 0;
+}
+.step-item .actions {
+  margin-left: auto;
+}
 .step-header {
   display: flex;
   justify-content: center;
@@ -511,14 +526,16 @@ button .components-spinner {
   width: 100%;
 }
 .step-number {
-  display: inline-block;
-  padding: 0.3em 0.7em;
   border-radius: 50%;
-  background-color: #0b6d9e98;
-  color: white;
-  font-weight: bold;
-  margin-bottom: 10px;
-  font-size: 1em;
+  background-color: var(--primary-600);
+  color: var(--white);
+  font-weight: 600;
+  font-size: 1rem;
+  min-height: 36px;
+  min-width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .step-title {
   margin-bottom: 10px;
@@ -531,7 +548,7 @@ button .components-spinner {
 
 .actions {
   display: flex;
-  gap: 10px;
+  gap: 1rem;
 }
 .pagination {
   display: flex;

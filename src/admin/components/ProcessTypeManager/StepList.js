@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Tooltip, Notice, Card, CardHeader, CardFooter, Icon } from '@wordpress/components';
+import { Button, Tooltip, Notice, Icon } from '@wordpress/components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import apiFetch from '@wordpress/api-fetch';
 import { trash, edit } from '@wordpress/icons';
@@ -66,59 +66,53 @@ const StepList = ({ processTypeId, stepOrder = [], onNotice }) => {
     };
 
     return (
-        <>
-            <DragDropContext onDragEnd={handleDragEnd}>
-                <Droppable droppableId="steps-list" direction="horizontal">
-                    {(provided) => (
-                        <div
-                            className="steps-list"
-                            {...provided.droppableProps}
-                            ref={provided.innerRef}
-                        >
-                            {stepsState.length > 0 ? (
-                                stepsState.map((step, index) => (
-                                    <Draggable key={`${step.id}-${index}`} draggableId={`${step.id}-${index}`} index={index}>
-                                        {(provided) => (
-                                            <Card
-                                                className="step-card"
-                                                ref={provided.innerRef}
-                                                {...provided.draggableProps}
-                                                {...provided.dragHandleProps}
-                                            >
-                                                <CardHeader>
-                                                    <div className="step-header">
-                                                        <span className="step-number">{index + 1}</span>
-                                                    </div>
-                                                    <h4>{step.title.rendered}</h4>
-                                                </CardHeader>
-                                                <CardFooter>
-                                                    <Tooltip text="Edit Step">
-                                                        <Button
-                                                            icon={<Icon icon={edit} />}
-                                                            onClick={() => window.location.href = `?page=process-step-editor&step_id=${step.id}`}
-                                                        />
-                                                    </Tooltip>
-                                                    <Tooltip text="Delete Step">
-                                                        <Button
-                                                            isDestructive
-                                                            icon={<Icon icon={trash} />}
-                                                            onClick={() => handleDeleteStep(index)}
-                                                        />
-                                                    </Tooltip>
-                                                </CardFooter>
-                                            </Card>
-                                        )}
-                                    </Draggable>
-                                ))
-                            ) : (
-                                <Notice status="warning" isDismissible={false}>No steps found.</Notice>
-                            )}
-                            {provided.placeholder}
-                        </div>
-                    )}
-                </Droppable>
-            </DragDropContext>
-        </>
+        <DragDropContext onDragEnd={handleDragEnd}>
+            <Droppable droppableId="steps-list" direction="vertical">
+                {(provided) => (
+                    <ul
+                        className="steps-list"
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                    >
+                        {stepsState.length > 0 ? (
+                            stepsState.map((step, index) => (
+                                <Draggable key={`${step.id}-${index}`} draggableId={`${step.id}-${index}`} index={index}>
+                                    {(provided) => (
+                                        <li
+                                            className="step-item"
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            {...provided.dragHandleProps}
+                                        >
+                                            <span className="step-number">{index + 1}</span>
+                                            <h4>{step.title.rendered}</h4>
+                                            <div className="actions">
+                                                <Tooltip text="Edit Step">
+                                                    <Button
+                                                        icon={<Icon icon={edit} />}
+                                                        onClick={() => window.location.href = `?page=process-step-editor&step_id=${step.id}`}
+                                                    />
+                                                </Tooltip>
+                                                <Tooltip text="Delete Step">
+                                                    <Button
+                                                        isDestructive
+                                                        icon={<Icon icon={trash} />}
+                                                        onClick={() => handleDeleteStep(index)}
+                                                    />
+                                                </Tooltip>
+                                            </div>
+                                        </li>
+                                    )}
+                                </Draggable>
+                            ))
+                        ) : (
+                            <Notice status="warning" isDismissible={false}>No steps found.</Notice>
+                        )}
+                        {provided.placeholder}
+                    </ul>
+                )}
+            </Droppable>
+        </DragDropContext>
     );
 };
 
