@@ -476,14 +476,17 @@ button .components-spinner {
 .comment .comment-content p {
   margin: 5px 0;
 }
+/* arrastáveis */
 .steps-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 7px;
-  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Ajuste conforme necessário */
+  gap: 10px;
   list-style: none;
-  margin: 5px;
+  padding: 0;
+  margin: 0;
+  background: white;
 }
+
 .step-card {
   display: flex;
   flex-direction: column;
@@ -558,6 +561,8 @@ button .components-spinner {
 .wp-admin #toplevel_page_obatala-main .wp-submenu li a[href*="process-type-editor"] {
     display: none;
 }
+
+/* Comentários em processos */
 .comment-form {
     margin-top: 20px;
     max-width: 50%;

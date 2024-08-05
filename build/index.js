@@ -1411,6 +1411,7 @@ const MetaFieldList = ({
       onDragEnd: handleDragEnd,
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__.Droppable, {
         droppableId: "meta-fields-list",
+        direction: "horizontal",
         children: provided => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("ul", {
           className: "steps-list",
           ...provided.droppableProps,
@@ -1418,34 +1419,36 @@ const MetaFieldList = ({
           children: [metaFields.length > 0 ? metaFields.map((field, index) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__.Draggable, {
             draggableId: `${field.title}-${index}`,
             index: index,
-            children: provided => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("li", {
+            children: provided => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("li", {
               className: "step-card",
               ref: provided.innerRef,
               ...provided.draggableProps,
               ...provided.dragHandleProps,
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CardHeader, {
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("h4", {
-                  className: "meta-field-title",
-                  children: field.title
-                })
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CardBody, {
-                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("p", {
-                  children: ["Type: ", field.type]
-                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("p", {
-                  children: ["Value: ", field.value]
-                })]
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CardFooter, {
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Tooltip, {
-                  text: "Delete Field",
-                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-                    isDestructive: true,
-                    icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Icon, {
-                      icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_5__["default"]
-                    }),
-                    onClick: () => handleDeleteField(index)
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Card, {
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CardHeader, {
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("h4", {
+                    className: "meta-field-title",
+                    children: field.title
                   })
-                })
-              })]
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CardBody, {
+                  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("p", {
+                    children: ["Type: ", field.type]
+                  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("p", {
+                    children: ["Value: ", field.value]
+                  })]
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CardFooter, {
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Tooltip, {
+                    text: "Delete Field",
+                    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+                      isDestructive: true,
+                      icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Icon, {
+                        icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_5__["default"]
+                      }),
+                      onClick: () => handleDeleteField(index)
+                    })
+                  })
+                })]
+              })
             })
           }, `${field.title}-${index}`)) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
             status: "info",
@@ -2419,11 +2422,31 @@ const StepList = ({
       _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
         path: `/obatala/v1/process_step?include=${stepOrder.join(',')}`
       }).then(stepsData => {
-        const orderedSteps = stepOrder.map((stepId, index) => ({
-          ...stepsData.find(step => step.id === stepId),
-          orderIndex: index
-        })).filter(Boolean);
+        // Cria um mapa de stepsData para facilitar a busca
+        const stepsMap = new Map(stepsData.map(step => [step.id, step]));
+
+        // Ordena os steps com base no stepOrder, preenchendo os ausentes com placeholders
+        const orderedSteps = stepOrder.map((stepId, index) => {
+          const step = stepsMap.get(stepId);
+          if (step) {
+            return {
+              ...step,
+              orderIndex: index
+            };
+          }
+          // Placeholder para steps ausentes
+          return {
+            id: stepId,
+            orderIndex: index,
+            title: {
+              rendered: `Step ${index + 1}`
+            },
+            type: "process_step",
+            status: "missing"
+          };
+        });
         setStepsState(orderedSteps);
+        console.log('steps', orderedSteps);
       }).catch(error => {
         console.error('Error fetching ordered steps:', error);
         onNotice({
@@ -2512,7 +2535,7 @@ const StepList = ({
                 })
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
                 className: "step-title",
-                children: step.title.rendered
+                children: step.title ? step.title.rendered : ''
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
                 className: "step-actions",
                 children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Tooltip, {

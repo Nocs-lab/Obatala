@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Button, Tooltip, Notice, Icon, Spinner, Card, CardBody, CardHeader, CardFooter } from "@wordpress/components";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import apiFetch from "@wordpress/api-fetch";
-import { trash, edit } from '@wordpress/icons';
+import { trash } from '@wordpress/icons';
 
 const MetaFieldList = ({ stepId, onNotice }) => {
   const [metaFields, setMetaFields] = useState([]);
@@ -76,7 +76,7 @@ const MetaFieldList = ({ stepId, onNotice }) => {
   return (
     <>
       <DragDropContext onDragEnd={handleDragEnd}>
-        <Droppable droppableId="meta-fields-list">
+        <Droppable droppableId="meta-fields-list" direction="horizontal">
           {(provided) => (
             <ul
               className="steps-list"
@@ -93,7 +93,7 @@ const MetaFieldList = ({ stepId, onNotice }) => {
                         {...provided.draggableProps}
                         {...provided.dragHandleProps}
                       >
-                        
+                        <Card>
                           <CardHeader>
                             <h4 className="meta-field-title">{field.title}</h4>
                           </CardHeader>
@@ -110,7 +110,7 @@ const MetaFieldList = ({ stepId, onNotice }) => {
                               />
                             </Tooltip>
                           </CardFooter>
-                        
+                        </Card>
                       </li>
                     )}
                   </Draggable>
