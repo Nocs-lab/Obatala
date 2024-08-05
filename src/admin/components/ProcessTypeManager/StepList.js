@@ -11,21 +11,8 @@ const StepList = ({ processTypeId, stepOrder = [], onNotice }) => {
         if (stepOrder.length > 0) {
             apiFetch({ path: `/obatala/v1/process_step?include=${stepOrder.join(',')}` })
                 .then((stepsData) => {
-                    // Cria um mapa de stepsData para facilitar a busca
-                    const stepsMap = new Map(stepsData.map((step) => [step.id, step]));
-    
-                    // Ordena os steps com base no stepOrder, preenchendo os ausentes com placeholders
-                    const orderedSteps = stepOrder.map((stepId, index) => {
-                        const step = stepsMap.get(stepId);
-                        if (step) {
-                            return { ...step, orderIndex: index };
-                        }
-                        // Placeholder para steps ausentes
-                        return { id: stepId, orderIndex: index, title: { rendered: `Step ${index + 1}` }, type: "process_step", status: "missing" };
-                    });
-    
+                    const orderedSteps = stepOrder.map((stepId, index) => ({ ...stepsData.find((step) => step.id === stepId), orderIndex: index })).filter(Boolean);
                     setStepsState(orderedSteps);
-                    console.log('steps', orderedSteps);
                 })
                 .catch((error) => {
                     console.error('Error fetching ordered steps:', error);
@@ -33,7 +20,6 @@ const StepList = ({ processTypeId, stepOrder = [], onNotice }) => {
                 });
         }
     }, [stepOrder, onNotice]);
-    
 
     const handleDragEnd = async (result) => {
         if (!result.destination) {
@@ -102,7 +88,7 @@ const StepList = ({ processTypeId, stepOrder = [], onNotice }) => {
                                                 <div className="step-header">
                                                     <span className="step-number">{index + 1}</span>
                                                 </div>
-                                                <div className="step-title">{step.title ? step.title.rendered : '' }</div>
+                                                <div className="step-title">{step.title.rendered}</div>
                                                 <div className="step-actions">
                                                     <Tooltip text="Edit Step">
                                                         <Button
