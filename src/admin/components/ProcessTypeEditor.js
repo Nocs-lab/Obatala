@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Panel, PanelHeader, Spinner, Notice } from '@wordpress/components';
+import { Panel, PanelHeader, PanelRow, Spinner, Notice } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import ProcessTypeForm from './ProcessTypeManager/ProcessTypeForm';
 import ProcessStepForm from './ProcessTypeManager/ProcessStepForm';
@@ -100,24 +100,23 @@ const ProcessTypeEditor = () => {
                 <main>
                     <Panel>
                         <PanelHeader><h3>Steps</h3></PanelHeader>
-                    
-                        {notice && (
-                            <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                                {notice.message}
-                            </Notice>
-                        )}
-
-                        <StepList
-                            processTypeId={processType.id}
-                            stepOrder={stepOrder}
-                            onNotice={setNotice}
-                        />
+                        <PanelRow>
+                            {notice && (
+                                <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                                    {notice.message}
+                                </Notice>
+                            )}
+                            <StepList
+                                processTypeId={processType.id}
+                                stepOrder={stepOrder}
+                                onNotice={setNotice}
+                            />
+                        </PanelRow>
                     </Panel>
                 </main>
                 <aside>
                     <Panel>
-                        <PanelHeader>Editing process type</PanelHeader>
-                        
+                        <PanelHeader>Adding steps</PanelHeader>
                         <ProcessStepForm 
                             onAddStep={handleAddProcessStep} 
                         />
