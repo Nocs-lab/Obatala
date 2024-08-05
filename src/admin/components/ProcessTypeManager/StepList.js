@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Tooltip, Notice, Icon } from '@wordpress/components';
+import { Button, Tooltip, Notice, Card, CardHeader, CardFooter, Icon } from '@wordpress/components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import apiFetch from '@wordpress/api-fetch';
 import { trash, edit } from '@wordpress/icons';
@@ -70,7 +70,7 @@ const StepList = ({ processTypeId, stepOrder = [], onNotice }) => {
             <DragDropContext onDragEnd={handleDragEnd}>
                 <Droppable droppableId="steps-list" direction="horizontal">
                     {(provided) => (
-                        <ul
+                        <div
                             className="steps-list"
                             {...provided.droppableProps}
                             ref={provided.innerRef}
@@ -79,17 +79,19 @@ const StepList = ({ processTypeId, stepOrder = [], onNotice }) => {
                                 stepsState.map((step, index) => (
                                     <Draggable key={`${step.id}-${index}`} draggableId={`${step.id}-${index}`} index={index}>
                                         {(provided) => (
-                                            <li
+                                            <Card
                                                 className="step-card"
                                                 ref={provided.innerRef}
                                                 {...provided.draggableProps}
                                                 {...provided.dragHandleProps}
                                             >
-                                                <div className="step-header">
-                                                    <span className="step-number">{index + 1}</span>
-                                                </div>
-                                                <div className="step-title">{step.title.rendered}</div>
-                                                <div className="step-actions">
+                                                <CardHeader>
+                                                    <div className="step-header">
+                                                        <span className="step-number">{index + 1}</span>
+                                                    </div>
+                                                    <h4>{step.title.rendered}</h4>
+                                                </CardHeader>
+                                                <CardFooter>
                                                     <Tooltip text="Edit Step">
                                                         <Button
                                                             icon={<Icon icon={edit} />}
@@ -103,16 +105,16 @@ const StepList = ({ processTypeId, stepOrder = [], onNotice }) => {
                                                             onClick={() => handleDeleteStep(index)}
                                                         />
                                                     </Tooltip>
-                                                </div>
-                                            </li>
+                                                </CardFooter>
+                                            </Card>
                                         )}
                                     </Draggable>
                                 ))
                             ) : (
-                                <Notice status="info">No steps found.</Notice>
+                                <Notice status="warning" isDismissible={false}>No steps found.</Notice>
                             )}
                             {provided.placeholder}
-                        </ul>
+                        </div>
                     )}
                 </Droppable>
             </DragDropContext>
