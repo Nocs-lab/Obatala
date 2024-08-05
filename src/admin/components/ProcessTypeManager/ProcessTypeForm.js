@@ -47,7 +47,7 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
     };
 
     return (
-        <>
+        <PanelBody title="Process Type Details" initialOpen={true}>
             {notice && (
                 <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
                     {notice.message}
@@ -86,7 +86,7 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
                     <Button isSecondary onClick={onCancel}>Cancel</Button>
                 </PanelRow>
             </form>
-        </>
+        </PanelBody>
     );
 };
 
