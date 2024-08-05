@@ -145,7 +145,7 @@ const ProcessStepManager = () => {
                 <aside>
                     <Panel>
                         <PanelHeader>Add Step</PanelHeader>
-                        <PanelBody title="Main data">
+                        <PanelBody>
                             <PanelRow>
                                 {notice && (
                                     <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
