@@ -14,109 +14,108 @@ import MetaFieldList from "./ProcessStepManager/MetaFieldList";
 import apiFetch from "@wordpress/api-fetch";
 
 const ProcessStepEditor = () => {
-    const params = new URLSearchParams(window.location.search);
-    const stepId = params.get("step_id");
-    const [stepTitle, setStepTitle] = useState("");
-    const [notice, setNotice] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
+  const params = new URLSearchParams(window.location.search);
+  const stepId = params.get("step_id");
+  const [stepTitle, setStepTitle] = useState("");
+  const [notice, setNotice] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-    useEffect(() => {
-        fetchStepData();
-    }, []);
+  useEffect(() => {
+    fetchStepData();
+  }, []);
 
-    const fetchStepData = () => {
-        setIsLoading(true);
-        apiFetch({ path: `/obatala/v1/process_step/${stepId}` })
-        .then((data) => {
-            setStepTitle(data.title.rendered || "");
-            setIsLoading(false);
-        })
-        .catch((error) => {
-            console.error("Error fetching step data:", error);
-            setNotice({ status: "error", message: "Error fetching step data." });
-            setIsLoading(false);
-        });
-    };
+  const fetchStepData = () => {
+    setIsLoading(true);
+    apiFetch({ path: `/obatala/v1/process_step/${stepId}` })
+      .then((data) => {
+        setStepTitle(data.title.rendered || "");
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching step data:", error);
+        setNotice({ status: "error", message: "Error fetching step data." });
+        setIsLoading(false);
+      });
+  };
 
-    const handleSaveStep = () => {
-        if (!stepTitle) {
-        setNotice({
-            status: "error",
-            message: "Step Title field cannot be empty.",
-        });
-        return;
-        }
-
-        const requestData = {
-        title: stepTitle,
-        };
-
-        apiFetch({
-        path: `/obatala/v1/process_step/${stepId}`,
-        method: "PUT",
-        data: requestData,
-        })
-        .then(() => {
-            setNotice({ status: "success", message: "Step updated successfully." });
-        })
-        .catch((error) => {
-            console.error("Error updating process step:", error);
-            setNotice({ status: "error", message: "Error updating process step." });
-        });
-    };
-
-    const handleMetaFieldAdded = (newField) => {
-        setNotice({
-        status: "success",
-        message: "Metadata field added successfully.",
-        });
-        fetchStepData(); // Atualiza os dados da etapa após adicionar um novo campo de metadados
-    };
-
-    if (isLoading) {
-        return <Spinner />;
+  const handleSaveStep = () => {
+    if (!stepTitle) {
+      setNotice({
+        status: "error",
+        message: "Step Title field cannot be empty.",
+      });
+      return;
     }
 
-    return (
-        <div>
-            <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
-            <h2>Edit Process Step</h2>
-            <div className="panel-container">
-                <main>
-                    {notice && (
-                        <Notice
-                            status={notice.status}
-                            isDismissible
-                            onRemove={() => setNotice(null)}
-                            >
-                            {notice.message}
-                        </Notice>
-                    )}
-                    <MetaFieldList stepId={stepId} onNotice={setNotice} />
-                </main>
-                <aside>
-                    <Panel>
-                        <PanelHeader>Edit data</PanelHeader>
-                        <PanelBody>
-                            <PanelRow>
-                                <TextControl
-                                    label="Step Title"
-                                    value={stepTitle}
-                                    onChange={(value) => setStepTitle(value)}
-                                />
-                                <Button isPrimary onClick={handleSaveStep}>
-                                    Save
-                                </Button>
-                            </PanelRow>
-                        </PanelBody>
-                    </Panel>
-                    <MetadataCreator
-                        stepId={stepId}
-                        onMetaFieldAdded={handleMetaFieldAdded}
-                    />
-                </aside>
-            </div>
-        </div>
+    const requestData = {
+      title: stepTitle,
+    };
+
+    apiFetch({
+      path: `/obatala/v1/process_step/${stepId}`,
+      method: "PUT",
+      data: requestData,
+    })
+      .then(() => {
+        setNotice({ status: "success", message: "Step updated successfully." });
+      })
+      .catch((error) => {
+        console.error("Error updating process step:", error);
+        setNotice({ status: "error", message: "Error updating process step." });
+      });
+  };
+
+  const handleMetaFieldAdded = (newField) => {
+    setNotice({
+      status: "success",
+      message: "Metadata field added successfully.",
+    });
+    fetchStepData(); // Atualiza os dados da etapa após adicionar um novo campo de metadados
+  };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
+  return (
+    <div>
+      <h2>Edit Process Step</h2>
+      <div className="panel-container">
+        <main>
+          <Panel>
+            {notice && (
+              <Notice
+                status={notice.status}
+                isDismissible
+                onRemove={() => setNotice(null)}
+              >
+                {notice.message}
+              </Notice>
+            )}
+            <TextControl
+              label="Step Title"
+              value={stepTitle}
+              onChange={(value) => setStepTitle(value)}
+            />
+            <MetaFieldList stepId={stepId} onNotice={setNotice} />
+          </Panel>
+        </main>
+        <aside>
+          <Panel>
+            
+            <PanelBody title="Save data" className="counter-container">
+              <Button isPrimary onClick={handleSaveStep}>
+                Save
+              </Button>
+            </PanelBody>
+          </Panel>
+          <MetadataCreator
+            stepId={stepId}
+            onMetaFieldAdded={handleMetaFieldAdded}
+          />
+        </aside>
+      </div>
+    </div>
   );
 };
 

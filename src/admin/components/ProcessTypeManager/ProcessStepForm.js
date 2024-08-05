@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Button, ComboboxControl, PanelRow, Notice, Icon } from '@wordpress/components';
+import { Button, ComboboxControl, PanelBody, PanelRow, Notice, Icon } from '@wordpress/components';
 import { closeSmall } from '@wordpress/icons';
 import apiFetch from '@wordpress/api-fetch';
 
@@ -45,40 +45,42 @@ const ProcessStepForm = ({ onAddStep }) => {
     };
 
     return (
-        <PanelRow>
-            {notice && (
-                <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                    {notice.message}
-                </Notice>
-            )}
-            <ComboboxControl
-                label="Select one or more Steps"
-                value={stepInputValue}
-                options={processSteps
-                    .filter((step) => !selectedSteps.includes(step.id))
-                    .map((step) => ({ label: step.title.rendered, value: step.id }))}
-                onChange={handleChange}
-                onInputChange={setStepInputValue}
-            />
-            <div className="selected-steps">
-                {selectedSteps.map((stepId) => {
-                    const step = processSteps.find((step) => step.id === stepId);
-                    return (
-                        <div key={stepId} className="selected-step">
-                            {step.title.rendered}
-                            <Button
-                                icon={closeSmall}
-                                onClick={() => handleRemoveStep(stepId)}
-                                className="remove-step-button"
-                            />
-                        </div>
-                    );
-                })}
-            </div>
-            <Button isSecondary onClick={handleAddStep}>
-                Add Steps
-            </Button>
-        </PanelRow>
+        <PanelBody title="Add a Step to the Process Type" initialOpen={true}>
+            <PanelRow>
+                {notice && (
+                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                        {notice.message}
+                    </Notice>
+                )}
+                <ComboboxControl
+                    label="Select one or more Steps"
+                    value={stepInputValue}
+                    options={processSteps
+                        .filter((step) => !selectedSteps.includes(step.id))
+                        .map((step) => ({ label: step.title.rendered, value: step.id }))}
+                    onChange={handleChange}
+                    onInputChange={setStepInputValue}
+                />
+                <div className="selected-steps">
+                    {selectedSteps.map((stepId) => {
+                        const step = processSteps.find((step) => step.id === stepId);
+                        return (
+                            <div key={stepId} className="selected-step">
+                                {step.title.rendered}
+                                <Button
+                                    icon={closeSmall}
+                                    onClick={() => handleRemoveStep(stepId)}
+                                    className="remove-step-button"
+                                />
+                            </div>
+                        );
+                    })}
+                </div>
+                <Button isSecondary onClick={handleAddStep}>
+                    Add Process Step
+                </Button>
+            </PanelRow>
+        </PanelBody>
     );
 };
 
