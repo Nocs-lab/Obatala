@@ -1,5 +1,5 @@
 :root {
-  --primary-50: #eff6ff;
+  --primary-50:  #eff6ff;
   --primary-100: #c4ddfe;
   --primary-200: #91c1fe;
   --primary-300: #5fa4fd;
@@ -11,7 +11,7 @@
   --primary-900: #00132a;
   --primary: var(--primary-800);
 
-  --white: #fff;
+  --white:    #fff;
   --gray-100: #eee;
   --gray-200: #ddd;
   --gray-300: #ccc;
@@ -21,7 +21,7 @@
   --gray-700: #555;
   --gray-800: #333;
   --gray-900: #111;
-  --black: #000;
+  --black:    #000;
 
   --error: #c52233;
   --success: #00a676;
@@ -113,10 +113,12 @@ h2:has(+ span.badge) {
 }
 
 /* Tables */
-table.widefat {
+table.wp-list-table {
   border: 0 none;
+  border-collapse: collapse;
+  width: 100%;
 }
-table.widefat td {
+table.wp-list-table td {
   vertical-align: middle;
 }
 
@@ -162,13 +164,16 @@ table.widefat td {
 .components-card > div {
   display: flex;
   flex-flow: column;
+  width: 100%;
 }
 .components-card__header {
   border-bottom-color: var(--primary-100) !important;
+  flex-wrap: wrap;
 }
+.components-card__header h4,
 .components-card__header .card-title {
   color: var(--gray-700);
-  font-size: 1.1rem;
+  font-size: 1rem;
   margin: 0;
 }
 .components-card dd + dt {
@@ -280,12 +285,11 @@ ol.list-group .list-group-item::before {
   background: var(--white);
   border: 0 none;
   border-radius: var(--border-radius);
-  padding: 15px;
 }
 
 .components-panel__header {
   font-size: 1.25rem;
-  padding: 0.75rem var(--gap);
+  padding: .75rem var(--gap);
 }
 .components-panel__header small {
   color: var(--gray-600);
@@ -346,6 +350,11 @@ ol.list-group .list-group-item::before {
 }
 .components-panel + .components-panel {
   margin-top: 1rem;
+}
+
+/* Functional classes */
+.mb-1 {
+  margin-bottom: 1rem;
 }
 
 /* Extra */
@@ -478,27 +487,39 @@ button .components-spinner {
 }
 /* arrastáveis */
 .steps-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); /* Ajuste conforme necessário */
-  gap: 10px;
-  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
   padding: 0;
-  margin: 0;
-  background: white;
+  width: 100%;
 }
 
 .step-card {
+  border-radius: 8px !important;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  flex-basis: 200px;
   background: #fff;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition:
     transform 0.2s,
     background-color 0.2s;
+}
+.step-item {
+  background-color: var(--primary-50);
+  border: 1px solid var(--primary-100);
+  border-radius: 25px 10px 10px 25px;
+  display: flex;
+  align-items: center;
+  flex-basis: 100%;
+  gap: 1rem;
+}
+.step-item h4 {
+  margin: 0;
+}
+.step-item .actions {
+  margin-left: auto;
 }
 .step-header {
   display: flex;
@@ -507,14 +528,16 @@ button .components-spinner {
   width: 100%;
 }
 .step-number {
-  display: inline-block;
-  padding: 0.3em 0.7em;
   border-radius: 50%;
-  background-color: #0b6d9e98;
-  color: white;
-  font-weight: bold;
-  margin-bottom: 10px;
-  font-size: 1em;
+  background-color: var(--primary-600);
+  color: var(--white);
+  font-weight: 600;
+  font-size: 1rem;
+  min-height: 36px;
+  min-width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .step-title {
   margin-bottom: 10px;
@@ -524,27 +547,16 @@ button .components-spinner {
   align-self: flex-end;
 }
 
-.wp-list-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.wp-list-table th,
-.wp-list-table td {
-  padding: 10px;
-  border: 1px solid #ddd;
-}
-.wp-list-table th {
-  background-color: #f1f1f1;
-  text-align: left;
-}
+
 .actions {
   display: flex;
-  gap: 10px;
+  gap: 1rem;
 }
 .pagination {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  padding: 10px 0;
+  padding: 1rem 0;
 }
 
 .meta-field-wrapper {
