@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Tooltip, Notice, Icon } from '@wordpress/components';
+import { Button, ButtonGroup, Tooltip, Notice, Icon } from '@wordpress/components';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import apiFetch from '@wordpress/api-fetch';
 import { trash, edit } from '@wordpress/icons';
@@ -86,7 +86,7 @@ const StepList = ({ processTypeId, stepOrder = [], onNotice }) => {
                                         >
                                             <span className="step-number">{index + 1}</span>
                                             <h4>{step.title.rendered}</h4>
-                                            <div className="actions">
+                                            <ButtonGroup>
                                                 <Tooltip text="Edit Step">
                                                     <Button
                                                         icon={<Icon icon={edit} />}
@@ -95,12 +95,11 @@ const StepList = ({ processTypeId, stepOrder = [], onNotice }) => {
                                                 </Tooltip>
                                                 <Tooltip text="Delete Step">
                                                     <Button
-                                                        isDestructive
                                                         icon={<Icon icon={trash} />}
                                                         onClick={() => handleDeleteStep(index)}
                                                     />
                                                 </Tooltip>
-                                            </div>
+                                            </ButtonGroup>
                                         </li>
                                     )}
                                 </Draggable>

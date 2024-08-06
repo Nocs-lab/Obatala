@@ -32,7 +32,7 @@ const MetroNavigation = ({ options, currentStep, onStepChange }) => {
                             onStepChange(index);
                         }}
                     >
-                        <span className="tooltip">{option.label}</span>
+                        {option.label}
                     </div>
                 ))}
             </div>
@@ -48,7 +48,7 @@ const MetroNavigation = ({ options, currentStep, onStepChange }) => {
                 }
                 .nav-button {
                     padding: 10px;
-                    background-color: #0b6d9e;
+                    background-color: var(--primary);
                     color: white;
                     border: none;
                     border-radius: 5px;
@@ -64,45 +64,15 @@ const MetroNavigation = ({ options, currentStep, onStepChange }) => {
                     position: relative;
                 }
                 .navigation-point {
-                    width: 20px;
-                    height: 20px;
-                    background-color: #ddd;
-                    border-radius: 50%;
+                    background-color: var(--gray-300);
+                    border-radius: 25px;
+                    padding: .5rem 1rem;
                     position: relative;
                     cursor: pointer;
                 }
                 .navigation-point.active {
-                    background-color: #0b6d9e;
-                }
-                .navigation-point:hover .tooltip {
-                    visibility: visible;
-                    opacity: 1;
-                }
-                .tooltip {
-                    visibility: hidden;
-                    opacity: 0;
-                    background-color: #333;
-                    color: #fff;
-                    text-align: center;
-                    padding: 5px;
-                    border-radius: 4px;
-                    position: absolute;
-                    z-index: 1;
-                    bottom: 125%; 
-                    left: 50%;
-                    transform: translateX(-50%);
-                    transition: opacity 0.3s;
-                    white-space: nowrap;
-                }
-                .tooltip::after {
-                    content: '';
-                    position: absolute;
-                    top: 100%; 
-                    left: 50%;
-                    transform: translateX(-50%);
-                    border-width: 5px;
-                    border-style: solid;
-                    border-color: #333 transparent transparent transparent;
+                    background-color: var(--success);
+                    color: var(--white);
                 }
             `}</style>
         </div>

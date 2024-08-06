@@ -72,7 +72,10 @@ const ProcessManager = ({ onSelectProcess }) => {
             <div className="panel-container">
                 <main>
                     <Panel>
-                        <PanelHeader>Existing Processes</PanelHeader>
+                        <PanelHeader>
+                            <h3>Existing Processes</h3>
+                            <span className="badge">{processes.length}</span>
+                        </PanelHeader>
                         <PanelRow>
                             {processes.length > 0 ? (
                                 <table className="wp-list-table widefat fixed striped">

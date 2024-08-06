@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
-import { Button, Icon, Tooltip, Panel, PanelHeader, PanelRow, Notice, TextControl } from '@wordpress/components';
+import { Button, ButtonGroup, Icon, Tooltip, Panel, PanelHeader, PanelRow, Notice, TextControl } from '@wordpress/components';
 import { edit, trash, yes, no } from '@wordpress/icons';
 import { format } from 'date-fns';
 
@@ -28,7 +28,7 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete }) => {
             Header: 'Actions',
             accessor: 'id',
             Cell: ({ row }) => (
-                <div className="actions">
+                <ButtonGroup>
                     <Tooltip text="Edit">
                         <Button
                             icon={<Icon icon={edit} />}
@@ -41,7 +41,7 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete }) => {
                             onClick={() => onDelete(row.original.id)}
                         />
                     </Tooltip>
-                </div>
+                </ButtonGroup>
             ),
         },
     ], [onEdit, onDelete]);
@@ -75,7 +75,10 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete }) => {
 
     return (
         <Panel>
-            <PanelHeader>Existing Process Types</PanelHeader>
+            <PanelHeader>
+                <h3>Existing Process Types</h3>
+                <span className="badge">{processTypes.length}</span>
+            </PanelHeader>
             <PanelRow>
                 <TextControl
                     className="mb-1"

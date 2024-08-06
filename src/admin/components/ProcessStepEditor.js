@@ -80,7 +80,7 @@ const ProcessStepEditor = () => {
     return (
         <div>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
-            <h2>Edit Process Step</h2>
+            <h2>Edit Process Step: {stepTitle}</h2>
             <div className="panel-container">
                 <main>
                     {notice && (
@@ -96,8 +96,10 @@ const ProcessStepEditor = () => {
                 </main>
                 <aside>
                     <Panel>
-                        <PanelHeader>Edit data</PanelHeader>
-                        <PanelBody>
+                        <PanelHeader>
+                            <h3>Manage data</h3>
+                        </PanelHeader>
+                        <PanelBody title="Edit main data" initialOpen={false}>
                             <PanelRow>
                                 <TextControl
                                     label="Step Title"
@@ -109,11 +111,11 @@ const ProcessStepEditor = () => {
                                 </Button>
                             </PanelRow>
                         </PanelBody>
+                        <MetadataCreator
+                            stepId={stepId}
+                            onMetaFieldAdded={handleMetaFieldAdded}
+                        />
                     </Panel>
-                    <MetadataCreator
-                        stepId={stepId}
-                        onMetaFieldAdded={handleMetaFieldAdded}
-                    />
                 </aside>
             </div>
         </div>

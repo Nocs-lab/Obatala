@@ -1,6 +1,6 @@
 // CommentForm.js
 import React, { useState, useEffect } from "react";
-import { TextControl, Button, Notice } from "@wordpress/components";
+import { TextControl, Button, Notice, PanelBody, PanelRow } from "@wordpress/components";
 import apiFetch from "@wordpress/api-fetch";
 
 const CommentForm = ({ stepId }) => {
@@ -54,38 +54,41 @@ const CommentForm = ({ stepId }) => {
     };
 
     return (
-        <div className="comment-form">
-            {notice && (
-                <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                    {notice.message}
-                </Notice>
-            )}
-            <div className="comment-input">
-                <TextControl
-                    label="Add a comment"
-                    value={comment}
-                    onChange={(value) => setComment(value)}
-                />
-                <Button isPrimary onClick={handleCommentSubmit}>Submit Comment</Button>
-            </div>
-
+        <>
+            <PanelBody title="Submit comment">
+                <PanelRow>
+                    {notice && (
+                        <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                            {notice.message}
+                        </Notice>
+                    )}
+                    <TextControl
+                        label="Add a comment"
+                        value={comment}
+                        onChange={(value) => setComment(value)}
+                    />
+                    <Button isPrimary onClick={handleCommentSubmit}>Submit</Button>
+                </PanelRow>
+            </PanelBody>
             {comments.length > 0 && (
-                <div className="comments-list">
-                    <h3>Comments:</h3>
-                    <div className="chat-messages">
-                        {comments.map((comment) => (
-                            <div key={comment.id} className={`chat-message ${comment.author ? 'received' : 'sent'}`}>
-                                <div className="message-content">
-                                    <strong>{comment.author || 'Anonymous'}:</strong> {comment.content}
-                                    <div className="message-date">{new Date(comment.date).toLocaleString()}</div>
-                                </div>
+                <PanelBody title="Comments">
+                    <PanelRow>
+                        <div className="chat-container">
+                            <div className="chat-messages">
+                                {comments.map((comment) => (
+                                    <div key={comment.id} className={`chat-message ${comment.author ? 'received' : 'sent'}`}>
+                                        <div className="message-content">
+                                            <strong>{comment.author || 'Anonymous'}:</strong> {comment.content}
+                                            <div className="message-date">{new Date(comment.date).toLocaleString()}</div>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
-                        ))}
-                    </div>
-                </div>
+                        </div>
+                    </PanelRow>
+                </PanelBody>
             )}
-
-        </div>
+        </>
     );
 };
 

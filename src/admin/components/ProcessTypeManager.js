@@ -92,7 +92,9 @@ const ProcessTypeManager = () => {
                 </main>
                 <aside>
                     <Panel>
-                        <PanelHeader>Managing process types</PanelHeader>
+                        <PanelHeader>
+                            <h3>Add process type</h3>
+                        </PanelHeader>
                         <ProcessTypeForm onSave={handleSaveProcessType} onCancel={() => setEditingProcessType(null)} editingProcessType={editingProcessType} />
                         {notice && (
                             <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>

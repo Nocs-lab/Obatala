@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, Tooltip, Notice, Icon, Spinner, Card, CardBody, CardHeader, CardFooter, Panel, PanelHeader, PanelRow } from "@wordpress/components";
+import { Button, ButtonGroup, Tooltip, Notice, Icon, Spinner, Card, CardBody, CardHeader, CardFooter, Panel, PanelHeader, PanelRow } from "@wordpress/components";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import apiFetch from "@wordpress/api-fetch";
 import { trash, edit } from '@wordpress/icons';
@@ -76,7 +76,10 @@ const MetaFieldList = ({ stepId, onNotice }) => {
     return (
         <>
             <Panel>
-                <PanelHeader>Metadata fields</PanelHeader>
+                <PanelHeader>
+                    <h3>Metadata fields</h3>
+                    <span className="badge">{metaFields.length}</span>
+                </PanelHeader>
                 <PanelRow>
                     <DragDropContext onDragEnd={handleDragEnd}>
                         <Droppable droppableId="meta-fields-list">
@@ -108,15 +111,14 @@ const MetaFieldList = ({ stepId, onNotice }) => {
                                                             </div>
                                                         )}
                                                     </dl>
-                                                    <div className="actions">
+                                                    <ButtonGroup>
                                                         <Tooltip text="Delete Field">
-                                                        <Button
-                                                            isDestructive
-                                                            icon={<Icon icon={trash} />}
-                                                            onClick={() => handleDeleteField(index)}
-                                                        />
+                                                            <Button
+                                                                icon={<Icon icon={trash} />}
+                                                                onClick={() => handleDeleteField(index)}
+                                                            />
                                                         </Tooltip>
-                                                    </div>
+                                                    </ButtonGroup>
                                                 </li>
                                             )}
                                         </Draggable>
