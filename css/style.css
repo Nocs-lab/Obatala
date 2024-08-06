@@ -514,10 +514,23 @@ button .components-spinner {
   gap: 1rem;
 }
 .step-item h4 {
+  flex-basis: 215px;
   margin: 0;
 }
 .step-item .actions {
   margin-left: auto;
+}
+.step-item .description-list {
+  margin: 0;
+}
+.step-item .description-list .list-item {
+  display: flex;
+  flex-basis: 100px;
+  flex-grow: 0;
+}
+.step-item .description-list dt {
+  float: left;
+  margin-right: .5rem;
 }
 .step-header {
   display: flex;

@@ -81,7 +81,7 @@ const MetaFieldList = ({ stepId, onNotice }) => {
                     <DragDropContext onDragEnd={handleDragEnd}>
                         <Droppable droppableId="meta-fields-list">
                             {(provided) => (
-                                <div
+                                <ul
                                     className="steps-list"
                                     {...provided.droppableProps}
                                     ref={provided.innerRef}
@@ -90,28 +90,25 @@ const MetaFieldList = ({ stepId, onNotice }) => {
                                         metaFields.map((field, index) => (
                                         <Draggable key={`${field.title}-${index}`} draggableId={`${field.title}-${index}`} index={index}>
                                             {(provided) => (
-                                                <Card
-                                                    className="step-card"
+                                                <li
+                                                    className="step-item"
                                                     ref={provided.innerRef}
                                                     {...provided.draggableProps}
                                                     {...provided.dragHandleProps}
                                                 >
-                                                    <CardHeader>
-                                                        <h4 className="meta-field-title">{field.title}</h4>
-                                                    </CardHeader>
-                                                    <CardBody>
-                                                        <dl className="description-list">
+                                                    <span className="step-number">{index + 1}</span>
+                                                    <h4>{field.title}</h4>
+                                                    <dl className="description-list">
+                                                        <div className="list-item">
+                                                            <dt>Type:</dt><dd>{field.type}</dd>
+                                                        </div>
+                                                        {field.value && (
                                                             <div className="list-item">
-                                                                <dt>Type:</dt><dd>{field.type}</dd>
+                                                                <dt>Value:</dt><dd>{field.value}</dd>
                                                             </div>
-                                                            {field.value && (
-                                                                <div className="list-item">
-                                                                    <dt>Value:</dt><dd>{field.value}</dd>
-                                                                </div>
-                                                            )}
-                                                        </dl>
-                                                    </CardBody>
-                                                    <CardFooter>
+                                                        )}
+                                                    </dl>
+                                                    <div className="actions">
                                                         <Tooltip text="Delete Field">
                                                         <Button
                                                             isDestructive
@@ -119,8 +116,8 @@ const MetaFieldList = ({ stepId, onNotice }) => {
                                                             onClick={() => handleDeleteField(index)}
                                                         />
                                                         </Tooltip>
-                                                    </CardFooter>
-                                                </Card>
+                                                    </div>
+                                                </li>
                                             )}
                                         </Draggable>
                                         ))
@@ -128,7 +125,7 @@ const MetaFieldList = ({ stepId, onNotice }) => {
                                         <Notice status="warning">No metadata fields found.</Notice>
                                     )}
                                     {provided.placeholder}
-                                </div>
+                                </ul>
                             )}
                         </Droppable>
                     </DragDropContext>
