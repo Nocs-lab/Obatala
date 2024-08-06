@@ -62,7 +62,7 @@ const ProcessViewer = () => {
     return (
         <div>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Viewer</span>
-            <h2>{process.process_type ? 'Process type title' : ''}: {process.title?.rendered}</h2>
+            <h2>{process.process_type ? process.process_type : 'Process type title'}: {process.title?.rendered}</h2>
             <div className="badge-container">
                 <span className={`badge ${process.status === 'completed' ? 'success' : 'warning'}`}>
                     {process.status}
@@ -81,12 +81,12 @@ const ProcessViewer = () => {
             />
 
             <div className="panel-container">
-                <main className="counter-container">
+                <main>
                     {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
-                        <Panel key={`${orderedSteps[currentStep].step_id}-${currentStep}`} className="counter-item">
+                        <Panel key={`${orderedSteps[currentStep].step_id}-${currentStep}`}>
                             <PanelHeader>{`Step ${orderedSteps[currentStep].step_id}`}</PanelHeader>
                             <PanelBody>
-                                <PanelRow className="panel-row">
+                                <PanelRow>
                                     <ul className="meta-fields-list">
                                         {Array.isArray(orderedSteps[currentStep].meta_fields) ? orderedSteps[currentStep].meta_fields.map((field, idx) => (
                                             <li key={`${orderedSteps[currentStep].step_id}-meta-${idx}`} className="meta-field-item">
@@ -94,9 +94,6 @@ const ProcessViewer = () => {
                                             </li>
                                         )) : null}
                                     </ul>
-                                    <div className="comment-form-wrapper">
-                                        <CommentForm stepId={orderedSteps[currentStep].step_id} />
-                                    </div>
                                 </PanelRow>
                             </PanelBody>
                         </Panel>
@@ -104,6 +101,12 @@ const ProcessViewer = () => {
                         <Notice status="warning" isDismissible={false}>No steps found for this process type.</Notice>
                     )}
                 </main>
+                <aside>
+                    <Panel>
+                        <PanelHeader>Comments</PanelHeader>
+                        <CommentForm stepId={orderedSteps[currentStep].step_id} />
+                    </Panel>
+                </aside>
             </div>
         </div>  
     );

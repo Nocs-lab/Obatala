@@ -145,39 +145,36 @@ const MetadataCreator = ({ stepId, onMetaFieldAdded }) => {
     };
 
     return (
-        <Panel>
+        <PanelBody title="Add Metadata Field">
             {notice && (
                 <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
                 {notice.message}
                 </Notice>
             )}
-            <PanelHeader>Add Metadata Field</PanelHeader>
-            <PanelBody>
-                <PanelRow>
-                    <TextControl
-                        label="Field Title"
-                        value={fieldTitle}
-                        onChange={(value) => setFieldTitle(value)}
-                    />
-                    <SelectControl
-                        label="Field Type"
-                        value={fieldType}
-                        options={[
-                        { label: "Text", value: "text" },
-                        { label: "Date Picker", value: "datepicker" },
-                        { label: "Upload", value: "upload" },
-                        { label: "Number", value: "number" },
-                        { label: "Text Field", value: "textfield" },
-                        { label: "Select", value: "select" },
-                        { label: "Radio", value: "radio" },
-                        ]}
-                        onChange={(value) => setFieldType(value)}
-                    />
-                    {renderConditionalFields()}
-                    <Button isPrimary onClick={handleAddMetaField}>Add Field</Button>
-                </PanelRow>
-            </PanelBody>
-        </Panel>
+            <PanelRow>
+                <TextControl
+                    label="Field Title"
+                    value={fieldTitle}
+                    onChange={(value) => setFieldTitle(value)}
+                />
+                <SelectControl
+                    label="Field Type"
+                    value={fieldType}
+                    options={[
+                    { label: "Text", value: "text" },
+                    { label: "Date Picker", value: "datepicker" },
+                    { label: "Upload", value: "upload" },
+                    { label: "Number", value: "number" },
+                    { label: "Text Field", value: "textfield" },
+                    { label: "Select", value: "select" },
+                    { label: "Radio", value: "radio" },
+                    ]}
+                    onChange={(value) => setFieldType(value)}
+                />
+                {renderConditionalFields()}
+                <Button isPrimary onClick={handleAddMetaField}>Save</Button>
+            </PanelRow>
+        </PanelBody>
   );
 };
 

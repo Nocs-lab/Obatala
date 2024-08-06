@@ -32,6 +32,20 @@
   --input-border-radius: 4px;
 }
 
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar:horizontal {
+  height: 5px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: var(--primary-600);
+  border-radius: var(--border-radius);
+}
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--primary-100);
+}
+
 /* Layout */
 #wpwrap {
   background-color: var(--gray-50);
@@ -78,6 +92,15 @@ h2:has(+ span.badge) {
 .components-button.is-primary {
   background-color: var(--primary);
 }
+.components-button-group .components-button:first-child {
+  border-radius: var(--input-border-radius) 0 0 var(--input-border-radius);
+}
+.components-button-group .components-button:last-child {
+  border-radius: 0 var(--input-border-radius) var(--input-border-radius) 0;
+}
+.components-button-group .components-button:only-child {
+  border-radius: var(--input-border-radius);
+}
 .components-checkbox-control + .components-checkbox-control {
   margin-top: 0.75rem;
 }
@@ -121,6 +144,9 @@ table.wp-list-table {
 table.wp-list-table td {
   vertical-align: middle;
 }
+table.wp-list-table th {
+  font-weight: 500;
+}
 
 /* Components */
 .badge {
@@ -148,18 +174,6 @@ table.wp-list-table td {
   gap: 0.5rem;
   margin-top: -1rem;
   margin-bottom: 2rem;
-}
-.card-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--gap);
-}
-.card-container .components-card {
-  background-color: var(--primary-50);
-  border-radius: var(--border-radius);
-  box-shadow: 0 0 0;
-  flex-basis: 300px;
-  flex-grow: 1;
 }
 .components-card > div {
   display: flex;
@@ -191,25 +205,43 @@ table.wp-list-table td {
 .components-card__footer {
   margin-top: auto;
 }
-main.counter-container {
-  counter-reset: number-counter;
+
+.chat-container {  
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 1rem;
+  width: 100%;
 }
-main.counter-container .counter-item {
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.chat-message {
+  border-radius: var(--border-radius);
+  max-width: 70%;
+  padding: .75rem;
   position: relative;
+  word-wrap: break-word;
 }
-main.counter-container .counter-item::before {
-  color: var(--primary-500);
-  content: counter(number-counter, decimal-leading-zero);
-  counter-increment: number-counter;
-  position: absolute;
-  top: 1.65rem;
-  left: 2rem;
-  text-transform: uppercase;
+.chat-message.sent {
+  background-color: #e1ffc7;
+  align-self: flex-end;
 }
-main.counter-container
-  .components-panel.counter-item
-  .components-panel__header {
-  padding: 0.75rem var(--gap) 0.75rem 3.5rem;
+.chat-message.received {
+  background-color: var(--white);
+  align-self: flex-start;
+}
+.message-content {
+  display: flex;
+  flex-direction: column;
+  gap: .25rem;
+}
+.message-date {
+  font-size: .8em;
+  color: var(--gray-500);
+  padding-left: 1rem;
+  text-align: right;
 }
 .description-list {
   display: flex;
@@ -227,7 +259,7 @@ main.counter-container
 .description-list dd {
   margin: 0;
 }
-.list-group-item {
+.list-group-item { /* not used */
   border: 1px solid var(--primary-300);
   border-radius: var(--border-radius);
   display: flex;
@@ -269,65 +301,38 @@ ol.list-group .list-group-item::before {
   margin-bottom: 2rem;
   padding-top: 0;
   padding-bottom: 0;
-  width: 100%;
 }
 .components-notice.is-error {
-  background-color: transparent;
   border-left-color: var(--error);
-  color: var(--error);
 }
 .components-notice.is-success {
-  background-color: transparent;
   border-left-color: var(--success);
-  color: var(--success);
 }
 .components-panel {
   background: var(--white);
   border: 0 none;
   border-radius: var(--border-radius);
 }
-
-.components-panel__header {
+.components-panel__header,
+.components-panel__header h3 {
   font-size: 1.25rem;
   padding: .75rem var(--gap);
 }
+.components-panel__header h3 {
+  margin: 0;
+  padding: 0;
+}
 .components-panel__header small {
   color: var(--gray-600);
-  font-size: 0.8rem;
+  font-size: .8rem;
 }
 .components-panel__header .badge {
-  font-size: 0.8rem;
+  font-size: .8rem;
   margin-right: auto;
-  margin-left: 2rem;
+  margin-left: 1rem;
 }
 .components-panel__body {
   padding: 0 !important;
-}
-.components-panel__body.counter-container {
-  counter-reset: number-counter;
-}
-.components-panel__body.counter-container .counter-item {
-  background-color: var(--primary-50);
-  border-radius: 5px;
-  margin: 0 2rem;
-  padding: 3rem 1rem 1rem;
-  position: relative;
-}
-.components-panel__body.counter-container .counter-item + .counter-item {
-  margin-top: 0.5rem;
-}
-.components-panel__body.counter-container .counter-item::before {
-  color: var(--primary-500);
-  content: "Metadata " counter(number-counter, decimal-leading-zero);
-  counter-increment: number-counter;
-  position: absolute;
-  top: 1rem;
-  left: 1rem;
-  text-transform: uppercase;
-}
-.components-panel__body.counter-container .counter-item .components-button {
-  margin-top: -2.5rem;
-  margin-left: auto;
 }
 .components-panel__body > .components-panel__body-title:hover {
   background-color: transparent;
@@ -344,6 +349,9 @@ ol.list-group .list-group-item::before {
 .components-panel__body-toggle.components-button:hover {
   color: var(--primary-900);
 }
+.components-panel__body.is-opened .components-panel__body-toggle.components-button {
+  color: var(--gray);
+}
 .components-panel__row {
   flex-wrap: wrap;
   padding: 1rem var(--gap) var(--gap);
@@ -355,6 +363,20 @@ ol.list-group .list-group-item::before {
 /* Functional classes */
 .mb-1 {
   margin-bottom: 1rem;
+}
+.text-center {
+  text-align: center;
+}
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
 }
 
 /* Extra */
@@ -413,20 +435,6 @@ button .components-spinner {
 .form-buttons .components-spinner {
   margin-top: 0;
 }
-.text-center {
-  text-align: center;
-}
-.visually-hidden {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  padding: 0 !important;
-  margin: -1px !important;
-  overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important;
-  white-space: nowrap !important;
-  border: 0 !important;
-}
 #obatala-manage-processes {
   max-width: 500px;
 }
@@ -441,16 +449,18 @@ button .components-spinner {
   height: 36px;
   margin-left: 0;
 }
-
 #obatala-manage-processes .list-controls {
   display: flex;
   width: 100%;
 }
-
 #obatala-manage-processes .list-controls .components-search-control {
   flex-grow: 1;
   margin-right: 8px;
 }
+
+
+
+
 
 .comment-list {
   list-style: none;
@@ -517,7 +527,7 @@ button .components-spinner {
   flex-basis: 215px;
   margin: 0;
 }
-.step-item .actions {
+.step-item .components-button-group {
   margin-left: auto;
 }
 .step-item .description-list {
@@ -582,56 +592,5 @@ button .components-spinner {
 .wp-admin #toplevel_page_obatala-main .wp-submenu li a[href*="process-viewer"],
 .wp-admin #toplevel_page_obatala-main .wp-submenu li a[href*="process-step-editor"],
 .wp-admin #toplevel_page_obatala-main .wp-submenu li a[href*="process-type-editor"] {
-    display: none;
-}
-.comment-form {
-    margin-top: 20px;
-    max-width: 50%;
-    margin: auto;
-}
-.comment-input {
-    display: flex;
-    flex-direction: column;
-}
-.comment-input button {
-    margin-top: 10px;
-}
-.comments-list {
-    margin-top: 20px;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    max-height: 400px;
-    overflow-y: auto;
-}
-.chat-messages {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-.chat-message {
-    padding: 10px;
-    border-radius: 15px;
-    max-width: 70%;
-    position: relative;
-    word-wrap: break-word;
-}
-.chat-message.sent {
-    background-color: #e1ffc7;
-    align-self: flex-end;
-}
-.chat-message.received {
-    background-color: #fff;
-    align-self: flex-start;
-}
-.message-content {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-.message-date {
-    font-size: 0.8em;
-    color: #666;
-    text-align: right;
+  display: none;
 }

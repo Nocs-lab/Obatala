@@ -95,11 +95,13 @@ const ProcessTypeEditor = () => {
     return (
         <div>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
-            <h2>Process Type Editor</h2>
+            <h2>Edit Process Type</h2>
             <div className="panel-container">
                 <main>
                     <Panel>
-                        <PanelHeader><h3>Steps</h3></PanelHeader>
+                        <PanelHeader>
+                            <h3>Steps</h3>
+                        </PanelHeader>
                         <PanelRow>
                             {notice && (
                                 <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
@@ -116,7 +118,9 @@ const ProcessTypeEditor = () => {
                 </main>
                 <aside>
                     <Panel>
-                        <PanelHeader>Adding steps</PanelHeader>
+                        <PanelHeader>
+                            <h3>Adding steps</h3>
+                        </PanelHeader>
                         <ProcessStepForm 
                             onAddStep={handleAddProcessStep} 
                         />

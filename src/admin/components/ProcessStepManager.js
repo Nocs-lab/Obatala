@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer } from 'react';
-import { Spinner, Button, TextControl, Notice, Panel, PanelHeader, PanelBody, PanelRow, Icon, __experimentalConfirmDialog as ConfirmDialog } from '@wordpress/components';
+import { Spinner, Button, ButtonGroup, TextControl, Notice, Panel, PanelHeader, PanelBody, PanelRow, Tooltip, Icon, __experimentalConfirmDialog as ConfirmDialog } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { edit, trash } from "@wordpress/icons";
 import Reducer, { initialState } from '../redux/reducer'; 
@@ -108,7 +108,10 @@ const ProcessStepManager = () => {
                         Are you sure you want to delete this Step?
                     </ConfirmDialog>
                     <Panel>
-                        <PanelHeader>Existing Steps</PanelHeader>
+                        <PanelHeader>
+                            <h3>Existing Steps</h3>
+                            <span className="badge">{processSteps.length}</span>
+                        </PanelHeader>
                         <PanelRow>
                             {processSteps.length > 0 ? (
                                 <table className="wp-list-table widefat fixed striped">
@@ -123,14 +126,20 @@ const ProcessStepManager = () => {
                                             <tr key={step.id}>
                                                 <td>{step.title.rendered}</td>
                                                 <td>
-                                                    <Button
-                                                        icon={<Icon icon={edit} />}
-                                                        onClick={() => handleEditStep(step.id)}
-                                                    />
-                                                    <Button
-                                                        icon={<Icon icon={trash} />}
-                                                        onClick={() => handleConfirmDeleteStep(step.id)}
-                                                    />
+                                                    <ButtonGroup>
+                                                        <Tooltip text="Edit">
+                                                            <Button
+                                                                icon={<Icon icon={edit} />}
+                                                                onClick={() => handleEditStep(step.id)}
+                                                            />
+                                                        </Tooltip>
+                                                        <Tooltip text="Delete">
+                                                            <Button
+                                                                icon={<Icon icon={trash} />}
+                                                                onClick={() => handleConfirmDeleteStep(step.id)}
+                                                        />
+                                                        </Tooltip>
+                                                    </ButtonGroup>
                                                 </td>
                                             </tr>
                                         ))}
@@ -144,7 +153,7 @@ const ProcessStepManager = () => {
                 </main>
                 <aside>
                     <Panel>
-                        <PanelHeader>Add Step</PanelHeader>
+                        <PanelHeader><h3>Add Step</h3></PanelHeader>
                         <PanelBody>
                             <PanelRow>
                                 {notice && (
@@ -158,7 +167,7 @@ const ProcessStepManager = () => {
                                     onChange={(value) => setNewStepTitle(value)}
                                 />
                                 <Button isPrimary onClick={handleSaveStep}>
-                                    Add Step
+                                    Save
                                 </Button>
                             </PanelRow>
                         </PanelBody>
