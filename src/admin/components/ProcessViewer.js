@@ -7,6 +7,7 @@ import CommentForm from './ProcessManager/CommentForm';
 
 const ProcessViewer = () => {
     const [process, setProcess] = useState(null);
+    const [steps, setSteps] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentStep, setCurrentStep] = useState(0);
@@ -26,18 +27,33 @@ const ProcessViewer = () => {
         }
     }, []);
 
-    const fetchProcess = (processId) => {
+    const fetchProcess = async (processId) => {
         setIsLoading(true);
-        apiFetch({ path: `/obatala/v1/process_obatala/${processId}?_embed` })
-            .then(data => {
-                setProcess(data);
-                setIsLoading(false);
-            })
-            .catch(error => {
-                console.error('Error fetching process:', error);
-                setError('Error fetching process details.');
-                setIsLoading(false);
-            });
+        try {
+            const data = await apiFetch({ path: `/obatala/v1/process_obatala/${processId}?_embed` });
+            setProcess(data);
+            if (data.meta && data.meta.step_order) {
+                const stepOrder = data.meta.step_order;
+                const stepsData = await fetchSteps(stepOrder);
+                setSteps(stepsData);
+            }
+            setIsLoading(false);
+        } catch (error) {
+            console.error('Error fetching process:', error);
+            setError('Error fetching process details.');
+            setIsLoading(false);
+        }
+    };
+
+    const fetchSteps = async (stepOrder) => {
+        try {
+            const stepsData = await apiFetch({ path: `/obatala/v1/process_step` });
+            return stepsData;
+        } catch (error) {
+            console.error('Error fetching steps:', error);
+            setError('Error fetching steps details.');
+            return [];
+        }
     };
 
     if (isLoading) {
@@ -52,13 +68,7 @@ const ProcessViewer = () => {
         return <Notice status="warning" isDismissible={false}>No process found.</Notice>;
     }
 
-    const orderedSteps = process.meta.step_order.map(order => {
-        const step = process.meta.step_order.find(s => s.step_id === order.step_id);
-        return { ...step, meta_fields: order.meta_fields || [] };
-    });
-
-    const options = orderedSteps.map(step => ({ label: `Step ${step.step_id}`, value: step.step_id }));
-
+    const options = steps.map(step => ({ label: `${step.title.rendered}`, value: step.id }));
     return (
         <div>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Viewer</span>
@@ -67,9 +77,9 @@ const ProcessViewer = () => {
                 <span className={`badge ${process.status === 'completed' ? 'success' : 'warning'}`}>
                     {process.status}
                 </span>
-                {orderedSteps[currentStep] && (
+                {steps[currentStep] && (
                     <span className="badge">
-                        Current step: {orderedSteps[currentStep]?.step_id || 'Unknown Step'}
+                        Current step: {steps[currentStep]?.title.rendered || 'Unknown Step'}
                     </span>
                 )}
             </div>
@@ -82,14 +92,14 @@ const ProcessViewer = () => {
 
             <div className="panel-container">
                 <main>
-                    {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
-                        <Panel key={`${orderedSteps[currentStep].step_id}-${currentStep}`}>
-                            <PanelHeader>{`Step ${orderedSteps[currentStep].step_id}`}</PanelHeader>
+                    {steps.length > 0 && steps[currentStep] ? (
+                        <Panel key={`${steps[currentStep].id}-${currentStep}`}>
+                            <PanelHeader>{`${steps[currentStep].title.rendered}`}</PanelHeader>
                             <PanelBody>
                                 <PanelRow>
                                     <ul className="meta-fields-list">
-                                        {Array.isArray(orderedSteps[currentStep].meta_fields) ? orderedSteps[currentStep].meta_fields.map((field, idx) => (
-                                            <li key={`${orderedSteps[currentStep].step_id}-meta-${idx}`} className="meta-field-item">
+                                        {Array.isArray(steps[currentStep].meta_fields) ? steps[currentStep].meta_fields.map((field, idx) => (
+                                            <li key={`${steps[currentStep].id}-meta-${idx}`} className="meta-field-item">
                                                 <MetaFieldInputs field={field} />
                                             </li>
                                         )) : null}
@@ -104,11 +114,11 @@ const ProcessViewer = () => {
                 <aside>
                     <Panel>
                         <PanelHeader>Comments</PanelHeader>
-                        <CommentForm stepId={orderedSteps[currentStep].step_id} />
+                        <CommentForm stepId={steps[currentStep].id} />
                     </Panel>
                 </aside>
             </div>
-        </div>  
+        </div>
     );
 };
 
