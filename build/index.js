@@ -2143,7 +2143,7 @@ const ProcessTypeForm = ({
     if (editingProcessType) {
       var _editingProcessType$t;
       setTitle((_editingProcessType$t = editingProcessType.title.rendered) !== null && _editingProcessType$t !== void 0 ? _editingProcessType$t : '');
-      setDescription(editingProcessType.meta.description ? editingProcessType.meta.description[0] : '');
+      setDescription(Array.isArray(editingProcessType.meta.description) ? editingProcessType.meta.description[0] : editingProcessType.meta.description);
       setAcceptAttachments(Array.isArray(editingProcessType.meta.accept_attachments) ? !!editingProcessType.meta.accept_attachments[0] : !!editingProcessType.meta.accept_attachments);
       setAcceptTainacanItems(Array.isArray(editingProcessType.meta.accept_tainacan_items) ? !!editingProcessType.meta.accept_tainacan_items[0] : !!editingProcessType.meta.accept_tainacan_items);
       setGenerateTainacanItems(Array.isArray(editingProcessType.meta.generate_tainacan_items) ? !!editingProcessType.meta.generate_tainacan_items[0] : !!editingProcessType.meta.generate_tainacan_items);
