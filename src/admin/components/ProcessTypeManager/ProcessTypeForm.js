@@ -10,17 +10,20 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
     const [notice, setNotice] = useState(null);
 
     useEffect(() => {
+        console.log(editingProcessType);
         if (editingProcessType) {
             setTitle(editingProcessType.title.rendered || '');
-            setDescription(editingProcessType.meta.description || '');
-            setAcceptAttachments(!!editingProcessType.meta.accept_attachments);
-            setAcceptTainacanItems(!!editingProcessType.meta.accept_tainacan_items);
-            setGenerateTainacanItems(!!editingProcessType.meta.generate_tainacan_items);
+            setDescription(editingProcessType.meta.description[0] || '');
+            setAcceptAttachments(Array.isArray(editingProcessType.meta.accept_attachments) ? !!editingProcessType.meta.accept_attachments[0] : !!editingProcessType.meta.accept_attachments);
+            setAcceptTainacanItems(Array.isArray(editingProcessType.meta.accept_tainacan_items) ? !!editingProcessType.meta.accept_tainacan_items[0] : !!editingProcessType.meta.accept_tainacan_items);
+            setGenerateTainacanItems(Array.isArray(editingProcessType.meta.generate_tainacan_items) ? !!editingProcessType.meta.generate_tainacan_items[0] : !!editingProcessType.meta.generate_tainacan_items);
         }
     }, [editingProcessType]);
+    
 
     const handleSave = async (event) => {
         event.preventDefault();
+        
         
         if (!title) {
             setNotice({ status: 'error', message: 'Title is required.' });
