@@ -2141,8 +2141,9 @@ const ProcessTypeForm = ({
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     console.log(editingProcessType);
     if (editingProcessType) {
-      setTitle(editingProcessType.title.rendered || '');
-      setDescription(editingProcessType.meta.description[0] || '');
+      var _editingProcessType$t;
+      setTitle((_editingProcessType$t = editingProcessType.title.rendered) !== null && _editingProcessType$t !== void 0 ? _editingProcessType$t : '');
+      setDescription(editingProcessType.meta.description ? editingProcessType.meta.description[0] : '');
       setAcceptAttachments(Array.isArray(editingProcessType.meta.accept_attachments) ? !!editingProcessType.meta.accept_attachments[0] : !!editingProcessType.meta.accept_attachments);
       setAcceptTainacanItems(Array.isArray(editingProcessType.meta.accept_tainacan_items) ? !!editingProcessType.meta.accept_tainacan_items[0] : !!editingProcessType.meta.accept_tainacan_items);
       setGenerateTainacanItems(Array.isArray(editingProcessType.meta.generate_tainacan_items) ? !!editingProcessType.meta.generate_tainacan_items[0] : !!editingProcessType.meta.generate_tainacan_items);
