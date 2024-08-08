@@ -2644,6 +2644,11 @@ const ProcessViewer = () => {
       return [];
     }
   };
+  /*
+      const processType = processTypes.find(processType => {
+          return processType.id == process.process_type;
+      });
+  */
   if (isLoading) {
     return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, {});
   }
@@ -2665,6 +2670,7 @@ const ProcessViewer = () => {
     label: `${step.title.rendered}`,
     value: step.id
   }));
+  console.log("aqui", process);
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("span", {
       className: "brand",

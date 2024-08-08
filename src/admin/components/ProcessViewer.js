@@ -55,7 +55,11 @@ const ProcessViewer = () => {
             return [];
         }
     };
-
+/*
+    const processType = processTypes.find(processType => {
+        return processType.id == process.process_type;
+    });
+*/
     if (isLoading) {
         return <Spinner />;
     }
@@ -69,6 +73,7 @@ const ProcessViewer = () => {
     }
 
     const options = steps.map(step => ({ label: `${step.title.rendered}`, value: step.id }));
+    console.log("aqui", process);
     return (
         <div>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Viewer</span>
