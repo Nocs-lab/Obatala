@@ -10,6 +10,7 @@ const ProcessViewer = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentStep, setCurrentStep] = useState(0);
+    const [steps, setSteps] = useState([]);
 
     const getProcessIdFromUrl = () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -26,6 +27,12 @@ const ProcessViewer = () => {
         }
     }, []);
 
+    useEffect(() => {
+        if (process) {
+            fetchSteps();
+        }
+    }, [process]);
+
     const fetchProcess = (processId) => {
         setIsLoading(true);
         apiFetch({ path: `/obatala/v1/process_obatala/${processId}?_embed` })
@@ -40,6 +47,16 @@ const ProcessViewer = () => {
             });
     };
 
+    const fetchSteps = async () => {
+        try {
+            const stepsData = await apiFetch({ path: `/obatala/v1/process_step` });
+            setSteps(stepsData);
+        } catch (error) {
+            console.error('Error fetching steps:', error);
+            setError('Error fetching steps details.');
+        }
+    };
+
     if (isLoading) {
         return <Spinner />;
     }
@@ -52,12 +69,13 @@ const ProcessViewer = () => {
         return <Notice status="warning" isDismissible={false}>No process found.</Notice>;
     }
 
+    // Map orderedSteps to include the title from the steps list
     const orderedSteps = process.meta.step_order.map(order => {
-        const step = process.meta.step_order.find(s => s.step_id === order.step_id);
-        return { ...step, meta_fields: order.meta_fields || [] };
+        const step = steps.find(s => s.id === order.step_id);
+        return { ...order, title: step ? step.title.rendered : 'Unknown Title', meta_fields: order.meta_fields || [] };
     });
 
-    const options = orderedSteps.map(step => ({ label: `Step ${step.step_id}`, value: step.step_id }));
+    const options = orderedSteps.map(step => ({ label: step.title, value: step.step_id }));
 
     return (
         <div>
@@ -69,7 +87,7 @@ const ProcessViewer = () => {
                 </span>
                 {orderedSteps[currentStep] && (
                     <span className="badge">
-                        Current step: {orderedSteps[currentStep]?.step_id || 'Unknown Step'}
+                        Current step: {orderedSteps[currentStep]?.title || 'Unknown Step'}
                     </span>
                 )}
             </div>
@@ -84,7 +102,7 @@ const ProcessViewer = () => {
                 <main>
                     {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
                         <Panel key={`${orderedSteps[currentStep].step_id}-${currentStep}`}>
-                            <PanelHeader>{`Step ${orderedSteps[currentStep].step_id}`}</PanelHeader>
+                            <PanelHeader>{`${orderedSteps[currentStep].title}`}</PanelHeader>
                             <PanelBody>
                                 <PanelRow>
                                     <ul className="meta-fields-list">
@@ -108,7 +126,7 @@ const ProcessViewer = () => {
                     </Panel>
                 </aside>
             </div>
-        </div>  
+        </div>
     );
 };
 

@@ -2596,6 +2596,7 @@ __webpack_require__.r(__webpack_exports__);
 
 const ProcessViewer = () => {
   const [process, setProcess] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const [steps, setSteps] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [isLoading, setIsLoading] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
   const [error, setError] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   const [currentStep, setCurrentStep] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
@@ -2612,19 +2613,42 @@ const ProcessViewer = () => {
       setIsLoading(false);
     }
   }, []);
-  const fetchProcess = processId => {
+  const fetchProcess = async processId => {
     setIsLoading(true);
-    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-      path: `/obatala/v1/process_obatala/${processId}?_embed`
-    }).then(data => {
+    try {
+      const data = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+        path: `/obatala/v1/process_obatala/${processId}?_embed`
+      });
       setProcess(data);
+      if (data.meta && data.meta.step_order) {
+        const stepOrder = data.meta.step_order;
+        const stepsData = await fetchSteps(stepOrder);
+        setSteps(stepsData);
+      }
       setIsLoading(false);
-    }).catch(error => {
+    } catch (error) {
       console.error('Error fetching process:', error);
       setError('Error fetching process details.');
       setIsLoading(false);
-    });
+    }
   };
+  const fetchSteps = async stepOrder => {
+    try {
+      const stepsData = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+        path: `/obatala/v1/process_step`
+      });
+      return stepsData;
+    } catch (error) {
+      console.error('Error fetching steps:', error);
+      setError('Error fetching steps details.');
+      return [];
+    }
+  };
+  /*
+      const processType = processTypes.find(processType => {
+          return processType.id == process.process_type;
+      });
+  */
   if (isLoading) {
     return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, {});
   }
@@ -2642,16 +2666,9 @@ const ProcessViewer = () => {
       children: "No process found."
     });
   }
-  const orderedSteps = process.meta.step_order.map(order => {
-    const step = process.meta.step_order.find(s => s.step_id === order.step_id);
-    return {
-      ...step,
-      meta_fields: order.meta_fields || []
-    };
-  });
-  const options = orderedSteps.map(step => ({
-    label: `Step ${step.step_id}`,
-    value: step.step_id
+  const options = steps.map(step => ({
+    label: `${step.title.rendered}`,
+    value: step.id
   }));
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("span", {
@@ -2666,9 +2683,9 @@ const ProcessViewer = () => {
       children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("span", {
         className: `badge ${process.status === 'completed' ? 'success' : 'warning'}`,
         children: process.status
-      }), orderedSteps[currentStep] && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("span", {
+      }), steps[currentStep] && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("span", {
         className: "badge",
-        children: ["Current step: ", orderedSteps[currentStep]?.step_id || 'Unknown Step']
+        children: ["Current step: ", steps[currentStep]?.title.rendered || 'Unknown Step']
       })]
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_ProcessManager_MetroNavigation__WEBPACK_IMPORTED_MODULE_3__["default"], {
       options: options,
@@ -2677,23 +2694,23 @@ const ProcessViewer = () => {
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
       className: "panel-container",
       children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("main", {
-        children: orderedSteps.length > 0 && orderedSteps[currentStep] ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
+        children: steps.length > 0 && steps[currentStep] ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, {
-            children: `Step ${orderedSteps[currentStep].step_id}`
+            children: `${steps[currentStep].title.rendered}`
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
             children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
               children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("ul", {
                 className: "meta-fields-list",
-                children: Array.isArray(orderedSteps[currentStep].meta_fields) ? orderedSteps[currentStep].meta_fields.map((field, idx) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("li", {
+                children: Array.isArray(steps[currentStep].meta_fields) ? steps[currentStep].meta_fields.map((field, idx) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("li", {
                   className: "meta-field-item",
                   children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_ProcessManager_MetaFieldInputs__WEBPACK_IMPORTED_MODULE_4__["default"], {
                     field: field
                   })
-                }, `${orderedSteps[currentStep].step_id}-meta-${idx}`)) : null
+                }, `${steps[currentStep].id}-meta-${idx}`)) : null
               })
             })
           })]
-        }, `${orderedSteps[currentStep].step_id}-${currentStep}`) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
+        }, `${steps[currentStep].id}-${currentStep}`) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
           status: "warning",
           isDismissible: false,
           children: "No steps found for this process type."
@@ -2703,7 +2720,7 @@ const ProcessViewer = () => {
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, {
             children: "Comments"
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_ProcessManager_CommentForm__WEBPACK_IMPORTED_MODULE_5__["default"], {
-            stepId: orderedSteps[currentStep].step_id
+            stepId: steps[currentStep].id
           })]
         })
       })]
