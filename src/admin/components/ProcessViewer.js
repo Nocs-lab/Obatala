@@ -73,7 +73,7 @@ const ProcessViewer = () => {
     }
 
     const options = steps.map(step => ({ label: `${step.title.rendered}`, value: step.id }));
-    console.log("aqui", process);
+
     return (
         <div>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Viewer</span>

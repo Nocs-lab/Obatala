@@ -2670,7 +2670,6 @@ const ProcessViewer = () => {
     label: `${step.title.rendered}`,
     value: step.id
   }));
-  console.log("aqui", process);
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("span", {
       className: "brand",
