@@ -11,6 +11,7 @@ const ProcessViewer = () => {
     const [error, setError] = useState(null);
     const [currentStep, setCurrentStep] = useState(0);
     const [steps, setSteps] = useState([]);
+    const [processType, setProcessType] = useState([]);
 
     const getProcessIdFromUrl = () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -21,6 +22,7 @@ const ProcessViewer = () => {
         const processId = getProcessIdFromUrl();
         if (processId) {
             fetchProcess(processId);
+            fetchProcessType(processId);
         } else {
             setError('No process ID found in the URL.');
             setIsLoading(false);
@@ -57,6 +59,17 @@ const ProcessViewer = () => {
         }
     };
 
+    const fetchProcessType = async (processId) => {
+        try {
+            const processTypeData = await apiFetch({ path: `/obatala/v1/process_obatala/${processId}/process_type` });
+            setProcessType(processTypeData);
+        } catch (error) {
+            console.error('Error fetching process types:', error);
+            setError('Error fetching process types.');
+        }
+    };
+
+    console.log("type:", processType);
     if (isLoading) {
         return <Spinner />;
     }
@@ -122,7 +135,7 @@ const ProcessViewer = () => {
                 <aside>
                     <Panel>
                         <PanelHeader>Comments</PanelHeader>
-                        <CommentForm stepId={orderedSteps[currentStep].step_id} />
+                        <CommentForm stepId={orderedSteps[currentStep]?.step_id || null} />
                     </Panel>
                 </aside>
             </div>
