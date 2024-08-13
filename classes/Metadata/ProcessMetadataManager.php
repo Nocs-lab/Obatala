@@ -62,18 +62,6 @@ class ProcessMetadataManager {
         }
     }
 
-    public static function metadata_exists($step_id, $meta_name) {
-        $meta_data = self::get_metadata($step_id);
-
-        foreach ($meta_data as $meta_key => $meta_value) {
-            if ($meta_value['name'] === $meta_name) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
     public static function has_duplicate_metadata($step_id) {
         $meta_data = self::get_metadata($step_id);
         $meta_names = [];
@@ -94,6 +82,7 @@ class ProcessMetadataManager {
      * Salva os dados dos campos de uma etapa do processo.
      *
      * @param int $step_id O ID da etapa do processo.
+     * @param int $process_id O ID do processo.
      * @return bool True se os dados foram salvos com sucesso, False caso contrário.
      */
     public static function save_step_data($step_id, $process_id) {
@@ -102,11 +91,17 @@ class ProcessMetadataManager {
         // Recuperar todos os metadados associados a esta etapa
         $meta_data = self::get_metadata($step_id);
 
-        // Armazenar os dados da etapa
-        $step_data = $meta_data; 
+        // Serializar os dados da etapa em JSON
+        $serialized_meta_data = wp_json_encode($meta_data);
+
         // Preparar consulta SQL
         $meta_key = 'step_data_' . $step_id;
-        $prepared_query = $wpdb->prepare("UPDATE {$wpdb->postmeta} SET meta_value = %s WHERE post_id = %d AND meta_key = %s", $step_data, $process_id, $meta_key);
+        $prepared_query = $wpdb->prepare(
+            "UPDATE {$wpdb->postmeta} SET meta_value = %s WHERE post_id = %d AND meta_key = %s",
+            $serialized_meta_data,
+            $process_id,
+            $meta_key
+        );
 
         // Executar consulta preparada
         return $wpdb->query($prepared_query);
@@ -296,5 +291,3 @@ class ProcessMetadataManager {
         return true;
     }
 }
-
-
