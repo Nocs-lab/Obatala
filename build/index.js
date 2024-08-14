@@ -870,6 +870,13 @@ const ProcessCreator = ({
           step_order: stepOrderWithMeta
         }
       });
+      await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+        path: `/obatala/v1/process_obatala/${savedProcess.id}/process_type`,
+        method: 'POST',
+        data: {
+          process_type: selectedProcessType.id
+        }
+      });
       onProcessCreated(savedProcess);
       setNewProcessTitle('');
       setNewProcessType('');
