@@ -9,7 +9,8 @@ import {
 import apiFetch from "@wordpress/api-fetch";
 import ProcessTypeForm from "./ProcessTypeManager/ProcessTypeForm";
 import ProcessStepForm from "./ProcessTypeManager/ProcessStepForm";
-import StepList from "./ProcessTypeManager/StepList";
+// import StepList from "./ProcessTypeManager/StepList";
+import SortableCanvas from "./Sortable/SortableCanvas";
 
 const ProcessTypeEditor = () => {
   const params = new URLSearchParams(window.location.search);
@@ -37,7 +38,6 @@ const ProcessTypeEditor = () => {
   }, [id]);
 
   const handleSave = async (updatedProcessType) => {
-    
     setIsLoading(true);
     try {
       const updatedData = {
@@ -132,11 +132,20 @@ const ProcessTypeEditor = () => {
                   {notice.message}
                 </Notice>
               )}
-              <StepList
+              {/* <StepList
                 processTypeId={processType.id}
                 stepOrder={stepOrder}
                 onNotice={setNotice}
-              />
+              /> */}
+            </PanelRow>
+          </Panel>
+
+          <Panel>
+            <PanelHeader>
+              <h3>Editor</h3>
+            </PanelHeader>
+            <PanelRow>
+              <SortableCanvas />
             </PanelRow>
           </Panel>
         </main>
@@ -156,7 +165,10 @@ const ProcessTypeEditor = () => {
                 </Notice>
               )}
               {/* input para editar o nome do processo */}
-              <ProcessTypeForm editingProcessType={processType} onSave={handleSave} />
+              <ProcessTypeForm
+                editingProcessType={processType}
+                onSave={handleSave}
+              />
             </PanelRow>
           </Panel>
           <Panel>

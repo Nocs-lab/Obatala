@@ -52,7 +52,7 @@ const ProcessCreator = ({ processTypes, onProcessCreated }) => {
             await apiFetch({
                 path: `/obatala/v1/process_obatala/${savedProcess.id}/meta`,
                 method: 'POST',
-                data: { step_order: stepOrderWithMeta }
+                data: { step_order: stepOrderWithMeta, process_type:  }
             });
 
             onProcessCreated(savedProcess);
