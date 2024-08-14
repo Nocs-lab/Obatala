@@ -118,7 +118,7 @@ const ProcessTypeEditor = () => {
       <h2>Edit Process Type</h2>
       <div className="panel-container">
         <main>
-          <Panel>
+          {/* <Panel>
             <PanelHeader>
               <h3>Steps</h3>
             </PanelHeader>
@@ -132,13 +132,13 @@ const ProcessTypeEditor = () => {
                   {notice.message}
                 </Notice>
               )}
-              {/* <StepList
+              <StepList
                 processTypeId={processType.id}
                 stepOrder={stepOrder}
                 onNotice={setNotice}
-              /> */}
+              />
             </PanelRow>
-          </Panel>
+          </Panel> */}
 
           <Panel>
             <PanelHeader>

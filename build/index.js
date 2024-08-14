@@ -7019,21 +7019,8 @@ const ProcessTypeEditor = () => {
       children: "Edit Process Type"
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
       className: "panel-container",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("main", {
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, {
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("h3", {
-              children: "Steps"
-            })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
-            children: notice && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
-              status: notice.status,
-              isDismissible: true,
-              onRemove: () => setNotice(null),
-              children: notice.message
-            })
-          })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("main", {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, {
             children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("h3", {
               children: "Editor"
@@ -7041,7 +7028,7 @@ const ProcessTypeEditor = () => {
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
             children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_Sortable_SortableCanvas__WEBPACK_IMPORTED_MODULE_5__["default"], {})
           })]
-        })]
+        })
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("aside", {
         children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, {
@@ -7818,91 +7805,99 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _dnd_kit_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @dnd-kit/core */ "./node_modules/@dnd-kit/core/dist/core.esm.js");
 /* harmony import */ var _dnd_kit_sortable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @dnd-kit/sortable */ "./node_modules/@dnd-kit/sortable/dist/sortable.esm.js");
 /* harmony import */ var _SortableColumn__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./SortableColumn */ "./src/admin/components/Sortable/SortableColumn.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _mockdata__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./mockdata */ "./src/admin/components/Sortable/mockdata.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__);
 
 
 
 
 
 
-const mockData = [{
-  id: "Etapa 1",
-  fields: ["Nome", "E-mail", "Telefone"]
-}, {
-  id: "Etapa 2",
-  fields: ["Endereço", "Cidade", "Estado"]
-}, {
-  id: "Etapa 3",
-  fields: ["CEP", "País", "Notas"]
-}, {
-  id: "Etapa 4",
-  fields: ["Comentários"]
-}, {
-  id: "Etapa 5",
-  fields: ["Item 1", "Item 2", "Item 3"]
-}];
 const SortableCanvas = () => {
-  const [columns, setColumns] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(mockData);
+  const [columns, setColumns] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(_mockdata__WEBPACK_IMPORTED_MODULE_4__["default"]);
+  const [initialPosition, setInitialPosition] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
+    x: 0,
+    y: 0
+  });
   const sensors = (0,_dnd_kit_core__WEBPACK_IMPORTED_MODULE_1__.useSensors)((0,_dnd_kit_core__WEBPACK_IMPORTED_MODULE_1__.useSensor)(_dnd_kit_core__WEBPACK_IMPORTED_MODULE_1__.PointerSensor), (0,_dnd_kit_core__WEBPACK_IMPORTED_MODULE_1__.useSensor)(_dnd_kit_core__WEBPACK_IMPORTED_MODULE_1__.KeyboardSensor, {
     coordinateGetter: _dnd_kit_sortable__WEBPACK_IMPORTED_MODULE_2__.sortableKeyboardCoordinates
   }));
+  function handleDragStart(event) {
+    const {
+      active
+    } = event;
+    const column = columns.find(col => col.id === active.id);
+    if (column) {
+      setInitialPosition(column.position); // Captura a posição inicial ao começar o arraste
+    }
+  }
   function handleDragEnd(event) {
     const {
       active,
-      over
+      over,
+      delta
     } = event;
-    if (!over) return;
     const activeContainer = findContainer(active.id);
-    const overContainer = findContainer(over.id);
-
-    // Verificar se ambos `active.id` e `over.id` pertencem às colunas
+    const overContainer = findContainer(over?.id);
     if (!activeContainer && !overContainer) {
-      const activeIndex = columns.findIndex(column => column.id === active.id);
-      const overIndex = columns.findIndex(column => column.id === over.id);
-      if (activeIndex !== overIndex) {
-        setColumns(columns => (0,_dnd_kit_sortable__WEBPACK_IMPORTED_MODULE_2__.arrayMove)(columns, activeIndex, overIndex));
+      // Movimentar colunas
+      setColumns(columns => columns.map(column => column.id === active.id ? {
+        ...column,
+        position: {
+          x: initialPosition.x + delta.x,
+          y: initialPosition.y + delta.y
+        }
+      } : column));
+    } else if (activeContainer && overContainer) {
+      if (activeContainer === overContainer) {
+        // Reordenar os fields dentro da mesma coluna
+        setColumns(columns => columns.map(column => column.id === activeContainer ? {
+          ...column,
+          fields: (0,_dnd_kit_sortable__WEBPACK_IMPORTED_MODULE_2__.arrayMove)(column.fields, column.fields.indexOf(active.id), column.fields.indexOf(over.id))
+        } : column));
+      } else {
+        // Mover fields entre colunas diferentes
+        setColumns(columns => {
+          const activeIndex = columns.findIndex(column => column.id === activeContainer);
+          const overIndex = columns.findIndex(column => column.id === overContainer);
+          const activeItemIndex = columns[activeIndex].fields.indexOf(active.id);
+          const overItemIndex = over?.id ? columns[overIndex].fields.indexOf(over.id) : columns[overIndex].fields.length;
+          return columns.map((column, index) => {
+            if (index === activeIndex) {
+              return {
+                ...column,
+                fields: column.fields.filter(item => item !== active.id)
+              };
+            } else if (index === overIndex) {
+              const newFields = [...column.fields];
+              newFields.splice(overItemIndex, 0, active.id);
+              return {
+                ...column,
+                fields: newFields
+              };
+            }
+            return column;
+          });
+        });
       }
-    } else if (activeContainer && overContainer && activeContainer !== overContainer) {
-      // Esta seção lida com a movimentação de campos entre colunas
-      setColumns(columns => {
-        const activeIndex = columns.findIndex(column => column.id === activeContainer);
-        const overIndex = columns.findIndex(column => column.id === overContainer);
-        const activeItemIndex = columns[activeIndex].fields.indexOf(active.id);
-        const overItemIndex = columns[overIndex].fields.indexOf(over.id);
-        return columns.map((column, index) => {
-          if (index === activeIndex) {
-            return {
-              ...column,
-              fields: column.fields.filter(item => item !== active.id)
-            };
-          } else if (index === overIndex) {
-            const newFields = [...column.fields];
-            newFields.splice(overItemIndex, 0, active.id);
-            return {
-              ...column,
-              fields: newFields
-            };
-          }
-          return column;
-        });
-      });
-    } else if (activeContainer && activeContainer === overContainer) {
-      // Lógica para reordenar campos dentro da mesma coluna
-      setColumns(columns => {
-        const activeIndex = columns.findIndex(column => column.id === activeContainer);
-        const oldIndex = columns[activeIndex].fields.indexOf(active.id);
-        const newIndex = columns[activeIndex].fields.indexOf(over.id);
-        return columns.map((column, index) => {
-          if (index === activeIndex) {
-            return {
-              ...column,
-              fields: (0,_dnd_kit_sortable__WEBPACK_IMPORTED_MODULE_2__.arrayMove)(column.fields, oldIndex, newIndex)
-            };
-          }
-          return column;
-        });
-      });
+    }
+  }
+  function handleDragMove(event) {
+    const {
+      active,
+      delta
+    } = event;
+    const activeContainer = findContainer(active.id);
+    if (!activeContainer) {
+      // Movimentar colunas
+      setColumns(columns => columns.map(column => column.id === active.id ? {
+        ...column,
+        position: {
+          x: initialPosition.x + delta.x,
+          y: initialPosition.y + delta.y
+        }
+      } : column));
     }
   }
   function findContainer(id) {
@@ -7913,21 +7908,34 @@ const SortableCanvas = () => {
     }
     return null;
   }
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_dnd_kit_core__WEBPACK_IMPORTED_MODULE_1__.DndContext, {
-    sensors: sensors,
-    collisionDetection: _dnd_kit_core__WEBPACK_IMPORTED_MODULE_1__.rectIntersection,
-    onDragEnd: handleDragEnd,
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_dnd_kit_sortable__WEBPACK_IMPORTED_MODULE_2__.SortableContext, {
-      items: columns.map(column => column.id),
-      strategy: _dnd_kit_sortable__WEBPACK_IMPORTED_MODULE_2__.horizontalListSortingStrategy,
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
+    style: {
+      width: "100%",
+      height: "500px",
+      overflow: "auto",
+      border: "1px solid black",
+      backgroundColor: "#ccc"
+    },
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_dnd_kit_core__WEBPACK_IMPORTED_MODULE_1__.DndContext, {
+      sensors: sensors,
+      collisionDetection: _dnd_kit_core__WEBPACK_IMPORTED_MODULE_1__.rectIntersection,
+      onDragStart: handleDragStart // Captura a posição inicial
+      ,
+      onDragEnd: handleDragEnd,
+      onDragMove: handleDragMove // Atualiza a posição em tempo real
+      ,
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
         style: {
-          display: "flex",
-          gap: "16px"
+          width: "1000px",
+          // Grande largura para simular canvas infinito
+          height: "1000px",
+          // Grande altura para simular canvas infinito
+          position: "relative"
         },
-        children: columns.map(column => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_SortableColumn__WEBPACK_IMPORTED_MODULE_3__["default"], {
+        children: columns.map(column => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_SortableColumn__WEBPACK_IMPORTED_MODULE_3__["default"], {
           id: column.id,
-          fields: column.fields
+          fields: column.fields,
+          position: column.position
         }, column.id))
       })
     })
@@ -7960,41 +7968,47 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
 const SortableColumn = ({
   id,
-  fields
+  fields,
+  position
 }) => {
   const {
     attributes,
     listeners,
     setNodeRef,
     transform,
-    transition
+    transition,
+    isDragging
   } = (0,_dnd_kit_sortable__WEBPACK_IMPORTED_MODULE_1__.useSortable)({
     id
   });
   const style = {
     transform: _dnd_kit_utilities__WEBPACK_IMPORTED_MODULE_2__.CSS.Transform.toString(transform),
-    transition
+    transition: isDragging ? "none" : transition || "transform 250ms ease",
+    // Remove a transição durante o arraste
+    position: "absolute",
+    top: `${position.y}px`,
+    left: `${position.x}px`,
+    border: isDragging ? "2px dashed #007bff" : "1px solid #ccc",
+    // Bordas visíveis ao arrastar
+    padding: "8px",
+    minWidth: "200px",
+    backgroundColor: isDragging ? "white" : "white",
+    // Feedback visual ao arrastar
+    borderRadius: "4px",
+    cursor: "move",
+    zIndex: isDragging ? 1000 : "auto" // Coloca a coluna em cima durante o arraste
   };
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
     ref: setNodeRef,
-    style: {
-      ...style,
-      border: "1px solid #ccc",
-      padding: "8px",
-      minWidth: "200px",
-      backgroundColor: "white",
-      borderRadius: "4px"
-    },
+    style: style,
     ...attributes,
     ...listeners,
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("h3", {
       children: id
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_dnd_kit_sortable__WEBPACK_IMPORTED_MODULE_1__.SortableContext, {
       items: fields,
-      strategy: _dnd_kit_sortable__WEBPACK_IMPORTED_MODULE_1__.verticalListSortingStrategy,
       children: fields.map(field => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_SortableField__WEBPACK_IMPORTED_MODULE_3__["default"], {
         id: field
       }, field))
@@ -8059,6 +8073,57 @@ const SortableField = ({
   });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SortableField);
+
+/***/ }),
+
+/***/ "./src/admin/components/Sortable/mockdata.js":
+/*!***************************************************!*\
+  !*** ./src/admin/components/Sortable/mockdata.js ***!
+  \***************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+const mockData = [{
+  id: "Etapa 1",
+  position: {
+    x: 20,
+    y: 20
+  },
+  fields: ["Nome", "E-mail", "Telefone"]
+}, {
+  id: "Etapa 2",
+  position: {
+    x: 200,
+    y: 20
+  },
+  fields: ["Endereço", "Cidade", "Estado"]
+}, {
+  id: "Etapa 3",
+  position: {
+    x: 380,
+    y: 20
+  },
+  fields: ["CEP", "País", "Notas"]
+}, {
+  id: "Etapa 4",
+  position: {
+    x: 560,
+    y: 20
+  },
+  fields: ["Comentários"]
+}, {
+  id: "Etapa 5",
+  position: {
+    x: 740,
+    y: 20
+  },
+  fields: ["Item 1", "Item 2", "Item 3"]
+}];
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (mockData);
 
 /***/ }),
 
