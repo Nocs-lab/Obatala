@@ -2607,11 +2607,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _ProcessManager_MetroNavigation__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ProcessManager/MetroNavigation */ "./src/admin/components/ProcessManager/MetroNavigation.js");
-/* harmony import */ var _ProcessManager_MetaFieldInputs__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ProcessManager/MetaFieldInputs */ "./src/admin/components/ProcessManager/MetaFieldInputs.js");
-/* harmony import */ var _ProcessManager_CommentForm__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ProcessManager/CommentForm */ "./src/admin/components/ProcessManager/CommentForm.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _api_apiRequests__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../api/apiRequests */ "./src/admin/api/apiRequests.js");
+/* harmony import */ var _ProcessManager_MetroNavigation__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ProcessManager/MetroNavigation */ "./src/admin/components/ProcessManager/MetroNavigation.js");
+/* harmony import */ var _ProcessManager_MetaFieldInputs__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./ProcessManager/MetaFieldInputs */ "./src/admin/components/ProcessManager/MetaFieldInputs.js");
+/* harmony import */ var _ProcessManager_CommentForm__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./ProcessManager/CommentForm */ "./src/admin/components/ProcessManager/CommentForm.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__);
+
 
 
 
@@ -2625,7 +2627,8 @@ const ProcessViewer = () => {
   const [error, setError] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   const [currentStep, setCurrentStep] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(0);
   const [steps, setSteps] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
-  const [processType, setProcessType] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+  const [filteredProcessType, setFilteredProcessType] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const [processTypes, setProcessTypes] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const getProcessIdFromUrl = () => {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get('process_id');
@@ -2633,13 +2636,21 @@ const ProcessViewer = () => {
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     const processId = getProcessIdFromUrl();
     if (processId) {
-      fetchProcess(processId);
-      fetchProcessType(processId);
+      // Carrega os tipos de processo e então busca o processo
+      fetchLoadProcess().then(() => {
+        fetchProcess(processId);
+      });
     } else {
       setError('No process ID found in the URL.');
       setIsLoading(false);
     }
   }, []);
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    const processId = getProcessIdFromUrl();
+    if (processId && processTypes.length > 0) {
+      fetchProcessType(processId);
+    }
+  }, [processTypes]);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (process) {
       fetchSteps();
@@ -2669,30 +2680,44 @@ const ProcessViewer = () => {
       setError('Error fetching steps details.');
     }
   };
-  const fetchProcessType = async processId => {
-    try {
-      const processTypeData = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-        path: `/obatala/v1/process_obatala/${processId}/process_type`
-      });
-      setProcessType(processTypeData);
-    } catch (error) {
+  const fetchLoadProcess = () => {
+    setIsLoading(true);
+    return (0,_api_apiRequests__WEBPACK_IMPORTED_MODULE_3__.fetchProcessTypes)().then(data => {
+      setProcessTypes(data);
+      setIsLoading(false);
+    }).catch(error => {
       console.error('Error fetching process types:', error);
-      setError('Error fetching process types.');
-    }
+      setIsLoading(false);
+    });
   };
-  console.log("type:", processType);
+  const fetchProcessType = processId => {
+    setIsLoading(true);
+    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+      path: `/obatala/v1/process_obatala/${processId}/process_type`
+    }).then(processTypeId => {
+      // Converta ambos para string ou number, conforme necessário
+      const filteredProcessType = processTypes.find(type => String(type.id) === String(processTypeId));
+      console.log("Filtrado", filteredProcessType);
+      setFilteredProcessType(filteredProcessType);
+      setIsLoading(false);
+    }).catch(error => {
+      console.error('Error fetching process type:', error);
+      setError('Error fetching process details.');
+      setIsLoading(false);
+    });
+  };
   if (isLoading) {
-    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, {});
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, {});
   }
   if (error) {
-    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
       status: "error",
       isDismissible: false,
       children: error
     });
   }
   if (!process) {
-    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
       status: "warning",
       isDismissible: false,
       children: "No process found."
@@ -2712,56 +2737,56 @@ const ProcessViewer = () => {
     label: step.title,
     value: step.step_id
   }));
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("span", {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("span", {
       className: "brand",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("strong", {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("strong", {
         children: "Obatala"
       }), " Curatorial Process Viewer"]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("h2", {
-      children: [process.process_type ? process.process_type : 'Process type title', ": ", process.title?.rendered]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("h2", {
+      children: [filteredProcessType ? filteredProcessType.title.rendered : 'Process type title', ": ", process.title?.rendered]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
       className: "badge-container",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("span", {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("span", {
         className: `badge ${process.status === 'completed' ? 'success' : 'warning'}`,
         children: process.status
-      }), orderedSteps[currentStep] && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("span", {
+      }), orderedSteps[currentStep] && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("span", {
         className: "badge",
         children: ["Current step: ", orderedSteps[currentStep]?.title || 'Unknown Step']
       })]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_ProcessManager_MetroNavigation__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_ProcessManager_MetroNavigation__WEBPACK_IMPORTED_MODULE_4__["default"], {
       options: options,
       currentStep: currentStep,
       onStepChange: newStep => setCurrentStep(newStep)
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)("div", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
       className: "panel-container",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("main", {
-        children: orderedSteps.length > 0 && orderedSteps[currentStep] ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("main", {
+        children: orderedSteps.length > 0 && orderedSteps[currentStep] ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, {
             children: `${orderedSteps[currentStep].title}`
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("ul", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("ul", {
                 className: "meta-fields-list",
-                children: Array.isArray(orderedSteps[currentStep].meta_fields) ? orderedSteps[currentStep].meta_fields.map((field, idx) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("li", {
+                children: Array.isArray(orderedSteps[currentStep].meta_fields) ? orderedSteps[currentStep].meta_fields.map((field, idx) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("li", {
                   className: "meta-field-item",
-                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_ProcessManager_MetaFieldInputs__WEBPACK_IMPORTED_MODULE_4__["default"], {
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_ProcessManager_MetaFieldInputs__WEBPACK_IMPORTED_MODULE_5__["default"], {
                     field: field
                   })
                 }, `${orderedSteps[currentStep].step_id}-meta-${idx}`)) : null
               })
             })
           })]
-        }, `${orderedSteps[currentStep].step_id}-${currentStep}`) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
+        }, `${orderedSteps[currentStep].step_id}-${currentStep}`) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
           status: "warning",
           isDismissible: false,
           children: "No steps found for this process type."
         })
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("aside", {
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("aside", {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, {
             children: "Comments"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_ProcessManager_CommentForm__WEBPACK_IMPORTED_MODULE_5__["default"], {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_ProcessManager_CommentForm__WEBPACK_IMPORTED_MODULE_6__["default"], {
             stepId: orderedSteps[currentStep]?.step_id || null
           })]
         })

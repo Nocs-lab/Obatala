@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Spinner, Notice, Panel, PanelHeader, PanelBody, PanelRow } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
+import { fetchProcessTypes } from '../api/apiRequests';
 import MetroNavigation from './ProcessManager/MetroNavigation';
 import MetaFieldInputs from './ProcessManager/MetaFieldInputs';
 import CommentForm from './ProcessManager/CommentForm';
@@ -11,7 +12,8 @@ const ProcessViewer = () => {
     const [error, setError] = useState(null);
     const [currentStep, setCurrentStep] = useState(0);
     const [steps, setSteps] = useState([]);
-    const [processType, setProcessType] = useState([]);
+    const [filteredProcessType, setFilteredProcessType] = useState(null);
+    const [processTypes, setProcessTypes] = useState([]);
 
     const getProcessIdFromUrl = () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -20,14 +22,25 @@ const ProcessViewer = () => {
 
     useEffect(() => {
         const processId = getProcessIdFromUrl();
+        
         if (processId) {
-            fetchProcess(processId);
-            fetchProcessType(processId);
+            // Carrega os tipos de processo e então busca o processo
+            fetchLoadProcess().then(() => {
+                fetchProcess(processId);
+            });
         } else {
             setError('No process ID found in the URL.');
             setIsLoading(false);
         }
     }, []);
+
+    useEffect(() => {
+        const processId = getProcessIdFromUrl();
+        
+        if (processId && processTypes.length > 0) {
+            fetchProcessType(processId);
+        }
+    }, [processTypes]);
 
     useEffect(() => {
         if (process) {
@@ -58,18 +71,38 @@ const ProcessViewer = () => {
             setError('Error fetching steps details.');
         }
     };
-
-    const fetchProcessType = async (processId) => {
-        try {
-            const processTypeData = await apiFetch({ path: `/obatala/v1/process_obatala/${processId}/process_type` });
-            setProcessType(processTypeData);
-        } catch (error) {
-            console.error('Error fetching process types:', error);
-            setError('Error fetching process types.');
-        }
+    
+    const fetchLoadProcess = () => {
+        setIsLoading(true);
+        return fetchProcessTypes()
+            .then(data => {
+                setProcessTypes(data);
+                setIsLoading(false);
+            })
+            .catch(error => {
+                console.error('Error fetching process types:', error);
+                setIsLoading(false);
+            });
     };
 
-    console.log("type:", processType);
+    const fetchProcessType = (processId) => {
+        setIsLoading(true);
+        apiFetch({ path: `/obatala/v1/process_obatala/${processId}/process_type` })
+            .then(processTypeId => {
+                // Converta ambos para string ou number, conforme necessário
+                const filteredProcessType = processTypes.find(type => String(type.id) === String(processTypeId));
+                
+                console.log("Filtrado", filteredProcessType);
+                setFilteredProcessType(filteredProcessType);
+                setIsLoading(false);
+            })
+            .catch(error => {
+                console.error('Error fetching process type:', error);
+                setError('Error fetching process details.');
+                setIsLoading(false);
+            });
+    };
+
     if (isLoading) {
         return <Spinner />;
     }
@@ -93,7 +126,7 @@ const ProcessViewer = () => {
     return (
         <div>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Viewer</span>
-            <h2>{process.process_type ? process.process_type : 'Process type title'}: {process.title?.rendered}</h2>
+            <h2>{filteredProcessType ? filteredProcessType.title.rendered : 'Process type title'}: {process.title?.rendered}</h2>
             <div className="badge-container">
                 <span className={`badge ${process.status === 'completed' ? 'success' : 'warning'}`}>
                     {process.status}
