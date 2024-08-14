@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Spinner, Button, Notice, Panel, PanelHeader, PanelRow } from '@wordpress/components';
+import { Spinner, Button, Notice, Panel, PanelHeader, PanelRow, Icon, ButtonGroup, Tooltip } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import ProcessCreator from './ProcessManager/ProcessCreator';
+import { edit, seen  } from '@wordpress/icons';
 
 const ProcessManager = ({ onSelectProcess }) => {
     const [processTypes, setProcessTypes] = useState([]);
@@ -9,6 +10,7 @@ const ProcessManager = ({ onSelectProcess }) => {
     const [processes, setProcesses] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedProcessId, setSelectedProcessId] = useState(null);
+    const [editingProcess, setEditingProcess] = useState(null);
 
     useEffect(() => {
         fetchProcessTypes();
@@ -52,14 +54,31 @@ const ProcessManager = ({ onSelectProcess }) => {
             });
     };
 
-    const handleProcessCreated = (newProcess) => {
-        setProcesses([...processes, newProcess]);
-    };
+    const handleProcessSaved = (newProcess) => {
+        if (editingProcess) {
+            const updatedProcesses = processes.map(process =>
+                process.id === editingProcess.id ? newProcess : process
+            );
+            setProcesses(updatedProcesses);
+            setEditingProcess(null); 
+        } else {
+            setProcesses([...processes, newProcess]);
+        }
+    }; 
 
     const handleSelectProcess = (processId) => {
         setSelectedProcessId(processId);
         onSelectProcess(processId);
     };
+
+    const handleEditProcess = (process) => {
+        setEditingProcess(process);
+    };
+
+    const handleCancel = () => {
+        setEditingProcess(null);
+    };
+
 
     if (isLoading) {
         return <Spinner />;
@@ -84,25 +103,40 @@ const ProcessManager = ({ onSelectProcess }) => {
                                             <th>Process Title</th>
                                             <th>Process Type</th>
                                             <th>Status</th>
+                                            <th>Access Level</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {processes.map(process => {
                                             console.log(process); // Adiciona log para verificar os dados
-                                            const processTypeFiltered = processSteps.find(step => {
-                                                return step.id == process.process_type;
+                                            const processTypeFiltered = processTypes.find(type => {
+                                                return type.id == process.meta.process_type;
                                             });
                                             console.log(processTypeFiltered); // Adiciona log para verificar os dados
                                             return (
                                                 <tr key={process.id}>
                                                     <td>{process.title.rendered}</td>
                                                     <td>{processTypeFiltered ? processTypeFiltered.title.rendered : 'Unknown'}</td>
-                                                    <td><span className="badge success">{process.status}</span></td>
+                                                    <td>{process.meta.current_stage || 'Not Started'}</td>
+                                                    <td><span className='badge success'>{process.meta.access_level}</span></td>
                                                     <td>
-                                                        <Button isSecondary onClick={() => handleSelectProcess(process.id)}>
-                                                            View
-                                                        </Button>
+                                                        <ButtonGroup>
+                                                            <Tooltip text="View">
+                                                                <Button
+                                                                icon={<Icon icon={seen} />} 
+                                                                onClick={() => handleSelectProcess(process.id)}
+                                                                />
+
+                                                            </Tooltip>
+                                                            <Tooltip text="Edit">
+                                                                <Button
+                                                                icon={<Icon icon={edit} />}
+                                                                onClick={() => handleEditProcess(process)}
+                                                            />
+
+                                                            </Tooltip>
+                                                        </ButtonGroup>
                                                     </td>
                                                 </tr>
                                             );
@@ -116,7 +150,11 @@ const ProcessManager = ({ onSelectProcess }) => {
                     </Panel>
                 </main>
                 <aside>
-                    <ProcessCreator processTypes={processTypes} onProcessCreated={handleProcessCreated} />
+                    <ProcessCreator processTypes={processTypes} 
+                                    onProcessSaved={handleProcessSaved}
+                                    editingProcess={editingProcess}
+                                    onCancel={handleCancel}
+                                    />
                 </aside>
             </div>
             {selectedProcessId && (
@@ -130,3 +168,4 @@ const ProcessManager = ({ onSelectProcess }) => {
 };
 
 export default ProcessManager;
+ 
