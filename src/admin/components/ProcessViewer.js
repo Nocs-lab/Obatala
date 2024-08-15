@@ -133,7 +133,7 @@ const ProcessViewer = () => {
                 </span>
                 {orderedSteps[currentStep] && (
                     <span className="badge">
-                        Current step: {orderedSteps[currentStep]?.title || 'Unknown Step'}
+                        Current step: {orderedSteps[currentStep]?.title || 'Unknown Title Step'}
                     </span>
                 )}
             </div>

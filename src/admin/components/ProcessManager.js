@@ -5,9 +5,10 @@ import ProcessCreator from './ProcessManager/ProcessCreator';
 
 const ProcessManager = ({ onSelectProcess }) => {
     const [processTypes, setProcessTypes] = useState([]);
-    const [processSteps, setProcessSteps] = useState([]);
     const [processes, setProcesses] = useState([]);
+    const [processTypeMappings, setProcessTypeMappings] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [processSteps, setProcessSteps] = useState([]);
     const [selectedProcessId, setSelectedProcessId] = useState(null);
 
     useEffect(() => {
@@ -38,22 +39,51 @@ const ProcessManager = ({ onSelectProcess }) => {
             });
     };
 
-    const fetchProcesses = () => {
+    const fetchProcesses = async () => {
         setIsLoading(true);
-        apiFetch({ path: `/obatala/v1/process_obatala?per_page=100&_embed` })
-            .then(data => {
-                console.log('Fetched processes:', data); // Adiciona log para verificar os dados
+        try {
+            const data = await apiFetch({ path: `/obatala/v1/process_obatala?per_page=100&_embed` });
+            if (data && Array.isArray(data)) {
                 setProcesses(data);
-                setIsLoading(false);
-            })
-            .catch(error => {
-                console.error('Error fetching processes:', error);
-                setIsLoading(false);
-            });
+                await fetchProcessTypesForProcesses(data);
+            } else {
+                console.error('No processes data returned.');
+                setProcesses([]); // Garanta que processes seja sempre um array
+            }
+        } catch (error) {
+            console.error('Error fetching processes:', error);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
-    const handleProcessCreated = (newProcess) => {
-        setProcesses([...processes, newProcess]);
+    const fetchProcessTypesForProcesses = async (processes) => {
+        if (!processes || processes.length === 0) {
+            console.error('No processes available for fetching process types.');
+            return;
+        }
+
+        const promises = processes.map(async process => {
+            try {
+                const processTypeId = await apiFetch({ path: `/obatala/v1/process_obatala/${process.id}/process_type` });
+                return { processId: process.id, processTypeId };
+            } catch (error) {
+                console.error(`Error fetching process type for process ${process.id}:`, error);
+                return { processId: process.id, processTypeId: null };
+            }
+        });
+
+        const results = await Promise.all(promises);
+        setProcessTypeMappings(results);
+    };
+
+    const handleProcessCreated = async (newProcess) => {
+        // Adiciona o novo processo à lista
+        setProcesses(prevProcesses => [...prevProcesses, newProcess]);
+
+        // Atualiza os mapeamentos de tipo de processo
+        const updatedProcesses = [...processes, newProcess];
+        await fetchProcessTypesForProcesses(updatedProcesses);
     };
 
     const handleSelectProcess = (processId) => {
@@ -82,22 +112,20 @@ const ProcessManager = ({ onSelectProcess }) => {
                                     <thead>
                                         <tr>
                                             <th>Process Title</th>
-                                            <th>Process Type</th>
+                                            <th>Process Type Title</th>
                                             <th>Status</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {processes.map(process => {
-                                            console.log(process); // Adiciona log para verificar os dados
-                                            const processTypeFiltered = processSteps.find(step => {
-                                                return step.id == process.process_type;
-                                            });
-                                            console.log(processTypeFiltered); // Adiciona log para verificar os dados
+                                            const typeMapping = processTypeMappings.find(m => m.processId == process.id);
+                                            const processType = typeMapping ? processTypes.find(type => type.id == typeMapping.processTypeId) : null;
+
                                             return (
                                                 <tr key={process.id}>
                                                     <td>{process.title.rendered}</td>
-                                                    <td>{processTypeFiltered ? processTypeFiltered.title.rendered : 'Unknown'}</td>
+                                                    <td>{processType ? processType.title.rendered : ''}</td>
                                                     <td><span className="badge success">{process.status}</span></td>
                                                     <td>
                                                         <Button isSecondary onClick={() => handleSelectProcess(process.id)}>

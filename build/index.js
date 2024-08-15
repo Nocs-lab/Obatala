@@ -319,9 +319,10 @@ const ProcessManager = ({
   onSelectProcess
 }) => {
   const [processTypes, setProcessTypes] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
-  const [processSteps, setProcessSteps] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [processes, setProcesses] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+  const [processTypeMappings, setProcessTypeMappings] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [isLoading, setIsLoading] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
+  const [processSteps, setProcessSteps] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [selectedProcessId, setSelectedProcessId] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     fetchProcessTypes();
@@ -348,21 +349,57 @@ const ProcessManager = ({
       console.error('Error fetching process steps:', error);
     });
   };
-  const fetchProcesses = () => {
+  const fetchProcesses = async () => {
     setIsLoading(true);
-    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-      path: `/obatala/v1/process_obatala?per_page=100&_embed`
-    }).then(data => {
-      console.log('Fetched processes:', data); // Adiciona log para verificar os dados
-      setProcesses(data);
-      setIsLoading(false);
-    }).catch(error => {
+    try {
+      const data = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+        path: `/obatala/v1/process_obatala?per_page=100&_embed`
+      });
+      if (data && Array.isArray(data)) {
+        setProcesses(data);
+        await fetchProcessTypesForProcesses(data);
+      } else {
+        console.error('No processes data returned.');
+        setProcesses([]); // Garanta que processes seja sempre um array
+      }
+    } catch (error) {
       console.error('Error fetching processes:', error);
+    } finally {
       setIsLoading(false);
-    });
+    }
   };
-  const handleProcessCreated = newProcess => {
-    setProcesses([...processes, newProcess]);
+  const fetchProcessTypesForProcesses = async processes => {
+    if (!processes || processes.length === 0) {
+      console.error('No processes available for fetching process types.');
+      return;
+    }
+    const promises = processes.map(async process => {
+      try {
+        const processTypeId = await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+          path: `/obatala/v1/process_obatala/${process.id}/process_type`
+        });
+        return {
+          processId: process.id,
+          processTypeId
+        };
+      } catch (error) {
+        console.error(`Error fetching process type for process ${process.id}:`, error);
+        return {
+          processId: process.id,
+          processTypeId: null
+        };
+      }
+    });
+    const results = await Promise.all(promises);
+    setProcessTypeMappings(results);
+  };
+  const handleProcessCreated = async newProcess => {
+    // Adiciona o novo processo à lista
+    setProcesses(prevProcesses => [...prevProcesses, newProcess]);
+
+    // Atualiza os mapeamentos de tipo de processo
+    const updatedProcesses = [...processes, newProcess];
+    await fetchProcessTypesForProcesses(updatedProcesses);
   };
   const handleSelectProcess = processId => {
     setSelectedProcessId(processId);
@@ -398,7 +435,7 @@ const ProcessManager = ({
                   children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("th", {
                     children: "Process Title"
                   }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("th", {
-                    children: "Process Type"
+                    children: "Process Type Title"
                   }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("th", {
                     children: "Status"
                   }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("th", {
@@ -407,16 +444,13 @@ const ProcessManager = ({
                 })
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("tbody", {
                 children: processes.map(process => {
-                  console.log(process); // Adiciona log para verificar os dados
-                  const processTypeFiltered = processSteps.find(step => {
-                    return step.id == process.process_type;
-                  });
-                  console.log(processTypeFiltered); // Adiciona log para verificar os dados
+                  const typeMapping = processTypeMappings.find(m => m.processId == process.id);
+                  const processType = typeMapping ? processTypes.find(type => type.id == typeMapping.processTypeId) : null;
                   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("tr", {
                     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("td", {
                       children: process.title.rendered
                     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("td", {
-                      children: processTypeFiltered ? processTypeFiltered.title.rendered : 'Unknown'
+                      children: processType ? processType.title.rendered : ''
                     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("td", {
                       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("span", {
                         className: "badge success",
@@ -2752,7 +2786,7 @@ const ProcessViewer = () => {
         children: process.status
       }), orderedSteps[currentStep] && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("span", {
         className: "badge",
-        children: ["Current step: ", orderedSteps[currentStep]?.title || 'Unknown Step']
+        children: ["Current step: ", orderedSteps[currentStep]?.title || 'Unknown Title Step']
       })]
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_ProcessManager_MetroNavigation__WEBPACK_IMPORTED_MODULE_4__["default"], {
       options: options,
