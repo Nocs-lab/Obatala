@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Spinner, Button, Notice, Panel, PanelHeader, PanelRow, Icon, ButtonGroup, Tooltip } from '@wordpress/components';
+import { Spinner, Button, Notice, Panel, PanelHeader, PanelBody, PanelRow, Icon, ButtonGroup, Tooltip, Modal } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import ProcessCreator from './ProcessManager/ProcessCreator';
 import { edit, seen  } from '@wordpress/icons';
@@ -150,11 +150,32 @@ const ProcessManager = ({ onSelectProcess }) => {
                     </Panel>
                 </main>
                 <aside>
-                    <ProcessCreator processTypes={processTypes} 
-                                    onProcessSaved={handleProcessSaved}
+                    {editingProcess && (
+                            <Modal
+                                title="Edit Process"
+                                onRequestClose={handleCancel}
+                                isDismissible={true}
+                            >
+                                <ProcessCreator 
+                                    processTypes={processTypes} 
+                                    onProcessSaved={handleProcessSaved} 
                                     editingProcess={editingProcess}
-                                    onCancel={handleCancel}
+                                    onCancel={handleCancel} 
+                                />
+                            </Modal>
+                        )}
+                        <Panel>
+                        <PanelHeader>Create Process</PanelHeader>
+                            <PanelBody>
+                                <PanelRow>
+                                    <ProcessCreator processTypes={processTypes} 
+                                        onProcessSaved={handleProcessSaved}
+                                        onCancel={handleCancel}
                                     />
+                                </PanelRow>
+                            </PanelBody>
+                        </Panel>
+                    
                 </aside>
             </div>
             {selectedProcessId && (
