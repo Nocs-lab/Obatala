@@ -74,7 +74,7 @@ const ProcessCreator = ({ processTypes, onProcessCreated }) => {
 
     return (
         <Panel>
-            <PanelHeader>Create Process</PanelHeader>
+            <PanelHeader>Add Process</PanelHeader>
             {notice && (
                 <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
                     {notice.message}
