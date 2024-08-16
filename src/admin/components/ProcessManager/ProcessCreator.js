@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Button, SelectControl, TextControl, Panel, PanelHeader, PanelBody, PanelRow, Notice } from '@wordpress/components';
+import React, { useState, useEffect } from 'react';
+import { Button, SelectControl, TextControl, Notice } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 
 const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel }) => {
@@ -8,18 +8,12 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
     const [accessLevel, setAccessLevel] = useState('public');
     const [notice, setNotice] = useState(null);
     
-    const formRef = useRef(null);
-
     useEffect(() => {
         if (editingProcess) {
             console.log( editingProcess )
             setAccessLevel(editingProcess.meta.access_level);
             setNewProcessTitle(editingProcess.title.rendered);
             setNewProcessType(editingProcess.meta.process_type);
-
-            if (formRef.current) {
-                formRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
         }
     }, [editingProcess]);
 
@@ -112,49 +106,47 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
     };
 
     return (
-        <Panel ref={formRef}>
-            <PanelHeader>{editingProcess ? 'Edit Process' : 'Create Process'}</PanelHeader>
-            {notice && (
+        <div>
+             {notice && (
                 <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
                     {notice.message}
                 </Notice>
             )}
-            <PanelBody>
-                <PanelRow>
-                    <TextControl
-                        label="Process Title"
-                        value={newProcessTitle}
-                        onChange={(value) => setNewProcessTitle(value)}
-                        disabled={!!editingProcess}
-                    />
-                    <SelectControl
-                        label="Process Type"
-                        value={newProcessType}
-                        options={[
-                            { label: 'Select a process type...', value: '' },
-                            ...processTypes.map(type => ({ label: type.title.rendered, value: type.id }))
-                        ]}
-                        onChange={(value) => setNewProcessType(value)}
-                        disabled={!!editingProcess}
-                    />
+            
+            <TextControl
+                label="Process Title"
+                value={newProcessTitle}
+                onChange={(value) => setNewProcessTitle(value)}
+                disabled={!!editingProcess}
+            />
 
-                    <SelectControl
-                        label="Access Level"
-                        value={accessLevel}
-                        options={[
-                            { label: 'Public', value: 'public' },
-                            { label: 'Private', value: 'private' }
-                        ]}
-                        onChange={(value) => setAccessLevel(value)}
-                    />
-                </PanelRow>
-                <PanelRow>
-                    <Button isPrimary onClick={handleSaveProcess}>Save</Button>
-                    <Button isSecondary onClick={handleCancel}>Cancel</Button>
-                </PanelRow>
-                    
-            </PanelBody>
-        </Panel>
+            <SelectControl
+                 label="Process Type"
+                 value={newProcessType}
+                 options={[
+                     { label: 'Select a process type...', value: '' },
+                     ...processTypes.map(type => ({ label: type.title.rendered, value: type.id }))
+                 ]}
+                 onChange={(value) => setNewProcessType(value)}
+                 disabled={!!editingProcess}
+            />       
+
+            <SelectControl
+                label="Access Level"
+                value={accessLevel}
+                options={[
+                    { label: 'Public', value: 'public' },
+                    { label: 'Private', value: 'private' }
+                ]}
+                onChange={(value) => setAccessLevel(value)}
+            />
+            <div style={{display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px'}}>
+                <Button isSecondary onClick={handleCancel}>Cancel</Button>
+                <Button isPrimary onClick={handleSaveProcess}>Save</Button>
+            </div>
+            
+        </div>
+     
     );
 };
 
