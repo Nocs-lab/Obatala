@@ -119,7 +119,7 @@ const ProcessManager = ({ onSelectProcess }) => {
                                                     <td>{process.title.rendered}</td>
                                                     <td>{processTypeFiltered ? processTypeFiltered.title.rendered : 'Unknown'}</td>
                                                     <td>{process.meta.current_stage || 'Not Started'}</td>
-                                                    <td><span className='badge success'>{process.meta.access_level}</span></td>
+                                                    <td><span className={`badge ${process.meta.access_level == 'public' ? 'success' : 'warning'}`}>{process.meta.access_level}</span></td>
                                                     <td>
                                                         <ButtonGroup>
                                                             <Tooltip text="View">
