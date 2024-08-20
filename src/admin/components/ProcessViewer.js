@@ -76,14 +76,13 @@ const ProcessViewer = () => {
     });
 
     const options = orderedSteps.map(step => ({ label: step.title, value: step.step_id }));
-
     return (
         <div>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Viewer</span>
             <h2>{process.process_type ? process.process_type : 'Process type title'}: {process.title?.rendered}</h2>
             <div className="badge-container">
-                <span className={`badge ${process.status === 'completed' ? 'success' : 'warning'}`}>
-                    {process.status}
+                <span className={`badge ${process.meta.access_level == 'public' ? 'success' : 'warning'}`}>
+                    {process.meta.access_level}
                 </span>
                 {orderedSteps[currentStep] && (
                     <span className="badge">
