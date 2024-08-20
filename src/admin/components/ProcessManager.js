@@ -79,14 +79,25 @@ const ProcessManager = ({ onSelectProcess }) => {
         setProcessTypeMappings(results);
     };
 
-    const handleProcessCreated = async (newProcess) => {
-        // Adiciona o novo processo à lista
-        setProcesses(prevProcesses => [...prevProcesses, newProcess]);
+    const handleProcessSaved = async (newProcess) => {
+        if (editingProcess) {
+            const updatedProcesses = processes.map(process =>
+                process.id === editingProcess.id ? newProcess : process
+            );
+            setProcesses(updatedProcesses);
+            setEditingProcess(null);
+        }
+        else {
+            // Adiciona o novo processo à lista
+            setProcesses(prevProcesses => [...prevProcesses, newProcess]);
+
+        }
 
         // Atualiza os mapeamentos de tipo de processo
         const updatedProcesses = [...processes, newProcess];
         await fetchProcessTypesForProcesses(updatedProcesses);
     };
+    
 
     const handleSelectProcess = (processId) => {
         setSelectedProcessId(processId);
