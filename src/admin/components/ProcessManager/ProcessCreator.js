@@ -82,6 +82,13 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
                 method: 'POST',
                 data: metaUpdateData
             });
+
+            await apiFetch({
+                path: `/obatala/v1/process_obatala/${savedProcess.id}/process_type`,
+                method: 'POST',
+                data: {process_type: selectedProcessType.id}
+            });
+
     
             // Atualiza o objeto savedProcess com os metas
             savedProcess.meta = metaUpdateData;
