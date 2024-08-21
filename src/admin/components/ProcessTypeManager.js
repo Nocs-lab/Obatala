@@ -43,10 +43,10 @@ const ProcessTypeManager = () => {
                 savedProcessType = await saveProcessType(processType);
             }
             const meta = {
-                accept_attachments: processType.accept_attachments,
-                accept_tainacan_items: processType.accept_tainacan_items,
-                generate_tainacan_items: processType.generate_tainacan_items,
-                description: processType.description,
+                accept_attachments: processType.meta.accept_attachments,
+                accept_tainacan_items: processType.meta.accept_tainacan_items,
+                generate_tainacan_items: processType.meta.generate_tainacan_items,
+                description: processType.meta.description,
             };
             await updateProcessTypeMeta(savedProcessType.id, meta);
             setNotice({ status: 'success', message: 'Process type saved successfully.' });
