@@ -2271,7 +2271,7 @@ const ProcessTypeForm = ({
   const [generateTainacanItems, setGenerateTainacanItems] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const [notice, setNotice] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    console.log(editingProcessType);
+    console.log("Aqui:", editingProcessType);
     if (editingProcessType) {
       var _editingProcessType$t;
       setTitle((_editingProcessType$t = editingProcessType.title.rendered) !== null && _editingProcessType$t !== void 0 ? _editingProcessType$t : '');
