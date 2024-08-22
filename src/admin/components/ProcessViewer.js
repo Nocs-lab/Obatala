@@ -130,11 +130,6 @@ const ProcessViewer = () => {
                 <span className={`badge ${process.meta.access_level == 'public' ? 'success' : 'warning'}`}>
                     {process.meta.access_level}
                 </span>
-                {orderedSteps[currentStep] && (
-                    <span className="badge">
-                        Current step: {orderedSteps[currentStep]?.title || 'Unknown Title Step'}
-                    </span>
-                )}
             </div>
 
             <MetroNavigation
@@ -153,6 +148,7 @@ const ProcessViewer = () => {
                                     <ul className="meta-fields-list">
                                         {Array.isArray(orderedSteps[currentStep].meta_fields) ? orderedSteps[currentStep].meta_fields.map((field, idx) => (
                                             <li key={`${orderedSteps[currentStep].step_id}-meta-${idx}`} className="meta-field-item">
+                                                <span className="order">{idx + 1}</span>
                                                 <MetaFieldInputs field={field} />
                                             </li>
                                         )) : null}

@@ -918,7 +918,29 @@ const MetroNavigation = ({
   };
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
     className: "metro-navigation",
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Tooltip, {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+      className: "navigation-line",
+      children: options.map((option, index) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Tooltip, {
+        text: option.label,
+        placement: "top",
+        delay: "0",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+          className: `navigation-point ${index === current ? 'active' : ''}`,
+          onClick: () => {
+            setCurrent(index);
+            onStepChange(index);
+          },
+          children: index === current ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("span", {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
+              class: "badge",
+              children: index + 1
+            }), " ", option.label]
+          }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
+            children: index + 1
+          })
+        }, index)
+      }))
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Tooltip, {
       text: "Previous",
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
         isPrimary: true,
@@ -928,16 +950,6 @@ const MetroNavigation = ({
           icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_3__["default"]
         })
       })
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
-      className: "navigation-line",
-      children: options.map((option, index) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
-        className: `navigation-point ${index === current ? 'active' : ''}`,
-        onClick: () => {
-          setCurrent(index);
-          onStepChange(index);
-        },
-        children: option.label
-      }, index))
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Tooltip, {
       text: "Next",
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
@@ -956,7 +968,7 @@ const MetroNavigation = ({
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    gap: 2rem;
+                    gap: 1rem;
                     margin-bottom: 1rem;
                     padding: .75rem;
                 }
@@ -964,9 +976,6 @@ const MetroNavigation = ({
                     border-radius: 10px;
                 }
                 .nav-button.prev {
-                    margin-right: auto;
-                }
-                .nav-button.next {
                     margin-left: auto;
                 }
                 .navigation-line {
@@ -993,6 +1002,11 @@ const MetroNavigation = ({
                 .navigation-point.active {
                     background-color: var(--success);
                     color: var(--white);
+                }
+                .navigation-point .badge {
+                    background-color: rgba(0,0,0,.15);
+                    color: var(--white);
+                    margin-right: .5rem;
                 }
             `
     })]
@@ -3010,15 +3024,12 @@ const ProcessViewer = () => {
       }), " Curatorial Process Viewer"]
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("h2", {
       children: [filteredProcessType ? filteredProcessType.title.rendered : 'Process type title', ": ", process.title?.rendered]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
       className: "badge-container",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("span", {
-        className: `badge ${process.meta.access_level == 'public' ? 'success' : 'warning'}`,
-        children: process.meta.access_level
-      }), orderedSteps[currentStep] && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("span", {
-        className: "badge",
-        children: ["Current step: ", orderedSteps[currentStep]?.title || 'Unknown Title Step']
-      })]
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("span", {
+        className: `badge ${process.status === 'completed' ? 'success' : 'warning'}`,
+        children: process.status
+      })
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_ProcessManager_MetroNavigation__WEBPACK_IMPORTED_MODULE_4__["default"], {
       options: options,
       currentStep: currentStep,
@@ -3033,11 +3044,14 @@ const ProcessViewer = () => {
             children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
               children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("ul", {
                 className: "meta-fields-list",
-                children: Array.isArray(orderedSteps[currentStep].meta_fields) ? orderedSteps[currentStep].meta_fields.map((field, idx) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("li", {
+                children: Array.isArray(orderedSteps[currentStep].meta_fields) ? orderedSteps[currentStep].meta_fields.map((field, idx) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("li", {
                   className: "meta-field-item",
-                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_ProcessManager_MetaFieldInputs__WEBPACK_IMPORTED_MODULE_5__["default"], {
+                  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("span", {
+                    className: "order",
+                    children: idx + 1
+                  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_ProcessManager_MetaFieldInputs__WEBPACK_IMPORTED_MODULE_5__["default"], {
                     field: field
-                  })
+                  })]
                 }, `${orderedSteps[currentStep].step_id}-meta-${idx}`)) : null
               })
             })

@@ -23,23 +23,29 @@ const MetroNavigation = ({ options, currentStep, onStepChange }) => {
 
     return (
         <div className="metro-navigation">
+            <div className="navigation-line">
+                {options.map((option, index) => (
+                    <Tooltip text={option.label} placement='top' delay='0'>
+                        <div
+                            key={index}
+                            className={`navigation-point ${index === current ? 'active' : ''}`}
+                            onClick={() => {
+                                setCurrent(index);
+                                onStepChange(index);
+                            }}
+                        >
+                            {index === current ? (
+                                <span><span class="badge">{index + 1}</span> {option.label}</span>
+                            ) : (
+                                <span>{index + 1}</span>
+                            )}                            
+                        </div>
+                    </Tooltip>
+                ))}
+            </div>
             <Tooltip text="Previous">
                 <Button isPrimary className="nav-button prev" onClick={handlePrev} icon={<Icon icon={arrowLeft} />} />
             </Tooltip>
-            <div className="navigation-line">
-                {options.map((option, index) => (
-                    <div
-                        key={index}
-                        className={`navigation-point ${index === current ? 'active' : ''}`}
-                        onClick={() => {
-                            setCurrent(index);
-                            onStepChange(index);
-                        }}
-                    >
-                        {option.label}
-                    </div>
-                ))}
-            </div>
             <Tooltip text="Next">
                 <Button isPrimary className="nav-button next" onClick={handleNext} icon={<Icon icon={arrowRight} />} />
             </Tooltip>
@@ -51,7 +57,7 @@ const MetroNavigation = ({ options, currentStep, onStepChange }) => {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    gap: 2rem;
+                    gap: 1rem;
                     margin-bottom: 1rem;
                     padding: .75rem;
                 }
@@ -59,9 +65,6 @@ const MetroNavigation = ({ options, currentStep, onStepChange }) => {
                     border-radius: 10px;
                 }
                 .nav-button.prev {
-                    margin-right: auto;
-                }
-                .nav-button.next {
                     margin-left: auto;
                 }
                 .navigation-line {
@@ -88,6 +91,11 @@ const MetroNavigation = ({ options, currentStep, onStepChange }) => {
                 .navigation-point.active {
                     background-color: var(--success);
                     color: var(--white);
+                }
+                .navigation-point .badge {
+                    background-color: rgba(0,0,0,.15);
+                    color: var(--white);
+                    margin-right: .5rem;
                 }
             `}</style>
         </div>
