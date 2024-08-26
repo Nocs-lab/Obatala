@@ -54,7 +54,18 @@ const ProcessTypeEditor = () => {
         data: updatedData,
       });
 
-      setProcessType(savedType);
+      await apiFetch({
+        path: `/obatala/v1/process_type/${id}/meta`,
+        method: "PUT",
+        data: updatedData.meta,
+      });
+
+      const savedTypeWithMeta = {
+        ...savedType,
+        meta: updatedData.meta,
+      };
+
+      setProcessType(savedTypeWithMeta);
 
       setNotice({
         status: "success",
