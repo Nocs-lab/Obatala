@@ -30,6 +30,7 @@ jobs:
           git config --local user.email "info@nocslab.ifrn.edu.br"
           git add .
           git commit -m "chore: update plugin version to ${GITHUB_REF_NAME}"
+          git pull --rebase origin main  # Isso vai trazer as mudanças do remoto e aplicar as suas mudanças sobre elas
           git push origin HEAD:main
 
       - name: Create plugin ZIP
