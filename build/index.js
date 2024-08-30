@@ -7898,6 +7898,7 @@ const SortableCanvas = () => {
           y: initialPosition.y + delta.y
         }
       } : column));
+      console.log('movimentando coluna para', initialPosition.x + delta.x, initialPosition.y + delta.y);
     }
   }
   function findContainer(id) {
@@ -8097,8 +8098,8 @@ const mockData = [{
 }, {
   id: "Etapa 2",
   position: {
-    x: 200,
-    y: 20
+    x: 250,
+    y: 120
   },
   fields: ["Endereço", "Cidade", "Estado"]
 }, {

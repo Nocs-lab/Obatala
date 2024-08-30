@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   DndContext,
   KeyboardSensor,
@@ -21,7 +21,8 @@ const SortableCanvas = () => {
       coordinateGetter: sortableKeyboardCoordinates,
     })
   );
-
+  
+  
   function handleDragStart(event) {
     const { active } = event;
     const column = columns.find((col) => col.id === active.id);
@@ -120,6 +121,7 @@ const SortableCanvas = () => {
             : column
         )
       );
+      console.log('movimentando coluna para', initialPosition.x + delta.x, initialPosition.y + delta.y);
     }
   }
 

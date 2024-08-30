@@ -7,7 +7,7 @@ const mockData = [
     },
     {
       id: "Etapa 2",
-      position: { x: 200, y: 20 },
+      position: { x: 250, y: 120 },
       fields: ["Endereço", "Cidade", "Estado"],
     },
     {
