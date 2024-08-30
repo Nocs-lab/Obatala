@@ -30,13 +30,17 @@ jobs:
           git config --local user.email "info@nocslab.ifrn.edu.br"
           git add .
           git commit -m "chore: update plugin version to ${GITHUB_REF_NAME}"
-          git fetch origin main
-          git rebase --strategy-option theirs origin/main || {
-            git rebase --abort
-            git merge -X theirs origin/main
-          }
-          git push origin HEAD:main
-      
+          git checkout -b update-plugin-version-${GITHUB_REF_NAME}
+          git push origin update-plugin-version-${GITHUB_REF_NAME}
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: update-plugin-version-${GITHUB_REF_NAME}
+          title: "chore: update plugin version to ${GITHUB_REF_NAME}"
+          body: "Automated PR to update the plugin version to ${GITHUB_REF_NAME}"
+          base: main
 
       - name: Create plugin ZIP
         run: node developer/create-zip.js
