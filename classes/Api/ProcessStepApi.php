@@ -3,7 +3,7 @@ namespace Obatala\Api;
 
 defined('ABSPATH') || exit;
 
-class ProcessStepCustomFields extends ObatalaAPI {
+class ProcessStepApi extends ObatalaAPI {
 
     public function register_routes() {
         $this->add_route('process_step/(?P<id>\d+)/meta', [

@@ -7,7 +7,7 @@ defined('ABSPATH') || exit;
  * Class ProcessTypeCustomFields
  * Handles custom fields for the "process_type" custom post type.
  */
-class ProcessTypeCustomFields extends ObatalaAPI {
+class ProcessTypeApi extends ObatalaAPI {
 
     /**
      * Registers the custom routes for the API.
