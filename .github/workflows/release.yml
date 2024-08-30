@@ -30,9 +30,10 @@ jobs:
           git config --local user.email "info@nocslab.ifrn.edu.br"
           git add .
           git commit -m "chore: update plugin version to ${GITHUB_REF_NAME}"
-          git pull --rebase origin main || {
+          git fetch origin main
+          git rebase --strategy-option theirs origin/main || {
             git rebase --abort
-            git pull origin main --strategy-option theirs
+            git merge -X theirs origin/main
           }
           git push origin HEAD:main
       
