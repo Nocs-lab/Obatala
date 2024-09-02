@@ -11,9 +11,9 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
 
     useEffect(() => {
         console.log(editingProcessType);
-        if (editingProcessType) {
+        if (editingProcessType && editingProcessType.meta) {
             setTitle(editingProcessType.title.rendered ?? '');
-            setDescription(editingProcessType.meta.description ? editingProcessType.meta.description[0] : '');
+            setDescription(editingProcessType.meta.description || '');
             setAcceptAttachments(Array.isArray(editingProcessType.meta.accept_attachments) ? !!editingProcessType.meta.accept_attachments[0] : !!editingProcessType.meta.accept_attachments);
             setAcceptTainacanItems(Array.isArray(editingProcessType.meta.accept_tainacan_items) ? !!editingProcessType.meta.accept_tainacan_items[0] : !!editingProcessType.meta.accept_tainacan_items);
             setGenerateTainacanItems(Array.isArray(editingProcessType.meta.generate_tainacan_items) ? !!editingProcessType.meta.generate_tainacan_items[0] : !!editingProcessType.meta.generate_tainacan_items);
@@ -43,10 +43,15 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
 
         try {
             await onSave(updatedProcessType);
+
+            
+
             setNotice({ status: 'success', message: 'Process type saved successfully.' });
         } catch (error) {
             setNotice({ status: 'error', message: 'Error saving process type.' });
         }
+
+        console.log('saved process Type:', updatedProcessType);
     };
 
     return (

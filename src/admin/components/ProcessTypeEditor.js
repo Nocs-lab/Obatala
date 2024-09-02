@@ -40,33 +40,44 @@ const ProcessTypeEditor = () => {
         
         setIsLoading(true);
         try {
-        const updatedData = {
-            ...updatedProcessType,
-            meta: {
-            ...updatedProcessType.meta,
-            step_order: stepOrder,
-            },
-        };
+            const updatedData = {
+                ...updatedProcessType,
+                meta: {
+                ...updatedProcessType.meta,
+                step_order: stepOrder,
+                },
+            };
 
-        const savedType = await apiFetch({
-            path: `/obatala/v1/process_type/${id}`,
-            method: "PUT",
-            data: updatedData,
-        });
+            const savedType = await apiFetch({
+                path: `/obatala/v1/process_type/${id}`,
+                method: "PUT",
+                data: updatedData,
+            });
 
-        setProcessType(savedType);
-
-        setNotice({
-            status: "success",
-            message: "Process type and meta updated successfully.",
-        });
+            await apiFetch({
+                path: `/obatala/v1/process_type/${id}/meta`,
+                method: "PUT",
+                data: updatedData.meta,
+            });
+        
+            const savedTypeWithMeta = {
+                ...savedType,
+                meta: updatedData.meta,
+            };
+        
+            setProcessType(savedTypeWithMeta);
+        
+            setNotice({
+                status: "success",
+                message: "Process type and meta updated successfully.",
+            });
         } catch (error) {
-        setNotice({
-            status: "error",
-            message: "Error updating process type and meta.",
-        });
+            setNotice({
+                status: "error",
+                message: "Error updating process type and meta.",
+            });
         } finally {
-        setIsLoading(false);
+            setIsLoading(false);
         }
     };
 
@@ -74,23 +85,23 @@ const ProcessTypeEditor = () => {
         const newStepOrder = Array.isArray(stepOrder) ? stepOrder : [];
 
         const stepsToAdd = stepIds.filter(
-        (stepId) => !newStepOrder.includes(stepId)
+            (stepId) => !newStepOrder.includes(stepId)
         );
 
         if (stepsToAdd.length === 0) {
-        setNotice({
-            status: "warning",
-            message: "All selected steps are already in the process type.",
-        });
-        return;
+            setNotice({
+                status: "warning",
+                message: "All selected steps are already in the process type.",
+            });
+            return;
         }
 
         const updatedStepOrder = [...newStepOrder, ...stepsToAdd];
 
         apiFetch({
-        path: `/obatala/v1/process_type/${id}/meta`,
-        method: "PUT",
-        data: { step_order: updatedStepOrder },
+            path: `/obatala/v1/process_type/${id}/meta`,
+            method: "PUT",
+            data: { step_order: updatedStepOrder },
         })
         .then(() => {
             setStepOrder(updatedStepOrder);
