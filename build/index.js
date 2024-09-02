@@ -1,70 +1,6 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./node_modules/@wordpress/icons/build-module/library/arrow-left.js":
-/*!**************************************************************************!*\
-  !*** ./node_modules/@wordpress/icons/build-module/library/arrow-left.js ***!
-  \**************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/primitives */ "@wordpress/primitives");
-/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
-/**
- * WordPress dependencies
- */
-
-
-const arrowLeft = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.SVG, {
-  xmlns: "http://www.w3.org/2000/svg",
-  viewBox: "0 0 24 24",
-  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.Path, {
-    d: "M20 11.2H6.8l3.7-3.7-1-1L3.9 12l5.6 5.5 1-1-3.7-3.7H20z"
-  })
-});
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (arrowLeft);
-//# sourceMappingURL=arrow-left.js.map
-
-/***/ }),
-
-/***/ "./node_modules/@wordpress/icons/build-module/library/arrow-right.js":
-/*!***************************************************************************!*\
-  !*** ./node_modules/@wordpress/icons/build-module/library/arrow-right.js ***!
-  \***************************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/primitives */ "@wordpress/primitives");
-/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
-/**
- * WordPress dependencies
- */
-
-
-const arrowRight = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.SVG, {
-  xmlns: "http://www.w3.org/2000/svg",
-  viewBox: "0 0 24 24",
-  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.Path, {
-    d: "m14.5 6.5-1 1 3.7 3.7H4v1.6h13.2l-3.7 3.7 1 1 5.6-5.5z"
-  })
-});
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (arrowRight);
-//# sourceMappingURL=arrow-right.js.map
-
-/***/ }),
-
 /***/ "./node_modules/@wordpress/icons/build-module/library/close-small.js":
 /*!***************************************************************************!*\
   !*** ./node_modules/@wordpress/icons/build-module/library/close-small.js ***!
@@ -887,14 +823,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/arrow-left.js");
-/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/arrow-right.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
-
-
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
 
 
 const MetroNavigation = ({
@@ -906,107 +836,46 @@ const MetroNavigation = ({
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     setCurrent(currentStep);
   }, [currentStep]);
-  const handleNext = () => {
-    const next = (current + 1) % options.length;
-    setCurrent(next);
-    onStepChange(next);
-  };
-  const handlePrev = () => {
-    const prev = (current - 1 + options.length) % options.length;
-    setCurrent(prev);
-    onStepChange(prev);
-  };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
     className: "metro-navigation",
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
-      className: "navigation-line",
-      children: options.map((option, index) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Tooltip, {
-        text: option.label,
-        placement: "top",
-        delay: "0",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
-          className: `navigation-point ${index === current ? 'active' : ''}`,
-          onClick: () => {
-            setCurrent(index);
-            onStepChange(index);
-          },
-          children: index === current ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("span", {
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
-              class: "badge",
-              children: index + 1
-            }), " ", option.label]
-          }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
-            children: index + 1
-          })
-        }, index)
-      }))
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Tooltip, {
-      text: "Previous",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-        isPrimary: true,
-        className: "nav-button prev",
-        onClick: handlePrev,
-        icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Icon, {
-          icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_3__["default"]
-        })
-      })
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Tooltip, {
-      text: "Next",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-        isPrimary: true,
-        className: "nav-button next",
-        onClick: handleNext,
-        icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Icon, {
-          icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_4__["default"]
-        })
-      })
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("style", {
+    children: [options.map((option, index) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("button", {
+      type: "button",
+      className: `navigation-point ${index === current ? 'active' : ''}`,
+      onClick: () => {
+        setCurrent(index);
+        onStepChange(index);
+      },
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("small", {
+        class: "badge",
+        children: index + 1
+      }), " ", option.label]
+    }, index)), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("style", {
       children: `
                 .metro-navigation {
-                    background-color: var(--gray-200);
-                    border-radius: var(--border-radius);
                     display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 1rem;
-                    margin-bottom: 1rem;
-                    padding: .75rem;
-                }
-                .nav-button {
-                    border-radius: 10px;
-                }
-                .nav-button.prev {
-                    margin-left: auto;
-                }
-                .navigation-line {
-                    display: flex;
-                    align-items: center;
+                    align-items: stretch;
+                    flex-basis: 200px;
+                    flex-direction: column;
                     gap: .75rem;
-                    position: relative;
-                }
-                .navigation-line::before {
-                    background-color: var(--gray-300);
-                    content: "";
-                    height: 2px;
-                    position: absolute;
-                    top: 50%;
-                    width: 100%;
                 }
                 .navigation-point {
                     background-color: var(--gray-300);
-                    border-radius: 25px;
-                    padding: .5rem 1rem;
-                    position: relative;
+                    border: 0 none;
+                    border-radius: 10px;
                     cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    font-size: .9rem;
+                    gap: .5rem;
+                    padding: .5rem;
                 }
                 .navigation-point.active {
-                    background-color: var(--success);
+                    background-color: var(--primary-500);
                     color: var(--white);
                 }
                 .navigation-point .badge {
                     background-color: rgba(0,0,0,.15);
                     color: var(--white);
-                    margin-right: .5rem;
                 }
             `
     })]
@@ -2035,7 +1904,16 @@ const ProcessTypeEditor = () => {
         method: "PUT",
         data: updatedData
       });
-      setProcessType(savedType);
+      await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+        path: `/obatala/v1/process_type/${id}/meta`,
+        method: "PUT",
+        data: updatedData.meta
+      });
+      const savedTypeWithMeta = {
+        ...savedType,
+        meta: updatedData.meta
+      };
+      setProcessType(savedTypeWithMeta);
       setNotice({
         status: "success",
         message: "Process type and meta updated successfully."
@@ -2121,18 +1999,18 @@ const ProcessTypeEditor = () => {
         children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, {
             children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)("h3", {
-              children: "Process Type Information"
+              children: "Edit Process Type data"
             })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
-            children: [notice && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
+          }), notice && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
               status: notice.status,
               isDismissible: true,
               onRemove: () => setNotice(null),
               children: notice.message
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_ProcessTypeManager_ProcessTypeForm__WEBPACK_IMPORTED_MODULE_3__["default"], {
-              editingProcessType: processType,
-              onSave: handleSave
-            })]
+            })
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_ProcessTypeManager_ProcessTypeForm__WEBPACK_IMPORTED_MODULE_3__["default"], {
+            editingProcessType: processType,
+            onSave: handleSave
           })]
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_6__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, {
@@ -2206,10 +2084,10 @@ const ProcessTypeManager = () => {
         savedProcessType = await (0,_api_apiRequests__WEBPACK_IMPORTED_MODULE_2__.saveProcessType)(processType);
       }
       const meta = {
-        accept_attachments: processType.accept_attachments,
-        accept_tainacan_items: processType.accept_tainacan_items,
-        generate_tainacan_items: processType.generate_tainacan_items,
-        description: processType.description
+        accept_attachments: processType.meta.accept_attachments,
+        accept_tainacan_items: processType.meta.accept_tainacan_items,
+        generate_tainacan_items: processType.meta.generate_tainacan_items,
+        description: processType.meta.description || ''
       };
       await (0,_api_apiRequests__WEBPACK_IMPORTED_MODULE_2__.updateProcessTypeMeta)(savedProcessType.id, meta);
       setNotice({
@@ -2426,10 +2304,10 @@ const ProcessTypeForm = ({
   const [notice, setNotice] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     console.log(editingProcessType);
-    if (editingProcessType) {
+    if (editingProcessType && editingProcessType.meta) {
       var _editingProcessType$t;
       setTitle((_editingProcessType$t = editingProcessType.title.rendered) !== null && _editingProcessType$t !== void 0 ? _editingProcessType$t : '');
-      setDescription(editingProcessType.meta.description ? editingProcessType.meta.description[0] : '');
+      setDescription(editingProcessType.meta.description || '');
       setAcceptAttachments(Array.isArray(editingProcessType.meta.accept_attachments) ? !!editingProcessType.meta.accept_attachments[0] : !!editingProcessType.meta.accept_attachments);
       setAcceptTainacanItems(Array.isArray(editingProcessType.meta.accept_tainacan_items) ? !!editingProcessType.meta.accept_tainacan_items[0] : !!editingProcessType.meta.accept_tainacan_items);
       setGenerateTainacanItems(Array.isArray(editingProcessType.meta.generate_tainacan_items) ? !!editingProcessType.meta.generate_tainacan_items[0] : !!editingProcessType.meta.generate_tainacan_items);
@@ -2466,6 +2344,7 @@ const ProcessTypeForm = ({
         message: 'Error saving process type.'
       });
     }
+    console.log('saved process Type:', updatedProcessType);
   };
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.Fragment, {
     children: [notice && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
@@ -3024,25 +2903,31 @@ const ProcessViewer = () => {
       }), " Curatorial Process Viewer"]
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("h2", {
       children: [filteredProcessType ? filteredProcessType.title.rendered : 'Process type title', ": ", process.title?.rendered]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
-      className: "badge-container",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("span", {
-        className: `badge ${process.status === 'completed' ? 'success' : 'warning'}`,
-        children: process.status
-      })
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_ProcessManager_MetroNavigation__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      options: options,
-      currentStep: currentStep,
-      onStepChange: newStep => setCurrentStep(newStep)
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
-      className: "panel-container",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("main", {
+      className: "badge-container",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("span", {
+        className: `badge ${process.meta.access_level == 'public' ? 'success' : 'warning'}`,
+        children: process.meta.access_level
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("span", {
+        className: "badge default",
+        children: "70% conclu\xEDdo"
+      })]
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
+      className: "panel-container three-columns",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_ProcessManager_MetroNavigation__WEBPACK_IMPORTED_MODULE_4__["default"], {
+        options: options,
+        currentStep: currentStep,
+        onStepChange: newStep => setCurrentStep(newStep)
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("main", {
         children: orderedSteps.length > 0 && orderedSteps[currentStep] ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, {
-            children: `${orderedSteps[currentStep].title}`
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, {
+            children: [`${orderedSteps[currentStep].title}`, /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("span", {
+              className: "badge default",
+              children: "Setor: Recep\xE7\xE3o"
+            })]
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("ul", {
+            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
+              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("ul", {
                 className: "meta-fields-list",
                 children: Array.isArray(orderedSteps[currentStep].meta_fields) ? orderedSteps[currentStep].meta_fields.map((field, idx) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("li", {
                   className: "meta-field-item",
@@ -3053,7 +2938,10 @@ const ProcessViewer = () => {
                     field: field
                   })]
                 }, `${orderedSteps[currentStep].step_id}-meta-${idx}`)) : null
-              })
+              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("p", {
+                className: "",
+                children: "\xDAltima atualiza\xE7\xE3o em 21/10/2024."
+              })]
             })
           })]
         }, `${orderedSteps[currentStep].step_id}-${currentStep}`) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
