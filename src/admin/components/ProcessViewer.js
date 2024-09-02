@@ -145,21 +145,19 @@ const ProcessViewer = () => {
                         <Panel key={`${orderedSteps[currentStep].step_id}-${currentStep}`}>
                             <PanelHeader>
                                 {`${orderedSteps[currentStep].title}`}
-                                <span className="badge default">Setor: Recepção</span>
+                                <span className="badge default ms-auto">Setor: Recepção</span>
                             </PanelHeader>
                             <PanelBody>
                                 <PanelRow>
                                     <ul className="meta-fields-list">
                                         {Array.isArray(orderedSteps[currentStep].meta_fields) ? orderedSteps[currentStep].meta_fields.map((field, idx) => (
                                             <li key={`${orderedSteps[currentStep].step_id}-meta-${idx}`} className="meta-field-item">
-                                                <span className="order">{idx + 1}</span>
                                                 <MetaFieldInputs field={field} />
                                             </li>
                                         )) : null}
                                     </ul>
-
-                                    <p className="">Última atualização em 21/10/2024.</p>
                                 </PanelRow>
+                                <footer>Última atualização em 21/10/2024 por João da Silva</footer>
                             </PanelBody>
                         </Panel>
                     ) : (

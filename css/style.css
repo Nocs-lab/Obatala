@@ -150,7 +150,7 @@ table.wp-list-table th {
 
 /* Components */
 .badge {
-  background-color: var(--primary-100);
+  background-color: var(--gray-200);
   border-radius: 25px;
   color: var(--primary-900);
   display: inline-block;
@@ -303,6 +303,16 @@ ol.list-group .list-group-item::before {
 .panel-container.three-columns aside {
   flex-basis: 220px;
 }
+.navigation-point.completed {
+  background-color: var(--success);
+  color: var(--white);
+}
+.navigation-point.completed::after {
+  content: '\f147';
+  font-family: 'Dashicons';
+  font-size: 1.2rem;
+  margin-left: auto;
+}
 .components-notice {
   margin-bottom: 2rem;
   padding-top: 0;
@@ -334,8 +344,6 @@ ol.list-group .list-group-item::before {
 }
 .components-panel__header .badge {
   font-size: .8rem;
-  margin-right: auto;
-  margin-left: 1rem;
 }
 .components-panel__body {
   padding: 0 !important;
@@ -365,6 +373,15 @@ ol.list-group .list-group-item::before {
 .components-panel + .components-panel {
   margin-top: 1rem;
 }
+.components-panel footer {
+  background: var(--primary-50);
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
+  color: var(--gray-800);
+  font-size: .8rem;
+  font-weight: 300;
+  padding: .5rem 2rem;
+  text-align: right;
+}
 .components-radio-control .components-flex {
   flex-direction: row;
   justify-content: start;
@@ -382,6 +399,9 @@ ol.list-group .list-group-item::before {
 /* Functional classes */
 .mb-1 {
   margin-bottom: 1rem;
+}
+.ms-auto {
+  margin-left: auto !important;
 }
 .text-center {
   text-align: center;
@@ -600,31 +620,18 @@ button .components-spinner {
 }
 
 .meta-fields-list {
+  margin: 2rem auto;
+  max-width: 800px;
   width: 100%;
 }
 .meta-field-item {
   display: flex;
   align-items: center;
   flex-basis: 100%;
+  margin-bottom: 2rem;
   gap: 1rem;
 }
-.meta-field-item .order {
-  border-radius: 50%;
-  background-color: var(--primary-800);
-  color: var(--white);
-  font-weight: 600;
-  font-size: 1rem;
-  min-height: 36px;
-  min-width: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 .meta-field-wrapper {
-  background-color: var(--primary-50);
-  border: 1px solid var(--primary-100);
-  border-radius: 10px;
-  padding: 1.5rem;
   width: 100%;
 }
 .meta-field-wrapper .components-base-control__field > label,
