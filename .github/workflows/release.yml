@@ -1,12 +1,15 @@
 name: Release
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  pull_request:
+    branches:
+      - main
+      - development
+    types: [closed]
 
 jobs:
   release:
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
@@ -21,29 +24,29 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Update plugin version
-        run: node developer/update-plugin-version.js
-
-      - name: Commit updated files
+      - name: Determine version bump
+        id: version
         run: |
+          if [[ "${{ github.event.pull_request.base.ref }}" == "development" ]]; then
+            echo "Bumping minor version"
+            npm version minor --no-git-tag-version
+            echo "version_type=minor" >> $GITHUB_ENV
+          elif [[ "${{ github.event.pull_request.base.ref }}" == "main" ]]; then
+            echo "Bumping patch version"
+            npm version patch --no-git-tag-version
+            echo "version_type=patch" >> $GITHUB_ENV
+          fi
+
+      - name: Update plugin version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          node developer/update-plugin-version.js
           git config --local user.name "Nocs Bot 🤖"
           git config --local user.email "info@nocslab.ifrn.edu.br"
           git add .
-          git commit -m "chore: update plugin version to ${GITHUB_REF_NAME}"
-          git checkout -b update-plugin-version-${GITHUB_REF_NAME}
-          git push origin update-plugin-version-${GITHUB_REF_NAME}
-
-      - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v5
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: update-plugin-version-${GITHUB_REF_NAME}
-          title: "chore: update plugin version to ${GITHUB_REF_NAME}"
-          body: "Automated PR to update the plugin version to ${GITHUB_REF_NAME}"
-          base: main
-
-      - name: Create plugin ZIP
-        run: node developer/create-zip.js
+          git commit -m "chore: update plugin version to ${VERSION}"
+          git tag "v${VERSION}"
+          git push origin "v${VERSION}"
 
       - name: Create GitHub Release
         id: create_release
@@ -51,8 +54,8 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref_name }}
-          release_name: ${{ github.ref_name }}
+          tag_name: "v${{ steps.version.outputs.new_version }}"
+          release_name: "v${{ steps.version.outputs.new_version }}"
           draft: false
           prerelease: false
 
