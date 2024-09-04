@@ -6,8 +6,7 @@ on:
       - main
       - development
     types:
-      - opened
-      - synchronize  # Executa também quando o PR for atualizado
+      - opened  # Executa apenas quando o PR for criado
 
 jobs:
   version_update:
