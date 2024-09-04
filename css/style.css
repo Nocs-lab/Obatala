@@ -23,12 +23,12 @@
   --gray-900: #111;
   --black:    #000;
 
-  --error: #c52233;
+  --error:   #c52233;
   --success: #00a676;
   --warning: #e2de84;
 
-  --border-radius: 15px;
-  --gap: 2rem;
+  --border-radius:       15px;
+  --gap:                 2rem;
   --input-border-radius: 4px;
 }
 
@@ -293,9 +293,15 @@ ol.list-group .list-group-item::before {
   flex-basis: 65%;
   flex-grow: 1;
 }
+.panel-container.three-columns main {
+  flex-basis: 55%;
+}
 .panel-container aside {
   flex-basis: 180px;
   flex-grow: 1;
+}
+.panel-container.three-columns aside {
+  flex-basis: 220px;
 }
 .components-notice {
   margin-bottom: 2rem;
