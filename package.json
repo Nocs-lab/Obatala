@@ -1,6 +1,6 @@
 {
     "name": "nocs-obatala",
-    "version": "1.0.0",
+    "version": "1.1.14",
     "private": true,
     "description": "Curatorial process manager for Tainacan",
     "author": "Nocs Lab",
@@ -24,7 +24,8 @@
         "check-engines": "wp-scripts check-engines"
     },
     "devDependencies": {
-        "@wordpress/scripts": "^28.4.0"
+        "@wordpress/scripts": "^28.4.0",
+        "archiver": "^7.0.1"
     },
     "dependencies": {
         "@dnd-kit/core": "^6.1.0",

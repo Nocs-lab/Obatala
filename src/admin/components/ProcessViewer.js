@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Spinner, Notice, Panel, PanelHeader, PanelBody, PanelRow } from '@wordpress/components';
+import { Spinner, Notice, Panel, PanelHeader, PanelBody, PanelRow, ProgressBar } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { fetchProcessTypes } from '../api/apiRequests';
 import MetroNavigation from './ProcessManager/MetroNavigation';
@@ -122,6 +122,7 @@ const ProcessViewer = () => {
     });
 
     const options = orderedSteps.map(step => ({ label: step.title, value: step.step_id }));
+
     return (
         <div>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Viewer</span>
@@ -130,19 +131,22 @@ const ProcessViewer = () => {
                 <span className={`badge ${process.meta.access_level == 'public' ? 'success' : 'warning'}`}>
                     {process.meta.access_level}
                 </span>
+                <span className="badge default">70% concluído</span>
             </div>
 
-            <MetroNavigation
-                options={options}
-                currentStep={currentStep}
-                onStepChange={(newStep) => setCurrentStep(newStep)}
-            />
-
-            <div className="panel-container">
+            <div className="panel-container three-columns">
+                <MetroNavigation
+                    options={options}
+                    currentStep={currentStep}
+                    onStepChange={(newStep) => setCurrentStep(newStep)}
+                />
                 <main>
                     {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
                         <Panel key={`${orderedSteps[currentStep].step_id}-${currentStep}`}>
-                            <PanelHeader>{`${orderedSteps[currentStep].title}`}</PanelHeader>
+                            <PanelHeader>
+                                {`${orderedSteps[currentStep].title}`}
+                                <span className="badge default">Setor: Recepção</span>
+                            </PanelHeader>
                             <PanelBody>
                                 <PanelRow>
                                     <ul className="meta-fields-list">
@@ -153,6 +157,8 @@ const ProcessViewer = () => {
                                             </li>
                                         )) : null}
                                     </ul>
+
+                                    <p className="">Última atualização em 21/10/2024.</p>
                                 </PanelRow>
                             </PanelBody>
                         </Panel>
