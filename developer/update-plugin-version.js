@@ -1,15 +1,14 @@
 const fs = require('fs');
 const path = require('path');
 
-// Carrega o package.json
-const packageJson = require('../package.json');
-
 // Caminhos dos arquivos do plugin e README
 const pluginFilePath = path.join(__dirname, '../obatala.php');
 const readmeFilePath = path.join(__dirname, '../README.md');
 
 // Função para atualizar a versão nos arquivos
 const updatePluginVersion = () => {
+  // Carrega o package.json atualizado (depois de rodar `npm version`)
+  const packageJson = JSON.parse(fs.readFileSync(path.join(__dirname, '../package.json'), 'utf8'));
   const version = packageJson.version;
 
   // Atualiza a versão no arquivo principal do plugin
