@@ -36,17 +36,32 @@ jobs:
             new_version=$(npm version minor --no-git-tag-version)
             echo "new_version=${new_version}" >> $GITHUB_ENV
           fi
+        shell: bash
 
-      - name: Update plugin version
+      - name: Update plugin version and commit
         run: |
           VERSION=${{ env.new_version }}
+          # Obtém o branch de destino do PR
+          TARGET_BRANCH=${{ github.event.pull_request.base.ref }}
+          
+          # Atualiza a versão no plugin
           node developer/update-plugin-version.js
+          
+          # Configura o git
           git config --local user.name "Nocs Bot 🤖"
           git config --local user.email "info@nocslab.ifrn.edu.br"
-          git add .
+          
+          # Garante que estamos no branch correto
+          git checkout $TARGET_BRANCH
+          
+          # Adiciona os arquivos modificados
+          git add package.json obatala.php README.md
+          
+          # Faz o commit
           git commit -m "chore: update plugin version to ${VERSION}"
-          git tag "${VERSION}"
-          git push origin "${VERSION}"
+          
+          # Faz o push do commit para o branch de destino do PR
+          git push origin $TARGET_BRANCH
 
       - name: Create GitHub Release
         id: create_release
