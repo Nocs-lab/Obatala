@@ -28,28 +28,25 @@ jobs:
         id: version
         run: |
           if [[ "${{ github.event.pull_request.base.ref }}" == "development" ]]; then
-            echo "Bumping minor version"
-            npm version minor --no-git-tag-version
-            echo "version_type=minor" >> $GITHUB_ENV
-          elif [[ "${{ github.event.pull_request.base.ref }}" == "main" ]]; then
             echo "Bumping patch version"
-            npm version patch --no-git-tag-version
-            echo "version_type=patch" >> $GITHUB_ENV
+            new_version=$(npm version patch --no-git-tag-version)
+            echo "new_version=${new_version}" >> $GITHUB_ENV
+          elif [[ "${{ github.event.pull_request.base.ref }}" == "main" ]]; then
+            echo "Bumping minor version"
+            new_version=$(npm version minor --no-git-tag-version)
+            echo "new_version=${new_version}" >> $GITHUB_ENV
           fi
 
       - name: Update plugin version
         run: |
-          VERSION=$(node -p "require('./package.json').version")
+          VERSION=${{ env.new_version }}
           node developer/update-plugin-version.js
           git config --local user.name "Nocs Bot 🤖"
           git config --local user.email "info@nocslab.ifrn.edu.br"
           git add .
           git commit -m "chore: update plugin version to ${VERSION}"
-          git tag "v${VERSION}"
-          git push origin "v${VERSION}"
-
-      - name: Create plugin ZIP
-        run: node developer/create-zip.js
+          git tag "${VERSION}"
+          git push origin "${VERSION}"
 
       - name: Create GitHub Release
         id: create_release
@@ -57,10 +54,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: "v${{ steps.version.outputs.new_version }}"
-          release_name: "v${{ steps.version.outputs.new_version }}"
+          tag_name: "${{ env.new_version }}"
+          release_name: "${{ env.new_version }}"
           draft: false
           prerelease: false
+
+      - name: Create plugin ZIP
+        run: node developer/create-zip.js
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
@@ -69,3 +69,5 @@ jobs:
           asset_path: dist/obatala.zip
           asset_name: obatala.zip
           asset_content_type: application/zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
