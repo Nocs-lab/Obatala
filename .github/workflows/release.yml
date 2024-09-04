@@ -48,6 +48,9 @@ jobs:
           git tag "v${VERSION}"
           git push origin "v${VERSION}"
 
+      - name: Create plugin ZIP
+        run: node developer/create-zip.js
+
       - name: Create GitHub Release
         id: create_release
         uses: actions/create-release@v1
@@ -61,8 +64,6 @@ jobs:
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: dist/obatala.zip
