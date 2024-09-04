@@ -9,7 +9,8 @@ import {
 import apiFetch from "@wordpress/api-fetch";
 import ProcessTypeForm from "./ProcessTypeManager/ProcessTypeForm";
 import ProcessStepForm from "./ProcessTypeManager/ProcessStepForm";
-import StepList from "./ProcessTypeManager/StepList";
+// import StepList from "./ProcessTypeManager/StepList";
+import SortableCanvas from "./Sortable/SortableCanvas";
 
 const ProcessTypeEditor = () => {
     const params = new URLSearchParams(window.location.search);
@@ -120,7 +121,6 @@ const ProcessTypeEditor = () => {
     if (!processType) {
         return <div>Loading...</div>;
     }
-
     return (
         <div>
             <span className="brand">
@@ -179,7 +179,7 @@ const ProcessTypeEditor = () => {
                 </aside>
             </div>
         </div>
-    );
+    ); 
 };
 
 export default ProcessTypeEditor;
