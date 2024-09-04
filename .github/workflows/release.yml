@@ -15,6 +15,8 @@ jobs:
     steps:
       - name: Check out the repository
         uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}  # Checkout no branch de origem do PR
 
       - name: Set up Node.js
         uses: actions/setup-node@v3
@@ -41,9 +43,6 @@ jobs:
       - name: Update plugin version and commit
         run: |
           VERSION=${{ env.new_version }}
-          # Obtém o branch de destino do PR
-          TARGET_BRANCH=${{ github.event.pull_request.base.ref }}
-          
           # Atualiza a versão no plugin
           node developer/update-plugin-version.js
           
@@ -51,17 +50,14 @@ jobs:
           git config --local user.name "Nocs Bot 🤖"
           git config --local user.email "info@nocslab.ifrn.edu.br"
           
-          # Garante que estamos no branch correto
-          git checkout $TARGET_BRANCH
-          
           # Adiciona os arquivos modificados
           git add package.json obatala.php README.md
           
           # Faz o commit
           git commit -m "chore: update plugin version to ${VERSION}"
           
-          # Faz o push do commit para o branch de destino do PR
-          git push origin $TARGET_BRANCH
+          # Faz o push do commit para o branch de origem do PR
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}
 
       - name: Create GitHub Release
         id: create_release
