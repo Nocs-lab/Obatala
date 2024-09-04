@@ -1,20 +1,20 @@
-import React, { useState } from "react";
+import React, { useState} from "react";
 import {
   TextControl,
   DatePicker,
   FormFileUpload,
-  NumberControl,
   SelectControl,
   RadioControl,
   TextareaControl,
 } from "@wordpress/components";
 
-const MetaFieldInputs = ({ field }) => {
+const MetaFieldInputs = ({ field, isEditable, onFieldChange, fieldId}) => {
   const [value, setValue] = useState(field.value);
 
   const handleChange = (newValue) => {
     setValue(newValue);
-    console.log(newValue);
+    onFieldChange(fieldId, newValue);
+
   };
 
   switch (field.type) {
@@ -25,6 +25,8 @@ const MetaFieldInputs = ({ field }) => {
             label={field.title}
             value={value}
             onChange={handleChange}
+            disabled={!isEditable}
+            required
           />
         </div>
       );
@@ -34,6 +36,8 @@ const MetaFieldInputs = ({ field }) => {
           <DatePicker
             currentDate={value}
             onChange={(date) => handleChange(date)}
+            disabled={!isEditable}
+            required
           />
         </div>
       );
@@ -44,6 +48,8 @@ const MetaFieldInputs = ({ field }) => {
             accept="image/*"
             onChange={(event) => console.log(event.currentTarget.files)}
             label={field.title}
+            disabled={!isEditable}
+            required
           >
             Upload
           </FormFileUpload>
@@ -54,9 +60,11 @@ const MetaFieldInputs = ({ field }) => {
         <div className="meta-field-wrapper">
           <TextControl
             label={field.title}
-            value={field.value}
-            onChange={(value) => setClassName(value)}
+            value={value}
+            onChange={(value) => handleChange(value)}
             type="number"
+            disabled={!isEditable}
+            required
           />
         </div>
       );
@@ -67,6 +75,8 @@ const MetaFieldInputs = ({ field }) => {
             label={field.title}
             value={value}
             onChange={(newValue) => handleChange(newValue)}
+            disabled={!isEditable}
+            required
           />
         </div>
       );
@@ -80,6 +90,8 @@ const MetaFieldInputs = ({ field }) => {
             options={field.value
               .split(",")
               .map((option) => ({ label: option, value: option }))}
+            disabled={!isEditable}
+            required
           />
         </div>
       );
@@ -93,6 +105,8 @@ const MetaFieldInputs = ({ field }) => {
             options={field.value
               .split(",")
               .map((option) => ({ label: option, value: option }))}
+            disabled={!isEditable}
+            required
           />
         </div>
       );
@@ -102,3 +116,4 @@ const MetaFieldInputs = ({ field }) => {
 };
 
 export default MetaFieldInputs;
+
