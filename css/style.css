@@ -359,6 +359,19 @@ ol.list-group .list-group-item::before {
 .components-panel + .components-panel {
   margin-top: 1rem;
 }
+.components-radio-control .components-flex {
+  flex-direction: row;
+  justify-content: start;
+  gap: 1rem;
+}
+.components-radio-control .components-flex .components-radio-control__option {
+  flex-basis: 50px;
+}
+.components-tooltip {
+  background-color: var(--primary-900);
+  border-radius: 5px;
+  padding: .5rem 1rem;
+}
 
 /* Functional classes */
 .mb-1 {
@@ -580,12 +593,37 @@ button .components-spinner {
   padding: 1rem 0;
 }
 
+.meta-fields-list {
+  width: 100%;
+}
+.meta-field-item {
+  display: flex;
+  align-items: center;
+  flex-basis: 100%;
+  gap: 1rem;
+}
+.meta-field-item .order {
+  border-radius: 50%;
+  background-color: var(--primary-800);
+  color: var(--white);
+  font-weight: 600;
+  font-size: 1rem;
+  min-height: 36px;
+  min-width: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .meta-field-wrapper {
-  border: 1px solid #ddd;
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 4px;
-  background-color: #f9f9f9;
+  background-color: var(--primary-50);
+  border: 1px solid var(--primary-100);
+  border-radius: 10px;
+  padding: 1.5rem;
+  width: 100%;
+}
+.meta-field-wrapper .components-base-control__field > label,
+.meta-field-wrapper .components-input-control__label {
+  font-size: 1rem;
 }
 
 /* Oculta os itens de menu específicos usando classes gerais para o painel de administração */

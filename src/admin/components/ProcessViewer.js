@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Spinner, Notice, Panel, PanelHeader, PanelBody, PanelRow } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
+import { fetchProcessTypes } from '../api/apiRequests';
 import MetroNavigation from './ProcessManager/MetroNavigation';
 import MetaFieldInputs from './ProcessManager/MetaFieldInputs';
 import CommentForm from './ProcessManager/CommentForm';
@@ -11,6 +12,8 @@ const ProcessViewer = () => {
     const [error, setError] = useState(null);
     const [currentStep, setCurrentStep] = useState(0);
     const [steps, setSteps] = useState([]);
+    const [filteredProcessType, setFilteredProcessType] = useState(null);
+    const [processTypes, setProcessTypes] = useState([]);
 
     const getProcessIdFromUrl = () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -19,13 +22,25 @@ const ProcessViewer = () => {
 
     useEffect(() => {
         const processId = getProcessIdFromUrl();
+        
         if (processId) {
-            fetchProcess(processId);
+            // Carrega os tipos de processo e então busca o processo
+            fetchLoadProcess().then(() => {
+                fetchProcess(processId);
+            });
         } else {
             setError('No process ID found in the URL.');
             setIsLoading(false);
         }
     }, []);
+
+    useEffect(() => {
+        const processId = getProcessIdFromUrl();
+        
+        if (processId && processTypes.length > 0) {
+            fetchProcessType(processId);
+        }
+    }, [processTypes]);
 
     useEffect(() => {
         if (process) {
@@ -56,6 +71,37 @@ const ProcessViewer = () => {
             setError('Error fetching steps details.');
         }
     };
+    
+    const fetchLoadProcess = () => {
+        setIsLoading(true);
+        return fetchProcessTypes()
+            .then(data => {
+                setProcessTypes(data);
+                setIsLoading(false);
+            })
+            .catch(error => {
+                console.error('Error fetching process types:', error);
+                setIsLoading(false);
+            });
+    };
+
+    const fetchProcessType = (processId) => {
+        setIsLoading(true);
+        apiFetch({ path: `/obatala/v1/process_obatala/${processId}/process_type` })
+            .then(processTypeId => {
+                // Converta ambos para string ou number, conforme necessário
+                const filteredProcessType = processTypes.find(type => String(type.id) === String(processTypeId));
+                
+                console.log("Filtrado", filteredProcessType);
+                setFilteredProcessType(filteredProcessType);
+                setIsLoading(false);
+            })
+            .catch(error => {
+                console.error('Error fetching process type:', error);
+                setError('Error fetching process details.');
+                setIsLoading(false);
+            });
+    };
 
     if (isLoading) {
         return <Spinner />;
@@ -76,20 +122,14 @@ const ProcessViewer = () => {
     });
 
     const options = orderedSteps.map(step => ({ label: step.title, value: step.step_id }));
-
     return (
         <div>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Viewer</span>
-            <h2>{process.process_type ? process.process_type : 'Process type title'}: {process.title?.rendered}</h2>
+            <h2>{filteredProcessType ? filteredProcessType.title.rendered : 'Process type title'}: {process.title?.rendered}</h2>
             <div className="badge-container">
-                <span className={`badge ${process.status === 'completed' ? 'success' : 'warning'}`}>
-                    {process.status}
+                <span className={`badge ${process.meta.access_level == 'public' ? 'success' : 'warning'}`}>
+                    {process.meta.access_level}
                 </span>
-                {orderedSteps[currentStep] && (
-                    <span className="badge">
-                        Current step: {orderedSteps[currentStep]?.title || 'Unknown Step'}
-                    </span>
-                )}
             </div>
 
             <MetroNavigation
@@ -108,6 +148,7 @@ const ProcessViewer = () => {
                                     <ul className="meta-fields-list">
                                         {Array.isArray(orderedSteps[currentStep].meta_fields) ? orderedSteps[currentStep].meta_fields.map((field, idx) => (
                                             <li key={`${orderedSteps[currentStep].step_id}-meta-${idx}`} className="meta-field-item">
+                                                <span className="order">{idx + 1}</span>
                                                 <MetaFieldInputs field={field} />
                                             </li>
                                         )) : null}
@@ -122,7 +163,7 @@ const ProcessViewer = () => {
                 <aside>
                     <Panel>
                         <PanelHeader>Comments</PanelHeader>
-                        <CommentForm stepId={orderedSteps[currentStep].step_id} />
+                        <CommentForm stepId={orderedSteps[currentStep]?.step_id || null} />
                     </Panel>
                 </aside>
             </div>

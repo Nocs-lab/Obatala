@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Button, Icon, Tooltip } from '@wordpress/components';
+import { arrowLeft, arrowRight } from "@wordpress/icons";
 
 const MetroNavigation = ({ options, currentStep, onStepChange }) => {
     const [current, setCurrent] = useState(currentStep || 0);
@@ -21,47 +23,63 @@ const MetroNavigation = ({ options, currentStep, onStepChange }) => {
 
     return (
         <div className="metro-navigation">
-            <button className="nav-button" onClick={handlePrev}>Previous</button>
             <div className="navigation-line">
                 {options.map((option, index) => (
-                    <div
-                        key={index}
-                        className={`navigation-point ${index === current ? 'active' : ''}`}
-                        onClick={() => {
-                            setCurrent(index);
-                            onStepChange(index);
-                        }}
-                    >
-                        {option.label}
-                    </div>
+                    <Tooltip text={option.label} placement='top' delay='0'>
+                        <div
+                            key={index}
+                            className={`navigation-point ${index === current ? 'active' : ''}`}
+                            onClick={() => {
+                                setCurrent(index);
+                                onStepChange(index);
+                            }}
+                        >
+                            {index === current ? (
+                                <span><span class="badge">{index + 1}</span> {option.label}</span>
+                            ) : (
+                                <span>{index + 1}</span>
+                            )}                            
+                        </div>
+                    </Tooltip>
                 ))}
             </div>
-            <button className="nav-button" onClick={handleNext}>Next</button>
+            <Tooltip text="Previous">
+                <Button isPrimary className="nav-button prev" onClick={handlePrev} icon={<Icon icon={arrowLeft} />} />
+            </Tooltip>
+            <Tooltip text="Next">
+                <Button isPrimary className="nav-button next" onClick={handleNext} icon={<Icon icon={arrowRight} />} />
+            </Tooltip>
 
             <style>{`
                 .metro-navigation {
+                    background-color: var(--gray-200);
+                    border-radius: var(--border-radius);
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    gap: 20px;
-                    margin: 20px 0;
+                    gap: 1rem;
+                    margin-bottom: 1rem;
+                    padding: .75rem;
                 }
                 .nav-button {
-                    padding: 10px;
-                    background-color: var(--primary);
-                    color: white;
-                    border: none;
-                    border-radius: 5px;
-                    cursor: pointer;
+                    border-radius: 10px;
                 }
-                .nav-button:hover {
-                    background-color: #084e6b;
+                .nav-button.prev {
+                    margin-left: auto;
                 }
                 .navigation-line {
                     display: flex;
                     align-items: center;
-                    gap: 10px;
+                    gap: .75rem;
                     position: relative;
+                }
+                .navigation-line::before {
+                    background-color: var(--gray-300);
+                    content: "";
+                    height: 2px;
+                    position: absolute;
+                    top: 50%;
+                    width: 100%;
                 }
                 .navigation-point {
                     background-color: var(--gray-300);
@@ -73,6 +91,11 @@ const MetroNavigation = ({ options, currentStep, onStepChange }) => {
                 .navigation-point.active {
                     background-color: var(--success);
                     color: var(--white);
+                }
+                .navigation-point .badge {
+                    background-color: rgba(0,0,0,.15);
+                    color: var(--white);
+                    margin-right: .5rem;
                 }
             `}</style>
         </div>
