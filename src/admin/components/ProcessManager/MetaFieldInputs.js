@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState, useEffect} from "react";
 import {
   TextControl,
   DatePicker,
@@ -8,8 +8,9 @@ import {
   TextareaControl,
 } from "@wordpress/components";
 
-const MetaFieldInputs = ({ field, isEditable, onFieldChange, fieldId}) => {
-  const [value, setValue] = useState(field.value);
+const MetaFieldInputs = ({ field, isEditable, onFieldChange, fieldId, initalValue}) => {
+  const [value, setValue] = useState(initalValue);
+
 
   const handleChange = (newValue) => {
     setValue(newValue);
