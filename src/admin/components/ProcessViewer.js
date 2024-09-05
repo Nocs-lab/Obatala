@@ -103,19 +103,23 @@ const ProcessViewer = () => {
 
     const handleFieldChange = (fieldId, newValue) => {
         setFormValues(prevValues => {
-            const updatedValues = { ...prevValues, [fieldId]: newValue };
-            return updatedValues;
+            const updatedValues = { ...prevValues[currentStep], [fieldId]: newValue };
+            return {
+                ...prevValues,
+                [currentStep]: updatedValues, 
+            };
         });
-
+        
         setIsSubmitEnabled(formValues);
-    };
-
+    }; 
+    
     const handleSubmit = () => {
         setSubmittedSteps(prev => ({
             ...prev,
             [currentStep]: true,
         }));
         console.log('Form values:', formValues);
+
     };
 
     if (isLoading) {
@@ -159,8 +163,9 @@ const ProcessViewer = () => {
                         <Panel key={`${orderedSteps[currentStep].step_id}-${currentStep}`}>
                             <PanelHeader>
                                 {`${orderedSteps[currentStep].title}`}
+                                <span className="badge default">Setor: Recepção</span>
                                 <div>
-                                    {submittedSteps[currentStep] && <Icon icon={check}  />}
+                                    {submittedSteps[currentStep] && <Icon icon={check} style={{width: 40, height: 40}} />}
                                 </div>
                             </PanelHeader>
                             <PanelBody>
@@ -170,8 +175,9 @@ const ProcessViewer = () => {
                                             <li key={`${orderedSteps[currentStep].step_id}-meta-${idx}`} className="meta-field-item">
                                                 <span className="order">{idx + 1}</span>
                                                 <MetaFieldInputs 
-                                                    field={field}  
-                                                    fieldId={field.key}  
+                                                    field={field} 
+                                                    fieldId={idx}  
+                                                    initalValue={formValues[currentStep]?.[idx] || ''}
                                                     isEditable={!submittedSteps[currentStep]} 
                                                     onFieldChange={handleFieldChange} 
                                                 />
@@ -180,14 +186,14 @@ const ProcessViewer = () => {
                                     </ul>
 
                                     <p>Última atualização em 21/10/2024.</p>
-                                </PanelRow>
-                                <PanelRow>
+
                                     <Button
                                         isPrimary
                                         onClick={handleSubmit}
                                         disabled={!isSubmitEnabled}
                                     >Submit
                                     </Button>
+
                                 </PanelRow>
                             </PanelBody>
                         </Panel>
