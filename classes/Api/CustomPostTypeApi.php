@@ -10,10 +10,10 @@ class CustomPostTypeApi extends ObatalaAPI {
     public function register_routes() {
         // Register routes for process_obatala
         $this->register_post_type_routes('process_obatala');
-        
+
         // Register routes for process_step
         $this->register_post_type_routes('process_step');
-        
+
         // Register routes for process_type
         $this->register_post_type_routes('process_type');
     }
@@ -30,15 +30,23 @@ class CustomPostTypeApi extends ObatalaAPI {
         register_rest_route(self::NAMESPACE, '/' . $post_type, [
             [
                 'methods' => WP_REST_Server::READABLE,
-                'callback' => function($request) use ($controller, $post_type) {
+                'callback' => function ($request) use ($controller, $post_type) {
                     $response = $controller->get_items($request);
                     if (!is_wp_error($response)) {
                         $data = $response->get_data();
                         foreach ($data as &$item) {
                             $meta = get_post_meta($item['id']);
+
+                            // Desserializar step_order, se estiver presente
                             if (isset($meta['step_order'])) {
                                 $meta['step_order'] = maybe_unserialize($meta['step_order'][0]);
                             }
+
+                            // Desserializar flowData, se estiver presente
+                            if (isset($meta['flowData'])) {
+                                $meta['flowData'] = maybe_unserialize($meta['flowData'][0]);
+                            }
+
                             $item['meta'] = $meta;
                         }
                         $response->set_data($data);
@@ -60,14 +68,22 @@ class CustomPostTypeApi extends ObatalaAPI {
         register_rest_route(self::NAMESPACE, '/' . $post_type . '/(?P<id>[\d]+)', [
             [
                 'methods' => WP_REST_Server::READABLE,
-                'callback' => function($request) use ($controller, $post_type) {
+                'callback' => function ($request) use ($controller, $post_type) {
                     $response = $controller->get_item($request);
                     if (!is_wp_error($response)) {
                         $data = $response->get_data();
                         $meta = get_post_meta($data['id']);
+
+                        // Desserializar step_order, se estiver presente
                         if (isset($meta['step_order'])) {
                             $meta['step_order'] = maybe_unserialize($meta['step_order'][0]);
                         }
+
+                        // Desserializar flowData, se estiver presente
+                        if (isset($meta['flowData'])) {
+                            $meta['flowData'] = maybe_unserialize($meta['flowData'][0]);
+                        }
+
                         $data['meta'] = $meta;
                         $response->set_data($data);
                     }
@@ -106,4 +122,3 @@ class CustomPostTypeApi extends ObatalaAPI {
         ]);
     }
 }
-
