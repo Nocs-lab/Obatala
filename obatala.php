@@ -87,16 +87,16 @@ class Nocs_ObatalaPlugin {
 		$custom_post_type_api = new \Obatala\Api\CustomPostTypeApi();
 		$custom_post_type_api->register();
 		
-		$process_custom_fields = new \Obatala\Api\ProcessCustomFields();
+		$process_custom_fields = new \Obatala\Api\ProcessApi();
 		$process_custom_fields->register();
 
 		$custom_metadata_api = new \Obatala\Api\StepMetadataApi();
 		$custom_metadata_api->register();
 
-		$process_step_custom_fields = new \Obatala\Api\ProcessStepCustomFields();
+		$process_step_custom_fields = new \Obatala\Api\ProcessStepApi();
 		$process_step_custom_fields->register();
 
-		$process_type_custom_fields = new \Obatala\Api\ProcessTypeCustomFields();
+		$process_type_custom_fields = new \Obatala\Api\ProcessTypeApi();
 		$process_type_custom_fields->register();
 	}
 
