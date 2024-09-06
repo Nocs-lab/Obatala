@@ -22,8 +22,7 @@ class Enqueuer {
 
     public static function enqueue_admin_scripts($hook) {
         if (array_key_exists($hook, self::$pages)) {
-            error_log("Enqueueing scripts for $hook");
-
+           
             $asset_file = include OBATALA_PLUGIN_DIR . 'build/index.asset.php';
 
             wp_register_script(
