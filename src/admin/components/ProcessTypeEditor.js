@@ -153,11 +153,11 @@ const ProcessTypeEditor = () => {
                   {notice.message}
                 </Notice>
               )}
-              {/* <StepList
+              <StepList
                 processTypeId={processType.id}
                 stepOrder={stepOrder}
                 onNotice={setNotice}
-              /> */}
+              />
               {/* Passa o flowData carregado como initialData para o ProcessFlow */}
               <ProcessFlow ref={flowRef} initialData={flowData} />
             </PanelRow>
