@@ -4,7 +4,10 @@ namespace Obatala\Entities;
 
 defined('ABSPATH') || exit;
 
-class ProcessTypeCollection {
+class ProcessType {
+    /* 
+    * Register the post type for the Process Type entity
+    */
 
     public static function get_post_type() {
         return 'process_type';

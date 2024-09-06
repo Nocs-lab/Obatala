@@ -67,9 +67,9 @@ class Nocs_ObatalaPlugin {
 		\Obatala\Admin\Enqueuer::init();
 
 		// Register the custom post types and taxonomies
-		add_action('init', ['Obatala\Entities\ProcessCollection', 'init']);
-		add_action('init', ['Obatala\Entities\ProcessStepCollection', 'init']);
-		add_action('init', ['Obatala\Entities\ProcessTypeCollection', 'init']);
+		add_action('init', ['Obatala\Entities\Process', 'init']);
+		add_action('init', ['Obatala\Entities\ProcessStep', 'init']);
+		add_action('init', ['Obatala\Entities\ProcessType', 'init']);
 
 		// Register and enqueue scripts and styles
 		// Register and enqueue scripts and styles

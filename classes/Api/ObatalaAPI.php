@@ -6,27 +6,27 @@ use WP_REST_Controller;
 
 class ObatalaAPI extends WP_REST_Controller {
     /**
-     * Namespace da API
+     * API Namespace
      */
     const NAMESPACE = 'obatala/v1';
 
     /**
-     * Registra o namespace da API e outras configurações iniciais
+     * Registers the API namespace and other initial settings
      */
     public function register() {
         add_action('rest_api_init', [$this, 'register_routes']);
     }
 
     /**
-     * Registra as rotas da API
-     * Este método deve ser implementado nas subclasses
+     * Registers the API routes
+     * This method should be implemented in subclasses
      */
     public function register_routes() {
-        // As rotas específicas serão registradas nas subclasses
+        // Specific routes will be registered in the subclasses
     }
 
     /**
-     * Adiciona uma rota customizada à API
+     * Adds a custom route to the API
      *
      * @param string $route
      * @param array $args
