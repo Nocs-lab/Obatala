@@ -3,7 +3,7 @@ import { SortableContext, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import SortableField from "./SortableField";
 
-const SortableColumn = ({ id, fields, position }) => {
+const SortableColumn = ({ id, fields, position = { x: 0, y: 0 } }) => {
   const {
     attributes,
     listeners,
@@ -15,17 +15,17 @@ const SortableColumn = ({ id, fields, position }) => {
 
   const style = {
     transform: CSS.Transform.toString(transform),
-    transition: isDragging ? "none" : transition || "transform 250ms ease", // Remove a transição durante o arraste
+    transition: isDragging ? "none" : transition || "transform 250ms ease", 
     position: "absolute",
-    top: `${position.y}px`,
+    top: `${position.y}px`, // Verifica se position existe, senão usa { x: 0, y: 0 }
     left: `${position.x}px`,
-    border: isDragging ? "2px dashed #007bff" : "1px solid #ccc", // Bordas visíveis ao arrastar
+    border: isDragging ? "2px dashed #007bff" : "1px solid #ccc",
     padding: "8px",
     minWidth: "200px",
-    backgroundColor: isDragging ? "white" : "white", // Feedback visual ao arrastar
+    backgroundColor: "white",
     borderRadius: "4px",
     cursor: "move",
-    zIndex: isDragging ? 1000 : "auto", // Coloca a coluna em cima durante o arraste
+    zIndex: isDragging ? 1000 : "auto",
   };
 
   return (

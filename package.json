@@ -32,6 +32,7 @@
         "@dnd-kit/sortable": "^8.0.0",
         "@dnd-kit/utilities": "^3.2.2",
         "@wordpress/icons": "^10.0.0",
+        "@xyflow/react": "^12.2.1",
         "date-fns": "^3.6.0",
         "react-beautiful-dnd": "^13.1.1",
         "react-router-dom": "^6.25.1",

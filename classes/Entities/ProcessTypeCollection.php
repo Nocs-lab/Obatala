@@ -1,4 +1,5 @@
 <?php
+
 namespace Obatala\Entities;
 
 defined('ABSPATH') || exit;
@@ -54,14 +55,14 @@ class ProcessTypeCollection {
             'single' => true,
             'show_in_rest' => true,
         ]);
-    
+
         register_post_meta('process_type', 'accept_tainacan_items', [
             'type' => 'boolean',
             'description' => 'Accept Tainacan items',
             'single' => true,
             'show_in_rest' => true,
         ]);
-    
+
         register_post_meta('process_type', 'generate_tainacan_items', [
             'type' => 'boolean',
             'description' => 'Generate Tainacan items',
@@ -89,6 +90,86 @@ class ProcessTypeCollection {
                 ],
             ],
             'default' => []
+        ]);
+        register_post_meta('process_type', 'flowData', [
+            'type' => 'object',
+            'description' => 'Flow Data',
+            'single' => true,
+            'show_in_rest' => [
+                'schema' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'nodes' => [
+                            'type' => 'array',
+                            'description' => 'List of nodes in the flow',
+                            'items' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'id' => [
+                                        'type' => 'string',
+                                        'description' => 'Node ID',
+                                    ],
+                                    'position' => [
+                                        'type' => 'object',
+                                        'description' => 'Position of the node',
+                                        'properties' => [
+                                            'x' => ['type' => 'number'],
+                                            'y' => ['type' => 'number'],
+                                        ],
+                                    ],
+                                    'fields' => [
+                                        'type' => 'array',
+                                        'description' => 'Fields associated with the node',
+                                        'items' => [
+                                            'type' => 'object',
+                                            'properties' => [
+                                                'id' => ['type' => 'string'],
+                                                'title' => ['type' => 'string'],
+                                                'type' => ['type' => 'string'],
+                                                'value' => ['type' => 'string'],
+                                            ],
+                                        ],
+                                    ],
+                                    'stageName' => [
+                                        'type' => 'string',
+                                        'description' => 'Name of the stage (node)',
+                                    ],
+                                ],
+                            ],
+                        ],
+                        'edges' => [
+                            'type' => 'array',
+                            'description' => 'List of edges connecting the nodes',
+                            'items' => [
+                                'type' => 'object',
+                                'properties' => [
+                                    'id' => [
+                                        'type' => 'string',
+                                        'description' => 'Edge ID',
+                                    ],
+                                    'source' => [
+                                        'type' => 'string',
+                                        'description' => 'Source node ID for the edge',
+                                    ],
+                                    'target' => [
+                                        'type' => 'string',
+                                        'description' => 'Target node ID for the edge',
+                                    ],
+                                    'type' => [
+                                        'type' => 'string',
+                                        'description' => 'Type of edge (e.g., smoothstep)',
+                                        'default' => 'smoothstep',
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+            'default' => [
+                'nodes' => [],
+                'edges' => [],
+            ],
         ]);
     }
 

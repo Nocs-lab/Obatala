@@ -2,12 +2,10 @@
 
 namespace Obatala\Admin;
 
-// Verifica se o arquivo está sendo acessado diretamente
 if (!defined('ABSPATH')) {
     exit; // Se sim, encerra a execução para segurança
 }
 
-// Define a classe Enqueuer
 class Enqueuer {
     private static $pages = [
         'obatala_page_process-manager' => 'process-manager',
@@ -37,6 +35,7 @@ class Enqueuer {
             );
             wp_enqueue_script('obatala-admin-scripts');
 
+            // Enfileirando o estilo principal do plugin
             wp_register_style(
                 'obatala-admin-styles',
                 OBATALA_PLUGIN_URL . 'css/style.css',
@@ -44,7 +43,15 @@ class Enqueuer {
                 $asset_file['version']
             );
             wp_enqueue_style('obatala-admin-styles');
+
+            // Enfileirando o estilo do React Flow
+            wp_register_style(
+                'react-flow-styles',
+                OBATALA_PLUGIN_URL . 'css/react-flow.css', // Certifique-se de que o arquivo foi copiado
+                [],
+                $asset_file['version']
+            );
+            wp_enqueue_style('react-flow-styles');
         }
     }
 }
-
