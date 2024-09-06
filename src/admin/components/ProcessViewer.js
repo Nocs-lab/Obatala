@@ -118,6 +118,7 @@ const ProcessViewer = () => {
             ...prev,
             [currentStep]: true,
         }));
+        setIsSubmitEnabled(false);
         console.log('Form values:', formValues);
 
     };
@@ -157,6 +158,7 @@ const ProcessViewer = () => {
                     options={options}
                     currentStep={currentStep}
                     onStepChange={(newStep) => setCurrentStep(newStep)}
+                    submittedSteps={submittedSteps}
                 />
                 <main>
                     {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
@@ -182,12 +184,10 @@ const ProcessViewer = () => {
                                         )) : null}
                                     </ul>
 
-                                    <p>Última atualização em 21/10/2024.</p>
-
                                     <Button
                                         isPrimary
                                         onClick={handleSubmit}
-                                        disabled={!isSubmitEnabled}
+                                        disabled={!isSubmitEnabled || submittedSteps[currentStep]}
                                     >Submit
                                     </Button>
 
