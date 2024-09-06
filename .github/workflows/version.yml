@@ -1,0 +1,60 @@
+name: Version Update
+
+on:
+  pull_request:
+    branches:
+      - main
+      - development
+    types:
+      - opened  # Executa apenas quando o PR for criado
+
+jobs:
+  version_update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}  # Checkout no branch de origem do PR
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Determine version bump
+        id: version
+        run: |
+          if [[ "${{ github.event.pull_request.base.ref }}" == "development" ]]; then
+            echo "Bumping patch version"
+            new_version=$(npm version patch --no-git-tag-version)
+            echo "new_version=${new_version}" >> $GITHUB_ENV
+          elif [[ "${{ github.event.pull_request.base.ref }}" == "main" ]]; then
+            echo "Bumping minor version"
+            new_version=$(npm version minor --no-git-tag-version)
+            echo "new_version=${new_version}" >> $GITHUB_ENV
+          fi
+        shell: bash
+
+      - name: Update plugin version and commit
+        run: |
+          VERSION=${{ env.new_version }}
+          # Atualiza a versão no plugin
+          node developer/update-plugin-version.js
+          
+          # Configura o git
+          git config --local user.name "Nocs Bot 🤖"
+          git config --local user.email "info@nocslab.ifrn.edu.br"
+          
+          # Adiciona os arquivos modificados
+          git add package.json obatala.php README.md
+          
+          # Faz o commit
+          git commit -m "chore: update plugin version to ${VERSION}"
+          
+          # Faz o push do commit para o branch de origem do PR
+          git push origin HEAD:${{ github.event.pull_request.head.ref }}

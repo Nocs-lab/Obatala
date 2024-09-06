@@ -6,7 +6,7 @@ defined('ABSPATH') || exit;
 
 use WP_REST_Response; // Certifique-se de importar a classe WP_REST_Response
 
-class ProcessCustomFields extends ObatalaAPI {
+class ProcessApi extends ObatalaAPI {
 
     public function register_routes() {
         // Route to get the current stage
