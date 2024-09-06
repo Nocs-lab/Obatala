@@ -8418,6 +8418,10 @@ const ProcessTypeEditor = () => {
               isDismissible: true,
               onRemove: () => setNotice(null),
               children: notice.message
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_ProcessTypeManager_StepList__WEBPACK_IMPORTED_MODULE_6__["default"], {
+              processTypeId: processType.id,
+              stepOrder: stepOrder,
+              onNotice: setNotice
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_FlowEditor_ProcessFlow__WEBPACK_IMPORTED_MODULE_5__["default"], {
               ref: flowRef,
               initialData: flowData

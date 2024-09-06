@@ -4,7 +4,7 @@ namespace Obatala\Entities;
 
 defined('ABSPATH') || exit;
 
-class ProcessCollection {
+class Process {
 
     public static function get_post_type() {
         return 'process_obatala';
