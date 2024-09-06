@@ -163,10 +163,7 @@ const ProcessViewer = () => {
                         <Panel key={`${orderedSteps[currentStep].step_id}-${currentStep}`}>
                             <PanelHeader>
                                 {`${orderedSteps[currentStep].title}`}
-                                <span className="badge default">Setor: Recepção</span>
-                                <div>
-                                    {submittedSteps[currentStep] && <Icon icon={check} style={{width: 40, height: 40}} />}
-                                </div>
+                                <span className="badge default ms-auto">Setor: Recepção</span>
                             </PanelHeader>
                             <PanelBody>
                                 <PanelRow>
@@ -195,6 +192,7 @@ const ProcessViewer = () => {
                                     </Button>
 
                                 </PanelRow>
+                                <footer>Última atualização em 21/10/2024 por João da Silva</footer>
                             </PanelBody>
                         </Panel>
                     ) : (

@@ -13,7 +13,7 @@ const MetroNavigation = ({ options, currentStep, onStepChange }) => {
                 <button
                     type="button"
                     key={index}
-                    className={`navigation-point ${index === current ? 'active' : ''}`}
+                    className={`navigation-point ${index === current ? 'active' : ''} ${index === 2 ? 'completed' : ''}`}
                     onClick={() => {
                         setCurrent(index);
                         onStepChange(index);
