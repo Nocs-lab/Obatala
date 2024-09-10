@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Spinner, Notice, Panel, PanelHeader, PanelBody, PanelRow, ProgressBar } from '@wordpress/components';
+import { Spinner, Notice, Panel, PanelHeader, PanelBody, PanelRow , Button} from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { fetchProcessTypes } from '../api/apiRequests';
 import MetroNavigation from './ProcessManager/MetroNavigation';
 import MetaFieldInputs from './ProcessManager/MetaFieldInputs';
 import CommentForm from './ProcessManager/CommentForm';
+import { check, Icon } from '@wordpress/icons';
 
 const ProcessViewer = () => {
     const [process, setProcess] = useState(null);
@@ -14,7 +15,10 @@ const ProcessViewer = () => {
     const [steps, setSteps] = useState([]);
     const [filteredProcessType, setFilteredProcessType] = useState(null);
     const [processTypes, setProcessTypes] = useState([]);
-
+    const [submittedSteps, setSubmittedSteps] = useState({});
+    const [formValues, setFormValues] = useState({});
+    const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
+    
     const getProcessIdFromUrl = () => {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get('process_id');
@@ -22,9 +26,7 @@ const ProcessViewer = () => {
 
     useEffect(() => {
         const processId = getProcessIdFromUrl();
-        
         if (processId) {
-            // Carrega os tipos de processo e então busca o processo
             fetchLoadProcess().then(() => {
                 fetchProcess(processId);
             });
@@ -36,7 +38,6 @@ const ProcessViewer = () => {
 
     useEffect(() => {
         const processId = getProcessIdFromUrl();
-        
         if (processId && processTypes.length > 0) {
             fetchProcessType(processId);
         }
@@ -71,7 +72,7 @@ const ProcessViewer = () => {
             setError('Error fetching steps details.');
         }
     };
-    
+
     const fetchLoadProcess = () => {
         setIsLoading(true);
         return fetchProcessTypes()
@@ -89,10 +90,7 @@ const ProcessViewer = () => {
         setIsLoading(true);
         apiFetch({ path: `/obatala/v1/process_obatala/${processId}/process_type` })
             .then(processTypeId => {
-                // Converta ambos para string ou number, conforme necessário
                 const filteredProcessType = processTypes.find(type => String(type.id) === String(processTypeId));
-                
-                console.log("Filtrado", filteredProcessType);
                 setFilteredProcessType(filteredProcessType);
                 setIsLoading(false);
             })
@@ -101,6 +99,28 @@ const ProcessViewer = () => {
                 setError('Error fetching process details.');
                 setIsLoading(false);
             });
+    };
+
+    const handleFieldChange = (fieldId, newValue) => {
+        setFormValues(prevValues => {
+            const updatedValues = { ...prevValues[currentStep], [fieldId]: newValue };
+            return {
+                ...prevValues,
+                [currentStep]: updatedValues, 
+            };
+        });
+        
+        setIsSubmitEnabled(formValues);
+    }; 
+    
+    const handleSubmit = () => {
+        setSubmittedSteps(prev => ({
+            ...prev,
+            [currentStep]: true,
+        }));
+        setIsSubmitEnabled(false);
+        console.log('Form values:', formValues);
+
     };
 
     if (isLoading) {
@@ -115,7 +135,6 @@ const ProcessViewer = () => {
         return <Notice status="warning" isDismissible={false}>No process found.</Notice>;
     }
 
-    // Map orderedSteps to include the title from the steps list
     const orderedSteps = process.meta.step_order.map(order => {
         const step = steps.find(s => s.id === order.step_id);
         return { ...order, title: step ? step.title.rendered : 'Unknown Title', meta_fields: order.meta_fields || [] };
@@ -139,6 +158,7 @@ const ProcessViewer = () => {
                     options={options}
                     currentStep={currentStep}
                     onStepChange={(newStep) => setCurrentStep(newStep)}
+                    submittedSteps={submittedSteps}
                 />
                 <main>
                     {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
@@ -152,10 +172,25 @@ const ProcessViewer = () => {
                                     <ul className="meta-fields-list">
                                         {Array.isArray(orderedSteps[currentStep].meta_fields) ? orderedSteps[currentStep].meta_fields.map((field, idx) => (
                                             <li key={`${orderedSteps[currentStep].step_id}-meta-${idx}`} className="meta-field-item">
-                                                <MetaFieldInputs field={field} />
+                                                <span className="order">{idx + 1}</span>
+                                                <MetaFieldInputs 
+                                                    field={field} 
+                                                    fieldId={idx}  
+                                                    initalValue={formValues[currentStep]?.[idx] || ''}
+                                                    isEditable={!submittedSteps[currentStep]} 
+                                                    onFieldChange={handleFieldChange} 
+                                                />
                                             </li>
                                         )) : null}
                                     </ul>
+
+                                    <Button
+                                        isPrimary
+                                        onClick={handleSubmit}
+                                        disabled={!isSubmitEnabled || submittedSteps[currentStep]}
+                                    >Submit
+                                    </Button>
+
                                 </PanelRow>
                                 <footer>Última atualização em 21/10/2024 por João da Silva</footer>
                             </PanelBody>

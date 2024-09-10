@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const MetroNavigation = ({ options, currentStep, onStepChange }) => {
+const MetroNavigation = ({ options, currentStep, onStepChange, submittedSteps }) => {
     const [current, setCurrent] = useState(currentStep || 0);
 
     useEffect(() => {
@@ -13,7 +13,7 @@ const MetroNavigation = ({ options, currentStep, onStepChange }) => {
                 <button
                     type="button"
                     key={index}
-                    className={`navigation-point ${index === current ? 'active' : ''} ${index === 2 ? 'completed' : ''}`}
+                    className={`navigation-point ${index === currentStep ? 'active' : ''} ${submittedSteps[index] ? 'completed' : ''}`}
                     onClick={() => {
                         setCurrent(index);
                         onStepChange(index);
