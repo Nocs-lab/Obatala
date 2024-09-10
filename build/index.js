@@ -6770,10 +6770,44 @@ const ProcessManager = ({
   const [selectedProcessId, setSelectedProcessId] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   const [editingProcess, setEditingProcess] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    fetchProcessTypes();
-    fetchProcessSteps();
-    fetchProcesses();
+    //createSector();
+    fetchSectores();
+    //fetchProcessTypes();
+    //fetchProcessSteps();
+    //fetchProcesses();
   }, []);
+  const fetchSectores = () => {
+    console.log("aqi");
+    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+      path: `/obatala/v1/sector_obatala?per_page=100&_embed`
+    }).then(data => {
+      console.log("se: ", data);
+    }).catch(error => {
+      console.error('Error fetching sectores:', error);
+    });
+  };
+  const createSector = () => {
+    console.log("Creating sector");
+
+    // Definindo o corpo da solicitação
+    const body = JSON.stringify({
+      sector_name: "sector teste"
+    });
+
+    // Configurando a solicitação POST
+    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
+      path: '/obatala/v1/sector_obatala',
+      method: 'POST',
+      body: body,
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    }).then(response => {
+      console.log("Sector created successfully:", response);
+    }).catch(error => {
+      console.error('Error creating sector:', error);
+    });
+  };
   const fetchProcessTypes = () => {
     _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
       path: `/obatala/v1/process_type?per_page=100&_embed`

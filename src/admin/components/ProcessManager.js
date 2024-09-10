@@ -19,6 +19,7 @@ const ProcessManager = ({ onSelectProcess }) => {
         fetchProcesses();
     }, []);
 
+
     const fetchProcessTypes = () => {
         apiFetch({ path: `/obatala/v1/process_type?per_page=100&_embed` })
             .then(data => {

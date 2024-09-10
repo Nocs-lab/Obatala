@@ -70,6 +70,7 @@ class Nocs_ObatalaPlugin {
 		add_action('init', ['Obatala\Entities\Process', 'init']);
 		add_action('init', ['Obatala\Entities\ProcessStep', 'init']);
 		add_action('init', ['Obatala\Entities\ProcessType', 'init']);
+		add_action('init', ['Obatala\Entities\Sector', 'init']);
 
 		// Register and enqueue scripts and styles
 		// Register and enqueue scripts and styles
@@ -98,6 +99,9 @@ class Nocs_ObatalaPlugin {
 
 		$process_type_custom_fields = new \Obatala\Api\ProcessTypeApi();
 		$process_type_custom_fields->register();
+
+		$sector_api = new \Obatala\Api\SectorAPI();
+		$sector_api->register();
 	}
 
 
