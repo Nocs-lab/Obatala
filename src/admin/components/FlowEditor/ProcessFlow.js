@@ -234,6 +234,7 @@ const ProcessFlow = forwardRef(({ initialData }, ref) => {
       console.error("Validation errors:", validationResult.errors);
     }
   };
+  
   // Função para adicionar novos nós
   const addNewNode = () => {
     const newNodeId = `Etapa ${nodes.length + 1}`;
