@@ -518,7 +518,28 @@ button .components-spinner {
   margin-right: 8px;
 }
 
-
+@media print {
+  #adminmenumain,
+  .action-bar,
+  .metro-navigation,
+  .update-nag {
+    display: none !important;
+  }
+  #wpcontent,
+  #wpfooter {
+    margin-left: 0;
+  }
+  .badge,
+  .components-panel__header,
+  .components-panel__header h3,
+  .components-panel__row {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .panel-container.three-columns main {
+    flex-basis: 100%;
+  }
+}
 
 
 
