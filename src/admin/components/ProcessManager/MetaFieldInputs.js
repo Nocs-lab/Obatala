@@ -17,26 +17,28 @@ const MetaFieldInputs = ({ field, isEditable, onFieldChange, fieldId, initalValu
 
   };
 
-  switch (field.type) {
-    case "text":
-      return (
-        <div className="meta-field-wrapper">
-          {isEditable ? (
-            <TextControl
-              label={field.title}
-              value={value}
-              onChange={handleChange}
-              disabled={!isEditable}
-              required
-            />
-          ) : (
-            <dl>
-                    <dt>{field.title}</dt>
-                    <dd>{initalValue}</dd>
-                </dl>
-          )}
-        </div>
-      );
+    switch (field.type) {
+        case "text":
+            return (
+                <div className="meta-field-wrapper">
+                    {isEditable ? (
+                        <TextControl
+                        label={field.title}
+                        value={value}
+                        onChange={handleChange}
+                        disabled={!isEditable}
+                        required
+                        />
+                    ) : (
+                        <dl className="description-list">
+                            <div className="list-item">
+                                <dt>{field.title}</dt>
+                                <dd>{initalValue}</dd>
+                            </div>
+                        </dl>
+                    )}
+                </div>
+            );
     case "datepicker":
       return (
         <div className="meta-field-wrapper">
@@ -48,9 +50,11 @@ const MetaFieldInputs = ({ field, isEditable, onFieldChange, fieldId, initalValu
               required
             />
           ) : (
-            <dl>
-                  <dt>{field.title}</dt>
-                  <dd>{initalValue}</dd>
+            <dl className="description-list">
+                <div className="list-item">
+                    <dt>{field.title}</dt>
+                    <dd>{initalValue}</dd>
+                  </div>
             </dl>
           )}
         </div>
@@ -69,9 +73,11 @@ const MetaFieldInputs = ({ field, isEditable, onFieldChange, fieldId, initalValu
               Upload
             </FormFileUpload>
             ) : (
-              <dl>
-                    <dt>{field.title}</dt>
-                    <dd>{initalValue}</dd>
+              <dl className="description-list">
+                    <div className="list-item">
+                        <dt>{field.title}</dt>
+                        <dd>{initalValue}</dd>
+                    </div>
               </dl>
             )}
         </div>
@@ -89,9 +95,11 @@ const MetaFieldInputs = ({ field, isEditable, onFieldChange, fieldId, initalValu
               required
             />
           ) : (
-            <dl>
-                  <dt>{field.title}</dt>
-                  <dd>{initalValue}</dd>
+            <dl className="description-list">
+                <div className="list-item">
+                    <dt>{field.title}</dt>
+                    <dd>{initalValue}</dd>
+                </div>
             </dl>
           )}
         </div>
@@ -108,9 +116,11 @@ const MetaFieldInputs = ({ field, isEditable, onFieldChange, fieldId, initalValu
               required
             />
           ) : (
-            <dl>
-                  <dt>{field.title}</dt>
-                  <dd>{initalValue}</dd>
+            <dl className="description-list">
+                <div className="list-item">
+                    <dt>{field.title}</dt>
+                    <dd>{initalValue}</dd>
+                </div>
             </dl>
           )}
         </div>
@@ -130,9 +140,11 @@ const MetaFieldInputs = ({ field, isEditable, onFieldChange, fieldId, initalValu
               required
             />
           ) : (
-            <dl>
+            <dl className="description-list">
+                <div className="list-item">
                   <dt>{field.title}</dt>
                   <dd>{initalValue}</dd>
+                  </div>
             </dl>
           )}
         </div>
@@ -152,9 +164,11 @@ const MetaFieldInputs = ({ field, isEditable, onFieldChange, fieldId, initalValu
               required
             />
           ) : (
-            <dl>
-                  <dt>{field.title}</dt>
-                  <dd>{initalValue}</dd>
+            <dl className="description-list">
+                <div className="list-item">
+                    <dt>{field.title}</dt>
+                    <dd>{initalValue}</dd>
+                </div>
             </dl>
           )}
         </div>

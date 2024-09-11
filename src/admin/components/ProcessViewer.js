@@ -164,33 +164,34 @@ const ProcessViewer = () => {
                     {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
                         <Panel key={`${orderedSteps[currentStep].step_id}-${currentStep}`}>
                             <PanelHeader>
-                                {`${orderedSteps[currentStep].title}`}
+                                <h3>{`${orderedSteps[currentStep].title}`}</h3>
                                 <span className="badge default ms-auto">Setor: Recepção</span>
                             </PanelHeader>
                             <PanelBody>
                                 <PanelRow>
-                                    <ul className="meta-fields-list">
-                                        {Array.isArray(orderedSteps[currentStep].meta_fields) ? orderedSteps[currentStep].meta_fields.map((field, idx) => (
-                                            <li key={`${orderedSteps[currentStep].step_id}-meta-${idx}`} className="meta-field-item">
-                                                <span className="order">{idx + 1}</span>
-                                                <MetaFieldInputs 
-                                                    field={field} 
-                                                    fieldId={idx}  
-                                                    initalValue={formValues[currentStep]?.[idx] || ''}
-                                                    isEditable={!submittedSteps[currentStep]} 
-                                                    onFieldChange={handleFieldChange} 
-                                                />
-                                            </li>
-                                        )) : null}
-                                    </ul>
-
-                                    <Button
-                                        isPrimary
-                                        onClick={handleSubmit}
-                                        disabled={!isSubmitEnabled || submittedSteps[currentStep]}
-                                    >Submit
-                                    </Button>
-
+                                    <form className="centered" action="">
+                                        <ul className="meta-fields-list">
+                                            {Array.isArray(orderedSteps[currentStep].meta_fields) ? orderedSteps[currentStep].meta_fields.map((field, idx) => (
+                                                <li key={`${orderedSteps[currentStep].step_id}-meta-${idx}`} className="meta-field-item">
+                                                    <MetaFieldInputs 
+                                                        field={field} 
+                                                        fieldId={idx}  
+                                                        initalValue={formValues[currentStep]?.[idx] || ''}
+                                                        isEditable={!submittedSteps[currentStep]} 
+                                                        onFieldChange={handleFieldChange} 
+                                                    />
+                                                </li>
+                                            )) : null}
+                                        </ul>
+                                        <div className="action-bar">
+                                            <Button
+                                                isPrimary
+                                                onClick={handleSubmit}
+                                                disabled={!isSubmitEnabled || submittedSteps[currentStep]}
+                                            >Submit
+                                            </Button>
+                                        </div>
+                                    </form>
                                 </PanelRow>
                                 <footer>Última atualização em 21/10/2024 por João da Silva</footer>
                             </PanelBody>
