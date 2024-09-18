@@ -10,6 +10,7 @@ use WP_Query;
 class SectorApi extends ObatalaAPI {
 
     public function register_routes() {
+
         error_log('Registering routes');
 
         // Route to create a new sector
@@ -23,8 +24,8 @@ class SectorApi extends ObatalaAPI {
                     'validate_callback' => function($param) {
                         return !empty($param);
                     }
-                ]
-            ]
+                ],
+            ] 
         ]);
 
         // Route to get the sector by ID
@@ -68,24 +69,35 @@ class SectorApi extends ObatalaAPI {
             'methods' => 'POST',
             'callback' => [$this, 'update_meta'],
             'permission_callback' => '__return_true',
+            'args' => [
+                'description' => [
+                    'required' => true,
+                    'validate_callback' => function($param) {
+                        return !empty($param);
+                    }
+                ]
+            ]
         ]);
     }
 
     public function create_sector($request) {
-        error_log('create_sector function called');
 
+        error_log('create_sector function called');
+        
         $sector_name = sanitize_text_field($request['sector_name']);
         
-        error_log('Sector name: ' . $sector_name); 
-
+        if (empty($sector_name)) {
+            return new WP_REST_Response('Nome do setor vazio', 400); // Retorna erro se o nome estiver vazia
+        }
         $post_id = wp_insert_post([
             'post_title' => $sector_name,
             'post_type' => 'sector_obatala',
-            'post_status' => 'publish',
+            'post_status' => 'publish'
         ]);
 
+
         if ($post_id && !is_wp_error($post_id)) {
-            return new WP_REST_Response('Sector created successfully', 201);
+                return new WP_REST_Response('Sector created', 201);
         } else {
             return new WP_REST_Response('Error creating sector', 500);
         }
@@ -106,32 +118,32 @@ class SectorApi extends ObatalaAPI {
         }
     }
 
-public function get_all_sectors($request) {
-    error_log('retorne sector function called');
+    public function get_all_sectors($request) {
+        error_log('retorne sector function called');
 
-    $query = new WP_Query([
-        'post_type' => 'sector_obatala',
-        'post_status' => 'publish',
-        'posts_per_page' => -1, 
-    ]);
+        $query = new WP_Query([
+            'post_type' => 'sector_obatala',
+            'post_status' => 'publish',
+            'posts_per_page' => -1, 
+        ]);
 
-    
-    $sectors = [];
+        
+        $sectors = [];
 
-    if ($query->have_posts()) {
-        while ($query->have_posts()) {
-            $query->the_post();
-            $sectors[] = [
-                'id' => get_the_ID(),
-                'title' => get_the_title(),
-                'content' => get_the_content(),
-            ];
+        if ($query->have_posts()) {
+            while ($query->have_posts()) {
+                $query->the_post();
+                $sectors[] = [
+                    'id' => get_the_ID(),
+                    'title' => get_the_title(),
+                    'content' => get_the_content(),
+                ];
+            }
+            wp_reset_postdata();
         }
-        wp_reset_postdata();
-    }
 
-    return $sectors;
-}
+        return $sectors;
+    }
 
     public function update_sector($request) {
         $post_id = (int) $request['id'];
@@ -158,11 +170,11 @@ public function get_all_sectors($request) {
 
     public function update_meta($request) {
         $post_id = (int) $request['id'];
-        $meta = $request->get_json_params();
 
-        foreach ($meta as $key => $value) {
-            update_post_meta($post_id, $key, $value);
-        }
+        $description = sanitize_text_field($request['description']);
+
+        update_post_meta($post_id, "sector_description", $description);
+        
 
         return new WP_REST_Response('Meta fields updated successfully', 200);
     } 

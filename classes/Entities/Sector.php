@@ -36,6 +36,15 @@ class Sector {
             'query_var'          => true,
             'rewrite'            => array('slug' => 'obatala_sectors'),
             'capability_type'    => 'post',
+            'capabilities'       => array(
+                'edit_post'          => 'edit_post',
+                'read_post'          => 'read_post',
+                'delete_post'        => 'delete_post',
+                'edit_posts'         => 'edit_posts',
+                'edit_others_posts'  => 'edit_others_posts',
+                'publish_posts'      => 'publish_posts',
+                'read_private_posts' => 'read_private_posts'
+            ),
             'has_archive'        => true,
             'hierarchical'       => false,
             'menu_position'      => 100,
@@ -46,17 +55,16 @@ class Sector {
 
         error_log('Post type registered: ' . self::get_post_type()); // Log para depuração
 
-
         register_post_type(self::get_post_type(), $args);
     }
 
     public static function register_sector_meta() {
-        // Se precisar adicionar metadados específicos para os setores
-        register_meta('post', 'sector_type', [
-            'type' => 'integer',
-            'description' => 'Tipo de Setor',
+        // Registrando o metadado para a descrição do setor
+        register_post_meta(self::get_post_type(), 'sector_description', [
+            'type' => 'string',
+            'description' => 'Descrição do Setor',
             'single' => true,
-            'show_in_rest' => true,
+            'show_in_rest' => true, // Isso garante que o metadado será acessível via API REST
         ]);
     }
 
