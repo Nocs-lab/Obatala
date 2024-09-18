@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const MetroNavigation = ({ options, currentStep, onStepChange }) => {
+const MetroNavigation = ({ options, currentStep, onStepChange, submittedSteps }) => {
     const [current, setCurrent] = useState(currentStep || 0);
 
     useEffect(() => {
@@ -13,13 +13,13 @@ const MetroNavigation = ({ options, currentStep, onStepChange }) => {
                 <button
                     type="button"
                     key={index}
-                    className={`navigation-point ${index === current ? 'active' : ''} ${index === 2 ? 'completed' : ''}`}
+                    className={`navigation-point ${index === currentStep ? 'active' : ''} ${submittedSteps[index] ? 'completed' : ''}`}
                     onClick={() => {
                         setCurrent(index);
                         onStepChange(index);
                     }}
                 >
-                    <small class="badge">{index + 1}</small> {option.label}
+                    {option.label}
                 </button>
             ))}
 
@@ -27,9 +27,9 @@ const MetroNavigation = ({ options, currentStep, onStepChange }) => {
                 .metro-navigation {
                     display: flex;
                     align-items: stretch;
-                    flex-basis: 200px;
+                    flex-basis: 260px;
                     flex-direction: column;
-                    gap: .75rem;
+                    gap: .5rem;
                 }
                 .navigation-point {
                     background-color: var(--gray-300);
@@ -40,7 +40,8 @@ const MetroNavigation = ({ options, currentStep, onStepChange }) => {
                     align-items: center;
                     font-size: .9rem;
                     gap: .5rem;
-                    padding: .5rem;
+                    padding: .45rem .75rem;
+                    text-align: left;
                 }
                 .navigation-point.active {
                     background-color: var(--primary-500);

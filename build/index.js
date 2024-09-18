@@ -5766,6 +5766,7 @@ const ProcessFlow = (0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(({
       console.error("Validation errors:", validationResult.errors);
     }
   };
+
   // Função para adicionar novos nós
   const addNewNode = () => {
     const newNodeId = `Etapa ${nodes.length + 1}`;
@@ -7131,84 +7132,172 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const MetaFieldInputs = ({
-  field
+  field,
+  isEditable,
+  onFieldChange,
+  fieldId,
+  initalValue
 }) => {
-  const [value, setValue] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(field.value);
+  const [value, setValue] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(initalValue);
   const handleChange = newValue => {
     setValue(newValue);
-    console.log(newValue);
+    onFieldChange(fieldId, newValue);
   };
   switch (field.type) {
     case "text":
       return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
         className: "meta-field-wrapper",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+        children: isEditable ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
           label: field.title,
           value: value,
-          onChange: handleChange
+          onChange: handleChange,
+          disabled: !isEditable,
+          required: true
+        }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("dl", {
+          className: "description-list",
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+            className: "list-item",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("dt", {
+              children: field.title
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("dd", {
+              children: initalValue
+            })]
+          })
         })
       });
     case "datepicker":
       return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
         className: "meta-field-wrapper",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.DatePicker, {
+        children: isEditable ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.DatePicker, {
           currentDate: value,
-          onChange: date => handleChange(date)
+          onChange: date => handleChange(date),
+          disabled: !isEditable,
+          required: true
+        }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("dl", {
+          className: "description-list",
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+            className: "list-item",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("dt", {
+              children: field.title
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("dd", {
+              children: initalValue
+            })]
+          })
         })
       });
     case "upload":
       return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
         className: "meta-field-wrapper",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.FormFileUpload, {
+        children: isEditable ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.FormFileUpload, {
           accept: "image/*",
           onChange: event => console.log(event.currentTarget.files),
           label: field.title,
+          disabled: !isEditable,
+          required: true,
           children: "Upload"
+        }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("dl", {
+          className: "description-list",
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+            className: "list-item",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("dt", {
+              children: field.title
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("dd", {
+              children: initalValue
+            })]
+          })
         })
       });
     case "number":
       return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
         className: "meta-field-wrapper",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+        children: isEditable ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
           label: field.title,
-          value: field.value,
-          onChange: value => setClassName(value),
-          type: "number"
+          value: value,
+          onChange: value => handleChange(value),
+          type: "number",
+          disabled: !isEditable,
+          required: true
+        }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("dl", {
+          className: "description-list",
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+            className: "list-item",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("dt", {
+              children: field.title
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("dd", {
+              children: initalValue
+            })]
+          })
         })
       });
     case "textfield":
       return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
         className: "meta-field-wrapper",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextareaControl, {
+        children: isEditable ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextareaControl, {
           label: field.title,
           value: value,
-          onChange: newValue => handleChange(newValue)
+          onChange: newValue => handleChange(newValue),
+          disabled: !isEditable,
+          required: true
+        }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("dl", {
+          className: "description-list",
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+            className: "list-item",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("dt", {
+              children: field.title
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("dd", {
+              children: initalValue
+            })]
+          })
         })
       });
     case "select":
       return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
         className: "meta-field-wrapper",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
+        children: isEditable ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.SelectControl, {
           label: field.title,
           value: value,
           onChange: newValue => handleChange(newValue),
           options: field.value.split(",").map(option => ({
             label: option,
             value: option
-          }))
+          })),
+          disabled: !isEditable,
+          required: true
+        }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("dl", {
+          className: "description-list",
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+            className: "list-item",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("dt", {
+              children: field.title
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("dd", {
+              children: initalValue
+            })]
+          })
         })
       });
     case "radio":
       return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
         className: "meta-field-wrapper",
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.RadioControl, {
+        children: isEditable ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.RadioControl, {
           label: field.title,
           selected: value,
           onChange: newValue => handleChange(newValue),
           options: field.value.split(",").map(option => ({
             label: option,
             value: option
-          }))
+          })),
+          disabled: !isEditable,
+          required: true
+        }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("dl", {
+          className: "description-list",
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+            className: "list-item",
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("dt", {
+              children: field.title
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("dd", {
+              children: initalValue
+            })]
+          })
         })
       });
     default:
@@ -7239,7 +7328,8 @@ __webpack_require__.r(__webpack_exports__);
 const MetroNavigation = ({
   options,
   currentStep,
-  onStepChange
+  onStepChange,
+  submittedSteps
 }) => {
   const [current, setCurrent] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(currentStep || 0);
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
@@ -7247,25 +7337,22 @@ const MetroNavigation = ({
   }, [currentStep]);
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
     className: "metro-navigation",
-    children: [options.map((option, index) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("button", {
+    children: [options.map((option, index) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
       type: "button",
-      className: `navigation-point ${index === current ? 'active' : ''} ${index === 2 ? 'completed' : ''}`,
+      className: `navigation-point ${index === currentStep ? 'active' : ''} ${submittedSteps[index] ? 'completed' : ''}`,
       onClick: () => {
         setCurrent(index);
         onStepChange(index);
       },
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("small", {
-        class: "badge",
-        children: index + 1
-      }), " ", option.label]
+      children: option.label
     }, index)), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("style", {
       children: `
                 .metro-navigation {
                     display: flex;
                     align-items: stretch;
-                    flex-basis: 200px;
+                    flex-basis: 260px;
                     flex-direction: column;
-                    gap: .75rem;
+                    gap: .5rem;
                 }
                 .navigation-point {
                     background-color: var(--gray-300);
@@ -7276,7 +7363,8 @@ const MetroNavigation = ({
                     align-items: center;
                     font-size: .9rem;
                     gap: .5rem;
-                    padding: .5rem;
+                    padding: .45rem .75rem;
+                    text-align: left;
                 }
                 .navigation-point.active {
                     background-color: var(--primary-500);
@@ -9050,18 +9138,27 @@ const StepList = ({
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     if (stepOrder.length > 0) {
       _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-        path: `/obatala/v1/process_step?include=${stepOrder.join(',')}`
+        path: `/obatala/v1/process_step?include=${stepOrder.join(",")}`
       }).then(stepsData => {
-        const orderedSteps = stepOrder.map((stepId, index) => ({
-          ...stepsData.find(step => step.id === stepId),
-          orderIndex: index
-        })).filter(Boolean);
+        console.log("Steps:", stepsData);
+        console.log("Step order:", stepOrder);
+        const orderedSteps = stepOrder.map((stepId, index) => {
+          // Converte o stepId para número antes de comparar
+          const step = stepsData.find(step => step.id === Number(stepId));
+          if (step) {
+            return {
+              ...step,
+              orderIndex: index
+            };
+          }
+          return null; // Retorna null se o stepId não for encontrado
+        }).filter(step => step !== null); // Filtra os nulos
         setStepsState(orderedSteps);
       }).catch(error => {
-        console.error('Error fetching ordered steps:', error);
+        console.error("Error fetching ordered steps:", error);
         onNotice({
-          status: 'error',
-          message: 'Error fetching ordered steps.'
+          status: "error",
+          message: "Error fetching ordered steps."
         });
       });
     }
@@ -9078,20 +9175,20 @@ const StepList = ({
       const newStepOrder = reorderedSteps.map(step => step.id);
       await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
         path: `/obatala/v1/process_type/${processTypeId}/meta`,
-        method: 'PUT',
+        method: "PUT",
         data: {
           step_order: newStepOrder
         }
       });
       onNotice({
-        status: 'success',
-        message: 'Step order updated successfully.'
+        status: "success",
+        message: "Step order updated successfully."
       });
     } catch (error) {
-      console.error('Error updating step order:', error);
+      console.error("Error updating step order:", error);
       onNotice({
-        status: 'error',
-        message: 'Error updating step order.'
+        status: "error",
+        message: "Error updating step order."
       });
     }
   };
@@ -9101,21 +9198,21 @@ const StepList = ({
     try {
       await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
         path: `/obatala/v1/process_type/${processTypeId}/meta`,
-        method: 'PUT',
+        method: "PUT",
         data: {
           step_order: updatedStepOrder
         }
       });
       setStepsState(updatedSteps);
       onNotice({
-        status: 'success',
-        message: 'Step removed successfully.'
+        status: "success",
+        message: "Step removed successfully."
       });
     } catch (error) {
-      console.error('Error removing step:', error);
+      console.error("Error removing step:", error);
       onNotice({
-        status: 'error',
-        message: 'Error removing step.'
+        status: "error",
+        message: "Error removing step."
       });
     }
   };
@@ -9205,6 +9302,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 const ProcessViewer = () => {
   const [process, setProcess] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   const [isLoading, setIsLoading] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
@@ -9213,6 +9311,9 @@ const ProcessViewer = () => {
   const [steps, setSteps] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const [filteredProcessType, setFilteredProcessType] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   const [processTypes, setProcessTypes] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+  const [submittedSteps, setSubmittedSteps] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({});
+  const [formValues, setFormValues] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({});
+  const [isSubmitEnabled, setIsSubmitEnabled] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
   const getProcessIdFromUrl = () => {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get('process_id');
@@ -9220,7 +9321,6 @@ const ProcessViewer = () => {
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     const processId = getProcessIdFromUrl();
     if (processId) {
-      // Carrega os tipos de processo e então busca o processo
       fetchLoadProcess().then(() => {
         fetchProcess(processId);
       });
@@ -9279,9 +9379,7 @@ const ProcessViewer = () => {
     _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
       path: `/obatala/v1/process_obatala/${processId}/process_type`
     }).then(processTypeId => {
-      // Converta ambos para string ou number, conforme necessário
       const filteredProcessType = processTypes.find(type => String(type.id) === String(processTypeId));
-      console.log("Filtrado", filteredProcessType);
       setFilteredProcessType(filteredProcessType);
       setIsLoading(false);
     }).catch(error => {
@@ -9289,6 +9387,27 @@ const ProcessViewer = () => {
       setError('Error fetching process details.');
       setIsLoading(false);
     });
+  };
+  const handleFieldChange = (fieldId, newValue) => {
+    setFormValues(prevValues => {
+      const updatedValues = {
+        ...prevValues[currentStep],
+        [fieldId]: newValue
+      };
+      return {
+        ...prevValues,
+        [currentStep]: updatedValues
+      };
+    });
+    setIsSubmitEnabled(formValues);
+  };
+  const handleSubmit = () => {
+    setSubmittedSteps(prev => ({
+      ...prev,
+      [currentStep]: true
+    }));
+    setIsSubmitEnabled(false);
+    console.log('Form values:', formValues);
   };
   if (isLoading) {
     return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, {});
@@ -9307,8 +9426,6 @@ const ProcessViewer = () => {
       children: "No process found."
     });
   }
-
-  // Map orderedSteps to include the title from the steps list
   const orderedSteps = process.meta.step_order.map(order => {
     const step = steps.find(s => s.id === order.step_id);
     return {
@@ -9343,24 +9460,43 @@ const ProcessViewer = () => {
       children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_ProcessManager_MetroNavigation__WEBPACK_IMPORTED_MODULE_4__["default"], {
         options: options,
         currentStep: currentStep,
-        onStepChange: newStep => setCurrentStep(newStep)
+        onStepChange: newStep => setCurrentStep(newStep),
+        submittedSteps: submittedSteps
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("main", {
         children: orderedSteps.length > 0 && orderedSteps[currentStep] ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, {
-            children: [`${orderedSteps[currentStep].title}`, /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("span", {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("h3", {
+              children: `${orderedSteps[currentStep].title}`
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("span", {
               className: "badge default ms-auto",
               children: "Setor: Recep\xE7\xE3o"
             })]
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelBody, {
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
-              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("ul", {
-                className: "meta-fields-list",
-                children: Array.isArray(orderedSteps[currentStep].meta_fields) ? orderedSteps[currentStep].meta_fields.map((field, idx) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("li", {
-                  className: "meta-field-item",
-                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_ProcessManager_MetaFieldInputs__WEBPACK_IMPORTED_MODULE_5__["default"], {
-                    field: field
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("form", {
+                className: "centered",
+                action: "",
+                children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("ul", {
+                  className: "meta-fields-list",
+                  children: Array.isArray(orderedSteps[currentStep].meta_fields) ? orderedSteps[currentStep].meta_fields.map((field, idx) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("li", {
+                    className: "meta-field-item",
+                    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_ProcessManager_MetaFieldInputs__WEBPACK_IMPORTED_MODULE_5__["default"], {
+                      field: field,
+                      fieldId: idx,
+                      initalValue: formValues[currentStep]?.[idx] || '',
+                      isEditable: !submittedSteps[currentStep],
+                      onFieldChange: handleFieldChange
+                    })
+                  }, `${orderedSteps[currentStep].step_id}-meta-${idx}`)) : null
+                }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
+                  className: "action-bar",
+                  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+                    isPrimary: true,
+                    onClick: handleSubmit,
+                    disabled: !isSubmitEnabled || submittedSteps[currentStep],
+                    children: "Submit"
                   })
-                }, `${orderedSteps[currentStep].step_id}-meta-${idx}`)) : null
+                })]
               })
             }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("footer", {
               children: "\xDAltima atualiza\xE7\xE3o em 21/10/2024 por Jo\xE3o da Silva"
