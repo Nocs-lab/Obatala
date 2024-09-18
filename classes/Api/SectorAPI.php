@@ -78,6 +78,63 @@ class SectorApi extends ObatalaAPI {
                 ]
             ]
         ]);
+
+        // Route to get all users
+        $this->add_route('sector_obatala/users_obatala', [
+            'methods' => 'GET',
+            'callback' => [$this, 'get_all_users'],
+            'permission_callback' => '__return_true',
+        ]);
+
+         // Rota para associar um usuário a um setor
+         $this->add_route('associate_user_to_sector', [
+            'methods' => 'POST',
+            'callback' => [$this, 'associate_user_to_sector'],
+            'permission_callback' => '__return_true',
+            'args' => [
+                'user_id' => [
+                    'required' => true,
+                    'validate_callback' => function($param) {
+                        return is_numeric($param) && $param > 0;
+                    }
+                ],
+                'sector_id' => [
+                    'required' => true,
+                    'validate_callback' => function($param) {
+                        return is_numeric($param) && $param > 0;
+                    }
+                ],
+            ]
+        ]);
+
+         // Route to return users of a specific sector
+         $this->add_route('sector_obatala/(?P<id>\d+)/users', [
+            'methods' => 'GET',
+            'callback' => [$this, 'get_sector_users'],
+            'permission_callback' => '__return_true',
+        ]);
+
+        // Rota para obter todos os setores e seus usuários associados
+        $this->add_route('sector_obatala/sectors_with_users', [
+            'methods' => 'GET',
+            'callback' => [$this, 'get_all_sectors_with_users'],
+            'permission_callback' => '__return_true', // Altere se quiser aplicar regras de permissão
+        ]);
+
+        // Rota para remover um usuário de um setor
+        $this->add_route('sector_obatala/(?P<sector_id>\d+)/remove_user', [
+            'methods' => 'POST',
+            'callback' => [$this, 'remove_user_from_sector'],
+            'permission_callback' => '__return_true', // Altere se quiser aplicar regras de permissão
+            'args' => [
+                'user_id' => [
+                    'required' => true,
+                    'validate_callback' => function($param) {
+                        return is_numeric($param);
+                    }
+                ],
+            ]
+        ]);
     }
 
     public function create_sector($request) {
@@ -178,4 +235,186 @@ class SectorApi extends ObatalaAPI {
 
         return new WP_REST_Response('Meta fields updated successfully', 200);
     } 
+
+    public function get_all_users($request) {
+        $args = array(
+            'role' => '',  
+            'orderby' => 'login',
+            'order' => 'ASC',
+        );
+        
+        $users = get_users($args);
+        $users_data = array();
+
+        foreach ($users as $user) {
+            $users_data[] = array(
+                'ID' => $user->ID,
+                'username' => $user->user_login,
+                'display_name' => $user->display_name,
+                'email' => $user->user_email,
+            );
+        }
+
+        return new WP_REST_Response($users_data, 200);
+    }
+
+    public function associate_user_to_sector($request) {
+        $user_id = (int) $request['user_id'];
+        $sector_id = (int) $request['sector_id'];
+
+        // Verificar se o usuário existe
+        if (!get_user_by('ID', $user_id)) {
+            return new WP_REST_Response('Usuário não encontrado.', 404);
+        }
+
+        // Verificar se o setor existe
+        $sector_post = get_post($sector_id);
+        if (!$sector_post || $sector_post->post_type !== 'sector_obatala') {
+            return new WP_REST_Response('Setor não encontrado.', 404);
+        }
+
+        // Associar o setor ao usuário nos meta dados
+        update_user_meta($user_id, 'associated_sector', $sector_id);
+
+        return new WP_REST_Response('Usuário associado ao setor com sucesso.', 200);
+    }
+
+     // Função que retorna a lista de usuários associados a um setor
+    public function get_sector_users($request) {
+        global $wpdb;
+
+        $sector_id = (int) $request['id'];
+
+        if (!$sector_id) {
+            return new WP_REST_Response('Setor inválido.', 400);
+        }
+
+        // Consulta os IDs dos usuários associados ao setor
+        $user_ids = $wpdb->get_col(
+            $wpdb->prepare(
+                "SELECT user_id 
+                FROM $wpdb->usermeta 
+                WHERE meta_key = 'associated_sector' 
+                AND meta_value = %d", 
+                $sector_id
+            )
+        );
+
+        if (empty($user_ids)) {
+            return new WP_REST_Response('Nenhum usuário encontrado para o setor especificado.', 404);
+        }
+
+        // buscar os dados dos usuários com base nos IDs
+        $users = [];
+        foreach ($user_ids as $user_id) {
+            $user_data = get_userdata($user_id);
+            if ($user_data) {
+                $users[] = [
+                    'ID' => $user_data->ID,
+                    'username' => $user_data->user_login,
+                    'display_name' => $user_data->display_name,
+                    'email' => $user_data->user_email,
+                ];
+            }
+        }
+
+        return new WP_REST_Response($users, 200);
+    }
+
+    public function get_all_sectors_with_users($request) {
+        global $wpdb;
+    
+        // Consulta todos os setores
+        $sectors_query = new WP_Query([
+            'post_type' => 'sector_obatala',
+            'post_status' => 'publish',
+            'posts_per_page' => -1
+        ]);
+    
+        $sectors_with_users = [];
+    
+        if ($sectors_query->have_posts()) {
+            while ($sectors_query->have_posts()) {
+                $sectors_query->the_post();
+                $sector_id = get_the_ID();
+                $sector_name = get_the_title();
+                
+                // Consulta os IDs dos usuários associados ao setor
+                $user_ids = $wpdb->get_col(
+                    $wpdb->prepare(
+                        "SELECT user_id 
+                         FROM $wpdb->usermeta 
+                         WHERE meta_key = 'associated_sector' 
+                         AND meta_value = %d", 
+                         $sector_id
+                    )
+                );
+    
+                // Obtém os dados dos usuários associados
+                $users = [];
+                foreach ($user_ids as $user_id) {
+                    $user_data = get_userdata($user_id);
+                    if ($user_data) {
+                        $users[] = [
+                            'ID' => $user_data->ID,
+                            'username' => $user_data->user_login,
+                            'display_name' => $user_data->display_name,
+                            'email' => $user_data->user_email,
+                        ];
+                    }
+                }
+    
+                // Adiciona o setor e seus usuários à lista
+                $sectors_with_users[] = [
+                    'sector_id' => $sector_id,
+                    'sector_name' => $sector_name,
+                    'users' => $users
+                ];
+            }
+    
+            wp_reset_postdata();
+        }
+    
+        return new WP_REST_Response($sectors_with_users, 200);
+    }
+
+    public function remove_user_from_sector($request) {
+        global $wpdb;
+    
+        $sector_id = (int) $request['sector_id'];
+        $user_id = (int) $request['user_id'];
+    
+        // Verifica se o usuário está associado ao setor
+        $meta_exists = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT COUNT(*) 
+                 FROM $wpdb->usermeta 
+                 WHERE meta_key = 'associated_sector' 
+                 AND meta_value = %d 
+                 AND user_id = %d",
+                $sector_id,
+                $user_id
+            )
+        );
+    
+        if ($meta_exists > 0) {
+            // Remove a associação
+            $deleted = $wpdb->delete(
+                $wpdb->usermeta,
+                [
+                    'meta_key' => 'associated_sector',
+                    'meta_value' => $sector_id,
+                    'user_id' => $user_id
+                ]
+            );
+    
+            if ($deleted !== false) {
+                return new WP_REST_Response('User removed from sector successfully', 200);
+            } else {
+                return new WP_REST_Response('Error removing user from sector', 500);
+            }
+        } else {
+            return new WP_REST_Response('User not associated with the sector', 404);
+        }
+    }    
 }
