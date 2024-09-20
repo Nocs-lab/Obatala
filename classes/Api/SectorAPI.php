@@ -135,6 +135,37 @@ class SectorApi extends ObatalaAPI {
                 ],
             ]
         ]);
+
+        // Rota para adicionar uma nova cargo
+        $this->add_route('add_job_title',[
+            'methods' => 'POST',
+            'callback' => [$this, 'add_job_title'],
+            'permission_callback' => '__return_true',
+            'args' => [
+                'assignment' => [
+                    'required' => true,
+                    'validate_callback' => function($param) {
+                        return !empty($param);
+                    }
+                ],
+            ]
+        ]);
+
+        // Rota para relacioanr um cargo a um usuario
+        $this->add_route('sector_obatala/(?P<job_title_id>)/add_job_title_user',[
+            'methods' => 'POST',
+            'callback' => [$this, 'add_job_title_user_meta'],
+            'permission_callback' => '__return_true',
+            'args' => [
+                'user_id' => [
+                    'required' => true,
+                    'validate_callback' => function($param) {
+                        return is_numeric($param);
+                    }
+                ],
+            ]
+        ]);
+
     }
 
     public function create_sector($request) {
@@ -416,5 +447,38 @@ class SectorApi extends ObatalaAPI {
         } else {
             return new WP_REST_Response('User not associated with the sector', 404);
         }
-    }    
+    } 
+
+    // Funçao que adiciona uma nova cargo
+    public function add_job_title ($request){
+        $assignment = sanitize_text_field($request['assignment']);
+        
+        if (empty($assignment)) {
+            return new WP_REST_Response('Atribuição esta vazia', 400);
+        }
+        $job_title_id = wp_insert_post([
+            'post_title' => $assignment,
+            'post_type' => 'assignment_obatala',
+            'post_status' => 'publish'
+        ]);
+
+        if ($job_title_id && !is_wp_error($job_title_id)) {
+            return new WP_REST_Response('Assignment created', 201);
+        } else {
+        return new WP_REST_Response('Error creating assignment', 500);
+        } 
+    }
+    
+    // Funçao que adiciona o cargo ao usuario 
+    public function add_job_title_user_meta ($request){
+        $job_title_id = sanitize_text_field($request['job_title_id']);
+        $user_id = (int) $request['user_id'];
+
+        if (!get_user_by('ID', $user_id)) {
+            return new WP_REST_Response('Usuário não encontrado.', 404);
+        }
+
+        update_user_meta($user_id, 'job_title', $job_title_id);
+
+    }
 }
