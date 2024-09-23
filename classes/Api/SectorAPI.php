@@ -36,7 +36,7 @@ class SectorApi extends ObatalaAPI {
         ]);
 
         // Route to get all sectors
-        $this->add_route('all_sector_obatala', [
+        $this->add_route('sector_obatala/all_sector_obatala', [
             'methods' => 'GET',
             'callback' => [$this, 'get_all_sectors'],
             'permission_callback' => '__return_true',
@@ -87,7 +87,7 @@ class SectorApi extends ObatalaAPI {
         ]);
 
          // Rota para associar um usuário a um setor
-         $this->add_route('associate_user_to_sector', [
+         $this->add_route('sector_obatala/associate_user_to_sector', [
             'methods' => 'POST',
             'callback' => [$this, 'associate_user_to_sector'],
             'permission_callback' => '__return_true',
