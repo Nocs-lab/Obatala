@@ -59,6 +59,8 @@ document.addEventListener("DOMContentLoaded", () => {
     createRoot(processStepEditorElement).render(<ProcessStepEditor />);
   }
 
+  // Verifica se o elemento com o ID 'sector-manager' existe
+  // Se existir, renderiza o componente SectorManager dentro deste elemento
   if (sectorManagerElement) {
     createRoot(sectorManagerElement).render(<SectorManager />);
   }
