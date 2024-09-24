@@ -3,8 +3,11 @@ import {
     Spinner,
     Button,
     Notice,
-    Modal
+    Modal,
+    ButtonGroup,
+    Icon,
 } from '@wordpress/components';
+import { plus } from "@wordpress/icons";
 import SectorCreator from './SectorManager/SectorCreator';
 import { fetchSectors, saveSector, updateSectorMeta } from '../api/apiRequests';
 import SectorList from './SectorManager/SectorList';
@@ -82,9 +85,15 @@ const SectorManager = () => {
     return (
         <div>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
-            <div className='div-container'>
+            <div className="title-container">
                 <h2>Sector Manager</h2>
-                <Button isPrimary onClick={handleAdd}>Add New</Button>
+                <ButtonGroup>
+                    <Button isPrimary 
+                            icon={<Icon icon={plus}/>}
+                            onClick={handleAdd}
+                            >Add new</Button>
+                </ButtonGroup>
+
             </div>
             {notice && (
                 <div className="notice-container">
