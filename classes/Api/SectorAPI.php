@@ -146,6 +146,15 @@ class SectorApi extends ObatalaAPI {
         if (empty($sector_name)) {
             return new WP_REST_Response('Nome do setor vazio', 400); // Retorna erro se o nome estiver vazia
         }
+
+        // Verificar se o setor já existe
+        $sector_exists = $this->exist_sector_name($sector_name);
+        
+        // Se o setor já existir, retornar a resposta de conflito
+        if ($sector_exists) {
+            return $sector_exists;
+        }
+        
         $post_id = wp_insert_post([
             'post_title' => $sector_name,
             'post_type' => 'sector_obatala',
@@ -205,6 +214,14 @@ class SectorApi extends ObatalaAPI {
     public function update_sector($request) {
         $post_id = (int) $request['id'];
         $sector_name = sanitize_text_field($request['sector_name']);
+        
+        // Verificar se o setor já existe
+        $sector_exists = $this->exist_sector_name($sector_name);
+        
+        // Se o setor já existir, retornar a resposta de conflito
+        if ($sector_exists) {
+            return $sector_exists;
+        }
 
         $result = wp_update_post([
             'ID' => $post_id,
@@ -416,5 +433,19 @@ class SectorApi extends ObatalaAPI {
         } else {
             return new WP_REST_Response('User not associated with the sector', 404);
         }
-    }    
+    }  
+    
+    // Funçao que verifica se ja exite um sector_name igual a outro no sector_obatala
+    public function exist_sector_name($sector_name){
+        $existing_sector = get_posts([
+                'post_type' => 'sector_obatala',
+                'title'     => $sector_name,
+                'post_status' => 'publish',
+                'numberposts' => 1
+            ]);
+        
+            if (!empty($existing_sector)) {
+                return new WP_REST_Response('Este setor já existe', 409); // Código de status 409 (Conflito)
+            }
+    }
 }
