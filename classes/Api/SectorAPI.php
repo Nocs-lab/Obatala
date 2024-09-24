@@ -438,15 +438,14 @@ class SectorApi extends ObatalaAPI {
     // Funçao que verifica se ja exite um sector_name igual a outro no sector_obatala
     public function exist_sector_name($sector_name){
         $existing_sector = get_posts([
-                'post_type' => 'sector_obatala',
-                'title'     => $sector_name,
-                'post_status' => 'publish',
-                'numberposts' => 1
-            ]);
+            'post_type' => 'sector_obatala',
+            'title'     => $sector_name,
+            'post_status' => 'publish',
+            'numberposts' => 1
+        ]);
         
-            if (!empty($existing_sector)) {
-                return new WP_REST_Response('Este setor já existe', 409); // Código de status 409 (Conflito)
-            }
-            
+        if (!empty($existing_sector)) {
+            return new WP_REST_Response('Este setor já existe', 409); // Código de status 409 (Conflito)
+        }      
     }
 }
