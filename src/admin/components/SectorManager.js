@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
-    Panel,
-    PanelHeader,
-    PanelBody,
-    PanelRow,
     Spinner,
+    Button,
     Notice,
     Modal
 } from '@wordpress/components';
@@ -15,6 +12,7 @@ import SectorList from './SectorManager/SectorList';
 const SectorManager = () => {
     const [sectors, setSectors] = useState([])
     const [editingSector, setEditingSector] = useState(null);
+    const [addingSector, setAddingSector] = useState(null);
     const [isLoading, setIsLoading] = useState(false)
     const [notice, setNotice] = useState(null);
 
@@ -55,6 +53,7 @@ const SectorManager = () => {
         
             setNotice({ status: 'success', message: 'Sector saved successfully.' });
             setEditingSector(null);
+            setAddingSector(null);
             loadSectors();
         } catch (error) {
             console.error('Error saving sector:', error);
@@ -63,12 +62,17 @@ const SectorManager = () => {
         }   
     };
 
+    const handleAdd = () => {
+        setAddingSector(true);
+    }
+
     const handleEdit = (sector) => {
         setEditingSector(sector);
     }
 
     const handleCancel = () => {
         setEditingSector(null);
+        setAddingSector(null);
     };
 
     if (isLoading) {
@@ -78,14 +82,25 @@ const SectorManager = () => {
     return (
         <div>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
-            <h2>Sector Manager</h2>
+            <div className='div-container'>
+                <h2>Sector Manager</h2>
+                <Button isPrimary onClick={handleAdd}>Add New</Button>
+            </div>
+            {notice && (
+                <div className="notice-container">
+                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                        {notice.message}
+                    </Notice>
+                </div>
+            )}
             <div className="panel-container">
                 <main>
                     <SectorList sectors={sectors}
                                 onEdit={handleEdit}
                     />
                 </main>
-                <aside>
+                <section>
+                {/* Open modal to editing Sector */}
                 {editingSector && (
                             <Modal
                                 title="Edit Sector"
@@ -98,23 +113,24 @@ const SectorManager = () => {
                                     onCancel={handleCancel}
                                 />
                             </Modal>
+                )}
+
+                {/* Open modal to adding Sector */}
+                {addingSector && (
+                            <Modal
+                                title="Add Sector"
+                                onRequestClose={handleCancel}
+                                isDismissible={true}
+                            >
+                                <SectorCreator
+                                    onSave={handleSectorSaved} 
+                                    onCancel={handleCancel}
+                                />
+                            </Modal>
                         )}
                         
-                    <Panel>
-                        <PanelHeader>Add Sector</PanelHeader>
-                            <PanelBody>
-                                <PanelRow>
-
-                                    {notice && (
-                                        <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                                            {notice.message}
-                                        </Notice>
-                                    )}
-                                    <SectorCreator  onSave={handleSectorSaved} onCancel={handleCancel}/>
-                                </PanelRow>
-                            </PanelBody>
-                    </Panel>
-                </aside>
+                    
+                </section>
             </div>
         </div>
     );
