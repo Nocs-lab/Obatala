@@ -447,5 +447,6 @@ class SectorApi extends ObatalaAPI {
             if (!empty($existing_sector)) {
                 return new WP_REST_Response('Este setor já existe', 409); // Código de status 409 (Conflito)
             }
+            
     }
 }
