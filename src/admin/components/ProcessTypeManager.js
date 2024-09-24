@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import {
+    Button,
+    ButtonGroup,
+    Icon,
     Panel,
     PanelHeader,
     Spinner,
     Notice,
 } from '@wordpress/components';
+import { plus } from "@wordpress/icons";
 import { fetchProcessTypes, saveProcessType, deleteProcessType, updateProcessTypeMeta } from '../api/apiRequests';
 import ProcessTypeForm from './ProcessTypeManager/ProcessTypeForm';
 import ProcessTypeList from './ProcessTypeManager/ProcessTypeList';
@@ -50,7 +54,6 @@ const ProcessTypeManager = () => {
                 description: processType.meta.description || '',
             };
 
-
             await updateProcessTypeMeta(savedProcessType.id, meta);
         
             setNotice({ status: 'success', message: 'Process type saved successfully.' });
@@ -85,7 +88,12 @@ const ProcessTypeManager = () => {
     return (
         <div>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
-            <h2>Process Type Manager</h2>
+            <div className="title-container">
+                <h2>Process Type Manager</h2>
+                <ButtonGroup>
+                    <Button isPrimary icon={<Icon icon={plus} />}>Add process type</Button>
+                </ButtonGroup>
+            </div>
             <div className="panel-container">
                 <main>
                     <ProcessTypeList
@@ -94,7 +102,7 @@ const ProcessTypeManager = () => {
                         onDelete={handleDeleteProcessType}
                     />
                 </main>
-                <aside>
+                <aside hidden>
                     <Panel>
                         <PanelHeader>
                             <h3>Add process type</h3>

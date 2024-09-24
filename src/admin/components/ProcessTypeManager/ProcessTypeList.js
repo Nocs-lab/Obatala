@@ -85,6 +85,7 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete }) => {
                     value={globalFilter || ''}
                     onChange={value => setGlobalFilter(value)}
                     placeholder="Search by title or description"
+                    type="search"
                 />
                 {processTypes.length > 0 ? (
                     <>
