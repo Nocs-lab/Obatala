@@ -681,3 +681,20 @@ button .components-spinner {
 .wp-admin #toplevel_page_obatala-main .wp-submenu li a[href*="process-type-editor"] {
   display: none;
 }
+
+.div-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content:flex-start;
+}
+
+.div-container Button {
+  margin-left: 1rem;
+}
+
+.notice-container {
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
