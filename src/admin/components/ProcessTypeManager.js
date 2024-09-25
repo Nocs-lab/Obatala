@@ -3,13 +3,12 @@ import {
     Button,
     ButtonGroup,
     Icon,
-    Panel,
-    PanelHeader,
     Spinner,
-    Notice,
+    Modal,
+    Notice
 } from '@wordpress/components';
 import { plus } from "@wordpress/icons";
-import { fetchProcessTypes, saveProcessType, deleteProcessType, updateProcessTypeMeta } from '../api/apiRequests';
+import { fetchProcessTypes, saveProcessType, deleteProcessType } from '../api/apiRequests';
 import ProcessTypeForm from './ProcessTypeManager/ProcessTypeForm';
 import ProcessTypeList from './ProcessTypeManager/ProcessTypeList';
 
@@ -17,6 +16,7 @@ const ProcessTypeManager = () => {
     const [processTypes, setProcessTypes] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [editingProcessType, setEditingProcessType] = useState(null);
+    const [addingProcessType, setAddingProcessType] = useState(null);
     const [notice, setNotice] = useState(null);
 
     useEffect(() => {
@@ -47,17 +47,9 @@ const ProcessTypeManager = () => {
             } else {
                 savedProcessType = await saveProcessType(processType);
             }
-            const meta = {
-                accept_attachments: processType.meta.accept_attachments,
-                accept_tainacan_items: processType.meta.accept_tainacan_items,
-                generate_tainacan_items: processType.meta.generate_tainacan_items,
-                description: processType.meta.description || '',
-            };
-
-            await updateProcessTypeMeta(savedProcessType.id, meta);
-        
             setNotice({ status: 'success', message: 'Process type saved successfully.' });
             setEditingProcessType(null);
+            setAddingProcessType(null);
             loadProcessTypes();
         } catch (error) {
             console.error('Error saving process type:', error);
@@ -77,9 +69,18 @@ const ProcessTypeManager = () => {
             });
     };
 
+    const handleAddProcessType = () => {
+        setAddingProcessType(true);
+    };
+
     const handleEditProcessType = (id) => {
         window.location.href = `?page=process-type-editor&process_type_id=${id}`;
     };
+
+    const handleCancel = () =>{
+        setAddingProcessType(null);
+        setEditingProcessType(null);
+    }
 
     if (isLoading) {
         return <Spinner />;
@@ -91,30 +92,45 @@ const ProcessTypeManager = () => {
             <div className="title-container">
                 <h2>Process Type Manager</h2>
                 <ButtonGroup>
-                    <Button isPrimary icon={<Icon icon={plus} />}>Add process type</Button>
+                    <Button 
+                    isPrimary 
+                    icon={<Icon icon={plus} />}
+                    onClick={handleAddProcessType}
+                    >Add process type</Button>
                 </ButtonGroup>
             </div>
+            
             <div className="panel-container">
                 <main>
+                    <div className='notice-container'>
+                        {notice && (
+                            <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                                {notice.message}
+                            </Notice>
+
+                    )}
+                    </div>
                     <ProcessTypeList
                         processTypes={processTypes}
                         onEdit={handleEditProcessType}
                         onDelete={handleDeleteProcessType}
                     />
                 </main>
-                <aside hidden>
-                    <Panel>
-                        <PanelHeader>
-                            <h3>Add process type</h3>
-                        </PanelHeader>
-                        <ProcessTypeForm onSave={handleSaveProcessType} onCancel={() => setEditingProcessType(null)} editingProcessType={editingProcessType} />
-                        {notice && (
-                            <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                                {notice.message}
-                            </Notice>
-                        )}
-                    </Panel>
-                </aside>
+                <section>
+                {addingProcessType && (
+                            <Modal
+                                title="Add process type"
+                                onRequestClose={handleCancel}
+                                isDismissible={true}
+                            >
+                                <ProcessTypeForm 
+                                    onSave={handleSaveProcessType} 
+                                    onCancel={handleCancel} 
+                                    editingProcessType={editingProcessType} 
+                                />
+                            </Modal>
+                )}
+                </section>
             </div>
         </div>
     );
