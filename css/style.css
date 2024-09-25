@@ -69,6 +69,10 @@ h2 {
 h2:has(+ span.badge) {
   margin-bottom: 1rem;
 }
+main > .notice-container {
+  margin: 1rem var(--gap-external) 2rem;
+}
+
 
 /* Forms */
 .components-base-control,
