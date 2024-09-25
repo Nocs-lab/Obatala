@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Spinner, Button, Notice, Panel, PanelHeader, PanelBody, PanelRow, Icon, ButtonGroup, Tooltip, Modal } from '@wordpress/components';
+import { Spinner, Button, Notice, Panel, PanelHeader, PanelRow, Icon, ButtonGroup, Tooltip, Modal} from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import ProcessCreator from './ProcessManager/ProcessCreator';
-import { edit, seen  } from '@wordpress/icons';
+import { edit, seen, plus } from '@wordpress/icons';
 
 const ProcessManager = ({ onSelectProcess }) => {
     const [processTypes, setProcessTypes] = useState([]);
@@ -11,6 +11,7 @@ const ProcessManager = ({ onSelectProcess }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [processSteps, setProcessSteps] = useState([]);
     const [selectedProcessId, setSelectedProcessId] = useState(null);
+    const [addingProcess, setAddingProcess] = useState(null);
     const [editingProcess, setEditingProcess] = useState(null);
 
     useEffect(() => {
@@ -91,9 +92,9 @@ const ProcessManager = ({ onSelectProcess }) => {
         else {
             // Adiciona o novo processo à lista
             setProcesses(prevProcesses => [...prevProcesses, newProcess]);
-
+            setAddingProcess(null);
         }
-
+        setIsLoading(true);
         // Atualiza os mapeamentos de tipo de processo
         const updatedProcesses = [...processes, newProcess];
         await fetchProcessTypesForProcesses(updatedProcesses);
@@ -109,8 +110,12 @@ const ProcessManager = ({ onSelectProcess }) => {
         setEditingProcess(process);
     };
 
+    const handleAddProcess = () => {
+        setAddingProcess(true);
+    };
     const handleCancel = () => {
         setEditingProcess(null);
+        setAddingProcess(null);
     };
 
 
@@ -121,7 +126,15 @@ const ProcessManager = ({ onSelectProcess }) => {
     return (
         <div>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
-            <h2>Process Manager</h2>
+            <div className="title-container">
+                <h2>Process Manager</h2>
+                <ButtonGroup>
+                    <Button isPrimary 
+                            icon={<Icon icon={plus}/>}
+                            onClick={handleAddProcess}
+                            >Add new</Button>
+                </ButtonGroup>
+            </div>
             <div className="panel-container">
                 <main>
                     <Panel>
@@ -181,7 +194,7 @@ const ProcessManager = ({ onSelectProcess }) => {
                         </PanelRow>
                     </Panel>
                 </main>
-                <aside>
+                <section>
                     {editingProcess && (
                             <Modal
                                 title="Edit Process"
@@ -195,20 +208,21 @@ const ProcessManager = ({ onSelectProcess }) => {
                                     onCancel={handleCancel} 
                                 />
                             </Modal>
-                        )}
-                        <Panel>
-                        <PanelHeader>Create Process</PanelHeader>
-                            <PanelBody>
-                                <PanelRow>
-                                    <ProcessCreator processTypes={processTypes} 
-                                        onProcessSaved={handleProcessSaved}
-                                        onCancel={handleCancel}
-                                    />
-                                </PanelRow>
-                            </PanelBody>
-                        </Panel>
-                    
-                </aside>
+                    )}
+                    {addingProcess && (
+                        <Modal
+                            title="Create Process"
+                            onRequestClose={handleCancel}
+                            isDismissible={true}
+                        >
+                            <ProcessCreator 
+                                processTypes={processTypes} 
+                                onProcessSaved={handleProcessSaved}
+                                onCancel={handleCancel}
+                            />
+                        </Modal>
+                    )}
+                </section>
             </div>
             {selectedProcessId && (
                 <div>
