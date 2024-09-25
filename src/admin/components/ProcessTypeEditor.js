@@ -8,9 +8,7 @@ import {
 } from "@wordpress/components";
 import apiFetch from "@wordpress/api-fetch";
 import ProcessTypeForm from "./ProcessTypeManager/ProcessTypeForm";
-import ProcessStepForm from "./ProcessTypeManager/ProcessStepForm";
 import ProcessFlow from "./FlowEditor/ProcessFlow";
-import StepList from "./ProcessTypeManager/StepList";
 
 const ProcessTypeEditor = () => {
   const params = new URLSearchParams(window.location.search);
@@ -136,9 +134,23 @@ const ProcessTypeEditor = () => {
       <span className="brand">
         <strong>Obatala</strong> Curatorial Process Management
       </span>
-      <h2>Edit Process Type</h2>
+      <div className="title-container">
+        <h2>Edit Process Type</h2>
+      </div>
       <div className="panel-container">
         <main>
+          <Panel style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            <PanelHeader>
+              <h3>Edit Title</h3>
+            </PanelHeader>
+              <PanelRow >
+                <ProcessTypeForm
+                  editingProcessType={processType}
+                  onSave={handleSave}
+                />
+              </PanelRow>
+            
+          </Panel>
           <Panel>
             <PanelHeader>
               <h3>Steps</h3>
@@ -153,44 +165,13 @@ const ProcessTypeEditor = () => {
                   {notice.message}
                 </Notice>
               )}
-              <StepList
-                processTypeId={processType.id}
-                stepOrder={stepOrder}
-                onNotice={setNotice}
-              />
+
               {/* Passa o flowData carregado como initialData para o ProcessFlow */}
               <ProcessFlow ref={flowRef} initialData={flowData} />
             </PanelRow>
           </Panel>
         </main>
-        <aside>
-          <Panel>
-            <PanelHeader>
-              <h3>Edit Process Type data</h3>
-            </PanelHeader>
-            {notice && (
-              <PanelRow>
-                <Notice
-                  status={notice.status}
-                  isDismissible
-                  onRemove={() => setNotice(null)}
-                >
-                  {notice.message}
-                </Notice>
-              </PanelRow>
-            )}
-            <ProcessTypeForm
-              editingProcessType={processType}
-              onSave={handleSave}
-            />
-          </Panel>
-          <Panel>
-            <PanelHeader>
-              <h3>Adding steps</h3>
-            </PanelHeader>
-            <ProcessStepForm onAddStep={handleAddProcessStep} />
-          </Panel>
-        </aside>
+
       </div>
     </div>
   );
