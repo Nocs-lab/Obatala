@@ -2,42 +2,16 @@ import React, { useState, useEffect } from "react";
 import {
   Button,
   TextControl,
-  CheckboxControl,
-  PanelRow,
   Notice,
 } from "@wordpress/components";
 
 const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [acceptAttachments, setAcceptAttachments] = useState(false);
-  const [acceptTainacanItems, setAcceptTainacanItems] = useState(false);
-  const [generateTainacanItems, setGenerateTainacanItems] = useState(false);
   const [notice, setNotice] = useState(null);
 
   useEffect(() => {
     if (editingProcessType && editingProcessType.meta) {
       setTitle(editingProcessType.title.rendered);
-      setDescription(
-        Array.isArray(editingProcessType.meta.description)
-          ? editingProcessType.meta.description[0]
-          : editingProcessType.meta.description || ""
-      );
-      setAcceptAttachments(
-        Array.isArray(editingProcessType.meta.accept_attachments)
-          ? !!editingProcessType.meta.accept_attachments[0]
-          : !!editingProcessType.meta.accept_attachments
-      );
-      setAcceptTainacanItems(
-        Array.isArray(editingProcessType.meta.accept_tainacan_items)
-          ? !!editingProcessType.meta.accept_tainacan_items[0]
-          : !!editingProcessType.meta.accept_tainacan_items
-      );
-      setGenerateTainacanItems(
-        Array.isArray(editingProcessType.meta.generate_tainacan_items)
-          ? !!editingProcessType.meta.generate_tainacan_items[0]
-          : !!editingProcessType.meta.generate_tainacan_items
-      );
     }
   }, [editingProcessType]);
 
@@ -52,12 +26,6 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
     const updatedProcessType = {
       title,
       status: "publish",
-      meta: {
-        description,
-        accept_attachments: acceptAttachments,
-        accept_tainacan_items: acceptTainacanItems,
-        generate_tainacan_items: generateTainacanItems,
-      },
     };
 
     try {
@@ -74,43 +42,27 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
 
   return (
     <>
-      <form onSubmit={handleSave}>
-        <PanelRow>
+        <div className="notice-container">
+          {notice && (
+            <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+              {notice.message}
+            </Notice>
+          )}
+
+        </div>
+
           <TextControl
             label="Title"
             value={title}
             onChange={(value) => setTitle(value)}
           />
-          <TextControl
-            label="Description"
-            value={description}
-            onChange={(value) => setDescription(value)}
-          />
-          <CheckboxControl
-            label="Accept Attachments"
-            checked={acceptAttachments}
-            onChange={(checked) => setAcceptAttachments(checked)}
-          />
-          <CheckboxControl
-            label="Accept Tainacan Items"
-            checked={acceptTainacanItems}
-            onChange={(checked) => setAcceptTainacanItems(checked)}
-          />
-          <CheckboxControl
-            label="Generate Tainacan Items"
-            checked={generateTainacanItems}
-            onChange={(checked) => setGenerateTainacanItems(checked)}
-          />
-        </PanelRow>
-        <PanelRow>
-          <Button isPrimary type="submit">
+          <Button isPrimary onClick={handleSave}>
             Save
           </Button>
           <Button isSecondary onClick={onCancel}>
             Cancel
           </Button>
-        </PanelRow>
-      </form>
+    
     </>
   );
 };
