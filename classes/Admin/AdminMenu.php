@@ -61,15 +61,6 @@ class AdminMenu {
             ],
             [
                 'parent_slug' => 'obatala-main', // Permitir acesso direto
-                'title' => 'Process Step Editor',
-                'menu_title' => 'Process Step Editor',
-                'capability' => 'manage_options',
-                'slug' => 'process-step-editor',
-                'callback' => 'render_page',
-                'show_in_menu' => true
-            ],
-            [
-                'parent_slug' => 'obatala-main', // Permitir acesso direto
                 'title' => 'Sector Manager',
                 'menu_title' => 'Sector Manager',
                 'capability' => 'manage_options',
