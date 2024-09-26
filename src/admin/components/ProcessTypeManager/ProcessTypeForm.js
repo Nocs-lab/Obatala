@@ -81,26 +81,6 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
             value={title}
             onChange={(value) => setTitle(value)}
           />
-          <TextControl
-            label="Description"
-            value={description}
-            onChange={(value) => setDescription(value)}
-          />
-          <CheckboxControl
-            label="Accept Attachments"
-            checked={acceptAttachments}
-            onChange={(checked) => setAcceptAttachments(checked)}
-          />
-          <CheckboxControl
-            label="Accept Tainacan Items"
-            checked={acceptTainacanItems}
-            onChange={(checked) => setAcceptTainacanItems(checked)}
-          />
-          <CheckboxControl
-            label="Generate Tainacan Items"
-            checked={generateTainacanItems}
-            onChange={(checked) => setGenerateTainacanItems(checked)}
-          />
         </PanelRow>
         <PanelRow>
           <Button isPrimary type="submit">

@@ -21,7 +21,6 @@ const ProcessViewer = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [steps, setSteps] = useState([]);
   const [filteredProcessType, setFilteredProcessType] = useState(null);
-  const [processTypes, setProcessTypes] = useState([]);
   const [submittedSteps, setSubmittedSteps] = useState({});
   const [formValues, setFormValues] = useState({});
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);

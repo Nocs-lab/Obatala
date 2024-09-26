@@ -11,10 +11,6 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete }) => {
             accessor: 'title.rendered',
         },
         {
-            Header: 'Description',
-            accessor: 'description',
-        },
-        {
             Header: 'Created At',
             accessor: 'date',
             Cell: ({ value }) => format(new Date(value), 'MM/dd/yyyy'),
@@ -76,7 +72,7 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete }) => {
     return (
         <Panel>
             <PanelHeader>
-                <h3>Existing Process Types</h3>
+                <h3>Existing Models</h3>
                 <span className="badge">{processTypes.length}</span>
             </PanelHeader>
             <PanelRow>
