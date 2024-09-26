@@ -68,7 +68,6 @@ class Nocs_ObatalaPlugin {
 
 		// Register the custom post types and taxonomies
 		add_action('init', ['Obatala\Entities\Process', 'init']);
-		add_action('init', ['Obatala\Entities\ProcessStep', 'init']);
 		add_action('init', ['Obatala\Entities\ProcessType', 'init']);
 		add_action('init', ['Obatala\Entities\Sector', 'init']);
 
@@ -87,12 +86,9 @@ class Nocs_ObatalaPlugin {
 	private function register_api_endpoints() {
 		$custom_post_type_api = new \Obatala\Api\CustomPostTypeApi();
 		$custom_post_type_api->register();
-		
+
 		$process_custom_fields = new \Obatala\Api\ProcessApi();
 		$process_custom_fields->register();
-
-		$custom_metadata_api = new \Obatala\Api\StepMetadataApi();
-		$custom_metadata_api->register();
 
 		$process_type_custom_fields = new \Obatala\Api\ProcessTypeApi();
 		$process_type_custom_fields->register();
