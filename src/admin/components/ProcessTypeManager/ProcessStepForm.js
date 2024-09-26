@@ -75,7 +75,7 @@ const ProcessStepForm = ({ onAddStep }) => {
                     );
                 })}
             </div>
-            <Button isSecondary onClick={handleAddStep}>
+            <Button variant="secondary" onClick={handleAddStep}>
                 Add Steps
             </Button>
         </PanelRow>

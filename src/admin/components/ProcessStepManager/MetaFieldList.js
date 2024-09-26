@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, ButtonGroup, Tooltip, Notice, Icon, Spinner, Card, CardBody, CardHeader, CardFooter, Panel, PanelHeader, PanelRow } from "@wordpress/components";
+import { Button, ButtonGroup, Tooltip, Notice, Icon, Spinner, Panel, PanelHeader, PanelRow } from "@wordpress/components";
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import apiFetch from "@wordpress/api-fetch";
 import { trash, edit } from '@wordpress/icons';

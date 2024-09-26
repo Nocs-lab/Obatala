@@ -139,7 +139,7 @@ const NodeMetadataCreator = ({ onFieldAdded }) => {
       <div style={{ marginBottom: "10px" }}>
         {renderConditionalFields()}
       </div>
-      <Button isPrimary onClick={handleAddField}>
+      <Button variant="primary" onClick={handleAddField}>
         Adicionar Campo
       </Button>
     </div>

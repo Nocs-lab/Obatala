@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Button,
+  ButtonGroup,
   TextControl,
   CheckboxControl,
   PanelRow,
@@ -103,12 +104,14 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
           />
         </PanelRow>
         <PanelRow>
-          <Button isPrimary type="submit">
-            Save
-          </Button>
-          <Button isSecondary onClick={onCancel}>
-            Cancel
-          </Button>
+          <ButtonGroup>
+            <Button variant="link" onClick={onCancel}>
+              Cancel
+            </Button>
+            <Button variant="primary" type="submit">
+              Save
+            </Button>
+          </ButtonGroup>
         </PanelRow>
       </form>
     </>
