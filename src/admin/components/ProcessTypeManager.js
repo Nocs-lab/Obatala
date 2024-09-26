@@ -5,7 +5,7 @@ import {
     Spinner,
     Notice,
 } from '@wordpress/components';
-import { fetchProcessTypes, saveProcessType, deleteProcessType, updateProcessTypeMeta } from '../api/apiRequests';
+import { fetchProcessModels, saveProcessType, deleteProcessType, updateProcessTypeMeta } from '../api/apiRequests';
 import ProcessTypeForm from './ProcessTypeManager/ProcessTypeForm';
 import ProcessTypeList from './ProcessTypeManager/ProcessTypeList';
 
@@ -21,7 +21,7 @@ const ProcessTypeManager = () => {
 
     const loadProcessTypes = () => {
         setIsLoading(true);
-        fetchProcessTypes()
+        fetchProcessModels()
             .then(data => {
                 const sortedProcessTypes = data.sort((a, b) => a.title.rendered.localeCompare(b.title.rendered));
                 setProcessTypes(sortedProcessTypes);

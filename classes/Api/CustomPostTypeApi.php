@@ -16,9 +16,6 @@ class CustomPostTypeApi extends ObatalaAPI {
         // Register routes for 'process_obatala' post type
         $this->register_post_type_routes('process_obatala');
 
-        // Register routes for 'process_step' post type
-        $this->register_post_type_routes('process_step');
-
         // Register routes for 'process_type' post type
         $this->register_post_type_routes('process_type');
 

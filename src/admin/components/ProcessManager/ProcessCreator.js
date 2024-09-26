@@ -22,14 +22,14 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
             setNotice({ status: 'error', message: 'Please provide a title and select a process type.' });
             return;
         }
-    
-        const selectedProcessType = processTypes.find(type => type.id === parseInt(newProcessType));
-    
-        if (!selectedProcessType) {
+        // get process model id
+        const selectedProcessModel = processTypes.find(type => type.id === parseInt(newProcessType));
+        console.log('processID', selectedProcessModel)
+        if (!selectedProcessModel) {
             setNotice({ status: 'error', message: 'Invalid process type selected.' });
             return;
         }
-    
+
         const newProcess = {
             title: newProcessTitle,
             status: 'publish',
@@ -38,7 +38,6 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
     
         try {
             let savedProcess;
-    
             if (editingProcess) {
                 // Atualiza o processo
                 savedProcess = await apiFetch({
@@ -54,26 +53,15 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
                     data: newProcess
                 });
             }
+            
+            // get our process type meta fields
+            const metaFields = await apiFetch({ path: `/obatala/v1/process_type/${selectedProcessModel.id}/meta` })
     
-            console.log(savedProcess);
-    
-            const stepOrder = selectedProcessType.meta.step_order || [];
-            const metaFieldsPromises = stepOrder.map(stepId => 
-                apiFetch({ path: `/obatala/v1/process_step/${stepId}/meta` })
-            );
-    
-            const metaFieldsResults = await Promise.all(metaFieldsPromises);
-    
-            const stepOrderWithMeta = stepOrder.map((stepId, index) => ({
-                step_id: stepId,
-                meta_fields: metaFieldsResults[index]
-            }));
+            // Atualiza o meta para o processocom os dados do fluxo
+            console.log(metaFields)            
     
             const metaUpdateData = {
-                step_order: stepOrderWithMeta,
-                process_type: selectedProcessType.id,
-                current_stage: 0,
-                access_level: accessLevel
+                flowData: metaFields.flowData
             };
     
             // Atualiza o meta para o processo 
@@ -86,7 +74,7 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
             await apiFetch({
                 path: `/obatala/v1/process_obatala/${savedProcess.id}/process_type`,
                 method: 'POST',
-                data: {process_type: selectedProcessType.id}
+                data: {process_type: selectedProcessModel.id}
             });
 
     

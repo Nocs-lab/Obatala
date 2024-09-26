@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Spinner, Notice, Panel, PanelHeader, PanelBody, PanelRow , Button} from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
-import { fetchProcessTypes } from '../api/apiRequests';
+import { fetchProcessModels } from '../api/apiRequests';
 import MetroNavigation from './ProcessManager/MetroNavigation';
 import MetaFieldInputs from './ProcessManager/MetaFieldInputs';
 import CommentForm from './ProcessManager/CommentForm';
-import { check, Icon } from '@wordpress/icons';
 
 const ProcessViewer = () => {
     const [process, setProcess] = useState(null);
@@ -75,7 +74,7 @@ const ProcessViewer = () => {
 
     const fetchLoadProcess = () => {
         setIsLoading(true);
-        return fetchProcessTypes()
+        return fetchProcessModels()
             .then(data => {
                 setProcessTypes(data);
                 setIsLoading(false);

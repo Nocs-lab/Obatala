@@ -94,9 +94,6 @@ class Nocs_ObatalaPlugin {
 		$custom_metadata_api = new \Obatala\Api\StepMetadataApi();
 		$custom_metadata_api->register();
 
-		$process_step_custom_fields = new \Obatala\Api\ProcessStepApi();
-		$process_step_custom_fields->register();
-
 		$process_type_custom_fields = new \Obatala\Api\ProcessTypeApi();
 		$process_type_custom_fields->register();
 
