@@ -29,6 +29,7 @@
 
   --border-radius:       15px;
   --gap:                 2rem;
+  --gap-external:        3rem;
   --input-border-radius: 4px;
 }
 
@@ -46,24 +47,30 @@
   background-color: var(--primary-100);
 }
 
+*, ::after, ::before {
+  box-sizing: border-box;
+}
+
 /* Layout */
 #wpwrap {
   background-color: var(--gray-50);
 }
 #wpcontent {
   height: 100%;
+  padding-left: 0;
 }
 #wpbody {
   height: 100%;
-  padding: var(--gap);
 }
 h2 {
   color: var(--primary-900);
   font-size: 2rem;
-  margin-top: 1.5rem;
 }
 h2:has(+ span.badge) {
   margin-bottom: 1rem;
+}
+main > .notice-container {
+  margin: 1rem var(--gap-external) 2rem;
 }
 
 /* Forms */
@@ -296,6 +303,8 @@ ol.list-group .list-group-item::before {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
+  margin-left: var(--gap-external);
+  margin-right: var(--gap-external);
 }
 .panel-container main {
   flex-basis: 65%;
@@ -350,12 +359,17 @@ ol.list-group .list-group-item::before {
   border: 0 none;
   border-radius: var(--border-radius);
 }
+main > .title-container ~ .components-panel {
+  margin-left: var(--gap-external);
+  margin-right: var(--gap-external);
+}
 .components-panel__header,
 .components-panel__header h3 {
-  font-size: 1.25rem;
-  padding: .75rem var(--gap);
+  font-size: 1rem;
+  padding: 0 var(--gap);
 }
 .components-panel__header h3 {
+  font-weight: 400;
   margin: 0;
   padding: 0;
 }
@@ -441,11 +455,15 @@ ol.list-group .list-group-item::before {
 
 /* Extra */
 .brand {
+  background-color: var(--gray-200);
+  border-top: 4px solid var(--primary-600);
   color: var(--primary-700);
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 2.5rem;
   justify-content: space-between;
+  font-size: .75rem;
+  padding: .5rem var(--gap-external);
   width: 100%;
 }
 .brand strong {
@@ -648,8 +666,15 @@ button .components-spinner {
 .step-card button {
   align-self: flex-end;
 }
-
-
+.title-container {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-left: var(--gap-external);
+  margin-right: var(--gap-external);
+}
 .actions {
   display: flex;
   gap: 1rem;
@@ -659,6 +684,7 @@ button .components-spinner {
   align-items: center;
   justify-content: space-between;
   padding: 1rem 0;
+  width: 100%;
 }
 .meta-field-item {
   display: flex;
@@ -680,4 +706,10 @@ button .components-spinner {
 .wp-admin #toplevel_page_obatala-main .wp-submenu li a[href*="process-step-editor"],
 .wp-admin #toplevel_page_obatala-main .wp-submenu li a[href*="process-type-editor"] {
   display: none;
+}
+
+/* tmp */
+.brand + h2 {
+  margin-left: var(--gap-external);
+  margin-right: var(--gap-external);
 }
