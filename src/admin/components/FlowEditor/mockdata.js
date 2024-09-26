@@ -39,9 +39,9 @@ const mockData = [
 
 // Conexões entre os nós (edges)
 const connections = [
-  { id: 'e1-2', source: 'Etapa 1', target: 'Etapa 2', type: 'smoothstep' },
-  { id: 'e2-3', source: 'Etapa 2', target: 'Etapa 3', type: 'smoothstep' },
-  { id: 'e3-4', source: 'Etapa 3', target: 'Etapa 4', type: 'smoothstep' },
+  { id: 'e1-2', source: 'Etapa 1', target: 'Etapa 2', type: 'buttonedge' },
+  { id: 'e2-3', source: 'Etapa 2', target: 'Etapa 3', type: 'buttonedge' },
+  { id: 'e3-4', source: 'Etapa 3', target: 'Etapa 4', type: 'buttonedge' },
 ];
 
 export { mockData, connections };
