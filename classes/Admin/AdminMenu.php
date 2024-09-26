@@ -25,15 +25,6 @@ class AdminMenu {
             ],
             [
                 'parent_slug' => 'obatala-main',
-                'title' => 'Process Type Manager',
-                'menu_title' => 'Process Type Manager',
-                'capability' => 'edit_posts',
-                'slug' => 'process-type-manager',
-                'callback' => 'render_page',
-                'show_in_menu' => true
-            ],
-            [
-                'parent_slug' => 'obatala-main',
                 'title' => 'Process Viewer',
                 'menu_title' => 'Process Viewer',
                 'capability' => 'read',
@@ -43,10 +34,10 @@ class AdminMenu {
             ],
             [
                 'parent_slug' => 'obatala-main',
-                'title' => 'Step Manager',
-                'menu_title' => 'Step Manager',
-                'capability' => 'manage_options',
-                'slug' => 'process-step-manager',
+                'title' => 'Process Models',
+                'menu_title' => 'Process Models',
+                'capability' => 'edit_posts',
+                'slug' => 'process-type-manager',
                 'callback' => 'render_page',
                 'show_in_menu' => true
             ],
@@ -56,15 +47,6 @@ class AdminMenu {
                 'menu_title' => 'Process Type Editor',
                 'capability' => 'manage_options',
                 'slug' => 'process-type-editor',
-                'callback' => 'render_page',
-                'show_in_menu' => true
-            ],
-            [
-                'parent_slug' => 'obatala-main', // Permitir acesso direto
-                'title' => 'Process Step Editor',
-                'menu_title' => 'Process Step Editor',
-                'capability' => 'manage_options',
-                'slug' => 'process-step-editor',
                 'callback' => 'render_page',
                 'show_in_menu' => true
             ]
@@ -151,7 +133,7 @@ class AdminMenu {
      * Enfileira os scripts necessários para garantir o comportamento do menu.
      */
     public static function enqueue_scripts() {
-        add_action('admin_footer', function() {
+        add_action('admin_footer', function () {
             echo '<style>
                 #toplevel_page_obatala-main.wp-menu-open > .wp-submenu {
                     display: block;

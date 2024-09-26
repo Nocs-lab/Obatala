@@ -5207,10 +5207,57 @@ function findFirstFocusableNode(element) {
 
 /***/ }),
 
-/***/ "./node_modules/@wordpress/icons/build-module/library/close-small.js":
-/*!***************************************************************************!*\
-  !*** ./node_modules/@wordpress/icons/build-module/library/close-small.js ***!
-  \***************************************************************************/
+/***/ "./node_modules/@wordpress/icons/build-module/icon/index.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@wordpress/icons/build-module/icon/index.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/element */ "@wordpress/element");
+/* harmony import */ var _wordpress_element__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_element__WEBPACK_IMPORTED_MODULE_0__);
+/**
+ * WordPress dependencies
+ */
+
+
+/** @typedef {{icon: JSX.Element, size?: number} & import('@wordpress/primitives').SVGProps} IconProps */
+
+/**
+ * Return an SVG icon.
+ *
+ * @param {IconProps}                                 props icon is the SVG component to render
+ *                                                          size is a number specifiying the icon size in pixels
+ *                                                          Other props will be passed to wrapped SVG component
+ * @param {import('react').ForwardedRef<HTMLElement>} ref   The forwarded ref to the SVG element.
+ *
+ * @return {JSX.Element}  Icon component
+ */
+function Icon({
+  icon,
+  size = 24,
+  ...props
+}, ref) {
+  return (0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.cloneElement)(icon, {
+    width: size,
+    height: size,
+    ...props,
+    ref
+  });
+}
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((0,_wordpress_element__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(Icon));
+//# sourceMappingURL=index.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@wordpress/icons/build-module/library/calendar.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/@wordpress/icons/build-module/library/calendar.js ***!
+  \************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -5227,15 +5274,147 @@ __webpack_require__.r(__webpack_exports__);
  */
 
 
-const closeSmall = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.SVG, {
+const calendar = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.SVG, {
+  viewBox: "0 0 24 24",
+  xmlns: "http://www.w3.org/2000/svg",
+  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.Path, {
+    d: "M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm.5 16c0 .3-.2.5-.5.5H5c-.3 0-.5-.2-.5-.5V7h15v12zM9 10H7v2h2v-2zm0 4H7v2h2v-2zm4-4h-2v2h2v-2zm4 0h-2v2h2v-2zm-4 4h-2v2h2v-2zm4 0h-2v2h2v-2z"
+  })
+});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (calendar);
+//# sourceMappingURL=calendar.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@wordpress/icons/build-module/library/check.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/@wordpress/icons/build-module/library/check.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/primitives */ "@wordpress/primitives");
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
+/**
+ * WordPress dependencies
+ */
+
+
+const check = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.SVG, {
   xmlns: "http://www.w3.org/2000/svg",
   viewBox: "0 0 24 24",
   children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.Path, {
-    d: "M12 13.06l3.712 3.713 1.061-1.06L13.061 12l3.712-3.712-1.06-1.06L12 10.938 8.288 7.227l-1.061 1.06L10.939 12l-3.712 3.712 1.06 1.061L12 13.061z"
+    d: "M16.7 7.1l-6.3 8.5-3.3-2.5-.9 1.2 4.5 3.4L17.9 8z"
   })
 });
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (closeSmall);
-//# sourceMappingURL=close-small.js.map
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (check);
+//# sourceMappingURL=check.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@wordpress/icons/build-module/library/close.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/@wordpress/icons/build-module/library/close.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/primitives */ "@wordpress/primitives");
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
+/**
+ * WordPress dependencies
+ */
+
+
+const close = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.SVG, {
+  xmlns: "http://www.w3.org/2000/svg",
+  viewBox: "0 0 24 24",
+  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.Path, {
+    d: "m13.06 12 6.47-6.47-1.06-1.06L12 10.94 5.53 4.47 4.47 5.53 10.94 12l-6.47 6.47 1.06 1.06L12 13.06l6.47 6.47 1.06-1.06L13.06 12Z"
+  })
+});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (close);
+//# sourceMappingURL=close.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@wordpress/icons/build-module/library/comment-content.js":
+/*!*******************************************************************************!*\
+  !*** ./node_modules/@wordpress/icons/build-module/library/comment-content.js ***!
+  \*******************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/primitives */ "@wordpress/primitives");
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
+/**
+ * WordPress dependencies
+ */
+
+
+const commentContent = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.SVG, {
+  viewBox: "0 0 24 24",
+  xmlns: "http://www.w3.org/2000/svg",
+  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.Path, {
+    fillRule: "evenodd",
+    clipRule: "evenodd",
+    d: "M6.68822 16.625L5.5 17.8145L5.5 5.5L18.5 5.5L18.5 16.625L6.68822 16.625ZM7.31 18.125L19 18.125C19.5523 18.125 20 17.6773 20 17.125L20 5C20 4.44772 19.5523 4 19 4H5C4.44772 4 4 4.44772 4 5V19.5247C4 19.8173 4.16123 20.086 4.41935 20.2237C4.72711 20.3878 5.10601 20.3313 5.35252 20.0845L7.31 18.125ZM16 9.99997H8V8.49997H16V9.99997ZM8 14H13V12.5H8V14Z"
+  })
+});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (commentContent);
+//# sourceMappingURL=comment-content.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@wordpress/icons/build-module/library/comment-edit-link.js":
+/*!*********************************************************************************!*\
+  !*** ./node_modules/@wordpress/icons/build-module/library/comment-edit-link.js ***!
+  \*********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/primitives */ "@wordpress/primitives");
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
+/**
+ * WordPress dependencies
+ */
+
+
+const commentEditLink = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.SVG, {
+  width: "24",
+  height: "24",
+  viewBox: "0 0 24 24",
+  xmlns: "http://www.w3.org/2000/svg",
+  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.Path, {
+    d: "m6.249 11.065.44-.44h3.186l-1.5 1.5H7.31l-1.957 1.96A.792.792 0 0 1 4 13.524V5a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v1.5L12.5 8V5.5h-7v6.315l.749-.75ZM20 19.75H7v-1.5h13v1.5Zm0-12.653-8.967 9.064L8 17l.867-2.935L17.833 5 20 7.097Z"
+  })
+});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (commentEditLink);
+//# sourceMappingURL=comment-edit-link.js.map
 
 /***/ }),
 
@@ -5258,6 +5437,235 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (_pencil__WEBPACK_IMPORTED_MODULE_0__["default"]);
 //# sourceMappingURL=edit.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@wordpress/icons/build-module/library/file.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/@wordpress/icons/build-module/library/file.js ***!
+  \********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/primitives */ "@wordpress/primitives");
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
+/**
+ * WordPress dependencies
+ */
+
+
+const file = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.SVG, {
+  viewBox: "0 0 24 24",
+  xmlns: "http://www.w3.org/2000/svg",
+  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.Path, {
+    fillRule: "evenodd",
+    clipRule: "evenodd",
+    d: "M12.848 8a1 1 0 0 1-.914-.594l-.723-1.63a.5.5 0 0 0-.447-.276H5a.5.5 0 0 0-.5.5v11.5a.5.5 0 0 0 .5.5h14a.5.5 0 0 0 .5-.5v-9A.5.5 0 0 0 19 8h-6.152Zm.612-1.5a.5.5 0 0 1-.462-.31l-.445-1.084A2 2 0 0 0 10.763 4H5a2 2 0 0 0-2 2v11.5a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-5.54Z"
+  })
+});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (file);
+//# sourceMappingURL=file.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@wordpress/icons/build-module/library/keyboard.js":
+/*!************************************************************************!*\
+  !*** ./node_modules/@wordpress/icons/build-module/library/keyboard.js ***!
+  \************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/primitives */ "@wordpress/primitives");
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
+/**
+ * WordPress dependencies
+ */
+
+
+
+const keyboard = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.SVG, {
+  xmlns: "http://www.w3.org/2000/svg",
+  viewBox: "0 0 24 24",
+  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.Path, {
+    d: "m16 15.5h-8v-1.5h8zm-7.5-2.5h-2v-2h2zm3 0h-2v-2h2zm3 0h-2v-2h2zm3 0h-2v-2h2zm-9-3h-2v-2h2zm3 0h-2v-2h2zm3 0h-2v-2h2zm3 0h-2v-2h2z"
+  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.Path, {
+    d: "m18.5 6.5h-13a.5.5 0 0 0 -.5.5v9.5a.5.5 0 0 0 .5.5h13a.5.5 0 0 0 .5-.5v-9.5a.5.5 0 0 0 -.5-.5zm-13-1.5h13a2 2 0 0 1 2 2v9.5a2 2 0 0 1 -2 2h-13a2 2 0 0 1 -2-2v-9.5a2 2 0 0 1 2-2z"
+  })]
+});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (keyboard);
+//# sourceMappingURL=keyboard.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@wordpress/icons/build-module/library/link.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/@wordpress/icons/build-module/library/link.js ***!
+  \********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/primitives */ "@wordpress/primitives");
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
+/**
+ * WordPress dependencies
+ */
+
+
+const link = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.SVG, {
+  xmlns: "http://www.w3.org/2000/svg",
+  viewBox: "0 0 24 24",
+  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.Path, {
+    d: "M10 17.389H8.444A5.194 5.194 0 1 1 8.444 7H10v1.5H8.444a3.694 3.694 0 0 0 0 7.389H10v1.5ZM14 7h1.556a5.194 5.194 0 0 1 0 10.39H14v-1.5h1.556a3.694 3.694 0 0 0 0-7.39H14V7Zm-4.5 6h5v-1.5h-5V13Z"
+  })
+});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (link);
+//# sourceMappingURL=link.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@wordpress/icons/build-module/library/list-view.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/@wordpress/icons/build-module/library/list-view.js ***!
+  \*************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/primitives */ "@wordpress/primitives");
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
+/**
+ * WordPress dependencies
+ */
+
+
+const listView = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.SVG, {
+  viewBox: "0 0 24 24",
+  xmlns: "http://www.w3.org/2000/svg",
+  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.Path, {
+    d: "M3 6h11v1.5H3V6Zm3.5 5.5h11V13h-11v-1.5ZM21 17H10v1.5h11V17Z"
+  })
+});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (listView);
+//# sourceMappingURL=list-view.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@wordpress/icons/build-module/library/map-marker.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/@wordpress/icons/build-module/library/map-marker.js ***!
+  \**************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/primitives */ "@wordpress/primitives");
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
+/**
+ * WordPress dependencies
+ */
+
+
+const mapMarker = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.SVG, {
+  xmlns: "http://www.w3.org/2000/svg",
+  viewBox: "0 0 24 24",
+  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.Path, {
+    d: "M12 9c-.8 0-1.5.7-1.5 1.5S11.2 12 12 12s1.5-.7 1.5-1.5S12.8 9 12 9zm0-5c-3.6 0-6.5 2.8-6.5 6.2 0 .8.3 1.8.9 3.1.5 1.1 1.2 2.3 2 3.6.7 1 3 3.8 3.2 3.9l.4.5.4-.5c.2-.2 2.6-2.9 3.2-3.9.8-1.2 1.5-2.5 2-3.6.6-1.3.9-2.3.9-3.1C18.5 6.8 15.6 4 12 4zm4.3 8.7c-.5 1-1.1 2.2-1.9 3.4-.5.7-1.7 2.2-2.4 3-.7-.8-1.9-2.3-2.4-3-.8-1.2-1.4-2.3-1.9-3.3-.6-1.4-.7-2.2-.7-2.5 0-2.6 2.2-4.7 5-4.7s5 2.1 5 4.7c0 .2-.1 1-.7 2.4z"
+  })
+});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (mapMarker);
+//# sourceMappingURL=map-marker.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@wordpress/icons/build-module/library/mobile.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@wordpress/icons/build-module/library/mobile.js ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/primitives */ "@wordpress/primitives");
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
+/**
+ * WordPress dependencies
+ */
+
+
+const mobile = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.SVG, {
+  xmlns: "http://www.w3.org/2000/svg",
+  viewBox: "0 0 24 24",
+  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.Path, {
+    d: "M15 4H9c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h6c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm.5 14c0 .3-.2.5-.5.5H9c-.3 0-.5-.2-.5-.5V6c0-.3.2-.5.5-.5h6c.3 0 .5.2.5.5v12zm-4.5-.5h2V16h-2v1.5z"
+  })
+});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (mobile);
+//# sourceMappingURL=mobile.js.map
+
+/***/ }),
+
+/***/ "./node_modules/@wordpress/icons/build-module/library/paragraph.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/@wordpress/icons/build-module/library/paragraph.js ***!
+  \*************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @wordpress/primitives */ "@wordpress/primitives");
+/* harmony import */ var _wordpress_primitives__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
+/**
+ * WordPress dependencies
+ */
+
+
+const paragraph = /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.SVG, {
+  xmlns: "http://www.w3.org/2000/svg",
+  viewBox: "0 0 24 24",
+  children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_wordpress_primitives__WEBPACK_IMPORTED_MODULE_0__.Path, {
+    d: "m9.99609 14v-.2251l.00391.0001v6.225h1.5v-14.5h2.5v14.5h1.5v-14.5h3v-1.5h-8.50391c-2.76142 0-5 2.23858-5 5 0 2.7614 2.23858 5 5 5z"
+  })
+});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (paragraph);
+//# sourceMappingURL=paragraph.js.map
 
 /***/ }),
 
@@ -5541,14 +5949,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _xyflow_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @xyflow/react */ "./node_modules/@xyflow/react/dist/esm/index.mjs");
-/* harmony import */ var _xyflow_react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @xyflow/react */ "./node_modules/@xyflow/system/dist/esm/index.mjs");
+/* harmony import */ var _xyflow_react__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @xyflow/react */ "./node_modules/@xyflow/react/dist/esm/index.mjs");
 /* harmony import */ var _xyflow_react_dist_style_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @xyflow/react/dist/style.css */ "./node_modules/@xyflow/react/dist/style.css");
-/* harmony import */ var _components_NodeContent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/NodeContent */ "./src/admin/components/FlowEditor/components/NodeContent.js");
-/* harmony import */ var _helpers_dataValidator__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./helpers/dataValidator */ "./src/admin/components/FlowEditor/helpers/dataValidator.js");
-/* harmony import */ var _components_FlowButtons__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/FlowButtons */ "./src/admin/components/FlowEditor/components/FlowButtons.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _components_reactFlow_NodeContent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/reactFlow/NodeContent */ "./src/admin/components/FlowEditor/components/reactFlow/NodeContent.js");
+/* harmony import */ var _components_reactFlow_CustomEdge__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/reactFlow/CustomEdge */ "./src/admin/components/FlowEditor/components/reactFlow/CustomEdge.js");
+/* harmony import */ var _components_reactFlow_FlowButtons__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/reactFlow/FlowButtons */ "./src/admin/components/FlowEditor/components/reactFlow/FlowButtons.js");
+/* harmony import */ var _components_SlidingDrawer__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/SlidingDrawer */ "./src/admin/components/FlowEditor/components/SlidingDrawer.js");
+/* harmony import */ var _context_DrawerContext__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./context/DrawerContext */ "./src/admin/components/FlowEditor/context/DrawerContext.js");
+/* harmony import */ var _context_FlowContext__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./context/FlowContext */ "./src/admin/components/FlowEditor/context/FlowContext.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__);
+
+
+
 
 
 
@@ -5557,255 +5970,39 @@ __webpack_require__.r(__webpack_exports__);
 
 
 const nodeTypes = {
-  customNode: _components_NodeContent__WEBPACK_IMPORTED_MODULE_2__["default"]
+  customNode: _components_reactFlow_NodeContent__WEBPACK_IMPORTED_MODULE_2__["default"]
+};
+const edgeTypes = {
+  buttonedge: _components_reactFlow_CustomEdge__WEBPACK_IMPORTED_MODULE_3__["default"]
 };
 const ProcessFlow = (0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(({
   initialData
 }, ref) => {
-  const [mockNodes, setMockNodes] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
-  const [mockEdges, setMockEdges] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
+  const {
+    nodes,
+    edges,
+    onNodesChangeHandler,
+    onEdgesChangeHandler,
+    onConnect,
+    initializeData
+  } = (0,_context_FlowContext__WEBPACK_IMPORTED_MODULE_7__.useFlowContext)();
   const [errors, setErrors] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]); // Armazena os erros de validação
+  const [isOpen, setIsOpen] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
 
-  // Função para validar os dados e atualizar o estado inicial
-  const initializeData = data => {
-    const validationResult = (0,_helpers_dataValidator__WEBPACK_IMPORTED_MODULE_3__["default"])(data);
-    if (true) {
-      // Atualiza os mockNodes e mockEdges com os dados válidos
-      setMockNodes(data.nodes || []);
-      setMockEdges(data.edges || []);
-
-      // Atualiza os estados de nodes e edges para que o ReactFlow use os dados validados
-      setNodes(data.nodes.map(({
-        id,
-        position,
-        fields,
-        stageName
-      }) => ({
-        id,
-        type: "customNode",
-        dragHandle: ".custom-drag-handle",
-        position,
-        data: {
-          fields: fields || [],
-          stageName: stageName || "",
-          updateFields: newFields => updateFieldsForNode(id, newFields),
-          updateNodeName: newName => updateNodeName(id, newName),
-          updatePosition: newPosition => updateNodePosition(id, newPosition)
-        }
-      })));
-      setEdges(data.edges.map(({
-        id,
-        source,
-        target
-      }) => ({
-        id,
-        source,
-        target,
-        type: "smoothstep"
-      })));
-    } else {}
-  };
-
-  // Definindo os estados dos nós e das arestas
-  const [nodes, setNodes, onNodesChange] = (0,_xyflow_react__WEBPACK_IMPORTED_MODULE_6__.useNodesState)(mockNodes.map(({
-    id,
-    position,
-    fields,
-    stageName
-  }) => ({
-    id,
-    type: "customNode",
-    dragHandle: ".custom-drag-handle",
-    position,
-    data: {
-      fields: fields || [],
-      stageName: stageName || "",
-      updateFields: newFields => updateFieldsForNode(id, newFields),
-      updateNodeName: newName => updateNodeName(id, newName),
-      updatePosition: newPosition => updateNodePosition(id, newPosition)
-    }
-  })));
-  const [edges, setEdges, onEdgesChange] = (0,_xyflow_react__WEBPACK_IMPORTED_MODULE_6__.useEdgesState)(mockEdges.map(({
-    id,
-    source,
-    target
-  }) => ({
-    id,
-    source,
-    target,
-    type: "smoothstep"
-  })));
-
-  // Função para atualizar os campos de cada nó
-  const updateFieldsForNode = (nodeId, newFields) => {
-    setMockNodes(prevMockData => prevMockData.map(node => node.id === nodeId ? {
-      ...node,
-      fields: newFields
-    } : node));
-    setNodes(prevNodes => prevNodes.map(node => node.id === nodeId ? {
-      ...node,
-      data: {
-        ...node.data,
-        fields: newFields
-      }
-    } : node));
-  };
-
-  // Função para atualizar o nome (stageName) de cada nó
-  const updateNodeName = (nodeId, newName) => {
-    setMockNodes(prevMockData => prevMockData.map(node => node.id === nodeId ? {
-      ...node,
-      stageName: newName
-    } : node));
-    setNodes(prevNodes => prevNodes.map(node => node.id === nodeId ? {
-      ...node,
-      data: {
-        ...node.data,
-        stageName: newName
-      }
-    } : node));
-  };
-
-  // Função para atualizar a posição de um nó
-  const updateNodePosition = (nodeId, newPosition) => {
-    // Atualiza o estado mockNodes com a nova posição do nó
-    setMockNodes(prevMockData => prevMockData.map(node => node.id === nodeId ? {
-      ...node,
-      position: {
-        ...newPosition
-      }
-    } : node));
-
-    // Também atualiza o estado dos nós visíveis em ReactFlow
-    setNodes(prevNodes => prevNodes.map(node => node.id === nodeId ? {
-      ...node,
-      position: {
-        ...newPosition
-      }
-    } : node));
-  };
-
-  // Função para capturar as mudanças de posição dos nós
-  const onNodesChangeHandler = changes => {
-    changes.forEach(change => {
-      if (change.type === "position") {
-        // Atualiza a posição quando o tipo de mudança for "position"
-        updateNodePosition(change.id, change.position);
-      }
-    });
-    onNodesChange(changes);
-  };
-
-  // Função para conectar nós
-  const onConnect = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(params => setEdges(eds => {
-    const updatedEdges = (0,_xyflow_react__WEBPACK_IMPORTED_MODULE_7__.addEdge)({
-      ...params,
-      type: "smoothstep"
-    }, eds);
-    setMockEdges(updatedEdges); // Atualiza o estado dos edges com as novas conexões
-    return updatedEdges;
-  }), [setEdges]);
-
-  // Função para capturar mudanças nos edges
-  const onEdgesChangeHandler = changes => {
-    setMockEdges(prevMockEdges => prevMockEdges.map(edge => changes.find(change => change.id === edge.id) || edge));
-    onEdgesChange(changes);
-  };
-
-  // função para exportar os dados do state
-  const onExport = () => {
-    const data = {
-      nodes: mockNodes,
-      edges: mockEdges
-    };
-    const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(data, null, 2))}`;
-    const downloadAnchorNode = document.createElement("a");
-    downloadAnchorNode.setAttribute("href", dataStr);
-    downloadAnchorNode.setAttribute("download", "flowData.json");
-    document.body.appendChild(downloadAnchorNode); // required for firefox
-    downloadAnchorNode.click();
-    downloadAnchorNode.remove();
-  };
-
-  // função para importar dados e sobrescrever o state
-  const onImport = importedData => {
-    const validationResult = (0,_helpers_dataValidator__WEBPACK_IMPORTED_MODULE_3__["default"])(importedData);
-    if (validationResult.isValid) {
-      setMockNodes(importedData.nodes || []);
-      setMockEdges(importedData.edges || []);
-      setNodes(importedData.nodes.map(({
-        id,
-        position,
-        fields,
-        stageName
-      }) => ({
-        id,
-        type: "customNode",
-        dragHandle: ".custom-drag-handle",
-        position,
-        data: {
-          fields: fields || [],
-          stageName: stageName || "",
-          updateFields: newFields => updateFieldsForNode(id, newFields),
-          updateNodeName: newName => updateNodeName(id, newName),
-          updatePosition: newPosition => updateNodePosition(id, newPosition)
-        }
-      })));
-      setEdges(importedData.edges.map(({
-        id,
-        source,
-        target
-      }) => ({
-        id,
-        source,
-        target,
-        type: "smoothstep"
-      })));
-    } else {
-      setErrors(validationResult.errors);
-      console.error("Validation errors:", validationResult.errors);
-    }
-  };
-
-  // Função para adicionar novos nós
-  const addNewNode = () => {
-    const newNodeId = `Etapa ${nodes.length + 1}`;
-    const newNode = {
-      id: newNodeId,
-      type: "customNode",
-      position: {
-        x: 200,
-        y: 200
-      },
-      data: {
-        fields: [],
-        stageName: `${newNodeId}`,
-        updateFields: newFields => updateFieldsForNode(newNodeId, newFields),
-        updateNodeName: newName => updateNodeName(newNodeId, newName),
-        updatePosition: newPosition => updateNodePosition(newNodeId, newPosition)
-      }
-    };
-    setNodes(prevNodes => [...prevNodes, newNode]);
-    setMockNodes(prevData => [...prevData, {
-      id: newNodeId,
-      position: {
-        x: 200,
-        y: 200
-      },
-      fields: [],
-      stageName: `Etapa ${newNodeId}`
-    }]);
+  // Função para abrir/fechar a gaveta
+  const toggleDrawer = () => {
+    setIsOpen(!isOpen);
   };
 
   // Expondo os dados do flow e dos nodes para o componente pai
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useImperativeHandle)(ref, () => ({
     getFlowData: () => ({
-      nodes: mockNodes,
-      edges: mockEdges
+      nodes,
+      edges
     }),
-    getNodesData: () => mockNodes,
+    getNodesData: () => nodes,
     // Função que retorna apenas os nodes
-    getEdgesData: () => mockEdges // Função que retorna apenas os edges
+    getEdgesData: () => edges // Função que retorna apenas os edges
   }));
 
   // Atualiza os dados iniciais quando o initialData for alterado
@@ -5814,42 +6011,51 @@ const ProcessFlow = (0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(({
       initializeData(initialData); // Valida e inicializa os dados
     }
   }, [initialData]);
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
+  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
+    console.log("Nodes:", nodes, "Edges:", edges);
+  }, [nodes, edges]);
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)("div", {
     style: {
       width: "100%",
       height: "650px",
       position: "relative"
     },
-    children: [errors.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
+    children: [errors.length > 0 && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)("div", {
       style: {
         color: "red",
         padding: "10px"
       },
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("strong", {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("strong", {
         children: "Validation Errors:"
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("ul", {
-        children: errors.map((error, index) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("li", {
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("ul", {
+        children: errors.map((error, index) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)("li", {
           children: error
         }, index))
       })]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_xyflow_react__WEBPACK_IMPORTED_MODULE_6__.ReactFlow, {
-      nodes: nodes,
-      edges: edges,
-      onNodesChange: onNodesChangeHandler,
-      onEdgesChange: onEdgesChangeHandler // Atualiza os edges com as mudanças
-      ,
-      onConnect: onConnect // Conecta nós e atualiza edges
-      ,
-      nodeTypes: nodeTypes,
-      fitView: true,
-      proOptions: {
-        hideAttribution: true
-      },
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_xyflow_react__WEBPACK_IMPORTED_MODULE_6__.Controls, {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_xyflow_react__WEBPACK_IMPORTED_MODULE_6__.MiniMap, {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_xyflow_react__WEBPACK_IMPORTED_MODULE_6__.Background, {})]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_components_FlowButtons__WEBPACK_IMPORTED_MODULE_4__["default"], {
-      onAddNode: addNewNode,
-      onExport: onExport,
-      onImport: onImport
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)(_context_DrawerContext__WEBPACK_IMPORTED_MODULE_6__.DrawerProvider, {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsxs)(_xyflow_react__WEBPACK_IMPORTED_MODULE_9__.ReactFlow, {
+        nodes: nodes.map(node => ({
+          ...node,
+          data: {
+            ...node.data
+          }
+        })),
+        edges: edges,
+        onNodesChange: onNodesChangeHandler,
+        onEdgesChange: onEdgesChangeHandler // Atualiza os edges com as mudanças
+        ,
+        onConnect: onConnect // Conecta nós e atualiza edges
+        ,
+        nodeTypes: nodeTypes,
+        edgeTypes: edgeTypes,
+        fitView: true,
+        proOptions: {
+          hideAttribution: true
+        },
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_components_SlidingDrawer__WEBPACK_IMPORTED_MODULE_5__["default"], {
+          toggleDrawer: toggleDrawer
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_xyflow_react__WEBPACK_IMPORTED_MODULE_9__.Controls, {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_xyflow_react__WEBPACK_IMPORTED_MODULE_9__.MiniMap, {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_xyflow_react__WEBPACK_IMPORTED_MODULE_9__.Background, {})]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_8__.jsx)(_components_reactFlow_FlowButtons__WEBPACK_IMPORTED_MODULE_4__["default"], {})]
     })]
   });
 });
@@ -5857,10 +6063,77 @@ const ProcessFlow = (0,react__WEBPACK_IMPORTED_MODULE_0__.forwardRef)(({
 
 /***/ }),
 
-/***/ "./src/admin/components/FlowEditor/components/DragAndDropList.js":
-/*!***********************************************************************!*\
-  !*** ./src/admin/components/FlowEditor/components/DragAndDropList.js ***!
-  \***********************************************************************/
+/***/ "./src/admin/components/FlowEditor/components/SlidingDrawer.js":
+/*!*********************************************************************!*\
+  !*** ./src/admin/components/FlowEditor/components/SlidingDrawer.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _context_DrawerContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../context/DrawerContext */ "./src/admin/components/FlowEditor/context/DrawerContext.js");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/icon/index.js");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/close.js");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__);
+
+
+
+
+
+const SlidingDrawer = () => {
+  const {
+    isOpen,
+    toggleDrawer,
+    content
+  } = (0,_context_DrawerContext__WEBPACK_IMPORTED_MODULE_1__.useDrawer)();
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.Fragment, {
+    children: isOpen && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+      className: "wp-drawer",
+      style: {
+        position: "absolute",
+        left: 0,
+        top: 0,
+        height: "100%",
+        width: "33%",
+        padding: "50px 20px",
+        zIndex: 1100,
+        backgroundColor: "#fff",
+        boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+        overflowY: "auto"
+      },
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_2__.Button, {
+        style: {
+          position: "absolute",
+          top: 0,
+          right: 0
+        },
+        icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_icons__WEBPACK_IMPORTED_MODULE_4__["default"], {
+          icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_5__["default"],
+          size: 24,
+          onClick: toggleDrawer
+        })
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+        children: content
+      })]
+    })
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SlidingDrawer);
+
+/***/ }),
+
+/***/ "./src/admin/components/FlowEditor/components/dragables/DragAndDropList.js":
+/*!*********************************************************************************!*\
+  !*** ./src/admin/components/FlowEditor/components/dragables/DragAndDropList.js ***!
+  \*********************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -5872,7 +6145,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _dnd_kit_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @dnd-kit/core */ "./node_modules/@dnd-kit/core/dist/core.esm.js");
 /* harmony import */ var _dnd_kit_sortable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @dnd-kit/sortable */ "./node_modules/@dnd-kit/sortable/dist/sortable.esm.js");
-/* harmony import */ var _SortableField__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./SortableField */ "./src/admin/components/FlowEditor/components/SortableField.js");
+/* harmony import */ var _SortableField__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./SortableField */ "./src/admin/components/FlowEditor/components/dragables/SortableField.js");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__);
 
@@ -5881,9 +6154,11 @@ __webpack_require__.r(__webpack_exports__);
  // Certifique-se de estar importando corretamente o SortableField
 
 const DragAndDropList = ({
+  nodeId,
   fields = [],
   updateFields
 }) => {
+  console.log(fields);
   // Função para lidar com o fim do arraste
   const handleDragEnd = event => {
     const {
@@ -5910,19 +6185,20 @@ const DragAndDropList = ({
       strategy: _dnd_kit_sortable__WEBPACK_IMPORTED_MODULE_2__.verticalListSortingStrategy,
       children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("ul", {
         style: {
-          listStyle: 'none',
+          listStyle: "none",
           padding: 0
         },
         children: fields.map(({
           id,
           title,
           type,
-          value
-        }) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_SortableField__WEBPACK_IMPORTED_MODULE_3__["default"], {
+          config
+        }) => (console.log(title, 'title'), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_SortableField__WEBPACK_IMPORTED_MODULE_3__["default"], {
+          nodeId: nodeId,
           id: id,
           title: title,
+          config: config,
           type: type,
-          value: value,
           updateField: (id, newValue) => {
             // Atualiza o valor do campo específico
             const newFields = fields.map(field => field.id === id ? {
@@ -5931,7 +6207,7 @@ const DragAndDropList = ({
             } : field);
             updateFields(newFields); // Atualiza o estado com o novo valor
           }
-        }, id))
+        }, id)))
       })
     })
   });
@@ -5940,195 +6216,10 @@ const DragAndDropList = ({
 
 /***/ }),
 
-/***/ "./src/admin/components/FlowEditor/components/FieldComponents.js":
-/*!***********************************************************************!*\
-  !*** ./src/admin/components/FlowEditor/components/FieldComponents.js ***!
-  \***********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   DatePickerControls: () => (/* binding */ DatePickerControls),
-/* harmony export */   FileUploadControls: () => (/* binding */ FileUploadControls),
-/* harmony export */   NumberFieldControls: () => (/* binding */ NumberFieldControls),
-/* harmony export */   SelectRadioControls: () => (/* binding */ SelectRadioControls),
-/* harmony export */   TextFieldControls: () => (/* binding */ TextFieldControls)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
-
-
-// Componente para renderizar os controles de Texto, Email, Telefone, Endereço
-
-const TextFieldControls = ({
-  label,
-  placeholder,
-  onChange
-}) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
-  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("label", {
-    children: "Label:"
-  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
-    type: "text",
-    value: label,
-    onChange: e => onChange("label", e.target.value),
-    placeholder: "Digite o label",
-    style: {
-      width: "100%",
-      marginBottom: "10px"
-    }
-  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("label", {
-    children: "Placeholder:"
-  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
-    type: "text",
-    value: placeholder,
-    onChange: e => onChange("placeholder", e.target.value),
-    placeholder: "Digite o placeholder",
-    style: {
-      width: "100%",
-      marginBottom: "10px"
-    }
-  })]
-});
-
-// Componente para renderizar os controles de Número
-const NumberFieldControls = ({
-  label,
-  min,
-  max,
-  onChange
-}) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
-  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("label", {
-    children: "Label:"
-  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
-    type: "text",
-    value: label,
-    onChange: e => onChange("label", e.target.value),
-    placeholder: "Digite o label",
-    style: {
-      width: "100%",
-      marginBottom: "10px"
-    }
-  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("label", {
-    children: "Valor M\xEDnimo:"
-  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
-    type: "number",
-    value: min,
-    onChange: e => onChange("min", e.target.value),
-    placeholder: "Digite o valor m\xEDnimo",
-    style: {
-      width: "100%",
-      marginBottom: "10px"
-    }
-  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("label", {
-    children: "Valor M\xE1ximo:"
-  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
-    type: "number",
-    value: max,
-    onChange: e => onChange("max", e.target.value),
-    placeholder: "Digite o valor m\xE1ximo",
-    style: {
-      width: "100%",
-      marginBottom: "10px"
-    }
-  })]
-});
-
-// Componente para renderizar os controles de DatePicker
-const DatePickerControls = ({
-  label,
-  onChange
-}) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
-  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("label", {
-    children: "Label:"
-  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
-    type: "text",
-    value: label,
-    onChange: e => onChange("label", e.target.value),
-    placeholder: "Digite o label",
-    style: {
-      width: "100%",
-      marginBottom: "10px"
-    }
-  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("label", {
-    children: "Selecionar Data:"
-  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
-    type: "date",
-    onChange: e => onChange("value", e.target.value),
-    style: {
-      width: "100%",
-      marginBottom: "10px"
-    }
-  })]
-});
-
-// Componente para renderizar os controles de Upload de Arquivo
-const FileUploadControls = ({
-  label,
-  onChange
-}) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
-  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("label", {
-    children: "Label:"
-  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
-    type: "text",
-    value: label,
-    onChange: e => onChange("label", e.target.value),
-    placeholder: "Digite o label",
-    style: {
-      width: "100%",
-      marginBottom: "10px"
-    }
-  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("label", {
-    children: "Upload de Arquivo:"
-  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
-    type: "file",
-    onChange: e => onChange("value", e.target.files[0]?.name),
-    style: {
-      width: "100%",
-      marginBottom: "10px"
-    }
-  })]
-});
-
-// Componente para renderizar os controles de Select e Radio
-const SelectRadioControls = ({
-  label,
-  options,
-  onChange
-}) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
-  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("label", {
-    children: "Label:"
-  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
-    type: "text",
-    value: label,
-    onChange: e => onChange("label", e.target.value),
-    placeholder: "Digite o label",
-    style: {
-      width: "100%",
-      marginBottom: "10px"
-    }
-  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("label", {
-    children: "Op\xE7\xF5es (separadas por v\xEDrgula):"
-  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
-    type: "text",
-    value: options,
-    onChange: e => onChange("options", e.target.value),
-    placeholder: "Op\xE7\xF5es, separadas por v\xEDrgula",
-    style: {
-      width: "100%",
-      marginBottom: "10px"
-    }
-  })]
-});
-
-/***/ }),
-
-/***/ "./src/admin/components/FlowEditor/components/FlowButtons.js":
-/*!*******************************************************************!*\
-  !*** ./src/admin/components/FlowEditor/components/FlowButtons.js ***!
-  \*******************************************************************/
+/***/ "./src/admin/components/FlowEditor/components/dragables/SortableField.js":
+/*!*******************************************************************************!*\
+  !*** ./src/admin/components/FlowEditor/components/dragables/SortableField.js ***!
+  \*******************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -6138,15 +6229,1181 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _dnd_kit_sortable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @dnd-kit/sortable */ "./node_modules/@dnd-kit/sortable/dist/sortable.esm.js");
+/* harmony import */ var _dnd_kit_utilities__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @dnd-kit/utilities */ "./node_modules/@dnd-kit/utilities/dist/utilities.esm.js");
+/* harmony import */ var _inputControls_TextFieldControls__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../inputControls/TextFieldControls */ "./src/admin/components/FlowEditor/components/inputControls/TextFieldControls.js");
+/* harmony import */ var _inputControls_NumberFieldControls__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../inputControls/NumberFieldControls */ "./src/admin/components/FlowEditor/components/inputControls/NumberFieldControls.js");
+/* harmony import */ var _inputControls_DatePickerControls__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../inputControls/DatePickerControls */ "./src/admin/components/FlowEditor/components/inputControls/DatePickerControls.js");
+/* harmony import */ var _inputControls_FileUploadControls__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../inputControls/FileUploadControls */ "./src/admin/components/FlowEditor/components/inputControls/FileUploadControls.js");
+/* harmony import */ var _inputControls_SelectRadioControls__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../inputControls/SelectRadioControls */ "./src/admin/components/FlowEditor/components/inputControls/SelectRadioControls.js");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/edit.js");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/trash.js");
+/* harmony import */ var _context_DrawerContext__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../../context/DrawerContext */ "./src/admin/components/FlowEditor/context/DrawerContext.js");
+/* harmony import */ var _inputControls_LabelWithIcon__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../inputControls/LabelWithIcon */ "./src/admin/components/FlowEditor/components/inputControls/LabelWithIcon.js");
+/* harmony import */ var _context_FlowContext__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../../context/FlowContext */ "./src/admin/components/FlowEditor/context/FlowContext.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+const SortableField = ({
+  id,
+  nodeId,
+  title,
+  type,
+  config
+}) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging
+  } = (0,_dnd_kit_sortable__WEBPACK_IMPORTED_MODULE_1__.useSortable)({
+    id
+  });
+  const {
+    removeFieldFromNode
+  } = (0,_context_FlowContext__WEBPACK_IMPORTED_MODULE_11__.useFlowContext)(); // Pega a função do FlowContext
+  const [label, setLabel] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(title); // Label do campo
+
+  const {
+    toggleDrawer
+  } = (0,_context_DrawerContext__WEBPACK_IMPORTED_MODULE_9__.useDrawer)();
+  const handleFieldChange = (field, value) => {
+    if (field === "label") {
+      setLabel(value);
+    }
+  };
+  const renderFieldControls = () => {
+    switch (type) {
+      case "text":
+      case "email":
+      case "phone":
+      case "address":
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_inputControls_TextFieldControls__WEBPACK_IMPORTED_MODULE_3__.TextFieldControls, {
+          nodeId: nodeId,
+          fieldId: id,
+          fieldType: type,
+          label: label,
+          setLabel: setLabel,
+          config: config
+        });
+      case "number":
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_inputControls_NumberFieldControls__WEBPACK_IMPORTED_MODULE_4__.NumberFieldControls, {
+          nodeId: nodeId,
+          fieldId: id,
+          fieldType: type,
+          label: label,
+          setLabel: setLabel,
+          config: config
+        });
+      case "datepicker":
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_inputControls_DatePickerControls__WEBPACK_IMPORTED_MODULE_5__.DatePickerControls, {
+          nodeId: nodeId,
+          fieldId: id,
+          fieldType: type,
+          label: label,
+          setLabel: setLabel,
+          config: config
+        });
+      case "upload":
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_inputControls_FileUploadControls__WEBPACK_IMPORTED_MODULE_6__.FileUploadControls, {
+          nodeId: nodeId,
+          fieldId: id,
+          fieldType: type,
+          label: label,
+          setLabel: setLabel,
+          config: config
+        });
+      case "select":
+      case "radio":
+        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_inputControls_SelectRadioControls__WEBPACK_IMPORTED_MODULE_7__.SelectRadioControls, {
+          nodeId: nodeId,
+          fieldId: id,
+          fieldType: type,
+          label: label,
+          setLabel: setLabel,
+          config: config
+        });
+      default:
+        return null;
+    }
+  };
+  const style = {
+    transform: _dnd_kit_utilities__WEBPACK_IMPORTED_MODULE_2__.CSS.Transform.toString(transform),
+    transition: transition || "transform 250ms ease",
+    padding: "2px",
+    margin: "4px 0",
+    backgroundColor: isDragging ? "#e0f7fa" : "#f9f9f9",
+    border: "1px solid #ddd",
+    fontSize: "10px",
+    borderRadius: "3px",
+    opacity: isDragging ? 0.8 : 1,
+    cursor: isDragging ? "grabbing" : "pointer",
+    boxShadow: isDragging ? "0 4px 8px rgba(0, 0, 0, 0.1)" : "none"
+  };
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("li", {
+    ref: setNodeRef,
+    style: style,
+    ...attributes,
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+      style: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignContent: "center",
+        alignItems: "center"
+      },
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_inputControls_LabelWithIcon__WEBPACK_IMPORTED_MODULE_10__["default"], {
+        label: config ? config.label : label,
+        type: type
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsxs)("div", {
+        style: {
+          display: "flex",
+          justifyContent: "end",
+          alignContent: "center",
+          alignItems: "center"
+        },
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__.Icon, {
+          icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_13__["default"],
+          size: 16,
+          onClick: () => toggleDrawer(renderFieldControls())
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_8__.Icon, {
+          icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_14__["default"],
+          size: 16,
+          onClick: () => removeFieldFromNode(nodeId, id) // Aqui você passa o nodeId e o id do campo
+        })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("div", {
+        ...listeners,
+        // Listeners aplicados ao ícone de arraste
+        style: {
+          cursor: "grab",
+          backgroundColor: "#ccc",
+          borderRadius: "4px",
+          padding: "4px",
+          marginLeft: "10px"
+        },
+        onClick: e => e.stopPropagation() // Evita a expansão ao clicar no drag handle
+        ,
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_12__.jsx)("span", {
+          role: "img",
+          "aria-label": "drag",
+          children: "\u283F"
+        })
+      })]
+    })
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SortableField);
+
+/***/ }),
+
+/***/ "./src/admin/components/FlowEditor/components/inputControls/DatePickerControls.js":
+/*!****************************************************************************************!*\
+  !*** ./src/admin/components/FlowEditor/components/inputControls/DatePickerControls.js ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   DatePickerControls: () => (/* binding */ DatePickerControls)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var yup__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! yup */ "./node_modules/yup/index.esm.js");
+/* harmony import */ var _context_FlowContext__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../context/FlowContext */ "./src/admin/components/FlowEditor/context/FlowContext.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__);
+
+
+
+
+
+// Esquema de validação usando Yup
+
+const validationSchema = yup__WEBPACK_IMPORTED_MODULE_2__.object().shape({
+  label: yup__WEBPACK_IMPORTED_MODULE_2__.string().required("O label é obrigatório"),
+  required: yup__WEBPACK_IMPORTED_MODULE_2__.boolean(),
+  dateValue: yup__WEBPACK_IMPORTED_MODULE_2__.date().required("A data é obrigatória"),
+  helpText: yup__WEBPACK_IMPORTED_MODULE_2__.string()
+});
+const DatePickerControls = ({
+  nodeId,
+  fieldId,
+  label,
+  required,
+  dateValue,
+  helpText,
+  config // Recebendo a configuração do campo
+}) => {
+  const {
+    updateFieldConfig
+  } = (0,_context_FlowContext__WEBPACK_IMPORTED_MODULE_3__.useFlowContext)(); // Usando a função do contexto
+  const [errors, setErrors] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({}); // Estado para armazenar erros de validação
+  const [formValues, setFormValues] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
+    label: config ? config.label : label ? label : "",
+    required: config ? config.required : false,
+    dateValue: config ? config.dateValue : dateValue ? dateValue : new Date(),
+    helpText: config ? config.helpText : ""
+  }); // Estado para armazenar os valores do formulário
+
+  // Função para validar os dados
+  const validateFields = () => {
+    const data = formValues; // Usar formValues para validar
+
+    // Usar o schema de validação do Yup
+    validationSchema.validate(data, {
+      abortEarly: false
+    }).then(() => {
+      // Se a validação passar, limpar erros
+      setErrors({});
+      // Atualizando o campo do nó ao salvar
+      updateFieldConfig(nodeId, fieldId, formValues);
+    }).catch(validationErrors => {
+      // Se houver erros de validação, processá-los
+      const formattedErrors = {};
+      if (validationErrors.inner) {
+        validationErrors.inner.forEach(error => {
+          formattedErrors[error.path] = error.message;
+        });
+      }
+      setErrors(formattedErrors);
+    });
+  };
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("form", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+      label: "Label",
+      value: formValues.label // Use formValues para sincronizar o valor
+      ,
+      onChange: value => {
+        setFormValues(prev => ({
+          ...prev,
+          label: value
+        }));
+      },
+      placeholder: "Digite o label",
+      style: {
+        marginBottom: "10px"
+      },
+      help: errors.label // Exibe a mensagem de erro, se houver
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CheckboxControl, {
+      label: "Obrigat\xF3rio",
+      checked: formValues.required // Use formValues para sincronizar o valor
+      ,
+      onChange: isChecked => setFormValues(prev => ({
+        ...prev,
+        required: isChecked
+      })),
+      style: {
+        marginBottom: "10px"
+      }
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("label", {
+      children: "Selecionar Data:"
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.DateTimePicker, {
+      currentDate: formValues.dateValue // Use formValues para sincronizar o valor
+      ,
+      onChange: value => {
+        setFormValues(prev => ({
+          ...prev,
+          dateValue: value
+        }));
+      },
+      is12Hour: false // Define se o formato de hora é 12h
+      ,
+      style: {
+        marginBottom: "10px"
+      },
+      help: errors.dateValue // Exibe a mensagem de erro, se houver
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextareaControl, {
+      label: "Texto de Ajuda",
+      value: formValues.helpText // Use formValues para sincronizar o valor
+      ,
+      onChange: value => setFormValues(prev => ({
+        ...prev,
+        helpText: value
+      })),
+      placeholder: "Digite um texto de ajuda",
+      style: {
+        marginBottom: "10px"
+      }
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+      style: {
+        padding: "10px 20px",
+        backgroundColor: "#007bff",
+        color: "white",
+        border: "none",
+        borderRadius: "4px",
+        cursor: "pointer",
+        marginBottom: "10px",
+        display: "block"
+      },
+      onClick: validateFields // Valida os campos ao clicar em salvar
+      ,
+      children: "Save"
+    })]
+  });
+};
+
+/***/ }),
+
+/***/ "./src/admin/components/FlowEditor/components/inputControls/FileUploadControls.js":
+/*!****************************************************************************************!*\
+  !*** ./src/admin/components/FlowEditor/components/inputControls/FileUploadControls.js ***!
+  \****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   FileUploadControls: () => (/* binding */ FileUploadControls)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var yup__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! yup */ "./node_modules/yup/index.esm.js");
+/* harmony import */ var _context_FlowContext__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../context/FlowContext */ "./src/admin/components/FlowEditor/context/FlowContext.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__);
+
+
+
+
+
+// Esquema de validação usando Yup
+
+const validationSchema = yup__WEBPACK_IMPORTED_MODULE_2__.object().shape({
+  label: yup__WEBPACK_IMPORTED_MODULE_2__.string().required("O label é obrigatório"),
+  required: yup__WEBPACK_IMPORTED_MODULE_2__.boolean(),
+  helpText: yup__WEBPACK_IMPORTED_MODULE_2__.string()
+});
+const FileUploadControls = ({
+  nodeId,
+  fieldId,
+  label,
+  required,
+  helpText,
+  config // Recebendo a configuração do campo
+}) => {
+  const {
+    updateFieldConfig
+  } = (0,_context_FlowContext__WEBPACK_IMPORTED_MODULE_3__.useFlowContext)(); // Usando a função do contexto
+  const [errors, setErrors] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({}); // Estado para armazenar erros de validação
+  const [formValues, setFormValues] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
+    label: config ? config.label : label ? label : "",
+    required: config ? config.required : false,
+    helpText: config ? config.helpText : ""
+  }); // Estado para armazenar os valores do formulário
+
+  // Função para validar os dados
+  const validateFields = () => {
+    const data = formValues; // Usar formValues para validar
+
+    // Usar o schema de validação do Yup
+    validationSchema.validate(data, {
+      abortEarly: false
+    }).then(() => {
+      // Se a validação passar, limpar erros
+      setErrors({});
+      // Atualizando o campo do nó ao salvar
+      updateFieldConfig(nodeId, fieldId, formValues);
+    }).catch(validationErrors => {
+      // Se houver erros de validação, processá-los
+      const formattedErrors = {};
+      if (validationErrors.inner) {
+        validationErrors.inner.forEach(error => {
+          formattedErrors[error.path] = error.message;
+        });
+      }
+      setErrors(formattedErrors);
+    });
+  };
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("form", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+      label: "Label",
+      value: formValues.label // Use formValues para sincronizar o valor
+      ,
+      onChange: value => {
+        setFormValues(prev => ({
+          ...prev,
+          label: value
+        }));
+      },
+      placeholder: "Digite o label",
+      style: {
+        marginBottom: "10px"
+      },
+      help: errors.label // Exibe a mensagem de erro, se houver
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CheckboxControl, {
+      label: "Obrigat\xF3rio",
+      checked: formValues.required // Use formValues para sincronizar o valor
+      ,
+      onChange: isChecked => setFormValues(prev => ({
+        ...prev,
+        required: isChecked
+      })),
+      style: {
+        marginBottom: "10px"
+      }
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextareaControl, {
+      label: "Texto de Ajuda",
+      value: formValues.helpText // Use formValues para sincronizar o valor
+      ,
+      onChange: value => setFormValues(prev => ({
+        ...prev,
+        helpText: value
+      })),
+      placeholder: "Digite um texto de ajuda",
+      style: {
+        marginBottom: "10px"
+      }
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+      style: {
+        padding: "10px 20px",
+        backgroundColor: "#007bff",
+        color: "white",
+        border: "none",
+        borderRadius: "4px",
+        cursor: "pointer",
+        marginBottom: "10px",
+        display: "block"
+      },
+      onClick: validateFields // Valida os campos ao clicar em salvar
+      ,
+      children: "Save"
+    })]
+  });
+};
+
+/***/ }),
+
+/***/ "./src/admin/components/FlowEditor/components/inputControls/LabelWithIcon.js":
+/*!***********************************************************************************!*\
+  !*** ./src/admin/components/FlowEditor/components/inputControls/LabelWithIcon.js ***!
+  \***********************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/paragraph.js");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/edit.js");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/check.js");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/list-view.js");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/keyboard.js");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/calendar.js");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/comment-content.js");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/link.js");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/comment-edit-link.js");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/seen.js");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/mobile.js");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/file.js");
+/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/map-marker.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+
+const IconForType = ({
+  type
+}) => {
+  const iconMapping = {
+    text: _wordpress_icons__WEBPACK_IMPORTED_MODULE_3__["default"],
+    // Ícone para tipo de input texto
+    edit: _wordpress_icons__WEBPACK_IMPORTED_MODULE_4__["default"],
+    checkbox: _wordpress_icons__WEBPACK_IMPORTED_MODULE_5__["default"],
+    radio: _wordpress_icons__WEBPACK_IMPORTED_MODULE_6__["default"],
+    select: _wordpress_icons__WEBPACK_IMPORTED_MODULE_6__["default"],
+    number: _wordpress_icons__WEBPACK_IMPORTED_MODULE_7__["default"],
+    datepicker: _wordpress_icons__WEBPACK_IMPORTED_MODULE_8__["default"],
+    email: _wordpress_icons__WEBPACK_IMPORTED_MODULE_9__["default"],
+    url: _wordpress_icons__WEBPACK_IMPORTED_MODULE_10__["default"],
+    textarea: _wordpress_icons__WEBPACK_IMPORTED_MODULE_11__["default"],
+    password: _wordpress_icons__WEBPACK_IMPORTED_MODULE_12__["default"],
+    phone: _wordpress_icons__WEBPACK_IMPORTED_MODULE_13__["default"],
+    upload: _wordpress_icons__WEBPACK_IMPORTED_MODULE_14__["default"],
+    address: _wordpress_icons__WEBPACK_IMPORTED_MODULE_15__["default"]
+  };
+  const SelectedIcon = iconMapping[type]; // Pega o componente do ícone correspondente
+
+  return SelectedIcon ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Icon, {
+    icon: SelectedIcon,
+    size: 12
+  }) : null; // Retorna null se o type não corresponder a nenhum ícone
+};
+const LabelWithIcon = ({
+  label,
+  type
+}) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+  style: {
+    display: "flex"
+  },
+  children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+    className: "step-icon",
+    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(IconForType, {
+      type: type
+    })
+  }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+    className: "step-label",
+    children: label
+  })]
+});
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (LabelWithIcon);
+
+/***/ }),
+
+/***/ "./src/admin/components/FlowEditor/components/inputControls/NumberFieldControls.js":
+/*!*****************************************************************************************!*\
+  !*** ./src/admin/components/FlowEditor/components/inputControls/NumberFieldControls.js ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   NumberFieldControls: () => (/* binding */ NumberFieldControls)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var yup__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! yup */ "./node_modules/yup/index.esm.js");
+/* harmony import */ var _context_FlowContext__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../context/FlowContext */ "./src/admin/components/FlowEditor/context/FlowContext.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__);
+
+
+
+
+
+// Esquema de validação usando Yup
+
+const validationSchema = yup__WEBPACK_IMPORTED_MODULE_2__.object().shape({
+  label: yup__WEBPACK_IMPORTED_MODULE_2__.string().required("O label é obrigatório"),
+  min: yup__WEBPACK_IMPORTED_MODULE_2__.number().nullable(),
+  max: yup__WEBPACK_IMPORTED_MODULE_2__.number().nullable().test("is-greater", "O valor máximo deve ser maior que o valor mínimo", function (value) {
+    const {
+      min
+    } = this.parent;
+    return value === undefined || min === undefined || value >= min;
+  }),
+  step: yup__WEBPACK_IMPORTED_MODULE_2__.number().nullable(),
+  required: yup__WEBPACK_IMPORTED_MODULE_2__.boolean(),
+  helpText: yup__WEBPACK_IMPORTED_MODULE_2__.string()
+});
+const NumberFieldControls = ({
+  nodeId,
+  fieldId,
+  label,
+  min,
+  max,
+  step,
+  required,
+  helpText,
+  config // Recebendo a configuração do campo
+}) => {
+  const {
+    updateFieldConfig
+  } = (0,_context_FlowContext__WEBPACK_IMPORTED_MODULE_3__.useFlowContext)(); // Usando a função do contexto
+  const [errors, setErrors] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({}); // Estado para armazenar erros de validação
+  const [formValues, setFormValues] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
+    label: config ? config.label : label ? label : "",
+    min: config ? config.min : min ? min : null,
+    max: config ? config.max : max ? max : null,
+    step: config ? config.step : step ? step : 1,
+    required: config ? config.required : false,
+    helpText: config ? config.helpText : ""
+  }); // Estado para armazenar os valores do formulário
+
+  // Função para validar os dados
+  const validateFields = () => {
+    const data = formValues; // Use formValues para validar
+
+    // Usar o schema de validação do Yup
+    validationSchema.validate(data, {
+      abortEarly: false
+    }).then(() => {
+      // Se a validação passar, limpar erros
+      setErrors({});
+      // Atualizando o campo do nó ao salvar
+      updateFieldConfig(nodeId, fieldId, formValues);
+    }).catch(validationErrors => {
+      // Se houver erros de validação, processá-los
+      const formattedErrors = {};
+      if (validationErrors.inner) {
+        validationErrors.inner.forEach(error => {
+          formattedErrors[error.path] = error.message;
+        });
+      }
+      setErrors(formattedErrors);
+    });
+  };
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("form", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+      label: "Label",
+      value: formValues.label // Use formValues para sincronizar o valor
+      ,
+      onChange: value => setFormValues(prev => ({
+        ...prev,
+        label: value
+      })),
+      placeholder: "Digite o label",
+      style: {
+        marginBottom: "10px"
+      },
+      help: errors.label // Exibe a mensagem de erro, se houver
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CheckboxControl, {
+      label: "Obrigat\xF3rio",
+      checked: formValues.required // Use formValues para sincronizar o valor
+      ,
+      onChange: isChecked => setFormValues(prev => ({
+        ...prev,
+        required: isChecked
+      })),
+      style: {
+        marginBottom: "10px"
+      }
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.__experimentalNumberControl, {
+      label: "Valor M\xEDnimo",
+      value: formValues.min // Use formValues para sincronizar o valor
+      ,
+      onChange: value => setFormValues(prev => ({
+        ...prev,
+        min: value
+      })),
+      placeholder: "Digite o valor m\xEDnimo",
+      style: {
+        marginBottom: "10px"
+      },
+      help: errors.min // Exibe a mensagem de erro, se houver
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.__experimentalNumberControl, {
+      label: "Valor M\xE1ximo",
+      value: formValues.max // Use formValues para sincronizar o valor
+      ,
+      onChange: value => setFormValues(prev => ({
+        ...prev,
+        max: value
+      })),
+      placeholder: "Digite o valor m\xE1ximo",
+      style: {
+        marginBottom: "10px"
+      },
+      help: errors.max // Exibe a mensagem de erro, se houver
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.__experimentalNumberControl, {
+      label: "Step (Incremento)",
+      value: formValues.step // Use formValues para sincronizar o valor
+      ,
+      onChange: value => setFormValues(prev => ({
+        ...prev,
+        step: value
+      })),
+      placeholder: "Digite o incremento",
+      style: {
+        marginBottom: "10px"
+      },
+      help: errors.step // Exibe a mensagem de erro, se houver
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextareaControl, {
+      label: "Texto de Ajuda",
+      value: formValues.helpText // Use formValues para sincronizar o valor
+      ,
+      onChange: value => setFormValues(prev => ({
+        ...prev,
+        helpText: value
+      })),
+      placeholder: "Digite um texto de ajuda",
+      style: {
+        marginBottom: "10px"
+      }
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+      style: {
+        padding: "10px 20px",
+        backgroundColor: "#007bff",
+        color: "white",
+        border: "none",
+        borderRadius: "4px",
+        cursor: "pointer",
+        marginBottom: "10px",
+        display: "block"
+      },
+      onClick: validateFields // Valida os campos ao clicar em salvar
+      ,
+      children: "Save"
+    })]
+  });
+};
+
+/***/ }),
+
+/***/ "./src/admin/components/FlowEditor/components/inputControls/SelectRadioControls.js":
+/*!*****************************************************************************************!*\
+  !*** ./src/admin/components/FlowEditor/components/inputControls/SelectRadioControls.js ***!
+  \*****************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   SelectRadioControls: () => (/* binding */ SelectRadioControls)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var yup__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! yup */ "./node_modules/yup/index.esm.js");
+/* harmony import */ var _context_FlowContext__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../context/FlowContext */ "./src/admin/components/FlowEditor/context/FlowContext.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__);
+
+
+
+
+
+// Esquema de validação usando Yup
+
+const validationSchema = yup__WEBPACK_IMPORTED_MODULE_2__.object().shape({
+  label: yup__WEBPACK_IMPORTED_MODULE_2__.string().required("O label é obrigatório"),
+  options: yup__WEBPACK_IMPORTED_MODULE_2__.string().required("As opções são obrigatórias"),
+  required: yup__WEBPACK_IMPORTED_MODULE_2__.boolean(),
+  helpText: yup__WEBPACK_IMPORTED_MODULE_2__.string()
+});
+const SelectRadioControls = ({
+  nodeId,
+  fieldId,
+  label,
+  options,
+  required,
+  helpText,
+  config // Recebendo a configuração do campo
+}) => {
+  const {
+    updateFieldConfig
+  } = (0,_context_FlowContext__WEBPACK_IMPORTED_MODULE_3__.useFlowContext)(); // Usando a função do contexto
+  const [errors, setErrors] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({}); // Estado para armazenar erros de validação
+  const [formValues, setFormValues] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
+    label: config ? config.label : label ? label : "",
+    options: config ? config.options : options ? options : "",
+    required: config ? config.required : false,
+    helpText: config ? config.helpText : ""
+  }); // Estado para armazenar os valores do formulário
+
+  // Função para validar os dados
+  const validateFields = () => {
+    const data = formValues; // Use formValues para validar
+
+    // Usar o schema de validação do Yup
+    validationSchema.validate(data, {
+      abortEarly: false
+    }).then(() => {
+      // Se a validação passar, limpar erros
+      setErrors({});
+      // Atualizando o campo do nó ao salvar
+      updateFieldConfig(nodeId, fieldId, formValues);
+    }).catch(validationErrors => {
+      // Se houver erros de validação, processá-los
+      const formattedErrors = {};
+      if (validationErrors.inner) {
+        validationErrors.inner.forEach(error => {
+          formattedErrors[error.path] = error.message;
+        });
+      }
+      setErrors(formattedErrors);
+    });
+  };
+
+  // Converte as opções separadas por vírgula em um array
+  const optionArray = formValues.options.split(",").map(option => option.trim());
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("form", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+      label: "Label",
+      value: formValues.label // Use formValues para sincronizar o valor
+      ,
+      onChange: value => setFormValues(prev => ({
+        ...prev,
+        label: value
+      })),
+      placeholder: "Digite o label",
+      style: {
+        marginBottom: "10px"
+      },
+      help: errors.label // Exibe a mensagem de erro, se houver
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CheckboxControl, {
+      label: "Obrigat\xF3rio",
+      checked: formValues.required // Use formValues para sincronizar o valor
+      ,
+      onChange: isChecked => setFormValues(prev => ({
+        ...prev,
+        required: isChecked
+      })),
+      style: {
+        marginBottom: "10px"
+      }
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+      label: "Op\xE7\xF5es (separadas por v\xEDrgula)",
+      value: formValues.options // Use formValues para sincronizar o valor
+      ,
+      onChange: value => setFormValues(prev => ({
+        ...prev,
+        options: value
+      })),
+      placeholder: "Op\xE7\xF5es, separadas por v\xEDrgula",
+      style: {
+        marginBottom: "10px"
+      },
+      help: errors.options // Exibe a mensagem de erro, se houver
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.RadioControl, {
+      label: "Pr\xE9-visualiza\xE7\xE3o das op\xE7\xF5es",
+      options: optionArray.map(option => ({
+        label: option,
+        value: option
+      })),
+      selected: null,
+      onChange: value => setFormValues(prev => ({
+        ...prev,
+        selectedOption: value
+      }))
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextareaControl, {
+      label: "Texto de Ajuda",
+      value: formValues.helpText // Use formValues para sincronizar o valor
+      ,
+      onChange: value => setFormValues(prev => ({
+        ...prev,
+        helpText: value
+      })),
+      placeholder: "Digite um texto de ajuda",
+      style: {
+        marginBottom: "10px"
+      }
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+      style: {
+        padding: "10px 20px",
+        backgroundColor: "#007bff",
+        color: "white",
+        border: "none",
+        borderRadius: "4px",
+        cursor: "pointer",
+        marginBottom: "10px",
+        display: "block"
+      },
+      onClick: validateFields // Valida os campos ao clicar em salvar
+      ,
+      children: "Save"
+    })]
+  });
+};
+
+/***/ }),
+
+/***/ "./src/admin/components/FlowEditor/components/inputControls/TextFieldControls.js":
+/*!***************************************************************************************!*\
+  !*** ./src/admin/components/FlowEditor/components/inputControls/TextFieldControls.js ***!
+  \***************************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   TextFieldControls: () => (/* binding */ TextFieldControls)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var yup__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! yup */ "./node_modules/yup/index.esm.js");
+/* harmony import */ var _context_FlowContext__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../context/FlowContext */ "./src/admin/components/FlowEditor/context/FlowContext.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__);
+
+
+
+
+
+// Esquema de validação usando Yup
+
+const validationSchema = yup__WEBPACK_IMPORTED_MODULE_2__.object().shape({
+  label: yup__WEBPACK_IMPORTED_MODULE_2__.string().required("O label é obrigatório"),
+  placeholder: yup__WEBPACK_IMPORTED_MODULE_2__.string(),
+  required: yup__WEBPACK_IMPORTED_MODULE_2__.boolean(),
+  minLength: yup__WEBPACK_IMPORTED_MODULE_2__.number().min(0, "Tamanho mínimo não pode ser negativo").nullable(),
+  maxLength: yup__WEBPACK_IMPORTED_MODULE_2__.number().min(yup__WEBPACK_IMPORTED_MODULE_2__.ref("minLength"), "O tamanho máximo deve ser maior que o mínimo").nullable(),
+  pattern: yup__WEBPACK_IMPORTED_MODULE_2__.string().matches(/^(?:|\/.*\/)$/, "Padrão de Regex inválido"),
+  helpText: yup__WEBPACK_IMPORTED_MODULE_2__.string()
+});
+const TextFieldControls = ({
+  nodeId,
+  fieldId,
+  fieldType,
+  label,
+  setLabel,
+  config // Recebendo a configuração do campo
+}) => {
+  const {
+    updateFieldConfig
+  } = (0,_context_FlowContext__WEBPACK_IMPORTED_MODULE_3__.useFlowContext)(); // Usando a função do contexto
+  const [errors, setErrors] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({}); // Estado para armazenar erros de validação
+  const [formValues, setFormValues] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
+    label: config ? config.label : label ? label : "",
+    placeholder: config ? config.placeholder : "",
+    required: config ? config.required : false,
+    minLength: config ? config.minLength : 0,
+    maxLength: config ? config.maxLength : 100,
+    pattern: config ? config.pattern : "",
+    helpText: config ? config.helpText : ""
+  }); // Estado para armazenar os valores do formulário
+
+  // Função para validar os dados
+  const validateFields = () => {
+    const data = formValues; // Use formValues para validar
+
+    // Usar o schema de validação do Yup
+    validationSchema.validate(data, {
+      abortEarly: false
+    }).then(() => {
+      // Se a validação passar, limpar erros
+      setErrors({});
+      // Atualizando o campo do nó ao salvar
+      updateFieldConfig(nodeId, fieldId, formValues);
+    }).catch(validationErrors => {
+      // Se houver erros de validação, processá-los
+      const formattedErrors = {};
+      if (validationErrors.inner) {
+        validationErrors.inner.forEach(error => {
+          formattedErrors[error.path] = error.message;
+        });
+      }
+      setErrors(formattedErrors);
+    });
+  };
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("form", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+      label: "Label",
+      value: formValues.label // Use formValues para sincronizar o valor
+      ,
+      onChange: value => {
+        setFormValues(prev => ({
+          ...prev,
+          label: value
+        }));
+        setLabel(value);
+      },
+      placeholder: "Digite o label",
+      style: {
+        marginBottom: "10px"
+      },
+      help: errors.label // Exibe a mensagem de erro, se houver
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+      label: "Placeholder",
+      value: formValues.placeholder // Use formValues para sincronizar o valor
+      ,
+      onChange: value => setFormValues(prev => ({
+        ...prev,
+        placeholder: value
+      })),
+      placeholder: "Digite o placeholder",
+      style: {
+        marginBottom: "10px"
+      },
+      help: errors.placeholder // Exibe a mensagem de erro, se houver
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.CheckboxControl, {
+      label: "Obrigat\xF3rio",
+      checked: formValues.required // Use formValues para sincronizar o valor
+      ,
+      onChange: isChecked => setFormValues(prev => ({
+        ...prev,
+        required: isChecked
+      })),
+      style: {
+        marginBottom: "10px"
+      }
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.__experimentalNumberControl, {
+      label: "Tamanho M\xEDnimo",
+      value: formValues.minLength // Use formValues para sincronizar o valor
+      ,
+      onChange: value => setFormValues(prev => ({
+        ...prev,
+        minLength: value
+      })),
+      style: {
+        marginBottom: "10px"
+      },
+      help: errors.minLength // Exibe a mensagem de erro, se houver
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.__experimentalNumberControl, {
+      label: "Tamanho M\xE1ximo",
+      value: formValues.maxLength // Use formValues para sincronizar o valor
+      ,
+      onChange: value => setFormValues(prev => ({
+        ...prev,
+        maxLength: value
+      })),
+      style: {
+        marginBottom: "10px"
+      },
+      help: errors.maxLength // Exibe a mensagem de erro, se houver
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+      label: "Padr\xE3o de Valida\xE7\xE3o (Regex)",
+      value: formValues.pattern // Use formValues para sincronizar o valor
+      ,
+      onChange: value => setFormValues(prev => ({
+        ...prev,
+        pattern: value
+      })),
+      placeholder: "Digite um padr\xE3o de valida\xE7\xE3o (Regex)",
+      style: {
+        marginBottom: "10px"
+      },
+      help: errors.pattern // Exibe a mensagem de erro, se houver
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextareaControl, {
+      label: "Texto de Ajuda",
+      value: formValues.helpText // Use formValues para sincronizar o valor
+      ,
+      onChange: value => setFormValues(prev => ({
+        ...prev,
+        helpText: value
+      })),
+      placeholder: "Digite um texto de ajuda",
+      style: {
+        marginBottom: "10px"
+      }
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+      style: {
+        padding: "10px 20px",
+        backgroundColor: "#007bff",
+        color: "white",
+        border: "none",
+        borderRadius: "4px",
+        cursor: "pointer",
+        marginBottom: "10px",
+        display: "block"
+      },
+      onClick: validateFields // Valida os campos ao clicar em salvar
+      ,
+      children: "Save"
+    })]
+  });
+};
+
+/***/ }),
+
+/***/ "./src/admin/components/FlowEditor/components/reactFlow/CustomEdge.js":
+/*!****************************************************************************!*\
+  !*** ./src/admin/components/FlowEditor/components/reactFlow/CustomEdge.js ***!
+  \****************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ CustomEdge)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _xyflow_react__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @xyflow/react */ "./node_modules/@xyflow/react/dist/esm/index.mjs");
+/* harmony import */ var _xyflow_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @xyflow/react */ "./node_modules/@xyflow/system/dist/esm/index.mjs");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
 
 
-const ProcessControls = ({
-  onAddNode,
-  onExport,
-  onImport
-}) => {
+
+function CustomEdge({
+  id,
+  sourceX,
+  sourceY,
+  targetX,
+  targetY,
+  sourcePosition,
+  targetPosition,
+  style = {
+    color: "red"
+  },
+  markerEnd
+}) {
+  const {
+    setEdges
+  } = (0,_xyflow_react__WEBPACK_IMPORTED_MODULE_2__.useReactFlow)();
+  const [edgePath, labelX, labelY] = (0,_xyflow_react__WEBPACK_IMPORTED_MODULE_3__.getSmoothStepPath)({
+    sourceX,
+    sourceY,
+    sourcePosition,
+    targetX,
+    targetY,
+    targetPosition
+  });
+  const onEdgeClick = () => {
+    setEdges(edges => edges.filter(edge => edge.id !== id));
+  };
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.Fragment, {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_xyflow_react__WEBPACK_IMPORTED_MODULE_2__.BaseEdge, {
+      path: edgePath,
+      markerEnd: markerEnd,
+      style: style
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(_xyflow_react__WEBPACK_IMPORTED_MODULE_2__.EdgeLabelRenderer, {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+        style: {
+          position: "absolute",
+          transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+          fontSize: 12,
+          pointerEvents: "all"
+        },
+        className: "nodrag nopan",
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
+          className: "btn close-btn",
+          onClick: onEdgeClick
+        })
+      })
+    })]
+  });
+}
+
+/***/ }),
+
+/***/ "./src/admin/components/FlowEditor/components/reactFlow/FlowButtons.js":
+/*!*****************************************************************************!*\
+  !*** ./src/admin/components/FlowEditor/components/reactFlow/FlowButtons.js ***!
+  \*****************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _context_FlowContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../context/FlowContext */ "./src/admin/components/FlowEditor/context/FlowContext.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+const ProcessControls = () => {
+  const {
+    addNewNode,
+    onExport,
+    onImport
+  } = (0,_context_FlowContext__WEBPACK_IMPORTED_MODULE_1__.useFlowContext)();
   const fileInputRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null);
   const handleImportClick = () => {
     fileInputRef.current.click();
@@ -6162,15 +7419,15 @@ const ProcessControls = ({
       reader.readAsText(file);
     }
   };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
     style: {
       position: "absolute",
       top: 10,
       right: 10,
       zIndex: 1000
     },
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
-      onClick: onAddNode,
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("button", {
+      onClick: addNewNode,
       style: {
         padding: "10px 20px",
         backgroundColor: "#007bff",
@@ -6182,7 +7439,7 @@ const ProcessControls = ({
         display: "block"
       },
       children: "Adicionar Etapa"
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("button", {
       onClick: onExport,
       style: {
         padding: "10px 20px",
@@ -6195,7 +7452,7 @@ const ProcessControls = ({
         display: "block"
       },
       children: "Exportar JSON"
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("button", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("button", {
       onClick: handleImportClick,
       style: {
         padding: "10px 20px",
@@ -6206,7 +7463,7 @@ const ProcessControls = ({
         cursor: "pointer"
       },
       children: "Importar JSON"
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("input", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("input", {
       type: "file",
       accept: ".json",
       ref: fileInputRef,
@@ -6221,10 +7478,10 @@ const ProcessControls = ({
 
 /***/ }),
 
-/***/ "./src/admin/components/FlowEditor/components/NodeContent.js":
-/*!*******************************************************************!*\
-  !*** ./src/admin/components/FlowEditor/components/NodeContent.js ***!
-  \*******************************************************************/
+/***/ "./src/admin/components/FlowEditor/components/reactFlow/NodeContent.js":
+/*!*****************************************************************************!*\
+  !*** ./src/admin/components/FlowEditor/components/reactFlow/NodeContent.js ***!
+  \*****************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
@@ -6234,55 +7491,59 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _xyflow_react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @xyflow/react */ "./node_modules/@xyflow/react/dist/esm/index.mjs");
-/* harmony import */ var _xyflow_react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @xyflow/react */ "./node_modules/@xyflow/system/dist/esm/index.mjs");
-/* harmony import */ var _DragAndDropList__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DragAndDropList */ "./src/admin/components/FlowEditor/components/DragAndDropList.js");
-/* harmony import */ var _NodeHandle__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./NodeHandle */ "./src/admin/components/FlowEditor/components/NodeHandle.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _xyflow_react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @xyflow/react */ "./node_modules/@xyflow/react/dist/esm/index.mjs");
+/* harmony import */ var _xyflow_react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @xyflow/react */ "./node_modules/@xyflow/system/dist/esm/index.mjs");
+/* harmony import */ var _dragables_DragAndDropList__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../dragables/DragAndDropList */ "./src/admin/components/FlowEditor/components/dragables/DragAndDropList.js");
+/* harmony import */ var _NodeHandle__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./NodeHandle */ "./src/admin/components/FlowEditor/components/reactFlow/NodeHandle.js");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
+/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _context_FlowContext__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../../context/FlowContext */ "./src/admin/components/FlowEditor/context/FlowContext.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__);
 
 
- // Usando o componente de drag-and-drop com @dnd-kit
- // Handle de arraste
- // Importando a barra de ferramentas do nó
+
+
+
+
+
+
 
 const nodeStyle = {
-  border: '1px solid #ddd',
-  backgroundColor: 'white',
-  borderRadius: '4px',
-  position: 'relative',
-  fontSize: '10px',
-  minWidth: '100px'
+  border: "1px solid #ddd",
+  backgroundColor: "white",
+  borderRadius: "4px",
+  position: "relative",
+  fontSize: "10px",
+  minWidth: "100px"
 };
-
-// Opções de campos que podem ser adicionados, refletindo todos os tipos suportados pelo NodeMetadataCreator
 const FIELD_OPTIONS = [{
-  id: 'text',
-  label: 'Texto'
+  id: "text",
+  label: "Texto"
 }, {
-  id: 'email',
-  label: 'Email'
+  id: "email",
+  label: "Email"
 }, {
-  id: 'phone',
-  label: 'Telefone'
+  id: "phone",
+  label: "Telefone"
 }, {
-  id: 'address',
-  label: 'Endereço'
+  id: "address",
+  label: "Endereço"
 }, {
-  id: 'number',
-  label: 'Número'
+  id: "number",
+  label: "Número"
 }, {
-  id: 'datepicker',
-  label: 'Date Picker'
+  id: "datepicker",
+  label: "Date Picker"
 }, {
-  id: 'upload',
-  label: 'Upload de Arquivo'
+  id: "upload",
+  label: "Upload de Arquivo"
 }, {
-  id: 'select',
-  label: 'Select (Múltiplas Opções)'
+  id: "select",
+  label: "Select (Múltiplas Opções)"
 }, {
-  id: 'radio',
-  label: 'Radio (Opções de Seleção)'
+  id: "radio",
+  label: "Radio (Opções de Seleção)"
 }];
 const NodeContent = ({
   id,
@@ -6290,112 +7551,120 @@ const NodeContent = ({
 }) => {
   const {
     fields = [],
-    updateFields = () => {},
-    updateNodeName = () => {},
-    stageName = 'Nó sem título'
-  } = data; // Garantindo que updateNodeName tenha um valor padrão
+    updateFields = () => {}
+  } = data;
   const {
     selectedNodes
-  } = (0,_xyflow_react__WEBPACK_IMPORTED_MODULE_4__.useReactFlow)(); // Hook do ReactFlow para acessar o estado
-
+  } = (0,_xyflow_react__WEBPACK_IMPORTED_MODULE_6__.useReactFlow)();
   const [isAddingFields, setIsAddingFields] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
-
-  // Verifica se o nó está selecionado
+  const {
+    updateNodeName
+  } = (0,_context_FlowContext__WEBPACK_IMPORTED_MODULE_4__.useFlowContext)();
   const isSelected = selectedNodes?.some(node => node.id === id);
-
-  // Função para adicionar um campo ao nó
+  const [stageName, setStageName] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(data?.stageName || "");
   const addFieldToNode = fieldId => {
     const newField = {
       id: `${fieldId}-${fields.length + 1}`,
       type: fieldId,
-      value: ''
+      title: "Campo sem título"
     };
     updateFields([...fields, newField]);
-    setIsAddingFields(false); // Fecha o menu após adicionar o campo
+    setIsAddingFields(false);
   };
   const handleStageNameChange = e => {
-    updateNodeName(e.target.value);
+    setStageName(e);
+    updateNodeName(id, e);
   };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
     style: nodeStyle,
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_NodeHandle__WEBPACK_IMPORTED_MODULE_2__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_xyflow_react__WEBPACK_IMPORTED_MODULE_4__.Handle, {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_NodeHandle__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      nodeId: id
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_xyflow_react__WEBPACK_IMPORTED_MODULE_6__.Handle, {
       type: "target",
-      position: _xyflow_react__WEBPACK_IMPORTED_MODULE_5__.Position.Left
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_xyflow_react__WEBPACK_IMPORTED_MODULE_4__.Handle, {
+      position: _xyflow_react__WEBPACK_IMPORTED_MODULE_7__.Position.Left
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_xyflow_react__WEBPACK_IMPORTED_MODULE_6__.Handle, {
       type: "source",
-      position: _xyflow_react__WEBPACK_IMPORTED_MODULE_5__.Position.Right
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("input", {
-      type: "text",
-      value: stageName,
-      onChange: handleStageNameChange,
-      placeholder: "Digite o nome da etapa",
+      position: _xyflow_react__WEBPACK_IMPORTED_MODULE_7__.Position.Right
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
       style: {
-        width: '100%',
-        padding: '5px',
-        marginBottom: '10px',
-        fontSize: '10px',
-        border: 'none',
-        borderBottom: '1px solid #ccc',
-        outline: 'none'
-      }
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
-      style: {
-        padding: '10px',
-        backgroundColor: '#fff',
-        borderRadius: '4px'
+        padding: "2px"
       },
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_DragAndDropList__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_3__.TextControl, {
+        value: stageName,
+        onChange: handleStageNameChange,
+        placeholder: "Digite o nome da etapa",
+        style: {
+          width: "100%",
+          padding: "5px",
+          marginBottom: "10px",
+          fontSize: "10px",
+          border: "none",
+          borderBottom: "1px solid #ccc",
+          outline: "none",
+          borderRadius: 0,
+          WebkitBorderRadius: 0
+        }
+      })
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
+      style: {
+        padding: "10px",
+        backgroundColor: "#fff",
+        borderRadius: "4px"
+      },
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_dragables_DragAndDropList__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        nodeId: id,
         fields: fields,
         updateFields: updateFields
       })
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_xyflow_react__WEBPACK_IMPORTED_MODULE_4__.NodeToolbar, {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_xyflow_react__WEBPACK_IMPORTED_MODULE_6__.NodeToolbar, {
       isVisible: isSelected,
       position: "right",
-      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
         style: {
-          backgroundColor: '#fff',
-          padding: '10px',
-          borderRadius: '4px',
-          border: '1px solid #ddd'
+          backgroundColor: "#fff",
+          padding: "10px",
+          borderRadius: "4px",
+          border: "1px solid #ddd"
         },
-        children: isAddingFields ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.Fragment, {
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("h4", {
+        children: isAddingFields ? /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("h4", {
             children: "Adicionar Campo"
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("ul", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("ul", {
             style: {
-              listStyle: 'none',
+              listStyle: "none",
               padding: 0
             },
-            children: FIELD_OPTIONS.map(option => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("li", {
+            children: FIELD_OPTIONS.map(option => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("li", {
+              className: "node-meta-list",
               onClick: () => addFieldToNode(option.id),
               style: {
-                padding: '5px',
-                cursor: 'pointer'
+                padding: "5px",
+                cursor: "pointer"
               },
               children: option.label
             }, option.id))
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("button", {
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("button", {
             onClick: () => setIsAddingFields(false),
             style: {
-              marginTop: '10px',
-              backgroundColor: '#ddd',
-              color: '#333',
-              border: 'none',
-              borderRadius: '4px',
-              padding: '5px 10px',
-              cursor: 'pointer'
+              marginTop: "10px",
+              backgroundColor: "#ddd",
+              color: "#333",
+              border: "none",
+              borderRadius: "4px",
+              padding: "5px 10px",
+              cursor: "pointer"
             },
             children: "Cancelar"
           })]
-        }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("button", {
-          onClick: () => setIsAddingFields(true),
-          style: {
-            backgroundColor: '#007bff',
-            color: 'white',
-            border: 'none',
-            cursor: 'pointer'
-          },
-          children: "+"
+        }) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.Fragment, {
+          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
+            style: {
+              width: "20px",
+              height: "20px"
+            },
+            onClick: () => setIsAddingFields(true),
+            className: "btn max-btn"
+          })
         })
       })
     })]
@@ -6405,16 +7674,57 @@ const NodeContent = ({
 
 /***/ }),
 
-/***/ "./src/admin/components/FlowEditor/components/NodeHandle.js":
-/*!******************************************************************!*\
-  !*** ./src/admin/components/FlowEditor/components/NodeHandle.js ***!
-  \******************************************************************/
+/***/ "./src/admin/components/FlowEditor/components/reactFlow/NodeHandle.js":
+/*!****************************************************************************!*\
+  !*** ./src/admin/components/FlowEditor/components/reactFlow/NodeHandle.js ***!
+  \****************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _context_FlowContext__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../context/FlowContext */ "./src/admin/components/FlowEditor/context/FlowContext.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
+
+
+// custom handle for our nodes
+
+const NodeHandle = id => {
+  const {
+    removeNode
+  } = (0,_context_FlowContext__WEBPACK_IMPORTED_MODULE_1__.useFlowContext)();
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
+    className: "custom-drag-handle",
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("span", {
+      role: "img",
+      "aria-label": "drag",
+      children: "\u283F"
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+      className: "btn close-btn",
+      onClick: () => removeNode(id.nodeId)
+    })]
+  });
+};
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (NodeHandle);
+
+/***/ }),
+
+/***/ "./src/admin/components/FlowEditor/context/DrawerContext.js":
+/*!******************************************************************!*\
+  !*** ./src/admin/components/FlowEditor/context/DrawerContext.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   DrawerProvider: () => (/* binding */ DrawerProvider),
+/* harmony export */   useDrawer: () => (/* binding */ useDrawer)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
@@ -6422,218 +7732,283 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__);
 
 
+// Criando o contexto
 
-const handleStyle = {
-  height: "20px",
-  width: "100%",
-  background: "linear-gradient(45deg, #fff 22.22%, #e5e5e5 22.22%, #e5e5e5 50%,#fff 50%, #fff 72.22%, #e5e5e5 72.22%, #e5e5e5 100%)",
-  backgroundSize: "12.73px 12.73px",
-  cursor: "move",
-  textAlign: "center",
-  color: "white",
-  borderTopLeftRadius: "4px",
-  borderTopRightRadius: "4px",
-  userSelect: "none",
-  // Previne a seleção de texto ao arrastar
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  transition: "background 0.3s ease" // Adiciona uma transição suave ao hover
-};
-const hoverStyle = {
-  background: "linear-gradient(45deg, #ddd 22.22%, #ccc 22.22%, #ccc 50%,#ddd 50%, #ddd 72.22%, #ccc 72.22%, #ccc 100%)"
-};
-const NodeHandle = () => {
-  const [isHovered, setIsHovered] = react__WEBPACK_IMPORTED_MODULE_0___default().useState(false);
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("div", {
-    className: "custom-drag-handle",
-    style: {
-      ...handleStyle,
-      ...(isHovered ? hoverStyle : {})
+const DrawerContext = (0,react__WEBPACK_IMPORTED_MODULE_0__.createContext)(null);
+
+// Provider que vai fornecer o contexto para os componentes
+const DrawerProvider = ({
+  children
+}) => {
+  const [isOpen, setIsOpen] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false);
+  const [content, setContent] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null); // Estado para armazenar o conteúdo dinâmico do Drawer
+
+  const toggleDrawer = (content = null) => {
+    setIsOpen(!isOpen);
+    setContent(content); // Define o conteúdo a ser exibido no Drawer
+  };
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)(DrawerContext.Provider, {
+    value: {
+      isOpen,
+      toggleDrawer,
+      content
     },
-    onMouseEnter: () => setIsHovered(true),
-    onMouseLeave: () => setIsHovered(false),
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("span", {
-      role: "img",
-      "aria-label": "drag",
-      children: "\u283F"
-    })
+    children: children
   });
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (NodeHandle);
+
+// Hook para consumir o contexto
+const useDrawer = () => {
+  const context = (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(DrawerContext);
+  if (!context) {
+    throw new Error('useDrawer must be used within a DrawerProvider');
+  }
+  return context;
+};
 
 /***/ }),
 
-/***/ "./src/admin/components/FlowEditor/components/SortableField.js":
-/*!*********************************************************************!*\
-  !*** ./src/admin/components/FlowEditor/components/SortableField.js ***!
-  \*********************************************************************/
+/***/ "./src/admin/components/FlowEditor/context/FlowContext.js":
+/*!****************************************************************!*\
+  !*** ./src/admin/components/FlowEditor/context/FlowContext.js ***!
+  \****************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */   FlowProvider: () => (/* binding */ FlowProvider),
+/* harmony export */   useFlowContext: () => (/* binding */ useFlowContext)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _dnd_kit_sortable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @dnd-kit/sortable */ "./node_modules/@dnd-kit/sortable/dist/sortable.esm.js");
-/* harmony import */ var _dnd_kit_utilities__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @dnd-kit/utilities */ "./node_modules/@dnd-kit/utilities/dist/utilities.esm.js");
-/* harmony import */ var _FieldComponents__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./FieldComponents */ "./src/admin/components/FlowEditor/components/FieldComponents.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__);
+/* harmony import */ var _xyflow_react__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @xyflow/react */ "./node_modules/@xyflow/react/dist/esm/index.mjs");
+/* harmony import */ var _xyflow_react__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @xyflow/react */ "./node_modules/@xyflow/system/dist/esm/index.mjs");
+/* harmony import */ var _helpers_dataValidator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../helpers/dataValidator */ "./src/admin/components/FlowEditor/helpers/dataValidator.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__);
 
 
 
- // Importando os controles individuais
 
-const SortableField = ({
-  id,
-  title,
-  type,
-  value,
-  options,
-  updateField
+// Cria o contexto para o fluxo
+
+const FlowContext = (0,react__WEBPACK_IMPORTED_MODULE_0__.createContext)();
+const useFlowContext = () => {
+  return (0,react__WEBPACK_IMPORTED_MODULE_0__.useContext)(FlowContext);
+};
+const FlowProvider = ({
+  children
 }) => {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging
-  } = (0,_dnd_kit_sortable__WEBPACK_IMPORTED_MODULE_1__.useSortable)({
-    id
-  });
-  const [isExpanded, setIsExpanded] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(false); // Estado para controle de expansão
-  const [fieldValue, setFieldValue] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(value); // Valor do campo
-  const [label, setLabel] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(title); // Label do campo
-  const [placeholder, setPlaceholder] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(""); // Placeholder do campo
-  const [min, setMin] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(""); // Valor mínimo
-  const [max, setMax] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(""); // Valor máximo
-  const [fieldOptions, setFieldOptions] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(options || ""); // Opções para Select/Radio
+  const [errors, setErrors] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
 
-  const handleFieldChange = (field, value) => {
-    if (field === "label") {
-      setLabel(value);
-    } else if (field === "placeholder") {
-      setPlaceholder(value);
-    } else if (field === "min") {
-      setMin(value);
-    } else if (field === "max") {
-      setMax(value);
-    } else if (field === "options") {
-      setFieldOptions(value);
+  // Utilizando estados diretamente para nodes e edges
+  const [nodes, setNodes, onNodesChange] = (0,_xyflow_react__WEBPACK_IMPORTED_MODULE_3__.useNodesState)([]);
+  const [edges, setEdges, onEdgesChange] = (0,_xyflow_react__WEBPACK_IMPORTED_MODULE_3__.useEdgesState)([]);
+
+  // Função para atualizar os campos de cada nó
+  const updateFieldsForNode = (nodeId, newFields) => {
+    setNodes(prevNodes => prevNodes.map(node => node.id === nodeId ? {
+      ...node,
+      data: {
+        ...node.data,
+        fields: newFields
+      }
+    } : node));
+  };
+
+  // Função para remover um campo específico de um nó
+  const removeFieldFromNode = (nodeId, fieldId) => {
+    console.log("Removing field", fieldId, "from node", nodeId);
+    setNodes(prevNodes => prevNodes.map(node => node.id === nodeId ? {
+      ...node,
+      data: {
+        ...node.data,
+        fields: node.data.fields.filter(field => field.id !== fieldId)
+      }
+    } : node));
+  };
+
+  // Função para gravar as configurações de um campo específico
+  const updateFieldConfig = (nodeId, fieldId, newConfig) => {
+    console.log("Updating field", fieldId, "from node", nodeId, "with config", newConfig);
+    setNodes(prevNodes => prevNodes.map(node => node.id === nodeId ? {
+      ...node,
+      data: {
+        ...node.data,
+        fields: node.data.fields.map(field => field.id === fieldId ? {
+          ...field,
+          config: newConfig
+        } : field)
+      }
+    } : node));
+  };
+
+  // Função para atualizar o nome (stageName) de cada nó
+  const updateNodeName = (nodeId, newName) => {
+    setNodes(prevNodes => prevNodes.map(node => node.id === nodeId ? {
+      ...node,
+      data: {
+        ...node.data,
+        stageName: newName
+      }
+    } : node));
+  };
+
+  // Função para atualizar a posição de um nó
+  const updateNodePosition = (nodeId, newPosition) => {
+    setNodes(prevNodes => prevNodes.map(node => node.id === nodeId ? {
+      ...node,
+      position: newPosition
+    } : node));
+  };
+
+  // Função para capturar mudanças de posição dos nós
+  const onNodesChangeHandler = changes => {
+    changes.forEach(change => {
+      if (change.type === "position") {
+        updateNodePosition(change.id, change.position);
+      }
+    });
+    onNodesChange(changes);
+  };
+
+  // Função para conectar nós
+  const onConnect = (0,react__WEBPACK_IMPORTED_MODULE_0__.useCallback)(params => setEdges(eds => (0,_xyflow_react__WEBPACK_IMPORTED_MODULE_4__.addEdge)({
+    ...params,
+    type: "buttonedge"
+  }, eds)), [setEdges]);
+
+  // Função para capturar mudanças nos edges
+  const onEdgesChangeHandler = changes => {
+    onEdgesChange(changes);
+  };
+
+  // Função para adicionar novos nós
+  const addNewNode = () => {
+    const newNodeId = `Etapa ${nodes.length + 1}`;
+    const lastNode = nodes[nodes.length - 1];
+    const newNodePosition = lastNode ? {
+      x: lastNode.position.x + 50,
+      y: lastNode.position.y + 50
+    } : {
+      x: 50,
+      y: 50
+    };
+    const newNode = {
+      id: newNodeId,
+      type: "customNode",
+      dragHandle: ".custom-drag-handle",
+      position: newNodePosition,
+      data: {
+        fields: [],
+        stageName: `${newNodeId}`,
+        updateFields: newFields => updateFieldsForNode(newNodeId, newFields),
+        updateNodeName: newName => updateNodeName(newNodeId, newName),
+        updatePosition: newPosition => updateNodePosition(newNodeId, newPosition)
+      }
+    };
+    setNodes(prevNodes => [...prevNodes, newNode]);
+  };
+
+  // Função para remover um nó e suas arestas associadas
+  const removeNode = nodeId => {
+    if (confirm(`Tem certeza que deseja remover o nó ${nodeId}?`)) {
+      setNodes(prevNodes => prevNodes.filter(node => node.id !== nodeId));
+      setEdges(prevEdges => prevEdges.filter(edge => edge.source !== nodeId && edge.target !== nodeId));
+    }
+  };
+
+  // Função para validar e inicializar dados
+  const initializeData = data => {
+    const validationResult = (0,_helpers_dataValidator__WEBPACK_IMPORTED_MODULE_1__["default"])(data);
+    if (validationResult.isValid || 1 === 1) {
+      setNodes(data.nodes.map(({
+        id,
+        position,
+        data: nodeData,
+        measured,
+        selected
+      }) => ({
+        id,
+        type: "customNode",
+        dragHandle: ".custom-drag-handle",
+        position,
+        data: {
+          fields: nodeData.fields || [],
+          stageName: nodeData.stageName || "",
+          updateFields: newFields => updateFieldsForNode(id, newFields),
+          updateNodeName: newName => updateNodeName(id, newName),
+          updatePosition: newPosition => updateNodePosition(id, newPosition)
+        },
+        measured: measured || {
+          width: 0,
+          height: 0
+        },
+        // Inclui a medida
+        selected: selected || false // Inclui o estado de seleção
+      })));
+      setEdges(data.edges.map(({
+        id,
+        source,
+        target
+      }) => ({
+        id,
+        source,
+        target,
+        type: "buttonedge"
+      })));
+    } else {}
+  };
+
+  // Função para exportar os dados do fluxo
+  const onExport = () => {
+    const data = {
+      nodes,
+      edges
+    };
+    const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(JSON.stringify(data, null, 2))}`;
+    const downloadAnchorNode = document.createElement("a");
+    downloadAnchorNode.setAttribute("href", dataStr);
+    downloadAnchorNode.setAttribute("download", "flowData.json");
+    document.body.appendChild(downloadAnchorNode);
+    downloadAnchorNode.click();
+    downloadAnchorNode.remove();
+  };
+
+  // Função para importar dados e sobrescrever o estado
+  const onImport = importedData => {
+    const validationResult = (0,_helpers_dataValidator__WEBPACK_IMPORTED_MODULE_1__["default"])(importedData);
+    if (validationResult.isValid) {
+      initializeData(importedData);
     } else {
-      setFieldValue(value);
-    }
-    updateField(id, value); // Atualiza o valor do campo
-  };
-  const toggleExpand = e => {
-    setIsExpanded(!isExpanded); // Alterna entre expandido e minimizado
-  };
-  const stopPropagation = e => {
-    e.stopPropagation(); // Impede que o evento de clique atinja o contêiner principal
-  };
-  const renderFieldControls = () => {
-    switch (type) {
-      case "text":
-      case "email":
-      case "phone":
-      case "address":
-        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_FieldComponents__WEBPACK_IMPORTED_MODULE_3__.TextFieldControls, {
-          label: label,
-          placeholder: placeholder,
-          onChange: handleFieldChange
-        });
-      case "number":
-        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_FieldComponents__WEBPACK_IMPORTED_MODULE_3__.NumberFieldControls, {
-          label: label,
-          min: min,
-          max: max,
-          onChange: handleFieldChange
-        });
-      case "datepicker":
-        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_FieldComponents__WEBPACK_IMPORTED_MODULE_3__.DatePickerControls, {
-          label: label,
-          onChange: handleFieldChange
-        });
-      case "upload":
-        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_FieldComponents__WEBPACK_IMPORTED_MODULE_3__.FileUploadControls, {
-          label: label,
-          onChange: handleFieldChange
-        });
-      case "select":
-      case "radio":
-        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)(_FieldComponents__WEBPACK_IMPORTED_MODULE_3__.SelectRadioControls, {
-          label: label,
-          options: fieldOptions,
-          onChange: handleFieldChange
-        });
-      default:
-        return null;
+      setErrors(validationResult.errors);
+      console.error("Validation errors:", validationResult.errors);
     }
   };
-  const style = {
-    transform: _dnd_kit_utilities__WEBPACK_IMPORTED_MODULE_2__.CSS.Transform.toString(transform),
-    transition: transition || "transform 250ms ease",
-    padding: "5px",
-    margin: "4px 0",
-    backgroundColor: isDragging ? "#e0f7fa" : "#f9f9f9",
-    border: "1px solid #ddd",
-    fontSize: "10px",
-    borderRadius: "4px",
-    opacity: isDragging ? 0.8 : 1,
-    cursor: isDragging ? "grabbing" : "pointer",
-    boxShadow: isDragging ? "0 4px 8px rgba(0, 0, 0, 0.1)" : "none"
+  const value = {
+    nodes,
+    edges,
+    onNodesChangeHandler,
+    onEdgesChangeHandler,
+    onConnect,
+    addNewNode,
+    removeNode,
+    initializeData,
+    updateFieldsForNode,
+    removeFieldFromNode,
+    updateFieldConfig,
+    updateNodeName,
+    updateNodePosition,
+    errors,
+    onExport,
+    onImport
   };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("li", {
-      ref: setNodeRef,
-      style: style,
-      ...attributes,
-      onClick: toggleExpand,
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("div", {
-        style: {
-          display: "flex",
-          justifyContent: "space-between"
-        },
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsxs)("label", {
-          children: [label, " (", type, ")"]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
-          ...listeners,
-          // Listeners aplicados ao ícone de arraste
-          style: {
-            cursor: "grab",
-            backgroundColor: "#ccc",
-            borderRadius: "4px",
-            padding: "4px",
-            marginLeft: "10px"
-          },
-          onClick: e => e.stopPropagation() // Evita a expansão ao clicar no drag handle
-          ,
-          children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("span", {
-            role: "img",
-            "aria-label": "drag",
-            children: "\u283F"
-          })
-        })]
-      }), isExpanded && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_4__.jsx)("div", {
-        style: {
-          marginTop: "10px",
-          padding: "10px",
-          backgroundColor: "#f1f1f1",
-          borderRadius: "4px",
-          width: "150px"
-        },
-        onClick: stopPropagation // Impede que o clique no contêiner dos controles minimize o campo
-        ,
-        children: renderFieldControls()
-      })]
-    })
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)(FlowContext.Provider, {
+    value: value,
+    children: children
   });
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SortableField);
 
 /***/ }),
 
@@ -8349,43 +9724,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
 /* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _ProcessTypeManager_ProcessTypeForm__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./ProcessTypeManager/ProcessTypeForm */ "./src/admin/components/ProcessTypeManager/ProcessTypeForm.js");
-/* harmony import */ var _ProcessTypeManager_ProcessStepForm__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./ProcessTypeManager/ProcessStepForm */ "./src/admin/components/ProcessTypeManager/ProcessStepForm.js");
-/* harmony import */ var _FlowEditor_ProcessFlow__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./FlowEditor/ProcessFlow */ "./src/admin/components/FlowEditor/ProcessFlow.js");
-/* harmony import */ var _ProcessTypeManager_StepList__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./ProcessTypeManager/StepList */ "./src/admin/components/ProcessTypeManager/StepList.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__);
+/* harmony import */ var _FlowEditor_ProcessFlow__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./FlowEditor/ProcessFlow */ "./src/admin/components/FlowEditor/ProcessFlow.js");
+/* harmony import */ var _FlowEditor_context_FlowContext__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./FlowEditor/context/FlowContext */ "./src/admin/components/FlowEditor/context/FlowContext.js");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
+/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__);
 
 
 
 
 
 
-
-
-const ProcessTypeEditor = () => {
+const processDataEditor = () => {
   const params = new URLSearchParams(window.location.search);
   const id = params.get("process_type_id");
-  const [processType, setProcessType] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
+  const [processData, setProcessData] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   const [notice, setNotice] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
   const [isLoading, setIsLoading] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(true);
-  const [stepOrder, setStepOrder] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
   const flowRef = (0,react__WEBPACK_IMPORTED_MODULE_0__.useRef)(null); // Referência para acessar os dados do fluxo
   const [flowData, setFlowData] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)({
     nodes: [],
     edges: []
   }); // Novo estado para o flowData
-
+  const [title, setTitle] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)("");
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
     setIsLoading(true);
     _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
       path: `/obatala/v1/process_type/${id}`
     }).then(typeData => {
-      console.log("Process type data:", typeData);
-      setProcessType(typeData);
-      const order = typeData.meta.step_order || [];
-      setStepOrder(order);
-
+      console.log("Process model data:", typeData);
+      setProcessData(typeData);
+      setTitle(typeData.title.rendered);
       // Extraindo flowData do processo carregado
       const flowData = typeData.meta.flowData || {
         nodes: [],
@@ -8402,19 +9770,18 @@ const ProcessTypeEditor = () => {
       setIsLoading(false);
     });
   }, [id]);
-  const handleSave = async updatedProcessType => {
+  const handleSave = async () => {
     try {
       const flowData = flowRef.current.getFlowData(); // Obtém os dados do flow
 
       const updatedData = {
-        ...updatedProcessType,
+        ...processData,
+        title: title,
         meta: {
-          ...updatedProcessType.meta,
-          flowData,
-          // Armazena os dados de fluxo como meta
-          step_order: stepOrder
+          flowData // Armazena os dados de fluxo como meta
         }
       };
+      console.log("Updated data:", updatedData);
 
       // Evita recarregar a página
       await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
@@ -8427,8 +9794,8 @@ const ProcessTypeEditor = () => {
         method: "PUT",
         data: updatedData.meta
       });
-      setProcessType({
-        ...updatedProcessType,
+      setProcessData({
+        ...processData,
         meta: updatedData.meta
       });
       setNotice({
@@ -8445,108 +9812,59 @@ const ProcessTypeEditor = () => {
       setIsLoading(false);
     }
   };
-  const handleAddProcessStep = stepIds => {
-    const newStepOrder = Array.isArray(stepOrder) ? stepOrder : [];
-    const stepsToAdd = stepIds.filter(stepId => !newStepOrder.includes(stepId));
-    if (stepsToAdd.length === 0) {
-      setNotice({
-        status: "warning",
-        message: "All selected steps are already in the process type."
-      });
-      return;
-    }
-    const updatedStepOrder = [...newStepOrder, ...stepsToAdd];
-    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-      path: `/obatala/v1/process_type/${id}/meta`,
-      method: "PUT",
-      data: {
-        step_order: updatedStepOrder
-      }
-    }).then(() => {
-      setStepOrder(updatedStepOrder);
-      setNotice({
-        status: "success",
-        message: "Steps added successfully."
-      });
-    }).catch(error => {
-      console.error("Error updating step order:", error);
-      setNotice({
-        status: "error",
-        message: "Error updating step order."
-      });
-    });
-  };
   if (isLoading) {
-    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, {});
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Spinner, {});
   }
-  if (!processType) {
-    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("div", {
+  if (!processData) {
+    return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
       children: "Loading..."
     });
   }
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
-    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("span", {
+  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
+    children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("span", {
       className: "brand",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("strong", {
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("strong", {
         children: "Obatala"
       }), " Curatorial Process Management"]
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("h2", {
-      children: "Edit Process Type"
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("div", {
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("h2", {
+      children: "Edit Process Model"
+    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("div", {
       className: "panel-container",
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("main", {
-        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, {
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("h3", {
-              children: "Steps"
-            })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
-            children: [notice && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
+      children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("main", {
+        children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, {
+            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.TextControl, {
+              value: title,
+              placeholder: "Digite o placeholder",
+              onChange: value => setTitle(value)
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
+              isPrimary: true,
+              type: "submit",
+              style: {
+                margin: 0
+              },
+              onClick: handleSave,
+              children: "Save"
+            })]
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
+            children: [notice && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
               status: notice.status,
               isDismissible: true,
               onRemove: () => setNotice(null),
               children: notice.message
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_ProcessTypeManager_StepList__WEBPACK_IMPORTED_MODULE_6__["default"], {
-              processTypeId: processType.id,
-              stepOrder: stepOrder,
-              onNotice: setNotice
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_FlowEditor_ProcessFlow__WEBPACK_IMPORTED_MODULE_5__["default"], {
-              ref: flowRef,
-              initialData: flowData
+            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_FlowEditor_context_FlowContext__WEBPACK_IMPORTED_MODULE_4__.FlowProvider, {
+              children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)(_FlowEditor_ProcessFlow__WEBPACK_IMPORTED_MODULE_3__["default"], {
+                ref: flowRef,
+                initialData: flowData
+              })
             })]
           })]
         })
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)("aside", {
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, {
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("h3", {
-              children: "Edit Process Type data"
-            })
-          }), notice && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
-              status: notice.status,
-              isDismissible: true,
-              onRemove: () => setNotice(null),
-              children: notice.message
-            })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_ProcessTypeManager_ProcessTypeForm__WEBPACK_IMPORTED_MODULE_3__["default"], {
-            editingProcessType: processType,
-            onSave: handleSave
-          })]
-        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Panel, {
-          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelHeader, {
-            children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)("h3", {
-              children: "Adding steps"
-            })
-          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_7__.jsx)(_ProcessTypeManager_ProcessStepForm__WEBPACK_IMPORTED_MODULE_4__["default"], {
-            onAddStep: handleAddProcessStep
-          })]
-        })]
-      })]
+      })
     })]
   });
 };
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProcessTypeEditor);
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (processDataEditor);
 
 /***/ }),
 
@@ -8647,7 +9965,7 @@ const ProcessTypeManager = () => {
         children: "Obatala"
       }), " Curatorial Process Management"]
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("h2", {
-      children: "Process Type Manager"
+      children: "Process Models"
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsxs)("div", {
       className: "panel-container",
       children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_5__.jsx)("main", {
@@ -8678,117 +9996,6 @@ const ProcessTypeManager = () => {
   });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProcessTypeManager);
-
-/***/ }),
-
-/***/ "./src/admin/components/ProcessTypeManager/ProcessStepForm.js":
-/*!********************************************************************!*\
-  !*** ./src/admin/components/ProcessTypeManager/ProcessStepForm.js ***!
-  \********************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/close-small.js");
-/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
-/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__);
-
-
-
-
-
-const ProcessStepForm = ({
-  onAddStep
-}) => {
-  const [processSteps, setProcessSteps] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
-  const [selectedSteps, setSelectedSteps] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
-  const [stepInputValue, setStepInputValue] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)('');
-  const [notice, setNotice] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null);
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-      path: `/obatala/v1/process_step?per_page=100&_embed`
-    }).then(stepsData => {
-      const sortedSteps = stepsData.sort((a, b) => a.title.rendered.localeCompare(b.title.rendered));
-      setProcessSteps(sortedSteps);
-    }).catch(error => {
-      console.error('Error fetching process steps:', error);
-      setNotice({
-        status: 'error',
-        message: 'Error fetching process steps.'
-      });
-    });
-  }, []);
-  const handleAddStep = () => {
-    if (selectedSteps.length === 0) {
-      setNotice({
-        status: 'error',
-        message: 'Please select at least one step.'
-      });
-      return;
-    }
-
-    // Chama a função onAddStep passada como prop
-    onAddStep(selectedSteps);
-    setSelectedSteps([]);
-    setNotice({
-      status: 'success',
-      message: 'Steps added successfully.'
-    });
-  };
-  const handleChange = value => {
-    if (value && !selectedSteps.includes(value)) {
-      setSelectedSteps([...selectedSteps, value]);
-      setStepInputValue('');
-    }
-  };
-  const handleRemoveStep = stepId => {
-    setSelectedSteps(selectedSteps.filter(step => step !== stepId));
-  };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.PanelRow, {
-    children: [notice && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
-      status: notice.status,
-      isDismissible: true,
-      onRemove: () => setNotice(null),
-      children: notice.message
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.ComboboxControl, {
-      label: "Select one or more Steps",
-      value: stepInputValue,
-      options: processSteps.filter(step => !selectedSteps.includes(step.id)).map(step => ({
-        label: step.title.rendered,
-        value: step.id
-      })),
-      onChange: handleChange,
-      onInputChange: setStepInputValue
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("div", {
-      className: "selected-steps",
-      children: selectedSteps.map(stepId => {
-        const step = processSteps.find(step => step.id === stepId);
-        return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("div", {
-          className: "selected-step",
-          children: [step.title.rendered, /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-            icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_4__["default"],
-            onClick: () => handleRemoveStep(stepId),
-            className: "remove-step-button"
-          })]
-        }, stepId);
-      })
-    }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-      isSecondary: true,
-      onClick: handleAddStep,
-      children: "Add Steps"
-    })]
-  });
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProcessStepForm);
 
 /***/ }),
 
@@ -9098,176 +10305,6 @@ const ProcessTypeList = ({
   });
 };
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (ProcessTypeList);
-
-/***/ }),
-
-/***/ "./src/admin/components/ProcessTypeManager/StepList.js":
-/*!*************************************************************!*\
-  !*** ./src/admin/components/ProcessTypeManager/StepList.js ***!
-  \*************************************************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @wordpress/components */ "@wordpress/components");
-/* harmony import */ var _wordpress_components__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! react-beautiful-dnd */ "./node_modules/react-beautiful-dnd/dist/react-beautiful-dnd.esm.js");
-/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @wordpress/api-fetch */ "@wordpress/api-fetch");
-/* harmony import */ var _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/edit.js");
-/* harmony import */ var _wordpress_icons__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @wordpress/icons */ "./node_modules/@wordpress/icons/build-module/library/trash.js");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! react/jsx-runtime */ "react/jsx-runtime");
-/* harmony import */ var react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__);
-
-
-
-
-
-
-const StepList = ({
-  processTypeId,
-  stepOrder = [],
-  onNotice
-}) => {
-  const [stepsState, setStepsState] = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]);
-  (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(() => {
-    if (stepOrder.length > 0) {
-      _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-        path: `/obatala/v1/process_step?include=${stepOrder.join(",")}`
-      }).then(stepsData => {
-        console.log("Steps:", stepsData);
-        console.log("Step order:", stepOrder);
-        const orderedSteps = stepOrder.map((stepId, index) => {
-          // Converte o stepId para número antes de comparar
-          const step = stepsData.find(step => step.id === Number(stepId));
-          if (step) {
-            return {
-              ...step,
-              orderIndex: index
-            };
-          }
-          return null; // Retorna null se o stepId não for encontrado
-        }).filter(step => step !== null); // Filtra os nulos
-        setStepsState(orderedSteps);
-      }).catch(error => {
-        console.error("Error fetching ordered steps:", error);
-        onNotice({
-          status: "error",
-          message: "Error fetching ordered steps."
-        });
-      });
-    }
-  }, [stepOrder, onNotice]);
-  const handleDragEnd = async result => {
-    if (!result.destination) {
-      return;
-    }
-    const reorderedSteps = Array.from(stepsState);
-    const [movedStep] = reorderedSteps.splice(result.source.index, 1);
-    reorderedSteps.splice(result.destination.index, 0, movedStep);
-    setStepsState(reorderedSteps);
-    try {
-      const newStepOrder = reorderedSteps.map(step => step.id);
-      await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-        path: `/obatala/v1/process_type/${processTypeId}/meta`,
-        method: "PUT",
-        data: {
-          step_order: newStepOrder
-        }
-      });
-      onNotice({
-        status: "success",
-        message: "Step order updated successfully."
-      });
-    } catch (error) {
-      console.error("Error updating step order:", error);
-      onNotice({
-        status: "error",
-        message: "Error updating step order."
-      });
-    }
-  };
-  const handleDeleteStep = async index => {
-    const updatedSteps = stepsState.filter((_, stepIndex) => stepIndex !== index);
-    const updatedStepOrder = updatedSteps.map(step => step.id);
-    try {
-      await _wordpress_api_fetch__WEBPACK_IMPORTED_MODULE_2___default()({
-        path: `/obatala/v1/process_type/${processTypeId}/meta`,
-        method: "PUT",
-        data: {
-          step_order: updatedStepOrder
-        }
-      });
-      setStepsState(updatedSteps);
-      onNotice({
-        status: "success",
-        message: "Step removed successfully."
-      });
-    } catch (error) {
-      console.error("Error removing step:", error);
-      onNotice({
-        status: "error",
-        message: "Error removing step."
-      });
-    }
-  };
-  return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__.DragDropContext, {
-    onDragEnd: handleDragEnd,
-    children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__.Droppable, {
-      droppableId: "steps-list",
-      direction: "vertical",
-      children: provided => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("ul", {
-        className: "steps-list",
-        ...provided.droppableProps,
-        ref: provided.innerRef,
-        children: [stepsState.length > 0 ? stepsState.map((step, index) => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(react_beautiful_dnd__WEBPACK_IMPORTED_MODULE_4__.Draggable, {
-          draggableId: `${step.id}-${index}`,
-          index: index,
-          children: provided => /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)("li", {
-            className: "step-item",
-            ref: provided.innerRef,
-            ...provided.draggableProps,
-            ...provided.dragHandleProps,
-            children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("span", {
-              className: "step-number",
-              children: index + 1
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)("h4", {
-              children: step.title.rendered
-            }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsxs)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.ButtonGroup, {
-              children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Tooltip, {
-                text: "Edit Step",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-                  icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Icon, {
-                    icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_5__["default"]
-                  }),
-                  onClick: () => window.location.href = `?page=process-step-editor&step_id=${step.id}`
-                })
-              }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Tooltip, {
-                text: "Delete Step",
-                children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Button, {
-                  icon: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Icon, {
-                    icon: _wordpress_icons__WEBPACK_IMPORTED_MODULE_6__["default"]
-                  }),
-                  onClick: () => handleDeleteStep(index)
-                })
-              })]
-            })]
-          })
-        }, `${step.id}-${index}`)) : /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_3__.jsx)(_wordpress_components__WEBPACK_IMPORTED_MODULE_1__.Notice, {
-          status: "warning",
-          isDismissible: false,
-          children: "No steps found."
-        }), provided.placeholder]
-      })
-    })
-  });
-};
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (StepList);
 
 /***/ }),
 
@@ -11254,6 +12291,175 @@ exports.typeOf = typeOf;
 
 if (false) {} else {
   module.exports = __webpack_require__(/*! ./cjs/react-is.development.js */ "./node_modules/prop-types/node_modules/react-is/cjs/react-is.development.js");
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/property-expr/index.js":
+/*!*********************************************!*\
+  !*** ./node_modules/property-expr/index.js ***!
+  \*********************************************/
+/***/ ((module) => {
+
+"use strict";
+/**
+ * Based on Kendo UI Core expression code <https://github.com/telerik/kendo-ui-core#license-information>
+ */
+
+
+function Cache(maxSize) {
+  this._maxSize = maxSize
+  this.clear()
+}
+Cache.prototype.clear = function () {
+  this._size = 0
+  this._values = Object.create(null)
+}
+Cache.prototype.get = function (key) {
+  return this._values[key]
+}
+Cache.prototype.set = function (key, value) {
+  this._size >= this._maxSize && this.clear()
+  if (!(key in this._values)) this._size++
+
+  return (this._values[key] = value)
+}
+
+var SPLIT_REGEX = /[^.^\]^[]+|(?=\[\]|\.\.)/g,
+  DIGIT_REGEX = /^\d+$/,
+  LEAD_DIGIT_REGEX = /^\d/,
+  SPEC_CHAR_REGEX = /[~`!#$%\^&*+=\-\[\]\\';,/{}|\\":<>\?]/g,
+  CLEAN_QUOTES_REGEX = /^\s*(['"]?)(.*?)(\1)\s*$/,
+  MAX_CACHE_SIZE = 512
+
+var pathCache = new Cache(MAX_CACHE_SIZE),
+  setCache = new Cache(MAX_CACHE_SIZE),
+  getCache = new Cache(MAX_CACHE_SIZE)
+
+var config
+
+module.exports = {
+  Cache: Cache,
+
+  split: split,
+
+  normalizePath: normalizePath,
+
+  setter: function (path) {
+    var parts = normalizePath(path)
+
+    return (
+      setCache.get(path) ||
+      setCache.set(path, function setter(obj, value) {
+        var index = 0
+        var len = parts.length
+        var data = obj
+
+        while (index < len - 1) {
+          var part = parts[index]
+          if (
+            part === '__proto__' ||
+            part === 'constructor' ||
+            part === 'prototype'
+          ) {
+            return obj
+          }
+
+          data = data[parts[index++]]
+        }
+        data[parts[index]] = value
+      })
+    )
+  },
+
+  getter: function (path, safe) {
+    var parts = normalizePath(path)
+    return (
+      getCache.get(path) ||
+      getCache.set(path, function getter(data) {
+        var index = 0,
+          len = parts.length
+        while (index < len) {
+          if (data != null || !safe) data = data[parts[index++]]
+          else return
+        }
+        return data
+      })
+    )
+  },
+
+  join: function (segments) {
+    return segments.reduce(function (path, part) {
+      return (
+        path +
+        (isQuoted(part) || DIGIT_REGEX.test(part)
+          ? '[' + part + ']'
+          : (path ? '.' : '') + part)
+      )
+    }, '')
+  },
+
+  forEach: function (path, cb, thisArg) {
+    forEach(Array.isArray(path) ? path : split(path), cb, thisArg)
+  },
+}
+
+function normalizePath(path) {
+  return (
+    pathCache.get(path) ||
+    pathCache.set(
+      path,
+      split(path).map(function (part) {
+        return part.replace(CLEAN_QUOTES_REGEX, '$2')
+      })
+    )
+  )
+}
+
+function split(path) {
+  return path.match(SPLIT_REGEX) || ['']
+}
+
+function forEach(parts, iter, thisArg) {
+  var len = parts.length,
+    part,
+    idx,
+    isArray,
+    isBracket
+
+  for (idx = 0; idx < len; idx++) {
+    part = parts[idx]
+
+    if (part) {
+      if (shouldBeQuoted(part)) {
+        part = '"' + part + '"'
+      }
+
+      isBracket = isQuoted(part)
+      isArray = !isBracket && /^\d+$/.test(part)
+
+      iter.call(thisArg, part, isBracket, isArray, idx, parts)
+    }
+  }
+}
+
+function isQuoted(str) {
+  return (
+    typeof str === 'string' && str && ["'", '"'].indexOf(str.charAt(0)) !== -1
+  )
+}
+
+function hasLeadingNumber(part) {
+  return part.match(LEAD_DIGIT_REGEX) && !part.match(DIGIT_REGEX)
+}
+
+function hasSpecialChars(part) {
+  return SPEC_CHAR_REGEX.test(part)
+}
+
+function shouldBeQuoted(part) {
+  return !isQuoted(part) && (hasLeadingNumber(part) || hasSpecialChars(part))
 }
 
 
@@ -27313,6 +28519,163 @@ function applyMiddleware() {
 
 /***/ }),
 
+/***/ "./node_modules/tiny-case/index.js":
+/*!*****************************************!*\
+  !*** ./node_modules/tiny-case/index.js ***!
+  \*****************************************/
+/***/ ((module) => {
+
+const reWords = /[A-Z\xc0-\xd6\xd8-\xde]?[a-z\xdf-\xf6\xf8-\xff]+(?:['’](?:d|ll|m|re|s|t|ve))?(?=[\xac\xb1\xd7\xf7\x00-\x2f\x3a-\x40\x5b-\x60\x7b-\xbf\u2000-\u206f \t\x0b\f\xa0\ufeff\n\r\u2028\u2029\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u202f\u205f\u3000]|[A-Z\xc0-\xd6\xd8-\xde]|$)|(?:[A-Z\xc0-\xd6\xd8-\xde]|[^\ud800-\udfff\xac\xb1\xd7\xf7\x00-\x2f\x3a-\x40\x5b-\x60\x7b-\xbf\u2000-\u206f \t\x0b\f\xa0\ufeff\n\r\u2028\u2029\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u202f\u205f\u3000\d+\u2700-\u27bfa-z\xdf-\xf6\xf8-\xffA-Z\xc0-\xd6\xd8-\xde])+(?:['’](?:D|LL|M|RE|S|T|VE))?(?=[\xac\xb1\xd7\xf7\x00-\x2f\x3a-\x40\x5b-\x60\x7b-\xbf\u2000-\u206f \t\x0b\f\xa0\ufeff\n\r\u2028\u2029\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u202f\u205f\u3000]|[A-Z\xc0-\xd6\xd8-\xde](?:[a-z\xdf-\xf6\xf8-\xff]|[^\ud800-\udfff\xac\xb1\xd7\xf7\x00-\x2f\x3a-\x40\x5b-\x60\x7b-\xbf\u2000-\u206f \t\x0b\f\xa0\ufeff\n\r\u2028\u2029\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u202f\u205f\u3000\d+\u2700-\u27bfa-z\xdf-\xf6\xf8-\xffA-Z\xc0-\xd6\xd8-\xde])|$)|[A-Z\xc0-\xd6\xd8-\xde]?(?:[a-z\xdf-\xf6\xf8-\xff]|[^\ud800-\udfff\xac\xb1\xd7\xf7\x00-\x2f\x3a-\x40\x5b-\x60\x7b-\xbf\u2000-\u206f \t\x0b\f\xa0\ufeff\n\r\u2028\u2029\u1680\u180e\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u202f\u205f\u3000\d+\u2700-\u27bfa-z\xdf-\xf6\xf8-\xffA-Z\xc0-\xd6\xd8-\xde])+(?:['’](?:d|ll|m|re|s|t|ve))?|[A-Z\xc0-\xd6\xd8-\xde]+(?:['’](?:D|LL|M|RE|S|T|VE))?|\d*(?:1ST|2ND|3RD|(?![123])\dTH)(?=\b|[a-z_])|\d*(?:1st|2nd|3rd|(?![123])\dth)(?=\b|[A-Z_])|\d+|(?:[\u2700-\u27bf]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff])[\ufe0e\ufe0f]?(?:[\u0300-\u036f\ufe20-\ufe2f\u20d0-\u20ff]|\ud83c[\udffb-\udfff])?(?:\u200d(?:[^\ud800-\udfff]|(?:\ud83c[\udde6-\uddff]){2}|[\ud800-\udbff][\udc00-\udfff])[\ufe0e\ufe0f]?(?:[\u0300-\u036f\ufe20-\ufe2f\u20d0-\u20ff]|\ud83c[\udffb-\udfff])?)*/g
+
+const words = (str) => str.match(reWords) || []
+
+const upperFirst = (str) => str[0].toUpperCase() + str.slice(1)
+
+const join = (str, d) => words(str).join(d).toLowerCase()
+
+const camelCase = (str) =>
+  words(str).reduce(
+    (acc, next) =>
+      `${acc}${
+        !acc
+          ? next.toLowerCase()
+          : next[0].toUpperCase() + next.slice(1).toLowerCase()
+      }`,
+    '',
+  )
+
+const pascalCase = (str) => upperFirst(camelCase(str))
+
+const snakeCase = (str) => join(str, '_')
+
+const kebabCase = (str) => join(str, '-')
+
+const sentenceCase = (str) => upperFirst(join(str, ' '))
+
+const titleCase = (str) => words(str).map(upperFirst).join(' ')
+
+module.exports = {
+  words,
+  upperFirst,
+  camelCase,
+  pascalCase,
+  snakeCase,
+  kebabCase,
+  sentenceCase,
+  titleCase,
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/toposort/index.js":
+/*!****************************************!*\
+  !*** ./node_modules/toposort/index.js ***!
+  \****************************************/
+/***/ ((module) => {
+
+
+/**
+ * Topological sorting function
+ *
+ * @param {Array} edges
+ * @returns {Array}
+ */
+
+module.exports = function(edges) {
+  return toposort(uniqueNodes(edges), edges)
+}
+
+module.exports.array = toposort
+
+function toposort(nodes, edges) {
+  var cursor = nodes.length
+    , sorted = new Array(cursor)
+    , visited = {}
+    , i = cursor
+    // Better data structures make algorithm much faster.
+    , outgoingEdges = makeOutgoingEdges(edges)
+    , nodesHash = makeNodesHash(nodes)
+
+  // check for unknown nodes
+  edges.forEach(function(edge) {
+    if (!nodesHash.has(edge[0]) || !nodesHash.has(edge[1])) {
+      throw new Error('Unknown node. There is an unknown node in the supplied edges.')
+    }
+  })
+
+  while (i--) {
+    if (!visited[i]) visit(nodes[i], i, new Set())
+  }
+
+  return sorted
+
+  function visit(node, i, predecessors) {
+    if(predecessors.has(node)) {
+      var nodeRep
+      try {
+        nodeRep = ", node was:" + JSON.stringify(node)
+      } catch(e) {
+        nodeRep = ""
+      }
+      throw new Error('Cyclic dependency' + nodeRep)
+    }
+
+    if (!nodesHash.has(node)) {
+      throw new Error('Found unknown node. Make sure to provided all involved nodes. Unknown node: '+JSON.stringify(node))
+    }
+
+    if (visited[i]) return;
+    visited[i] = true
+
+    var outgoing = outgoingEdges.get(node) || new Set()
+    outgoing = Array.from(outgoing)
+
+    if (i = outgoing.length) {
+      predecessors.add(node)
+      do {
+        var child = outgoing[--i]
+        visit(child, nodesHash.get(child), predecessors)
+      } while (i)
+      predecessors.delete(node)
+    }
+
+    sorted[--cursor] = node
+  }
+}
+
+function uniqueNodes(arr){
+  var res = new Set()
+  for (var i = 0, len = arr.length; i < len; i++) {
+    var edge = arr[i]
+    res.add(edge[0])
+    res.add(edge[1])
+  }
+  return Array.from(res)
+}
+
+function makeOutgoingEdges(arr){
+  var edges = new Map()
+  for (var i = 0, len = arr.length; i < len; i++) {
+    var edge = arr[i]
+    if (!edges.has(edge[0])) edges.set(edge[0], new Set())
+    if (!edges.has(edge[1])) edges.set(edge[1], new Set())
+    edges.get(edge[0]).add(edge[1])
+  }
+  return edges
+}
+
+function makeNodesHash(arr){
+  var res = new Map()
+  for (var i = 0, len = arr.length; i < len; i++) {
+    res.set(arr[i], i)
+  }
+  return res
+}
+
+
+/***/ }),
+
 /***/ "./node_modules/use-memo-one/dist/use-memo-one.esm.js":
 /*!************************************************************!*\
   !*** ./node_modules/use-memo-one/dist/use-memo-one.esm.js ***!
@@ -27836,6 +29199,2453 @@ if (false) {} else {
 
 /***/ }),
 
+/***/ "./node_modules/yup/index.esm.js":
+/*!***************************************!*\
+  !*** ./node_modules/yup/index.esm.js ***!
+  \***************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   ArraySchema: () => (/* binding */ ArraySchema),
+/* harmony export */   BooleanSchema: () => (/* binding */ BooleanSchema),
+/* harmony export */   DateSchema: () => (/* binding */ DateSchema),
+/* harmony export */   MixedSchema: () => (/* binding */ MixedSchema),
+/* harmony export */   NumberSchema: () => (/* binding */ NumberSchema),
+/* harmony export */   ObjectSchema: () => (/* binding */ ObjectSchema),
+/* harmony export */   Schema: () => (/* binding */ Schema),
+/* harmony export */   StringSchema: () => (/* binding */ StringSchema),
+/* harmony export */   TupleSchema: () => (/* binding */ TupleSchema),
+/* harmony export */   ValidationError: () => (/* binding */ ValidationError),
+/* harmony export */   addMethod: () => (/* binding */ addMethod),
+/* harmony export */   array: () => (/* binding */ create$2),
+/* harmony export */   bool: () => (/* binding */ create$7),
+/* harmony export */   boolean: () => (/* binding */ create$7),
+/* harmony export */   date: () => (/* binding */ create$4),
+/* harmony export */   defaultLocale: () => (/* binding */ locale),
+/* harmony export */   getIn: () => (/* binding */ getIn),
+/* harmony export */   isSchema: () => (/* binding */ isSchema),
+/* harmony export */   lazy: () => (/* binding */ create),
+/* harmony export */   mixed: () => (/* binding */ create$8),
+/* harmony export */   number: () => (/* binding */ create$5),
+/* harmony export */   object: () => (/* binding */ create$3),
+/* harmony export */   printValue: () => (/* binding */ printValue),
+/* harmony export */   reach: () => (/* binding */ reach),
+/* harmony export */   ref: () => (/* binding */ create$9),
+/* harmony export */   setLocale: () => (/* binding */ setLocale),
+/* harmony export */   string: () => (/* binding */ create$6),
+/* harmony export */   tuple: () => (/* binding */ create$1)
+/* harmony export */ });
+/* harmony import */ var property_expr__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! property-expr */ "./node_modules/property-expr/index.js");
+/* harmony import */ var property_expr__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(property_expr__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var tiny_case__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! tiny-case */ "./node_modules/tiny-case/index.js");
+/* harmony import */ var tiny_case__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(tiny_case__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var toposort__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! toposort */ "./node_modules/toposort/index.js");
+/* harmony import */ var toposort__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(toposort__WEBPACK_IMPORTED_MODULE_2__);
+
+
+
+
+const toString = Object.prototype.toString;
+const errorToString = Error.prototype.toString;
+const regExpToString = RegExp.prototype.toString;
+const symbolToString = typeof Symbol !== 'undefined' ? Symbol.prototype.toString : () => '';
+const SYMBOL_REGEXP = /^Symbol\((.*)\)(.*)$/;
+function printNumber(val) {
+  if (val != +val) return 'NaN';
+  const isNegativeZero = val === 0 && 1 / val < 0;
+  return isNegativeZero ? '-0' : '' + val;
+}
+function printSimpleValue(val, quoteStrings = false) {
+  if (val == null || val === true || val === false) return '' + val;
+  const typeOf = typeof val;
+  if (typeOf === 'number') return printNumber(val);
+  if (typeOf === 'string') return quoteStrings ? `"${val}"` : val;
+  if (typeOf === 'function') return '[Function ' + (val.name || 'anonymous') + ']';
+  if (typeOf === 'symbol') return symbolToString.call(val).replace(SYMBOL_REGEXP, 'Symbol($1)');
+  const tag = toString.call(val).slice(8, -1);
+  if (tag === 'Date') return isNaN(val.getTime()) ? '' + val : val.toISOString(val);
+  if (tag === 'Error' || val instanceof Error) return '[' + errorToString.call(val) + ']';
+  if (tag === 'RegExp') return regExpToString.call(val);
+  return null;
+}
+function printValue(value, quoteStrings) {
+  let result = printSimpleValue(value, quoteStrings);
+  if (result !== null) return result;
+  return JSON.stringify(value, function (key, value) {
+    let result = printSimpleValue(this[key], quoteStrings);
+    if (result !== null) return result;
+    return value;
+  }, 2);
+}
+
+function toArray(value) {
+  return value == null ? [] : [].concat(value);
+}
+
+let _Symbol$toStringTag, _Symbol$hasInstance, _Symbol$toStringTag2;
+let strReg = /\$\{\s*(\w+)\s*\}/g;
+_Symbol$toStringTag = Symbol.toStringTag;
+class ValidationErrorNoStack {
+  constructor(errorOrErrors, value, field, type) {
+    this.name = void 0;
+    this.message = void 0;
+    this.value = void 0;
+    this.path = void 0;
+    this.type = void 0;
+    this.params = void 0;
+    this.errors = void 0;
+    this.inner = void 0;
+    this[_Symbol$toStringTag] = 'Error';
+    this.name = 'ValidationError';
+    this.value = value;
+    this.path = field;
+    this.type = type;
+    this.errors = [];
+    this.inner = [];
+    toArray(errorOrErrors).forEach(err => {
+      if (ValidationError.isError(err)) {
+        this.errors.push(...err.errors);
+        const innerErrors = err.inner.length ? err.inner : [err];
+        this.inner.push(...innerErrors);
+      } else {
+        this.errors.push(err);
+      }
+    });
+    this.message = this.errors.length > 1 ? `${this.errors.length} errors occurred` : this.errors[0];
+  }
+}
+_Symbol$hasInstance = Symbol.hasInstance;
+_Symbol$toStringTag2 = Symbol.toStringTag;
+class ValidationError extends Error {
+  static formatError(message, params) {
+    const path = params.label || params.path || 'this';
+    if (path !== params.path) params = Object.assign({}, params, {
+      path
+    });
+    if (typeof message === 'string') return message.replace(strReg, (_, key) => printValue(params[key]));
+    if (typeof message === 'function') return message(params);
+    return message;
+  }
+  static isError(err) {
+    return err && err.name === 'ValidationError';
+  }
+  constructor(errorOrErrors, value, field, type, disableStack) {
+    const errorNoStack = new ValidationErrorNoStack(errorOrErrors, value, field, type);
+    if (disableStack) {
+      return errorNoStack;
+    }
+    super();
+    this.value = void 0;
+    this.path = void 0;
+    this.type = void 0;
+    this.params = void 0;
+    this.errors = [];
+    this.inner = [];
+    this[_Symbol$toStringTag2] = 'Error';
+    this.name = errorNoStack.name;
+    this.message = errorNoStack.message;
+    this.type = errorNoStack.type;
+    this.value = errorNoStack.value;
+    this.path = errorNoStack.path;
+    this.errors = errorNoStack.errors;
+    this.inner = errorNoStack.inner;
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, ValidationError);
+    }
+  }
+  static [_Symbol$hasInstance](inst) {
+    return ValidationErrorNoStack[Symbol.hasInstance](inst) || super[Symbol.hasInstance](inst);
+  }
+}
+
+let mixed = {
+  default: '${path} is invalid',
+  required: '${path} is a required field',
+  defined: '${path} must be defined',
+  notNull: '${path} cannot be null',
+  oneOf: '${path} must be one of the following values: ${values}',
+  notOneOf: '${path} must not be one of the following values: ${values}',
+  notType: ({
+    path,
+    type,
+    value,
+    originalValue
+  }) => {
+    const castMsg = originalValue != null && originalValue !== value ? ` (cast from the value \`${printValue(originalValue, true)}\`).` : '.';
+    return type !== 'mixed' ? `${path} must be a \`${type}\` type, ` + `but the final value was: \`${printValue(value, true)}\`` + castMsg : `${path} must match the configured type. ` + `The validated value was: \`${printValue(value, true)}\`` + castMsg;
+  }
+};
+let string = {
+  length: '${path} must be exactly ${length} characters',
+  min: '${path} must be at least ${min} characters',
+  max: '${path} must be at most ${max} characters',
+  matches: '${path} must match the following: "${regex}"',
+  email: '${path} must be a valid email',
+  url: '${path} must be a valid URL',
+  uuid: '${path} must be a valid UUID',
+  datetime: '${path} must be a valid ISO date-time',
+  datetime_precision: '${path} must be a valid ISO date-time with a sub-second precision of exactly ${precision} digits',
+  datetime_offset: '${path} must be a valid ISO date-time with UTC "Z" timezone',
+  trim: '${path} must be a trimmed string',
+  lowercase: '${path} must be a lowercase string',
+  uppercase: '${path} must be a upper case string'
+};
+let number = {
+  min: '${path} must be greater than or equal to ${min}',
+  max: '${path} must be less than or equal to ${max}',
+  lessThan: '${path} must be less than ${less}',
+  moreThan: '${path} must be greater than ${more}',
+  positive: '${path} must be a positive number',
+  negative: '${path} must be a negative number',
+  integer: '${path} must be an integer'
+};
+let date = {
+  min: '${path} field must be later than ${min}',
+  max: '${path} field must be at earlier than ${max}'
+};
+let boolean = {
+  isValue: '${path} field must be ${value}'
+};
+let object = {
+  noUnknown: '${path} field has unspecified keys: ${unknown}'
+};
+let array = {
+  min: '${path} field must have at least ${min} items',
+  max: '${path} field must have less than or equal to ${max} items',
+  length: '${path} must have ${length} items'
+};
+let tuple = {
+  notType: params => {
+    const {
+      path,
+      value,
+      spec
+    } = params;
+    const typeLen = spec.types.length;
+    if (Array.isArray(value)) {
+      if (value.length < typeLen) return `${path} tuple value has too few items, expected a length of ${typeLen} but got ${value.length} for value: \`${printValue(value, true)}\``;
+      if (value.length > typeLen) return `${path} tuple value has too many items, expected a length of ${typeLen} but got ${value.length} for value: \`${printValue(value, true)}\``;
+    }
+    return ValidationError.formatError(mixed.notType, params);
+  }
+};
+var locale = Object.assign(Object.create(null), {
+  mixed,
+  string,
+  number,
+  date,
+  object,
+  array,
+  boolean,
+  tuple
+});
+
+const isSchema = obj => obj && obj.__isYupSchema__;
+
+class Condition {
+  static fromOptions(refs, config) {
+    if (!config.then && !config.otherwise) throw new TypeError('either `then:` or `otherwise:` is required for `when()` conditions');
+    let {
+      is,
+      then,
+      otherwise
+    } = config;
+    let check = typeof is === 'function' ? is : (...values) => values.every(value => value === is);
+    return new Condition(refs, (values, schema) => {
+      var _branch;
+      let branch = check(...values) ? then : otherwise;
+      return (_branch = branch == null ? void 0 : branch(schema)) != null ? _branch : schema;
+    });
+  }
+  constructor(refs, builder) {
+    this.fn = void 0;
+    this.refs = refs;
+    this.refs = refs;
+    this.fn = builder;
+  }
+  resolve(base, options) {
+    let values = this.refs.map(ref =>
+    // TODO: ? operator here?
+    ref.getValue(options == null ? void 0 : options.value, options == null ? void 0 : options.parent, options == null ? void 0 : options.context));
+    let schema = this.fn(values, base, options);
+    if (schema === undefined ||
+    // @ts-ignore this can be base
+    schema === base) {
+      return base;
+    }
+    if (!isSchema(schema)) throw new TypeError('conditions must return a schema object');
+    return schema.resolve(options);
+  }
+}
+
+const prefixes = {
+  context: '$',
+  value: '.'
+};
+function create$9(key, options) {
+  return new Reference(key, options);
+}
+class Reference {
+  constructor(key, options = {}) {
+    this.key = void 0;
+    this.isContext = void 0;
+    this.isValue = void 0;
+    this.isSibling = void 0;
+    this.path = void 0;
+    this.getter = void 0;
+    this.map = void 0;
+    if (typeof key !== 'string') throw new TypeError('ref must be a string, got: ' + key);
+    this.key = key.trim();
+    if (key === '') throw new TypeError('ref must be a non-empty string');
+    this.isContext = this.key[0] === prefixes.context;
+    this.isValue = this.key[0] === prefixes.value;
+    this.isSibling = !this.isContext && !this.isValue;
+    let prefix = this.isContext ? prefixes.context : this.isValue ? prefixes.value : '';
+    this.path = this.key.slice(prefix.length);
+    this.getter = this.path && (0,property_expr__WEBPACK_IMPORTED_MODULE_0__.getter)(this.path, true);
+    this.map = options.map;
+  }
+  getValue(value, parent, context) {
+    let result = this.isContext ? context : this.isValue ? value : parent;
+    if (this.getter) result = this.getter(result || {});
+    if (this.map) result = this.map(result);
+    return result;
+  }
+
+  /**
+   *
+   * @param {*} value
+   * @param {Object} options
+   * @param {Object=} options.context
+   * @param {Object=} options.parent
+   */
+  cast(value, options) {
+    return this.getValue(value, options == null ? void 0 : options.parent, options == null ? void 0 : options.context);
+  }
+  resolve() {
+    return this;
+  }
+  describe() {
+    return {
+      type: 'ref',
+      key: this.key
+    };
+  }
+  toString() {
+    return `Ref(${this.key})`;
+  }
+  static isRef(value) {
+    return value && value.__isYupRef;
+  }
+}
+
+// @ts-ignore
+Reference.prototype.__isYupRef = true;
+
+const isAbsent = value => value == null;
+
+function createValidation(config) {
+  function validate({
+    value,
+    path = '',
+    options,
+    originalValue,
+    schema
+  }, panic, next) {
+    const {
+      name,
+      test,
+      params,
+      message,
+      skipAbsent
+    } = config;
+    let {
+      parent,
+      context,
+      abortEarly = schema.spec.abortEarly,
+      disableStackTrace = schema.spec.disableStackTrace
+    } = options;
+    function resolve(item) {
+      return Reference.isRef(item) ? item.getValue(value, parent, context) : item;
+    }
+    function createError(overrides = {}) {
+      const nextParams = Object.assign({
+        value,
+        originalValue,
+        label: schema.spec.label,
+        path: overrides.path || path,
+        spec: schema.spec,
+        disableStackTrace: overrides.disableStackTrace || disableStackTrace
+      }, params, overrides.params);
+      for (const key of Object.keys(nextParams)) nextParams[key] = resolve(nextParams[key]);
+      const error = new ValidationError(ValidationError.formatError(overrides.message || message, nextParams), value, nextParams.path, overrides.type || name, nextParams.disableStackTrace);
+      error.params = nextParams;
+      return error;
+    }
+    const invalid = abortEarly ? panic : next;
+    let ctx = {
+      path,
+      parent,
+      type: name,
+      from: options.from,
+      createError,
+      resolve,
+      options,
+      originalValue,
+      schema
+    };
+    const handleResult = validOrError => {
+      if (ValidationError.isError(validOrError)) invalid(validOrError);else if (!validOrError) invalid(createError());else next(null);
+    };
+    const handleError = err => {
+      if (ValidationError.isError(err)) invalid(err);else panic(err);
+    };
+    const shouldSkip = skipAbsent && isAbsent(value);
+    if (shouldSkip) {
+      return handleResult(true);
+    }
+    let result;
+    try {
+      var _result;
+      result = test.call(ctx, value, ctx);
+      if (typeof ((_result = result) == null ? void 0 : _result.then) === 'function') {
+        if (options.sync) {
+          throw new Error(`Validation test of type: "${ctx.type}" returned a Promise during a synchronous validate. ` + `This test will finish after the validate call has returned`);
+        }
+        return Promise.resolve(result).then(handleResult, handleError);
+      }
+    } catch (err) {
+      handleError(err);
+      return;
+    }
+    handleResult(result);
+  }
+  validate.OPTIONS = config;
+  return validate;
+}
+
+function getIn(schema, path, value, context = value) {
+  let parent, lastPart, lastPartDebug;
+
+  // root path: ''
+  if (!path) return {
+    parent,
+    parentPath: path,
+    schema
+  };
+  (0,property_expr__WEBPACK_IMPORTED_MODULE_0__.forEach)(path, (_part, isBracket, isArray) => {
+    let part = isBracket ? _part.slice(1, _part.length - 1) : _part;
+    schema = schema.resolve({
+      context,
+      parent,
+      value
+    });
+    let isTuple = schema.type === 'tuple';
+    let idx = isArray ? parseInt(part, 10) : 0;
+    if (schema.innerType || isTuple) {
+      if (isTuple && !isArray) throw new Error(`Yup.reach cannot implicitly index into a tuple type. the path part "${lastPartDebug}" must contain an index to the tuple element, e.g. "${lastPartDebug}[0]"`);
+      if (value && idx >= value.length) {
+        throw new Error(`Yup.reach cannot resolve an array item at index: ${_part}, in the path: ${path}. ` + `because there is no value at that index. `);
+      }
+      parent = value;
+      value = value && value[idx];
+      schema = isTuple ? schema.spec.types[idx] : schema.innerType;
+    }
+
+    // sometimes the array index part of a path doesn't exist: "nested.arr.child"
+    // in these cases the current part is the next schema and should be processed
+    // in this iteration. For cases where the index signature is included this
+    // check will fail and we'll handle the `child` part on the next iteration like normal
+    if (!isArray) {
+      if (!schema.fields || !schema.fields[part]) throw new Error(`The schema does not contain the path: ${path}. ` + `(failed at: ${lastPartDebug} which is a type: "${schema.type}")`);
+      parent = value;
+      value = value && value[part];
+      schema = schema.fields[part];
+    }
+    lastPart = part;
+    lastPartDebug = isBracket ? '[' + _part + ']' : '.' + _part;
+  });
+  return {
+    schema,
+    parent,
+    parentPath: lastPart
+  };
+}
+function reach(obj, path, value, context) {
+  return getIn(obj, path, value, context).schema;
+}
+
+class ReferenceSet extends Set {
+  describe() {
+    const description = [];
+    for (const item of this.values()) {
+      description.push(Reference.isRef(item) ? item.describe() : item);
+    }
+    return description;
+  }
+  resolveAll(resolve) {
+    let result = [];
+    for (const item of this.values()) {
+      result.push(resolve(item));
+    }
+    return result;
+  }
+  clone() {
+    return new ReferenceSet(this.values());
+  }
+  merge(newItems, removeItems) {
+    const next = this.clone();
+    newItems.forEach(value => next.add(value));
+    removeItems.forEach(value => next.delete(value));
+    return next;
+  }
+}
+
+// tweaked from https://github.com/Kelin2025/nanoclone/blob/0abeb7635bda9b68ef2277093f76dbe3bf3948e1/src/index.js
+function clone(src, seen = new Map()) {
+  if (isSchema(src) || !src || typeof src !== 'object') return src;
+  if (seen.has(src)) return seen.get(src);
+  let copy;
+  if (src instanceof Date) {
+    // Date
+    copy = new Date(src.getTime());
+    seen.set(src, copy);
+  } else if (src instanceof RegExp) {
+    // RegExp
+    copy = new RegExp(src);
+    seen.set(src, copy);
+  } else if (Array.isArray(src)) {
+    // Array
+    copy = new Array(src.length);
+    seen.set(src, copy);
+    for (let i = 0; i < src.length; i++) copy[i] = clone(src[i], seen);
+  } else if (src instanceof Map) {
+    // Map
+    copy = new Map();
+    seen.set(src, copy);
+    for (const [k, v] of src.entries()) copy.set(k, clone(v, seen));
+  } else if (src instanceof Set) {
+    // Set
+    copy = new Set();
+    seen.set(src, copy);
+    for (const v of src) copy.add(clone(v, seen));
+  } else if (src instanceof Object) {
+    // Object
+    copy = {};
+    seen.set(src, copy);
+    for (const [k, v] of Object.entries(src)) copy[k] = clone(v, seen);
+  } else {
+    throw Error(`Unable to clone ${src}`);
+  }
+  return copy;
+}
+
+// If `CustomSchemaMeta` isn't extended with any keys, we'll fall back to a
+// loose Record definition allowing free form usage.
+class Schema {
+  constructor(options) {
+    this.type = void 0;
+    this.deps = [];
+    this.tests = void 0;
+    this.transforms = void 0;
+    this.conditions = [];
+    this._mutate = void 0;
+    this.internalTests = {};
+    this._whitelist = new ReferenceSet();
+    this._blacklist = new ReferenceSet();
+    this.exclusiveTests = Object.create(null);
+    this._typeCheck = void 0;
+    this.spec = void 0;
+    this.tests = [];
+    this.transforms = [];
+    this.withMutation(() => {
+      this.typeError(mixed.notType);
+    });
+    this.type = options.type;
+    this._typeCheck = options.check;
+    this.spec = Object.assign({
+      strip: false,
+      strict: false,
+      abortEarly: true,
+      recursive: true,
+      disableStackTrace: false,
+      nullable: false,
+      optional: true,
+      coerce: true
+    }, options == null ? void 0 : options.spec);
+    this.withMutation(s => {
+      s.nonNullable();
+    });
+  }
+
+  // TODO: remove
+  get _type() {
+    return this.type;
+  }
+  clone(spec) {
+    if (this._mutate) {
+      if (spec) Object.assign(this.spec, spec);
+      return this;
+    }
+
+    // if the nested value is a schema we can skip cloning, since
+    // they are already immutable
+    const next = Object.create(Object.getPrototypeOf(this));
+
+    // @ts-expect-error this is readonly
+    next.type = this.type;
+    next._typeCheck = this._typeCheck;
+    next._whitelist = this._whitelist.clone();
+    next._blacklist = this._blacklist.clone();
+    next.internalTests = Object.assign({}, this.internalTests);
+    next.exclusiveTests = Object.assign({}, this.exclusiveTests);
+
+    // @ts-expect-error this is readonly
+    next.deps = [...this.deps];
+    next.conditions = [...this.conditions];
+    next.tests = [...this.tests];
+    next.transforms = [...this.transforms];
+    next.spec = clone(Object.assign({}, this.spec, spec));
+    return next;
+  }
+  label(label) {
+    let next = this.clone();
+    next.spec.label = label;
+    return next;
+  }
+  meta(...args) {
+    if (args.length === 0) return this.spec.meta;
+    let next = this.clone();
+    next.spec.meta = Object.assign(next.spec.meta || {}, args[0]);
+    return next;
+  }
+  withMutation(fn) {
+    let before = this._mutate;
+    this._mutate = true;
+    let result = fn(this);
+    this._mutate = before;
+    return result;
+  }
+  concat(schema) {
+    if (!schema || schema === this) return this;
+    if (schema.type !== this.type && this.type !== 'mixed') throw new TypeError(`You cannot \`concat()\` schema's of different types: ${this.type} and ${schema.type}`);
+    let base = this;
+    let combined = schema.clone();
+    const mergedSpec = Object.assign({}, base.spec, combined.spec);
+    combined.spec = mergedSpec;
+    combined.internalTests = Object.assign({}, base.internalTests, combined.internalTests);
+
+    // manually merge the blacklist/whitelist (the other `schema` takes
+    // precedence in case of conflicts)
+    combined._whitelist = base._whitelist.merge(schema._whitelist, schema._blacklist);
+    combined._blacklist = base._blacklist.merge(schema._blacklist, schema._whitelist);
+
+    // start with the current tests
+    combined.tests = base.tests;
+    combined.exclusiveTests = base.exclusiveTests;
+
+    // manually add the new tests to ensure
+    // the deduping logic is consistent
+    combined.withMutation(next => {
+      schema.tests.forEach(fn => {
+        next.test(fn.OPTIONS);
+      });
+    });
+    combined.transforms = [...base.transforms, ...combined.transforms];
+    return combined;
+  }
+  isType(v) {
+    if (v == null) {
+      if (this.spec.nullable && v === null) return true;
+      if (this.spec.optional && v === undefined) return true;
+      return false;
+    }
+    return this._typeCheck(v);
+  }
+  resolve(options) {
+    let schema = this;
+    if (schema.conditions.length) {
+      let conditions = schema.conditions;
+      schema = schema.clone();
+      schema.conditions = [];
+      schema = conditions.reduce((prevSchema, condition) => condition.resolve(prevSchema, options), schema);
+      schema = schema.resolve(options);
+    }
+    return schema;
+  }
+  resolveOptions(options) {
+    var _options$strict, _options$abortEarly, _options$recursive, _options$disableStack;
+    return Object.assign({}, options, {
+      from: options.from || [],
+      strict: (_options$strict = options.strict) != null ? _options$strict : this.spec.strict,
+      abortEarly: (_options$abortEarly = options.abortEarly) != null ? _options$abortEarly : this.spec.abortEarly,
+      recursive: (_options$recursive = options.recursive) != null ? _options$recursive : this.spec.recursive,
+      disableStackTrace: (_options$disableStack = options.disableStackTrace) != null ? _options$disableStack : this.spec.disableStackTrace
+    });
+  }
+
+  /**
+   * Run the configured transform pipeline over an input value.
+   */
+
+  cast(value, options = {}) {
+    let resolvedSchema = this.resolve(Object.assign({
+      value
+    }, options));
+    let allowOptionality = options.assert === 'ignore-optionality';
+    let result = resolvedSchema._cast(value, options);
+    if (options.assert !== false && !resolvedSchema.isType(result)) {
+      if (allowOptionality && isAbsent(result)) {
+        return result;
+      }
+      let formattedValue = printValue(value);
+      let formattedResult = printValue(result);
+      throw new TypeError(`The value of ${options.path || 'field'} could not be cast to a value ` + `that satisfies the schema type: "${resolvedSchema.type}". \n\n` + `attempted value: ${formattedValue} \n` + (formattedResult !== formattedValue ? `result of cast: ${formattedResult}` : ''));
+    }
+    return result;
+  }
+  _cast(rawValue, options) {
+    let value = rawValue === undefined ? rawValue : this.transforms.reduce((prevValue, fn) => fn.call(this, prevValue, rawValue, this), rawValue);
+    if (value === undefined) {
+      value = this.getDefault(options);
+    }
+    return value;
+  }
+  _validate(_value, options = {}, panic, next) {
+    let {
+      path,
+      originalValue = _value,
+      strict = this.spec.strict
+    } = options;
+    let value = _value;
+    if (!strict) {
+      value = this._cast(value, Object.assign({
+        assert: false
+      }, options));
+    }
+    let initialTests = [];
+    for (let test of Object.values(this.internalTests)) {
+      if (test) initialTests.push(test);
+    }
+    this.runTests({
+      path,
+      value,
+      originalValue,
+      options,
+      tests: initialTests
+    }, panic, initialErrors => {
+      // even if we aren't ending early we can't proceed further if the types aren't correct
+      if (initialErrors.length) {
+        return next(initialErrors, value);
+      }
+      this.runTests({
+        path,
+        value,
+        originalValue,
+        options,
+        tests: this.tests
+      }, panic, next);
+    });
+  }
+
+  /**
+   * Executes a set of validations, either schema, produced Tests or a nested
+   * schema validate result.
+   */
+  runTests(runOptions, panic, next) {
+    let fired = false;
+    let {
+      tests,
+      value,
+      originalValue,
+      path,
+      options
+    } = runOptions;
+    let panicOnce = arg => {
+      if (fired) return;
+      fired = true;
+      panic(arg, value);
+    };
+    let nextOnce = arg => {
+      if (fired) return;
+      fired = true;
+      next(arg, value);
+    };
+    let count = tests.length;
+    let nestedErrors = [];
+    if (!count) return nextOnce([]);
+    let args = {
+      value,
+      originalValue,
+      path,
+      options,
+      schema: this
+    };
+    for (let i = 0; i < tests.length; i++) {
+      const test = tests[i];
+      test(args, panicOnce, function finishTestRun(err) {
+        if (err) {
+          Array.isArray(err) ? nestedErrors.push(...err) : nestedErrors.push(err);
+        }
+        if (--count <= 0) {
+          nextOnce(nestedErrors);
+        }
+      });
+    }
+  }
+  asNestedTest({
+    key,
+    index,
+    parent,
+    parentPath,
+    originalParent,
+    options
+  }) {
+    const k = key != null ? key : index;
+    if (k == null) {
+      throw TypeError('Must include `key` or `index` for nested validations');
+    }
+    const isIndex = typeof k === 'number';
+    let value = parent[k];
+    const testOptions = Object.assign({}, options, {
+      // Nested validations fields are always strict:
+      //    1. parent isn't strict so the casting will also have cast inner values
+      //    2. parent is strict in which case the nested values weren't cast either
+      strict: true,
+      parent,
+      value,
+      originalValue: originalParent[k],
+      // FIXME: tests depend on `index` being passed around deeply,
+      //   we should not let the options.key/index bleed through
+      key: undefined,
+      // index: undefined,
+      [isIndex ? 'index' : 'key']: k,
+      path: isIndex || k.includes('.') ? `${parentPath || ''}[${isIndex ? k : `"${k}"`}]` : (parentPath ? `${parentPath}.` : '') + key
+    });
+    return (_, panic, next) => this.resolve(testOptions)._validate(value, testOptions, panic, next);
+  }
+  validate(value, options) {
+    var _options$disableStack2;
+    let schema = this.resolve(Object.assign({}, options, {
+      value
+    }));
+    let disableStackTrace = (_options$disableStack2 = options == null ? void 0 : options.disableStackTrace) != null ? _options$disableStack2 : schema.spec.disableStackTrace;
+    return new Promise((resolve, reject) => schema._validate(value, options, (error, parsed) => {
+      if (ValidationError.isError(error)) error.value = parsed;
+      reject(error);
+    }, (errors, validated) => {
+      if (errors.length) reject(new ValidationError(errors, validated, undefined, undefined, disableStackTrace));else resolve(validated);
+    }));
+  }
+  validateSync(value, options) {
+    var _options$disableStack3;
+    let schema = this.resolve(Object.assign({}, options, {
+      value
+    }));
+    let result;
+    let disableStackTrace = (_options$disableStack3 = options == null ? void 0 : options.disableStackTrace) != null ? _options$disableStack3 : schema.spec.disableStackTrace;
+    schema._validate(value, Object.assign({}, options, {
+      sync: true
+    }), (error, parsed) => {
+      if (ValidationError.isError(error)) error.value = parsed;
+      throw error;
+    }, (errors, validated) => {
+      if (errors.length) throw new ValidationError(errors, value, undefined, undefined, disableStackTrace);
+      result = validated;
+    });
+    return result;
+  }
+  isValid(value, options) {
+    return this.validate(value, options).then(() => true, err => {
+      if (ValidationError.isError(err)) return false;
+      throw err;
+    });
+  }
+  isValidSync(value, options) {
+    try {
+      this.validateSync(value, options);
+      return true;
+    } catch (err) {
+      if (ValidationError.isError(err)) return false;
+      throw err;
+    }
+  }
+  _getDefault(options) {
+    let defaultValue = this.spec.default;
+    if (defaultValue == null) {
+      return defaultValue;
+    }
+    return typeof defaultValue === 'function' ? defaultValue.call(this, options) : clone(defaultValue);
+  }
+  getDefault(options
+  // If schema is defaulted we know it's at least not undefined
+  ) {
+    let schema = this.resolve(options || {});
+    return schema._getDefault(options);
+  }
+  default(def) {
+    if (arguments.length === 0) {
+      return this._getDefault();
+    }
+    let next = this.clone({
+      default: def
+    });
+    return next;
+  }
+  strict(isStrict = true) {
+    return this.clone({
+      strict: isStrict
+    });
+  }
+  nullability(nullable, message) {
+    const next = this.clone({
+      nullable
+    });
+    next.internalTests.nullable = createValidation({
+      message,
+      name: 'nullable',
+      test(value) {
+        return value === null ? this.schema.spec.nullable : true;
+      }
+    });
+    return next;
+  }
+  optionality(optional, message) {
+    const next = this.clone({
+      optional
+    });
+    next.internalTests.optionality = createValidation({
+      message,
+      name: 'optionality',
+      test(value) {
+        return value === undefined ? this.schema.spec.optional : true;
+      }
+    });
+    return next;
+  }
+  optional() {
+    return this.optionality(true);
+  }
+  defined(message = mixed.defined) {
+    return this.optionality(false, message);
+  }
+  nullable() {
+    return this.nullability(true);
+  }
+  nonNullable(message = mixed.notNull) {
+    return this.nullability(false, message);
+  }
+  required(message = mixed.required) {
+    return this.clone().withMutation(next => next.nonNullable(message).defined(message));
+  }
+  notRequired() {
+    return this.clone().withMutation(next => next.nullable().optional());
+  }
+  transform(fn) {
+    let next = this.clone();
+    next.transforms.push(fn);
+    return next;
+  }
+
+  /**
+   * Adds a test function to the schema's queue of tests.
+   * tests can be exclusive or non-exclusive.
+   *
+   * - exclusive tests, will replace any existing tests of the same name.
+   * - non-exclusive: can be stacked
+   *
+   * If a non-exclusive test is added to a schema with an exclusive test of the same name
+   * the exclusive test is removed and further tests of the same name will be stacked.
+   *
+   * If an exclusive test is added to a schema with non-exclusive tests of the same name
+   * the previous tests are removed and further tests of the same name will replace each other.
+   */
+
+  test(...args) {
+    let opts;
+    if (args.length === 1) {
+      if (typeof args[0] === 'function') {
+        opts = {
+          test: args[0]
+        };
+      } else {
+        opts = args[0];
+      }
+    } else if (args.length === 2) {
+      opts = {
+        name: args[0],
+        test: args[1]
+      };
+    } else {
+      opts = {
+        name: args[0],
+        message: args[1],
+        test: args[2]
+      };
+    }
+    if (opts.message === undefined) opts.message = mixed.default;
+    if (typeof opts.test !== 'function') throw new TypeError('`test` is a required parameters');
+    let next = this.clone();
+    let validate = createValidation(opts);
+    let isExclusive = opts.exclusive || opts.name && next.exclusiveTests[opts.name] === true;
+    if (opts.exclusive) {
+      if (!opts.name) throw new TypeError('Exclusive tests must provide a unique `name` identifying the test');
+    }
+    if (opts.name) next.exclusiveTests[opts.name] = !!opts.exclusive;
+    next.tests = next.tests.filter(fn => {
+      if (fn.OPTIONS.name === opts.name) {
+        if (isExclusive) return false;
+        if (fn.OPTIONS.test === validate.OPTIONS.test) return false;
+      }
+      return true;
+    });
+    next.tests.push(validate);
+    return next;
+  }
+  when(keys, options) {
+    if (!Array.isArray(keys) && typeof keys !== 'string') {
+      options = keys;
+      keys = '.';
+    }
+    let next = this.clone();
+    let deps = toArray(keys).map(key => new Reference(key));
+    deps.forEach(dep => {
+      // @ts-ignore readonly array
+      if (dep.isSibling) next.deps.push(dep.key);
+    });
+    next.conditions.push(typeof options === 'function' ? new Condition(deps, options) : Condition.fromOptions(deps, options));
+    return next;
+  }
+  typeError(message) {
+    let next = this.clone();
+    next.internalTests.typeError = createValidation({
+      message,
+      name: 'typeError',
+      skipAbsent: true,
+      test(value) {
+        if (!this.schema._typeCheck(value)) return this.createError({
+          params: {
+            type: this.schema.type
+          }
+        });
+        return true;
+      }
+    });
+    return next;
+  }
+  oneOf(enums, message = mixed.oneOf) {
+    let next = this.clone();
+    enums.forEach(val => {
+      next._whitelist.add(val);
+      next._blacklist.delete(val);
+    });
+    next.internalTests.whiteList = createValidation({
+      message,
+      name: 'oneOf',
+      skipAbsent: true,
+      test(value) {
+        let valids = this.schema._whitelist;
+        let resolved = valids.resolveAll(this.resolve);
+        return resolved.includes(value) ? true : this.createError({
+          params: {
+            values: Array.from(valids).join(', '),
+            resolved
+          }
+        });
+      }
+    });
+    return next;
+  }
+  notOneOf(enums, message = mixed.notOneOf) {
+    let next = this.clone();
+    enums.forEach(val => {
+      next._blacklist.add(val);
+      next._whitelist.delete(val);
+    });
+    next.internalTests.blacklist = createValidation({
+      message,
+      name: 'notOneOf',
+      test(value) {
+        let invalids = this.schema._blacklist;
+        let resolved = invalids.resolveAll(this.resolve);
+        if (resolved.includes(value)) return this.createError({
+          params: {
+            values: Array.from(invalids).join(', '),
+            resolved
+          }
+        });
+        return true;
+      }
+    });
+    return next;
+  }
+  strip(strip = true) {
+    let next = this.clone();
+    next.spec.strip = strip;
+    return next;
+  }
+
+  /**
+   * Return a serialized description of the schema including validations, flags, types etc.
+   *
+   * @param options Provide any needed context for resolving runtime schema alterations (lazy, when conditions, etc).
+   */
+  describe(options) {
+    const next = (options ? this.resolve(options) : this).clone();
+    const {
+      label,
+      meta,
+      optional,
+      nullable
+    } = next.spec;
+    const description = {
+      meta,
+      label,
+      optional,
+      nullable,
+      default: next.getDefault(options),
+      type: next.type,
+      oneOf: next._whitelist.describe(),
+      notOneOf: next._blacklist.describe(),
+      tests: next.tests.map(fn => ({
+        name: fn.OPTIONS.name,
+        params: fn.OPTIONS.params
+      })).filter((n, idx, list) => list.findIndex(c => c.name === n.name) === idx)
+    };
+    return description;
+  }
+}
+// @ts-expect-error
+Schema.prototype.__isYupSchema__ = true;
+for (const method of ['validate', 'validateSync']) Schema.prototype[`${method}At`] = function (path, value, options = {}) {
+  const {
+    parent,
+    parentPath,
+    schema
+  } = getIn(this, path, value, options.context);
+  return schema[method](parent && parent[parentPath], Object.assign({}, options, {
+    parent,
+    path
+  }));
+};
+for (const alias of ['equals', 'is']) Schema.prototype[alias] = Schema.prototype.oneOf;
+for (const alias of ['not', 'nope']) Schema.prototype[alias] = Schema.prototype.notOneOf;
+
+const returnsTrue = () => true;
+function create$8(spec) {
+  return new MixedSchema(spec);
+}
+class MixedSchema extends Schema {
+  constructor(spec) {
+    super(typeof spec === 'function' ? {
+      type: 'mixed',
+      check: spec
+    } : Object.assign({
+      type: 'mixed',
+      check: returnsTrue
+    }, spec));
+  }
+}
+create$8.prototype = MixedSchema.prototype;
+
+function create$7() {
+  return new BooleanSchema();
+}
+class BooleanSchema extends Schema {
+  constructor() {
+    super({
+      type: 'boolean',
+      check(v) {
+        if (v instanceof Boolean) v = v.valueOf();
+        return typeof v === 'boolean';
+      }
+    });
+    this.withMutation(() => {
+      this.transform((value, _raw, ctx) => {
+        if (ctx.spec.coerce && !ctx.isType(value)) {
+          if (/^(true|1)$/i.test(String(value))) return true;
+          if (/^(false|0)$/i.test(String(value))) return false;
+        }
+        return value;
+      });
+    });
+  }
+  isTrue(message = boolean.isValue) {
+    return this.test({
+      message,
+      name: 'is-value',
+      exclusive: true,
+      params: {
+        value: 'true'
+      },
+      test(value) {
+        return isAbsent(value) || value === true;
+      }
+    });
+  }
+  isFalse(message = boolean.isValue) {
+    return this.test({
+      message,
+      name: 'is-value',
+      exclusive: true,
+      params: {
+        value: 'false'
+      },
+      test(value) {
+        return isAbsent(value) || value === false;
+      }
+    });
+  }
+  default(def) {
+    return super.default(def);
+  }
+  defined(msg) {
+    return super.defined(msg);
+  }
+  optional() {
+    return super.optional();
+  }
+  required(msg) {
+    return super.required(msg);
+  }
+  notRequired() {
+    return super.notRequired();
+  }
+  nullable() {
+    return super.nullable();
+  }
+  nonNullable(msg) {
+    return super.nonNullable(msg);
+  }
+  strip(v) {
+    return super.strip(v);
+  }
+}
+create$7.prototype = BooleanSchema.prototype;
+
+/**
+ * This file is a modified version of the file from the following repository:
+ * Date.parse with progressive enhancement for ISO 8601 <https://github.com/csnover/js-iso8601>
+ * NON-CONFORMANT EDITION.
+ * © 2011 Colin Snover <http://zetafleet.com>
+ * Released under MIT license.
+ */
+
+// prettier-ignore
+//                1 YYYY                2 MM        3 DD              4 HH     5 mm        6 ss           7 msec         8 Z 9 ±   10 tzHH    11 tzmm
+const isoReg = /^(\d{4}|[+-]\d{6})(?:-?(\d{2})(?:-?(\d{2}))?)?(?:[ T]?(\d{2}):?(\d{2})(?::?(\d{2})(?:[,.](\d{1,}))?)?(?:(Z)|([+-])(\d{2})(?::?(\d{2}))?)?)?$/;
+function parseIsoDate(date) {
+  const struct = parseDateStruct(date);
+  if (!struct) return Date.parse ? Date.parse(date) : Number.NaN;
+
+  // timestamps without timezone identifiers should be considered local time
+  if (struct.z === undefined && struct.plusMinus === undefined) {
+    return new Date(struct.year, struct.month, struct.day, struct.hour, struct.minute, struct.second, struct.millisecond).valueOf();
+  }
+  let totalMinutesOffset = 0;
+  if (struct.z !== 'Z' && struct.plusMinus !== undefined) {
+    totalMinutesOffset = struct.hourOffset * 60 + struct.minuteOffset;
+    if (struct.plusMinus === '+') totalMinutesOffset = 0 - totalMinutesOffset;
+  }
+  return Date.UTC(struct.year, struct.month, struct.day, struct.hour, struct.minute + totalMinutesOffset, struct.second, struct.millisecond);
+}
+function parseDateStruct(date) {
+  var _regexResult$7$length, _regexResult$;
+  const regexResult = isoReg.exec(date);
+  if (!regexResult) return null;
+
+  // use of toNumber() avoids NaN timestamps caused by “undefined”
+  // values being passed to Date constructor
+  return {
+    year: toNumber(regexResult[1]),
+    month: toNumber(regexResult[2], 1) - 1,
+    day: toNumber(regexResult[3], 1),
+    hour: toNumber(regexResult[4]),
+    minute: toNumber(regexResult[5]),
+    second: toNumber(regexResult[6]),
+    millisecond: regexResult[7] ?
+    // allow arbitrary sub-second precision beyond milliseconds
+    toNumber(regexResult[7].substring(0, 3)) : 0,
+    precision: (_regexResult$7$length = (_regexResult$ = regexResult[7]) == null ? void 0 : _regexResult$.length) != null ? _regexResult$7$length : undefined,
+    z: regexResult[8] || undefined,
+    plusMinus: regexResult[9] || undefined,
+    hourOffset: toNumber(regexResult[10]),
+    minuteOffset: toNumber(regexResult[11])
+  };
+}
+function toNumber(str, defaultValue = 0) {
+  return Number(str) || defaultValue;
+}
+
+// Taken from HTML spec: https://html.spec.whatwg.org/multipage/input.html#valid-e-mail-address
+let rEmail =
+// eslint-disable-next-line
+/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+let rUrl =
+// eslint-disable-next-line
+/^((https?|ftp):)?\/\/(((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:)*@)?(((\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])\.(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5]))|((([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|\d|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.)+(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])*([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])))\.?)(:\d*)?)(\/((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)+(\/(([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)*)*)?)?(\?((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|[\uE000-\uF8FF]|\/|\?)*)?(\#((([a-z]|\d|-|\.|_|~|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])|(%[\da-f]{2})|[!\$&'\(\)\*\+,;=]|:|@)|\/|\?)*)?$/i;
+
+// eslint-disable-next-line
+let rUUID = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000)$/i;
+let yearMonthDay = '^\\d{4}-\\d{2}-\\d{2}';
+let hourMinuteSecond = '\\d{2}:\\d{2}:\\d{2}';
+let zOrOffset = '(([+-]\\d{2}(:?\\d{2})?)|Z)';
+let rIsoDateTime = new RegExp(`${yearMonthDay}T${hourMinuteSecond}(\\.\\d+)?${zOrOffset}$`);
+let isTrimmed = value => isAbsent(value) || value === value.trim();
+let objStringTag = {}.toString();
+function create$6() {
+  return new StringSchema();
+}
+class StringSchema extends Schema {
+  constructor() {
+    super({
+      type: 'string',
+      check(value) {
+        if (value instanceof String) value = value.valueOf();
+        return typeof value === 'string';
+      }
+    });
+    this.withMutation(() => {
+      this.transform((value, _raw, ctx) => {
+        if (!ctx.spec.coerce || ctx.isType(value)) return value;
+
+        // don't ever convert arrays
+        if (Array.isArray(value)) return value;
+        const strValue = value != null && value.toString ? value.toString() : value;
+
+        // no one wants plain objects converted to [Object object]
+        if (strValue === objStringTag) return value;
+        return strValue;
+      });
+    });
+  }
+  required(message) {
+    return super.required(message).withMutation(schema => schema.test({
+      message: message || mixed.required,
+      name: 'required',
+      skipAbsent: true,
+      test: value => !!value.length
+    }));
+  }
+  notRequired() {
+    return super.notRequired().withMutation(schema => {
+      schema.tests = schema.tests.filter(t => t.OPTIONS.name !== 'required');
+      return schema;
+    });
+  }
+  length(length, message = string.length) {
+    return this.test({
+      message,
+      name: 'length',
+      exclusive: true,
+      params: {
+        length
+      },
+      skipAbsent: true,
+      test(value) {
+        return value.length === this.resolve(length);
+      }
+    });
+  }
+  min(min, message = string.min) {
+    return this.test({
+      message,
+      name: 'min',
+      exclusive: true,
+      params: {
+        min
+      },
+      skipAbsent: true,
+      test(value) {
+        return value.length >= this.resolve(min);
+      }
+    });
+  }
+  max(max, message = string.max) {
+    return this.test({
+      name: 'max',
+      exclusive: true,
+      message,
+      params: {
+        max
+      },
+      skipAbsent: true,
+      test(value) {
+        return value.length <= this.resolve(max);
+      }
+    });
+  }
+  matches(regex, options) {
+    let excludeEmptyString = false;
+    let message;
+    let name;
+    if (options) {
+      if (typeof options === 'object') {
+        ({
+          excludeEmptyString = false,
+          message,
+          name
+        } = options);
+      } else {
+        message = options;
+      }
+    }
+    return this.test({
+      name: name || 'matches',
+      message: message || string.matches,
+      params: {
+        regex
+      },
+      skipAbsent: true,
+      test: value => value === '' && excludeEmptyString || value.search(regex) !== -1
+    });
+  }
+  email(message = string.email) {
+    return this.matches(rEmail, {
+      name: 'email',
+      message,
+      excludeEmptyString: true
+    });
+  }
+  url(message = string.url) {
+    return this.matches(rUrl, {
+      name: 'url',
+      message,
+      excludeEmptyString: true
+    });
+  }
+  uuid(message = string.uuid) {
+    return this.matches(rUUID, {
+      name: 'uuid',
+      message,
+      excludeEmptyString: false
+    });
+  }
+  datetime(options) {
+    let message = '';
+    let allowOffset;
+    let precision;
+    if (options) {
+      if (typeof options === 'object') {
+        ({
+          message = '',
+          allowOffset = false,
+          precision = undefined
+        } = options);
+      } else {
+        message = options;
+      }
+    }
+    return this.matches(rIsoDateTime, {
+      name: 'datetime',
+      message: message || string.datetime,
+      excludeEmptyString: true
+    }).test({
+      name: 'datetime_offset',
+      message: message || string.datetime_offset,
+      params: {
+        allowOffset
+      },
+      skipAbsent: true,
+      test: value => {
+        if (!value || allowOffset) return true;
+        const struct = parseDateStruct(value);
+        if (!struct) return false;
+        return !!struct.z;
+      }
+    }).test({
+      name: 'datetime_precision',
+      message: message || string.datetime_precision,
+      params: {
+        precision
+      },
+      skipAbsent: true,
+      test: value => {
+        if (!value || precision == undefined) return true;
+        const struct = parseDateStruct(value);
+        if (!struct) return false;
+        return struct.precision === precision;
+      }
+    });
+  }
+
+  //-- transforms --
+  ensure() {
+    return this.default('').transform(val => val === null ? '' : val);
+  }
+  trim(message = string.trim) {
+    return this.transform(val => val != null ? val.trim() : val).test({
+      message,
+      name: 'trim',
+      test: isTrimmed
+    });
+  }
+  lowercase(message = string.lowercase) {
+    return this.transform(value => !isAbsent(value) ? value.toLowerCase() : value).test({
+      message,
+      name: 'string_case',
+      exclusive: true,
+      skipAbsent: true,
+      test: value => isAbsent(value) || value === value.toLowerCase()
+    });
+  }
+  uppercase(message = string.uppercase) {
+    return this.transform(value => !isAbsent(value) ? value.toUpperCase() : value).test({
+      message,
+      name: 'string_case',
+      exclusive: true,
+      skipAbsent: true,
+      test: value => isAbsent(value) || value === value.toUpperCase()
+    });
+  }
+}
+create$6.prototype = StringSchema.prototype;
+
+//
+// String Interfaces
+//
+
+let isNaN$1 = value => value != +value;
+function create$5() {
+  return new NumberSchema();
+}
+class NumberSchema extends Schema {
+  constructor() {
+    super({
+      type: 'number',
+      check(value) {
+        if (value instanceof Number) value = value.valueOf();
+        return typeof value === 'number' && !isNaN$1(value);
+      }
+    });
+    this.withMutation(() => {
+      this.transform((value, _raw, ctx) => {
+        if (!ctx.spec.coerce) return value;
+        let parsed = value;
+        if (typeof parsed === 'string') {
+          parsed = parsed.replace(/\s/g, '');
+          if (parsed === '') return NaN;
+          // don't use parseFloat to avoid positives on alpha-numeric strings
+          parsed = +parsed;
+        }
+
+        // null -> NaN isn't useful; treat all nulls as null and let it fail on
+        // nullability check vs TypeErrors
+        if (ctx.isType(parsed) || parsed === null) return parsed;
+        return parseFloat(parsed);
+      });
+    });
+  }
+  min(min, message = number.min) {
+    return this.test({
+      message,
+      name: 'min',
+      exclusive: true,
+      params: {
+        min
+      },
+      skipAbsent: true,
+      test(value) {
+        return value >= this.resolve(min);
+      }
+    });
+  }
+  max(max, message = number.max) {
+    return this.test({
+      message,
+      name: 'max',
+      exclusive: true,
+      params: {
+        max
+      },
+      skipAbsent: true,
+      test(value) {
+        return value <= this.resolve(max);
+      }
+    });
+  }
+  lessThan(less, message = number.lessThan) {
+    return this.test({
+      message,
+      name: 'max',
+      exclusive: true,
+      params: {
+        less
+      },
+      skipAbsent: true,
+      test(value) {
+        return value < this.resolve(less);
+      }
+    });
+  }
+  moreThan(more, message = number.moreThan) {
+    return this.test({
+      message,
+      name: 'min',
+      exclusive: true,
+      params: {
+        more
+      },
+      skipAbsent: true,
+      test(value) {
+        return value > this.resolve(more);
+      }
+    });
+  }
+  positive(msg = number.positive) {
+    return this.moreThan(0, msg);
+  }
+  negative(msg = number.negative) {
+    return this.lessThan(0, msg);
+  }
+  integer(message = number.integer) {
+    return this.test({
+      name: 'integer',
+      message,
+      skipAbsent: true,
+      test: val => Number.isInteger(val)
+    });
+  }
+  truncate() {
+    return this.transform(value => !isAbsent(value) ? value | 0 : value);
+  }
+  round(method) {
+    var _method;
+    let avail = ['ceil', 'floor', 'round', 'trunc'];
+    method = ((_method = method) == null ? void 0 : _method.toLowerCase()) || 'round';
+
+    // this exists for symemtry with the new Math.trunc
+    if (method === 'trunc') return this.truncate();
+    if (avail.indexOf(method.toLowerCase()) === -1) throw new TypeError('Only valid options for round() are: ' + avail.join(', '));
+    return this.transform(value => !isAbsent(value) ? Math[method](value) : value);
+  }
+}
+create$5.prototype = NumberSchema.prototype;
+
+//
+// Number Interfaces
+//
+
+let invalidDate = new Date('');
+let isDate = obj => Object.prototype.toString.call(obj) === '[object Date]';
+function create$4() {
+  return new DateSchema();
+}
+class DateSchema extends Schema {
+  constructor() {
+    super({
+      type: 'date',
+      check(v) {
+        return isDate(v) && !isNaN(v.getTime());
+      }
+    });
+    this.withMutation(() => {
+      this.transform((value, _raw, ctx) => {
+        // null -> InvalidDate isn't useful; treat all nulls as null and let it fail on
+        // nullability check vs TypeErrors
+        if (!ctx.spec.coerce || ctx.isType(value) || value === null) return value;
+        value = parseIsoDate(value);
+
+        // 0 is a valid timestamp equivalent to 1970-01-01T00:00:00Z(unix epoch) or before.
+        return !isNaN(value) ? new Date(value) : DateSchema.INVALID_DATE;
+      });
+    });
+  }
+  prepareParam(ref, name) {
+    let param;
+    if (!Reference.isRef(ref)) {
+      let cast = this.cast(ref);
+      if (!this._typeCheck(cast)) throw new TypeError(`\`${name}\` must be a Date or a value that can be \`cast()\` to a Date`);
+      param = cast;
+    } else {
+      param = ref;
+    }
+    return param;
+  }
+  min(min, message = date.min) {
+    let limit = this.prepareParam(min, 'min');
+    return this.test({
+      message,
+      name: 'min',
+      exclusive: true,
+      params: {
+        min
+      },
+      skipAbsent: true,
+      test(value) {
+        return value >= this.resolve(limit);
+      }
+    });
+  }
+  max(max, message = date.max) {
+    let limit = this.prepareParam(max, 'max');
+    return this.test({
+      message,
+      name: 'max',
+      exclusive: true,
+      params: {
+        max
+      },
+      skipAbsent: true,
+      test(value) {
+        return value <= this.resolve(limit);
+      }
+    });
+  }
+}
+DateSchema.INVALID_DATE = invalidDate;
+create$4.prototype = DateSchema.prototype;
+create$4.INVALID_DATE = invalidDate;
+
+// @ts-expect-error
+function sortFields(fields, excludedEdges = []) {
+  let edges = [];
+  let nodes = new Set();
+  let excludes = new Set(excludedEdges.map(([a, b]) => `${a}-${b}`));
+  function addNode(depPath, key) {
+    let node = (0,property_expr__WEBPACK_IMPORTED_MODULE_0__.split)(depPath)[0];
+    nodes.add(node);
+    if (!excludes.has(`${key}-${node}`)) edges.push([key, node]);
+  }
+  for (const key of Object.keys(fields)) {
+    let value = fields[key];
+    nodes.add(key);
+    if (Reference.isRef(value) && value.isSibling) addNode(value.path, key);else if (isSchema(value) && 'deps' in value) value.deps.forEach(path => addNode(path, key));
+  }
+  return toposort__WEBPACK_IMPORTED_MODULE_2___default().array(Array.from(nodes), edges).reverse();
+}
+
+function findIndex(arr, err) {
+  let idx = Infinity;
+  arr.some((key, ii) => {
+    var _err$path;
+    if ((_err$path = err.path) != null && _err$path.includes(key)) {
+      idx = ii;
+      return true;
+    }
+  });
+  return idx;
+}
+function sortByKeyOrder(keys) {
+  return (a, b) => {
+    return findIndex(keys, a) - findIndex(keys, b);
+  };
+}
+
+const parseJson = (value, _, ctx) => {
+  if (typeof value !== 'string') {
+    return value;
+  }
+  let parsed = value;
+  try {
+    parsed = JSON.parse(value);
+  } catch (err) {
+    /* */
+  }
+  return ctx.isType(parsed) ? parsed : value;
+};
+
+// @ts-ignore
+function deepPartial(schema) {
+  if ('fields' in schema) {
+    const partial = {};
+    for (const [key, fieldSchema] of Object.entries(schema.fields)) {
+      partial[key] = deepPartial(fieldSchema);
+    }
+    return schema.setFields(partial);
+  }
+  if (schema.type === 'array') {
+    const nextArray = schema.optional();
+    if (nextArray.innerType) nextArray.innerType = deepPartial(nextArray.innerType);
+    return nextArray;
+  }
+  if (schema.type === 'tuple') {
+    return schema.optional().clone({
+      types: schema.spec.types.map(deepPartial)
+    });
+  }
+  if ('optional' in schema) {
+    return schema.optional();
+  }
+  return schema;
+}
+const deepHas = (obj, p) => {
+  const path = [...(0,property_expr__WEBPACK_IMPORTED_MODULE_0__.normalizePath)(p)];
+  if (path.length === 1) return path[0] in obj;
+  let last = path.pop();
+  let parent = (0,property_expr__WEBPACK_IMPORTED_MODULE_0__.getter)((0,property_expr__WEBPACK_IMPORTED_MODULE_0__.join)(path), true)(obj);
+  return !!(parent && last in parent);
+};
+let isObject = obj => Object.prototype.toString.call(obj) === '[object Object]';
+function unknown(ctx, value) {
+  let known = Object.keys(ctx.fields);
+  return Object.keys(value).filter(key => known.indexOf(key) === -1);
+}
+const defaultSort = sortByKeyOrder([]);
+function create$3(spec) {
+  return new ObjectSchema(spec);
+}
+class ObjectSchema extends Schema {
+  constructor(spec) {
+    super({
+      type: 'object',
+      check(value) {
+        return isObject(value) || typeof value === 'function';
+      }
+    });
+    this.fields = Object.create(null);
+    this._sortErrors = defaultSort;
+    this._nodes = [];
+    this._excludedEdges = [];
+    this.withMutation(() => {
+      if (spec) {
+        this.shape(spec);
+      }
+    });
+  }
+  _cast(_value, options = {}) {
+    var _options$stripUnknown;
+    let value = super._cast(_value, options);
+
+    //should ignore nulls here
+    if (value === undefined) return this.getDefault(options);
+    if (!this._typeCheck(value)) return value;
+    let fields = this.fields;
+    let strip = (_options$stripUnknown = options.stripUnknown) != null ? _options$stripUnknown : this.spec.noUnknown;
+    let props = [].concat(this._nodes, Object.keys(value).filter(v => !this._nodes.includes(v)));
+    let intermediateValue = {}; // is filled during the transform below
+    let innerOptions = Object.assign({}, options, {
+      parent: intermediateValue,
+      __validating: options.__validating || false
+    });
+    let isChanged = false;
+    for (const prop of props) {
+      let field = fields[prop];
+      let exists = (prop in value);
+      if (field) {
+        let fieldValue;
+        let inputValue = value[prop];
+
+        // safe to mutate since this is fired in sequence
+        innerOptions.path = (options.path ? `${options.path}.` : '') + prop;
+        field = field.resolve({
+          value: inputValue,
+          context: options.context,
+          parent: intermediateValue
+        });
+        let fieldSpec = field instanceof Schema ? field.spec : undefined;
+        let strict = fieldSpec == null ? void 0 : fieldSpec.strict;
+        if (fieldSpec != null && fieldSpec.strip) {
+          isChanged = isChanged || prop in value;
+          continue;
+        }
+        fieldValue = !options.__validating || !strict ?
+        // TODO: use _cast, this is double resolving
+        field.cast(value[prop], innerOptions) : value[prop];
+        if (fieldValue !== undefined) {
+          intermediateValue[prop] = fieldValue;
+        }
+      } else if (exists && !strip) {
+        intermediateValue[prop] = value[prop];
+      }
+      if (exists !== prop in intermediateValue || intermediateValue[prop] !== value[prop]) {
+        isChanged = true;
+      }
+    }
+    return isChanged ? intermediateValue : value;
+  }
+  _validate(_value, options = {}, panic, next) {
+    let {
+      from = [],
+      originalValue = _value,
+      recursive = this.spec.recursive
+    } = options;
+    options.from = [{
+      schema: this,
+      value: originalValue
+    }, ...from];
+    // this flag is needed for handling `strict` correctly in the context of
+    // validation vs just casting. e.g strict() on a field is only used when validating
+    options.__validating = true;
+    options.originalValue = originalValue;
+    super._validate(_value, options, panic, (objectErrors, value) => {
+      if (!recursive || !isObject(value)) {
+        next(objectErrors, value);
+        return;
+      }
+      originalValue = originalValue || value;
+      let tests = [];
+      for (let key of this._nodes) {
+        let field = this.fields[key];
+        if (!field || Reference.isRef(field)) {
+          continue;
+        }
+        tests.push(field.asNestedTest({
+          options,
+          key,
+          parent: value,
+          parentPath: options.path,
+          originalParent: originalValue
+        }));
+      }
+      this.runTests({
+        tests,
+        value,
+        originalValue,
+        options
+      }, panic, fieldErrors => {
+        next(fieldErrors.sort(this._sortErrors).concat(objectErrors), value);
+      });
+    });
+  }
+  clone(spec) {
+    const next = super.clone(spec);
+    next.fields = Object.assign({}, this.fields);
+    next._nodes = this._nodes;
+    next._excludedEdges = this._excludedEdges;
+    next._sortErrors = this._sortErrors;
+    return next;
+  }
+  concat(schema) {
+    let next = super.concat(schema);
+    let nextFields = next.fields;
+    for (let [field, schemaOrRef] of Object.entries(this.fields)) {
+      const target = nextFields[field];
+      nextFields[field] = target === undefined ? schemaOrRef : target;
+    }
+    return next.withMutation(s =>
+    // XXX: excludes here is wrong
+    s.setFields(nextFields, [...this._excludedEdges, ...schema._excludedEdges]));
+  }
+  _getDefault(options) {
+    if ('default' in this.spec) {
+      return super._getDefault(options);
+    }
+
+    // if there is no default set invent one
+    if (!this._nodes.length) {
+      return undefined;
+    }
+    let dft = {};
+    this._nodes.forEach(key => {
+      var _innerOptions;
+      const field = this.fields[key];
+      let innerOptions = options;
+      if ((_innerOptions = innerOptions) != null && _innerOptions.value) {
+        innerOptions = Object.assign({}, innerOptions, {
+          parent: innerOptions.value,
+          value: innerOptions.value[key]
+        });
+      }
+      dft[key] = field && 'getDefault' in field ? field.getDefault(innerOptions) : undefined;
+    });
+    return dft;
+  }
+  setFields(shape, excludedEdges) {
+    let next = this.clone();
+    next.fields = shape;
+    next._nodes = sortFields(shape, excludedEdges);
+    next._sortErrors = sortByKeyOrder(Object.keys(shape));
+    // XXX: this carries over edges which may not be what you want
+    if (excludedEdges) next._excludedEdges = excludedEdges;
+    return next;
+  }
+  shape(additions, excludes = []) {
+    return this.clone().withMutation(next => {
+      let edges = next._excludedEdges;
+      if (excludes.length) {
+        if (!Array.isArray(excludes[0])) excludes = [excludes];
+        edges = [...next._excludedEdges, ...excludes];
+      }
+
+      // XXX: excludes here is wrong
+      return next.setFields(Object.assign(next.fields, additions), edges);
+    });
+  }
+  partial() {
+    const partial = {};
+    for (const [key, schema] of Object.entries(this.fields)) {
+      partial[key] = 'optional' in schema && schema.optional instanceof Function ? schema.optional() : schema;
+    }
+    return this.setFields(partial);
+  }
+  deepPartial() {
+    const next = deepPartial(this);
+    return next;
+  }
+  pick(keys) {
+    const picked = {};
+    for (const key of keys) {
+      if (this.fields[key]) picked[key] = this.fields[key];
+    }
+    return this.setFields(picked, this._excludedEdges.filter(([a, b]) => keys.includes(a) && keys.includes(b)));
+  }
+  omit(keys) {
+    const remaining = [];
+    for (const key of Object.keys(this.fields)) {
+      if (keys.includes(key)) continue;
+      remaining.push(key);
+    }
+    return this.pick(remaining);
+  }
+  from(from, to, alias) {
+    let fromGetter = (0,property_expr__WEBPACK_IMPORTED_MODULE_0__.getter)(from, true);
+    return this.transform(obj => {
+      if (!obj) return obj;
+      let newObj = obj;
+      if (deepHas(obj, from)) {
+        newObj = Object.assign({}, obj);
+        if (!alias) delete newObj[from];
+        newObj[to] = fromGetter(obj);
+      }
+      return newObj;
+    });
+  }
+
+  /** Parse an input JSON string to an object */
+  json() {
+    return this.transform(parseJson);
+  }
+  noUnknown(noAllow = true, message = object.noUnknown) {
+    if (typeof noAllow !== 'boolean') {
+      message = noAllow;
+      noAllow = true;
+    }
+    let next = this.test({
+      name: 'noUnknown',
+      exclusive: true,
+      message: message,
+      test(value) {
+        if (value == null) return true;
+        const unknownKeys = unknown(this.schema, value);
+        return !noAllow || unknownKeys.length === 0 || this.createError({
+          params: {
+            unknown: unknownKeys.join(', ')
+          }
+        });
+      }
+    });
+    next.spec.noUnknown = noAllow;
+    return next;
+  }
+  unknown(allow = true, message = object.noUnknown) {
+    return this.noUnknown(!allow, message);
+  }
+  transformKeys(fn) {
+    return this.transform(obj => {
+      if (!obj) return obj;
+      const result = {};
+      for (const key of Object.keys(obj)) result[fn(key)] = obj[key];
+      return result;
+    });
+  }
+  camelCase() {
+    return this.transformKeys(tiny_case__WEBPACK_IMPORTED_MODULE_1__.camelCase);
+  }
+  snakeCase() {
+    return this.transformKeys(tiny_case__WEBPACK_IMPORTED_MODULE_1__.snakeCase);
+  }
+  constantCase() {
+    return this.transformKeys(key => (0,tiny_case__WEBPACK_IMPORTED_MODULE_1__.snakeCase)(key).toUpperCase());
+  }
+  describe(options) {
+    const next = (options ? this.resolve(options) : this).clone();
+    const base = super.describe(options);
+    base.fields = {};
+    for (const [key, value] of Object.entries(next.fields)) {
+      var _innerOptions2;
+      let innerOptions = options;
+      if ((_innerOptions2 = innerOptions) != null && _innerOptions2.value) {
+        innerOptions = Object.assign({}, innerOptions, {
+          parent: innerOptions.value,
+          value: innerOptions.value[key]
+        });
+      }
+      base.fields[key] = value.describe(innerOptions);
+    }
+    return base;
+  }
+}
+create$3.prototype = ObjectSchema.prototype;
+
+function create$2(type) {
+  return new ArraySchema(type);
+}
+class ArraySchema extends Schema {
+  constructor(type) {
+    super({
+      type: 'array',
+      spec: {
+        types: type
+      },
+      check(v) {
+        return Array.isArray(v);
+      }
+    });
+
+    // `undefined` specifically means uninitialized, as opposed to "no subtype"
+    this.innerType = void 0;
+    this.innerType = type;
+  }
+  _cast(_value, _opts) {
+    const value = super._cast(_value, _opts);
+
+    // should ignore nulls here
+    if (!this._typeCheck(value) || !this.innerType) {
+      return value;
+    }
+    let isChanged = false;
+    const castArray = value.map((v, idx) => {
+      const castElement = this.innerType.cast(v, Object.assign({}, _opts, {
+        path: `${_opts.path || ''}[${idx}]`
+      }));
+      if (castElement !== v) {
+        isChanged = true;
+      }
+      return castElement;
+    });
+    return isChanged ? castArray : value;
+  }
+  _validate(_value, options = {}, panic, next) {
+    var _options$recursive;
+    // let sync = options.sync;
+    // let path = options.path;
+    let innerType = this.innerType;
+    // let endEarly = options.abortEarly ?? this.spec.abortEarly;
+    let recursive = (_options$recursive = options.recursive) != null ? _options$recursive : this.spec.recursive;
+    options.originalValue != null ? options.originalValue : _value;
+    super._validate(_value, options, panic, (arrayErrors, value) => {
+      var _options$originalValu2;
+      if (!recursive || !innerType || !this._typeCheck(value)) {
+        next(arrayErrors, value);
+        return;
+      }
+
+      // #950 Ensure that sparse array empty slots are validated
+      let tests = new Array(value.length);
+      for (let index = 0; index < value.length; index++) {
+        var _options$originalValu;
+        tests[index] = innerType.asNestedTest({
+          options,
+          index,
+          parent: value,
+          parentPath: options.path,
+          originalParent: (_options$originalValu = options.originalValue) != null ? _options$originalValu : _value
+        });
+      }
+      this.runTests({
+        value,
+        tests,
+        originalValue: (_options$originalValu2 = options.originalValue) != null ? _options$originalValu2 : _value,
+        options
+      }, panic, innerTypeErrors => next(innerTypeErrors.concat(arrayErrors), value));
+    });
+  }
+  clone(spec) {
+    const next = super.clone(spec);
+    // @ts-expect-error readonly
+    next.innerType = this.innerType;
+    return next;
+  }
+
+  /** Parse an input JSON string to an object */
+  json() {
+    return this.transform(parseJson);
+  }
+  concat(schema) {
+    let next = super.concat(schema);
+
+    // @ts-expect-error readonly
+    next.innerType = this.innerType;
+    if (schema.innerType)
+      // @ts-expect-error readonly
+      next.innerType = next.innerType ?
+      // @ts-expect-error Lazy doesn't have concat and will break
+      next.innerType.concat(schema.innerType) : schema.innerType;
+    return next;
+  }
+  of(schema) {
+    // FIXME: this should return a new instance of array without the default to be
+    let next = this.clone();
+    if (!isSchema(schema)) throw new TypeError('`array.of()` sub-schema must be a valid yup schema not: ' + printValue(schema));
+
+    // @ts-expect-error readonly
+    next.innerType = schema;
+    next.spec = Object.assign({}, next.spec, {
+      types: schema
+    });
+    return next;
+  }
+  length(length, message = array.length) {
+    return this.test({
+      message,
+      name: 'length',
+      exclusive: true,
+      params: {
+        length
+      },
+      skipAbsent: true,
+      test(value) {
+        return value.length === this.resolve(length);
+      }
+    });
+  }
+  min(min, message) {
+    message = message || array.min;
+    return this.test({
+      message,
+      name: 'min',
+      exclusive: true,
+      params: {
+        min
+      },
+      skipAbsent: true,
+      // FIXME(ts): Array<typeof T>
+      test(value) {
+        return value.length >= this.resolve(min);
+      }
+    });
+  }
+  max(max, message) {
+    message = message || array.max;
+    return this.test({
+      message,
+      name: 'max',
+      exclusive: true,
+      params: {
+        max
+      },
+      skipAbsent: true,
+      test(value) {
+        return value.length <= this.resolve(max);
+      }
+    });
+  }
+  ensure() {
+    return this.default(() => []).transform((val, original) => {
+      // We don't want to return `null` for nullable schema
+      if (this._typeCheck(val)) return val;
+      return original == null ? [] : [].concat(original);
+    });
+  }
+  compact(rejector) {
+    let reject = !rejector ? v => !!v : (v, i, a) => !rejector(v, i, a);
+    return this.transform(values => values != null ? values.filter(reject) : values);
+  }
+  describe(options) {
+    const next = (options ? this.resolve(options) : this).clone();
+    const base = super.describe(options);
+    if (next.innerType) {
+      var _innerOptions;
+      let innerOptions = options;
+      if ((_innerOptions = innerOptions) != null && _innerOptions.value) {
+        innerOptions = Object.assign({}, innerOptions, {
+          parent: innerOptions.value,
+          value: innerOptions.value[0]
+        });
+      }
+      base.innerType = next.innerType.describe(innerOptions);
+    }
+    return base;
+  }
+}
+create$2.prototype = ArraySchema.prototype;
+
+// @ts-ignore
+function create$1(schemas) {
+  return new TupleSchema(schemas);
+}
+class TupleSchema extends Schema {
+  constructor(schemas) {
+    super({
+      type: 'tuple',
+      spec: {
+        types: schemas
+      },
+      check(v) {
+        const types = this.spec.types;
+        return Array.isArray(v) && v.length === types.length;
+      }
+    });
+    this.withMutation(() => {
+      this.typeError(tuple.notType);
+    });
+  }
+  _cast(inputValue, options) {
+    const {
+      types
+    } = this.spec;
+    const value = super._cast(inputValue, options);
+    if (!this._typeCheck(value)) {
+      return value;
+    }
+    let isChanged = false;
+    const castArray = types.map((type, idx) => {
+      const castElement = type.cast(value[idx], Object.assign({}, options, {
+        path: `${options.path || ''}[${idx}]`
+      }));
+      if (castElement !== value[idx]) isChanged = true;
+      return castElement;
+    });
+    return isChanged ? castArray : value;
+  }
+  _validate(_value, options = {}, panic, next) {
+    let itemTypes = this.spec.types;
+    super._validate(_value, options, panic, (tupleErrors, value) => {
+      var _options$originalValu2;
+      // intentionally not respecting recursive
+      if (!this._typeCheck(value)) {
+        next(tupleErrors, value);
+        return;
+      }
+      let tests = [];
+      for (let [index, itemSchema] of itemTypes.entries()) {
+        var _options$originalValu;
+        tests[index] = itemSchema.asNestedTest({
+          options,
+          index,
+          parent: value,
+          parentPath: options.path,
+          originalParent: (_options$originalValu = options.originalValue) != null ? _options$originalValu : _value
+        });
+      }
+      this.runTests({
+        value,
+        tests,
+        originalValue: (_options$originalValu2 = options.originalValue) != null ? _options$originalValu2 : _value,
+        options
+      }, panic, innerTypeErrors => next(innerTypeErrors.concat(tupleErrors), value));
+    });
+  }
+  describe(options) {
+    const next = (options ? this.resolve(options) : this).clone();
+    const base = super.describe(options);
+    base.innerType = next.spec.types.map((schema, index) => {
+      var _innerOptions;
+      let innerOptions = options;
+      if ((_innerOptions = innerOptions) != null && _innerOptions.value) {
+        innerOptions = Object.assign({}, innerOptions, {
+          parent: innerOptions.value,
+          value: innerOptions.value[index]
+        });
+      }
+      return schema.describe(innerOptions);
+    });
+    return base;
+  }
+}
+create$1.prototype = TupleSchema.prototype;
+
+function create(builder) {
+  return new Lazy(builder);
+}
+class Lazy {
+  constructor(builder) {
+    this.type = 'lazy';
+    this.__isYupSchema__ = true;
+    this.spec = void 0;
+    this._resolve = (value, options = {}) => {
+      let schema = this.builder(value, options);
+      if (!isSchema(schema)) throw new TypeError('lazy() functions must return a valid schema');
+      if (this.spec.optional) schema = schema.optional();
+      return schema.resolve(options);
+    };
+    this.builder = builder;
+    this.spec = {
+      meta: undefined,
+      optional: false
+    };
+  }
+  clone(spec) {
+    const next = new Lazy(this.builder);
+    next.spec = Object.assign({}, this.spec, spec);
+    return next;
+  }
+  optionality(optional) {
+    const next = this.clone({
+      optional
+    });
+    return next;
+  }
+  optional() {
+    return this.optionality(true);
+  }
+  resolve(options) {
+    return this._resolve(options.value, options);
+  }
+  cast(value, options) {
+    return this._resolve(value, options).cast(value, options);
+  }
+  asNestedTest(config) {
+    let {
+      key,
+      index,
+      parent,
+      options
+    } = config;
+    let value = parent[index != null ? index : key];
+    return this._resolve(value, Object.assign({}, options, {
+      value,
+      parent
+    })).asNestedTest(config);
+  }
+  validate(value, options) {
+    return this._resolve(value, options).validate(value, options);
+  }
+  validateSync(value, options) {
+    return this._resolve(value, options).validateSync(value, options);
+  }
+  validateAt(path, value, options) {
+    return this._resolve(value, options).validateAt(path, value, options);
+  }
+  validateSyncAt(path, value, options) {
+    return this._resolve(value, options).validateSyncAt(path, value, options);
+  }
+  isValid(value, options) {
+    return this._resolve(value, options).isValid(value, options);
+  }
+  isValidSync(value, options) {
+    return this._resolve(value, options).isValidSync(value, options);
+  }
+  describe(options) {
+    return options ? this.resolve(options).describe(options) : {
+      type: 'lazy',
+      meta: this.spec.meta,
+      label: undefined
+    };
+  }
+  meta(...args) {
+    if (args.length === 0) return this.spec.meta;
+    let next = this.clone();
+    next.spec.meta = Object.assign(next.spec.meta || {}, args[0]);
+    return next;
+  }
+}
+
+function setLocale(custom) {
+  Object.keys(custom).forEach(type => {
+    // @ts-ignore
+    Object.keys(custom[type]).forEach(method => {
+      // @ts-ignore
+      locale[type][method] = custom[type][method];
+    });
+  });
+}
+
+function addMethod(schemaType, name, fn) {
+  if (!schemaType || !isSchema(schemaType.prototype)) throw new TypeError('You must provide a yup schema constructor function');
+  if (typeof name !== 'string') throw new TypeError('A Method name must be provided');
+  if (typeof fn !== 'function') throw new TypeError('Method function must be provided');
+  schemaType.prototype[name] = fn;
+}
+
+
+
+
+/***/ }),
+
 /***/ "react":
 /*!************************!*\
   !*** external "React" ***!
@@ -27888,6 +31698,17 @@ module.exports = window["wp"]["apiFetch"];
 
 "use strict";
 module.exports = window["wp"]["components"];
+
+/***/ }),
+
+/***/ "@wordpress/element":
+/*!*********************************!*\
+  !*** external ["wp","element"] ***!
+  \*********************************/
+/***/ ((module) => {
+
+"use strict";
+module.exports = window["wp"]["element"];
 
 /***/ }),
 

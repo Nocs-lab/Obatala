@@ -1,6 +1,11 @@
 import React, { useRef } from "react";
+import { useFlowContext } from "../../context/FlowContext";
 
-const ProcessControls = ({ onAddNode, onExport, onImport }) => {
+
+const ProcessControls = () => {
+
+  const { addNewNode, onExport, onImport } = useFlowContext();
+
   const fileInputRef = useRef(null);
 
   const handleImportClick = () => {
@@ -18,12 +23,11 @@ const ProcessControls = ({ onAddNode, onExport, onImport }) => {
       reader.readAsText(file);
     }
   };
-
   return (
     <div style={{ position: "absolute", top: 10, right: 10, zIndex: 1000 }}>
       {/* Botão para adicionar nova etapa */}
       <button
-        onClick={onAddNode}
+        onClick={addNewNode}
         style={{
           padding: "10px 20px",
           backgroundColor: "#007bff",
@@ -37,7 +41,6 @@ const ProcessControls = ({ onAddNode, onExport, onImport }) => {
       >
         Adicionar Etapa
       </button>
-
       {/* Botão para exportar JSON */}
       <button
         onClick={onExport}
@@ -54,7 +57,6 @@ const ProcessControls = ({ onAddNode, onExport, onImport }) => {
       >
         Exportar JSON
       </button>
-
       {/* Botão para importar JSON */}
       <button
         onClick={handleImportClick}
@@ -69,7 +71,6 @@ const ProcessControls = ({ onAddNode, onExport, onImport }) => {
       >
         Importar JSON
       </button>
-
       {/* Input invisível para carregar o arquivo JSON */}
       <input
         type="file"
