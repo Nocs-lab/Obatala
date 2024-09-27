@@ -171,26 +171,26 @@ const ProcessStage = ({ process, onCancelEdit }) => {
     return (
         <div className='panel'>
             <h3>Process: {process.title.rendered}</h3>
-            <Button isSecondary onClick={onCancelEdit}>Back to Processes</Button>
+            <Button variant="link" onClick={onCancelEdit}>Back to Processes</Button>
             <div>
                 <h4>Current Stage: {currentStage.title}</h4>
                 <p>{currentStage.content}</p>
                 <Button
-                    isSecondary
+                    variant="link"
                     onClick={handlePreviousStage}
                     disabled={stages.findIndex(stage => stage.id === currentStage.id) === 0}
                 >
                     View Previous Stage
                 </Button>
                 <Button
-                    isSecondary
+                    variant="link"
                     onClick={handleAdvanceStage}
                     disabled={stages.findIndex(stage => stage.id === currentStage.id) === stages.length - 1}
                 >
                     Advance Stage
                 </Button>
                 <Button
-                    isSecondary
+                    variant="link"
                     onClick={() => handleReopenStage(currentStage.id)}
                     disabled={stages.findIndex(stage => stage.id === currentStage.id) <= stages.findIndex(stage => stage.id === process.current_stage)}
                 >
@@ -230,7 +230,7 @@ const ProcessStage = ({ process, onCancelEdit }) => {
                         disabled={false}
                     />
                     <Button
-                        isPrimary
+                        variant="primary"
                         onClick={handleAddComment}
                         disabled={false}
                     >

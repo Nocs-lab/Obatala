@@ -141,22 +141,20 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
                     disabled={!!editingProcess}
                 />
 
-                <SelectControl
-                    label="Access Level"
-                    value={accessLevel}
-                    options={[
-                        { label: 'Public', value: 'public' },
-                        { label: 'Private', value: 'private' }
-                    ]}
-                    onChange={(value) => setAccessLevel(value)}
-                />
-                <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
-                    <Button isSecondary onClick={handleCancel}>Cancel</Button>
-                    <Button isPrimary type='submit'>Save</Button>
-                </div>
-            </form>
-
-
+            <SelectControl
+                label="Access Level"
+                value={accessLevel}
+                options={[
+                    { label: 'Public', value: 'public' },
+                    { label: 'Private', value: 'private' }
+                ]}
+                onChange={(value) => setAccessLevel(value)}
+            />
+            <div style={{display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px'}}>
+                <Button variant="link" onClick={handleCancel}>Cancel</Button>
+                <Button variant="primary" onClick={handleSaveProcess}>Save</Button>
+            </div>
+            
         </div>
 
     );

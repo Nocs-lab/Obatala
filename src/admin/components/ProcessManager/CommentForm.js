@@ -67,7 +67,7 @@ const CommentForm = ({ stepId }) => {
                         value={comment}
                         onChange={(value) => setComment(value)}
                     />
-                    <Button isPrimary onClick={handleCommentSubmit}>Submit</Button>
+                    <Button variant="primary" onClick={handleCommentSubmit}>Submit</Button>
                 </PanelRow>
             </PanelBody>
             {comments.length > 0 && (
