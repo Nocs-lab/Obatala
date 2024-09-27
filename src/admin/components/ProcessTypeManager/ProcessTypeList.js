@@ -76,7 +76,7 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete }) => {
     return (
         <Panel>
             <PanelHeader>
-                <h3>Existing Process Types</h3>
+                <h3>Existing Process Models</h3>
                 <span className="badge">{processTypes.length}</span>
             </PanelHeader>
             <PanelRow>
@@ -148,7 +148,7 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete }) => {
                         </div>
                     </>
                 ) : (
-                    <Notice isDismissible={false} status="warning">No existing process types.</Notice>
+                    <Notice isDismissible={false} status="warning">No existing process models.</Notice>
                 )}
             </PanelRow>
         </Panel>
