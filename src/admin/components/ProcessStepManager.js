@@ -166,7 +166,7 @@ const ProcessStepManager = () => {
                                     value={newStepTitle}
                                     onChange={(value) => setNewStepTitle(value)}
                                 />
-                                <Button isPrimary onClick={handleSaveStep}>
+                                <Button variant="primary" onClick={handleSaveStep}>
                                     Save
                                 </Button>
                             </PanelRow>

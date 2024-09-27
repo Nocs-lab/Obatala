@@ -175,7 +175,7 @@ const MetadataCreator = ({ stepId, onMetaFieldAdded }) => {
           onChange={(value) => setFieldType(value)}
         />
         {renderConditionalFields()}
-        <Button isPrimary onClick={handleAddMetaField}>
+        <Button variant="primary" onClick={handleAddMetaField}>
           Save
         </Button>
       </PanelRow>

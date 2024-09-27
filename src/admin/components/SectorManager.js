@@ -86,9 +86,9 @@ const SectorManager = () => {
         <main>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
             <div className="title-container">
-                <h2>Sector Manager</h2>
+                <h2>Sector manager</h2>
                 <ButtonGroup>
-                    <Button isPrimary 
+                    <Button variant="primary" 
                             icon={<Icon icon={plus}/>}
                             onClick={handleAdd}
                             >Add new</Button>
@@ -108,32 +108,32 @@ const SectorManager = () => {
 
             {/* Open modal to editing Sector */}
             {editingSector && (
-                        <Modal
-                            title="Edit Sector"
-                            onRequestClose={handleCancel}
-                            isDismissible={true}
-                        >
-                            <SectorCreator
-                                onSave={handleSectorSaved} 
-                                editingSector={editingSector}
-                                onCancel={handleCancel}
-                            />
-                        </Modal>
+                <Modal
+                    title="Edit Sector"
+                    onRequestClose={handleCancel}
+                    isDismissible={true}
+                >
+                    <SectorCreator
+                        onSave={handleSectorSaved} 
+                        editingSector={editingSector}
+                        onCancel={handleCancel}
+                    />
+                </Modal>
             )}
 
             {/* Open modal to adding Sector */}
             {addingSector && (
-                        <Modal
-                            title="Add Sector"
-                            onRequestClose={handleCancel}
-                            isDismissible={true}
-                        >
-                            <SectorCreator
-                                onSave={handleSectorSaved} 
-                                onCancel={handleCancel}
-                            />
-                        </Modal>
-                    )}
+                <Modal
+                    title="Add sector"
+                    onRequestClose={handleCancel}
+                    isDismissible={true}
+                >
+                    <SectorCreator
+                        onSave={handleSectorSaved} 
+                        onCancel={handleCancel}
+                    />
+                </Modal>
+            )}
         </main>
     );
 };

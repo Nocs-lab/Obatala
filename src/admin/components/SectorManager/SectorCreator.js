@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Button,
+  ButtonGroup,
   TextControl,
   Notice,
 } from "@wordpress/components";
@@ -71,14 +72,14 @@ const SectorCreator = ({onSave, editingSector, onCancel}) => {
               onChange={(value) => setDescription(value)}
             />
 
-          <div style={{display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px'}}>
-            <Button isPrimary onClick={handleSave}>
-              Save
-            </Button>
-            <Button isSecondary onClick={handleCancel}>
+          <ButtonGroup>
+            <Button variant="link" onClick={handleCancel}>
               Cancel
             </Button>
-          </div>
+            <Button variant="primary" onClick={handleSave}>
+              Save
+            </Button>
+          </ButtonGroup>
       </>
     )
 }

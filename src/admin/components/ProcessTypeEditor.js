@@ -112,7 +112,7 @@ const processDataEditor = () => {
                 placeholder="Digite o placeholder"
                 onChange={(value) => setTitle(value)}
               />
-              <Button isPrimary type="submit" style={{
+              <Button variant="primary" type="submit" style={{
                 margin: 0
               }}
               onClick={handleSave}

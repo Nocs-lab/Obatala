@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Button,
+  ButtonGroup,
   TextControl,
   Notice,
 } from "@wordpress/components";
@@ -52,31 +53,43 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
   return (
     <>
       <form onSubmit={handleSave}>
-        {notice && (
-          <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-            {notice.message}
-          </Notice>
-        )}
-        <TextControl
-          label="Title"
-          value={title}
-          onChange={(value) => setTitle(value)}
-        />
-        <TextControl
-          label="Description"
-          value={description}
-          onChange={(value) => setDescription(value)}
-        />
-        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
-          <Button isPrimary type="submit">
-            Save
-          </Button>
-          <Button isSecondary onClick={onCancel}>
-            Cancel
-          </Button>
-
-        </div>
-
+        <PanelRow>
+          <TextControl
+            label="Title"
+            value={title}
+            onChange={(value) => setTitle(value)}
+          />
+          <TextControl
+            label="Description"
+            value={description}
+            onChange={(value) => setDescription(value)}
+          />
+          <CheckboxControl
+            label="Accept Attachments"
+            checked={acceptAttachments}
+            onChange={(checked) => setAcceptAttachments(checked)}
+          />
+          <CheckboxControl
+            label="Accept Tainacan Items"
+            checked={acceptTainacanItems}
+            onChange={(checked) => setAcceptTainacanItems(checked)}
+          />
+          <CheckboxControl
+            label="Generate Tainacan Items"
+            checked={generateTainacanItems}
+            onChange={(checked) => setGenerateTainacanItems(checked)}
+          />
+        </PanelRow>
+        <PanelRow>
+          <ButtonGroup>
+            <Button variant="link" onClick={onCancel}>
+              Cancel
+            </Button>
+            <Button variant="primary" type="submit">
+              Save
+            </Button>
+          </ButtonGroup>
+        </PanelRow>
       </form>
     </>
   );
