@@ -101,7 +101,7 @@ const processDataEditor = () => {
       <span className="brand">
         <strong>Obatala</strong> Curatorial Process Management
       </span>
-      <h2>Edit Process Model</h2>
+      <h2>Edit Process Model: {title}</h2>
 
       <div className="panel-container">
         <main>
