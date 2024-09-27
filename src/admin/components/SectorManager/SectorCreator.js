@@ -55,31 +55,34 @@ const SectorCreator = ({onSave, editingSector, onCancel}) => {
 
     return ( 
        <>
-            {notice && (
-                <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                    {notice.message}
-                </Notice>
-            )}
+          <form onSubmit={handleSave}>
+              {notice && (
+                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                        {notice.message}
+                    </Notice>
+                )}
 
-            <TextControl
-              label="Title"
-              value={title}
-              onChange={(value) => setTitle(value)}
-            />
-            <TextControl
-              label="Description"
-              value={description}
-              onChange={(value) => setDescription(value)}
-            />
+                <TextControl
+                  label="Title"
+                  value={title}
+                  onChange={(value) => setTitle(value)}
+                />
+                <TextControl
+                  label="Description"
+                  value={description}
+                  onChange={(value) => setDescription(value)}
+                />
 
-          <ButtonGroup>
-            <Button variant="link" onClick={handleCancel}>
-              Cancel
-            </Button>
-            <Button variant="primary" onClick={handleSave}>
-              Save
-            </Button>
-          </ButtonGroup>
+              <ButtonGroup>
+                <Button variant="link" onClick={handleCancel}>
+                  Cancel
+                </Button>
+                <Button variant="primary" type='submit'>
+                  Save
+                </Button>
+              </ButtonGroup>
+          </form>
+            
       </>
     )
 }
