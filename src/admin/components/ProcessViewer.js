@@ -185,7 +185,7 @@ const ProcessViewer = () => {
                                         </ul>
                                         <div className="action-bar">
                                             <Button
-                                                isPrimary
+                                                variant="primary"
                                                 onClick={handleSubmit}
                                                 disabled={!isSubmitEnabled || submittedSteps[currentStep]}
                                             >Submit

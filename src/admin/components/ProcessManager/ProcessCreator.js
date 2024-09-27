@@ -148,8 +148,8 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
                 onChange={(value) => setAccessLevel(value)}
             />
             <div style={{display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px'}}>
-                <Button isSecondary onClick={handleCancel}>Cancel</Button>
-                <Button isPrimary onClick={handleSaveProcess}>Save</Button>
+                <Button variant="link" onClick={handleCancel}>Cancel</Button>
+                <Button variant="primary" onClick={handleSaveProcess}>Save</Button>
             </div>
             
         </div>
