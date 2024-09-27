@@ -13,6 +13,7 @@ const ProcessManager = ({ onSelectProcess }) => {
     const [selectedProcessId, setSelectedProcessId] = useState(null);
     const [addingProcess, setAddingProcess] = useState(null);
     const [editingProcess, setEditingProcess] = useState(null);
+    const [notice, setNotice] = useState(null);
 
     useEffect(() => {
         fetchProcessTypes();
@@ -97,7 +98,9 @@ const ProcessManager = ({ onSelectProcess }) => {
         setIsLoading(true);
         // Atualiza os mapeamentos de tipo de processo
         const updatedProcesses = [...processes, newProcess];
+        setNotice({ status: 'success', message: 'Process saved successfully.' });
         await fetchProcessTypesForProcesses(updatedProcesses);
+        setIsLoading(false);
     };
     
 
@@ -135,6 +138,13 @@ const ProcessManager = ({ onSelectProcess }) => {
                             >Add new</Button>
                 </ButtonGroup>
             </div>
+            {notice && (
+                <div className="notice-container">
+                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                        {notice.message}
+                    </Notice>
+                </div>
+            )}
             <div className="panel-container">
                 <main>
                     <Panel>
