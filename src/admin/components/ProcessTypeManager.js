@@ -85,7 +85,7 @@ const ProcessTypeManager = () => {
     return (
         <div>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
-            <h2>Process Type Manager</h2>
+            <h2>Process Models</h2>
             <div className="panel-container">
                 <main>
                     <ProcessTypeList

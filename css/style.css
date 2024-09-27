@@ -51,6 +51,7 @@
   box-sizing: border-box;
 }
 
+
 /* Layout */
 #wpwrap {
   background-color: var(--gray-50);
@@ -69,6 +70,7 @@ h2 {
 h2:has(+ span.badge) {
   margin-bottom: 1rem;
 }
+
 main > .notice-container {
   margin: 1rem var(--gap-external) 2rem;
 }
@@ -360,13 +362,17 @@ ol.list-group .list-group-item::before {
   border: 0 none;
   border-radius: var(--border-radius);
 }
+main > .title-container ~ .components-panel {
+  margin-left: var(--gap-external);
+  margin-right: var(--gap-external);
+}
 .components-panel__header,
 .components-panel__header h3 {
-  font-size: 1.25rem;
-  padding: .75rem var(--gap);
+  font-size: 1rem;
+  padding: 0 var(--gap);
 }
 .components-panel__header h3 {
-  font-weight: 500;
+  font-weight: 400;
   margin: 0;
   padding: 0;
 }
@@ -672,7 +678,6 @@ button .components-spinner {
   margin-left: var(--gap-external);
   margin-right: var(--gap-external);
 }
-
 .actions {
   display: flex;
   gap: 1rem;
@@ -704,4 +709,10 @@ button .components-spinner {
 .wp-admin #toplevel_page_obatala-main .wp-submenu li a[href*="process-step-editor"],
 .wp-admin #toplevel_page_obatala-main .wp-submenu li a[href*="process-type-editor"] {
   display: none;
+}
+
+/* tmp */
+.brand + h2 {
+  margin-left: var(--gap-external);
+  margin-right: var(--gap-external);
 }
