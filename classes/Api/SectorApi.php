@@ -152,31 +152,63 @@ class SectorApi extends ObatalaAPI {
     public function add_sector($request) {
 
         error_log('create_sector function called');
-        
+    
         $sector_name = sanitize_text_field($request['sector_name']);
         $description = sanitize_text_field($request['sector_description']);
-
+        $status = sanitize_text_field($request['sector_status']); // Novo campo para o status do setor
+    
+        // Verificações
         if (empty($sector_name)) {
-            return new WP_REST_Response('Nome do setor vazio', 400); // Retorna erro se o nome estiver vazia
+            return new WP_REST_Response('Nome do setor vazio', 400); // Retorna erro se o nome estiver vazio
         }
-
+    
         if (empty($description)) {
-            return new WP_REST_Response('Descrição do setor vazio', 400); // Retorna erro se o nome estiver vazia
+            return new WP_REST_Response('Descrição do setor vazia', 400); // Retorna erro se a descrição estiver vazia
         }
-        
-        $post_id = wp_insert_post([
-            'post_title'    => $sector_name,
-            'post_type' => 'sector_obatala',
-            'post_status' => 'publish'
-        ]);
-
-
-        if ($post_id && !is_wp_error($post_id)) {
-                return new WP_REST_Response('Sector created', 201);
-        } else {
-            return new WP_REST_Response('Error creating sector', 500);
+    
+        // Recupera setores salvos no wp_options e garante que sejam decodificados corretamente
+        $setores_json = get_option('obatala_setores', '{}');
+        $setores = json_decode($setores_json, true); // Decodifica para array associativo
+    
+        // Se a decodificação falhar ou o valor não for um array, inicializa um array vazio
+        if (!is_array($setores)) {
+            $setores = [];
         }
+    
+        // Verifica se o setor já existe no array de setores
+        if (array_key_exists(sanitize_title($sector_name), $setores)) {
+            return new WP_REST_Response('Setor já existe', 409); // Retorna erro se o setor já existir
+        }
+    
+        // Armazenar o setor no wp_options como JSON
+        $this->cadastrar_setor($sector_name, $description, $status);
+    
+        return new WP_REST_Response('Setor cadastrado com sucesso', 201);
     }
+    
+    // Função para cadastrar o setor no wp_options
+    private function cadastrar_setor($nome, $descricao, $status) {
+        // Recuperar setores já existentes no formato JSON
+        $setores_json = get_option('obatala_setores', '{}'); // Recupera como JSON ou inicializa como um objeto vazio
+        $setores = json_decode($setores_json, true); // Decodifica para array associativo
+    
+        // Se a decodificação falhar ou o valor não for um array, inicializa um array vazio
+        if (!is_array($setores)) {
+            $setores = [];
+        }
+    
+        // Adicionar o novo setor
+        $setores[sanitize_title($nome)] = array(
+            'nome' => sanitize_text_field($nome),
+            'descricao' => sanitize_textarea_field($descricao),
+            'status' => sanitize_text_field($status) // 'ativo' ou 'inativo'
+        );
+    
+        // Codificar o array em JSON antes de salvar
+        update_option('obatala_setores', json_encode($setores));
+    }
+    
+    
 
     public function get_sector($request) {
         $post_id = (int) $request['id'];

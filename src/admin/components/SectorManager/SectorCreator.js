@@ -31,7 +31,6 @@ const SectorCreator = ({onSave, editingSector, onCancel}) => {
         }
         const savedSector = {
             sector_name: title,
-            status: 'publish',
             sector_description: description,
             sector_status: "Ativo"
         }
