@@ -55,19 +55,38 @@ class SectorApi extends ObatalaAPI {
         ]);
 
         // Route to update sector by ID
-        $this->add_route('add_sector_obatala/(?P<id>\d+)', [
+        $this->add_route('update_sector_obatala/(?P<id>\d+)', [
             'methods' => 'POST',
             'callback' => [$this, 'update_sector'],
             'permission_callback' => '__return_true',
             'args' => [
-                'title' => [
+                'sector_name' => [
                     'required' => true,
                     'validate_callback' => function($param) {
                         return !empty($param);
                     }
-                ]
+                ],
+                'sector_description' => [
+                    'required' => true,
+                    'validate_callback' => function($param) {
+                        return !empty($param);
+                    }
+                ],
+                'sector_status' => [
+                    'required' => true,
+                    'validate_callback' => function($param) {
+                        return !empty($param);
+                    }
+                ],
             ]
         ]);
+        
+        // Route to delete sector
+        // $this->add_route('delete_sector_obatala/(?P<id>\d+)', [
+        //     'methods' => 'DELETE',
+        //     'callback' => [$this, 'delete_sector'],
+        //     'permission_callback' => '__return_true'
+        // ]);
 
         // Route to get sector meta fields
         $this->add_route('sector_obatala/(?P<id>\d+)/meta', [
@@ -206,67 +225,118 @@ class SectorApi extends ObatalaAPI {
     
         // Codificar o array em JSON antes de salvar
         update_option('obatala_setores', json_encode($setores));
-    }
-    
-    
+    } 
 
     public function get_sector($request) {
-        $post_id = (int) $request['id'];
-        $post = get_post($post_id);
+        $sector_name = sanitize_text_field($request['sector_name']);
 
-        if ($post) {
-            return [
-                'id' => $post->ID,
-                'title' => $post->post_title,
-                'content' => $post->post_content,
-            ];
-        } else {
-            return new WP_REST_Response('Sector not found.', 404);
+        if (empty($sector_name)) {
+            return new WP_REST_Response('Nome do setor vazio', 400); // Retorna erro se o nome estiver vazio
         }
+
+        $setores_json = get_option('obatala_setores', '{}'); // Recupera como JSON ou inicializa como um objeto vazio
+        $setores = json_decode($setores_json, true);
+
+        if (!is_array($setores)) {
+            $setores = [];
+        }
+
+        // Verifica se o setor com o ID fornecido existe
+        if (!array_key_exists($sector_name, $setores)) {
+            return new WP_REST_Response('Setor não encontrado', 404); // Retorna erro se o setor não for encontrado
+        }
+
+        // Retorna os dados do setor encontrado
+        return new WP_REST_Response($setores[$sector_name], 200); // Retorna o setor como resposta
     }
 
     public function get_all_sectors($request) {
         error_log('retorne sector function called');
 
-        $query = new WP_Query([
-            'post_type' => 'sector_obatala',
-            'post_status' => 'publish',
-            'posts_per_page' => -1, 
-        ]);
+        // Recuperar setores já existentes no formato JSON
+        $setores_json = get_option('obatala_setores', '{}'); // Recupera como JSON ou inicializa como um objeto vazio
+        $setores = json_decode($setores_json, true);
 
-        
-        $sectors = [];
-
-        if ($query->have_posts()) {
-            while ($query->have_posts()) {
-                $query->the_post();
-                $sectors[] = [
-                    'id' => get_the_ID(),
-                    'title' => get_the_title(),
-                    'content' => get_the_content(),
-                ];
-            }
-            wp_reset_postdata();
-        }
-
-        return $sectors;
+        return $setores;
     }
 
     public function update_sector($request) {
-        $post_id = (int) $request['id'];
+
+        error_log('update_sector function called');
+
         $sector_name = sanitize_text_field($request['sector_name']);
+        $description = sanitize_text_field($request['sector_description']);
+        $status = sanitize_text_field($request['sector_status']);
 
-        $result = wp_update_post([
-            'ID' => $post_id,
-            'post_title' => $sector_name,
-        ]);
-
-        if ($result && !is_wp_error($result)) {
-            return new WP_REST_Response('Sector updated successfully', 200);
-        } else {
-            return new WP_REST_Response('Error updating sector', 500);
+        if (empty($sector_name)) {
+            return new WP_REST_Response('Nome do setor vazio', 400); // Retorna erro se o nome estiver vazio
         }
+
+        // Recuperar setores já existentes no formato JSON
+        $setores_json = get_option('obatala_setores', '{}'); // Recupera como JSON ou inicializa como um objeto vazio
+        $setores = json_decode($setores_json, true);
+
+        if (!is_array($setores)) {
+            $setores = [];
+        }
+
+        // Verifica se o setor existe
+        if (!array_key_exists(sanitize_title($sector_name), $setores)) {
+            return new WP_REST_Response('Setor não encontrado', 404); // Retorna erro se o setor não for encontrado
+        }
+        //salva a copia
+        $copia = $setores[$sector_name];
+
+        //deleta o campo que existia para cadastar um novo equivalente
+        unset($setores[$sector_name]);
+
+        // cria um novo setor com os dados da copia caso as ateraçoes em certos campos não forem efetivadas
+        $setores[!empty($sector_name) ? sanitize_text_field($sector_name) : $copia['nome']] = array(
+            'nome' => !empty($sector_name) ? sanitize_text_field($sector_name) : $copia['nome'], // Substitui o nome se alterado
+            'descricao' => !empty($description) ? sanitize_textarea_field($description) : $copia['descricao'], // Substitui a descrição se alterada
+            'status' => !empty($status) ? sanitize_text_field($status) : $copia['status'], // Substitui o status se alterado
+        );
+    
+        // Codificar o array em JSON antes de salvar
+        update_option('obatala_setores', json_encode($setores));
+
+        return new WP_REST_Response('Setor atualizado com sucesso', 201);
     }
+
+    // public function delete_sector($request) {
+
+    //     error_log('delete_sector function called');
+
+    //     $sector_name = sanitize_text_field($request['sector_name']);
+
+    //     if (empty($sector_name)) {
+    //         return new WP_REST_Response('Nome do setor vazio', 400); // Retorna erro se o nome estiver vazio
+    //     }
+    
+    //     if (empty($description)) {
+    //         return new WP_REST_Response('Descrição do setor vazia', 400); // Retorna erro se a descrição estiver vazia
+    //     }
+
+    //     // Recuperar setores já existentes no formato JSON
+    //     $setores_json = get_option('obatala_setores', '{}'); // Recupera como JSON ou inicializa como um objeto vazio
+    //     $setores = json_decode($setores_json, true);
+
+    //     if (!is_array($setores)) {
+    //         $setores = [];
+    //     }
+
+    //     // Remover o setor do array
+    //     unset($setores[$sector_name]);
+
+    //     // Salvar os setores atualizados de volta na opção do WordPress
+    //     $updated = update_option('obatala_setores', json_encode($setores));
+
+    //     if ($updated) {
+    //         return new WP_REST_Response('Setor deletado com sucesso', 200); // Sucesso
+    //     } else {
+    //         return new WP_REST_Response('Erro ao deletar o setor', 500); // Falha ao salvar
+    //     }
+    // }
 
     public function get_meta($request) {
         $post_id = (int) $request['id'];
