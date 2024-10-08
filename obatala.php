@@ -100,7 +100,7 @@ class Nocs_ObatalaPlugin {
 		$process_type_custom_fields = new \Obatala\Api\ProcessTypeApi();
 		$process_type_custom_fields->register();
 
-		$sector_api = new \Obatala\Api\SectorAPI();
+		$sector_api = new \Obatala\Api\SectorApi();
 		$sector_api->register();
 	}
 
