@@ -14,7 +14,7 @@ class SectorApi extends ObatalaAPI {
         error_log('Registering routes');
 
         // Route to create a new sector
-        $this->add_route('sector_obatala', [
+        $this->add_route('add_sector_obatala', [
             'methods' => 'POST',
             'callback' => [$this, 'create_sector'],
             'permission_callback' => '__return_true',
@@ -29,7 +29,7 @@ class SectorApi extends ObatalaAPI {
         ]);
 
         // Route to get the sector by ID
-        $this->add_route('sector_obatala/(?P<id>\d+)', [
+        $this->add_route('get_sector_obatala/(?P<id>\d+)', [
             'methods' => 'GET',
             'callback' => [$this, 'get_sector'],
             'permission_callback' => '__return_true',
