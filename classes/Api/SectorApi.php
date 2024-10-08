@@ -14,12 +14,24 @@ class SectorApi extends ObatalaAPI {
         error_log('Registering routes');
 
         // Route to create a new sector
-        $this->add_route('add_sector_obatala', [
+        $this->add_route('create_sector_obatala', [
             'methods' => 'POST',
-            'callback' => [$this, 'create_sector'],
+            'callback' => [$this, 'add_sector'],
             'permission_callback' => '__return_true',
             'args' => [
                 'sector_name' => [
+                    'required' => true,
+                    'validate_callback' => function($param) {
+                        return !empty($param);
+                    }
+                ],
+                'sector_description' => [
+                    'required' => true,
+                    'validate_callback' => function($param) {
+                        return !empty($param);
+                    }
+                ],
+                'sector_status' => [
                     'required' => true,
                     'validate_callback' => function($param) {
                         return !empty($param);
@@ -43,12 +55,12 @@ class SectorApi extends ObatalaAPI {
         ]);
 
         // Route to update sector by ID
-        $this->add_route('sector_obatala/(?P<id>\d+)', [
+        $this->add_route('add_sector_obatala/(?P<id>\d+)', [
             'methods' => 'POST',
             'callback' => [$this, 'update_sector'],
             'permission_callback' => '__return_true',
             'args' => [
-                'sector_name' => [
+                'title' => [
                     'required' => true,
                     'validate_callback' => function($param) {
                         return !empty($param);
@@ -137,17 +149,23 @@ class SectorApi extends ObatalaAPI {
         ]);
     }
 
-    public function create_sector($request) {
+    public function add_sector($request) {
 
         error_log('create_sector function called');
         
         $sector_name = sanitize_text_field($request['sector_name']);
-        
+        $description = sanitize_text_field($request['sector_description']);
+
         if (empty($sector_name)) {
             return new WP_REST_Response('Nome do setor vazio', 400); // Retorna erro se o nome estiver vazia
         }
+
+        if (empty($description)) {
+            return new WP_REST_Response('Descrição do setor vazio', 400); // Retorna erro se o nome estiver vazia
+        }
+        
         $post_id = wp_insert_post([
-            'post_title' => $sector_name,
+            'post_title'    => $sector_name,
             'post_type' => 'sector_obatala',
             'post_status' => 'publish'
         ]);

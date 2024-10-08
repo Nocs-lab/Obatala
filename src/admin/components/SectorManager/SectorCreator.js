@@ -30,9 +30,10 @@ const SectorCreator = ({onSave, editingSector, onCancel}) => {
             return;
         }
         const savedSector = {
-            title,
+            sector_name: title,
             status: 'publish',
-            meta: { description }
+            sector_description: description,
+            sector_status: "Ativo"
         }
 
         try {
