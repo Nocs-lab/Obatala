@@ -1,29 +1,45 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Spinner, Notice, Panel, PanelHeader, PanelBody, PanelRow , Button} from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { fetchProcessTypes } from '../api/apiRequests';
 import MetroNavigation from './ProcessManager/MetroNavigation';
 import MetaFieldInputs from './ProcessManager/MetaFieldInputs';
 import CommentForm from './ProcessManager/CommentForm';
-import { check, Icon } from '@wordpress/icons';
 
 const ProcessViewer = () => {
     const [process, setProcess] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
     const [currentStep, setCurrentStep] = useState(0);
-    const [steps, setSteps] = useState([]);
     const [filteredProcessType, setFilteredProcessType] = useState(null);
     const [processTypes, setProcessTypes] = useState([]);
     const [submittedSteps, setSubmittedSteps] = useState({});
-    const [formValues, setFormValues] = useState({});
+    const [formValues, setFormValues] = useState([]);
     const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
+    const [flowNodes, setFlowNodes] = useState([]);
+    const [orderedSteps, setOrderedSteps] = useState([]);
+
     
     const getProcessIdFromUrl = () => {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get('process_id');
     };
-
+    
+    useEffect(()  => {
+        if (flowNodes && flowNodes.nodes && flowNodes.edges) {
+            const steps = getOrderedSteps();
+            if (steps.length > 0) {
+                setOrderedSteps(steps);
+    
+                const processId = getProcessIdFromUrl();
+                if (processId) {
+                    fetchMetaData(processId, steps);
+                }
+            }
+        }
+    }, [flowNodes]);
+    
+    
     useEffect(() => {
         const processId = getProcessIdFromUrl();
         if (processId) {
@@ -43,18 +59,14 @@ const ProcessViewer = () => {
         }
     }, [processTypes]);
 
-    useEffect(() => {
-        if (process) {
-            fetchSteps();
-        }
-    }, [process]);
-
     const fetchProcess = (processId) => {
         setIsLoading(true);
         apiFetch({ path: `/obatala/v1/process_obatala/${processId}?_embed` })
             .then(data => {
                 setProcess(data);
+                setFlowNodes(data.meta.flowData);
                 setIsLoading(false);
+        
             })
             .catch(error => {
                 console.error('Error fetching process:', error);
@@ -62,17 +74,45 @@ const ProcessViewer = () => {
                 setIsLoading(false);
             });
     };
-
-    const fetchSteps = async () => {
+    
+    const fetchMetaData = async (processId, steps) => {
+        setIsLoading(true);
         try {
-            const stepsData = await apiFetch({ path: `/obatala/v1/process_step` });
-            setSteps(stepsData);
+            const metaData = await apiFetch({ path: `/obatala/v1/process_obatala/${processId}/meta` });
+            
+            const submittedState = metaData.submittedStages || {};
+            const updatedSubmittedSteps = steps.reduce((acc, step, index) => {
+                if (submittedState[step.id]) {
+                    acc[index] = true;
+                }
+                return acc;
+            }, {});
+    
+            setSubmittedSteps(prev => ({ ...prev, ...updatedSubmittedSteps }));
+
+            const stageData = metaData.stageData || {};
+            const updatedFormValues = steps.reduce((acc, step) => {
+                if (stageData[step.id]) {
+                    acc[step.id] = stageData[step.id].fields.reduce((acc, field) => {
+                        acc[field.fieldId] = field.value || ''; 
+                        return acc;
+                    }, {});
+                }
+                return acc;
+            }, {});
+    
+            setFormValues(prev => ({ ...prev, ...updatedFormValues }));
+
         } catch (error) {
-            console.error('Error fetching steps:', error);
-            setError('Error fetching steps details.');
+            console.error('Error fetching meta data:', error);
+            setError('Error fetching meta data.');
+        } finally {
+            setIsLoading(false);
         }
     };
-
+    
+    
+    
     const fetchLoadProcess = () => {
         setIsLoading(true);
         return fetchProcessTypes()
@@ -101,27 +141,97 @@ const ProcessViewer = () => {
             });
     };
 
-    const handleFieldChange = (fieldId, newValue) => {
-        setFormValues(prevValues => {
-            const updatedValues = { ...prevValues[currentStep], [fieldId]: newValue };
-            return {
-                ...prevValues,
-                [currentStep]: updatedValues, 
-            };
-        });
-        
-        setIsSubmitEnabled(formValues);
-    }; 
-    
-    const handleSubmit = () => {
-        setSubmittedSteps(prev => ({
-            ...prev,
-            [currentStep]: true,
-        }));
-        setIsSubmitEnabled(false);
-        console.log('Form values:', formValues);
 
+    const handleFieldChange = (fieldId, newValue) => {
+        const stepId = orderedSteps[currentStep].id;
+
+        setFormValues(prevValues => ({
+                ...prevValues,
+                [stepId]: {
+                    ...prevValues[stepId],
+                    [fieldId]: newValue
+                }
+        }));
+
+        setIsSubmitEnabled(formValues);
     };
+    
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        const stepId = orderedSteps[currentStep].id;
+        
+        const fields = orderedSteps[currentStep].data.fields.map(field => ({
+            fieldId: field.id,
+            value: formValues[stepId]?.[field.id],
+        }));
+        
+        try {
+            const existingMetaData = await apiFetch({
+                path: `/obatala/v1/process_obatala/${process.id}/meta`,
+                method: 'GET',
+            });
+    
+            const updatedStageData = {
+                ...existingMetaData.stageData,
+                [stepId]: { fields }
+            };
+    
+    
+            await apiFetch({
+                path: `/obatala/v1/process_obatala/${process.id}/meta`,
+                method: 'POST',
+                data: {
+                    stageData: updatedStageData,
+                    submittedStages: {
+                        ...existingMetaData.submittedStages,
+                        [stepId]: true,
+                    }
+                }
+            });
+
+            setSubmittedSteps(prev => ({
+                ...prev,
+                [currentStep]: true, 
+            }));
+
+        } catch (error) {
+            console.error('Error saving metadata:', error);
+            setError('Error saving metadata.');
+        }
+    };
+    
+    const getOrderedSteps = useCallback(() => {
+        if (flowNodes && flowNodes.nodes){
+            const { edges, nodes } = flowNodes;
+            const nodeMap = new Map(nodes.map(node => [node.id, node]));
+            const sources = new Set(edges.map(edge => edge.source));
+            const targets = new Set(edges.map(edge => edge.target));
+
+            const initialStep = nodes.filter(node => sources.has(node.id) && !targets.has(node.id));
+            
+            const orderedSteps = [];
+            const visited = new Set();
+    
+            const visit = (nodeId) => {
+                if (visited.has(nodeId)) return;
+                visited.add(nodeId);
+                const node = nodeMap.get(nodeId);
+                if (node) {
+                    orderedSteps.push(node);
+                    edges
+                        .filter(edge => edge.source === nodeId)
+                        .forEach(edge => visit(edge.target));
+                }
+            };
+    
+            initialStep.forEach(node => visit(node.id));
+    
+            return orderedSteps;
+
+        }
+        return [];
+    }, [flowNodes]);
 
     if (isLoading) {
         return <Spinner />;
@@ -135,12 +245,7 @@ const ProcessViewer = () => {
         return <Notice status="warning" isDismissible={false}>No process found.</Notice>;
     }
 
-    const orderedSteps = process.meta.step_order.map(order => {
-        const step = steps.find(s => s.id === order.step_id);
-        return { ...order, title: step ? step.title.rendered : 'Unknown Title', meta_fields: order.meta_fields || [] };
-    });
-
-    const options = orderedSteps.map(step => ({ label: step.title, value: step.step_id }));
+    const options = orderedSteps.map(step => ({ label: step.data.stageName, value: step.id }));
 
     return (
         <div>
@@ -162,21 +267,22 @@ const ProcessViewer = () => {
                 />
                 <main>
                     {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
-                        <Panel key={`${orderedSteps[currentStep].step_id}-${currentStep}`}>
+                        <Panel key={`${orderedSteps[currentStep].id}-${currentStep}`}>
                             <PanelHeader>
-                                <h3>{`${orderedSteps[currentStep].title}`}</h3>
+                                <h3>{`${orderedSteps[currentStep].data.stageName}`}</h3>
                                 <span className="badge default ms-auto">Setor: Recepção</span>
                             </PanelHeader>
                             <PanelBody>
                                 <PanelRow>
-                                    <form className="centered" action="">
+                                {orderedSteps[currentStep].data.fields.length > 0 ? (
+                                    <form className="centered" onSubmit={handleSubmit}>
                                         <ul className="meta-fields-list">
-                                            {Array.isArray(orderedSteps[currentStep].meta_fields) ? orderedSteps[currentStep].meta_fields.map((field, idx) => (
-                                                <li key={`${orderedSteps[currentStep].step_id}-meta-${idx}`} className="meta-field-item">
+                                            {Array.isArray(orderedSteps[currentStep].data.fields) ? orderedSteps[currentStep].data.fields.map((field, idx) => (
+                                                <li key={`${orderedSteps[currentStep].id}-meta-${idx}`} className="meta-field-item">
                                                     <MetaFieldInputs 
                                                         field={field} 
-                                                        fieldId={idx}  
-                                                        initalValue={formValues[currentStep]?.[idx] || ''}
+                                                        fieldId={field.id} 
+                                                        initalValue={formValues[orderedSteps[currentStep].id]?.[field.id] || ''}
                                                         isEditable={!submittedSteps[currentStep]} 
                                                         onFieldChange={handleFieldChange} 
                                                     />
@@ -186,24 +292,27 @@ const ProcessViewer = () => {
                                         <div className="action-bar">
                                             <Button
                                                 variant="primary"
-                                                onClick={handleSubmit}
+                                                type="submit"
                                                 disabled={!isSubmitEnabled || submittedSteps[currentStep]}
                                             >Submit
                                             </Button>
                                         </div>
                                     </form>
+                                    ) : (
+                                        <Notice status="warning" isDismissible={false}>No fields found for this Step.</Notice>
+                                    )}
                                 </PanelRow>
                                 <footer>Última atualização em 21/10/2024 por João da Silva</footer>
                             </PanelBody>
                         </Panel>
                     ) : (
-                        <Notice status="warning" isDismissible={false}>No steps found for this process type.</Notice>
+                        <Notice status="warning" isDismissible={false}>No steps found for this process.</Notice>
                     )}
                 </main>
                 <aside>
                     <Panel>
                         <PanelHeader>Comments</PanelHeader>
-                        <CommentForm stepId={orderedSteps[currentStep]?.step_id || null} />
+                        <CommentForm stepId={orderedSteps[currentStep]?.id || null} />
                     </Panel>
                 </aside>
             </div>
@@ -211,4 +320,4 @@ const ProcessViewer = () => {
     );
 };
 
-export default ProcessViewer;
+export default ProcessViewer; 
