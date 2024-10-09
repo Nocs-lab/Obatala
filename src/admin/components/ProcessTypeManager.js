@@ -103,10 +103,10 @@ const ProcessTypeManager = () => {
                 <h2>Process Models</h2>
                 <ButtonGroup>
                     <Button 
-                    isPrimary 
-                    icon={<Icon icon={plus} />}
-                    onClick={handleAdd}
-                    >Add process model</Button>
+                        variant="primary" 
+                        icon={<Icon icon={plus} />}
+                        onClick={handleAdd}
+                        >Add process model</Button>
                 </ButtonGroup>
             </div>
             {notice && (
@@ -118,35 +118,26 @@ const ProcessTypeManager = () => {
             )}
             <div className="panel-container">
                 <main>
-                    <div className='notice-container'>
-                        {notice && (
-                            <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                                {notice.message}
-                            </Notice>
-
-                    )}
-                    </div>
                     <ProcessTypeList
                         processTypes={processTypes}
                         onEdit={handleEditProcessType}
                         onDelete={handleDeleteProcessType}
                     />
                 </main>
-                <section>
-                    {addingProcessType && (
-                        <Modal
-                            title="Add process model"
-                            onRequestClose={handleCancel}
-                            isDismissible={true}
-                        >
-                            <ProcessTypeForm
-                                onSave={handleSaveProcessType}
-                                onCancel={handleCancel}
-                                editingProcessType={editingProcessType}
-                            />
-                        </Modal>
-                    )}
-                </section>
+                {addingProcessType && (
+                    <Modal
+                        title="Add process model"
+                        onRequestClose={handleCancel}
+                        isDismissible={true}
+                        size="medium"
+                    >
+                        <ProcessTypeForm
+                            onSave={handleSaveProcessType}
+                            onCancel={handleCancel}
+                            editingProcessType={editingProcessType}
+                        />
+                    </Modal>
+                )}
             </div>
         </div>
     );

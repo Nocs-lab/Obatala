@@ -51,41 +51,36 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
     }
   };
 
-  return (
-    <>
-      <form onSubmit={handleSave}>
-          {notice && (
-              <div className="notice-container">
-                  <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                      {notice.message}
-                  </Notice>
-              </div>
-                )}
-        <PanelRow>
-          <TextControl
-              label="Title"
-              value={title}
-              onChange={(value) => setTitle(value)}
-          />
-          <TextControl
-              label="Description"
-              value={description}
-              onChange={(value) => setDescription(value)}
-          />
-        </PanelRow>
-        <PanelRow>
-          <ButtonGroup>
-              <Button variant="link" onClick={onCancel}>
-                  Cancel
-              </Button>
-              <Button variant="primary" type="submit">
-                  Save
-              </Button>
-          </ButtonGroup>
-        </PanelRow>
-      </form>
-    </>
-  );
+    return (
+        <form onSubmit={handleSave}>
+            {notice && (
+                <div className="notice-container">
+                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                        {notice.message}
+                    </Notice>
+                </div>
+            )}
+            <TextControl
+                label="Title"
+                value={title}
+                onChange={(value) => setTitle(value)}
+            />
+            <TextControl
+                label="Description"
+                value={description}
+                onChange={(value) => setDescription(value)}
+            />
+    
+            <ButtonGroup>
+                <Button variant="link" onClick={onCancel}>
+                    Cancel
+                </Button>
+                <Button variant="primary" type="submit">
+                    Save
+                </Button>
+            </ButtonGroup>
+        </form>
+    );
 };
 
 export default ProcessTypeForm;

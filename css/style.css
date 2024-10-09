@@ -71,9 +71,6 @@ h2 {
 h2:has(+ span.badge) {
   margin-bottom: 1rem;
 }
-main > .notice-container {
-  margin: 1rem var(--gap-external) 2rem;
-}
 /* #endregion */
 
 /* #region Forms */
@@ -116,6 +113,7 @@ form .components-button-group {
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 1rem;
+  margin-top: 2rem;
   width: 100%;
 }
 form :not(.components-panel__row) > .components-button-group {
@@ -203,6 +201,12 @@ table.wp-list-table th {
   flex-wrap: wrap;
   gap: 0.5rem;
   margin: -1rem var(--gap-external) 2rem;
+}
+/* #endregion */
+
+/* #region Notice */
+.notice-container {
+  margin: 1rem var(--gap-external) 2rem;
 }
 /* #endregion */
 

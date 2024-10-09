@@ -9,6 +9,7 @@ import {
   Button,
 } from "@wordpress/components";
 import apiFetch from "@wordpress/api-fetch";
+import ProcessTypeForm from './ProcessTypeManager/ProcessTypeForm';
 import ProcessFlow from "./FlowEditor/ProcessFlow";
 import { FlowProvider } from "./FlowEditor/context/FlowContext";
 
