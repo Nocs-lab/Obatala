@@ -81,12 +81,12 @@ class SectorApi extends ObatalaAPI {
             ]
         ]);
         
-        // Route to delete sector
-        // $this->add_route('delete_sector_obatala/(?P<id>\d+)', [
-        //     'methods' => 'DELETE',
-        //     'callback' => [$this, 'delete_sector'],
-        //     'permission_callback' => '__return_true'
-        // ]);
+        //Route to delete sector
+        $this->add_route('delete_sector_obatala/(?P<id>\d+)', [
+            'methods' => 'DELETE',
+            'callback' => [$this, 'delete_sector'],
+            'permission_callback' => '__return_true'
+        ]);
 
         // Route to get all users
         $this->add_route('sector_obatala/users_obatala', [
@@ -281,40 +281,42 @@ class SectorApi extends ObatalaAPI {
         return new WP_REST_Response('Setor atualizado com sucesso', 201);
     }
 
-    // public function delete_sector($request) {
+    public function delete_sector($request) {
 
-    //     error_log('delete_sector function called');
+        error_log('delete_sector function called');
 
-    //     $sector_name = sanitize_text_field($request['sector_name']);
+        $sector_name = sanitize_text_field($request['sector_name']);
 
-    //     if (empty($sector_name)) {
-    //         return new WP_REST_Response('Nome do setor vazio', 400); // Retorna erro se o nome estiver vazio
-    //     }
-    
-    //     if (empty($description)) {
-    //         return new WP_REST_Response('Descrição do setor vazia', 400); // Retorna erro se a descrição estiver vazia
-    //     }
+        if (empty($sector_name)) {
+            return new WP_REST_Response('Nome do setor vazio', 400); // Retorna erro se o nome estiver vazio
+        }
 
-    //     // Recuperar setores já existentes no formato JSON
-    //     $setores_json = get_option('obatala_setores', '{}'); // Recupera como JSON ou inicializa como um objeto vazio
-    //     $setores = json_decode($setores_json, true);
+        $user = $this->return_sector_users($sector_name);
+        // verifica se não tem usuarios assocados a um setor
+        if(empty($user)){
+            // Recuperar setores já existentes no formato JSON
+            $setores_json = get_option('obatala_setores', '{}'); // Recupera como JSON ou inicializa como um objeto vazio
+            $setores = json_decode($setores_json, true);
 
-    //     if (!is_array($setores)) {
-    //         $setores = [];
-    //     }
+            if (!is_array($setores)) {
+                $setores = [];
+            }
 
-    //     // Remover o setor do array
-    //     unset($setores[$sector_name]);
+            // Remover o setor do array
+            unset($setores[$sector_name]);
 
-    //     // Salvar os setores atualizados de volta na opção do WordPress
-    //     $updated = update_option('obatala_setores', json_encode($setores));
+            // Salvar os setores atualizados de volta na opção do WordPress
+            $updated = update_option('obatala_setores', json_encode($setores));
 
-    //     if ($updated) {
-    //         return new WP_REST_Response('Setor deletado com sucesso', 200); // Sucesso
-    //     } else {
-    //         return new WP_REST_Response('Erro ao deletar o setor', 500); // Falha ao salvar
-    //     }
-    // }
+            if ($updated) {
+                return new WP_REST_Response('Setor deletado com sucesso', 200); // Sucesso
+            } else {
+                return new WP_REST_Response('Erro ao deletar o setor', 500); // Falha ao salvar
+            }
+        }else{
+            return new WP_REST_Response('Erro ao deletar o setor', 500); // ja possue um usuario associado a um setor
+        }
+    }
 
     public function get_all_users($request) {
         $args = array(
@@ -340,34 +342,59 @@ class SectorApi extends ObatalaAPI {
 
     public function associate_user_to_sector($request) {
         $user_id = (int) $request['user_id'];
-        $sector_id = (int) $request['sector_id'];
+        $sector_name = sanitize_text_field($request['sector_name']);
 
         // Verificar se o usuário existe
         if (!get_user_by('ID', $user_id)) {
             return new WP_REST_Response('Usuário não encontrado.', 404);
         }
 
-        // Verificar se o setor existe
-        $sector_post = get_post($sector_id);
-        if (!$sector_post || $sector_post->post_type !== 'sector_obatala') {
-            return new WP_REST_Response('Setor não encontrado.', 404);
+        
+        if (empty($sector_name)) {
+            return new WP_REST_Response('Nome do setor vazio', 400); // Retorna erro se o nome estiver vazio
+        }
+
+        // Recuperar setores já existentes no formato JSON
+        $setores_json = get_option('obatala_setores', '{}'); // Recupera como JSON ou inicializa como um objeto vazio
+        $setores = json_decode($setores_json, true);
+
+        if (!is_array($setores)) {
+            $setores = [];
+        }
+
+        // Verifica se o setor existe
+        if (!array_key_exists(sanitize_title($sector_name), $setores)) {
+            return new WP_REST_Response('Setor não encontrado', 404); // Retorna erro se o setor não for encontrado
         }
 
         // Associar o setor ao usuário nos meta dados
-        update_user_meta($user_id, 'associated_sector', $sector_id);
+        update_user_meta($user_id, 'associated_sector', $sector_name);
 
         return new WP_REST_Response('Usuário associado ao setor com sucesso.', 200);
     }
 
      // Função que retorna a lista de usuários associados a um setor
     public function get_sector_users($request) {
-        global $wpdb;
 
-        $sector_id = (int) $request['id'];
+        $sector_name = sanitize_text_field($request['sector_name']);
 
-        if (!$sector_id) {
-            return new WP_REST_Response('Setor inválido.', 400);
+        if (empty($sector_name)) {
+            return new WP_REST_Response('Nome do setor vazio', 400); // Retorna erro se o nome estiver vazio
         }
+
+        $users = $this->return_sector_users($sector_name);
+
+        // Se não encontrar usuários, retorna um erro (talvez seja redundante por conta da funçao return_sector_users())
+        //if (empty($users)) {
+            //return new WP_REST_Response('Nenhum usuário encontrado para o setor especificado.', 404);
+        //}
+
+        return new WP_REST_Response($users, 200);
+    }
+
+    // Função que retorna lista de usuarios associados a um setor
+    public function return_sector_users($sector_name){
+        global $wpdb;
 
         // Consulta os IDs dos usuários associados ao setor
         $user_ids = $wpdb->get_col(
@@ -375,8 +402,8 @@ class SectorApi extends ObatalaAPI {
                 "SELECT user_id 
                 FROM $wpdb->usermeta 
                 WHERE meta_key = 'associated_sector' 
-                AND meta_value = %d", 
-                $sector_id
+                AND meta_value = %s", 
+                $sector_name
             )
         );
 
@@ -397,27 +424,27 @@ class SectorApi extends ObatalaAPI {
                 ];
             }
         }
-
-        return new WP_REST_Response($users, 200);
+        return $users;
     }
 
     public function get_all_sectors_with_users($request) {
+        
         global $wpdb;
     
-        // Consulta todos os setores
-        $sectors_query = new WP_Query([
-            'post_type' => 'sector_obatala',
-            'post_status' => 'publish',
-            'posts_per_page' => -1
-        ]);
+        // Recuperar setores já existentes no formato JSON
+        $setores_json = get_option('obatala_setores', '{}'); // Recupera como JSON ou inicializa como um objeto vazio
+        $setores = json_decode($setores_json, true);
+
+        if (!is_array($setores)) {
+            $setores = [];
+        }
     
         $sectors_with_users = [];
     
-        if ($sectors_query->have_posts()) {
-            while ($sectors_query->have_posts()) {
-                $sectors_query->the_post();
-                $sector_id = get_the_ID();
-                $sector_name = get_the_title();
+        if (is_array($setores) && !empty($setores)) {
+            foreach ($setores as $sector_slug => $sector_data) {
+                $nome = $sector_data['nome'];
+                
                 
                 // Consulta os IDs dos usuários associados ao setor
                 $user_ids = $wpdb->get_col(
@@ -425,34 +452,33 @@ class SectorApi extends ObatalaAPI {
                         "SELECT user_id 
                          FROM $wpdb->usermeta 
                          WHERE meta_key = 'associated_sector' 
-                         AND meta_value = %d", 
-                         $sector_id
+                         AND meta_value = %s", 
+                         $nome
                     )
                 );
     
                 // Obtém os dados dos usuários associados
                 $users = [];
-                foreach ($user_ids as $user_id) {
-                    $user_data = get_userdata($user_id);
-                    if ($user_data) {
-                        $users[] = [
-                            'ID' => $user_data->ID,
-                            'username' => $user_data->user_login,
-                            'display_name' => $user_data->display_name,
-                            'email' => $user_data->user_email,
-                        ];
+                if (!empty($user_ids)) {
+                    foreach ($user_ids as $user_id) {
+                        $user_data = get_userdata($user_id);
+                        if ($user_data) {
+                            $users[] = [
+                                'ID' => $user_data->ID,
+                                'username' => $user_data->user_login,
+                                'display_name' => $user_data->display_name,
+                                'email' => $user_data->user_email,
+                            ];
+                        }
                     }
                 }
     
                 // Adiciona o setor e seus usuários à lista
                 $sectors_with_users[] = [
-                    'sector_id' => $sector_id,
-                    'sector_name' => $sector_name,
+                    'sector_name' => $nome,
                     'users' => $users
                 ];
             }
-    
-            wp_reset_postdata();
         }
     
         return new WP_REST_Response($sectors_with_users, 200);
@@ -461,18 +487,22 @@ class SectorApi extends ObatalaAPI {
     public function remove_user_from_sector($request) {
         global $wpdb;
     
-        $sector_id = (int) $request['sector_id'];
         $user_id = (int) $request['user_id'];
-    
+        $sector_name = sanitize_text_field($request['sector_name']);
+
+        if (empty($sector_name)) {
+            return new WP_REST_Response('Nome do setor vazio', 400); // Retorna erro se o nome estiver vazio
+        }
+        
         // Verifica se o usuário está associado ao setor
         $meta_exists = $wpdb->get_var(
             $wpdb->prepare(
                 "SELECT COUNT(*) 
                  FROM $wpdb->usermeta 
                  WHERE meta_key = 'associated_sector' 
-                 AND meta_value = %d 
+                 AND meta_value = %s 
                  AND user_id = %d",
-                $sector_id,
+                $sector_name,
                 $user_id
             )
         );
@@ -483,7 +513,7 @@ class SectorApi extends ObatalaAPI {
                 $wpdb->usermeta,
                 [
                     'meta_key' => 'associated_sector',
-                    'meta_value' => $sector_id,
+                    'meta_value' => $sector_name,
                     'user_id' => $user_id
                 ]
             );
