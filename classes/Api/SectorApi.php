@@ -88,28 +88,6 @@ class SectorApi extends ObatalaAPI {
         //     'permission_callback' => '__return_true'
         // ]);
 
-        // Route to get sector meta fields
-        $this->add_route('sector_obatala/(?P<id>\d+)/meta', [
-            'methods' => 'GET',
-            'callback' => [$this, 'get_meta'],
-            'permission_callback' => '__return_true',
-        ]);
-
-        // Route to update sector meta fields
-        $this->add_route('sector_obatala/(?P<id>\d+)/meta', [
-            'methods' => 'POST',
-            'callback' => [$this, 'update_meta'],
-            'permission_callback' => '__return_true',
-            'args' => [
-                'description' => [
-                    'required' => true,
-                    'validate_callback' => function($param) {
-                        return !empty($param);
-                    }
-                ]
-            ]
-        ]);
-
         // Route to get all users
         $this->add_route('sector_obatala/users_obatala', [
             'methods' => 'GET',
@@ -337,24 +315,6 @@ class SectorApi extends ObatalaAPI {
     //         return new WP_REST_Response('Erro ao deletar o setor', 500); // Falha ao salvar
     //     }
     // }
-
-    public function get_meta($request) {
-        $post_id = (int) $request['id'];
-        $meta = get_post_meta($post_id);
-
-        return $meta;
-    }
-
-    public function update_meta($request) {
-        $post_id = (int) $request['id'];
-
-        $description = sanitize_text_field($request['description']);
-
-        update_post_meta($post_id, "sector_description", $description);
-        
-
-        return new WP_REST_Response('Meta fields updated successfully', 200);
-    } 
 
     public function get_all_users($request) {
         $args = array(
