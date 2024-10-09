@@ -113,7 +113,7 @@ const processDataEditor = () => {
             </PanelHeader>
               <PanelRow >
                 <ProcessTypeForm
-                  editingProcessType={processType}
+                  editingProcessType={processData}
                   onSave={handleSave}
                 />
               </PanelRow>
