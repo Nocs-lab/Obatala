@@ -1,17 +1,25 @@
 import React, { useState, useEffect } from "react";
 import {
   Button,
+  ButtonGroup,
   TextControl,
   Notice,
+  PanelRow,
 } from "@wordpress/components";
 
 const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
   const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [notice, setNotice] = useState(null);
 
   useEffect(() => {
     if (editingProcessType && editingProcessType.meta) {
       setTitle(editingProcessType.title.rendered);
+      setDescription(
+        Array.isArray(editingProcessType.meta.description)
+          ? editingProcessType.meta.description[0]
+          : editingProcessType.meta.description || ""
+      );
     }
   }, [editingProcessType]);
 
@@ -26,6 +34,9 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
     const updatedProcessType = {
       title,
       status: "publish",
+      meta: {
+        description
+      },
     };
 
     try {
@@ -42,27 +53,37 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
 
   return (
     <>
-        <div className="notice-container">
+      <form onSubmit={handleSave}>
           {notice && (
-            <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-              {notice.message}
-            </Notice>
-          )}
-
-        </div>
-
+              <div className="notice-container">
+                  <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                      {notice.message}
+                  </Notice>
+              </div>
+                )}
+        <PanelRow>
           <TextControl
-            label="Title"
-            value={title}
-            onChange={(value) => setTitle(value)}
+              label="Title"
+              value={title}
+              onChange={(value) => setTitle(value)}
           />
-          <Button isPrimary onClick={handleSave}>
-            Save
-          </Button>
-          <Button isSecondary onClick={onCancel}>
-            Cancel
-          </Button>
-    
+          <TextControl
+              label="Description"
+              value={description}
+              onChange={(value) => setDescription(value)}
+          />
+        </PanelRow>
+        <PanelRow>
+          <ButtonGroup>
+              <Button variant="link" onClick={onCancel}>
+                  Cancel
+              </Button>
+              <Button variant="primary" type="submit">
+                  Save
+              </Button>
+          </ButtonGroup>
+        </PanelRow>
+      </form>
     </>
   );
 };

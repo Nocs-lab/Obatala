@@ -36,7 +36,7 @@ class Sector {
             'query_var'          => true,
             'rewrite'            => array('slug' => 'obatala_sectors'),
             'capability_type'    => 'post',
-            'capabilities'       => array(
+            /* 'capabilities'       => array(
                 'edit_post'          => 'edit_post',
                 'read_post'          => 'read_post',
                 'delete_post'        => 'delete_post',
@@ -44,7 +44,7 @@ class Sector {
                 'edit_others_posts'  => 'edit_others_posts',
                 'publish_posts'      => 'publish_posts',
                 'read_private_posts' => 'read_private_posts'
-            ),
+            ), */
             'has_archive'        => true,
             'hierarchical'       => false,
             'menu_position'      => 100,

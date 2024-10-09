@@ -5,35 +5,34 @@ import {
   PanelRow,
   Spinner,
   Notice,
+  TextControl,
+  Button,
 } from "@wordpress/components";
 import apiFetch from "@wordpress/api-fetch";
-import ProcessTypeForm from "./ProcessTypeManager/ProcessTypeForm";
 import ProcessFlow from "./FlowEditor/ProcessFlow";
+import { FlowProvider } from "./FlowEditor/context/FlowContext";
 
-const ProcessTypeEditor = () => {
+const processDataEditor = () => {
   const params = new URLSearchParams(window.location.search);
   const id = params.get("process_type_id");
-  const [processType, setProcessType] = useState(null);
+  const [processData, setProcessData] = useState(null);
   const [notice, setNotice] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [stepOrder, setStepOrder] = useState([]);
   const flowRef = useRef(null); // Referência para acessar os dados do fluxo
   const [flowData, setFlowData] = useState({ nodes: [], edges: [] }); // Novo estado para o flowData
+  const [title, setTitle] = useState("");
 
   useEffect(() => {
     setIsLoading(true);
 
     apiFetch({ path: `/obatala/v1/process_type/${id}` })
       .then((typeData) => {
-        console.log("Process type data:", typeData);
-        setProcessType(typeData);
-        const order = typeData.meta.step_order || [];
-        setStepOrder(order);
-
+        console.log("Process model data:", typeData);
+        setProcessData(typeData);
+        setTitle(typeData.title.rendered);
         // Extraindo flowData do processo carregado
         const flowData = typeData.meta.flowData || { nodes: [], edges: [] };
         setFlowData(flowData);
-
         setIsLoading(false);
       })
       .catch((error) => {
@@ -43,37 +42,38 @@ const ProcessTypeEditor = () => {
       });
   }, [id]);
 
-  const handleSave = async (updatedProcessType) => {
+  const handleSave = async () => {
     try {
       const flowData = flowRef.current.getFlowData(); // Obtém os dados do flow
-  
+
       const updatedData = {
-        ...updatedProcessType,
+        ...processData,
+        title: title,
         meta: {
-          ...updatedProcessType.meta,
           flowData, // Armazena os dados de fluxo como meta
-          step_order: stepOrder,
         },
       };
-  
+
+      console.log("Updated data:", updatedData);
+
       // Evita recarregar a página
       await apiFetch({
         path: `/obatala/v1/process_type/${id}`,
         method: "PUT",
         data: updatedData,
       });
-  
+
       await apiFetch({
         path: `/obatala/v1/process_type/${id}/meta`,
         method: "PUT",
         data: updatedData.meta,
       });
-  
-      setProcessType({
-        ...updatedProcessType,
+
+      setProcessData({
+        ...processData,
         meta: updatedData.meta,
       });
-  
+
       setNotice({
         status: "success",
         message: "Process type and meta updated successfully.",
@@ -88,45 +88,12 @@ const ProcessTypeEditor = () => {
       setIsLoading(false);
     }
   };
-  
-
-  const handleAddProcessStep = (stepIds) => {
-    const newStepOrder = Array.isArray(stepOrder) ? stepOrder : [];
-
-    const stepsToAdd = stepIds.filter(
-      (stepId) => !newStepOrder.includes(stepId)
-    );
-
-    if (stepsToAdd.length === 0) {
-      setNotice({
-        status: "warning",
-        message: "All selected steps are already in the process type.",
-      });
-      return;
-    }
-
-    const updatedStepOrder = [...newStepOrder, ...stepsToAdd];
-
-    apiFetch({
-      path: `/obatala/v1/process_type/${id}/meta`,
-      method: "PUT",
-      data: { step_order: updatedStepOrder },
-    })
-      .then(() => {
-        setStepOrder(updatedStepOrder);
-        setNotice({ status: "success", message: "Steps added successfully." });
-      })
-      .catch((error) => {
-        console.error("Error updating step order:", error);
-        setNotice({ status: "error", message: "Error updating step order." });
-      });
-  };
 
   if (isLoading) {
     return <Spinner />;
   }
 
-  if (!processType) {
+  if (!processData) {
     return <div>Loading...</div>;
   }
   return (
@@ -135,7 +102,7 @@ const ProcessTypeEditor = () => {
         <strong>Obatala</strong> Curatorial Process Management
       </span>
       <div className="title-container">
-        <h2>Edit Process Type</h2>
+        <h2>Edit Process Model: {title}</h2>
       </div>
       <div className="panel-container">
         <main>
@@ -153,7 +120,18 @@ const ProcessTypeEditor = () => {
           </Panel>
           <Panel>
             <PanelHeader>
-              <h3>Steps</h3>
+              <TextControl
+                value={title}
+                placeholder="Digite o placeholder"
+                onChange={(value) => setTitle(value)}
+              />
+              <Button variant="primary" type="submit" style={{
+                margin: 0
+              }}
+              onClick={handleSave}
+              >
+                Save
+              </Button>
             </PanelHeader>
             <PanelRow>
               {notice && (
@@ -167,14 +145,15 @@ const ProcessTypeEditor = () => {
               )}
 
               {/* Passa o flowData carregado como initialData para o ProcessFlow */}
-              <ProcessFlow ref={flowRef} initialData={flowData} />
+              <FlowProvider>
+                <ProcessFlow ref={flowRef} initialData={flowData} />
+              </FlowProvider>
             </PanelRow>
           </Panel>
         </main>
-
       </div>
     </div>
   );
 };
 
-export default ProcessTypeEditor;
+export default processDataEditor;
