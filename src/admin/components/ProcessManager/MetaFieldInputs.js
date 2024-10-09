@@ -5,10 +5,9 @@ import {
   FormFileUpload,
   SelectControl,
   RadioControl,
-  TextareaControl,
 } from "@wordpress/components";
 
-const MetaFieldInputs = ({ field, isEditable, onFieldChange, fieldId, initalValue}) => {
+const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId, initalValue}) => {
   const [value, setValue] = useState(initalValue);
 
   const handleChange = (newValue) => {
@@ -19,20 +18,27 @@ const MetaFieldInputs = ({ field, isEditable, onFieldChange, fieldId, initalValu
 
     switch (field.type) {
         case "text":
+        case "email":
+        case "phone":
+        case "address":
             return (
                 <div className="meta-field-wrapper">
                     {isEditable ? (
                         <TextControl
-                        label={field.title}
+                        label={field.config?.label ?? 'Unknow Title'}
+                        placeholder={field.config?.placeholder ?? 'Enter a value...'}
                         value={value}
                         onChange={handleChange}
                         disabled={!isEditable}
-                        required
+                        required={field.config?.required ?? false}
+                        minLength={field.config?.minLength }
+                        maxLength={field.config?.maxLength }
+                        help={field.config?.helpText}
                         />
                     ) : (
                         <dl className="description-list">
                             <div className="list-item">
-                                <dt>{field.title}</dt>
+                                <dt>{field.config?.label}</dt>
                                 <dd>{initalValue}</dd>
                             </div>
                         </dl>
@@ -44,15 +50,17 @@ const MetaFieldInputs = ({ field, isEditable, onFieldChange, fieldId, initalValu
         <div className="meta-field-wrapper">
           {isEditable ? (
             <DatePicker
-              currentDate={value}
+              label={field.config?.label ?? 'Unknow Title'}
+              currentDate={field.config?.dateValue}
               onChange={(date) => handleChange(date)}
               disabled={!isEditable}
-              required
+              required={field.config?.required ?? false}
+              help={field.config?.helpText}
             />
           ) : (
             <dl className="description-list">
                 <div className="list-item">
-                    <dt>{field.title}</dt>
+                    <dt>{field.config?.label}</dt>
                     <dd>{initalValue}</dd>
                   </div>
             </dl>
@@ -66,16 +74,17 @@ const MetaFieldInputs = ({ field, isEditable, onFieldChange, fieldId, initalValu
             <FormFileUpload
               accept="image/*"
               onChange={(event) => console.log(event.currentTarget.files)}
-              label={field.title}
+              label={field.config?.label ?? 'Unknow title'}
               disabled={!isEditable}
-              required
+              required={field.config?.required ?? false}
+              help={field.config?.helpText}
             >
               Upload
             </FormFileUpload>
             ) : (
               <dl className="description-list">
                     <div className="list-item">
-                        <dt>{field.title}</dt>
+                        <dt>{field.config?.label}</dt>
                         <dd>{initalValue}</dd>
                     </div>
               </dl>
@@ -87,38 +96,21 @@ const MetaFieldInputs = ({ field, isEditable, onFieldChange, fieldId, initalValu
         <div className="meta-field-wrapper">
           {isEditable ? (
             <TextControl
-              label={field.title}
+              label={field.config?.label  ?? 'Unknow title'}
+              min={field.config?.min}
+              max={field.config?.max}
+              step={field.config?.step}
               value={value}
               onChange={(value) => handleChange(value)}
               type="number"
               disabled={!isEditable}
-              required
+              required={field.config?.required ?? false}
+              help={field.config?.helpText}
             />
           ) : (
             <dl className="description-list">
                 <div className="list-item">
-                    <dt>{field.title}</dt>
-                    <dd>{initalValue}</dd>
-                </div>
-            </dl>
-          )}
-        </div>
-      );
-    case "textfield":
-      return (
-        <div className="meta-field-wrapper">
-          {isEditable ? (
-            <TextareaControl
-              label={field.title}
-              value={value}
-              onChange={(newValue) => handleChange(newValue)}
-              disabled={!isEditable}
-              required
-            />
-          ) : (
-            <dl className="description-list">
-                <div className="list-item">
-                    <dt>{field.title}</dt>
+                    <dt>{field.config?.label}</dt>
                     <dd>{initalValue}</dd>
                 </div>
             </dl>
@@ -130,19 +122,21 @@ const MetaFieldInputs = ({ field, isEditable, onFieldChange, fieldId, initalValu
         <div className="meta-field-wrapper">
           {isEditable ? (
             <SelectControl
-              label={field.title}
+              label={field.config?.label  ?? 'Unknow title'}
               value={value}
               onChange={(newValue) => handleChange(newValue)}
-              options={field.value
+              options={field.config?.options
                 .split(",")
-                .map((option) => ({ label: option, value: option }))}
+                .map((option) => (
+                  { label: option, value: option }))}
               disabled={!isEditable}
-              required
+              required={field.config?.required ?? false}
+              help={field.config?.helpText}
             />
           ) : (
             <dl className="description-list">
                 <div className="list-item">
-                  <dt>{field.title}</dt>
+                  <dt>{field.config?.label}</dt>
                   <dd>{initalValue}</dd>
                   </div>
             </dl>
@@ -154,29 +148,29 @@ const MetaFieldInputs = ({ field, isEditable, onFieldChange, fieldId, initalValu
         <div className="meta-field-wrapper">
           {isEditable ? (
             <RadioControl
-              label={field.title}
+              label={field.config?.label  ?? 'Unknow Title'}
               selected={value}
               onChange={(newValue) => handleChange(newValue)}
-              options={field.value
+              options={field.config?.options
                 .split(",")
                 .map((option) => ({ label: option, value: option }))}
               disabled={!isEditable}
-              required
+              required={field.config?.required ?? false}
+              help={field.config?.helpText}
             />
           ) : (
             <dl className="description-list">
                 <div className="list-item">
-                    <dt>{field.title}</dt>
+                    <dt>{field.config?.label}</dt>
                     <dd>{initalValue}</dd>
                 </div>
             </dl>
           )}
         </div>
-      );
+      ); 
     default:
       return null;
   }
-};
+});
 
 export default MetaFieldInputs;
-
