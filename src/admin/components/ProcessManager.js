@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Spinner, Button, Notice, Panel, PanelHeader, PanelBody, PanelRow, Icon, ButtonGroup, Tooltip, Modal } from '@wordpress/components';
+import { Spinner, Button, Notice, Panel, PanelHeader, PanelRow, Icon, ButtonGroup, Tooltip, Modal} from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import ProcessCreator from './ProcessManager/ProcessCreator';
-import { edit, seen  } from '@wordpress/icons';
+import { edit, seen, plus } from '@wordpress/icons';
 
 const ProcessManager = ({ onSelectProcess }) => {
     const [processTypes, setProcessTypes] = useState([]);
@@ -11,7 +11,9 @@ const ProcessManager = ({ onSelectProcess }) => {
     const [isLoading, setIsLoading] = useState(true);
     const [processSteps, setProcessSteps] = useState([]);
     const [selectedProcessId, setSelectedProcessId] = useState(null);
+    const [addingProcess, setAddingProcess] = useState(null);
     const [editingProcess, setEditingProcess] = useState(null);
+    const [notice, setNotice] = useState(null);
 
     useEffect(() => {
         fetchProcessTypes();
@@ -91,12 +93,14 @@ const ProcessManager = ({ onSelectProcess }) => {
         else {
             // Adiciona o novo processo à lista
             setProcesses(prevProcesses => [...prevProcesses, newProcess]);
-
+            setAddingProcess(null);
         }
-
+        setIsLoading(true);
         // Atualiza os mapeamentos de tipo de processo
         const updatedProcesses = [...processes, newProcess];
+        setNotice({ status: 'success', message: 'Process saved successfully.' });
         await fetchProcessTypesForProcesses(updatedProcesses);
+        setIsLoading(false);
     };
     
 
@@ -109,8 +113,12 @@ const ProcessManager = ({ onSelectProcess }) => {
         setEditingProcess(process);
     };
 
+    const handleAddProcess = () => {
+        setAddingProcess(true);
+    };
     const handleCancel = () => {
         setEditingProcess(null);
+        setAddingProcess(null);
     };
 
 
@@ -119,104 +127,114 @@ const ProcessManager = ({ onSelectProcess }) => {
     }
 
     return (
-        <div>
+        <main>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
-            <h2>Process Manager</h2>
-            <div className="panel-container">
-                <main>
-                    <Panel>
-                        <PanelHeader>
-                            <h3>Existing Processes</h3>
-                            <span className="badge">{processes.length}</span>
-                        </PanelHeader>
-                        <PanelRow>
-                            {processes.length > 0 ? (
-                                <table className="wp-list-table widefat fixed striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Process Title</th>
-                                            <th>Process Type Title</th>
-                                            <th>Status</th>
-                                            <th>Access Level</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {processes.map(process => {
-                                            const typeMapping = processTypeMappings.find(m => m.processId == process.id);
-                                            const processType = typeMapping ? processTypes.find(type => type.id == typeMapping.processTypeId) : null;
-
-                                            return (
-                                                <tr key={process.id}>
-                                                    <td>{process.title.rendered}</td>
-                                                    <td>{processType ? processType.title.rendered : ''}</td>
-                                                    <td>{process.meta.current_stage || 'Not Started'}</td>
-                                                    <td><span className={`badge ${process.meta.access_level == 'public' ? 'success' : 'warning'}`}>{process.meta.access_level}</span></td>
-                                                    <td>
-                                                        <ButtonGroup>
-                                                            <Tooltip text="View">
-                                                                <Button
-                                                                icon={<Icon icon={seen} />} 
-                                                                onClick={() => handleSelectProcess(process.id)}
-                                                                />
-
-                                                            </Tooltip>
-                                                            <Tooltip text="Edit">
-                                                                <Button
-                                                                icon={<Icon icon={edit} />}
-                                                                onClick={() => handleEditProcess(process)}
-                                                            />
-
-                                                            </Tooltip>
-                                                        </ButtonGroup>
-                                                    </td>
-                                                </tr>
-                                            );
-                                        })}
-                                    </tbody>
-                                </table>
-                            ) : (
-                                <Notice isDismissible={false} status="warning">No existing processes.</Notice>
-                            )}
-                        </PanelRow>
-                    </Panel>
-                </main>
-                <aside>
-                    {editingProcess && (
-                            <Modal
-                                title="Edit Process"
-                                onRequestClose={handleCancel}
-                                isDismissible={true}
-                            >
-                                <ProcessCreator 
-                                    processTypes={processTypes} 
-                                    onProcessSaved={handleProcessSaved} 
-                                    editingProcess={editingProcess}
-                                    onCancel={handleCancel} 
-                                />
-                            </Modal>
-                        )}
-                        <Panel>
-                        <PanelHeader>Create Process</PanelHeader>
-                            <PanelBody>
-                                <PanelRow>
-                                    <ProcessCreator processTypes={processTypes} 
-                                        onProcessSaved={handleProcessSaved}
-                                        onCancel={handleCancel}
-                                    />
-                                </PanelRow>
-                            </PanelBody>
-                        </Panel>
-                    
-                </aside>
+            <div className="title-container">
+                <h2>Process Manager</h2>
+                <ButtonGroup>
+                    <Button isPrimary 
+                            icon={<Icon icon={plus}/>}
+                            onClick={handleAddProcess}
+                            >Add new</Button>
+                </ButtonGroup>
             </div>
+            {notice && (
+                <div className="notice-container">
+                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                        {notice.message}
+                    </Notice>
+                </div>
+            )}
+            <Panel>
+                <PanelHeader>
+                    <h3>Existing Processes</h3>
+                    <span className="badge">{processes.length}</span>
+                </PanelHeader>
+                <PanelRow>
+                    {processes.length > 0 ? (
+                        <table className="wp-list-table widefat fixed striped">
+                            <thead>
+                                <tr>
+                                    <th>Process Title</th>
+                                    <th>Process Type Title</th>
+                                    <th>Status</th>
+                                    <th>Access Level</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {processes.map(process => {
+                                    const typeMapping = processTypeMappings.find(m => m.processId == process.id);
+                                    const processType = typeMapping ? processTypes.find(type => type.id == typeMapping.processTypeId) : null;
+
+                                    return (
+                                        <tr key={process.id}>
+                                            <td>{process.title.rendered}</td>
+                                            <td>{processType ? processType.title.rendered : ''}</td>
+                                            <td>{process.meta.current_stage || 'Not Started'}</td>
+                                            <td><span className={`badge ${process.meta.access_level == 'public' ? 'success' : 'warning'}`}>{process.meta.access_level}</span></td>
+                                            <td>
+                                                <ButtonGroup>
+                                                    <Tooltip text="View">
+                                                        <Button
+                                                        icon={<Icon icon={seen} />} 
+                                                        onClick={() => handleSelectProcess(process.id)}
+                                                        />
+
+                                                    </Tooltip>
+                                                    <Tooltip text="Edit">
+                                                        <Button
+                                                        icon={<Icon icon={edit} />}
+                                                        onClick={() => handleEditProcess(process)}
+                                                    />
+
+                                                    </Tooltip>
+                                                </ButtonGroup>
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    ) : (
+                        <Notice isDismissible={false} status="warning">No existing processes.</Notice>
+                    )}
+                </PanelRow>
+            </Panel>
+            {editingProcess && (
+                    <Modal
+                        title="Edit Process"
+                        onRequestClose={handleCancel}
+                        isDismissible={true}
+                    >
+                        <ProcessCreator 
+                            processTypes={processTypes} 
+                            onProcessSaved={handleProcessSaved} 
+                            editingProcess={editingProcess}
+                            onCancel={handleCancel} 
+                        />
+                    </Modal>
+            )}
+            {addingProcess && (
+                <Modal
+                    title="Add new process"
+                    onRequestClose={handleCancel}
+                    isDismissible={true}
+                >
+                    <ProcessCreator 
+                        processTypes={processTypes} 
+                        onProcessSaved={handleProcessSaved}
+                        onCancel={handleCancel}
+                    />
+                </Modal>
+            )}
             {selectedProcessId && (
                 <div>
                     {/* Render your ProcessViewer component or call onSelectProcess with selectedProcessId */}
                     {onSelectProcess(selectedProcessId)}
                 </div>
             )}
-        </div>
+        </main>
     );
 };
 
