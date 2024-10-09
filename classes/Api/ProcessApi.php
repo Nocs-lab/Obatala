@@ -52,7 +52,14 @@ class ProcessApi extends ObatalaAPI {
                 ]
             ]
         ]);
-
+        
+        // Route to get meta fields
+        $this->add_route('process_obatala/(?P<id>\d+)/meta', [
+            'methods' => 'GET',
+            'callback' => [$this, 'get_meta'],
+            'permission_callback' => '__return_true',
+        ]);
+        
         // Route to update multiple meta fields
         $this->add_route('process_obatala/(?P<id>\d+)/meta', [
             'methods' => 'POST',
@@ -108,11 +115,25 @@ class ProcessApi extends ObatalaAPI {
         return update_post_meta($post_id, 'process_type', $process_type);
     }
 
+    public function get_meta($request) {
+        $post_id = (int) $request['id'];
+    
+        $stageData = maybe_unserialize(get_post_meta($post_id, 'stageData', true));
+        $submittedStages = maybe_unserialize(get_post_meta($post_id, 'submittedStages', true));
+
+        $response = array(
+            'stageData' => $stageData,
+            'submittedStages' => $submittedStages,
+        );
+    
+        return rest_ensure_response($response);
+    }
+    
     public function update_meta($request) {
         $post_id = (int) $request['id'];
         $meta = $request->get_json_params();
         foreach ($meta as $key => $value) {
-            update_post_meta($post_id, $key, $value);
+            update_post_meta($post_id, $key, maybe_unserialize($value));
         }
         return true;
     }
