@@ -61,21 +61,12 @@ export const fetchProcesses = () => {
 };
 
 export const fetchSectors = () => {
-    return apiFetch({ path: `/obatala/v1/sector_obatala?per_page=100` });
+    return apiFetch({ path: `/obatala/v1/all_sector_obatala` });
+    
 }; 
 
-export const saveSector = (sector, editingSector) => {
-    const path = editingSector ? `/obatala/v1/update_sector_obatala/${editingSector.id}` : `/obatala/v1/create_sector_obatala`;
+export const saveSector = async (sector, editingSector) => {
+    const path = editingSector ? `/obatala/v1/update_sector_obatala/${editingSector.key}` : `/obatala/v1/create_sector_obatala`;
     const method = 'POST';
     return apiFetch({ path, method, data: sector });
 };
-
-/*
-export const updateSectorMeta = (id, meta) => {
-    
-    return apiFetch({
-        path: `/obatala/v1/sector_obatala/${id}/meta`,
-        method: 'POST',
-        data: meta
-    });
-};*/
