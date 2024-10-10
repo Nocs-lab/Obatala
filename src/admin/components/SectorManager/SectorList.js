@@ -10,15 +10,16 @@ const SectorList = ({sectors, onEdit}) => {
         <Panel>
             <PanelHeader>
                 <h3>Existing sectors</h3>
-                <span className="badge">{filteredSectors.length}</span>
+                {/* <span className="badge">{filteredSectors.length}</span> */}
             </PanelHeader>
             <PanelRow>
-                {filteredSectors.length > 0 ? (
+                {filteredSectors ? (
                     <table className="wp-list-table widefat fixed striped">
                         <thead>
                             <tr>
                                 <th>Title</th>
                                 <th>Description</th>
+                                <th>Status</th>
                                 <th>Actions</th>
                                 
                             </tr>
@@ -26,9 +27,10 @@ const SectorList = ({sectors, onEdit}) => {
                         <tbody>
                             {filteredSectors.map(sector => {
                                 return (
-                                    <tr key={sector.id}>
-                                        <td>{sector.title.rendered}</td>
-                                        <td>{sector.meta.sector_description}</td>
+                                    <tr key={sector.key}>
+                                        <td>{sector.name}</td>
+                                        <td>{sector.description}</td>
+                                        <td>{sector.status}</td>
                                         <td>
                                             <ButtonGroup>
                                                 <Tooltip text="Edit">
