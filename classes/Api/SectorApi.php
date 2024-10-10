@@ -41,7 +41,7 @@ class SectorApi extends ObatalaAPI {
         ]);
 
         // Route to get the sector by ID
-        $this->add_route('get_sector_obatala/(?P<$sector_id>\d+)', [
+        $this->add_route('get_sector_obatala/(?P<id>\d+)', [
             'methods' => 'GET',
             'callback' => [$this, 'get_sector'],
             'permission_callback' => '__return_true',
@@ -55,7 +55,7 @@ class SectorApi extends ObatalaAPI {
         ]);
 
         // Route to update sector by ID
-        $this->add_route('update_sector_obatala/(?P<sector_id>\d+)', [
+        $this->add_route('update_sector_obatala/(?P<id>\d+)', [
             'methods' => 'POST',
             'callback' => [$this, 'update_sector'],
             'permission_callback' => '__return_true',
@@ -82,7 +82,7 @@ class SectorApi extends ObatalaAPI {
         ]);
         
         //Route to delete sector
-        $this->add_route('delete_sector_obatala/(?P<sector_id>\d+)', [
+        $this->add_route('delete_sector_obatala/(?P<id>\d+)', [
             'methods' => 'DELETE',
             'callback' => [$this, 'delete_sector'],
             'permission_callback' => '__return_true'
@@ -117,7 +117,7 @@ class SectorApi extends ObatalaAPI {
         ]);
 
          // Route to return users of a specific sector
-         $this->add_route('sector_obatala/(?P<sector_id>\d+)/users', [
+         $this->add_route('sector_obatala/(?P<id>\d+)/users', [
             'methods' => 'GET',
             'callback' => [$this, 'get_sector_users'],
             'permission_callback' => '__return_true',
@@ -131,7 +131,7 @@ class SectorApi extends ObatalaAPI {
         ]);
 
         // Rota para remover um usuário de um setor
-        $this->add_route('sector_obatala/(?P<sector_id>\d+)/remove_user', [
+        $this->add_route('sector_obatala/(?P<id>\d+)/remove_user', [
             'methods' => 'POST',
             'callback' => [$this, 'remove_user_from_sector'],
             'permission_callback' => '__return_true', // Altere se quiser aplicar regras de permissão
@@ -174,7 +174,7 @@ class SectorApi extends ObatalaAPI {
     
         // Verifica se o setor já existe no array de setores
         foreach ($setores as $sector_id => $sector_data) {
-            if (isset($sector_data['name']) && $sector_data['name'] === $sector_name) {
+            if (isset($sector_data['nome']) && $sector_data['nome'] === $sector_name) {
                 return new WP_REST_Response('Setor já existe', 409);
             }
         }
@@ -197,7 +197,7 @@ class SectorApi extends ObatalaAPI {
         }
 
         // Cria uma chave unica baseada na data e hora 
-        $sector_id = uniqid('Obatala_sector_id_', true);
+        $sector_id = uniqid('', true);
 
         // Adicionar o novo setor
         $setores[$sector_id] = array(
@@ -215,7 +215,7 @@ class SectorApi extends ObatalaAPI {
 
         $sector_id = sanitize_text_field($request['sector_id']);
 
-        if (empty($$sector_id)) {
+        if (empty($sector_id)) {
             return new WP_REST_Response('Id do setor vazio', 400); // Retorna erro se o campo estiver vazio
         }
 
@@ -264,7 +264,7 @@ class SectorApi extends ObatalaAPI {
 
         // Verifica se o setor existe
         foreach ($setores as $id => $sector_data) {
-            if ($id !== $sector_id && isset($sector_data['name']) && $sector_data['name'] === $sector_name) {
+            if ($id !== $sector_id && isset($sector_data['nome']) && $sector_data['nome'] === $sector_name) {
                 return new WP_REST_Response('Setor já existe', 409);
             }
         }
