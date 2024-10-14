@@ -88,7 +88,7 @@ const SectorCreator = ({onSave, editingSector, onCancel}) => {
           />
             )}
 
-          <ButtonGroup>
+          <ButtonGroup style={{display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px'}}>
             <Button variant="link" onClick={handleCancel}>
               Cancel
             </Button>
