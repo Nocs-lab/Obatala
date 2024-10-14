@@ -66,7 +66,7 @@ export const fetchSectors = () => {
 }; 
 
 export const saveSector = async (sector, editingSector) => {
-    const path = editingSector ? `/obatala/v1/update_sector_obatala/${editingSector.key}` : `/obatala/v1/create_sector_obatala`;
+    const path = editingSector ? `/obatala/v1/update_sector_obatala/${editingSector.id}` : `/obatala/v1/create_sector_obatala`;
     const method = 'POST';
     return apiFetch({ path, method, data: sector });
 };

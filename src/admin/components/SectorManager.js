@@ -27,8 +27,14 @@ const SectorManager = () => {
         setIsLoading(true);
         fetchSectors()
             .then(data => {
-                const sortedSectors = data.sort((a, b) => a.title.rendered.localeCompare(b.title.rendered));
-                setSectors(sortedSectors);
+                const sectors = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    name: value.nome,
+                    description: value.descricao,
+                    status: value.status,
+                }));
+
+                setSectors(sectors);
                 setIsLoading(false);
             })
             .catch(error => {
@@ -47,12 +53,6 @@ const SectorManager = () => {
             } else {
                 savedSector = await saveSector(newSector);
             }
-            
-            const meta = {
-                description: newSector.meta.description || '',
-            };
-
-            await updateSectorMeta(savedSector.id, meta);
         
             setNotice({ status: 'success', message: 'Sector saved successfully.' });
             setEditingSector(null);
@@ -60,9 +60,17 @@ const SectorManager = () => {
             loadSectors();
         } catch (error) {
             console.error('Error saving sector:', error);
-            setNotice({ status: 'error', message: 'Error saving sector.' });
+           
+            if (error === 'Setor já existe' || error === 'Setor com o mesmo nome já existe') {
+                setNotice({ status: 'error', message: 'Sector already exists.' });
+            } else {
+                setNotice({ status: 'error', message: 'Error saving sector.' });
+            }
+            setEditingSector(null);
+            setAddingSector(null);
             setIsLoading(false);
         }   
+  
     };
 
     const handleAdd = () => {

@@ -36,7 +36,7 @@ const SectorCreator = ({onSave, editingSector, onCancel}) => {
         const savedSector = {
             sector_name: title,
             sector_description: description,
-            sector_status: "Active"
+            sector_status: editingSector ? status : "Active"
         }
 
         try {

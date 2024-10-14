@@ -27,10 +27,10 @@ const SectorList = ({sectors, onEdit}) => {
                         <tbody>
                             {filteredSectors.map(sector => {
                                 return (
-                                    <tr key={sector.key}>
+                                    <tr key={sector.id}>
                                         <td>{sector.name}</td>
                                         <td>{sector.description}</td>
-                                        <td>{sector.status}</td>
+                                        <td><span className={`badge ${sector.status == 'Active' ? 'success' : 'error'}`}>{sector.status}</span></td>
                                         <td>
                                             <ButtonGroup>
                                                 <Tooltip text="Edit">
