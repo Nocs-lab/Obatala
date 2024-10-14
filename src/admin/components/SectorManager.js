@@ -9,7 +9,7 @@ import {
 } from '@wordpress/components';
 import { plus } from "@wordpress/icons";
 import SectorCreator from './SectorManager/SectorCreator';
-import { fetchSectors, saveSector, updateSectorMeta } from '../api/apiRequests';
+import { deleteSector, fetchSectors, saveSector, updateSectorMeta } from '../api/apiRequests';
 import SectorList from './SectorManager/SectorList';
 
 const SectorManager = () => {
@@ -72,6 +72,16 @@ const SectorManager = () => {
         }   
   
     };
+    const handleDelete = (id) => {
+        deleteSector(id)
+            .then(() => {
+                const updatedSectors = sectors.filter(type => type.id !== id);
+                setSectors(updatedSectors);
+            })
+            .catch(error => {
+                console.error('Error deleting process type:', error);
+            });
+    };
 
     const handleAdd = () => {
         setAddingSector(true);
@@ -112,6 +122,7 @@ const SectorManager = () => {
 
             <SectorList sectors={sectors}
                         onEdit={handleEdit}
+                        onDelete={handleDelete}
             />
 
             {/* Open modal to editing Sector */}

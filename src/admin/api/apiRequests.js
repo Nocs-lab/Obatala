@@ -70,3 +70,7 @@ export const saveSector = async (sector, editingSector) => {
     const method = 'POST';
     return apiFetch({ path, method, data: sector });
 };
+
+export const deleteSector = (id) => {
+    return apiFetch({ path: `/obatala/v1/delete_sector_obatala/${id}`, method: 'DELETE' });
+};

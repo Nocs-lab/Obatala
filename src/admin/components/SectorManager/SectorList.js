@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
 import { Button, ButtonGroup, Icon, Tooltip, Panel, PanelHeader, PanelRow, Notice } from '@wordpress/components';
-import { edit} from '@wordpress/icons';
+import { edit, trash} from '@wordpress/icons';
 
 
-const SectorList = ({sectors, onEdit}) => {
+const SectorList = ({sectors, onEdit, onDelete}) => {
     const filteredSectors = useMemo(() => sectors, [sectors]);
     
     return (
@@ -37,6 +37,12 @@ const SectorList = ({sectors, onEdit}) => {
                                                     <Button
                                                         icon={<Icon icon={edit} />}
                                                         onClick={() => onEdit(sector)}
+                                                    />
+                                                </Tooltip>
+                                                <Tooltip text="Delete">
+                                                    <Button
+                                                        icon={<Icon icon={trash} />}
+                                                        onClick={() => onDelete(sector.id)}
                                                     />
                                                 </Tooltip>
                                             </ButtonGroup>
