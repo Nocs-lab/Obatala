@@ -132,10 +132,10 @@ const ProcessManager = ({ onSelectProcess }) => {
             <div className="title-container">
                 <h2>Process Manager</h2>
                 <ButtonGroup>
-                    <Button isPrimary 
-                            icon={<Icon icon={plus}/>}
-                            onClick={handleAddProcess}
-                            >Add new</Button>
+                    <Button variant="primary" 
+                        icon={<Icon icon={plus}/>}
+                        onClick={handleAddProcess}
+                        >Add new</Button>
                 </ButtonGroup>
             </div>
             {notice && (

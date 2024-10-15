@@ -7,6 +7,7 @@ import {
   Spinner,
   Notice,
   TextControl,
+  Tooltip,
   ButtonGroup,
   Button,
 } from "@wordpress/components";
@@ -106,9 +107,7 @@ const processDataEditor = () => {
   
   const handleCancel= () => {
     setIsEditing(null);
-
   };
- 
 
   if (isLoading) {
     return <Spinner />;
@@ -118,109 +117,105 @@ const processDataEditor = () => {
     return <div>Loading...</div>;
   }
   return (
-    <div>
-      <span className="brand">
-        <strong>Obatala</strong> Curatorial Process Management
-      </span>
-      
-      {isEditing === 'title' ? (
-                <>
-                  <TextControl
-                  value={title}
-                  placeholder="Digite o placeholder"
-                  onChange={(value) => setTitle(value)}
-                  autoFocus
-                />
-                <ButtonGroup>
-                  <Button
-                    icon={<Icon icon={check} />}
-                    onClick={handleSave}
-                
-                />
-                  <Button
-                    onClick={handleCancel}
-                    icon={<Icon icon={closeSmall} />}
-                    
-                />
-                </ButtonGroup>
-                </>
-              ) : (
-                <div style={{display:'flex', flexDirection: 'row', alignItems:'center'}}>
-                  <div className="title-container">
-                    <h2 onClick={() => handleEdit('title')}>Edit Process Model: {title}</h2>
-                  </div>
-                   <Button 
-                      onClick={() => handleEdit('title')}
-                      icon={<Icon icon={edit} />}
-                    />
-                </div>
-              )}
-   
-      {isEditing === 'description' ? (
-                <>
-                  <TextControl
-                  value={description}
-                  placeholder="Digite o placeholder"
-                  onChange={(value) => setDescription(value)}
-                  autoFocus
-                />
-                <ButtonGroup>
-                  <Button
-                    icon={<Icon icon={check} />}
-                    onClick={handleSave}
-                
-                />
-                  <Button
-                    onClick={handleCancel}
-                    icon={<Icon icon={closeSmall} />}
-                    
-                />
-                </ButtonGroup>
-                </>
-              ) : (
-                <div style={{display:'flex', flexDirection: 'row', marginLeft: 50}}>
-                  <p onClick={() => handleEdit('description')}>{description}</p>
-                  <Button 
-                      onClick={() => handleEdit('description')}
-                      icon={<Icon icon={edit} />}
-                    />
-                </div>
-              )}
-    
-      <div className="panel-container">
         <main>
-          <Panel>
-            <PanelHeader>
-                <Button variant="primary" type="submit" style={{
-                    margin: 0
-                  }}
-                  onClick={handleSave}
-                  >
-                    Save
-                  </Button>
-            </PanelHeader>
-              
-            <PanelRow>
-              {notice && (
-                <Notice
-                  status={notice.status}
-                  isDismissible
-                  onRemove={() => setNotice(null)}
-                >
-                  {notice.message}
-                </Notice>
-              )}
+            <span className="brand">
+                <strong>Obatala</strong> Curatorial Process Management
+            </span>
+      
+            {isEditing === 'title' ? (
+                <div className="inline-edition mt-2 mb-1">
+                    <TextControl
+                        value={title}
+                        onChange={(value) => setTitle(value)}
+                        autoFocus
+                    />
+                    <ButtonGroup>
+                        <Tooltip text="Save">
+                            <Button
+                                icon={<Icon icon={check} />}
+                                onClick={handleSave}
+                            />
+                        </Tooltip>
+                        <Tooltip text="Cancel">
+                            <Button
+                                onClick={handleCancel}
+                                icon={<Icon icon={closeSmall} />}
+                            />
+                        </Tooltip>
+                    </ButtonGroup>
+                </div>
+            ) : (
+                <div className="title-container">
+                    <h2 onClick={() => handleEdit('title')}>Edit Process Model: <strong>{title}</strong></h2>
+                    <Tooltip text="Edit">
+                        <Button
+                            onClick={() => handleEdit('title')}
+                            icon={<Icon icon={edit} />}
+                            className="me-auto"
+                        />
+                    </Tooltip>
+                </div>
+            )}
+   
+            {isEditing === 'description' ? (
+                <div className="inline-edition mb-2">
+                    <TextControl
+                        value={description}
+                        onChange={(value) => setDescription(value)}
+                        autoFocus
+                    />
+                    <ButtonGroup>
+                        <Button
+                            icon={<Icon icon={check} />}
+                            onClick={handleSave}
+                        />
+                        <Button
+                            onClick={handleCancel}
+                            icon={<Icon icon={closeSmall} />}
+                        />
+                    </ButtonGroup>
+                </div>
+            ) : (
+                <div className="title-container mb-2">
+                    <p onClick={() => handleEdit('description')}>{description}</p>
+                    <Tooltip text="Edit">
+                        <Button 
+                            onClick={() => handleEdit('description')}
+                            icon={<Icon icon={edit} />}
+                            className="me-auto"
+                            />
+                    </Tooltip>
+                </div>
+            )}
 
-              {/* Passa o flowData carregado como initialData para o ProcessFlow */}
-              <FlowProvider>
-                <ProcessFlow ref={flowRef} initialData={flowData}/>
-              </FlowProvider>
-            </PanelRow>
-          </Panel>
+            {notice && (
+                <Notice
+                    status={notice.status}
+                    isDismissible
+                    onRemove={() => setNotice(null)}
+                >
+                    {notice.message}
+                </Notice>
+            )}
+    
+            <Panel>
+                <PanelRow>
+                    {/* Passa o flowData carregado como initialData para o ProcessFlow */}
+                    <FlowProvider>
+                        <ProcessFlow ref={flowRef} initialData={flowData}/>
+                    </FlowProvider>
+                </PanelRow>
+            </Panel>
+            <ButtonGroup>
+                <Button variant="primary" type="submit" onClick={handleSave}>
+                    Save
+                </Button>
+                <Button variant="link">
+                    Cancel
+                </Button>
+            </ButtonGroup>
         </main>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default processDataEditor;
