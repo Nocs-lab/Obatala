@@ -58,7 +58,7 @@ const SectorCreator = ({onSave, editingSector, onCancel}) => {
     };
 
     return ( 
-       <>
+        <>
               {notice && (
                     <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
                         {notice.message}
@@ -88,15 +88,15 @@ const SectorCreator = ({onSave, editingSector, onCancel}) => {
           />
             )}
 
-          <ButtonGroup style={{display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px'}}>
-            <Button variant="link" onClick={handleCancel}>
-              Cancel
-            </Button>
-            <Button variant="primary" onClick={handleSave}>
-              Save
-            </Button>
-          </ButtonGroup>
-      </>
+            <ButtonGroup>
+                <Button variant="link" onClick={handleCancel}>
+                    Cancel
+                </Button>
+                <Button variant="primary" onClick={handleSave}>
+                    Save
+                </Button>
+            </ButtonGroup>
+        </>
     )
 }
 

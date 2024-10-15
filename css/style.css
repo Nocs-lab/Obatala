@@ -103,6 +103,9 @@ main > .notice-container {
 .components-button.is-primary {
   background-color: var(--primary);
 }
+.components-button-group .components-button.is-primary {
+  border-radius: var(--input-border-radius) !important;
+}
 .components-button-group .components-button:first-child {
   border-radius: var(--input-border-radius) 0 0 var(--input-border-radius);
 }
@@ -164,6 +167,26 @@ form.centered {
   max-width: 800px;
   width: 100%;
 }
+.inline-edition {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-left: var(--gap-external);
+  margin-right: var(--gap-external);
+}
+.inline-edition .components-base-control {
+  flex-basis: 200px;
+  flex-grow: 1;
+}
+.inline-edition .components-base-control .components-base-control__field {
+  margin-bottom: 0;
+}
+.inline-edition .components-button-group {
+  margin-top: 0;
+  width: auto;
+}
 /* #endregion  */
 
 /* #region Tables */
@@ -218,8 +241,20 @@ table.wp-list-table th {
 .mb-1 {
   margin-bottom: 1rem;
 }
+.mb-2 {
+  margin-bottom: 2rem;
+}
+.me-auto {
+  margin-right: auto !important;
+}
 .ms-auto {
   margin-left: auto !important;
+}
+.mt-1 {
+  margin-top: 1rem;
+}
+.mt-2 {
+  margin-top: 2rem;
 }
 .text-center {
   text-align: center;
@@ -437,6 +472,17 @@ main > .title-container ~ .components-panel {
   font-weight: 300;
   padding: .5rem 2rem;
   text-align: right;
+}
+.components-panel + .components-button-group {
+  background-color: var(--white);
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  margin-left: 6rem;
+  padding: 0 2rem 1rem;
+  width: fit-content;
 }
 .components-radio-control .components-flex {
   flex-direction: row;
@@ -673,6 +719,14 @@ button .components-spinner {
   gap: 2rem;
   margin-left: var(--gap-external);
   margin-right: var(--gap-external);
+}
+.title-container p {
+  font-size: 1rem;
+  margin: 0;
+  max-width: 60%;
+}
+.title-container strong {
+  font-weight: 800;
 }
 .actions {
   display: flex;
