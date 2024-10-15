@@ -85,6 +85,7 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete }) => {
                     value={globalFilter || ''}
                     onChange={value => setGlobalFilter(value)}
                     placeholder="Search by title or description"
+                    type="search"
                 />
                 {processTypes.length > 0 ? (
                     <>
@@ -148,7 +149,7 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete }) => {
                         </div>
                     </>
                 ) : (
-                    <Notice isDismissible={false} status="warning">No existing process types.</Notice>
+                    <Notice isDismissible={false} status="warning">No existing process models.</Notice>
                 )}
             </PanelRow>
         </Panel>

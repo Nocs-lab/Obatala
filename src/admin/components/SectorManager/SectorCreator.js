@@ -59,22 +59,22 @@ const SectorCreator = ({onSave, editingSector, onCancel}) => {
 
     return ( 
        <>
-            {notice && (
-                <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                    {notice.message}
-                </Notice>
-            )}
+              {notice && (
+                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                        {notice.message}
+                    </Notice>
+                )}
 
-            <TextControl
-              label="Title"
-              value={title}
-              onChange={(value) => setTitle(value)}
-            />
-            <TextControl
-              label="Description"
-              value={description}
-              onChange={(value) => setDescription(value)}
-            />
+                <TextControl
+                  label="Title"
+                  value={title}
+                  onChange={(value) => setTitle(value)}
+                />
+                <TextControl
+                  label="Description"
+                  value={description}
+                  onChange={(value) => setDescription(value)}
+                />
 
             {editingSector && (
               <SelectControl

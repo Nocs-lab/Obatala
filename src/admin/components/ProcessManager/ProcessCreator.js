@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, SelectControl, TextControl, Notice } from '@wordpress/components';
+import { Button, ButtonGroup, SelectControl, TextControl, Notice } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 
 const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel }) => {
@@ -57,8 +57,6 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
                 });
             }
 
-            console.log(savedProcess);
-
             const stepOrder = selectedProcessType.meta.step_order || [];
             const metaFieldsPromises = stepOrder.map(stepId =>
                 apiFetch({ path: `/obatala/v1/process_step/${stepId}/meta` })
@@ -106,7 +104,6 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
         }
     };
 
-
     const handleCancel = () => {
         onCancel();
         setNewProcessTitle('');
@@ -115,48 +112,45 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
     };
 
     return (
-        <div>
-            <form onSubmit={handleSaveProcess}>
-                {notice && (
-                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                        {notice.message}
-                    </Notice>
-                )}
+        <form onSubmit={handleSaveProcess}>
+            {notice && (
+                <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                    {notice.message}
+                </Notice>
+            )}
 
-                <TextControl
-                    label="Process Title"
-                    value={newProcessTitle}
-                    onChange={(value) => setNewProcessTitle(value)}
-                    disabled={!!editingProcess}
-                />
+            <TextControl
+                label="Process Title"
+                value={newProcessTitle}
+                onChange={(value) => setNewProcessTitle(value)}
+                disabled={!!editingProcess}
+            />
 
-                <SelectControl
-                    label="Process Type"
-                    value={newProcessType}
-                    options={[
-                        { label: 'Select a process type...', value: '' },
-                        ...processTypes.map(type => ({ label: type.title.rendered, value: type.id }))
-                    ]}
-                    onChange={(value) => setNewProcessType(value)}
-                    disabled={!!editingProcess}
-                />
+            <SelectControl
+                label="Process Type"
+                value={newProcessType}
+                options={[
+                    { label: 'Select a process type...', value: '' },
+                    ...processTypes.map(type => ({ label: type.title.rendered, value: type.id }))
+                ]}
+                onChange={(value) => setNewProcessType(value)}
+                disabled={!!editingProcess}
+            />
 
-                <SelectControl
-                    label="Access Level"
-                    value={accessLevel}
-                    options={[
-                        { label: 'Public', value: 'public' },
-                        { label: 'Private', value: 'private' }
-                    ]}
-                    onChange={(value) => setAccessLevel(value)}
-                />
-                <div style={{display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px'}}>
-                    <Button variant="link" onClick={handleCancel}>Cancel</Button>
-                    <Button variant="primary" onClick={handleSaveProcess}>Save</Button>
-                </div>
-            
-            </form>
-        </div>
+            <SelectControl
+                label="Access Level"
+                value={accessLevel}
+                options={[
+                    { label: 'Public', value: 'public' },
+                    { label: 'Private', value: 'private' }
+                ]}
+                onChange={(value) => setAccessLevel(value)}
+            />
+            <ButtonGroup>
+                <Button variant="link" onClick={handleCancel}>Cancel</Button>
+                <Button variant="primary" onClick={handleSaveProcess}>Save</Button>
+            </ButtonGroup>        
+        </form>
     );
 };
 
