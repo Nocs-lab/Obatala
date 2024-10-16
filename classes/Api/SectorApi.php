@@ -398,26 +398,21 @@ class SectorApi extends ObatalaAPI {
 
     // Função que retorna lista de usuarios associados a um setor
     public function return_sector_users($sector_id) {
-        global $wpdb;
-
         // Consulta os IDs dos usuários que possuem 'associated_sector' nos metadados
-        $user_ids = $wpdb->get_col(
-            $wpdb->prepare(
-                "SELECT user_id 
-                FROM $wpdb->usermeta 
-                WHERE meta_key = 'associated_sector'", 
-            )
-        );
-
-        if (empty($user_ids)) {
-            return null;
+        $user_query = get_users(array(
+            'meta_key'   => 'associated_sector', // Chave do meta valor associado ao setor
+            'fields'     => 'ID'                 // Retorna apenas os IDs dos usuários
+        ));
+    
+        if (empty($user_query)) {
+            return null; // Se não encontrar nenhum usuário, retorna null
         }
-
+    
         // Buscar os dados dos usuários com base nos IDs e verificar se o setor está associado
         $users = [];
-        foreach ($user_ids as $user_id) {
+        foreach ($user_query as $user_id) {
             $sectors = get_user_meta($user_id, 'associated_sector', true);
-
+    
             // Verifica se o setor realmente está associado ao usuário (em caso de array serializado)
             if (is_array($sectors) && in_array($sector_id, $sectors)) {
                 $user_data = get_userdata($user_id);
@@ -431,41 +426,39 @@ class SectorApi extends ObatalaAPI {
                 }
             }
         }
-        return $users;
+        return $users; // Retorna a lista de usuários associados ao setor
     }
+    
 
     public function get_all_sectors_with_users($request) {
-        global $wpdb;
-
         // Recuperar setores já existentes no formato JSON
         $setores_json = get_option('obatala_setores', '{}'); // Recupera como JSON ou inicializa como um objeto vazio
         $setores = json_decode($setores_json, true);
-
+    
         if (!is_array($setores)) {
             $setores = [];
         }
-
+    
         $sectors_with_users = [];
-
+    
         if (is_array($setores) && !empty($setores)) {
             foreach ($setores as $id => $sector_data) {
                 $sector_id = $id;
                 $sector_name = $sector_data['nome'];
-
-                // Consulta os IDs dos usuários
-                $user_ids = $wpdb->get_col(
-                    "SELECT DISTINCT user_id 
-                    FROM $wpdb->usermeta 
-                    WHERE meta_key = 'associated_sector'"
-                );
-
+    
+                // Consulta todos os usuários que têm o meta_key 'associated_sector'
+                $user_query = get_users(array(
+                    'meta_key'   => 'associated_sector', // Chave do meta valor associado ao setor
+                    'fields'     => 'ID'                 // Retorna apenas os IDs
+                ));
+    
                 // Obtém os dados dos usuários associados ao setor atual
                 $users = [];
-                if (!empty($user_ids)) {
-                    foreach ($user_ids as $user_id) {
+                if (!empty($user_query)) {
+                    foreach ($user_query as $user_id) {
                         // Recupera os setores associados ao usuário
                         $user_sectors = get_user_meta($user_id, 'associated_sector', true);
-
+    
                         // Verifica se o setor atual está associado ao usuário
                         if (is_array($user_sectors) && in_array($sector_id, $user_sectors)) {
                             $user_data = get_userdata($user_id);
@@ -480,7 +473,7 @@ class SectorApi extends ObatalaAPI {
                         }
                     }
                 }
-
+    
                 // Adiciona o setor e seus usuários à lista
                 $sectors_with_users[] = [
                     'sector_id' => $sector_id,
@@ -489,9 +482,10 @@ class SectorApi extends ObatalaAPI {
                 ];
             }
         }
-
+    
         return new WP_REST_Response($sectors_with_users, 200);
     }
+    
 
     public function remove_user_from_sector($request) {
         $user_id = (int) $request['user_id'];
