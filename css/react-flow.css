@@ -95,6 +95,73 @@
   --xy-edge-label-background-color-default: #141414;
   --xy-edge-label-color-default: #f8f8f8;
 }
+.react-flow .react-flow__node {
+  max-width: 230px;
+}
+.flow-container .react-flow__handle {
+  background-color: var(--primary);
+  min-width: 10px;
+  min-height: 10px;
+}
+.flow-container .react-flow__handle:hover {
+  background-color: var(--primary-500);
+}
+.flow-container .components-base-control {
+  background-color: var(--gray-100);
+  padding: .5rem;
+}
+.flow-container .components-base-control__field > label {
+  margin-bottom: 0.1rem;
+  text-transform: none;
+  color: var(--gray-600);
+  font-weight: 400;
+  font-size: .6rem;
+}
+.flow-container .components-text-control__input {
+  font-size: .65rem;
+  font-weight: 600;
+  height: 26px !important;
+  margin-bottom: 0;
+  min-height: 26px !important;
+}
+.flow-fields {
+  background-color: var(--gray-100);
+}
+.flow-fields ul:not(:empty) {
+  margin: 0;
+  padding: .5rem;
+}
+.flow-fields ul li {
+  border: 1px solid var(--gray-400);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: .65rem;
+  padding: .2rem;
+}
+.flow-fields .step-label {
+  line-height: 1.35em;
+  margin-right: auto;
+}
+.flow-fields .components-button-group {
+  display: inline-flex;
+  margin-left: .5rem;
+}
+.flow-fields .flow-grabber {
+  background-color: var(--gray-400);
+  border-radius: 3px;
+  color: var(--white);
+  cursor: grab;
+  display: flex;
+  align-self: stretch;
+  align-items: center;
+  margin-left: .5rem;
+  padding: 4px;
+}
+.flow-fields .flow-grabber:hover {
+  background-color: var(--gray-500);
+}
 .react-flow__background {
   background-color: var(--xy-background-color, var(--xy-background-color-props, var(--xy-background-color-default)));
   pointer-events: none;
@@ -696,12 +763,9 @@ svg.react-flow__connectionline {
   top: 50%;
   opacity: 1;
 }
-.step-icon{
-	background: #fff;
-	border: 1px solid #ebebeb;
-	display: flex;
-	border-radius: 3px;
-	margin-right: 2px;
+.step-icon {
+  display: flex;
+	margin-right: .25rem;
 }
 
 .edgebutton {

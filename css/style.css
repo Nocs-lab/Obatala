@@ -415,7 +415,8 @@ ol.list-group .list-group-item::before {
   border: 0 none;
   border-radius: var(--border-radius);
 }
-main > .title-container ~ .components-panel {
+main > .title-container ~ .components-panel,
+main > .components-notice {
   margin-left: var(--gap-external);
   margin-right: var(--gap-external);
 }
