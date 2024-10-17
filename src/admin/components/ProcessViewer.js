@@ -128,78 +128,62 @@ const ProcessViewer = () => {
         <span className="badge default">70% concluído</span>
       </div>
 
-      <div className="panel-container three-columns">
-        <MetroNavigation
-          options={options}
-          currentStep={currentStep}
-          onStepChange={(newStep) => setCurrentStep(newStep)}
-          submittedSteps={submittedSteps}
-        />
-        <main>
-          {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
-            <Panel key={`${orderedSteps[currentStep].step_id}-${currentStep}`}>
-              <PanelHeader>
-                <h3>{`${orderedSteps[currentStep].title}`}</h3>
-                <span className="badge default ms-auto">Setor: Recepção</span>
-              </PanelHeader>
-              <PanelBody>
-                <PanelRow>
-                  <form className="centered" action="">
-                    <ul className="meta-fields-list">
-                      {orderedSteps[currentStep].meta_fields.length &&
-                        orderedSteps[currentStep].meta_fields.map(
-                          (field, index) => (
-                            console.log(field),
-                            <li
-                              key={`${orderedSteps[currentStep].step_id}-meta-${index}`}
-                              className="meta-field-item"
-                            >
-                              <MetaFieldInputs
-                                  field={field}
-                                  fieldId={index}
-                                  initalValue={
-                                    formValues[currentStep]?.[index] || ""
-                                  }
-                                  isEditable={!submittedSteps[currentStep]}
-                                  onFieldChange={handleFieldChange}
-                                />
-                            </li>
-                          )
-                        )}
-                    </ul>
-                    <div className="action-bar">
-                      <Button
-                        isPrimary
-                        onClick={handleSubmit}
-                        disabled={
-                          !isSubmitEnabled || submittedSteps[currentStep]
-                        }
-                      >
-                        Submit
-                      </Button>
-                    </div>
-                  </form>
-                </PanelRow>
-                <footer>
-                  Última atualização em 21/10/2024 por João da Silva
-                </footer>
-              </PanelBody>
-            </Panel>
-          ) : (
-            <Notice status="warning" isDismissible={false}>
-              No steps found for this process type.
-            </Notice>
-          )}
-        </main>
-        <aside>
-          <Panel>
-            <PanelHeader>Comments</PanelHeader>
-            <CommentForm stepId={orderedSteps[currentStep]?.step_id || null} />
-          </Panel>
-        </aside>
-      </div>
-    </div>
-  );
+            <div className="panel-container three-columns">
+                <MetroNavigation
+                    options={options}
+                    currentStep={currentStep}
+                    onStepChange={(newStep) => setCurrentStep(newStep)}
+                    submittedSteps={submittedSteps}
+                />
+                <main>
+                    {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
+                        <Panel key={`${orderedSteps[currentStep].step_id}-${currentStep}`}>
+                            <PanelHeader>
+                                <h3>{`${orderedSteps[currentStep].title}`}</h3>
+                                <span className="badge default ms-auto">Setor: Recepção</span>
+                            </PanelHeader>
+                            <PanelBody>
+                                <PanelRow>
+                                    <form className="centered" action="">
+                                        <ul className="meta-fields-list">
+                                            {Array.isArray(orderedSteps[currentStep].meta_fields) ? orderedSteps[currentStep].meta_fields.map((field, idx) => (
+                                                <li key={`${orderedSteps[currentStep].step_id}-meta-${idx}`} className="meta-field-item">
+                                                    <MetaFieldInputs 
+                                                        field={field} 
+                                                        fieldId={idx}  
+                                                        initalValue={formValues[currentStep]?.[idx] || ''}
+                                                        isEditable={!submittedSteps[currentStep]} 
+                                                        onFieldChange={handleFieldChange} 
+                                                    />
+                                                </li>
+                                            )) : null}
+                                        </ul>
+                                        <div className="action-bar">
+                                            <Button
+                                                variant="primary"
+                                                onClick={handleSubmit}
+                                                disabled={!isSubmitEnabled || submittedSteps[currentStep]}
+                                            >Submit
+                                            </Button>
+                                        </div>
+                                    </form>
+                                </PanelRow>
+                                <footer>Última atualização em 21/10/2024 por João da Silva</footer>
+                            </PanelBody>
+                        </Panel>
+                    ) : (
+                        <Notice status="warning" isDismissible={false}>No steps found for this process type.</Notice>
+                    )}
+                </main>
+                <aside>
+                    <Panel>
+                        <PanelHeader>Comments</PanelHeader>
+                        <CommentForm stepId={orderedSteps[currentStep]?.step_id || null} />
+                    </Panel>
+                </aside>
+            </div>
+        </div>
+    );
 };
 
 export default ProcessViewer;

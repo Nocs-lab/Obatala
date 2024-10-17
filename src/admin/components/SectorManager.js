@@ -9,7 +9,7 @@ import {
 } from '@wordpress/components';
 import { plus } from "@wordpress/icons";
 import SectorCreator from './SectorManager/SectorCreator';
-import { fetchSectors, saveSector, updateSectorMeta } from '../api/apiRequests';
+import { deleteSector, fetchSectors, saveSector, updateSectorMeta } from '../api/apiRequests';
 import SectorList from './SectorManager/SectorList';
 
 const SectorManager = () => {
@@ -27,8 +27,14 @@ const SectorManager = () => {
         setIsLoading(true);
         fetchSectors()
             .then(data => {
-                const sortedSectors = data.sort((a, b) => a.title.rendered.localeCompare(b.title.rendered));
-                setSectors(sortedSectors);
+                const sectors = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    name: value.nome,
+                    description: value.descricao,
+                    status: value.status,
+                }));
+
+                setSectors(sectors);
                 setIsLoading(false);
             })
             .catch(error => {
@@ -47,12 +53,6 @@ const SectorManager = () => {
             } else {
                 savedSector = await saveSector(newSector);
             }
-            
-            const meta = {
-                description: newSector.meta.description || '',
-            };
-
-            await updateSectorMeta(savedSector.id, meta);
         
             setNotice({ status: 'success', message: 'Sector saved successfully.' });
             setEditingSector(null);
@@ -60,9 +60,27 @@ const SectorManager = () => {
             loadSectors();
         } catch (error) {
             console.error('Error saving sector:', error);
-            setNotice({ status: 'error', message: 'Error saving sector.' });
+           
+            if (error === 'Setor já existe' || error === 'Setor com o mesmo nome já existe') {
+                setNotice({ status: 'error', message: 'Sector already exists.' });
+            } else {
+                setNotice({ status: 'error', message: 'Error saving sector.' });
+            }
+            setEditingSector(null);
+            setAddingSector(null);
             setIsLoading(false);
         }   
+  
+    };
+    const handleDelete = (id) => {
+        deleteSector(id)
+            .then(() => {
+                const updatedSectors = sectors.filter(type => type.id !== id);
+                setSectors(updatedSectors);
+            })
+            .catch(error => {
+                console.error('Error deleting process type:', error);
+            });
     };
 
     const handleAdd = () => {
@@ -86,9 +104,9 @@ const SectorManager = () => {
         <main>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
             <div className="title-container">
-                <h2>Sector Manager</h2>
+                <h2>Sector manager</h2>
                 <ButtonGroup>
-                    <Button isPrimary 
+                    <Button variant="primary" 
                             icon={<Icon icon={plus}/>}
                             onClick={handleAdd}
                             >Add new</Button>
@@ -104,36 +122,37 @@ const SectorManager = () => {
 
             <SectorList sectors={sectors}
                         onEdit={handleEdit}
+                        onDelete={handleDelete}
             />
 
             {/* Open modal to editing Sector */}
             {editingSector && (
-                        <Modal
-                            title="Edit Sector"
-                            onRequestClose={handleCancel}
-                            isDismissible={true}
-                        >
-                            <SectorCreator
-                                onSave={handleSectorSaved} 
-                                editingSector={editingSector}
-                                onCancel={handleCancel}
-                            />
-                        </Modal>
+                <Modal
+                    title="Edit Sector"
+                    onRequestClose={handleCancel}
+                    isDismissible={true}
+                >
+                    <SectorCreator
+                        onSave={handleSectorSaved} 
+                        editingSector={editingSector}
+                        onCancel={handleCancel}
+                    />
+                </Modal>
             )}
 
             {/* Open modal to adding Sector */}
             {addingSector && (
-                        <Modal
-                            title="Add Sector"
-                            onRequestClose={handleCancel}
-                            isDismissible={true}
-                        >
-                            <SectorCreator
-                                onSave={handleSectorSaved} 
-                                onCancel={handleCancel}
-                            />
-                        </Modal>
-                    )}
+                <Modal
+                    title="Add sector"
+                    onRequestClose={handleCancel}
+                    isDismissible={true}
+                >
+                    <SectorCreator
+                        onSave={handleSectorSaved} 
+                        onCancel={handleCancel}
+                    />
+                </Modal>
+            )}
         </main>
     );
 };

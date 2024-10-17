@@ -1,16 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
   Panel,
+  Icon,
   PanelHeader,
   PanelRow,
   Spinner,
   Notice,
   TextControl,
+  Tooltip,
+  ButtonGroup,
   Button,
 } from "@wordpress/components";
 import apiFetch from "@wordpress/api-fetch";
 import ProcessFlow from "./FlowEditor/ProcessFlow";
 import { FlowProvider } from "./FlowEditor/context/FlowContext";
+import { closeSmall, edit, check} from '@wordpress/icons';
 
 const processDataEditor = () => {
   const params = new URLSearchParams(window.location.search);
@@ -21,6 +25,9 @@ const processDataEditor = () => {
   const flowRef = useRef(null); // Referência para acessar os dados do fluxo
   const [flowData, setFlowData] = useState({ nodes: [], edges: [] }); // Novo estado para o flowData
   const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [isEditing, setIsEditing] = useState(null);
+  
 
   useEffect(() => {
     setIsLoading(true);
@@ -30,6 +37,9 @@ const processDataEditor = () => {
         console.log("Process model data:", typeData);
         setProcessData(typeData);
         setTitle(typeData.title.rendered);
+        setDescription((Array.isArray(typeData.meta.description)          
+                        ? typeData.meta.description[0]
+                        : typeData.meta.description || ""))
         // Extraindo flowData do processo carregado
         const flowData = typeData.meta.flowData || { nodes: [], edges: [] };
         setFlowData(flowData);
@@ -45,11 +55,11 @@ const processDataEditor = () => {
   const handleSave = async () => {
     try {
       const flowData = flowRef.current.getFlowData(); // Obtém os dados do flow
-
       const updatedData = {
         ...processData,
         title: title,
         meta: {
+          description: description,
           flowData, // Armazena os dados de fluxo como meta
         },
       };
@@ -73,11 +83,12 @@ const processDataEditor = () => {
         ...processData,
         meta: updatedData.meta,
       });
-
+      
       setNotice({
         status: "success",
         message: "Process type and meta updated successfully.",
       });
+      setIsEditing(null);
     } catch (error) {
       console.error(error);
       setNotice({
@@ -88,6 +99,15 @@ const processDataEditor = () => {
       setIsLoading(false);
     }
   };
+  
+  const handleEdit = (field) => {
+    console.log(isEditing)
+    setIsEditing(field);
+  };
+  
+  const handleCancel= () => {
+    setIsEditing(null);
+  };
 
   if (isLoading) {
     return <Spinner />;
@@ -97,49 +117,105 @@ const processDataEditor = () => {
     return <div>Loading...</div>;
   }
   return (
-    <div>
-      <span className="brand">
-        <strong>Obatala</strong> Curatorial Process Management
-      </span>
-      <h2>Edit Process Model</h2>
-
-      <div className="panel-container">
         <main>
-          <Panel>
-            <PanelHeader>
-              <TextControl
-                value={title}
-                placeholder="Digite o placeholder"
-                onChange={(value) => setTitle(value)}
-              />
-              <Button isPrimary type="submit" style={{
-                margin: 0
-              }}
-              onClick={handleSave}
-              >
-                Save
-              </Button>
-            </PanelHeader>
-            <PanelRow>
-              {notice && (
+            <span className="brand">
+                <strong>Obatala</strong> Curatorial Process Management
+            </span>
+      
+            {isEditing === 'title' ? (
+                <div className="inline-edition mt-2 mb-1">
+                    <TextControl
+                        value={title}
+                        onChange={(value) => setTitle(value)}
+                        autoFocus
+                    />
+                    <ButtonGroup>
+                        <Tooltip text="Save">
+                            <Button
+                                icon={<Icon icon={check} />}
+                                onClick={handleSave}
+                            />
+                        </Tooltip>
+                        <Tooltip text="Cancel">
+                            <Button
+                                onClick={handleCancel}
+                                icon={<Icon icon={closeSmall} />}
+                            />
+                        </Tooltip>
+                    </ButtonGroup>
+                </div>
+            ) : (
+                <div className="title-container">
+                    <h2 onClick={() => handleEdit('title')}>Edit Process Model: <strong>{title}</strong></h2>
+                    <Tooltip text="Edit">
+                        <Button
+                            onClick={() => handleEdit('title')}
+                            icon={<Icon icon={edit} />}
+                            className="me-auto"
+                        />
+                    </Tooltip>
+                </div>
+            )}
+   
+            {isEditing === 'description' ? (
+                <div className="inline-edition mb-2">
+                    <TextControl
+                        value={description}
+                        onChange={(value) => setDescription(value)}
+                        autoFocus
+                    />
+                    <ButtonGroup>
+                        <Button
+                            icon={<Icon icon={check} />}
+                            onClick={handleSave}
+                        />
+                        <Button
+                            onClick={handleCancel}
+                            icon={<Icon icon={closeSmall} />}
+                        />
+                    </ButtonGroup>
+                </div>
+            ) : (
+                <div className="title-container mb-2">
+                    <p onClick={() => handleEdit('description')}>{description}</p>
+                    <Tooltip text="Edit">
+                        <Button 
+                            onClick={() => handleEdit('description')}
+                            icon={<Icon icon={edit} />}
+                            className="me-auto"
+                            />
+                    </Tooltip>
+                </div>
+            )}
+
+            {notice && (
                 <Notice
-                  status={notice.status}
-                  isDismissible
-                  onRemove={() => setNotice(null)}
+                    status={notice.status}
+                    isDismissible
+                    onRemove={() => setNotice(null)}
                 >
-                  {notice.message}
+                    {notice.message}
                 </Notice>
-              )}
-              {/* Passa o flowData carregado como initialData para o ProcessFlow */}
-              <FlowProvider>
-                <ProcessFlow ref={flowRef} initialData={flowData} />
-              </FlowProvider>
-            </PanelRow>
-          </Panel>
+            )}
+    
+            <Panel>
+                <PanelRow>
+                    {/* Passa o flowData carregado como initialData para o ProcessFlow */}
+                    <FlowProvider>
+                        <ProcessFlow ref={flowRef} initialData={flowData}/>
+                    </FlowProvider>
+                </PanelRow>
+            </Panel>
+            <ButtonGroup>
+                <Button variant="primary" type="submit" onClick={handleSave}>
+                    Save
+                </Button>
+                <Button variant="link">
+                    Cancel
+                </Button>
+            </ButtonGroup>
         </main>
-      </div>
-    </div>
-  );
+    );
 };
 
 export default processDataEditor;

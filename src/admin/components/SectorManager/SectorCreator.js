@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import {
   Button,
+  ButtonGroup,
   TextControl,
+  SelectControl,
   Notice,
 } from "@wordpress/components";
 
@@ -9,29 +11,32 @@ import {
 const SectorCreator = ({onSave, editingSector, onCancel}) => {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
+    const [status, setStatus] = useState("");
     const [notice, setNotice] = useState(null);
 
     useEffect(() => {
       if (editingSector) {
-          setTitle(editingSector.title.rendered);
+        console.log(editingSector)
+          setTitle(editingSector.name);
           setDescription(
-            Array.isArray(editingSector.meta.sector_description)
-          ? editingSector.meta.sector_description[0]
-          : editingSector.meta.sector_description || "");
+            Array.isArray(editingSector.description)
+          ? editingSector.description[0]
+          : editingSector.description || "");
+          setStatus(editingSector.status)
       }
     }, [editingSector]);
 
     const handleSave = async(e) => {
         e.preventDefault();
 
-        if (!title) {
-            setNotice({ status: "error", message: "Title is required." });
+        if (!title || !description) {
+            setNotice({ status: "error", message: "Title and description is required." });
             return;
         }
         const savedSector = {
-            title,
-            status: 'publish',
-            meta: { description }
+            sector_name: title,
+            sector_description: description,
+            sector_status: editingSector ? status : "Active"
         }
 
         try {
@@ -53,33 +58,45 @@ const SectorCreator = ({onSave, editingSector, onCancel}) => {
     };
 
     return ( 
-       <>
-            {notice && (
-                <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                    {notice.message}
-                </Notice>
+        <>
+              {notice && (
+                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                        {notice.message}
+                    </Notice>
+                )}
+
+                <TextControl
+                  label="Title"
+                  value={title}
+                  onChange={(value) => setTitle(value)}
+                />
+                <TextControl
+                  label="Description"
+                  value={description}
+                  onChange={(value) => setDescription(value)}
+                />
+
+            {editingSector && (
+              <SelectControl
+              label="Status"
+              value={status}
+              options={[
+                  { label: 'Active', value: 'Active' },
+                  { label: 'Inactive', value: 'Inactive' }
+              ]}
+              onChange={(value) => setStatus(value)}
+          />
             )}
 
-            <TextControl
-              label="Title"
-              value={title}
-              onChange={(value) => setTitle(value)}
-            />
-            <TextControl
-              label="Description"
-              value={description}
-              onChange={(value) => setDescription(value)}
-            />
-
-          <div style={{display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px'}}>
-            <Button isPrimary onClick={handleSave}>
-              Save
-            </Button>
-            <Button isSecondary onClick={handleCancel}>
-              Cancel
-            </Button>
-          </div>
-      </>
+            <ButtonGroup>
+                <Button variant="link" onClick={handleCancel}>
+                    Cancel
+                </Button>
+                <Button variant="primary" onClick={handleSave}>
+                    Save
+                </Button>
+            </ButtonGroup>
+        </>
     )
 }
 

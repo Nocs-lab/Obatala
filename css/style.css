@@ -33,6 +33,11 @@
   --input-border-radius: 4px;
 }
 
+*, ::after, ::before {
+  box-sizing: border-box;
+}
+
+/* #region Scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
 }
@@ -44,14 +49,11 @@
   border-radius: var(--border-radius);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background-color: var(--primary-100);
+  background-color: var(--primary-800);
 }
+/* #endregion */
 
-*, ::after, ::before {
-  box-sizing: border-box;
-}
-
-/* Layout */
+/* #region Layout */
 #wpwrap {
   background-color: var(--gray-50);
 }
@@ -69,11 +71,13 @@ h2 {
 h2:has(+ span.badge) {
   margin-bottom: 1rem;
 }
+
 main > .notice-container {
   margin: 1rem var(--gap-external) 2rem;
 }
+/* #endregion */
 
-/* Forms */
+/* #region Forms */
 .components-base-control,
 .components-base-control:not(.components-checkbox-control)
   + div:has(> .components-base-control) {
@@ -99,6 +103,9 @@ main > .notice-container {
 .components-button.is-primary {
   background-color: var(--primary);
 }
+.components-button-group .components-button.is-primary {
+  border-radius: var(--input-border-radius) !important;
+}
 .components-button-group .components-button:first-child {
   border-radius: var(--input-border-radius) 0 0 var(--input-border-radius);
 }
@@ -107,6 +114,20 @@ main > .notice-container {
 }
 .components-button-group .components-button:only-child {
   border-radius: var(--input-border-radius);
+}
+form .components-button-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+  width: 100%;
+}
+form :not(.components-panel__row) > .components-button-group {
+  margin-top: 2rem;
+}
+form .components-button-group .components-button {
+  border-radius: var(--input-border-radius) !important;
 }
 .components-checkbox-control + .components-checkbox-control {
   margin-top: 0.75rem;
@@ -146,8 +167,29 @@ form.centered {
   max-width: 800px;
   width: 100%;
 }
+.inline-edition {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-left: var(--gap-external);
+  margin-right: var(--gap-external);
+}
+.inline-edition .components-base-control {
+  flex-basis: 200px;
+  flex-grow: 1;
+}
+.inline-edition .components-base-control .components-base-control__field {
+  margin-bottom: 0;
+}
+.inline-edition .components-button-group {
+  margin-top: 0;
+  width: auto;
+}
+/* #endregion  */
 
-/* Tables */
+/* #region Tables */
 table.wp-list-table {
   border: 0 none;
   border-collapse: collapse;
@@ -159,12 +201,9 @@ table.wp-list-table td {
 table.wp-list-table th {
   font-weight: 500;
 }
+/* #endregion */
 
-/* Components */
-form .action-bar {
-  display: flex;
-  width: 100%;
-}
+/* #region Badge */
 .badge {
   background-color: var(--gray-200);
   border-radius: 25px;
@@ -188,38 +227,55 @@ form .action-bar {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin-top: -1rem;
+  margin: -1rem var(--gap-external) 2rem;
+}
+/* #endregion */
+
+/* #region Notice */
+.notice-container {
+  margin: 1rem var(--gap-external) 2rem;
+}
+/* #endregion */
+
+/* #region Functional classes */
+.mb-1 {
+  margin-bottom: 1rem;
+}
+.mb-2 {
   margin-bottom: 2rem;
 }
-.components-card > div {
+.me-auto {
+  margin-right: auto !important;
+}
+.ms-auto {
+  margin-left: auto !important;
+}
+.mt-1 {
+  margin-top: 1rem;
+}
+.mt-2 {
+  margin-top: 2rem;
+}
+.text-center {
+  text-align: center;
+}
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+/* #endregion */
+
+/* Components */
+form .action-bar {
   display: flex;
-  flex-flow: column;
   width: 100%;
-}
-.components-card__header {
-  border-bottom-color: var(--primary-100) !important;
-  flex-wrap: wrap;
-}
-.components-card__header h4,
-.components-card__header .card-title {
-  color: var(--gray-700);
-  font-size: 1rem;
-  margin: 0;
-}
-.components-card dd + dt {
-  margin-top: 0.5rem;
-}
-.components-card h5 {
-  margin-bottom: 0;
-}
-.components-card .components-button.has-icon {
-  color: var(--primary-300);
-}
-.components-card .components-button.has-icon:hover {
-  color: var(--primary);
-}
-.components-card__footer {
-  margin-top: auto;
 }
 .chat-container {  
   max-height: 400px;
@@ -417,6 +473,17 @@ main > .title-container ~ .components-panel {
   padding: .5rem 2rem;
   text-align: right;
 }
+.components-panel + .components-button-group {
+  background-color: var(--white);
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  margin-left: 6rem;
+  padding: 0 2rem 1rem;
+  width: fit-content;
+}
 .components-radio-control .components-flex {
   flex-direction: row;
   justify-content: start;
@@ -429,28 +496,6 @@ main > .title-container ~ .components-panel {
   background-color: var(--primary-900);
   border-radius: 5px;
   padding: .5rem 1rem;
-}
-
-/* Functional classes */
-.mb-1 {
-  margin-bottom: 1rem;
-}
-.ms-auto {
-  margin-left: auto !important;
-}
-.text-center {
-  text-align: center;
-}
-.visually-hidden {
-  position: absolute !important;
-  width: 1px !important;
-  height: 1px !important;
-  padding: 0 !important;
-  margin: -1px !important;
-  overflow: hidden !important;
-  clip: rect(0, 0, 0, 0) !important;
-  white-space: nowrap !important;
-  border: 0 !important;
 }
 
 /* Extra */
@@ -674,6 +719,14 @@ button .components-spinner {
   gap: 2rem;
   margin-left: var(--gap-external);
   margin-right: var(--gap-external);
+}
+.title-container p {
+  font-size: 1rem;
+  margin: 0;
+  max-width: 60%;
+}
+.title-container strong {
+  font-weight: 800;
 }
 .actions {
   display: flex;
