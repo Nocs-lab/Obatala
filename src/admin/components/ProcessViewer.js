@@ -226,7 +226,13 @@ const ProcessViewer = () => {
             };
     
             initialStep.forEach(node => visit(node.id));
-    
+            
+            nodes.forEach(node => {
+                if (!visited.has(node.id)) {
+                    orderedSteps.push(node);
+                }
+            });
+            
             return orderedSteps;
 
         }
