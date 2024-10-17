@@ -6,14 +6,6 @@ import { NodeToolbar } from "@xyflow/react";
 import { TextControl } from "@wordpress/components";
 import { useFlowContext } from "../../context/FlowContext";
 import { set } from "date-fns";
-const nodeStyle = {
-  border: "1px solid #ddd",
-  backgroundColor: "white",
-  borderRadius: "4px",
-  position: "relative",
-  fontSize: "10px",
-  minWidth: "100px",
-};
 
 const FIELD_OPTIONS = [
   { id: "text", label: "Texto" },
@@ -56,7 +48,7 @@ const NodeContent = ({ id, data = {} }) => {
   };
 
   return (
-    <div style={nodeStyle}>
+    <div className="flow-container">
       {/* Node Drag Handle */}
       <NodeHandle nodeId={id} />
 
@@ -65,37 +57,15 @@ const NodeContent = ({ id, data = {} }) => {
       <Handle type="source" position={Position.Right} />
 
       {/* Node Name */}
-      <div
-        style={{
-          padding: "2px",
-        }}
-      >
-        <TextControl
-          value={stageName}
-          onChange={handleStageNameChange}
-          placeholder="Digite o nome da etapa"
-          style={{
-            width: "100%",
-            padding: "5px",
-            marginBottom: "10px",
-            fontSize: "10px",
-            border: "none",
-            borderBottom: "1px solid #ccc",
-            outline: "none",
-            borderRadius: 0,
-            WebkitBorderRadius: 0,
-          }}
-        />
-      </div>
+      <TextControl
+        value={stageName}
+        label="Step name"
+        onChange={handleStageNameChange}
+        placeholder="Digite o nome da etapa"
+      />
 
       {/* List of Fields */}
-      <div
-        style={{
-          padding: "10px",
-          backgroundColor: "#fff",
-          borderRadius: "4px",
-        }}
-      >
+      <div className="flow-fields">
         <DragAndDropList nodeId={id} fields={fields} updateFields={updateFields} />
       </div>
 

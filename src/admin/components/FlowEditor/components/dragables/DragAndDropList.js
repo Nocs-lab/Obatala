@@ -33,7 +33,7 @@ const DragAndDropList = ({nodeId, fields = [], updateFields }) => {
         items={fields.map((field) => field.id)}
         strategy={verticalListSortingStrategy}
       >
-        <ul style={{ listStyle: "none", padding: 0 }}>
+        <ul>
           {fields.map(({ id, title, type, config }) => (
             console.log(title, 'title'),
             <SortableField
