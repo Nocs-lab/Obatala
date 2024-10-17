@@ -1,0 +1,305 @@
+# Copyright (C) 2024 Douglas de Araújo
+# This file is distributed under the GPLv2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Obatala - Plugin de Gestão de Processos Curatoriais para WordPress beta.0.1\n"
+"Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/Obatala\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2024-05-28T20:38:23+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"X-Generator: WP-CLI 2.10.0\n"
+"X-Domain: obatala\n"
+
+#. Plugin Name of the plugin
+#: obatala.php
+msgid "Obatala - Plugin de Gestão de Processos Curatoriais para WordPress"
+msgstr ""
+
+#. Description of the plugin
+#: obatala.php
+msgid "Adiciona funcionalidades de gestão de processos curatoriais para o plugin Tainacan"
+msgstr ""
+
+#. Author of the plugin
+#: obatala.php
+msgid "Douglas de Araújo"
+msgstr ""
+
+#. Author URI of the plugin
+#: obatala.php
+msgid "github.com/everbero"
+msgstr ""
+
+#: archive-process_collection.php:59
+msgid "No processes found."
+msgstr ""
+
+#: classes/Admin/AdminMenu.php:9
+#: classes/Admin/AdminMenu.php:20
+msgid "Obatala Settings"
+msgstr ""
+
+#: classes/Admin/AdminMenu.php:21
+msgid "Settings"
+msgstr ""
+
+#: classes/Admin/AdminMenu.php:30
+#: classes/Admin/AdminMenu.php:31
+#: classes/Entities/ProcessCollection.php:24
+msgid "All Processes"
+msgstr ""
+
+#: classes/Admin/AdminMenu.php:39
+#: classes/Admin/AdminMenu.php:40
+#: classes/Entities/ProcessCollection.php:20
+msgid "Add New Process"
+msgstr ""
+
+#: classes/Admin/AdminMenu.php:48
+#: classes/Admin/AdminMenu.php:49
+msgid "All Steps"
+msgstr ""
+
+#: classes/Admin/AdminMenu.php:57
+#: classes/Admin/AdminMenu.php:58
+#: classes/Entities/ProcessStepCollection.php:21
+msgid "Add New Step"
+msgstr ""
+
+#: classes/Admin/SettingsPage.php:16
+msgid "General Settings"
+msgstr ""
+
+#: classes/Admin/SettingsPage.php:24
+msgid "Some Setting"
+msgstr ""
+
+#: classes/Admin/SettingsPage.php:32
+msgid "Enable Feature"
+msgstr ""
+
+#: classes/Admin/SettingsPage.php:40
+msgid "API Key"
+msgstr ""
+
+#: classes/Admin/SettingsPage.php:50
+msgid "Enter the value for some setting."
+msgstr ""
+
+#: classes/Admin/SettingsPage.php:56
+msgid "Enable or disable a specific feature."
+msgstr ""
+
+#: classes/Admin/SettingsPage.php:62
+msgid "Enter your API key here."
+msgstr ""
+
+#: classes/Admin/SettingsPage.php:73
+msgid "Save Settings"
+msgstr ""
+
+#: classes/Entities/ProcessCollection.php:15
+msgctxt "Post type general name"
+msgid "Processes"
+msgstr ""
+
+#: classes/Entities/ProcessCollection.php:16
+msgctxt "Post type singular name"
+msgid "Process"
+msgstr ""
+
+#: classes/Entities/ProcessCollection.php:17
+msgctxt "Admin Menu text"
+msgid "Process"
+msgstr ""
+
+#: classes/Entities/ProcessCollection.php:18
+msgctxt "Add New on Toolbar"
+msgid "Process"
+msgstr ""
+
+#: classes/Entities/ProcessCollection.php:19
+#: classes/Entities/ProcessStepCollection.php:20
+msgid "Add New"
+msgstr ""
+
+#: classes/Entities/ProcessCollection.php:21
+msgid "New Process"
+msgstr ""
+
+#: classes/Entities/ProcessCollection.php:22
+msgid "Edit Process"
+msgstr ""
+
+#: classes/Entities/ProcessCollection.php:23
+msgid "View Process"
+msgstr ""
+
+#: classes/Entities/ProcessCollection.php:25
+msgid "Search Processes"
+msgstr ""
+
+#: classes/Entities/ProcessCollection.php:26
+msgid "Parent Process:"
+msgstr ""
+
+#: classes/Entities/ProcessCollection.php:27
+#: single-process_collection.php:30
+msgid "No process found."
+msgstr ""
+
+#: classes/Entities/ProcessCollection.php:28
+msgid "No process found in Trash."
+msgstr ""
+
+#: classes/Entities/ProcessCollection.php:55
+msgctxt "taxonomy general name"
+msgid "Process Types"
+msgstr ""
+
+#: classes/Entities/ProcessCollection.php:56
+msgctxt "taxonomy singular name"
+msgid "Process Type"
+msgstr ""
+
+#: classes/Entities/ProcessCollection.php:57
+msgid "Search Process Types"
+msgstr ""
+
+#: classes/Entities/ProcessCollection.php:58
+msgid "All Process Types"
+msgstr ""
+
+#: classes/Entities/ProcessCollection.php:59
+msgid "Parent Process Type"
+msgstr ""
+
+#: classes/Entities/ProcessCollection.php:60
+msgid "Parent Process Type:"
+msgstr ""
+
+#: classes/Entities/ProcessCollection.php:61
+msgid "Edit Process Type"
+msgstr ""
+
+#: classes/Entities/ProcessCollection.php:62
+msgid "Update Process Type"
+msgstr ""
+
+#: classes/Entities/ProcessCollection.php:63
+msgid "Add New Process Type"
+msgstr ""
+
+#: classes/Entities/ProcessCollection.php:64
+msgid "New Process Type Name"
+msgstr ""
+
+#: classes/Entities/ProcessCollection.php:65
+msgid "Process Types"
+msgstr ""
+
+#: classes/Entities/ProcessStepCollection.php:16
+msgctxt "Post type general name"
+msgid "Process Steps"
+msgstr ""
+
+#: classes/Entities/ProcessStepCollection.php:17
+msgctxt "Post type singular name"
+msgid "Step"
+msgstr ""
+
+#: classes/Entities/ProcessStepCollection.php:18
+msgctxt "Admin Menu text"
+msgid "Step"
+msgstr ""
+
+#: classes/Entities/ProcessStepCollection.php:19
+msgctxt "Add New on Toolbar"
+msgid "Step"
+msgstr ""
+
+#: classes/Entities/ProcessStepCollection.php:22
+msgid "New Step"
+msgstr ""
+
+#: classes/Entities/ProcessStepCollection.php:23
+msgid "Edit Step"
+msgstr ""
+
+#: classes/Entities/ProcessStepCollection.php:24
+msgid "View Step"
+msgstr ""
+
+#: classes/Entities/ProcessStepCollection.php:25
+msgid "All Step"
+msgstr ""
+
+#: classes/Entities/ProcessStepCollection.php:26
+msgid "Search Step"
+msgstr ""
+
+#: classes/Entities/ProcessStepCollection.php:27
+msgid "Parent Step:"
+msgstr ""
+
+#: classes/Entities/ProcessStepCollection.php:28
+msgid "No step found."
+msgstr ""
+
+#: classes/Entities/ProcessStepCollection.php:29
+msgid "No step found in Trash."
+msgstr ""
+
+#: classes/Entities/ProcessStepCollection.php:56
+msgctxt "taxonomy general name"
+msgid "Steps Types"
+msgstr ""
+
+#: classes/Entities/ProcessStepCollection.php:57
+msgctxt "taxonomy singular name"
+msgid "Step Type"
+msgstr ""
+
+#: classes/Entities/ProcessStepCollection.php:58
+msgid "Search Step Types"
+msgstr ""
+
+#: classes/Entities/ProcessStepCollection.php:59
+msgid "All Step Types"
+msgstr ""
+
+#: classes/Entities/ProcessStepCollection.php:60
+msgid "Parent Step Type"
+msgstr ""
+
+#: classes/Entities/ProcessStepCollection.php:61
+msgid "Parent Step Type:"
+msgstr ""
+
+#: classes/Entities/ProcessStepCollection.php:62
+msgid "Edit Step Type"
+msgstr ""
+
+#: classes/Entities/ProcessStepCollection.php:63
+msgid "Update Step Type"
+msgstr ""
+
+#: classes/Entities/ProcessStepCollection.php:64
+msgid "Add New Step Type"
+msgstr ""
+
+#: classes/Entities/ProcessStepCollection.php:65
+msgid "New Step Type Name"
+msgstr ""
+
+#: classes/Entities/ProcessStepCollection.php:66
+msgid "Step Types"
+msgstr ""
+
+#: obatala.php:116
+msgid "Obatala requires the Tainacan plugin to be installed and activated."
+msgstr ""
