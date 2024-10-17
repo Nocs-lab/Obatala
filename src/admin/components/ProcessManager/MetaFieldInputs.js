@@ -8,6 +8,7 @@ import {
   TextareaControl,
 } from "@wordpress/components";
 import { upload } from "@wordpress/icons";
+import TainacanSearchControls from "../Tainacan/TainacanSearch";
 const MetaFieldInputs = ({
   field,
   isEditable,
@@ -189,6 +190,10 @@ const MetaFieldInputs = ({
           )}
         </div>
       );
+    case "search":
+      return (
+        <TainacanSearchControls />
+      )
     default:
       return null;
   }

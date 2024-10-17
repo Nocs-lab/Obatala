@@ -11,6 +11,7 @@ import { edit, trash } from "@wordpress/icons";
 import { useDrawer } from "../../context/DrawerContext";
 import LabelWithIcon from "../inputControls/LabelWithIcon";
 import { useFlowContext } from "../../context/FlowContext";
+import TainacanSearchDetails from "../inputControls/TainacanSearch";
 
 const SortableField = ({ id, nodeId, title, type, config }) => {
   const {
@@ -94,6 +95,10 @@ const SortableField = ({ id, nodeId, title, type, config }) => {
             config={config}
           />
         );
+      case "search":
+        return (
+          <TainacanSearchDetails />
+        )
       default:
         return null;
     }
