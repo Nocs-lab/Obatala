@@ -8,7 +8,7 @@ import {
     Notice
 } from '@wordpress/components';
 import { plus } from "@wordpress/icons";
-import { fetchProcessTypes, saveProcessType, deleteProcessType, updateProcessTypeMeta } from '../api/apiRequests';
+import { fetchProcessModels, saveProcessType, deleteProcessType, updateProcessTypeMeta } from '../api/apiRequests';
 import ProcessTypeForm from './ProcessTypeManager/ProcessTypeForm';
 import ProcessTypeList from './ProcessTypeManager/ProcessTypeList';
 
