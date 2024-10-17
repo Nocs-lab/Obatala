@@ -95,7 +95,7 @@ const ProcessManager = ({ onSelectProcess }) => {
         // Atualiza os mapeamentos de tipo de processo
         const updatedProcesses = [...processes, newProcess];
         setNotice({ status: 'success', message: 'Process saved successfully.' });
-        await fetchProcessTypesForProcesses(updatedProcesses);
+        await fetchProcessModelsForProcesses(updatedProcesses);
         setIsLoading(false);
     };
     

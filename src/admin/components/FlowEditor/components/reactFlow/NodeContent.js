@@ -25,6 +25,7 @@ const FIELD_OPTIONS = [
   { id: "upload", label: "Upload de Arquivo" },
   { id: "select", label: "Select (Múltiplas Opções)" },
   { id: "radio", label: "Radio (Opções de Seleção)" },
+  { id: "search", label: "Busca em Tainacan" },
 ];
 
 const NodeContent = ({ id, data = {} }) => {
