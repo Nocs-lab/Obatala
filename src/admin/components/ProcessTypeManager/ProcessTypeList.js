@@ -11,10 +11,6 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete }) => {
             accessor: 'title.rendered',
         },
         {
-            Header: 'Description',
-            accessor: 'description',
-        },
-        {
             Header: 'Created At',
             accessor: 'date',
             Cell: ({ value }) => format(new Date(value), 'MM/dd/yyyy'),

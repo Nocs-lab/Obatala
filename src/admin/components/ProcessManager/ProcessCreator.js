@@ -70,10 +70,7 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
             }));
 
             const metaUpdateData = {
-                step_order: stepOrderWithMeta,
-                process_type: selectedProcessType.id,
-                current_stage: 0,
-                access_level: accessLevel
+                flowData: metaFields.flowData
             };
 
             // Atualiza o meta para o processo 
