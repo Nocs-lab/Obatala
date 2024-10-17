@@ -149,7 +149,7 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
             />
             <ButtonGroup>
                 <Button variant="link" onClick={handleCancel}>Cancel</Button>
-                <Button variant="primary" onClick={handleSaveProcess}>Save</Button>
+                <Button variant="primary" type="submit">Save</Button>
             </ButtonGroup>        
         </form>
     );

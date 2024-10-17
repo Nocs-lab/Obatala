@@ -58,7 +58,7 @@ const SectorCreator = ({onSave, editingSector, onCancel}) => {
     };
 
     return ( 
-        <>
+        <form onSubmit={handleSave}>
               {notice && (
                     <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
                         {notice.message}
@@ -92,11 +92,11 @@ const SectorCreator = ({onSave, editingSector, onCancel}) => {
                 <Button variant="link" onClick={handleCancel}>
                     Cancel
                 </Button>
-                <Button variant="primary" onClick={handleSave}>
+                <Button variant="primary" type="submit">
                     Save
                 </Button>
             </ButtonGroup>
-        </>
+        </form>
     )
 }
 

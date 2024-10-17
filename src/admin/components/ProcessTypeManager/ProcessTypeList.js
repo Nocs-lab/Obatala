@@ -21,7 +21,7 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete }) => {
         },
         {
             Header: 'Number of Steps',
-            accessor: 'meta.step_order',
+            accessor: 'meta.flowData.nodes',
             Cell: ({ value }) => (value ? value.length : 0),
         },
         {
