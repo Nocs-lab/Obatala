@@ -109,6 +109,11 @@ const processDataEditor = () => {
     setIsEditing(null);
   };
 
+  const handleCancelEditProcessType = () => {
+    window.location.href = '?page=process-type-manager';
+  };
+
+
   if (isLoading) {
     return <Spinner />;
   }
@@ -189,13 +194,12 @@ const processDataEditor = () => {
             )}
 
             {notice && (
-                <Notice
-                    status={notice.status}
-                    isDismissible
-                    onRemove={() => setNotice(null)}
-                >
-                    {notice.message}
-                </Notice>
+                <div className="notice-container">
+                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                        {notice.message}
+                    </Notice>
+                </div>
+                
             )}
     
             <Panel>
@@ -210,7 +214,7 @@ const processDataEditor = () => {
                 <Button variant="primary" type="submit" onClick={handleSave}>
                     Save
                 </Button>
-                <Button variant="link">
+                <Button variant="link" onClick={handleCancelEditProcessType}>
                     Cancel
                 </Button>
             </ButtonGroup>
