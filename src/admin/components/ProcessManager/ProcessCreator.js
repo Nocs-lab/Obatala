@@ -17,7 +17,8 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
         }
     }, [editingProcess]);
 
-    const handleSaveProcess = async () => {
+    const handleSaveProcess = async (e) => {
+        e.preventDefault();
         if (!newProcessTitle || !newProcessType) {
             setNotice({ status: 'error', message: 'Please provide a title and select a process type.' });
             return;
@@ -61,6 +62,8 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
             console.log(metaFields)            
     
             const metaUpdateData = {
+                current_stage: 0,
+                access_level: accessLevel,
                 flowData: metaFields.flowData
             };
     
@@ -101,7 +104,7 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
     };
 
     return (
-        <div>
+        <form onSubmit={handleSaveProcess}>
              {notice && (
                 <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
                     {notice.message}
@@ -137,10 +140,10 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
             />
             <div style={{display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px'}}>
                 <Button isSecondary onClick={handleCancel}>Cancel</Button>
-                <Button isPrimary onClick={handleSaveProcess}>Save</Button>
+                <Button isPrimary type="submit">Save</Button>
             </div>
             
-        </div>
+        </form>
      
     );
 };

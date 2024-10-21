@@ -10,10 +10,10 @@ const SectorList = ({sectors, onEdit, onDelete}) => {
         <Panel>
             <PanelHeader>
                 <h3>Existing sectors</h3>
-                {/* <span className="badge">{filteredSectors.length}</span> */}
+                <span className="badge">{filteredSectors.length}</span>
             </PanelHeader>
             <PanelRow>
-                {filteredSectors ? (
+                {filteredSectors.length > 0 ? (
                     <table className="wp-list-table widefat fixed striped">
                         <thead>
                             <tr>
