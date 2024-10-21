@@ -41,16 +41,12 @@ const IconForType = ({ type }) => {
 };
 
 const LabelWithIcon = ({ label, type }) => (
-  <div
-    style={{
-      display: "flex",
-    }}
-  >
-    <div className="step-icon">
+  <>
+    <span className="step-icon">
       <IconForType type={type} /> 
-    </div>
-    <div className="step-label">{label}</div>
-  </div>
+    </span>
+    <span className="step-label">{label}</span>
+  </>
 );
 
 export default LabelWithIcon;
