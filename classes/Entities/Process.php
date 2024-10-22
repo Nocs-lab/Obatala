@@ -63,6 +63,13 @@ class Process {
             'show_in_rest' => true,
         ]);
 
+        register_meta('post', 'current_sector', [
+            'type' => 'integer',
+            'description' => 'Current Sector ID',
+            'single' => true,
+            'show_in_rest' => true,
+        ]);
+
         register_meta('comment', 'stage_id', [
             'type' => 'number',
             'description' => __('Estágio do Processo', 'obatala'),
