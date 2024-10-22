@@ -137,6 +137,12 @@ class ProcessType {
                                         'type' => 'string',
                                         'description' => 'Name of the stage (node)',
                                     ],
+                                    'sector_history' => [
+                                        'type' => 'array',
+                                        'sector_id' => [
+                                            'type' => 'string'
+                                        ]
+                                    ]
                                 ],
                             ],
                         ],
