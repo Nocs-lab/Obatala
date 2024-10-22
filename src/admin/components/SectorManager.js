@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import {
     Spinner,
     Button,
@@ -6,18 +6,24 @@ import {
     Modal,
     ButtonGroup,
     Icon,
+    __experimentalConfirmDialog as ConfirmDialog 
 } from '@wordpress/components';
 import { plus } from "@wordpress/icons";
 import SectorCreator from './SectorManager/SectorCreator';
-import { deleteSector, fetchSectors, saveSector, updateSectorMeta } from '../api/apiRequests';
+import { deleteSector, fetchSectors, saveSector } from '../api/apiRequests';
 import SectorList from './SectorManager/SectorList';
+import Reducer, { initialState } from '../redux/reducer';
+import UsersManager from './SectorManager/UserManager/UserManager';
 
 const SectorManager = () => {
     const [sectors, setSectors] = useState([])
     const [editingSector, setEditingSector] = useState(null);
     const [addingSector, setAddingSector] = useState(null);
+    const [addingUsers, setAddingUsers] = useState(null);
     const [isLoading, setIsLoading] = useState(false)
     const [notice, setNotice] = useState(null);
+
+    const [state, dispatch] = useReducer(Reducer, initialState)
 
     useEffect(() => {
         loadSectors();
@@ -54,7 +60,7 @@ const SectorManager = () => {
                 savedSector = await saveSector(newSector);
             }
         
-            setNotice({ status: 'success', message: 'Sector saved successfully.' });
+            setNotice({ status: 'success', message: 'Sector successfully saved.' });
             setEditingSector(null);
             setAddingSector(null);
             loadSectors();
@@ -72,13 +78,17 @@ const SectorManager = () => {
         }   
   
     };
-    const handleDelete = (id) => {
-        deleteSector(id)
+    const handleDelete = (sector) => {
+        deleteSector(sector.id)
             .then(() => {
-                const updatedSectors = sectors.filter(type => type.id !== id);
+                const updatedSectors = sectors.filter(type => type.id !== sector.id);
                 setSectors(updatedSectors);
+                setNotice({ status: 'success', message: 'Sector successfully removed.' })
             })
             .catch(error => {
+                if(error === 'Erro ao deletar o setor, o setor esta vinculado a um usuario'){
+                    setNotice({ status: 'error', message: 'Cannot deleting sector linked to a user.' }); 
+                }
                 console.error('Error deleting process type:', error);
             });
     };
@@ -89,12 +99,23 @@ const SectorManager = () => {
 
     const handleEdit = (sector) => {
         setEditingSector(sector);
+        
+    }
+
+    const handleAddUser = (sector) => {
+        setAddingUsers(sector);
     }
 
     const handleCancel = () => {
         setEditingSector(null);
         setAddingSector(null);
+        setAddingUsers(null);
+        dispatch({ type: 'CLOSE_MODAL' });
     };
+
+    const handleConfirmDelete = (sector) => {
+        dispatch({type: 'OPEN_MODAL_SECTOR', payload: sector})
+    }
 
     if (isLoading) {
         return <Spinner />;
@@ -102,6 +123,7 @@ const SectorManager = () => {
 
     return (
         <main>
+            
             <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
             <div className="title-container">
                 <h2>Sector manager</h2>
@@ -120,9 +142,21 @@ const SectorManager = () => {
                 </div>
             )}
 
+            <ConfirmDialog
+                isOpen={state.isOpen}
+                onConfirm={() => {
+                    handleDelete(state.sector);
+                    dispatch({type: 'CLOSE_MODAL'})
+                }}
+                onCancel={ handleCancel }
+            >
+                Are you sure you want to delete sector {state.sector?.name}?
+            </ConfirmDialog>
+
             <SectorList sectors={sectors}
                         onEdit={handleEdit}
-                        onDelete={handleDelete}
+                        onDelete={handleConfirmDelete}
+                        onAddUser={handleAddUser}
             />
 
             {/* Open modal to editing Sector */}
@@ -151,6 +185,18 @@ const SectorManager = () => {
                         onSave={handleSectorSaved} 
                         onCancel={handleCancel}
                     />
+                </Modal>
+            )}
+            {addingUsers && (
+                <Modal
+                    title="User Manager"
+                    onRequestClose={handleCancel}
+                    isDismissible={true}
+                    size="medium"
+                >
+                    <UsersManager
+                        sector={addingUsers}
+                    /> 
                 </Modal>
             )}
         </main>
