@@ -197,18 +197,15 @@ const processDataEditor = () => {
           <PanelRow>
               {/* Passa o flowData carregado como initialData para o ProcessFlow */}
               <FlowProvider>
-                  <ProcessFlow ref={flowRef} initialData={flowData} />
+                  <ProcessFlow 
+                    ref={flowRef} 
+                    initialData={flowData}
+                    onSave={handleSave}
+                    onCancel={handleCancelEditProcessType}
+                    />
               </FlowProvider>
           </PanelRow>
       </Panel>
-      <ButtonGroup>
-          <Button variant="primary" type="submit" onClick={handleSave}>
-                Save
-          </Button>
-          <Button variant="link" onClick={handleCancelEditProcessType}>
-                Cancel
-           </Button>
-      </ButtonGroup>
     </main>
   );
 };
