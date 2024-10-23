@@ -742,6 +742,12 @@ button .components-spinner {
 .title-container strong {
   font-weight: 800;
 }
+.title-container-table {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
 .actions {
   display: flex;
   gap: 1rem;
