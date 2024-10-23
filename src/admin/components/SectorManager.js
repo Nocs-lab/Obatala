@@ -123,7 +123,6 @@ const SectorManager = () => {
 
     return (
         <main>
-            
             <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
             <div className="title-container">
                 <h2>Sector manager</h2>
@@ -189,10 +188,10 @@ const SectorManager = () => {
             )}
             {addingUsers && (
                 <Modal
-                    title="User Manager"
+                    title={<>Manager users <span className="badge">99</span></>}
                     onRequestClose={handleCancel}
                     isDismissible={true}
-                    size="medium"
+                    size="large"
                 >
                     <UsersManager
                         sector={addingUsers}

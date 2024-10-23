@@ -71,10 +71,6 @@ h2 {
 h2:has(+ span.badge) {
   margin-bottom: 1rem;
 }
-
-main > .notice-container {
-  margin: 1rem var(--gap-external) 2rem;
-}
 /* #endregion */
 
 /* #region Forms */
@@ -231,9 +227,26 @@ table.wp-list-table th {
 }
 /* #endregion */
 
+/* #region Modal */
+.components-modal__header .components-modal__header-heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.components-modal__header .components-modal__header-heading .badge {
+  font-size: .8rem;
+}
+/* #endregion */
+
 /* #region Notice */
 .notice-container {
-  margin: 1rem var(--gap-external) 2rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+main > .notice-container {
+  margin-left: var(--gap-external);
+  margin-right: var(--gap-external);
 }
 /* #endregion */
 
