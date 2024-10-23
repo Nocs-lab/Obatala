@@ -9,6 +9,7 @@ import {trash} from '@wordpress/icons';
 import { assignUserToSector, deleteSectorUser, fetchUsers, fetchUsersBySector } from '../../../api/apiRequests';
 import UserSelect from './UserSelect';
 
+
 const UserManager = ({ sector }) => {
     const [users, setUsers] = useState([]);
     const [sectorUsers, setSectorUsers] = useState([]);
@@ -45,21 +46,23 @@ const UserManager = ({ sector }) => {
         });
     };
     // Associa um usuário ao setor com base no ID de ambos
-    const assignUserSector = async (userId) => {
-        const data = {
+    const assignUserSector = async (usersId) => {
+        usersId.map((userId) => {
+            const data = {
             user_id: userId,
             sector_id: sector.id,
-        }
-        assignUserToSector(data)
-            .then(() => {
-                loadSectorUsers(sector.id);
-                setNotice({ status: 'success', message: 'User successfully added.' })
-            })
-            .catch(error => {
-                console.error('Error fetching sectors:', error);
-                setIsLoading(false);
-                setNotice({ status: 'error', message: 'Error adding user.' })
-            });
+            }
+            assignUserToSector(data)
+                .then(() => {
+                    loadSectorUsers(sector.id);
+                    setNotice({ status: 'success', message: 'User successfully added.' })
+                })
+                .catch(error => {
+                    console.error('Error fetching sectors:', error);
+                    setIsLoading(false);
+                    setNotice({ status: 'error', message: 'Error adding user.' })
+                });
+        })
     };
 
     // Remove o usuário do setor
@@ -69,6 +72,7 @@ const UserManager = ({ sector }) => {
             .then(() => {
                 const updatedUsers = sectorUsers.filter(type => type.id !== user.id);
                 setSectorUsers(updatedUsers);
+                loadSectorUsers(sector.id);
                 setNotice({ status: 'success', message: 'User successfully removed.' })
             })
             .catch(error => {
@@ -96,9 +100,14 @@ const UserManager = ({ sector }) => {
                     </Notice>
                 </div>
             )}
+             
+            <div className='title-container-table'>
+                <h3>Related Users</h3>
+                <span className="badge">{sectorUsers.length}</span>
+            </div>
 
             {sectorUsers.length > 0 ? (
-                <table className="wp-list-table widefat fixed striped mt-2">
+                <table className="wp-list-table widefat fixed striped mt-1">
                     <thead>
                         <tr>
                             <th>Name</th>
