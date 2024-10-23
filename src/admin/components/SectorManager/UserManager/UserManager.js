@@ -2,10 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, 
         ButtonGroup, 
         Icon, 
-        Tooltip, 
-        Panel, 
-        PanelHeader, 
-        PanelRow, 
+        Tooltip,
         Notice, 
         Spinner } from '@wordpress/components';
 import {trash} from '@wordpress/icons';
@@ -84,63 +81,56 @@ const UserManager = ({ sector }) => {
         return <Spinner />;
     }
 
-
     return (
-        <Panel>
-            <PanelHeader>
-                <h3>Existing users</h3>
-                <span className="badge">{sectorUsers.length}</span>
-            </PanelHeader>
-            <PanelRow>
-                <UserSelect
-                    users={users}
-                    sectorUsers={sectorUsers}
-                    onSelectUser={assignUserSector}
-                />
-            </PanelRow>
-            <PanelRow>
-                {notice && (
-                    <div className="notice-container">
-                        <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                            {notice.message}
-                        </Notice>
-                    </div>
-                )}
-                {sectorUsers.length > 0 ? (
-                    <table className="wp-list-table widefat fixed striped">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>User Name</th>
-                                <th>Email</th>
-                                <th>Actions</th>
+        <>
+            <UserSelect
+                users={users}
+                sectorUsers={sectorUsers}
+                onSelectUser={assignUserSector}
+            />
+
+            {notice && (
+                <div className="notice-container">
+                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                        {notice.message}
+                    </Notice>
+                </div>
+            )}
+
+            {sectorUsers.length > 0 ? (
+                <table className="wp-list-table widefat fixed striped mt-2">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>User Name</th>
+                            <th>Email</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {sectorUsers.map(user => (
+                            <tr key={user.ID}>
+                                <td>{user.display_name}</td>
+                                <td>{user.username}</td>
+                                <td>{user.email}</td>
+                                <td>
+                                    <ButtonGroup>
+                                        <Tooltip text="Delete">
+                                            <Button
+                                                icon={<Icon icon={trash} />}
+                                                onClick={() => handleDeleteUser(user)}
+                                            />
+                                        </Tooltip>
+                                    </ButtonGroup>
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {sectorUsers.map(user => (
-                                <tr key={user.ID}>
-                                    <td>{user.display_name}</td>
-                                    <td>{user.username}</td>
-                                    <td>{user.email}</td>
-                                    <td>
-                                        <ButtonGroup>
-                                            <Tooltip text="Delete">
-                                                <Button
-                                                    icon={<Icon icon={trash} />}
-                                                    onClick={() => handleDeleteUser(user)}
-                                                />
-                                            </Tooltip>
-                                        </ButtonGroup>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                ) : (
-                    <Notice isDismissible={false} status="warning">No existing users for this sector.</Notice>
-                )}
-            </PanelRow>
-        </Panel>
+                        ))}
+                    </tbody>
+                </table>
+            ) : (
+                <Notice isDismissible={false} status="warning" className="mt-2">No existing users for this sector.</Notice>
+            )}
+        </>
     );
 }
 

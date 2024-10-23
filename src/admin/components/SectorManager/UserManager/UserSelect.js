@@ -48,7 +48,7 @@ const UserSelect = ({ users, sectorUsers, onSelectUser }) => {
                 onClick={() => onSelectUser(selectedUser?.ID)}
                 disabled={!selectedUser}    
             >
-                Add User
+                Add user(s)
             </Button>
         </>       
     );

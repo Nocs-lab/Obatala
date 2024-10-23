@@ -47,7 +47,6 @@ const SectorList = ({sectors, onEdit, onDelete, onAddUser}) => {
                                 <th>Number of users</th>
                                 <th>Status</th>
                                 <th>Actions</th>
-                                
                             </tr>
                         </thead>
                         <tbody>
@@ -60,6 +59,12 @@ const SectorList = ({sectors, onEdit, onDelete, onAddUser}) => {
                                         <td><span className={`badge ${sector.status == 'Active' ? 'success' : 'error'}`}>{sector.status}</span></td>
                                         <td>
                                             <ButtonGroup>
+                                                <Tooltip text="Manage users">
+                                                    <Button
+                                                        icon={<Icon icon={people} />}
+                                                        onClick={() => onAddUser(sector)}
+                                                    />
+                                                </Tooltip>
                                                 <Tooltip text="Edit">
                                                     <Button
                                                         icon={<Icon icon={edit} />}
@@ -70,12 +75,6 @@ const SectorList = ({sectors, onEdit, onDelete, onAddUser}) => {
                                                     <Button
                                                         icon={<Icon icon={trash} />}
                                                         onClick={() => onDelete(sector)}
-                                                    />
-                                                </Tooltip>
-                                                <Tooltip text="Users">
-                                                    <Button
-                                                        icon={<Icon icon={people} />}
-                                                        onClick={() => onAddUser(sector)}
                                                     />
                                                 </Tooltip>
                                             </ButtonGroup>
