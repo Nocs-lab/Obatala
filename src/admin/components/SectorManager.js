@@ -188,7 +188,7 @@ const SectorManager = () => {
             )}
             {addingUsers && (
                 <Modal
-                    title={<>Manager users <span className="badge">99</span></>}
+                    title={<>Manager users: {addingUsers.name}</>}
                     onRequestClose={handleCancel}
                     isDismissible={true}
                     size="large"
