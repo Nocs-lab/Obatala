@@ -85,7 +85,7 @@ class ProcessApi extends ObatalaAPI {
             ]
         ]);
 
-        // Funçao para associar e gerensiar historico de setores das etapas
+        // Rota para associar e gerensiar historico de setores das etapas
         $this->add_route('process_obatala/(?P<id>\d+)/assosiate_sector', [
             'methods' => 'POST',
             'callback' => [$this, 'assosiate_sector'],
@@ -106,6 +106,12 @@ class ProcessApi extends ObatalaAPI {
             ]
         ]);
 
+        // Rota para verificar as permisoes
+        $this->add_route('process_obatala/(?P<id>\d+)/check_permision', [
+            'methods' => 'GET',
+            'callback' => [$this, 'check_permision'],
+            'permission_callback' => '__return_true',
+        ]);
     }
     
     public function get_current_stage($request) {
@@ -228,6 +234,40 @@ class ProcessApi extends ObatalaAPI {
             return new WP_REST_Response('Setor associado com sucesso', 200);
         } else {
             return new WP_REST_Response('Erro ao associar o setor', 500);
+        }
+    }
+
+    // Funçao informar se o usuario tem permisao permisao
+    public function check_permision($request){
+        $process_id = (int) $request['id'];
+        // Pega o setor atual da etapa
+        $curent_sector = get_post_meta($process_id, 'current_sector', true);
+
+        // Pega as informações do usuário atual
+        $current_user = wp_get_current_user();
+        $id_user = $current_user->ID;
+        
+        // Pega os setores que estão associados ao usuário
+        //$user_sector = get_user_meta(1, 'associated_sector', false);
+        $user_sector = get_user_meta($id_user, 'associated_sector', false);
+
+        // Pega a permisao do usuario
+        //$permision = get_user_meta(1, 'wp_capabilities');
+        $permision = get_user_meta($id_user, 'wp_capabilities');
+
+        // Verifica se este usuário possui algum setor associado e percorre o array
+        if(!empty($user_sector) && is_array($user_sector)){
+            foreach ($user_sector as $sector) {
+                // Verifica se algum setor do usuário é igual ao current_sector
+                if (in_array($curent_sector, $sector)) {
+                    return new WP_REST_Response($permision, 200);
+                    //return new WP_REST_Response($current_user->allcaps, 200); 
+                }else{
+                    return new WP_REST_Response('Usuário não possui permissão para este setor.', 403);
+                }
+            }
+        }else{
+            return new WP_REST_Response('Usuário não possui permissão para este setor.', 403);
         }
     }
 
