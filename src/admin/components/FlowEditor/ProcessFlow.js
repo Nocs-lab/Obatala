@@ -22,7 +22,7 @@ const edgeTypes = {
   buttonedge: ButtonEdge,
 };
 
-const ProcessFlow = forwardRef(({ initialData }, ref) => {
+const ProcessFlow = forwardRef(({ initialData, onSave, onCancel}, ref,) => {
   const {
     nodes,
     edges,
@@ -97,7 +97,10 @@ const ProcessFlow = forwardRef(({ initialData }, ref) => {
           <Background />
         </ReactFlow>
 
-        <ProcessControls />
+        <ProcessControls 
+          onSave={onSave}
+          onCancel={onCancel}
+        />
       </DrawerProvider>
     </div>
   );

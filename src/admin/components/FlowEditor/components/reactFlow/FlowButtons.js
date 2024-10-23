@@ -2,7 +2,7 @@ import React, { useRef } from "react";
 import { useFlowContext } from "../../context/FlowContext";
 import { Button, ButtonGroup } from "@wordpress/components";
 
-const ProcessControls = () => {
+const ProcessControls = ({onSave, onCancel}) => {
 
     const { addNewNode, onExport, onImport } = useFlowContext();
 
@@ -27,10 +27,10 @@ const ProcessControls = () => {
     return (
         <>
             <ButtonGroup style={{ position: "absolute", top: 0, right: 0, zIndex: 1000 }}>
-                <Button variant="primary" type="submit">
+                <Button variant="primary" type="submit" onClick={onSave}>
                     Save changes
                 </Button>
-                <Button variant="secondary">
+                <Button variant="secondary" onClick={onCancel}>
                     Cancel changes
                 </Button>
                 <Button variant="secondary" onClick={addNewNode}>
