@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import {
   Panel,
   Icon,
-  PanelHeader,
   PanelRow,
   Spinner,
   Notice,

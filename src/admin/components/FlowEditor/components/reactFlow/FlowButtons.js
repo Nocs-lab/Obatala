@@ -1,86 +1,58 @@
 import React, { useRef } from "react";
 import { useFlowContext } from "../../context/FlowContext";
-
+import { Button, ButtonGroup } from "@wordpress/components";
 
 const ProcessControls = () => {
 
-  const { addNewNode, onExport, onImport } = useFlowContext();
+    const { addNewNode, onExport, onImport } = useFlowContext();
 
-  const fileInputRef = useRef(null);
+    const fileInputRef = useRef(null);
 
-  const handleImportClick = () => {
-    fileInputRef.current.click();
-  };
+    const handleImportClick = () => {
+        fileInputRef.current.click();
+    };
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const importedData = JSON.parse(e.target.result);
-        onImport(importedData); // Chama a função para importar os dados
-      };
-      reader.readAsText(file);
-    }
-  };
-  return (
-    <div style={{ position: "absolute", top: 10, right: 10, zIndex: 1000 }}>
-      {/* Botão para adicionar nova etapa */}
-      <button
-        onClick={addNewNode}
-        style={{
-          padding: "10px 20px",
-          backgroundColor: "#007bff",
-          color: "white",
-          border: "none",
-          borderRadius: "4px",
-          cursor: "pointer",
-          marginBottom: "10px",
-          display: "block",
-        }}
-      >
-        Adicionar Etapa
-      </button>
-      {/* Botão para exportar JSON */}
-      <button
-        onClick={onExport}
-        style={{
-          padding: "10px 20px",
-          backgroundColor: "#28a745",
-          color: "white",
-          border: "none",
-          borderRadius: "4px",
-          cursor: "pointer",
-          marginBottom: "10px",
-          display: "block",
-        }}
-      >
-        Exportar JSON
-      </button>
-      {/* Botão para importar JSON */}
-      <button
-        onClick={handleImportClick}
-        style={{
-          padding: "10px 20px",
-          backgroundColor: "#ffc107",
-          color: "black",
-          border: "none",
-          borderRadius: "4px",
-          cursor: "pointer",
-        }}
-      >
-        Importar JSON
-      </button>
-      {/* Input invisível para carregar o arquivo JSON */}
-      <input
-        type="file"
-        accept=".json"
-        ref={fileInputRef}
-        onChange={handleFileChange}
-        style={{ display: "none" }}
-      />
-    </div>
-  );
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const importedData = JSON.parse(e.target.result);
+                onImport(importedData); // Chama a função para importar os dados
+            };
+            reader.readAsText(file);
+        }
+    };
+  
+    return (
+        <>
+            <ButtonGroup style={{ position: "absolute", top: 0, right: 0, zIndex: 1000 }}>
+                <Button variant="primary" type="submit">
+                    Save changes
+                </Button>
+                <Button variant="secondary">
+                    Cancel changes
+                </Button>
+                <Button variant="secondary" onClick={addNewNode}>
+                    Add Step
+                </Button>
+                <Button variant="secondary" onClick={onExport}>
+                    Exportar JSON
+                </Button>
+                <Button variant="secondary" onClick={handleImportClick}>
+                    Importar JSON
+                </Button>
+            </ButtonGroup>
+            {/* Input invisível para carregar o arquivo JSON */}
+            <input
+                type="file"
+                accept=".json"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                style={{ display: "none" }}
+            />
+        </>
+    );
 };
 
 export default ProcessControls;

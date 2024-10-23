@@ -62,7 +62,7 @@ const ProcessFlow = forwardRef(({ initialData }, ref) => {
   }, [nodes, edges]);
 
   return (
-    <div style={{ width: "100%", height: "650px", position: "relative" }}>
+    <div style={{ width: "100%", height: "60vh", position: "relative" }}>
       {errors.length > 0 && (
         <div style={{ color: "red", padding: "10px" }}>
           <strong>Validation Errors:</strong>

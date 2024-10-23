@@ -103,6 +103,10 @@ main > .notice-container {
 .components-button.is-primary {
   background-color: var(--primary);
 }
+.components-button.is-secondary:hover:not(:disabled,[aria-disabled=true]) {
+  box-shadow: inset 0 0 0 1px var(--primary);
+  color: var(--primary);
+}
 .components-button-group .components-button.is-primary {
   border-radius: var(--input-border-radius) !important;
 }
@@ -460,7 +464,10 @@ main > .components-notice {
 }
 .components-panel__row {
   flex-wrap: wrap;
-  padding: 1rem var(--gap) var(--gap);
+  padding: var(--gap);
+}
+.components-panel__header + .components-panel__row {
+  padding-top: 1rem;
 }
 .components-panel + .components-panel {
   margin-top: 1rem;
