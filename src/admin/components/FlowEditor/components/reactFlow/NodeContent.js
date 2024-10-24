@@ -5,7 +5,9 @@ import NodeHandle from "./NodeHandle";
 import { NodeToolbar } from "@xyflow/react";
 import { TextControl } from "@wordpress/components";
 import { useFlowContext } from "../../context/FlowContext";
-import { set } from "date-fns";
+import TainacanFields from "./TainacanFields";
+import ObatalaFields from "./ObatalaFields";
+
 const nodeStyle = {
   border: "1px solid #ddd",
   backgroundColor: "white",
@@ -25,29 +27,34 @@ const FIELD_OPTIONS = [
   { id: "upload", label: "Upload de Arquivo" },
   { id: "select", label: "Select (Múltiplas Opções)" },
   { id: "radio", label: "Radio (Opções de Seleção)" },
-  { id: "search", label: "Busca em Tainacan" },
+];
+
+const TAINACAN_FIELD_OPTIONS = [
+  { id: "search", label: "Tainacan Search" },
+  { id: "tainacan-list", label: "Tainacan Item List" },
 ];
 
 const NodeContent = ({ id, data = {} }) => {
-  const {
-    fields = [],
-    updateFields = () => {},
-  } = data;
-
+  const { fields = [], updateFields = () => {} } = data;
   const { selectedNodes } = useReactFlow();
   const [isAddingFields, setIsAddingFields] = useState(false);
+  const [isAddingTainacanFields, setIsAddingTainacanFields] = useState(false);
   const { updateNodeName } = useFlowContext();
   const isSelected = selectedNodes?.some((node) => node.id === id);
   const [stageName, setStageName] = useState(data?.stageName || "");
 
+  const solveTitle = (fieldId) => {
+    if (fieldId === "search") return "Tainacan Search";
+    if (fieldId === "tatainacan-list") return "Tainacan Item List";
+    return false
+  };
   const addFieldToNode = (fieldId) => {
     const newField = {
       id: `${fieldId}-${fields.length + 1}`,
       type: fieldId,
-      title: "Campo sem título",
+      title: solveTitle(fieldId) ? solveTitle(fieldId) : "Untitled Field",
     };
     updateFields([...fields, newField]);
-    setIsAddingFields(false);
   };
 
   const handleStageNameChange = (e) => {
@@ -57,102 +64,41 @@ const NodeContent = ({ id, data = {} }) => {
 
   return (
     <div style={nodeStyle}>
-      {/* Node Drag Handle */}
       <NodeHandle nodeId={id} />
-
-      {/* Connection Handles */}
       <Handle type="target" position={Position.Left} />
       <Handle type="source" position={Position.Right} />
 
-      {/* Node Name */}
-      <div
+      <TextControl
+        value={stageName}
+        onChange={handleStageNameChange}
+        placeholder="Digite o nome da etapa"
         style={{
-          padding: "2px",
+          width: "100%",
+          padding: "5px",
+          marginBottom: "10px",
+          fontSize: "10px",
+          border: "none",
+          borderBottom: "1px solid #ccc",
+          outline: "none",
+          borderRadius: 0,
         }}
-      >
-        <TextControl
-          value={stageName}
-          onChange={handleStageNameChange}
-          placeholder="Digite o nome da etapa"
-          style={{
-            width: "100%",
-            padding: "5px",
-            marginBottom: "10px",
-            fontSize: "10px",
-            border: "none",
-            borderBottom: "1px solid #ccc",
-            outline: "none",
-            borderRadius: 0,
-            WebkitBorderRadius: 0,
-          }}
+      />
+
+      <DragAndDropList nodeId={id} fields={fields} updateFields={updateFields} />
+
+      <NodeToolbar isVisible={isSelected} position="right" style={{display: "flex", flexDirection: "column"}}>
+        <TainacanFields
+          isAdding={isAddingTainacanFields}
+          setIsAdding={setIsAddingTainacanFields}
+          addFieldToNode={addFieldToNode}
+          options={TAINACAN_FIELD_OPTIONS}
         />
-      </div>
-
-      {/* List of Fields */}
-      <div
-        style={{
-          padding: "10px",
-          backgroundColor: "#fff",
-          borderRadius: "4px",
-        }}
-      >
-        <DragAndDropList nodeId={id} fields={fields} updateFields={updateFields} />
-      </div>
-
-      {/* Toolbar with Add and Delete */}
-      <NodeToolbar isVisible={isSelected} position="right">
-        <div
-          style={{
-            backgroundColor: "#fff",
-            padding: "10px",
-            borderRadius: "4px",
-            border: "1px solid #ddd",
-          }}
-        >
-          {isAddingFields ? (
-            <>
-              <h4>Adicionar Campo</h4>
-              <ul style={{ listStyle: "none", padding: 0 }}>
-                {FIELD_OPTIONS.map((option) => (
-                  <li
-                    className="node-meta-list"
-                    key={option.id}
-                    onClick={() => addFieldToNode(option.id)}
-                    style={{ padding: "5px", cursor: "pointer" }}
-                  >
-                    {option.label}
-                  </li>
-                ))}
-              </ul>
-              <button
-                onClick={() => setIsAddingFields(false)}
-                style={{
-                  marginTop: "10px",
-                  backgroundColor: "#ddd",
-                  color: "#333",
-                  border: "none",
-                  borderRadius: "4px",
-                  padding: "5px 10px",
-                  cursor: "pointer",
-                }}
-              >
-                Cancelar
-              </button>
-            </>
-          ) : (
-            <>
-              <div style={{
-                width: "20px",
-                height: "20px",
-              }}
-                onClick={() => setIsAddingFields(true)}
-                className="btn max-btn"
-              ></div>
-
-              {/* Remover nó */}
-            </>
-          )}
-        </div>
+        <ObatalaFields
+          isAdding={isAddingFields}
+          setIsAdding={setIsAddingFields}
+          addFieldToNode={addFieldToNode}
+          options={FIELD_OPTIONS}
+        />
       </NodeToolbar>
     </div>
   );

@@ -9,6 +9,7 @@ import {
 } from "@wordpress/components";
 import { upload } from "@wordpress/icons";
 import TainacanSearchControls from "../Tainacan/TainacanSearch";
+import TainacanTodoList from "../Tainacan/TainacaTodoList";
 const MetaFieldInputs = ({
   field,
   isEditable,
@@ -193,7 +194,11 @@ const MetaFieldInputs = ({
     case "search":
       return (
         <TainacanSearchControls />
-      )
+      );
+    case "tainacan-list":
+      return (
+        <TainacanTodoList />
+      );
     default:
       return null;
   }

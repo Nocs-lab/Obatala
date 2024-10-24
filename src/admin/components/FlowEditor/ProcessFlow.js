@@ -9,6 +9,9 @@ import "@xyflow/react/dist/style.css";
 
 import NodeContent from "./components/reactFlow/NodeContent";
 import ButtonEdge from "./components/reactFlow/CustomEdge";
+import NorGate from "./components/reactFlow/CustomEdges/NorGate";
+import OrGate from "./components/reactFlow/CustomEdges/OrGate";
+import AndGate from "./components/reactFlow/CustomEdges/AndGate";
 import ProcessControls from "./components/reactFlow/FlowButtons";
 import SlidingDrawer from "./components/SlidingDrawer";
 import { DrawerProvider } from "./context/DrawerContext";
@@ -20,6 +23,9 @@ const nodeTypes = {
 
 const edgeTypes = {
   buttonedge: ButtonEdge,
+  andGate: AndGate,
+  NorGate: NorGate,
+  AndGate: AndGate,
 };
 
 const ProcessFlow = forwardRef(({ initialData }, ref) => {

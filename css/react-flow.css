@@ -657,6 +657,11 @@ svg.react-flow__connectionline {
   border: 1px solid #0ea642;
 }
 
+.tainacan-btn {
+  background:#539cac;
+  border: 1px solid #264270;
+}
+
 /* Close btn */
 .close-btn:before,
 .max-btn:before,

@@ -12,6 +12,7 @@ import { useDrawer } from "../../context/DrawerContext";
 import LabelWithIcon from "../inputControls/LabelWithIcon";
 import { useFlowContext } from "../../context/FlowContext";
 import TainacanSearchDetails from "../inputControls/TainacanSearch";
+import TainacanTodoList from "../inputControls/TainacanTodoListControls";
 
 const SortableField = ({ id, nodeId, title, type, config }) => {
   const {
@@ -98,7 +99,11 @@ const SortableField = ({ id, nodeId, title, type, config }) => {
       case "search":
         return (
           <TainacanSearchDetails />
-        )
+        );
+      case "tainacan-list":
+        return (
+          <TainacanTodoList />
+        );
       default:
         return null;
     }
@@ -108,7 +113,7 @@ const SortableField = ({ id, nodeId, title, type, config }) => {
     transform: CSS.Transform.toString(transform),
     transition: transition || "transform 250ms ease",
     padding: "2px",
-    margin: "4px 0",
+    marginBottom: "2px",
     backgroundColor: isDragging ? "#e0f7fa" : "#f9f9f9",
     border: "1px solid #ddd",
     fontSize: "10px",
