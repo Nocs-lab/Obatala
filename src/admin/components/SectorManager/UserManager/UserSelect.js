@@ -42,6 +42,7 @@ const UserSelect = ({ users, sectorUsers, onSelectUser }) => {
                                     icon={closeSmall}
                                     onClick={() => handleRemoveUser(userId)}
                                     className="remove-user-button"
+                                    
                                 />
                             </div>
                         );
@@ -52,7 +53,7 @@ const UserSelect = ({ users, sectorUsers, onSelectUser }) => {
             <Button 
                 variant="secondary" 
                 onClick={() => onSelectUser(selectedUser)}
-                disabled={!selectedUser}    
+                disabled={selectedUser.length === 0}   
             >
                 Add user(s)
             </Button>
