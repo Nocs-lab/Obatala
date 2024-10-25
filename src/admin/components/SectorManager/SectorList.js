@@ -1,18 +1,29 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import apiFetch from "@wordpress/api-fetch";
-import { Button, ButtonGroup, Icon, Tooltip, Panel, PanelHeader, PanelRow, Notice } from '@wordpress/components';
+import { Button, ButtonGroup, Icon, Tooltip, Panel, PanelHeader, PanelRow, Notice, Modal } from '@wordpress/components';
 import { edit, trash, people} from '@wordpress/icons';
+import UsersManager from './UserManager/UserManager';
 
 
-const SectorList = ({sectors, onEdit, onDelete, onAddUser}) => {
+const SectorList = ({sectors, onEdit, onDelete}) => {
     const filteredSectors = useMemo(() => sectors, [sectors]);
+    const [addingUsers, setAddingUsers] = useState(null);
     const [usersSectors, setUsersSectors] = useState({});
     
     useEffect(() => {
         if (filteredSectors.length > 0) {
             loadSectorUsers();
         }
-    }, [filteredSectors]);
+    }, [addingUsers]);
+
+    const handleManagerUsers = (sector) => {
+        setAddingUsers(sector)
+    }
+
+    const handleCancel = () => {
+        setAddingUsers(null);
+    };
+
 
     const loadSectorUsers = async () => {
         const updatedSectors = await Promise.all(
@@ -30,7 +41,6 @@ const SectorList = ({sectors, onEdit, onDelete, onAddUser}) => {
         )
         setUsersSectors(updatedSectors);
     } 
-    console.log(usersSectors)
     return (
         <Panel>
             <PanelHeader>
@@ -62,7 +72,7 @@ const SectorList = ({sectors, onEdit, onDelete, onAddUser}) => {
                                                 <Tooltip text="Manage users">
                                                     <Button
                                                         icon={<Icon icon={people} />}
-                                                        onClick={() => onAddUser(sector)}
+                                                        onClick={() => handleManagerUsers(sector)}
                                                     />
                                                 </Tooltip>
                                                 <Tooltip text="Edit">
@@ -87,6 +97,18 @@ const SectorList = ({sectors, onEdit, onDelete, onAddUser}) => {
                 ) : (
                     <Notice isDismissible={false} status="warning">No existing sectors.</Notice>
                 )}
+                 {addingUsers && (
+                <Modal
+                    title={<>Manager users: {addingUsers.name}</>}
+                    onRequestClose={handleCancel}
+                    isDismissible={true}
+                    size="large"
+                >
+                    <UsersManager
+                        sector={addingUsers}
+                    /> 
+                </Modal>
+            )}
             </PanelRow>
         </Panel>
     );
