@@ -10,7 +10,7 @@ import { assignUserToSector, deleteSectorUser, fetchUsers, fetchUsersBySector } 
 import UserSelect from './UserSelect';
 
 
-const UserManager = ({ sector }) => {
+const UserManager = ({ sector}) => {
     const [users, setUsers] = useState([]);
     const [sectorUsers, setSectorUsers] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -47,24 +47,19 @@ const UserManager = ({ sector }) => {
     };
     // Associa um usuário ao setor com base no ID de ambos
     const assignUserSector = async (usersId) => {
-        usersId.map((userId) => {
-            const data = {
-            user_id: userId,
-            sector_id: sector.id,
-            }
-            assignUserToSector(data)
-                .then(() => {
-                    loadSectorUsers(sector.id);
-                    setNotice({ status: 'success', message: 'User successfully added.' })
-                })
-                .catch(error => {
-                    console.error('Error fetching sectors:', error);
-                    setIsLoading(false);
-                    setNotice({ status: 'error', message: 'Error adding user.' })
-                });
-        })
+        try {
+            await Promise.all(usersId.map((userId) => {
+                const data = { user_id: userId, sector_id: sector.id };
+                return assignUserToSector(data);
+            }));
+            loadSectorUsers(sector.id);
+            setNotice({ status: 'success', message: 'Users successfully added.' });
+        } catch (error) {
+            console.error('Error adding users:', error);
+            setNotice({ status: 'error', message: 'Error adding users.' });
+        }
     };
-
+    
     // Remove o usuário do setor
     const handleDeleteUser = async (user) => {
         const data = { user_id: user.ID };
