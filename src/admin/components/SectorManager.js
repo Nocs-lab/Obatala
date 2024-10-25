@@ -13,13 +13,11 @@ import SectorCreator from './SectorManager/SectorCreator';
 import { deleteSector, fetchSectors, saveSector } from '../api/apiRequests';
 import SectorList from './SectorManager/SectorList';
 import Reducer, { initialState } from '../redux/reducer';
-import UsersManager from './SectorManager/UserManager/UserManager';
 
 const SectorManager = () => {
     const [sectors, setSectors] = useState([])
     const [editingSector, setEditingSector] = useState(null);
     const [addingSector, setAddingSector] = useState(null);
-    const [addingUsers, setAddingUsers] = useState(null);
     const [isLoading, setIsLoading] = useState(false)
     const [notice, setNotice] = useState(null);
 
@@ -79,11 +77,14 @@ const SectorManager = () => {
   
     };
     const handleDelete = (sector) => {
+        setIsLoading(true)
         deleteSector(sector.id)
             .then(() => {
                 const updatedSectors = sectors.filter(type => type.id !== sector.id);
                 setSectors(updatedSectors);
+                setIsLoading(false);
                 setNotice({ status: 'success', message: 'Sector successfully removed.' })
+                
             })
             .catch(error => {
                 if(error === 'Erro ao deletar o setor, o setor esta vinculado a um usuario'){
@@ -102,14 +103,9 @@ const SectorManager = () => {
         
     }
 
-    const handleAddUser = (sector) => {
-        setAddingUsers(sector);
-    }
-
     const handleCancel = () => {
         setEditingSector(null);
         setAddingSector(null);
-        setAddingUsers(null);
         dispatch({ type: 'CLOSE_MODAL' });
     };
 
@@ -155,7 +151,6 @@ const SectorManager = () => {
             <SectorList sectors={sectors}
                         onEdit={handleEdit}
                         onDelete={handleConfirmDelete}
-                        onAddUser={handleAddUser}
             />
 
             {/* Open modal to editing Sector */}
@@ -184,18 +179,6 @@ const SectorManager = () => {
                         onSave={handleSectorSaved} 
                         onCancel={handleCancel}
                     />
-                </Modal>
-            )}
-            {addingUsers && (
-                <Modal
-                    title={<>Manager users: {addingUsers.name}</>}
-                    onRequestClose={handleCancel}
-                    isDismissible={true}
-                    size="large"
-                >
-                    <UsersManager
-                        sector={addingUsers}
-                    /> 
                 </Modal>
             )}
         </main>
