@@ -1,0 +1,725 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.17">
+    
+    
+      
+        <title>Pessoa - Obatala</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.bcfcd587.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#documento-de-modelagem-de-classe-pessoa" class="md-skip">
+          Ir para o conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../../.." title="Obatala" class="md-header__button md-logo" aria-label="Obatala" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Obatala
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Pessoa
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Compartilhar" aria-label="Compartilhar" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando a pesquisa
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../organizacao/" class="md-tabs__link">
+        
+  
+    
+  
+  Organização
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../gutenberg/" class="md-tabs__link">
+        
+  
+    
+  
+  Guia do Frontend
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../posts-customizados/" class="md-tabs__link">
+        
+  
+    
+  
+  Posts Customizados
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../metadados/metadados/" class="md-tabs__link">
+          
+  
+  Metadados Dinâmicos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../tutoriais/guia-dev/" class="md-tabs__link">
+          
+  
+  Tutoriais
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Obatala" class="md-nav__button md-logo" aria-label="Obatala" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Obatala
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../organizacao/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Organização
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../gutenberg/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Guia do Frontend
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../posts-customizados/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Posts Customizados
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../metadados/metadados/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Metadados Dinâmicos
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../../tutoriais/guia-dev/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Tutoriais
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  <h1>Pessoa</h1>
+
+<h3 id="documento-de-modelagem-de-classe-pessoa">Documento de Modelagem de Classe: Pessoa</h3>
+<hr />
+<h2 id="introducao">Introdução</h2>
+<p>Este documento descreve a modelagem da classe <code>Pessoa</code> dentro do sistema "Obatala", que será utilizada como uma abstração sobre os usuários do WordPress. A classe <code>Pessoa</code> possibilitará a extensão das permissões de usuários em coleções do Tainacan, permitindo um controle mais granular sobre quem pode editar, apagar ou atualizar determinada etapa de um processo.</p>
+<hr />
+<h3 id="descricao-geral">Descrição Geral</h3>
+<p>A classe <code>Pessoa</code> representa um usuário do WordPress que pode ser atribuído a uma etapa de um processo curatorial. As permissões de um usuário determinarão suas capacidades de interação com as etapas, como editar, apagar ou atualizar. Apenas administradores terão a permissão de reabrir uma etapa de um processo.</p>
+<h3 id="propriedades-da-classe">Propriedades da Classe</h3>
+<h4 id="1-nome-name">1. Nome (Name)</h4>
+<ul>
+<li><strong>Descrição</strong>: Nome da pessoa.</li>
+<li><strong>Tipo</strong>: String</li>
+</ul>
+<h4 id="2-email-email">2. Email (Email)</h4>
+<ul>
+<li><strong>Descrição</strong>: Email da pessoa.</li>
+<li><strong>Tipo</strong>: String</li>
+</ul>
+<h4 id="3-permissoes-permissions">3. Permissões (Permissions)</h4>
+<ul>
+<li><strong>Descrição</strong>: Permissões do usuário sobre etapas e processos.</li>
+<li><strong>Tipo</strong>: Array de Strings</li>
+</ul>
+<h4 id="4-funcao-role">4. Função (Role)</h4>
+<ul>
+<li><strong>Descrição</strong>: Função do usuário no WordPress (ex: Administrador, Editor, Colaborador).</li>
+<li><strong>Tipo</strong>: String</li>
+</ul>
+<h4 id="5-setor-department">5. Setor (Department)</h4>
+<ul>
+<li><strong>Descrição</strong>: Setor ao qual a pessoa pertence.</li>
+<li><strong>Tipo</strong>: Objeto <code>Setor</code></li>
+</ul>
+<hr />
+<h3 id="metodos-da-classe">Métodos da Classe</h3>
+<h4 id="1-obterpermissoes">1. obterPermissoes()</h4>
+<ul>
+<li><strong>Descrição</strong>: Retorna a lista de permissões do usuário.</li>
+<li><strong>Retorno</strong>: Array de Strings</li>
+</ul>
+<h4 id="2-atribuirpermissaostring-permissao">2. atribuirPermissao(String $permissao)</h4>
+<ul>
+<li><strong>Descrição</strong>: Atribui uma nova permissão ao usuário.</li>
+<li><strong>Parâmetros</strong>: <code>String $permissao</code></li>
+<li><strong>Retorno</strong>: void</li>
+</ul>
+<h4 id="3-removerpermissaostring-permissao">3. removerPermissao(String $permissao)</h4>
+<ul>
+<li><strong>Descrição</strong>: Remove uma permissão do usuário.</li>
+<li><strong>Parâmetros</strong>: <code>String $permissao</code></li>
+<li><strong>Retorno</strong>: void</li>
+</ul>
+<h4 id="4-podeeditaretapaetapa-etapa">4. podeEditarEtapa(Etapa $etapa)</h4>
+<ul>
+<li><strong>Descrição</strong>: Verifica se o usuário tem permissão para editar uma etapa.</li>
+<li><strong>Parâmetros</strong>: <code>Etapa $etapa</code></li>
+<li><strong>Retorno</strong>: Boolean</li>
+</ul>
+<h4 id="5-podeapagaretapaetapa-etapa">5. podeApagarEtapa(Etapa $etapa)</h4>
+<ul>
+<li><strong>Descrição</strong>: Verifica se o usuário tem permissão para apagar uma etapa.</li>
+<li><strong>Parâmetros</strong>: <code>Etapa $etapa</code></li>
+<li><strong>Retorno</strong>: Boolean</li>
+</ul>
+<h4 id="6-podeatualizaretapaetapa-etapa">6. podeAtualizarEtapa(Etapa $etapa)</h4>
+<ul>
+<li><strong>Descrição</strong>: Verifica se o usuário tem permissão para atualizar uma etapa.</li>
+<li><strong>Parâmetros</strong>: <code>Etapa $etapa</code></li>
+<li><strong>Retorno</strong>: Boolean</li>
+</ul>
+<h4 id="7-podereabriretapaetapa-etapa">7. podeReabrirEtapa(Etapa $etapa)</h4>
+<ul>
+<li><strong>Descrição</strong>: Verifica se o usuário tem permissão para reabrir uma etapa (apenas administradores).</li>
+<li><strong>Parâmetros</strong>: <code>Etapa $etapa</code></li>
+<li><strong>Retorno</strong>: Boolean</li>
+</ul>
+<hr />
+<h3 id="diagramas">Diagramas</h3>
+<h4 id="diagrama-de-classe">Diagrama de Classe</h4>
+<pre class="mermaid"><code>classDiagram
+    class Pessoa {
+        +String nome
+        +String email
+        +Array&lt;String&gt; permissoes
+        +String funcao
+        +Setor setor
+        +Array&lt;String&gt; obterPermissoes()
+        +void atribuirPermissao(String permissao)
+        +void removerPermissao(String permissao)
+        +Boolean podeEditarEtapa(Etapa etapa)
+        +Boolean podeApagarEtapa(Etapa etapa)
+        +Boolean podeAtualizarEtapa(Etapa etapa)
+        +Boolean podeReabrirEtapa(Etapa etapa)
+    }
+
+    class Setor {
+        +String nome
+        +String descricao
+        +Array&lt;Pessoa&gt; pessoas
+        +Array&lt;String&gt; permissoes
+        +void adicionarPessoa(Pessoa pessoa)
+        +void removerPessoa(Pessoa pessoa)
+        +Array&lt;String&gt; obterPermissoes()
+        +void atribuirPermissao(String permissao)
+        +void removerPermissao(String permissao)
+        +Boolean podeEditarEtapa(Etapa etapa)
+        +Boolean podeApagarEtapa(Etapa etapa)
+        +Boolean podeAtualizarEtapa(Etapa etapa)
+    }
+
+    class Etapa {
+        +String nome
+        +Date prazo
+        +String status
+        +List&lt;Comentario&gt; comentarios
+        +Setor setor
+        +List&lt;Pessoa&gt; pessoas
+        +List&lt;Notificacao&gt; notificacoes
+        +List&lt;Arquivo&gt; arquivos
+        +Integer postTypeID
+        +void adicionarComentario(Comentario comentario)
+        +void adicionarSetor(Setor setor)
+        +void adicionarPessoa(Pessoa pessoa)
+        +void adicionarNotificacao(Notificacao notificacao)
+        +void adicionarArquivo(Arquivo arquivo)
+        +void alterarStatus(String novoStatus)
+    }
+
+    Pessoa "1" -- "1" Setor : pertence a
+    Setor "1" -- "*" Pessoa : agrupa
+    Etapa "1" -- "1" Setor : atribuido a
+    Etapa "*" -- "*" Pessoa : atribuido a</code></pre>
+<h3 id="explicacao-do-diagrama">Explicação do Diagrama</h3>
+<ol>
+<li>
+<p><strong>Pessoa</strong>: Representa um usuário do WordPress, com propriedades como nome, email, permissões, função e setor. A classe inclui métodos para gerenciar as permissões do usuário e verificar suas capacidades de interação com as etapas do processo.</p>
+</li>
+<li>
+<p><strong>Setor</strong>: Agrupa pessoas com permissões específicas para interagir com as etapas de um processo. Cada setor tem um nome, descrição, lista de pessoas e permissões. Um setor pode ter várias pessoas, mas cada pessoa pertence a apenas um setor.</p>
+</li>
+<li>
+<p><strong>Etapa</strong>: Uma fase específica dentro de um processo. Cada etapa pode conter comentários, setores, pessoas, notificações e arquivos. Cada etapa é atribuída a um único setor.</p>
+</li>
+<li>
+<p><strong>Relacionamentos</strong>:</p>
+<ul>
+<li><strong>Pessoa</strong> pertence a um <strong>Setor</strong>.</li>
+<li><strong>Setor</strong> agrupa múltiplas <strong>Pessoas</strong>.</li>
+<li><strong>Etapa</strong> é atribuída a um único <strong>Setor</strong>.</li>
+<li><strong>Pessoa</strong> pode ser atribuída a múltiplas <strong>Etapas</strong>.</li>
+</ul>
+</li>
+</ol>
+<h4 id="diagrama-de-sequencia">Diagrama de Sequência</h4>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Administrador
+    participant Sistema
+    participant Etapa
+
+    Administrador-&gt;&gt;Sistema: Reabrir Etapa
+    Sistema--&gt;&gt;Etapa: Verifica Permissão do Usuário
+    Etapa--&gt;&gt;Sistema: Permissão Concedida
+    Sistema--&gt;&gt;Administrador: Etapa Reaberta</code></pre>
+<h3 id="explicacao-dos-metodos">Explicação dos Métodos</h3>
+<h4 id="1-obterpermissoes_1">1. obterPermissoes()</h4>
+<p>Este método retorna a lista de permissões atribuídas ao usuário, permitindo verificar quais ações o usuário pode realizar.</p>
+<h4 id="2-atribuirpermissaostring-permissao_1">2. atribuirPermissao(String $permissao)</h4>
+<p>Este método atribui uma nova permissão ao usuário, adicionando a capacidade de realizar ações adicionais sobre as etapas.</p>
+<h4 id="3-removerpermissaostring-permissao_1">3. removerPermissao(String $permissao)</h4>
+<p>Este método remove uma permissão do usuário, restringindo suas capacidades de interação com as etapas.</p>
+<h4 id="4-podeeditaretapaetapa-etapa_1">4. podeEditarEtapa(Etapa $etapa)</h4>
+<p>Este método verifica se o usuário tem permissão para editar uma etapa específica.</p>
+<h4 id="5-podeapagaretapaetapa-etapa_1">5. podeApagarEtapa(Etapa $etapa)</h4>
+<p>Este método verifica se o usuário tem permissão para apagar uma etapa específica.</p>
+<h4 id="6-podeatualizaretapaetapa-etapa_1">6. podeAtualizarEtapa(Etapa $etapa)</h4>
+<p>Este método verifica se o usuário tem permissão para atualizar uma etapa específica.</p>
+<h4 id="7-podereabriretapaetapa-etapa_1">7. podeReabrirEtapa(Etapa $etapa)</h4>
+<p>Este método verifica se o usuário tem permissão para reabrir uma etapa. Apenas administradores terão essa permissão.</p>
+<hr />
+<h3 id="conclusao">Conclusão</h3>
+<p>A classe <code>Pessoa</code>, implementada como uma abstração sobre os usuários do WordPress, é fundamental para a gestão de permissões e atribuições dentro de um processo curatorial no sistema "Obatala". Este documento apresentou uma visão geral das propriedades e métodos da classe, assim como diagramas que explicam sua estrutura e sequência de utilização. Ao utilizar a classe <code>Pessoa</code>, o sistema pode controlar de forma granular as permissões dos usuários sobre as etapas, garantindo um fluxo de trabalho seguro e eficiente.</p>
+<hr />
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": ["navigation.expand", "navigation.tabs", "navigation.prune", "navigation.sections", "search.highlight", "search.share", "toc.integrate", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "Mais 1 nesta p\u00e1gina", "search.result.more.other": "Mais # nesta p\u00e1gina", "search.result.none": "Nenhum resultado encontrado", "search.result.one": "1 resultado encontrado", "search.result.other": "# resultados encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.1e8ae164.min.js"></script>
+      
+    
+  </body>
+</html>

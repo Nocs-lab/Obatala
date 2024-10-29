@@ -1,0 +1,928 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+        <link rel="prev" href="../metadados/">
+      
+      
+        <link rel="next" href="../../tutoriais/guia-dev/">
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.17">
+    
+    
+      
+        <title>Implementação - Obatala</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.bcfcd587.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#implementacao-de-metadados-dinamicos" class="md-skip">
+          Ir para o conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="../.." title="Obatala" class="md-header__button md-logo" aria-label="Obatala" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Obatala
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Implementação
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Compartilhar" aria-label="Compartilhar" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando a pesquisa
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../organizacao/" class="md-tabs__link">
+        
+  
+    
+  
+  Organização
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../gutenberg/" class="md-tabs__link">
+        
+  
+    
+  
+  Guia do Frontend
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../posts-customizados/" class="md-tabs__link">
+        
+  
+    
+  
+  Posts Customizados
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../metadados/" class="md-tabs__link">
+          
+  
+  Metadados Dinâmicos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../tutoriais/guia-dev/" class="md-tabs__link">
+          
+  
+  Tutoriais
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Obatala" class="md-nav__button md-logo" aria-label="Obatala" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Obatala
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../organizacao/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Organização
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../gutenberg/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Guia do Frontend
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../posts-customizados/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Posts Customizados
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+      
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
+            
+  
+  <span class="md-ellipsis">
+    Metadados Dinâmicos
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            Metadados Dinâmicos
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../metadados/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Conceito
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Implementação
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Implementação
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#arquivos-e-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Arquivos e Classes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Arquivos e Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#processmetadatamanagerphp" class="md-nav__link">
+    <span class="md-ellipsis">
+      ProcessMetadataManager.php
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="ProcessMetadataManager.php">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#metodos-principais" class="md-nav__link">
+    <span class="md-ellipsis">
+      Métodos Principais
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metadatahandlerphp" class="md-nav__link">
+    <span class="md-ellipsis">
+      MetadataHandler.php
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="MetadataHandler.php">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#metodos-principais_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Métodos Principais
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ajaxhandlerphp" class="md-nav__link">
+    <span class="md-ellipsis">
+      AjaxHandler.php
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AjaxHandler.php">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#metodos-principais_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Métodos Principais
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#fluxo-de-trabalho" class="md-nav__link">
+    <span class="md-ellipsis">
+      Fluxo de Trabalho
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exemplo-de-uso" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exemplo de Uso
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exemplo de Uso">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adicionar-ou-atualizar-metadados" class="md-nav__link">
+    <span class="md-ellipsis">
+      Adicionar ou Atualizar Metadados
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#recuperar-metadados" class="md-nav__link">
+    <span class="md-ellipsis">
+      Recuperar Metadados
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#remover-metadados" class="md-nav__link">
+    <span class="md-ellipsis">
+      Remover Metadados
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consideracoes-finais" class="md-nav__link">
+    <span class="md-ellipsis">
+      Considerações Finais
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="../../tutoriais/guia-dev/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Tutoriais
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="implementacao-de-metadados-dinamicos">Implementação de Metadados Dinâmicos</h1>
+<h2 id="arquivos-e-classes">Arquivos e Classes</h2>
+<pre class="mermaid"><code>classDiagram
+    AjaxHandler --&gt; MetadataHandler
+    MetadataHandler --&gt; ProcessMetadataManager
+
+    class AjaxHandler {
+        +__construct()
+        +handle_ajax_request()
+        +check_permissions()
+    }
+
+    class MetadataHandler {
+        +handle_save_metadata()
+        +handle_get_metadata()
+        +handle_delete_metadata()
+        +handle_save_step_data()
+    }
+
+    class ProcessMetadataManager {
+        +save_metadata(step_id, meta_data, meta_key)
+        +get_metadata(step_id)
+        +delete_metadata(step_id, meta_key)
+        +sanitize_metadata(meta_data)
+        +validate_metadata(meta_data)
+    }</code></pre>
+<h3 id="processmetadatamanagerphp"><code>ProcessMetadataManager.php</code></h3>
+<p>Esta classe é responsável por gerenciar os metadados dinâmicos associados às etapas de um processo. Suas principais responsabilidades incluem salvar, recuperar e deletar metadados no banco de dados do WordPress.</p>
+<h4 id="metodos-principais">Métodos Principais</h4>
+<ul>
+<li>
+<p><strong>save_metadata($step_id, $meta_data, $meta_key = " ")</strong>: Adiciona ou atualiza um metadado dinâmico para uma etapa específica. Sanitiza e valida os dados antes de salvá-los como JSON.</p>
+</li>
+<li>
+<p><strong>get_metadata($step_id)</strong>: Recupera todos os metadados dinâmicos associados a uma etapa específica.</p>
+</li>
+<li>
+<p><strong>delete_metadata($step_id, $meta_key)</strong>: Remove um metadado dinâmico específico de uma etapa.</p>
+</li>
+<li>
+<p><strong>sanitize_metadata($meta_data)</strong>: Sanitiza os dados dos metadados.</p>
+</li>
+<li>
+<p><strong>validate_metadata($meta_data)</strong>: Valida os dados dos metadados.</p>
+</li>
+</ul>
+<h3 id="metadatahandlerphp"><code>MetadataHandler.php</code></h3>
+<p>Esta classe é responsável por lidar com as requisições relacionadas aos metadados. Atua como intermediária entre as requisições AJAX e a <code>ProcessMetadataManager</code>.</p>
+<h4 id="metodos-principais_1">Métodos Principais</h4>
+<ul>
+<li>
+<p><strong>handle_save_metadata()</strong>: Lida com a requisição para salvar metadados.</p>
+</li>
+<li>
+<p><strong>handle_get_metadata()</strong>: Lida com a requisição para recuperar metadados.</p>
+</li>
+<li>
+<p><strong>handle_delete_metadata()</strong>: Lida com a requisição para deletar metadados.</p>
+</li>
+<li>
+<p><strong>handle_save_step_data()</strong>: Lida com a requisição para salvar dados de uma etapa.</p>
+</li>
+</ul>
+<h3 id="ajaxhandlerphp"><code>AjaxHandler.php</code></h3>
+<p>Esta classe registra os endpoints AJAX no WordPress e direciona as requisições para os métodos apropriados no <code>MetadataHandler</code>.</p>
+<h4 id="metodos-principais_2">Métodos Principais</h4>
+<ul>
+<li>
+<p><strong>__construct()</strong>: Registra os hooks AJAX do WordPress.</p>
+</li>
+<li>
+<p><strong>handle_ajax_request()</strong>: Lida com as requisições AJAX, verifica a segurança (nonce) e direciona a ação para o método correspondente no <code>MetadataHandler</code>.</p>
+</li>
+<li>
+<p><strong>check_permissions()</strong>: Verifica as permissões do usuário para garantir que apenas usuários autorizados possam realizar ações específicas.</p>
+</li>
+</ul>
+<h2 id="fluxo-de-trabalho">Fluxo de Trabalho</h2>
+<pre class="mermaid"><code>sequenceDiagram
+    participant User as User
+    participant Browser as Browser
+    participant AjaxHandler as AjaxHandler
+    participant MetadataHandler as MetadataHandler
+    participant ProcessMetadataManager as ProcessMetadataManager
+    participant Database as Database
+
+    User-&gt;&gt;Browser: Triggers AJAX Request (save_metadata)
+    Browser-&gt;&gt;AjaxHandler: Sends AJAX Request
+    AjaxHandler-&gt;&gt;AjaxHandler: handle_ajax_request()
+    AjaxHandler-&gt;&gt;MetadataHandler: handle_save_metadata()
+    MetadataHandler-&gt;&gt;ProcessMetadataManager: save_metadata(step_id, meta_data, meta_key)
+    ProcessMetadataManager-&gt;&gt;ProcessMetadataManager: sanitize_metadata(meta_data)
+    ProcessMetadataManager-&gt;&gt;ProcessMetadataManager: validate_metadata(meta_data)
+    ProcessMetadataManager-&gt;&gt;Database: update_post_meta(step_id, meta_key, serialized_meta_data)
+    Database--&gt;&gt;ProcessMetadataManager: Response (success/failure)
+    ProcessMetadataManager--&gt;&gt;MetadataHandler: Response (success/failure)
+    MetadataHandler--&gt;&gt;AjaxHandler: Response (success/failure)
+    AjaxHandler--&gt;&gt;Browser: Sends AJAX Response (JSON)
+    Browser--&gt;&gt;User: Displays Result</code></pre>
+<ol>
+<li>
+<p><strong>Requisição AJAX</strong>: Quando uma ação relacionada aos metadados é disparada no front-end, uma requisição AJAX é enviada para um endpoint registrado pelo <code>AjaxHandler</code>.</p>
+</li>
+<li>
+<p><strong>Manipulação da Requisição</strong>: O <code>AjaxHandler</code> verifica a validade da requisição (por exemplo, verificando um nonce de segurança) e direciona a ação para o método correspondente no <code>MetadataHandler</code>.</p>
+</li>
+<li>
+<p><strong>Processamento dos Metadados</strong>: O <code>MetadataHandler</code> utiliza os métodos do <code>ProcessMetadataManager</code> para realizar a operação solicitada (salvar, recuperar, deletar).</p>
+</li>
+<li>
+<p><strong>Resposta AJAX</strong>: O resultado da operação é retornado ao front-end como uma resposta JSON.</p>
+</li>
+</ol>
+<h2 id="exemplo-de-uso">Exemplo de Uso</h2>
+<h3 id="adicionar-ou-atualizar-metadados">Adicionar ou Atualizar Metadados</h3>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="cp">&lt;?</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="nv">$meta_data</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        <span class="s2">&quot;type&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        <span class="s2">&quot;placeholder&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;Digite uma informação...&quot;</span><span class="p">,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>        <span class="s2">&quot;name&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;input-de-texto&quot;</span><span class="p">,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        <span class="s2">&quot;label&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;Informação&quot;</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        <span class="s2">&quot;value&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;valor inicial&quot;</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="p">);</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="nv">$step_id</span> <span class="o">=</span> <span class="mi">123</span><span class="p">;</span> <span class="c1">// ID da etapa</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="nv">$meta_key</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span> <span class="c1">// Deixe vazio para gerar uma nova chave única ou forneça uma existente para atualizar</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="nx">ProcessMetadataManager</span><span class="o">::</span><span class="na">save_metadata</span><span class="p">(</span><span class="nv">$step_id</span><span class="p">,</span> <span class="nv">$meta_data</span><span class="p">,</span> <span class="nv">$meta_key</span><span class="p">);</span>
+</span></code></pre></div>
+<h3 id="recuperar-metadados">Recuperar Metadados</h3>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="cp">&lt;?</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="nv">$step_id</span> <span class="o">=</span> <span class="mi">123</span><span class="p">;</span> <span class="c1">// ID da etapa</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="nv">$metadata</span> <span class="o">=</span> <span class="nx">ProcessMetadataManager</span><span class="o">::</span><span class="na">get_metadata</span><span class="p">(</span><span class="nv">$step_id</span><span class="p">);</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="c1">// $metadata agora contém todos os metadados dinâmicos associados a esta etapa</span>
+</span></code></pre></div>
+<h3 id="remover-metadados">Remover Metadados</h3>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="cp">&lt;?</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="nv">$step_id</span> <span class="o">=</span> <span class="mi">123</span><span class="p">;</span> <span class="c1">// ID da etapa</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nv">$meta_key</span> <span class="o">=</span> <span class="s1">&#39;dynamic_field_123456&#39;</span><span class="p">;</span> <span class="c1">// A chave do metadado a ser removido</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="nx">ProcessMetadataManager</span><span class="o">::</span><span class="na">delete_metadata</span><span class="p">(</span><span class="nv">$step_id</span><span class="p">,</span> <span class="nv">$meta_key</span><span class="p">);</span>
+</span></code></pre></div>
+<h2 id="consideracoes-finais">Considerações Finais</h2>
+<p>Essa implementação oferece uma solução robusta para gerenciar metadados dinâmicos em processos e etapas no WordPress. Seguindo as melhores práticas de desenvolvimento, o sistema é seguro, eficiente e fácil de integrar com outras funcionalidades do WordPress.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "../..", "features": ["navigation.expand", "navigation.tabs", "navigation.prune", "navigation.sections", "search.highlight", "search.share", "toc.integrate", "content.code.copy"], "search": "../../assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "Mais 1 nesta p\u00e1gina", "search.result.more.other": "Mais # nesta p\u00e1gina", "search.result.none": "Nenhum resultado encontrado", "search.result.one": "1 resultado encontrado", "search.result.other": "# resultados encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.1e8ae164.min.js"></script>
+      
+    
+  </body>
+</html>

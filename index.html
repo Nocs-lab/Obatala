@@ -1,0 +1,1002 @@
+
+<!doctype html>
+<html lang="pt" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+      
+      
+        <link rel="next" href="organizacao/">
+      
+      
+      <link rel="icon" href="assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.5.3, mkdocs-material-9.5.17">
+    
+    
+      
+        <title>Obatala</title>
+      
+    
+    
+      <link rel="stylesheet" href="assets/stylesheets/main.bcfcd587.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="stylesheets/extra.css">
+    
+    <script>__md_scope=new URL(".",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#documentacao-do-plugin" class="md-skip">
+          Ir para o conteúdo
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Cabeçalho">
+    <a href="." title="Obatala" class="md-header__button md-logo" aria-label="Obatala" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Obatala
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Home
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var media,input,key,value,palette=__md_get("__palette");if(palette&&palette.color){"(prefers-color-scheme)"===palette.color.media&&(media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']"),palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent"));for([key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Buscar" placeholder="Buscar" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Pesquisar">
+        
+          <a href="javascript:void(0)" class="md-search__icon md-icon" title="Compartilhar" aria-label="Compartilhar" data-clipboard data-clipboard-text="" data-md-component="search-share" tabindex="-1">
+            
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7 0-.24-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9a3 3 0 0 0-3 3 3 3 0 0 0 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.15c-.05.21-.08.43-.08.66 0 1.61 1.31 2.91 2.92 2.91 1.61 0 2.92-1.3 2.92-2.91A2.92 2.92 0 0 0 18 16.08Z"/></svg>
+          </a>
+        
+        <button type="reset" class="md-search__icon md-icon" title="Limpar" aria-label="Limpar" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Inicializando a pesquisa
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Abas" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="." class="md-tabs__link">
+        
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="organizacao/" class="md-tabs__link">
+        
+  
+    
+  
+  Organização
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="gutenberg/" class="md-tabs__link">
+        
+  
+    
+  
+  Guia do Frontend
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="posts-customizados/" class="md-tabs__link">
+        
+  
+    
+  
+  Posts Customizados
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="metadados/metadados/" class="md-tabs__link">
+          
+  
+  Metadados Dinâmicos
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="tutoriais/guia-dev/" class="md-tabs__link">
+          
+  
+  Tutoriais
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Navegação" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="." title="Obatala" class="md-nav__button md-logo" aria-label="Obatala" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    Obatala
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="." class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Home
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Índice">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Índice
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#visao-geral" class="md-nav__link">
+    <span class="md-ellipsis">
+      Visão Geral
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#conceitos-envolvidos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Conceitos Envolvidos
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Conceitos Envolvidos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gerenciamento-de-menus-administrativos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Gerenciamento de Menus Administrativos
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enfileiramento-de-scripts-e-estilos" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enfileiramento de Scripts e Estilos
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#paginas-de-configuracao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Páginas de Configuração
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#diagrama-de-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Diagrama de Classes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#explicacao-do-diagrama-de-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Explicação do Diagrama de Classes
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#descricao-das-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      Descrição das Classes
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Descrição das Classes">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#adminmenu" class="md-nav__link">
+    <span class="md-ellipsis">
+      AdminMenu
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="AdminMenu">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#funcao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Função
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#responsabilidades" class="md-nav__link">
+    <span class="md-ellipsis">
+      Responsabilidades
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#estrutura-do-menu" class="md-nav__link">
+    <span class="md-ellipsis">
+      Estrutura do Menu
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#enqueuer" class="md-nav__link">
+    <span class="md-ellipsis">
+      Enqueuer
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Enqueuer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#funcao_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Função
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#responsabilidades_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Responsabilidades
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#estrutura-das-paginas" class="md-nav__link">
+    <span class="md-ellipsis">
+      Estrutura das Páginas
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#classe-settingspage" class="md-nav__link">
+    <span class="md-ellipsis">
+      Classe SettingsPage
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Classe SettingsPage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#funcao_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Função
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#responsabilidades_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      Responsabilidades
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#estrutura-do-codigo" class="md-nav__link">
+    <span class="md-ellipsis">
+      Estrutura do Código
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#estrutura-de-registro" class="md-nav__link">
+    <span class="md-ellipsis">
+      Estrutura de Registro
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consideracoes-finais" class="md-nav__link">
+    <span class="md-ellipsis">
+      Considerações Finais
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="organizacao/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Organização
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="gutenberg/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Guia do Frontend
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="posts-customizados/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Posts Customizados
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="metadados/metadados/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Metadados Dinâmicos
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+      
+      
+        
+      
+    
+    
+      
+        
+        
+      
+    
+    <li class="md-nav__item md-nav__item--pruned md-nav__item--nested">
+      
+        
+  
+  
+    <a href="tutoriais/guia-dev/" class="md-nav__link">
+      
+  
+  <span class="md-ellipsis">
+    Tutoriais
+  </span>
+  
+
+      
+        <span class="md-nav__icon md-icon"></span>
+      
+    </a>
+  
+
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="documentacao-do-plugin">Documentação do Plugin</h1>
+<h2 id="visao-geral">Visão Geral</h2>
+<p>O plugin foi desenvolvido para gerenciar funcionalidades administrativas e de interface dentro da plataforma WordPress. Este documento detalha as classes principais que compõem o sistema, como <code>AdminMenu</code>, <code>Enqueuer</code> e <code>SettingsPage</code>, explicando suas responsabilidades e interações.</p>
+<h2 id="conceitos-envolvidos">Conceitos Envolvidos</h2>
+<h3 id="gerenciamento-de-menus-administrativos">Gerenciamento de Menus Administrativos</h3>
+<p>A classe <code>AdminMenu</code> é responsável por gerenciar a adição de menus no painel administrativo do WordPress. Estes menus permitem que os administradores acessem páginas de configuração e funcionalidades específicas do plugin.</p>
+<h3 id="enfileiramento-de-scripts-e-estilos">Enfileiramento de Scripts e Estilos</h3>
+<p>A classe <code>Enqueuer</code> lida com o enfileiramento de scripts e estilos (JavaScript e CSS) necessários para o funcionamento correto do plugin tanto no front-end quanto no back-end.</p>
+<h3 id="paginas-de-configuracao">Páginas de Configuração</h3>
+<p>A classe <code>SettingsPage</code> é responsável por criar e gerenciar as páginas de configuração do plugin dentro do painel administrativo, onde o usuário pode ajustar as opções e salvar suas preferências.</p>
+<h2 id="diagrama-de-classes">Diagrama de Classes</h2>
+<pre class="mermaid"><code>classDiagram
+    class AdminMenu {
+        +init() void
+        +add_admin_pages() void
+        +render_main_page() void
+        +render_page() void
+        +enqueue_scripts() void
+        -pages array
+    }
+
+    class Enqueuer {
+        +init() void
+        +enqueue_admin_scripts(hook) void
+        -pages array
+    }
+
+    class SettingsPage {
+        +register_settings() void
+        +create_settings_page() void
+        +some_setting_field_render() void
+        +enable_feature_field_render() void
+        +api_key_field_render() void
+        -some_setting string
+        -enable_feature bool
+        -api_key string
+    }
+
+    AdminMenu --&gt; SettingsPage : registra e exibe
+    Enqueuer --&gt; AdminMenu : enfileira scripts/estilos
+    SettingsPage --&gt; AdminMenu : renderiza configuração</code></pre>
+<h2 id="explicacao-do-diagrama-de-classes">Explicação do Diagrama de Classes</h2>
+<p>O diagrama de classes acima representa as principais interações entre as classes <code>AdminMenu</code>, <code>Enqueuer</code> e <code>SettingsPage</code>.</p>
+<ul>
+<li><strong>AdminMenu</strong>: Gerencia a adição de menus e submenus no painel administrativo do WordPress.</li>
+<li><strong>Enqueuer</strong>: Responsável por carregar os scripts e estilos necessários para a interface do plugin.</li>
+<li><strong>SettingsPage</strong>: Cria e gerencia as páginas de configuração no painel administrativo, sendo associada diretamente ao menu gerido pela <code>AdminMenu</code>.</li>
+</ul>
+<h2 id="descricao-das-classes">Descrição das Classes</h2>
+<h3 id="adminmenu">AdminMenu</h3>
+<p>Classe responsável por gerenciar os menus administrativos do plugin Obatala no WordPress.</p>
+<h4 id="funcao">Função</h4>
+<p>Gerencia o menu principal e os submenus, criando páginas de administração para o plugin Obatala no WordPress.</p>
+<h4 id="responsabilidades">Responsabilidades</h4>
+<ul>
+<li>
+<p><strong>init()</strong><br />
+  Método de inicialização principal que adiciona as ações para registrar as páginas de administração (<code>add_admin_pages</code>) e enfileirar scripts (<code>enqueue_scripts</code>) no painel do WordPress.</p>
+</li>
+<li>
+<p><strong>add_admin_pages()</strong><br />
+  Adiciona a página principal e submenus ao painel administrativo. Utiliza o array <code>self::$pages</code> para definir as configurações de cada item de menu.</p>
+</li>
+<li>
+<p><strong>Menu Principal</strong>: Cria o menu principal usando as configurações do array <code>self::$pages['main']</code>, incluindo título, permissão, ícone e posição.</p>
+</li>
+<li>
+<p><strong>Submenus</strong>: Adiciona submenus ao menu principal com as configurações de <code>self::$pages['submenus']</code>, permitindo definir permissões e callbacks específicos.</p>
+</li>
+<li>
+<p><strong>render_main_page()</strong><br />
+  Exibe a página principal do menu Obatala. Apresenta uma mensagem de boas-vindas e orienta o usuário a selecionar uma opção do submenu.<br />
+  Inclui um estilo CSS inline para ocultar submenus específicos no menu lateral.</p>
+</li>
+<li>
+<p><strong>render_page()</strong><br />
+  Renderiza uma página de administração com base no ID da página atual. Verifica o ID da tela atual e exibe uma div correspondente ao submenu ativo.</p>
+</li>
+<li>
+<p><strong>enqueue_scripts()</strong><br />
+  Enfileira os scripts e estilos necessários para o funcionamento do menu de administração. Adiciona um estilo CSS para garantir que o menu principal e submenus estejam sempre visíveis ao serem selecionados.</p>
+</li>
+</ul>
+<h4 id="estrutura-do-menu">Estrutura do Menu</h4>
+<p>A estrutura do menu é configurada no atributo <code>self::$pages</code> da classe <code>AdminMenu</code>, conforme o exemplo a seguir:</p>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="x">private static $pages = [</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="x">    &#39;main&#39; =&gt; [</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="x">        &#39;title&#39; =&gt; &#39;Obatala&#39;,</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="x">        &#39;menu_title&#39; =&gt; &#39;Obatala&#39;,</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="x">        &#39;capability&#39; =&gt; &#39;manage_options&#39;,</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="x">        &#39;slug&#39; =&gt; &#39;obatala-main&#39;,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="x">        &#39;callback&#39; =&gt; &#39;render_main_page&#39;,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a><span class="x">        &#39;icon&#39; =&gt; &#39;dashicons-admin-site&#39;,</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a><span class="x">        &#39;position&#39; =&gt; 2</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a><span class="x">    ],</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a><span class="x">    &#39;submenus&#39; =&gt; [</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a><span class="x">        [</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a><span class="x">            &#39;parent_slug&#39; =&gt; &#39;obatala-main&#39;,</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a><span class="x">            &#39;title&#39; =&gt; &#39;Process Manager&#39;,</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a><span class="x">            &#39;menu_title&#39; =&gt; &#39;Process Manager&#39;,</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a><span class="x">            &#39;capability&#39; =&gt; &#39;manage_options&#39;,</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a><span class="x">            &#39;slug&#39; =&gt; &#39;process-manager&#39;,</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a><span class="x">            &#39;callback&#39; =&gt; &#39;render_page&#39;,</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a><span class="x">            &#39;show_in_menu&#39; =&gt; true</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a><span class="x">        ],</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a><span class="x">        [</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a><span class="x">            &#39;parent_slug&#39; =&gt; &#39;obatala-main&#39;,</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a><span class="x">            &#39;title&#39; =&gt; &#39;Process Viewer&#39;,</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a><span class="x">            &#39;menu_title&#39; =&gt; &#39;Process Viewer&#39;,</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a><span class="x">            &#39;capability&#39; =&gt; &#39;read&#39;,</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a><span class="x">            &#39;slug&#39; =&gt; &#39;process-viewer&#39;,</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a><span class="x">            &#39;callback&#39; =&gt; &#39;render_page&#39;,</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a><span class="x">            &#39;show_in_menu&#39; =&gt; true</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a><span class="x">        ],</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a><span class="x">    ]</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a><span class="x">];</span>
+</span></code></pre></div>
+<h3 id="enqueuer">Enqueuer</h3>
+<p>Classe responsável por gerenciar o enfileiramento de scripts e estilos no painel administrativo do plugin Obatala no WordPress.</p>
+<h4 id="funcao_1">Função</h4>
+<p>Enfileira os scripts e estilos necessários para as páginas de administração específicas do plugin Obatala, garantindo que recursos como JavaScript e CSS estejam disponíveis quando o usuário acessa as páginas administrativas.</p>
+<h4 id="responsabilidades_1">Responsabilidades</h4>
+<ul>
+<li>
+<p><strong>init()</strong><br />
+  Método de inicialização principal que adiciona uma ação para enfileirar scripts (<code>enqueue_admin_scripts</code>) no painel administrativo do WordPress.</p>
+</li>
+<li>
+<p><strong>enqueue_admin_scripts($hook)</strong><br />
+  Enfileira os scripts e estilos necessários para as páginas administrativas específicas do plugin. Este método verifica se o <code>$hook</code> atual corresponde a uma das páginas definidas em <code>self::$pages</code>.<br />
+  Quando uma correspondência é encontrada, são registrados e enfileirados:</p>
+</li>
+<li>
+<p><strong>Script Principal do Plugin</strong>: Carrega o JavaScript do plugin a partir do arquivo <code>build/index.js</code>, utilizando as dependências e versão especificadas no arquivo <code>index.asset.php</code>.</p>
+</li>
+<li>
+<p><strong>Estilo Principal do Plugin</strong>: Carrega o arquivo CSS principal do plugin (<code>css/style.css</code>) para estilizar as páginas administrativas.</p>
+</li>
+<li>
+<p><strong>Estilo React Flow</strong>: Enfileira o estilo do React Flow (<code>css/react-flow.css</code>) para garantir a correta renderização de componentes interativos no plugin.</p>
+</li>
+</ul>
+<h4 id="estrutura-das-paginas">Estrutura das Páginas</h4>
+<p>A lista de páginas é armazenada no atributo <code>self::$pages</code>, que define os identificadores de páginas específicas para o enfileiramento de recursos.</p>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="x">private static $pages = [</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a><span class="x">    &#39;obatala_page_process-manager&#39; =&gt; &#39;process-manager&#39;,</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="x">    &#39;obatala_page_process-type-manager&#39; =&gt; &#39;process-type-manager&#39;,</span>
+</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a><span class="x">    &#39;obatala_page_process-viewer&#39; =&gt; &#39;process-viewer&#39;,</span>
+</span><span id="__span-1-5"><a id="__codelineno-1-5" name="__codelineno-1-5" href="#__codelineno-1-5"></a><span class="x">    &#39;obatala_page_process-step-manager&#39; =&gt; &#39;process-step-manager&#39;,</span>
+</span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="x">    &#39;obatala_page_process-type-editor&#39; =&gt; &#39;process-type-editor&#39;,</span>
+</span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="x">    &#39;obatala_page_sector_manager&#39; =&gt; &#39;sector_manager&#39;</span>
+</span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="x">];</span>
+</span></code></pre></div>
+<h3 id="classe-settingspage">Classe SettingsPage</h3>
+<p>A classe <code>SettingsPage</code> é responsável por registrar e renderizar as configurações personalizadas para o plugin Obatala no painel administrativo do WordPress.</p>
+<h4 id="funcao_2">Função</h4>
+<p>Esta classe facilita a criação de uma página de configurações com campos personalizados, como caixas de texto e checkbox, permitindo que o administrador configure o plugin diretamente pelo painel de administração do WordPress.</p>
+<h4 id="responsabilidades_2">Responsabilidades</h4>
+<ul>
+<li>
+<p><strong>register_settings()</strong><br />
+  Registra os campos de configuração, agrupando-os em uma seção e adicionando os campos individuais.</p>
+</li>
+<li>
+<p><strong>some_setting_field_render()</strong>   <br />
+  Renderiza um campo de texto some_setting para ajustes específicos.</p>
+</li>
+<li>
+<p><strong>enable_feature_field_render()</strong><br />
+  Renderiza um checkbox enable_feature para ativar ou desativar uma funcionalidade.</p>
+</li>
+<li>
+<p><strong>api_key_field_render()</strong><br />
+  Renderiza o campo api_key, permitindo ao administrador inserir uma chave de API.</p>
+</li>
+<li>
+<p><strong>create_settings_page()</strong><br />
+  Gera a interface da página de configurações, exibindo o formulário de submissão.</p>
+</li>
+</ul>
+<h4 id="estrutura-do-codigo">Estrutura do Código</h4>
+<p>Abaixo estão exemplos do código que compõe cada campo de configuração:</p>
+<h4 id="estrutura-de-registro">Estrutura de Registro</h4>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="x">register_setting(&#39;obatala_settings_group&#39;, &#39;some_setting&#39;);</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="x">register_setting(&#39;obatala_settings_group&#39;, &#39;enable_feature&#39;);</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="x">register_setting(&#39;obatala_settings_group&#39;, &#39;api_key&#39;);</span>
+</span></code></pre></div>
+<h2 id="consideracoes-finais">Considerações Finais</h2>
+<p>Esta documentação detalha a estrutura básica do plugin, explicando como as classes interagem para fornecer funcionalidades administrativas no WordPress. O uso de namespaces e o enfileiramento adequado de scripts garantem que o plugin opere de forma eficiente e compatível com o ambiente do WordPress.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": ".", "features": ["navigation.expand", "navigation.tabs", "navigation.prune", "navigation.sections", "search.highlight", "search.share", "toc.integrate", "content.code.copy"], "search": "assets/javascripts/workers/search.b8dbb3d2.min.js", "translations": {"clipboard.copied": "Copiado para \u00e1rea de transfer\u00eancia", "clipboard.copy": "Copiar para \u00e1rea de transfer\u00eancia", "search.result.more.one": "Mais 1 nesta p\u00e1gina", "search.result.more.other": "Mais # nesta p\u00e1gina", "search.result.none": "Nenhum resultado encontrado", "search.result.one": "1 resultado encontrado", "search.result.other": "# resultados encontrados", "search.result.placeholder": "Digite para iniciar a busca", "search.result.term.missing": "Ausente", "select.version": "Selecione a vers\u00e3o"}}</script>
+    
+    
+      <script src="assets/javascripts/bundle.1e8ae164.min.js"></script>
+      
+    
+  </body>
+</html>
