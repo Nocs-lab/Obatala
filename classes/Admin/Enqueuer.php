@@ -15,7 +15,7 @@ class Enqueuer {
         'obatala_page_process-type-editor' => 'process-type-editor',
         'obatala_page_sector_manager' => 'sector_manager'
     ];
-
+    // variavel onde estara o id do usuario logado.
     private static $current_user;
     
     public static function init() {
