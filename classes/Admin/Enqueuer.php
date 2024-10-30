@@ -16,13 +16,17 @@ class Enqueuer {
         'obatala_page_sector_manager' => 'sector_manager'
     ];
 
+    private static $current_user;
+    
     public static function init() {
-        add_action('admin_enqueue_scripts', [self::class, 'enqueue_admin_scripts']);
+        self::$current_user = get_current_user_id();
+        add_action('admin_enqueue_scripts', [self::class, 'enqueue_admin_scripts']);    
     }
 
     public static function enqueue_admin_scripts($hook) {
-        if (array_key_exists($hook, self::$pages)) {
-           
+        if (array_key_exists($hook, self::$pages) && self::$current_user != 0) {
+        // if (array_key_exists($hook, self::$pages)) {
+
             $asset_file = include OBATALA_PLUGIN_DIR . 'build/index.asset.php';
 
             wp_register_script(
@@ -52,5 +56,13 @@ class Enqueuer {
             );
             wp_enqueue_style('react-flow-styles');
         }
+    }
+
+    public static function get_user_id() {
+        // Se o usuário ainda não foi carregado (ex.: caso `init` ainda não tenha sido executado)
+        if (!self::$current_user) {
+            self::$current_user = get_current_user_id();
+        }
+        return self::$current_user;
     }
 }

@@ -5,6 +5,7 @@ namespace Obatala\Api;
 defined('ABSPATH') || exit;
 
 use WP_REST_Response; // Certifique-se de importar a classe WP_REST_Response
+use Obatala\Admin\Enqueuer;
 
 class ProcessApi extends ObatalaAPI {
 
@@ -85,7 +86,7 @@ class ProcessApi extends ObatalaAPI {
             ]
         ]);
 
-        // Rota para associar e gerensiar historico de setores das etapas
+        // Rota para associar e gerenciar historico de setores das etapas
         $this->add_route('process_obatala/(?P<id>\d+)/assosiate_sector', [
             'methods' => 'POST',
             'callback' => [$this, 'assosiate_sector'],
@@ -244,15 +245,20 @@ class ProcessApi extends ObatalaAPI {
         $curent_sector = get_post_meta($process_id, 'current_sector', true);
 
         // Pega as informações do usuário atual
-        $current_user = wp_get_current_user();
-        $id_user = $current_user->ID;
+        $id_user = Enqueuer::get_user_id();
         
+        // verifica se o usuario esta autenticado
+        if($id_user == 0){
+            return new WP_REST_Response([
+                'mensage' => 'Usuário não autenticado.',
+                'id_user' =>  $id_user
+            ], 403);
+        }
+
         // Pega os setores que estão associados ao usuário
-        //$user_sector = get_user_meta(1, 'associated_sector', false);
         $user_sector = get_user_meta($id_user, 'associated_sector', false);
 
         // Pega a permisao do usuario
-        //$permision = get_user_meta(1, 'wp_capabilities');
         $permision = get_user_meta($id_user, 'wp_capabilities');
 
         // Verifica se este usuário possui algum setor associado e percorre o array
@@ -261,13 +267,12 @@ class ProcessApi extends ObatalaAPI {
                 // Verifica se algum setor do usuário é igual ao current_sector
                 if (in_array($curent_sector, $sector)) {
                     return new WP_REST_Response($permision, 200);
-                    //return new WP_REST_Response($current_user->allcaps, 200); 
                 }else{
                     return new WP_REST_Response('Usuário não possui permissão para este setor.', 403);
                 }
             }
         }else{
-            return new WP_REST_Response('Usuário não possui permissão para este setor.', 403);
+            return new WP_REST_Response('Usuário não possui setores vinculados.', 403);
         }
     }
 
