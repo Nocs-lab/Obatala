@@ -21,7 +21,7 @@ const UserSelect = ({ users, sectorUsers, onSelectUser }) => {
     return (
         <>
             <ComboboxControl
-                label="Select a User"
+                label="Select one or more users"
                 value={stepInputValue}
                 options={users.map(user => ({ 
                     label: user.display_name, 
@@ -32,11 +32,11 @@ const UserSelect = ({ users, sectorUsers, onSelectUser }) => {
                 onChange={handleChange}
             />
             {selectedUser && (
-                <div className="selected-user">
+                <div className="combobox-selection">
                     {selectedUser.map((userId) => {
                         const user = users.find((user) => user.ID === userId)
                         return (
-                            <div key={userId} className="selected-step">
+                            <div key={userId} className="combobox-selected">
                                 {user.display_name}
                                 <Button
                                     icon={closeSmall}
@@ -47,7 +47,6 @@ const UserSelect = ({ users, sectorUsers, onSelectUser }) => {
                             </div>
                         );
                     })}
-                    
                 </div>
             )}
             <Button 

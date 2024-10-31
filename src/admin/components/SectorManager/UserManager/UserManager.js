@@ -82,12 +82,6 @@ const UserManager = ({ sector}) => {
 
     return (
         <>
-            <UserSelect
-                users={users}
-                sectorUsers={sectorUsers}
-                onSelectUser={assignUserSector}
-            />
-
             {notice && (
                 <div className="notice-container">
                     <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
@@ -95,6 +89,14 @@ const UserManager = ({ sector}) => {
                     </Notice>
                 </div>
             )}
+
+            <UserSelect
+                users={users}
+                sectorUsers={sectorUsers}
+                onSelectUser={assignUserSector}
+            />
+
+            <hr class="mt-2" />
              
             <div className='title-container-table'>
                 <h3>Related Users</h3>
@@ -132,7 +134,7 @@ const UserManager = ({ sector}) => {
                     </tbody>
                 </table>
             ) : (
-                <Notice isDismissible={false} status="warning" className="mt-2">No existing users for this sector.</Notice>
+                <Notice isDismissible={false} status="warning">No existing users for this sector.</Notice>
             )}
         </>
     );

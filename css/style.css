@@ -74,6 +74,27 @@ h2:has(+ span.badge) {
 /* #endregion */
 
 /* #region Forms */
+.combobox-selection {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+  width: 100%;
+}
+.combobox-selection .combobox-selected {
+  background-color: var(--primary-50);
+  display: flex;
+  align-items: center;
+  padding-left: 0.5rem;
+}
+.combobox-selection .combobox-selected .components-button.has-icon {
+  height: 30px;
+  padding: 0;
+}
+.combobox-selection + .components-button {
+  margin-top: .5rem;
+}
 .components-base-control,
 .components-base-control:not(.components-checkbox-control)
   + div:has(> .components-base-control) {
@@ -83,8 +104,7 @@ h2:has(+ span.badge) {
   + .components-base-control,
 .components-base-control:not(.components-checkbox-control)
   + div:has(> .components-base-control),
-.components-base-control + .components-button,
-.selected-steps + .components-button {
+.components-base-control + .components-button {
   margin-top: 1rem;
 }
 .components-base-control__field > label {
@@ -139,24 +159,6 @@ form .components-button-group .components-button {
 }
 .components-combobox-control__suggestions-container > .components-flex {
   height: 38px;
-}
-.selected-steps {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-  margin-top: 0.5rem;
-  width: 100%;
-}
-.selected-steps .selected-step {
-  background-color: var(--primary-50);
-  display: flex;
-  align-items: center;
-  padding-left: 0.5rem;
-}
-.selected-steps .selected-step .components-button.has-icon {
-  height: 30px;
-  padding: 0;
 }
 form.centered {
   margin: 2rem auto;
