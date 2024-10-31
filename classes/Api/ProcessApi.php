@@ -1,11 +1,11 @@
 <?php
 
 namespace Obatala\Api;
+use Obatala\Entities\Teste;
 
 defined('ABSPATH') || exit;
 
 use WP_REST_Response; // Certifique-se de importar a classe WP_REST_Response
-use Obatala\Admin\Enqueuer;
 
 class ProcessApi extends ObatalaAPI {
 
@@ -238,6 +238,10 @@ class ProcessApi extends ObatalaAPI {
         }
     }
 
+    public function check_user_logged_in() {
+        return get_current_user_id() !== 0; // Retorna true se o usuário está logado
+    }
+
     // Funçao informar se o usuario tem permisao permisao
     public function check_permision($request){
         $process_id = (int) $request['id'];
@@ -245,7 +249,7 @@ class ProcessApi extends ObatalaAPI {
         $curent_sector = get_post_meta($process_id, 'current_sector', true);
 
         // Pega as informações do usuário atual
-        $id_user = Enqueuer::get_user_id();
+        $id_user = Teste::get_user_id();
         
         // verifica se o usuario esta autenticado
         if($id_user == 0){
