@@ -488,6 +488,15 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
+  <a href="#atencao" class="md-nav__link">
+    <span class="md-ellipsis">
+      Atenção
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#conceito-de-metadados-dinamicos" class="md-nav__link">
     <span class="md-ellipsis">
       Conceito de Metadados Dinâmicos
@@ -498,9 +507,9 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#exemplo-de-metadado-dinamico" class="md-nav__link">
+  <a href="#exemplo-de-metadado-dinamico-estrutura-do-flowdata" class="md-nav__link">
     <span class="md-ellipsis">
-      Exemplo de Metadado Dinâmico
+      Exemplo de Metadado Dinâmico: Estrutura do flowData
     </span>
   </a>
   
@@ -508,6 +517,15 @@
         
       </ul>
     </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#componentes-do-flowdata" class="md-nav__link">
+    <span class="md-ellipsis">
+      Componentes do flowData
+    </span>
+  </a>
   
 </li>
       
@@ -522,14 +540,13 @@
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#1-criando-metadados-dinamicos-nas-etapas" class="md-nav__link">
+  <a href="#criando-metadados-dinamicos-nas-etapas" class="md-nav__link">
     <span class="md-ellipsis">
-      1. Criando Metadados Dinâmicos nas Etapas
+      Criando Metadados Dinâmicos nas Etapas
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="1. Criando Metadados Dinâmicos nas Etapas">
-      <ul class="md-nav__list">
+</li>
         
           <li class="md-nav__item">
   <a href="#interface-para-adicionar-metadados-dinamicos" class="md-nav__link">
@@ -540,70 +557,26 @@
   
 </li>
         
-          <li class="md-nav__item">
-  <a href="#exemplo-de-interface-de-configuracao" class="md-nav__link">
-    <span class="md-ellipsis">
-      Exemplo de Interface de Configuração
-    </span>
-  </a>
-  
-</li>
-        
       </ul>
     </nav>
   
 </li>
-        
-          <li class="md-nav__item">
-  <a href="#2-armazenando-metadados-como-post_meta" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#armazenando-metadados-como-post_meta" class="md-nav__link">
     <span class="md-ellipsis">
-      2. Armazenando Metadados como post_meta
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="2. Armazenando Metadados como post_meta">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#exemplo-de-armazenamento-em-post_meta" class="md-nav__link">
-    <span class="md-ellipsis">
-      Exemplo de Armazenamento em post_meta
+      Armazenando Metadados como post_meta
     </span>
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#3-exibindo-metadados-dinamicos-na-interface-de-gestao-de-processos" class="md-nav__link">
+      
+        <li class="md-nav__item">
+  <a href="#exibindo-metadados-dinamicos-na-interface-de-gestao-de-processos" class="md-nav__link">
     <span class="md-ellipsis">
-      3. Exibindo Metadados Dinâmicos na Interface de Gestão de Processos
+      Exibindo Metadados Dinâmicos na Interface de Gestão de Processos
     </span>
   </a>
-  
-    <nav class="md-nav" aria-label="3. Exibindo Metadados Dinâmicos na Interface de Gestão de Processos">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#renderizando-campos-dinamicos" class="md-nav__link">
-    <span class="md-ellipsis">
-      Renderizando Campos Dinâmicos
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
   
 </li>
       
@@ -731,39 +704,77 @@
 
 
 <h1 id="metadados-dinamicos-para-gestao-de-processos-no-plugin-obatala">Metadados Dinâmicos para Gestão de Processos no Plugin Obatala</h1>
-<!-- experimental shield -->
 <p><img alt="Experimental" src="https://img.shields.io/badge/Status-Experimental-yellow.svg" /></p>
-<div class="admonition atenção">
-<p class="admonition-title">Atenção</p>
+<h2 id="atencao">Atenção</h2>
 <p>Os snippets de código neste documento são apenas modelos ilustrativos.</p>
-</div>
-<p>O plugin Obatala permite a criação e gerenciamento de processos curatoriais no WordPress. Uma das funcionalidades avançadas do plugin é a capacidade de criar metadados dinâmicos que se adaptam às necessidades específicas de cada etapa do processo. Esta documentação explica como implementar e utilizar metadados dinâmicos dentro das interfaces de processo e etapa.</p>
-<h3 id="conceito-de-metadados-dinamicos">Conceito de Metadados Dinâmicos</h3>
-<p>Os metadados dinâmicos são dados adicionais associados a cada etapa de um processo, armazenados como <code>post_meta</code> no WordPress. Esses metadados são representações de campos de formulário, que podem ser configurados e personalizados dinamicamente pelos usuários.</p>
-<h4 id="exemplo-de-metadado-dinamico">Exemplo de Metadado Dinâmico</h4>
-<p>Um metadado dinâmico para um campo de texto pode ser representado da seguinte forma:</p>
-<div class="language-json highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="kc">te</span><span class="err">x</span><span class="kc">t</span><span class="err">_i</span><span class="kc">n</span><span class="err">pu</span><span class="kc">t</span><span class="err">_</span><span class="mi">918309123</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="w">    </span><span class="nt">&quot;tipo&quot;</span><span class="p">:</span><span class="w">  </span><span class="s2">&quot;text&quot;</span><span class="p">,</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="w">    </span><span class="nt">&quot;placeholder&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Digite uma informação...&quot;</span><span class="p">,</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="w">    </span><span class="nt">&quot;nome&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;input-de-texto&quot;</span><span class="p">,</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a><span class="w">    </span><span class="nt">&quot;label&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Informação&quot;</span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a><span class="w">    </span><span class="nt">&quot;value&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;valor inicial&quot;</span><span class="p">,</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a><span class="p">}</span>
+<p>O plugin Obatala permite a criação e o gerenciamento de processos curatoriais no WordPress, utilizando metadados dinâmicos para atender às necessidades específicas de cada etapa. Esta documentação detalha como implementar e utilizar esses metadados dentro das interfaces de processos e etapas.</p>
+<hr />
+<h2 id="conceito-de-metadados-dinamicos">Conceito de Metadados Dinâmicos</h2>
+<p>Os metadados dinâmicos no Obatala são dados adicionais associados a cada etapa de um processo, armazenados como <code>post_meta</code> no WordPress. Esses metadados representam campos de formulário que podem ser configurados dinamicamente.</p>
+<h3 id="exemplo-de-metadado-dinamico-estrutura-do-flowdata">Exemplo de Metadado Dinâmico: Estrutura do <code>flowData</code></h3>
+<p>O <code>flowData</code> é uma estrutura que organiza as etapas de um processo e seus campos personalizados. Veja um exemplo de como o <code>flowData</code> é estruturado:</p>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="cp">&lt;?php</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="nx">flowData</span> <span class="o">=</span> <span class="p">[</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        <span class="p">[</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>            <span class="s1">&#39;nodes&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
+</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>                <span class="p">[</span>
+</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>                    <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Etapa 1&#39;</span><span class="p">,</span>
+</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>                    <span class="s1">&#39;type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;customNode&#39;</span><span class="p">,</span>
+</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>                    <span class="s1">&#39;dragHandle&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;.custom-drag-handle&#39;</span><span class="p">,</span>
+</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>                    <span class="s1">&#39;position&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span> <span class="o">=&gt;</span> <span class="mi">50</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span> <span class="o">=&gt;</span> <span class="mi">50</span><span class="p">],</span>
+</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>                    <span class="s1">&#39;data&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
+</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>                        <span class="s1">&#39;fields&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
+</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>                            <span class="p">[</span>
+</span><span id="__span-0-13"><a id="__codelineno-0-13" name="__codelineno-0-13" href="#__codelineno-0-13"></a>                                <span class="s1">&#39;id&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text-1&#39;</span><span class="p">,</span>
+</span><span id="__span-0-14"><a id="__codelineno-0-14" name="__codelineno-0-14" href="#__codelineno-0-14"></a>                                <span class="s1">&#39;type&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;text&#39;</span><span class="p">,</span>
+</span><span id="__span-0-15"><a id="__codelineno-0-15" name="__codelineno-0-15" href="#__codelineno-0-15"></a>                                <span class="s1">&#39;title&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Campo sem título&#39;</span><span class="p">,</span>
+</span><span id="__span-0-16"><a id="__codelineno-0-16" name="__codelineno-0-16" href="#__codelineno-0-16"></a>                                <span class="s1">&#39;config&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span>
+</span><span id="__span-0-17"><a id="__codelineno-0-17" name="__codelineno-0-17" href="#__codelineno-0-17"></a>                                    <span class="s1">&#39;label&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Campo sem título&#39;</span><span class="p">,</span>
+</span><span id="__span-0-18"><a id="__codelineno-0-18" name="__codelineno-0-18" href="#__codelineno-0-18"></a>                                    <span class="s1">&#39;placeholder&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;adds shine&#39;</span><span class="p">,</span>
+</span><span id="__span-0-19"><a id="__codelineno-0-19" name="__codelineno-0-19" href="#__codelineno-0-19"></a>                                    <span class="s1">&#39;required&#39;</span> <span class="o">=&gt;</span> <span class="k">false</span><span class="p">,</span>
+</span><span id="__span-0-20"><a id="__codelineno-0-20" name="__codelineno-0-20" href="#__codelineno-0-20"></a>                                    <span class="s1">&#39;minLength&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;10&#39;</span><span class="p">,</span>
+</span><span id="__span-0-21"><a id="__codelineno-0-21" name="__codelineno-0-21" href="#__codelineno-0-21"></a>                                    <span class="s1">&#39;maxLength&#39;</span> <span class="o">=&gt;</span> <span class="mi">100</span><span class="p">,</span>
+</span><span id="__span-0-22"><a id="__codelineno-0-22" name="__codelineno-0-22" href="#__codelineno-0-22"></a>                                    <span class="s1">&#39;pattern&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;&#39;</span><span class="p">,</span>
+</span><span id="__span-0-23"><a id="__codelineno-0-23" name="__codelineno-0-23" href="#__codelineno-0-23"></a>                                    <span class="s1">&#39;helpText&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;adds shine adds shine adds shine adds shine&#39;</span><span class="p">,</span>
+</span><span id="__span-0-24"><a id="__codelineno-0-24" name="__codelineno-0-24" href="#__codelineno-0-24"></a>                                <span class="p">],</span>
+</span><span id="__span-0-25"><a id="__codelineno-0-25" name="__codelineno-0-25" href="#__codelineno-0-25"></a>                            <span class="p">],</span>
+</span><span id="__span-0-26"><a id="__codelineno-0-26" name="__codelineno-0-26" href="#__codelineno-0-26"></a>                        <span class="p">],</span>
+</span><span id="__span-0-27"><a id="__codelineno-0-27" name="__codelineno-0-27" href="#__codelineno-0-27"></a>                        <span class="s1">&#39;stageName&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Etapa 1&#39;</span><span class="p">,</span>
+</span><span id="__span-0-28"><a id="__codelineno-0-28" name="__codelineno-0-28" href="#__codelineno-0-28"></a>                    <span class="p">],</span>
+</span><span id="__span-0-29"><a id="__codelineno-0-29" name="__codelineno-0-29" href="#__codelineno-0-29"></a>                    <span class="s1">&#39;measured&#39;</span> <span class="o">=&gt;</span> <span class="p">[</span><span class="s1">&#39;width&#39;</span> <span class="o">=&gt;</span> <span class="mi">200</span><span class="p">,</span> <span class="s1">&#39;height&#39;</span> <span class="o">=&gt;</span> <span class="mi">133</span><span class="p">],</span>
+</span><span id="__span-0-30"><a id="__codelineno-0-30" name="__codelineno-0-30" href="#__codelineno-0-30"></a>                    <span class="s1">&#39;selected&#39;</span> <span class="o">=&gt;</span> <span class="k">true</span><span class="p">,</span>
+</span><span id="__span-0-31"><a id="__codelineno-0-31" name="__codelineno-0-31" href="#__codelineno-0-31"></a>                <span class="p">],</span>
+</span><span id="__span-0-32"><a id="__codelineno-0-32" name="__codelineno-0-32" href="#__codelineno-0-32"></a>            <span class="p">],</span>
+</span><span id="__span-0-33"><a id="__codelineno-0-33" name="__codelineno-0-33" href="#__codelineno-0-33"></a>            <span class="s1">&#39;edges&#39;</span> <span class="o">=&gt;</span> <span class="p">[],</span>
+</span><span id="__span-0-34"><a id="__codelineno-0-34" name="__codelineno-0-34" href="#__codelineno-0-34"></a>        <span class="p">],</span>
+</span><span id="__span-0-35"><a id="__codelineno-0-35" name="__codelineno-0-35" href="#__codelineno-0-35"></a>    <span class="p">];</span>
+</span><span id="__span-0-36"><a id="__codelineno-0-36" name="__codelineno-0-36" href="#__codelineno-0-36"></a><span class="cp">?&gt;</span>
 </span></code></pre></div>
-<p>Neste exemplo:
-- <code>text_input_918309123</code> é a chave do <code>post_meta</code>, onde <code>text_input</code> identifica o tipo de campo e <code>918309123</code> é um identificador único.
-- O valor associado é um objeto JSON que define as propriedades do campo de entrada de texto:
-  - <code>tipo</code>: Tipo do campo (neste caso, um campo de texto).
-  - <code>placeholder</code>: Texto de sugestão exibido dentro do campo.
-  - <code>nome</code>: Nome do campo, utilizado como referência no formulário.
-  - <code>label</code>: Rótulo descritivo para o campo.
-  - <code>value</code>: Valor inicial preenchido no campo.</p>
-<h3 id="implementacao-de-metadados-dinamicos">Implementação de Metadados Dinâmicos</h3>
-<h4 id="1-criando-metadados-dinamicos-nas-etapas">1. Criando Metadados Dinâmicos nas Etapas</h4>
-<p>Nas etapas (<code>ProcessModel</code>), os metadados são utilizados como modelos para os campos que serão exibidos no processo. </p>
-<h5 id="interface-para-adicionar-metadados-dinamicos">Interface para Adicionar Metadados Dinâmicos</h5>
-<p>A interface de administração do WordPress permite aos usuários adicionar e configurar metadados dinâmicos para cada etapa. Isso é feito através de uma interface em React que oferece opções para escolher o tipo de campo e suas propriedades.</p>
-<h5 id="exemplo-de-interface-de-configuracao">Exemplo de Interface de Configuração</h5>
+<h2 id="componentes-do-flowdata">Componentes do flowData</h2>
+<ul>
+<li><strong>nodes</strong>: Contém as etapas do processo, onde cada etapa inclui informações específicas:</li>
+<li><strong>id</strong>: Identificador único da etapa, como Etapa 1.</li>
+<li><strong>type</strong>: Tipo do nó, definido como <code>customNode</code>.</li>
+<li><strong>dragHandle</strong>: Classe CSS usada para arrastar o nó.</li>
+<li><strong>position</strong>: Coordenadas de posição (x, y) da etapa na interface.</li>
+<li><strong>data</strong>: Dados da etapa, incluindo:<ul>
+<li><strong>fields</strong>: Campos personalizados da etapa, cada um com:</li>
+<li><strong>id</strong>: Identificador único do campo, ex.: text-1.</li>
+<li><strong>type</strong>: Tipo do campo, como text.</li>
+<li><strong>title</strong>: Título do campo.</li>
+<li><strong>config</strong>: Configurações do campo, com propriedades como <code>label</code>, <code>placeholder</code>, <code>required</code>, <code>minLength</code>, <code>maxLength</code>, <code>pattern</code>, e <code>helpText</code>.</li>
+<li><strong>stageName</strong>: Nome da etapa, como Etapa 1.</li>
+</ul>
+</li>
+<li><strong>measured</strong>: Dimensões da etapa (largura e altura) para a renderização.</li>
+<li><strong>selected</strong>: Indica se a etapa está selecionada (booleano).</li>
+<li><strong>edges</strong>: Define conexões entre etapas, permitindo representar visualmente o fluxo entre elas. Neste exemplo, está vazio.</li>
+</ul>
+<h2 id="implementacao-de-metadados-dinamicos">Implementação de Metadados Dinâmicos</h2>
+<h3 id="criando-metadados-dinamicos-nas-etapas">Criando Metadados Dinâmicos nas Etapas</h3>
+<p>Nas etapas (ProcessModel), os metadados configurados são utilizados como modelos para os campos exibidos no processo.</p>
+<h3 id="interface-para-adicionar-metadados-dinamicos">Interface para Adicionar Metadados Dinâmicos</h3>
+<p>A interface de administração do WordPress permite aos usuários adicionar e configurar metadados dinâmicos para cada etapa, usando uma interface em React.</p>
 <div class="language-javascript highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="p">,</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="nx">useState</span><span class="w"> </span><span class="p">}</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;react&#39;</span><span class="p">;</span>
 </span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>
 </span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="kd">function</span><span class="w"> </span><span class="nx">DynamicFieldConfigurator</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
@@ -772,9 +783,9 @@
 </span><span id="__span-1-6"><a id="__codelineno-1-6" name="__codelineno-1-6" href="#__codelineno-1-6"></a><span class="w">    </span><span class="kd">const</span><span class="w"> </span><span class="nx">addField</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="nx">type</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-1-7"><a id="__codelineno-1-7" name="__codelineno-1-7" href="#__codelineno-1-7"></a><span class="w">        </span><span class="kd">const</span><span class="w"> </span><span class="nx">newField</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-1-8"><a id="__codelineno-1-8" name="__codelineno-1-8" href="#__codelineno-1-8"></a><span class="w">            </span><span class="nx">id</span><span class="o">:</span><span class="w"> </span><span class="nb">Date</span><span class="p">.</span><span class="nx">now</span><span class="p">(),</span>
-</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">            </span><span class="nx">tipo</span><span class="o">:</span><span class="w"> </span><span class="nx">type</span><span class="p">,</span>
+</span><span id="__span-1-9"><a id="__codelineno-1-9" name="__codelineno-1-9" href="#__codelineno-1-9"></a><span class="w">            </span><span class="nx">type</span><span class="o">:</span><span class="w"> </span><span class="nx">type</span><span class="p">,</span>
 </span><span id="__span-1-10"><a id="__codelineno-1-10" name="__codelineno-1-10" href="#__codelineno-1-10"></a><span class="w">            </span><span class="nx">placeholder</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">            </span><span class="nx">nome</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+</span><span id="__span-1-11"><a id="__codelineno-1-11" name="__codelineno-1-11" href="#__codelineno-1-11"></a><span class="w">            </span><span class="nx">name</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
 </span><span id="__span-1-12"><a id="__codelineno-1-12" name="__codelineno-1-12" href="#__codelineno-1-12"></a><span class="w">            </span><span class="nx">label</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
 </span><span id="__span-1-13"><a id="__codelineno-1-13" name="__codelineno-1-13" href="#__codelineno-1-13"></a><span class="w">            </span><span class="nx">value</span><span class="o">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
 </span><span id="__span-1-14"><a id="__codelineno-1-14" name="__codelineno-1-14" href="#__codelineno-1-14"></a><span class="w">        </span><span class="p">};</span>
@@ -785,43 +796,40 @@
 </span><span id="__span-1-19"><a id="__codelineno-1-19" name="__codelineno-1-19" href="#__codelineno-1-19"></a><span class="w">        </span><span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
 </span><span id="__span-1-20"><a id="__codelineno-1-20" name="__codelineno-1-20" href="#__codelineno-1-20"></a><span class="w">            </span><span class="o">&lt;</span><span class="nx">button</span><span class="w"> </span><span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">addField</span><span class="p">(</span><span class="s1">&#39;text&#39;</span><span class="p">)}</span><span class="o">&gt;</span><span class="nx">Adicionar</span><span class="w"> </span><span class="nx">Campo</span><span class="w"> </span><span class="nx">de</span><span class="w"> </span><span class="nx">Texto</span><span class="o">&lt;</span><span class="err">/button&gt;</span>
 </span><span id="__span-1-21"><a id="__codelineno-1-21" name="__codelineno-1-21" href="#__codelineno-1-21"></a><span class="w">            </span><span class="o">&lt;</span><span class="nx">button</span><span class="w"> </span><span class="nx">onClick</span><span class="o">=</span><span class="p">{()</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="nx">addField</span><span class="p">(</span><span class="s1">&#39;number&#39;</span><span class="p">)}</span><span class="o">&gt;</span><span class="nx">Adicionar</span><span class="w"> </span><span class="nx">Campo</span><span class="w"> </span><span class="nx">Numérico</span><span class="o">&lt;</span><span class="err">/button&gt;</span>
-</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">            </span><span class="p">{</span><span class="cm">/* Adicione mais botões para outros tipos de campos conforme necessário */</span><span class="p">}</span>
-</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">            </span><span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
-</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">                </span><span class="p">{</span><span class="nx">fields</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">field</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">(</span>
-</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">                    </span><span class="o">&lt;</span><span class="nx">div</span><span class="w"> </span><span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">field</span><span class="p">.</span><span class="nx">id</span><span class="p">}</span><span class="o">&gt;</span>
-</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">                        </span><span class="o">&lt;</span><span class="nx">label</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">field</span><span class="p">.</span><span class="nx">label</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/label&gt;</span>
-</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">                        </span><span class="o">&lt;</span><span class="nx">input</span><span class="w"> </span>
-</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">                            </span><span class="nx">type</span><span class="o">=</span><span class="p">{</span><span class="nx">field</span><span class="p">.</span><span class="nx">tipo</span><span class="p">}</span><span class="w"> </span>
-</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">                            </span><span class="nx">placeholder</span><span class="o">=</span><span class="p">{</span><span class="nx">field</span><span class="p">.</span><span class="nx">placeholder</span><span class="p">}</span><span class="w"> </span>
-</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">                            </span><span class="nx">name</span><span class="o">=</span><span class="p">{</span><span class="nx">field</span><span class="p">.</span><span class="nx">nome</span><span class="p">}</span><span class="w"> </span>
-</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">                            </span><span class="nx">value</span><span class="o">=</span><span class="p">{</span><span class="nx">field</span><span class="p">.</span><span class="nx">value</span><span class="p">}</span><span class="w"> </span>
-</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">                            </span><span class="nx">onChange</span><span class="o">=</span><span class="p">{(</span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
-</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">                                </span><span class="nx">field</span><span class="p">.</span><span class="nx">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
-</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">                                </span><span class="nx">setFields</span><span class="p">([...</span><span class="nx">fields</span><span class="p">]);</span>
-</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="w">                            </span><span class="p">}}</span>
-</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="w">                        </span><span class="o">/&gt;</span>
-</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="w">                    </span><span class="o">&lt;</span><span class="err">/div&gt;</span>
-</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="w">                </span><span class="p">))}</span>
-</span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="w">            </span><span class="o">&lt;</span><span class="err">/div&gt;</span>
-</span><span id="__span-1-40"><a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="w">        </span><span class="o">&lt;</span><span class="err">/div&gt;</span>
-</span><span id="__span-1-41"><a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="w">    </span><span class="p">);</span>
-</span><span id="__span-1-42"><a id="__codelineno-1-42" name="__codelineno-1-42" href="#__codelineno-1-42"></a><span class="p">}</span>
+</span><span id="__span-1-22"><a id="__codelineno-1-22" name="__codelineno-1-22" href="#__codelineno-1-22"></a><span class="w">            </span><span class="o">&lt;</span><span class="nx">div</span><span class="o">&gt;</span>
+</span><span id="__span-1-23"><a id="__codelineno-1-23" name="__codelineno-1-23" href="#__codelineno-1-23"></a><span class="w">                </span><span class="p">{</span><span class="nx">fields</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">field</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">(</span>
+</span><span id="__span-1-24"><a id="__codelineno-1-24" name="__codelineno-1-24" href="#__codelineno-1-24"></a><span class="w">                    </span><span class="o">&lt;</span><span class="nx">div</span><span class="w"> </span><span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">field</span><span class="p">.</span><span class="nx">id</span><span class="p">}</span><span class="o">&gt;</span>
+</span><span id="__span-1-25"><a id="__codelineno-1-25" name="__codelineno-1-25" href="#__codelineno-1-25"></a><span class="w">                        </span><span class="o">&lt;</span><span class="nx">label</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">field</span><span class="p">.</span><span class="nx">label</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/label&gt;</span>
+</span><span id="__span-1-26"><a id="__codelineno-1-26" name="__codelineno-1-26" href="#__codelineno-1-26"></a><span class="w">                        </span><span class="o">&lt;</span><span class="nx">input</span><span class="w"> </span>
+</span><span id="__span-1-27"><a id="__codelineno-1-27" name="__codelineno-1-27" href="#__codelineno-1-27"></a><span class="w">                            </span><span class="nx">type</span><span class="o">=</span><span class="p">{</span><span class="nx">field</span><span class="p">.</span><span class="nx">type</span><span class="p">}</span><span class="w"> </span>
+</span><span id="__span-1-28"><a id="__codelineno-1-28" name="__codelineno-1-28" href="#__codelineno-1-28"></a><span class="w">                            </span><span class="nx">placeholder</span><span class="o">=</span><span class="p">{</span><span class="nx">field</span><span class="p">.</span><span class="nx">placeholder</span><span class="p">}</span><span class="w"> </span>
+</span><span id="__span-1-29"><a id="__codelineno-1-29" name="__codelineno-1-29" href="#__codelineno-1-29"></a><span class="w">                            </span><span class="nx">name</span><span class="o">=</span><span class="p">{</span><span class="nx">field</span><span class="p">.</span><span class="nx">name</span><span class="p">}</span><span class="w"> </span>
+</span><span id="__span-1-30"><a id="__codelineno-1-30" name="__codelineno-1-30" href="#__codelineno-1-30"></a><span class="w">                            </span><span class="nx">value</span><span class="o">=</span><span class="p">{</span><span class="nx">field</span><span class="p">.</span><span class="nx">value</span><span class="p">}</span><span class="w"> </span>
+</span><span id="__span-1-31"><a id="__codelineno-1-31" name="__codelineno-1-31" href="#__codelineno-1-31"></a><span class="w">                            </span><span class="nx">onChange</span><span class="o">=</span><span class="p">{(</span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
+</span><span id="__span-1-32"><a id="__codelineno-1-32" name="__codelineno-1-32" href="#__codelineno-1-32"></a><span class="w">                                </span><span class="nx">field</span><span class="p">.</span><span class="nx">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
+</span><span id="__span-1-33"><a id="__codelineno-1-33" name="__codelineno-1-33" href="#__codelineno-1-33"></a><span class="w">                                </span><span class="nx">setFields</span><span class="p">([...</span><span class="nx">fields</span><span class="p">]);</span>
+</span><span id="__span-1-34"><a id="__codelineno-1-34" name="__codelineno-1-34" href="#__codelineno-1-34"></a><span class="w">                            </span><span class="p">}}</span>
+</span><span id="__span-1-35"><a id="__codelineno-1-35" name="__codelineno-1-35" href="#__codelineno-1-35"></a><span class="w">                        </span><span class="o">/&gt;</span>
+</span><span id="__span-1-36"><a id="__codelineno-1-36" name="__codelineno-1-36" href="#__codelineno-1-36"></a><span class="w">                    </span><span class="o">&lt;</span><span class="err">/div&gt;</span>
+</span><span id="__span-1-37"><a id="__codelineno-1-37" name="__codelineno-1-37" href="#__codelineno-1-37"></a><span class="w">                </span><span class="p">))}</span>
+</span><span id="__span-1-38"><a id="__codelineno-1-38" name="__codelineno-1-38" href="#__codelineno-1-38"></a><span class="w">            </span><span class="o">&lt;</span><span class="err">/div&gt;</span>
+</span><span id="__span-1-39"><a id="__codelineno-1-39" name="__codelineno-1-39" href="#__codelineno-1-39"></a><span class="w">        </span><span class="o">&lt;</span><span class="err">/div&gt;</span>
+</span><span id="__span-1-40"><a id="__codelineno-1-40" name="__codelineno-1-40" href="#__codelineno-1-40"></a><span class="w">    </span><span class="p">);</span>
+</span><span id="__span-1-41"><a id="__codelineno-1-41" name="__codelineno-1-41" href="#__codelineno-1-41"></a><span class="p">}</span>
 </span></code></pre></div>
-<p>Este exemplo simples de interface permite adicionar campos de texto e numéricos e configurar suas propriedades.</p>
-<h4 id="2-armazenando-metadados-como-post_meta">2. Armazenando Metadados como <code>post_meta</code></h4>
-<p>Após configurar os metadados, eles são salvos como <code>post_meta</code> no WordPress. Cada campo de metadados é armazenado com uma chave única que combina o tipo de campo e um identificador.</p>
-<h5 id="exemplo-de-armazenamento-em-post_meta">Exemplo de Armazenamento em <code>post_meta</code></h5>
-<div class="language-php highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="x">function save_dynamic_fields($post_id, $fields) {</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="x">    foreach ($fields as $field) {</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="x">        $meta_key = &quot;{$field[&#39;tipo&#39;]}_{$field[&#39;id&#39;]}&quot;;</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a><span class="x">        update_post_meta($post_id, $meta_key, json_encode($field));</span>
-</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="x">    }</span>
-</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="x">}</span>
+<h2 id="armazenando-metadados-como-post_meta">Armazenando Metadados como post_meta</h2>
+<p>Após configurar os metadados, eles são salvos no WordPress como <code>post_meta</code>. Cada campo é armazenado com uma chave única que combina o tipo e o identificador do campo.</p>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="cp">&lt;?php</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="k">function</span> <span class="nf">save_dynamic_fields</span><span class="p">(</span><span class="nv">$post_id</span><span class="p">,</span> <span class="nv">$fields</span><span class="p">)</span> <span class="p">{</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>        <span class="k">foreach</span> <span class="p">(</span><span class="nv">$fields</span> <span class="k">as</span> <span class="nv">$field</span><span class="p">)</span> <span class="p">{</span>
+</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>            <span class="nv">$meta_key</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">{</span><span class="nv">$field</span><span class="p">[</span><span class="s1">&#39;type&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="nv">$field</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">;</span>
+</span><span id="__span-2-5"><a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a>            <span class="nx">update_post_meta</span><span class="p">(</span><span class="nv">$post_id</span><span class="p">,</span> <span class="nv">$meta_key</span><span class="p">,</span> <span class="nb">json_encode</span><span class="p">(</span><span class="nv">$field</span><span class="p">));</span>
+</span><span id="__span-2-6"><a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a>        <span class="p">}</span>
+</span><span id="__span-2-7"><a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a>    <span class="p">}</span>
+</span><span id="__span-2-8"><a id="__codelineno-2-8" name="__codelineno-2-8" href="#__codelineno-2-8"></a><span class="cp">?&gt;</span>
 </span></code></pre></div>
-<p>Nesta função, cada campo é salvo no banco de dados do WordPress com uma chave única baseada no tipo e identificador do campo.</p>
-<h4 id="3-exibindo-metadados-dinamicos-na-interface-de-gestao-de-processos">3. Exibindo Metadados Dinâmicos na Interface de Gestão de Processos</h4>
-<p>Na interface de gestão de processos (<code>Process</code>), os campos definidos como metadados dinâmicos nas etapas são renderizados de acordo com suas configurações. </p>
-<h5 id="renderizando-campos-dinamicos">Renderizando Campos Dinâmicos</h5>
+<h2 id="exibindo-metadados-dinamicos-na-interface-de-gestao-de-processos">Exibindo Metadados Dinâmicos na Interface de Gestão de Processos</h2>
+<p>Na interface de gestão de processos, os campos dinâmicos definidos nos metadados são renderizados conforme as configurações.</p>
 <div class="language-javascript highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">import</span><span class="w"> </span><span class="nx">React</span><span class="w"> </span><span class="kr">from</span><span class="w"> </span><span class="s1">&#39;react&#39;</span><span class="p">;</span>
 </span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>
 </span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="kd">function</span><span class="w"> </span><span class="nx">DynamicFieldRenderer</span><span class="p">({</span><span class="w"> </span><span class="nx">fields</span><span class="w"> </span><span class="p">})</span><span class="w"> </span><span class="p">{</span>
@@ -831,30 +839,28 @@
 </span><span id="__span-3-7"><a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a><span class="w">                </span><span class="o">&lt;</span><span class="nx">div</span><span class="w"> </span><span class="nx">key</span><span class="o">=</span><span class="p">{</span><span class="nx">field</span><span class="p">.</span><span class="nx">id</span><span class="p">}</span><span class="o">&gt;</span>
 </span><span id="__span-3-8"><a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="w">                    </span><span class="o">&lt;</span><span class="nx">label</span><span class="o">&gt;</span><span class="p">{</span><span class="nx">field</span><span class="p">.</span><span class="nx">label</span><span class="p">}</span><span class="o">&lt;</span><span class="err">/label&gt;</span>
 </span><span id="__span-3-9"><a id="__codelineno-3-9" name="__codelineno-3-9" href="#__codelineno-3-9"></a><span class="w">                    </span><span class="o">&lt;</span><span class="nx">input</span><span class="w"> </span>
-</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">                        </span><span class="nx">type</span><span class="o">=</span><span class="p">{</span><span class="nx">field</span><span class="p">.</span><span class="nx">tipo</span><span class="p">}</span><span class="w"> </span>
+</span><span id="__span-3-10"><a id="__codelineno-3-10" name="__codelineno-3-10" href="#__codelineno-3-10"></a><span class="w">                        </span><span class="nx">type</span><span class="o">=</span><span class="p">{</span><span class="nx">field</span><span class="p">.</span><span class="nx">type</span><span class="p">}</span><span class="w"> </span>
 </span><span id="__span-3-11"><a id="__codelineno-3-11" name="__codelineno-3-11" href="#__codelineno-3-11"></a><span class="w">                        </span><span class="nx">placeholder</span><span class="o">=</span><span class="p">{</span><span class="nx">field</span><span class="p">.</span><span class="nx">placeholder</span><span class="p">}</span><span class="w"> </span>
-</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">                        </span><span class="nx">name</span><span class="o">=</span><span class="p">{</span><span class="nx">field</span><span class="p">.</span><span class="nx">nome</span><span class="p">}</span><span class="w"> </span>
+</span><span id="__span-3-12"><a id="__codelineno-3-12" name="__codelineno-3-12" href="#__codelineno-3-12"></a><span class="w">                        </span><span class="nx">name</span><span class="o">=</span><span class="p">{</span><span class="nx">field</span><span class="p">.</span><span class="nx">name</span><span class="p">}</span><span class="w"> </span>
 </span><span id="__span-3-13"><a id="__codelineno-3-13" name="__codelineno-3-13" href="#__codelineno-3-13"></a><span class="w">                        </span><span class="nx">value</span><span class="o">=</span><span class="p">{</span><span class="nx">field</span><span class="p">.</span><span class="nx">value</span><span class="p">}</span><span class="w"> </span>
 </span><span id="__span-3-14"><a id="__codelineno-3-14" name="__codelineno-3-14" href="#__codelineno-3-14"></a><span class="w">                        </span><span class="nx">onChange</span><span class="o">=</span><span class="p">{(</span><span class="nx">e</span><span class="p">)</span><span class="w"> </span><span class="p">=&gt;</span><span class="w"> </span><span class="p">{</span>
 </span><span id="__span-3-15"><a id="__codelineno-3-15" name="__codelineno-3-15" href="#__codelineno-3-15"></a><span class="w">                            </span><span class="nx">field</span><span class="p">.</span><span class="nx">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nx">e</span><span class="p">.</span><span class="nx">target</span><span class="p">.</span><span class="nx">value</span><span class="p">;</span>
-</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">                            </span><span class="c1">// Atualizar o estado ou enviar a mudança de valor para o backend conforme necessário</span>
-</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">                        </span><span class="p">}}</span>
-</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">                    </span><span class="o">/&gt;</span>
-</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">                </span><span class="o">&lt;</span><span class="err">/div&gt;</span>
-</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">            </span><span class="p">))}</span>
-</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">        </span><span class="o">&lt;</span><span class="err">/div&gt;</span>
-</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="w">    </span><span class="p">);</span>
-</span><span id="__span-3-23"><a id="__codelineno-3-23" name="__codelineno-3-23" href="#__codelineno-3-23"></a><span class="p">}</span>
+</span><span id="__span-3-16"><a id="__codelineno-3-16" name="__codelineno-3-16" href="#__codelineno-3-16"></a><span class="w">                        </span><span class="p">}}</span>
+</span><span id="__span-3-17"><a id="__codelineno-3-17" name="__codelineno-3-17" href="#__codelineno-3-17"></a><span class="w">                    </span><span class="o">/&gt;</span>
+</span><span id="__span-3-18"><a id="__codelineno-3-18" name="__codelineno-3-18" href="#__codelineno-3-18"></a><span class="w">                </span><span class="o">&lt;</span><span class="err">/div&gt;</span>
+</span><span id="__span-3-19"><a id="__codelineno-3-19" name="__codelineno-3-19" href="#__codelineno-3-19"></a><span class="w">            </span><span class="p">))}</span>
+</span><span id="__span-3-20"><a id="__codelineno-3-20" name="__codelineno-3-20" href="#__codelineno-3-20"></a><span class="w">        </span><span class="o">&lt;</span><span class="err">/div&gt;</span>
+</span><span id="__span-3-21"><a id="__codelineno-3-21" name="__codelineno-3-21" href="#__codelineno-3-21"></a><span class="w">    </span><span class="p">);</span>
+</span><span id="__span-3-22"><a id="__codelineno-3-22" name="__codelineno-3-22" href="#__codelineno-3-22"></a><span class="p">}</span>
 </span></code></pre></div>
-<p>Este componente renderiza os campos de formulário baseados nos metadados dinâmicos.</p>
-<h3 id="fluxo-de-trabalho-para-metadados-dinamicos">Fluxo de Trabalho para Metadados Dinâmicos</h3>
+<h2 id="fluxo-de-trabalho-para-metadados-dinamicos">Fluxo de Trabalho para Metadados Dinâmicos</h2>
 <ol>
-<li><strong>Configuração de Metadados nas Etapas</strong>: O usuário define e configura campos personalizados através da interface de configuração de metadados na etapa.</li>
-<li><strong>Armazenamento de Metadados</strong>: Os campos configurados são salvos como <code>post_meta</code> no banco de dados do WordPress.</li>
-<li><strong>Renderização de Campos no Processo</strong>: Durante a execução de um processo, os campos dinâmicos são renderizados na interface do processo, permitindo que os usuários preencham e interajam com eles.</li>
-<li><strong>Salvamento de Dados do Processo</strong>: Os valores preenchidos pelos usuários nos campos dinâmicos são armazenados como <code>post_meta</code> do processo.</li>
+<li><strong>Configuração de Metadados nas Etapas</strong>: O usuário define campos personalizados através da interface de configuração na etapa.</li>
+<li><strong>Armazenamento de Metadados</strong>: Os campos configurados são salvos como <code>post_meta</code>.</li>
+<li><strong>Renderização de Campos no Processo</strong>: Durante a execução do processo, os campos dinâmicos são renderizados na interface.</li>
+<li><strong>Salvamento de Dados do Processo</strong>: Os valores preenchidos são armazenados como <code>post_meta</code>.</li>
 </ol>
-<h3 id="diagrama-do-processo-de-metadados-dinamicos">Diagrama do Processo de Metadados Dinâmicos</h3>
+<h2 id="diagrama-do-processo-de-metadados-dinamicos">Diagrama do Processo de Metadados Dinâmicos</h2>
 <pre class="mermaid"><code>classDiagram
     class Processo {
         +String nome
@@ -891,8 +897,8 @@
     Processo "1" -- "*" Etapa : contém
     Etapa "1" -- "*" Metadado : define
     Processo "1" -- "*" Metadado : utiliza</code></pre>
-<h3 id="conclusao">Conclusão</h3>
-<p>Os metadados dinâmicos no plugin Obatala proporcionam uma flexibilidade significativa na configuração e gestão de processos curatoriais. Ao permitir a criação e personalização de campos de formulário dinâmicos, o plugin atende às necessidades específicas de cada processo e etapa, facilitando a interação dos usuários com o sistema e melhorando a eficiência na gestão de dados curatoriais.</p>
+<h2 id="conclusao">Conclusão</h2>
+<p>Os metadados dinâmicos no plugin Obatala oferecem flexibilidade para a configuração de processos curatoriais, permitindo a criação e personalização de campos conforme a necessidade de cada etapa. A estrutura flowData organiza visualmente o processo e simplifica a interação do usuário com o sistema, melhorando a gestão de dados curatoriais.</p>
 
 
 

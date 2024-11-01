@@ -515,20 +515,18 @@
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Arquivos e Classes">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
+</li>
+      
+        <li class="md-nav__item">
   <a href="#processmetadatamanagerphp" class="md-nav__link">
     <span class="md-ellipsis">
       ProcessMetadataManager.php
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="ProcessMetadataManager.php">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
+</li>
+      
+        <li class="md-nav__item">
   <a href="#metodos-principais" class="md-nav__link">
     <span class="md-ellipsis">
       Métodos Principais
@@ -536,88 +534,21 @@
   </a>
   
 </li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#metadatahandlerphp" class="md-nav__link">
-    <span class="md-ellipsis">
-      MetadataHandler.php
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="MetadataHandler.php">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#metodos-principais_1" class="md-nav__link">
-    <span class="md-ellipsis">
-      Métodos Principais
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-          <li class="md-nav__item">
-  <a href="#ajaxhandlerphp" class="md-nav__link">
-    <span class="md-ellipsis">
-      AjaxHandler.php
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="AjaxHandler.php">
-      <ul class="md-nav__list">
-        
-          <li class="md-nav__item">
-  <a href="#metodos-principais_2" class="md-nav__link">
-    <span class="md-ellipsis">
-      Métodos Principais
-    </span>
-  </a>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
-        
-      </ul>
-    </nav>
-  
-</li>
       
         <li class="md-nav__item">
-  <a href="#fluxo-de-trabalho" class="md-nav__link">
+  <a href="#exemplos-de-uso" class="md-nav__link">
     <span class="md-ellipsis">
-      Fluxo de Trabalho
+      Exemplos de Uso
     </span>
   </a>
   
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#exemplo-de-uso" class="md-nav__link">
-    <span class="md-ellipsis">
-      Exemplo de Uso
-    </span>
-  </a>
-  
-    <nav class="md-nav" aria-label="Exemplo de Uso">
+    <nav class="md-nav" aria-label="Exemplos de Uso">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
-  <a href="#adicionar-ou-atualizar-metadados" class="md-nav__link">
+  <a href="#salvar-metadados" class="md-nav__link">
     <span class="md-ellipsis">
-      Adicionar ou Atualizar Metadados
+      Salvar Metadados
     </span>
   </a>
   
@@ -633,9 +564,27 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#remover-metadados" class="md-nav__link">
+  <a href="#deletar-metadados" class="md-nav__link">
     <span class="md-ellipsis">
-      Remover Metadados
+      Deletar Metadados
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#salvar-dados-da-etapa" class="md-nav__link">
+    <span class="md-ellipsis">
+      Salvar Dados da Etapa:
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#renderizar-um-campo-de-input" class="md-nav__link">
+    <span class="md-ellipsis">
+      Renderizar um Campo de Input
     </span>
   </a>
   
@@ -647,9 +596,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#consideracoes-finais" class="md-nav__link">
+  <a href="#conclusao" class="md-nav__link">
     <span class="md-ellipsis">
-      Considerações Finais
+      Conclusão
     </span>
   </a>
   
@@ -733,14 +682,7 @@
 <h1 id="implementacao-de-metadados-dinamicos">Implementação de Metadados Dinâmicos</h1>
 <h2 id="arquivos-e-classes">Arquivos e Classes</h2>
 <pre class="mermaid"><code>classDiagram
-    AjaxHandler --&gt; MetadataHandler
     MetadataHandler --&gt; ProcessMetadataManager
-
-    class AjaxHandler {
-        +__construct()
-        +handle_ajax_request()
-        +check_permissions()
-    }
 
     class MetadataHandler {
         +handle_save_metadata()
@@ -750,128 +692,70 @@
     }
 
     class ProcessMetadataManager {
-        +save_metadata(step_id, meta_data, meta_key)
+        +save_metadata(step_id, meta_value, meta_key)
+        +save_step_data(step_id, process_id)
         +get_metadata(step_id)
         +delete_metadata(step_id, meta_key)
+        +render_input_field(type, args)
         +sanitize_metadata(meta_data)
         +validate_metadata(meta_data)
     }</code></pre>
-<h3 id="processmetadatamanagerphp"><code>ProcessMetadataManager.php</code></h3>
+<h2 id="processmetadatamanagerphp">ProcessMetadataManager.php</h2>
 <p>Esta classe é responsável por gerenciar os metadados dinâmicos associados às etapas de um processo. Suas principais responsabilidades incluem salvar, recuperar e deletar metadados no banco de dados do WordPress.</p>
-<h4 id="metodos-principais">Métodos Principais</h4>
+<h2 id="metodos-principais">Métodos Principais</h2>
 <ul>
 <li>
-<p><strong>save_metadata($step_id, $meta_data, $meta_key = " ")</strong>: Adiciona ou atualiza um metadado dinâmico para uma etapa específica. Sanitiza e valida os dados antes de salvá-los como JSON.</p>
+<p><strong>save_metadata($step_id, $meta_value, $meta_key)</strong>: Adiciona ou atualiza um metadado dinâmico para uma etapa específica. Se a chave do metadado não for fornecida, um identificador único é gerado. O valor do metadado é sanitizado e validado antes de ser salvo.</p>
 </li>
 <li>
-<p><strong>get_metadata($step_id)</strong>: Recupera todos os metadados dinâmicos associados a uma etapa específica.</p>
+<p><strong>save_step_data($step_id, $process_id)</strong>: Salva os dados dos campos de uma etapa do processo, armazenando todos os metadados associados a esta etapa no post_meta do processo.</p>
 </li>
 <li>
-<p><strong>delete_metadata($step_id, $meta_key)</strong>: Remove um metadado dinâmico específico de uma etapa.</p>
+<p><strong>get_metadata($step_id)</strong>: Recupera todos os metadados dinâmicos associados a uma etapa específica. Retorna um array de metadados filtrados pelo prefixo definido.</p>
 </li>
 <li>
-<p><strong>sanitize_metadata($meta_data)</strong>: Sanitiza os dados dos metadados.</p>
+<p><strong>delete_metadata($step_id, $meta_key)</strong>: Remove um metadado dinâmico específico de uma etapa, retornando um valor booleano indicando o sucesso ou falha da operação.</p>
 </li>
 <li>
-<p><strong>validate_metadata($meta_data)</strong>: Valida os dados dos metadados.</p>
+<p><strong>render_input_field($type, $args)</strong>: Renderiza um campo de input com base no tipo especificado. O tipo de campo é adicionado aos argumentos, e os dados do campo são salvos como metadado para uso posterior.</p>
+</li>
+<li>
+<p><strong>sanitize_metadata($meta_data)</strong>: Sanitiza os dados do metadado, garantindo que os campos como 'type', 'name', 'value', 'label', e 'options' sejam tratados corretamente antes do armazenamento.</p>
+</li>
+<li>
+<p><strong>validate_metadata($meta_data)</strong>: Valida os dados do metadado, verificando se o campo "name" foi fornecido.</p>
 </li>
 </ul>
-<h3 id="metadatahandlerphp"><code>MetadataHandler.php</code></h3>
-<p>Esta classe é responsável por lidar com as requisições relacionadas aos metadados. Atua como intermediária entre as requisições AJAX e a <code>ProcessMetadataManager</code>.</p>
-<h4 id="metodos-principais_1">Métodos Principais</h4>
-<ul>
-<li>
-<p><strong>handle_save_metadata()</strong>: Lida com a requisição para salvar metadados.</p>
-</li>
-<li>
-<p><strong>handle_get_metadata()</strong>: Lida com a requisição para recuperar metadados.</p>
-</li>
-<li>
-<p><strong>handle_delete_metadata()</strong>: Lida com a requisição para deletar metadados.</p>
-</li>
-<li>
-<p><strong>handle_save_step_data()</strong>: Lida com a requisição para salvar dados de uma etapa.</p>
-</li>
-</ul>
-<h3 id="ajaxhandlerphp"><code>AjaxHandler.php</code></h3>
-<p>Esta classe registra os endpoints AJAX no WordPress e direciona as requisições para os métodos apropriados no <code>MetadataHandler</code>.</p>
-<h4 id="metodos-principais_2">Métodos Principais</h4>
-<ul>
-<li>
-<p><strong>__construct()</strong>: Registra os hooks AJAX do WordPress.</p>
-</li>
-<li>
-<p><strong>handle_ajax_request()</strong>: Lida com as requisições AJAX, verifica a segurança (nonce) e direciona a ação para o método correspondente no <code>MetadataHandler</code>.</p>
-</li>
-<li>
-<p><strong>check_permissions()</strong>: Verifica as permissões do usuário para garantir que apenas usuários autorizados possam realizar ações específicas.</p>
-</li>
-</ul>
-<h2 id="fluxo-de-trabalho">Fluxo de Trabalho</h2>
-<pre class="mermaid"><code>sequenceDiagram
-    participant User as User
-    participant Browser as Browser
-    participant AjaxHandler as AjaxHandler
-    participant MetadataHandler as MetadataHandler
-    participant ProcessMetadataManager as ProcessMetadataManager
-    participant Database as Database
-
-    User-&gt;&gt;Browser: Triggers AJAX Request (save_metadata)
-    Browser-&gt;&gt;AjaxHandler: Sends AJAX Request
-    AjaxHandler-&gt;&gt;AjaxHandler: handle_ajax_request()
-    AjaxHandler-&gt;&gt;MetadataHandler: handle_save_metadata()
-    MetadataHandler-&gt;&gt;ProcessMetadataManager: save_metadata(step_id, meta_data, meta_key)
-    ProcessMetadataManager-&gt;&gt;ProcessMetadataManager: sanitize_metadata(meta_data)
-    ProcessMetadataManager-&gt;&gt;ProcessMetadataManager: validate_metadata(meta_data)
-    ProcessMetadataManager-&gt;&gt;Database: update_post_meta(step_id, meta_key, serialized_meta_data)
-    Database--&gt;&gt;ProcessMetadataManager: Response (success/failure)
-    ProcessMetadataManager--&gt;&gt;MetadataHandler: Response (success/failure)
-    MetadataHandler--&gt;&gt;AjaxHandler: Response (success/failure)
-    AjaxHandler--&gt;&gt;Browser: Sends AJAX Response (JSON)
-    Browser--&gt;&gt;User: Displays Result</code></pre>
-<ol>
-<li>
-<p><strong>Requisição AJAX</strong>: Quando uma ação relacionada aos metadados é disparada no front-end, uma requisição AJAX é enviada para um endpoint registrado pelo <code>AjaxHandler</code>.</p>
-</li>
-<li>
-<p><strong>Manipulação da Requisição</strong>: O <code>AjaxHandler</code> verifica a validade da requisição (por exemplo, verificando um nonce de segurança) e direciona a ação para o método correspondente no <code>MetadataHandler</code>.</p>
-</li>
-<li>
-<p><strong>Processamento dos Metadados</strong>: O <code>MetadataHandler</code> utiliza os métodos do <code>ProcessMetadataManager</code> para realizar a operação solicitada (salvar, recuperar, deletar).</p>
-</li>
-<li>
-<p><strong>Resposta AJAX</strong>: O resultado da operação é retornado ao front-end como uma resposta JSON.</p>
-</li>
-</ol>
-<h2 id="exemplo-de-uso">Exemplo de Uso</h2>
-<h3 id="adicionar-ou-atualizar-metadados">Adicionar ou Atualizar Metadados</h3>
-<div class="language-php highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="cp">&lt;?</span>
-</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="nv">$meta_data</span> <span class="o">=</span> <span class="k">array</span><span class="p">(</span>
-</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>        <span class="s2">&quot;type&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;text&quot;</span><span class="p">,</span>
-</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>        <span class="s2">&quot;placeholder&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;Digite uma informação...&quot;</span><span class="p">,</span>
-</span><span id="__span-0-5"><a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>        <span class="s2">&quot;name&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;input-de-texto&quot;</span><span class="p">,</span>
-</span><span id="__span-0-6"><a id="__codelineno-0-6" name="__codelineno-0-6" href="#__codelineno-0-6"></a>        <span class="s2">&quot;label&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;Informação&quot;</span><span class="p">,</span>
-</span><span id="__span-0-7"><a id="__codelineno-0-7" name="__codelineno-0-7" href="#__codelineno-0-7"></a>        <span class="s2">&quot;value&quot;</span> <span class="o">=&gt;</span> <span class="s2">&quot;valor inicial&quot;</span>
-</span><span id="__span-0-8"><a id="__codelineno-0-8" name="__codelineno-0-8" href="#__codelineno-0-8"></a>    <span class="p">);</span>
-</span><span id="__span-0-9"><a id="__codelineno-0-9" name="__codelineno-0-9" href="#__codelineno-0-9"></a>
-</span><span id="__span-0-10"><a id="__codelineno-0-10" name="__codelineno-0-10" href="#__codelineno-0-10"></a>    <span class="nv">$step_id</span> <span class="o">=</span> <span class="mi">123</span><span class="p">;</span> <span class="c1">// ID da etapa</span>
-</span><span id="__span-0-11"><a id="__codelineno-0-11" name="__codelineno-0-11" href="#__codelineno-0-11"></a>    <span class="nv">$meta_key</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="p">;</span> <span class="c1">// Deixe vazio para gerar uma nova chave única ou forneça uma existente para atualizar</span>
-</span><span id="__span-0-12"><a id="__codelineno-0-12" name="__codelineno-0-12" href="#__codelineno-0-12"></a>    <span class="nx">ProcessMetadataManager</span><span class="o">::</span><span class="na">save_metadata</span><span class="p">(</span><span class="nv">$step_id</span><span class="p">,</span> <span class="nv">$meta_data</span><span class="p">,</span> <span class="nv">$meta_key</span><span class="p">);</span>
+<h2 id="exemplos-de-uso">Exemplos de Uso</h2>
+<h3 id="salvar-metadados">Salvar Metadados</h3>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-0-1"><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="cp">&lt;?php</span>
+</span><span id="__span-0-2"><a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>    <span class="nx">ProcessMetadataManager</span><span class="o">::</span><span class="na">save_metadata</span><span class="p">(</span><span class="nv">$step_id</span><span class="p">,</span> <span class="nv">$meta_value</span><span class="p">,</span> <span class="nv">$meta_key</span><span class="p">);</span>
+</span><span id="__span-0-3"><a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>    <span class="nx">Recuperar</span> <span class="nx">Metadados</span><span class="o">:</span>
+</span><span id="__span-0-4"><a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="cp">?&gt;</span>
 </span></code></pre></div>
 <h3 id="recuperar-metadados">Recuperar Metadados</h3>
-<div class="language-php highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="cp">&lt;?</span>
-</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="nv">$step_id</span> <span class="o">=</span> <span class="mi">123</span><span class="p">;</span> <span class="c1">// ID da etapa</span>
-</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>    <span class="nv">$metadata</span> <span class="o">=</span> <span class="nx">ProcessMetadataManager</span><span class="o">::</span><span class="na">get_metadata</span><span class="p">(</span><span class="nv">$step_id</span><span class="p">);</span>
-</span><span id="__span-1-4"><a id="__codelineno-1-4" name="__codelineno-1-4" href="#__codelineno-1-4"></a>    <span class="c1">// $metadata agora contém todos os metadados dinâmicos associados a esta etapa</span>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-1-1"><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="cp">&lt;?php</span>
+</span><span id="__span-1-2"><a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>    <span class="nv">$metadata</span> <span class="o">=</span> <span class="nx">ProcessMetadataManager</span><span class="o">::</span><span class="na">get_metadata</span><span class="p">(</span><span class="nv">$step_id</span><span class="p">);</span>
+</span><span id="__span-1-3"><a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a><span class="cp">?&gt;</span>
 </span></code></pre></div>
-<h3 id="remover-metadados">Remover Metadados</h3>
-<div class="language-php highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="cp">&lt;?</span>
-</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="nv">$step_id</span> <span class="o">=</span> <span class="mi">123</span><span class="p">;</span> <span class="c1">// ID da etapa</span>
-</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a>    <span class="nv">$meta_key</span> <span class="o">=</span> <span class="s1">&#39;dynamic_field_123456&#39;</span><span class="p">;</span> <span class="c1">// A chave do metadado a ser removido</span>
-</span><span id="__span-2-4"><a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>    <span class="nx">ProcessMetadataManager</span><span class="o">::</span><span class="na">delete_metadata</span><span class="p">(</span><span class="nv">$step_id</span><span class="p">,</span> <span class="nv">$meta_key</span><span class="p">);</span>
+<h3 id="deletar-metadados">Deletar Metadados</h3>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-2-1"><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="cp">&lt;?php</span>
+</span><span id="__span-2-2"><a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a>    <span class="nx">ProcessMetadataManager</span><span class="o">::</span><span class="na">delete_metadata</span><span class="p">(</span><span class="nv">$step_id</span><span class="p">,</span> <span class="nv">$meta_key</span><span class="p">);</span>
+</span><span id="__span-2-3"><a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="cp">?&gt;</span>
 </span></code></pre></div>
-<h2 id="consideracoes-finais">Considerações Finais</h2>
-<p>Essa implementação oferece uma solução robusta para gerenciar metadados dinâmicos em processos e etapas no WordPress. Seguindo as melhores práticas de desenvolvimento, o sistema é seguro, eficiente e fácil de integrar com outras funcionalidades do WordPress.</p>
+<h3 id="salvar-dados-da-etapa">Salvar Dados da Etapa:</h3>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-3-1"><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="cp">&lt;?php</span>
+</span><span id="__span-3-2"><a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="nx">ProcessMetadataManager</span><span class="o">::</span><span class="na">save_step_data</span><span class="p">(</span><span class="nv">$step_id</span><span class="p">,</span> <span class="nv">$process_id</span><span class="p">);</span>
+</span><span id="__span-3-3"><a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="cp">?&gt;</span>
+</span></code></pre></div>
+<h3 id="renderizar-um-campo-de-input">Renderizar um Campo de Input</h3>
+<div class="language-php highlight"><pre><span></span><code><span id="__span-4-1"><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="cp">&lt;?php</span>
+</span><span id="__span-4-2"><a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="nx">ProcessMetadataManager</span><span class="o">::</span><span class="na">render_input_field</span><span class="p">(</span><span class="s1">&#39;text&#39;</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;step_id&#39;</span> <span class="o">=&gt;</span> <span class="nv">$step_id</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;campo_exemplo&#39;</span><span class="p">,</span> <span class="s1">&#39;label&#39;</span> <span class="o">=&gt;</span> <span class="s1">&#39;Campo de Exemplo&#39;</span><span class="p">]);</span>
+</span><span id="__span-4-3"><a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a><span class="cp">?&gt;</span>
+</span></code></pre></div>
+<h2 id="conclusao">Conclusão</h2>
+<p>É importante garantir que os IDs das etapas sejam válidos e que os dados a serem salvos sejam sanitizados e validados para evitar problemas de segurança e integridade de dados.
+A classe utiliza funções nativas do WordPress para manipulação de metadados, garantindo uma integração adequada com a base de dados.</p>
 
 
 
