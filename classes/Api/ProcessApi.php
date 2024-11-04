@@ -67,7 +67,6 @@ class ProcessApi extends ObatalaAPI {
             'permission_callback' => '__return_true',
         ]);
 
-       
         // Route to add a comment to the process
         $this->add_route('process_obatala/(?P<id>\d+)/comment', [
             'methods' => 'POST',
@@ -86,33 +85,6 @@ class ProcessApi extends ObatalaAPI {
             ]
         ]);
 
-        // Rota para associar e gerenciar historico de setores das etapas
-        $this->add_route('process_obatala/(?P<id>\d+)/assosiate_sector', [
-            'methods' => 'POST',
-            'callback' => [$this, 'assosiate_sector'],
-            'permission_callback' => '__return_true',
-            'args' => [
-                'sector_id' => [
-                    'required' => true,
-                    'validate_callback' => function($param) {
-                        return is_string($param);
-                    }
-                ],
-                'node_id' => [
-                    'required' => true,
-                    'validate_callback' => function($param) {
-                        return !empty($param) && is_string($param);
-                    }
-                ]
-            ]
-        ]);
-
-        // Rota para verificar as permisoes
-        $this->add_route('process_obatala/(?P<id>\d+)/check_permision', [
-            'methods' => 'GET',
-            'callback' => [$this, 'check_permision'],
-            'permission_callback' => '__return_true',
-        ]);
     }
     
     public function get_current_stage($request) {
@@ -145,6 +117,7 @@ class ProcessApi extends ObatalaAPI {
         }
         return true;
     }
+    
     public function get_comments($request) {
         $post_id = (int) $request['id'];
         
@@ -168,7 +141,6 @@ class ProcessApi extends ObatalaAPI {
         }
     }
     
-
     public function add_comment($request) {
         $post_id = (int) $request['id'];
         $content = sanitize_text_field($request['content']);
@@ -190,94 +162,6 @@ class ProcessApi extends ObatalaAPI {
         }
     }
 
-    public function assosiate_sector($request) {
-        // Obter os parâmetros do request
-        $process_id = (int) $request['id'];
-        $sector_id = sanitize_text_field($request['sector_id']);
-        $node_id = sanitize_text_field($request['node_id']);
-        
-        // Verificar se o processo existe
-        $process = get_post($process_id);
-        if (!$process || $process->post_type !== 'process_type') {
-            return new WP_REST_Response('Processo não encontrado ou tipo de processo inválido', 404);
-        }
-    
-        // Obter os dados do flowData do processo
-        $flow_data = get_post_meta($process_id, 'flowData', true);
-    
-        // Verificar se o flowData está configurado corretamente
-        if (!isset($flow_data['nodes']) || !is_array($flow_data['nodes'])) {
-            return new WP_REST_Response('Os dados do fluxo não estão configurados corretamente', 400);
-        }
-    
-        // Procurar o nó correspondente ao node_id fornecido
-        $node_key = array_search($node_id, array_column($flow_data['nodes'], 'id'));
-        if ($node_key === false) {
-            return new WP_REST_Response('Nó não encontrado nos dados do fluxo', 404);
-        }
-    
-        // Atualizar o current_sector
-        update_post_meta($process_id, 'current_sector', $sector_id);
-    
-        // Adicionar o setor ao histórico da etapa (node)
-        if (!isset($flow_data['nodes'][$node_key]['sector_history'])) {
-            $flow_data['nodes'][$node_key]['sector_history'] = [];
-        }
-    
-        // Adicionar o novo setor ao histórico
-        $flow_data['nodes'][$node_key]['sector_history'][] = $sector_id;
-    
-        // Atualizar o flowData com o novo histórico
-        $updated = update_post_meta($process_id, 'flowData', $flow_data);
-    
-        // Verificar se a atualização foi bem-sucedida
-        if ($updated) {
-            return new WP_REST_Response('Setor associado com sucesso', 200);
-        } else {
-            return new WP_REST_Response('Erro ao associar o setor', 500);
-        }
-    }
 
-    public function check_user_logged_in() {
-        return get_current_user_id() !== 0; // Retorna true se o usuário está logado
-    }
-
-    // Funçao informar se o usuario tem permisao permisao
-    public function check_permision($request){
-        $process_id = (int) $request['id'];
-        // Pega o setor atual da etapa
-        $curent_sector = get_post_meta($process_id, 'current_sector', true);
-
-        // Pega as informações do usuário atual
-        $id_user = Teste::get_user_id();
-        
-        // verifica se o usuario esta autenticado
-        if($id_user == 0){
-            return new WP_REST_Response([
-                'mensage' => 'Usuário não autenticado.',
-                'id_user' =>  $id_user
-            ], 403);
-        }
-
-        // Pega os setores que estão associados ao usuário
-        $user_sector = get_user_meta($id_user, 'associated_sector', false);
-
-        // Pega a permisao do usuario
-        $permision = get_user_meta($id_user, 'wp_capabilities');
-
-        // Verifica se este usuário possui algum setor associado e percorre o array
-        if(!empty($user_sector) && is_array($user_sector)){
-            foreach ($user_sector as $sector) {
-                // Verifica se algum setor do usuário é igual ao current_sector
-                if (in_array($curent_sector, $sector)) {
-                    return new WP_REST_Response($permision, 200);
-                }else{
-                    return new WP_REST_Response('Usuário não possui permissão para este setor.', 403);
-                }
-            }
-        }else{
-            return new WP_REST_Response('Usuário não possui setores vinculados.', 403);
-        }
-    }
 
 }

@@ -1,7 +1,6 @@
 <?php
 
 namespace Obatala\Admin;
-use Obatala\Entities\Teste;
 
 if (!defined('ABSPATH')) {
     exit; // Se sim, encerra a execução para segurança
@@ -18,7 +17,6 @@ class Enqueuer {
     ];
     
     public static function init() {
-        Teste::get_user_id();
         add_action('admin_enqueue_scripts', [self::class, 'enqueue_admin_scripts']);    
     }
 

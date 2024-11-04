@@ -6,6 +6,7 @@ defined('ABSPATH') || exit;
 
 use WP_REST_Response;
 use WP_Query;
+use Obatala\Entities\Sector;
 
 class SectorApi extends ObatalaAPI {
 
@@ -282,7 +283,7 @@ class SectorApi extends ObatalaAPI {
             return new WP_REST_Response('Nome do setor vazio', 400); // Retorna erro se o nome estiver vazio
         }
 
-        $user = $this->return_sector_users($sector_id);
+        $user = Sector::return_sector_users($sector_id);
 
         // verifica se não tem usuarios assocados a um setor
         if(empty($user)){
@@ -386,50 +387,16 @@ class SectorApi extends ObatalaAPI {
             return new WP_REST_Response('Nome do setor vazio', 400); // Retorna erro se o nome estiver vazio
         }
 
-        $users = $this->return_sector_users($sector_id);
+        $users = Sector::return_sector_users($sector_id);
 
-        // Se não encontrar usuários, retorna um erro (talvez seja redundante por conta da funçao return_sector_users())
+        // Se não encontrar usuários, retorna um erro 
         if (empty($users)) {
             return new WP_REST_Response('Nenhum usuário encontrado para o setor especificado.', 404);
         }
 
         return new WP_REST_Response($users, 200);
     }
-
-    // Função que retorna lista de usuarios associados a um setor
-    public function return_sector_users($sector_id) {
-        // Consulta os IDs dos usuários que possuem 'associated_sector' nos metadados
-        $user_query = get_users(array(
-            'meta_key'   => 'associated_sector', // Chave do meta valor associado ao setor
-            'fields'     => 'ID'                 // Retorna apenas os IDs dos usuários
-        ));
     
-        if (empty($user_query)) {
-            return null; // Se não encontrar nenhum usuário, retorna null
-        }
-    
-        // Buscar os dados dos usuários com base nos IDs e verificar se o setor está associado
-        $users = [];
-        foreach ($user_query as $user_id) {
-            $sectors = get_user_meta($user_id, 'associated_sector', true);
-    
-            // Verifica se o setor realmente está associado ao usuário (em caso de array serializado)
-            if (is_array($sectors) && in_array($sector_id, $sectors)) {
-                $user_data = get_userdata($user_id);
-                if ($user_data) {
-                    $users[] = [
-                        'ID' => $user_data->ID,
-                        'username' => $user_data->user_login,
-                        'display_name' => $user_data->display_name,
-                        'email' => $user_data->user_email,
-                    ];
-                }
-            }
-        }
-        return $users; // Retorna a lista de usuários associados ao setor
-    }
-    
-
     public function get_all_sectors_with_users($request) {
         // Recuperar setores já existentes no formato JSON
         $setores_json = get_option('obatala_setores', '{}'); // Recupera como JSON ou inicializa como um objeto vazio

@@ -2,74 +2,84 @@
 
 namespace Obatala\Entities;
 
-defined('ABSPATH') || exit;
-
 class Sector {
 
-    public static function get_post_type() {
-        return 'sector_obatala';
+  // inplementar metodo init
+
+  // Função para verificar a permissão
+  public static function check_permission($process_id) {
+    // Verifica se o usuário está autenticado
+    $user_id = wp_get_current_user();
+    
+    if ($user_id->ID === 0) {
+      return [
+        'status' => false,
+        'message' => 'Usuário não autenticado.',
+        'data' => $user_id
+        ];
     }
 
-    public static function register_post_type() {
-        $labels = array(
-            'name'                  => _x('Setores', 'Post type general name', 'obatala'),
-            'singular_name'         => _x('Setor', 'Post type singular name', 'obatala'),
-            'menu_name'             => _x('Setor', 'Admin Menu text', 'obatala'),
-            'name_admin_bar'        => _x('Setor', 'Add New on Toolbar', 'obatala'),
-            'add_new'               => __('Adicionar Novo', 'obatala'),
-            'add_new_item'          => __('Adicionar Novo Setor', 'obatala'),
-            'new_item'              => __('Novo Setor', 'obatala'),
-            'edit_item'             => __('Editar Setor', 'obatala'),
-            'view_item'             => __('Ver Setor', 'obatala'),
-            'all_items'             => __('Todos os Setores', 'obatala'),
-            'search_items'          => __('Procurar Setores', 'obatala'),
-            'not_found'             => __('Nenhum setor encontrado.', 'obatala'),
-            'not_found_in_trash'    => __('Nenhum setor encontrado na lixeira.', 'obatala')
-        );
+    // Pega os setores associados ao usuário
+    $user_sectors = get_user_meta($user_id->ID, 'associated_sector', false);
 
-        $args = array(
-            'labels'             => $labels,
-            'public'             => true,
-            'publicly_queryable' => true,
-            'show_ui'            => true,
-            'show_in_menu'       => true,
-            'query_var'          => true,
-            'rewrite'            => array('slug' => 'obatala_sectors'),
-            'capability_type'    => 'post',
-            /* 'capabilities'       => array(
-                'edit_post'          => 'edit_post',
-                'read_post'          => 'read_post',
-                'delete_post'        => 'delete_post',
-                'edit_posts'         => 'edit_posts',
-                'edit_others_posts'  => 'edit_others_posts',
-                'publish_posts'      => 'publish_posts',
-                'read_private_posts' => 'read_private_posts'
-            ), */
-            'has_archive'        => true,
-            'hierarchical'       => false,
-            'menu_position'      => 100,
-            'supports'           => array('title', 'editor'),
-            'show_in_rest'       => true,
-            'menu_icon'          => 'dashicons-building'
-        );
+    // Pega o sector_id atual do precess
+    $sector_id = get_post_meta($process_id,'current_sector', true);
 
-        error_log('Post type registered: ' . self::get_post_type()); // Log para depuração
+    // Verifica se o usuário possui setores associados
+    if (!empty($user_sectors) && is_array($user_sectors)) {
+      // Verifica se algum setor do usuário é igual ao setor_id fornecido
+      foreach ($user_sectors as $sector) {
+        if (in_array($sector_id, $sector)) {
+          return [
+            'status' => true,
+            'message' => 'Permissão concedida.',
+            'Cargo:' => $user_id->roles
+            ];
+        }
+      }
+          return [
+              'status' => false,
+              'message' => 'Usuário não possui permissão.'
+          ];
+      } else {
+      return [
+        'status' => false,
+        'message' => 'Usuário não possui setores vinculados.'
+        ];
+    }
+  }
 
-        register_post_type(self::get_post_type(), $args);
+  // Função que retorna lista de usuarios associados a um setor
+  public static function return_sector_users($sector_id) {
+    // Consulta os IDs dos usuários que possuem 'associated_sector' nos metadados
+    $user_query = get_users(array(
+        'meta_key'   => 'associated_sector', // Chave do meta valor associado ao setor
+        'fields'     => 'ID'                 // Retorna apenas os IDs dos usuários
+    ));
+
+    if (empty($user_query)) {
+        return null; // Se não encontrar nenhum usuário, retorna null
     }
 
-    public static function register_sector_meta() {
-        // Registrando o metadado para a descrição do setor
-        register_post_meta(self::get_post_type(), 'sector_description', [
-            'type' => 'string',
-            'description' => 'Descrição do Setor',
-            'single' => true,
-            'show_in_rest' => true, // Isso garante que o metadado será acessível via API REST
-        ]);
-    }
+    // Buscar os dados dos usuários com base nos IDs e verificar se o setor está associado
+    $users = [];
+    foreach ($user_query as $user_id) {
+        $sectors = get_user_meta($user_id, 'associated_sector', true);
 
-    public static function init() {
-        self::register_post_type();
-        self::register_sector_meta();
+        // Verifica se o setor realmente está associado ao usuário (em caso de array serializado)
+        if (is_array($sectors) && in_array($sector_id, $sectors)) {
+            $user_data = get_userdata($user_id);
+            if ($user_data) {
+                $users[] = [
+                    'ID' => $user_data->ID,
+                    'username' => $user_data->user_login,
+                    'display_name' => $user_data->display_name,
+                    'email' => $user_data->user_email,
+                ];
+            }
+        }
     }
+    return $users; // Retorna a lista de usuários associados ao setor
+  }
+
 }
