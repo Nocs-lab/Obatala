@@ -1,5 +1,6 @@
 <?php
 namespace Obatala\Api;
+use Obatala\Entities\Sector;
 
 defined('ABSPATH') || exit;
 
@@ -8,10 +9,13 @@ class ProcessTypeApi extends ObatalaAPI {
 
 
     public function register_routes() {
-        $this->add_route('process_type/(?P<id>\d+)/meta', [
+        $this->add_route('process_type/teste', [
             'methods' => 'GET',
-            'callback' => [$this, 'get_meta'],
-            'permission_callback' => '__return_true',
+            'callback' => [$this, 'teste'],
+            'permission_callback' => function(){
+                print_r(Sector::check_permission(180));
+                return Sector::check_permission(180);
+            },
         ]);
 
         $this->add_route('process_type/(?P<id>\d+)/meta', [
@@ -191,5 +195,9 @@ class ProcessTypeApi extends ObatalaAPI {
         } else {
             return new WP_REST_Response('Erro ao associar o setor', 500);
         }
+    }
+
+    public function teste($request){  
+        
     }
 }

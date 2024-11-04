@@ -5,22 +5,23 @@ namespace Obatala\Entities;
 class Sector {
 
   // inplementar metodo init
-
+  
   // Função para verificar a permissão
   public static function check_permission($process_id) {
-    // Verifica se o usuário está autenticado
-    $user_id = wp_get_current_user();
     
-    if ($user_id->ID === 0) {
+    // Verifica se o usuário está autenticado
+    $user = wp_get_current_user();
+    //print_r($user);
+    if ($user->ID === 0) {
       return [
         'status' => false,
         'message' => 'Usuário não autenticado.',
-        'data' => $user_id
+        'data' => $user
         ];
     }
 
     // Pega os setores associados ao usuário
-    $user_sectors = get_user_meta($user_id->ID, 'associated_sector', false);
+    $user_sectors = get_user_meta($user->ID, 'associated_sector', false);
 
     // Pega o sector_id atual do precess
     $sector_id = get_post_meta($process_id,'current_sector', true);
@@ -33,7 +34,7 @@ class Sector {
           return [
             'status' => true,
             'message' => 'Permissão concedida.',
-            'Cargo:' => $user_id->roles
+            'Cargo:' => $user->roles
             ];
         }
       }
