@@ -8,22 +8,49 @@ Este documento descreve a estrutura de arquivos do plugin "Obatala", que é util
 
 ```
 └── 📁Obatala
-    └── .gitignore
-    └── README.md
-    └── archive-process_obatala.php
+    └── 📁.github
+        └── 📁workflows
+            └── release.yml
+            └── version.yml
+    └── 📁build
+        └── index.asset.php
+        └── index.js
+        └── index.js.map
+        └── style-index-rtl.css
+        └── style-index.css
+        └── style-index.css.map
     └── 📁classes
         └── 📁Admin
             └── AdminMenu.php
+            └── Enqueuer.php
             └── SettingsPage.php
+        └── 📁Api
+            └── CustomPostTypeApi.php
+            └── ObatalaAPI.php
+            └── ProcessApi.php
+            └── ProcessTypeApi.php
+            └── SectorApi.php
         └── 📁Entities
-            └── ProcessCollection.php
-            └── ProcessStepCollection.php
-    └── composer.json
+            └── Process.php
+            └── ProcessType.php
+            └── Sector.php
+        └── 📁Metadata
+            └── ProcessMetadataManager.php
+    └── 📁css
+        └── react-flow.css
+        └── style.css
+    └── 📁developer
+        └── create-zip.js
+        └── update-plugin-version.js
+    └── 📁languages
+        └── obatala-pt_BR.mo
+        └── obatala-pt_BR.po
+        └── obatala.pot
     └── 📁mk-docs
         └── 📁docs
-            └── guia-dev.md
-            └── gutenberg.md
-            └── index.md
+            └── 📁metadados
+                └── implementacao.md
+                └── metadados.md
             └── 📁modelagem
                 └── 📁classes
                     └── etapa.md
@@ -33,65 +60,196 @@ Este documento descreve a estrutura de arquivos do plugin "Obatala", que é util
                     └── setor.md
                 └── index.md
                 └── processos.md
+            └── 📁roadmap
+                └── sprint-1.md
+                └── sprint-2.md
+                └── sprint-3.md
+                └── sprint-4.md
+                └── sprint-5.md
+                └── sprint-6.md
+                └── stories.md
+            └── 📁stylesheets
+                └── extra.css
+            └── 📁tutoriais
+                └── guia-dev.md
+            └── gutenberg.md
+            └── index.md
             └── organizacao.md
             └── posts-customizados.md
         └── mkdocs.yml
         └── requirements.txt
-    └── obatala.php
-    └── single-process_obatala.php
+    └── 📁src
+        └── 📁admin
+            └── 📁api
+                └── apiRequests.js
+            └── 📁components
+                └── 📁FlowEditor
+                    └── 📁components
+                        └── 📁dragables
+                            └── DragAndDropList.js
+                            └── SortableField.js
+                        └── 📁inputControls
+                            └── DatePickerControls.js
+                            └── FileUploadControls.js
+                            └── LabelWithIcon.js
+                            └── NumberFieldControls.js
+                            └── SelectRadioControls.js
+                            └── TainacanSearch.js
+                            └── TextFieldControls.js
+                        └── 📁reactFlow
+                            └── CustomEdge.js
+                            └── FlowButtons.js
+                            └── NodeContent.js
+                            └── NodeHandle.js
+                        └── FieldComponents.js
+                        └── SlidingDrawer.js
+                    └── 📁context
+                        └── DrawerContext.js
+                        └── FlowContext.js
+                    └── 📁helpers
+                        └── dataValidator.js
+                    └── mockdata.js
+                    └── ProcessFlow.js
+                └── 📁ProcessManager
+                    └── CommentForm.js
+                    └── MetaFieldInputs.js
+                    └── MetroNavigation.js
+                    └── ProcessCreator.js
+                    └── ProcessStage.js
+                └── 📁ProcessTypeManager
+                    └── ProcessTypeForm.js
+                    └── ProcessTypeList.js
+                └── 📁SectorManager
+                    └── SectorCreator.js
+                    └── SectorList.js
+                └── 📁Tainacan
+                    └── 📁TainacanSearch
+                        └── CollectionCard.js
+                        └── ItemCard.js
+                    └── TainacanSearch.js
+                └── ProcessManager.js
+                └── ProcessModelEditor.js
+                └── ProcessTypeManager.js
+                └── ProcessViewer.js
+                └── SectorManager.js
+            └── 📁redux
+                └── reducer.js
+            └── App.js
+        └── index.js
     └── 📁vendor
-        └── autoload.php
         └── 📁composer
-            └── ClassLoader.php
-            └── LICENSE
             └── autoload_classmap.php
             └── autoload_namespaces.php
             └── autoload_psr4.php
             └── autoload_real.php
             └── autoload_static.php
+            └── ClassLoader.php
+            └── installed.json
+            └── installed.php
+            └── InstalledVersions.php
+            └── LICENSE
+        └── autoload.php
     └── 📁view
-        └── component.js
+        └── archive-obatala_steps.php
+        └── archive-process_obatala.php
+        └── single-obatala_steps.php
+        └── single-process_obatala.php
+    └── .gitignore
+    └── composer.json
+    └── obatala.php
+    └── package-lock.json
+    └── package.json
+    └── README.md
 ```
 
 ---
 
 #### Descrição dos Arquivos e Diretórios
 
-- **.gitignore**: Arquivo utilizado para especificar quais arquivos e diretórios devem ser ignorados pelo Git.
-  
-- **README.md**: Arquivo de documentação que fornece uma visão geral do plugin, incluindo instruções de instalação, configuração e uso.
+### 📁 .github/workflows
+Contém os workflows do GitHub Actions para automação de tarefas no projeto.
 
-- **archive-process_obatala.php**: Template de arquivo para exibição de arquivos de processos.
+- **release.yml**: Configura a automação para criar uma nova versão.
+- **version.yml**: Gerencia o versionamento do projeto.
 
-- **classes/**: Diretório que contém as classes PHP principais do plugin, separadas por funcionalidade.
-  - **Admin/**: Contém classes relacionadas à interface de administração do plugin.
-    - **AdminMenu.php**: Classe responsável por adicionar e gerenciar o menu de administração.
-    - **SettingsPage.php**: Classe responsável por gerenciar a página de configurações do plugin.
-  - **Entities/**: Contém classes que representam entidades do plugin.
-    - **ProcessCollection.php**: Classe que define a coleção de processos.
-    - **ProcessStepCollection.php**: Classe que define os passos dos processos.
+### 📁 classes
 
-- **composer.json**: Arquivo de configuração do Composer, usado para gerenciar dependências PHP e autoloading.
+#### 📁 Admin
+Classes para gerenciamento administrativo do plugin.
 
-- **mk-docs/**: Diretório que contém a documentação do plugin.
+- **AdminMenu.php**: Gerencia o menu administrativo do WordPress.
+- **Enqueuer.php**: Controla a adição de scripts e estilos no painel.
+- **SettingsPage.php**: Define a página de configurações do plugin.
 
-- **obatala.php**: Arquivo principal do plugin, responsável por inicializar o plugin e carregar suas dependências.
+#### 📁 Api
+Classes de API para interagir com diferentes endpoints.
 
-- **single-process_obatala.php**: Template de arquivo para exibição de um único processo.
+- **CustomPostTypeApi.php**: API para o registro de tipos de post personalizados.
+- **ObatalaAPI.php**: Gerencia as integrações de API principais.
+- **ProcessApi.php**, **ProcessTypeApi.php**, **SectorApi.php**: APIs para operações específicas de processos, tipos de processo e setores.
 
-- **vendor/**: Diretório gerenciado pelo Composer que contém as dependências do plugin.
-  - **autoload.php**: Script de autoloading gerado pelo Composer.
-  - **composer/**: Diretório que contém os arquivos internos do Composer.
-    - **ClassLoader.php**: Classe responsável pelo carregamento automático de classes.
-    - **LICENSE**: Licença do Composer.
-    - **autoload_classmap.php**: Mapa de classes para autoloading.
-    - **autoload_namespaces.php**: Mapa de namespaces para autoloading.
-    - **autoload_psr4.php**: Mapa de namespaces PSR-4 para autoloading.
-    - **autoload_real.php**: Arquivo real de autoloading.
-    - **autoload_static.php**: Mapa estático de autoloading.
+#### 📁 Entities
+Define entidades principais.
 
-- **view/**: Diretório que contém arquivos relacionados à interface de usuário.
-  - **component.js**: Script JavaScript que gerencia a interação do usuário com a interface.
+- **Process.php**: Define a entidade `Processo`.
+- **ProcessType.php**: Define a entidade `Tipo de Processo`.
+- **Sector.php**: Define a entidade `Setor`.
+
+#### 📁 Metadata
+
+- **ProcessMetadataManager.php**: Gerencia metadados de processos.
+
+- **create-zip.js**: Cria um arquivo ZIP do plugin para distribuição.
+- **update-plugin-version.js**: Atualiza a versão do plugin.
+
+### 📁 src
+
+#### 📁 admin
+
+##### 📁 api
+- **apiRequests.js**: Funções para chamadas de API.
+
+##### 📁 components
+
+###### 📁 FlowEditor
+Editor de fluxo para o projeto.
+
+- **dragables**: Componentes para arrastar e soltar, como `DragAndDropList.js`.
+- **inputControls**: Controles personalizados de input, como `DatePickerControls.js`.
+- **reactFlow**: Componentes de fluxo, incluindo `CustomEdge.js`, `NodeContent.js`.
+
+###### 📁 ProcessManager
+Gerenciamento de processos.
+
+- Inclui `CommentForm.js`, `ProcessCreator.js`, entre outros.
+
+###### 📁 ProcessTypeManager
+Gerenciamento de tipos de processo.
+
+- **ProcessTypeForm.js**, **ProcessTypeList.js**: Formulários e listas.
+
+###### 📁 SectorManager
+Gerenciamento de setores.
+
+- **SectorCreator.js**, **SectorList.js**.
+
+###### 📁 Tainacan
+Componentes de integração com o Tainacan.
+
+- **TainacanSearch**: Componente de busca Tainacan.
+- **CollectionCard.js** e **ItemCard.js**: Cards para coleções e itens.
+
+#### 📁 redux
+- **reducer.js**: Gerenciamento do estado do Redux.
+
+- **App.js**: Ponto de entrada do aplicativo.
+
+### Arquivos Raiz
+- **.gitignore**: Define arquivos ignorados pelo Git.
+- **composer.json**: Configuração do Composer.
+- **obatala.php**: Arquivo principal do plugin.
+- **package-lock.json** e **package.json**: Configuração de dependências NPM.
+- **README.md**: Documentação inicial do projeto.
 
 ---
 
@@ -117,11 +275,13 @@ Para uma classe `AdminMenu` localizada em `classes/admin/AdminMenu.php`:
 1. **Namespace**: O namespace pode ser `Obatala\Admin`.
 2. **Declaração da Classe**:
    ```php
-   namespace Obatala\Admin;
+   <?php
+    namespace Obatala\Admin;
 
-   class AdminMenu {
-       // Conteúdo da classe
-   }
+    class AdminMenu {
+        // Conteúdo da classe
+    }
+   ?>
    ```
 
 3. **Configuração no `composer.json`**:
@@ -139,6 +299,6 @@ Com essa configuração, o Composer pode carregar automaticamente a classe `Admi
 
 ---
 
-### Conclusão
+## Conclusão
 
 Este documento apresentou uma visão detalhada da estrutura de arquivos do plugin "Obatala" e explicou como usar namespaces e a nomenclatura de arquivos conforme o padrão PSR-4 para organizar o código de forma eficiente e evitar conflitos de nome. Seguir essas práticas ajuda a manter o código limpo, modular e fácil de manter.

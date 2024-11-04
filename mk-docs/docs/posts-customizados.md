@@ -1,73 +1,74 @@
 # Utilização dos Custom Post Types no Plugin Obatala
 
-No plugin Obatala, utilizamos três tipos de post (custom post types) para gerenciar processos curatoriais e suas etapas: **Process**, **ProcessType** e **ProcessStep**. Cada um desses tipos de post tem um papel específico na configuração e operação do sistema de gestão de processos.
+No plugin Obatala, utilizamos três tipos de post personalizados (Custom Post Types) para gerenciar processos curatoriais e suas etapas: **ProcessManager**, **ProcessTypeManager** e **ProcessModel**. Cada tipo de post tem um papel específico na configuração e operação do sistema de gestão de processos.
 
-### Descrição dos Custom Post Types
+## Descrição dos Custom Post Types
 
-#### 1. ProcessStep
+### 1. ProcessModel
 
-- **Função**: Serve como modelo (mockup) para as etapas de um processo.
-- **Utilização**: Armazena os metadados que serão usados para criar campos personalizados em cada etapa do processo. Esses campos personalizados são exibidos na interface do processo para que os usuários possam interagir.
-- **Estrutura**: Inclui campos para definir o nome da etapa, a descrição, e os metadados associados que especificam o tipo de campo que será exibido na interface do processo.
+- **Função**: Serve como modelo para as etapas de um processo.
+- **Utilização**: Armazena os metadados usados para criar campos personalizados em cada etapa. Esses campos são exibidos na interface do processo para interação dos usuários.
+- **Estrutura**: Inclui campos para o título e a descrição de cada etapa, além dos dados de fluxo (`flowData`), que especificam a sequência e conexão entre as etapas.
 
-#### 2. ProcessType
+### 2. ProcessTypeManager
 
-- **Função**: Serve como modelo (mockup) para tipos de processos.
-- **Utilização**: Armazena o nome do tipo de processo, uma descrição detalhada e uma lista ordenada de steps (etapas) que compõem o processo.
-- **Estrutura**: Contém campos para o nome do processo, a descrição da sua utilidade, e uma referência às etapas (`ProcessStep`) que definem a sequência do processo.
+- **Função**: Define o modelo ou tipo de processo.
+- **Utilização**: Armazena o título do tipo de processo, a descrição e uma lista ordenada de etapas (steps) que compõem o processo. Esse tipo permite gerenciar diferentes modelos de processos, cada um com suas etapas específicas.
+- **Estrutura**: Contém campos para o título e a descrição do processo, além de uma referência às etapas (`ProcessModel`) que definem a sequência do processo.
 
-#### 3. Process
+### 3. ProcessManager
 
-- **Função**: Representa a instância real de um processo na aplicação.
-- **Utilização**: Quando um novo processo é criado, ele é de um determinado tipo (`ProcessType`). Durante a criação, ele consulta o `ProcessType` e os `ProcessStep` associados para gravar os metadados necessários. Esses metadados são usados para criar e interagir com o processo. 
-- **Estrutura**: Inclui campos para o título do processo, uma descrição geral, o tipo do processo, as etapas, e os metadados necessários para a interação.
+- **Função**: Representa a instância real de um processo no sistema.
+- **Utilização**: Quando um novo processo é criado, ele é baseado em um tipo (`ProcessTypeManager`). Durante a criação, ele consulta o `ProcessTypeManager` e o `ProcessModel` associado para gravar os metadados necessários. Esses metadados são usados para criar e interagir com o processo.
+- **Estrutura**: Inclui campos para o título e descrição do processo, o tipo de processo, as etapas e os metadados necessários para a interação.
 
-### Fluxo de Trabalho dos Custom Post Types
+## Fluxo de Trabalho dos Custom Post Types
 
-1. **Definição dos Steps (Etapas)**:
-      - Cria-se um `ProcessStep` para cada etapa que pode fazer parte de um processo.
-      - Define-se os metadados que descrevem os campos personalizados a serem exibidos na interface do processo.
+1. **Definição dos Modelos**:          
 
-2. **Criação do Tipo de Processo**:
-      - Cria-se um `ProcessType` para definir um modelo de processo.
-      - Inclui-se uma lista ordenada de `ProcessStep`, especificando a sequência de etapas que o processo seguirá.
+    - Cria-se um `ProcessModel` para cada etapa que pode fazer parte de um processo.
+    - Define-se os metadados que descrevem os campos personalizados a serem exibidos na interface do processo.
 
-3. **Instanciação de um Processo**:
-      - Cria-se um `Process` baseado em um `ProcessType`.
-      - O `Process` consulta o `ProcessType` e os `ProcessStep` associados para configurar os metadados e campos personalizados.
-      - Esses metadados são gravados no `Process` para criar uma interface interativa onde os usuários podem gerenciar e interagir com cada etapa.
+1. **Criação do Tipo de Processo**:     
 
-### Diagrama do Processo
+    - Cria-se um `ProcessTypeManager` para definir um modelo de processo.
+    - Inclui-se uma lista ordenada de `ProcessModel`, especificando a sequência de etapas que o processo seguirá.
+
+1. **Instanciação de um Processo**:       
+    - Cria-se um `ProcessManager` baseado em um `ProcessTypeManager`.
+    - O `ProcessManager` consulta o `ProcessTypeManager` e as etapas no `ProcessModel` associado para configurar os metadados e campos personalizados.
+    - Esses metadados são gravados no `ProcessManager` para criar uma interface interativa onde os usuários podem gerenciar e interagir com cada etapa.
+
+## Diagrama do Processo
 
 ```mermaid
 classDiagram
-    class ProcessStep {
+    class ProcessModel {
         +String nome
         +String descricao
         +List~Metadados~ metadados
     }
 
-    class ProcessType {
+    class ProcessTypeManager {
         +String nome
         +String descricao
-        +List~ProcessStep~ etapas
+        +List~ProcessModel~ etapas
     }
 
-    class Process {
+    class ProcessManager {
         +String nome
         +String descricao
-        +ProcessType tipo
-        +List~ProcessStep~ etapas
+        +ProcessTypeManager tipo
+        +List~ProcessModel~ etapas
         +List~Metadados~ metadados
     }
 
-    ProcessType "1" -- "*" ProcessStep : inclui
-    Process "1" -- "*" ProcessStep : consulta e inclui
-    Process "1" -- "1" ProcessType : é baseado em
-    ProcessStep "1" -- "*" Metadados : define
-    Process "1" -- "*" Metadados : utiliza
+    ProcessTypeManager "1" -- "*" ProcessModel : inclui
+    ProcessManager "1" -- "*" ProcessModel : consulta e inclui
+    ProcessManager "1" -- "1" ProcessTypeManager : é baseado em
+    ProcessModel "1" -- "*" Metadados : define
+    ProcessManager "1" -- "*" Metadados : utiliza
 ```
 
-### Conclusão
-
-O plugin Obatala utiliza uma estrutura organizada de custom post types para gerenciar processos curatoriais, etapas e tipos de processos. Essa abordagem permite uma configuração flexível e a integração de metadados personalizados, facilitando a criação de interfaces interativas para a gestão de processos dentro do WordPress.
+## Conclusão
+O plugin Obatala utiliza uma estrutura organizada de Custom Post Types para gerenciar processos curatoriais, etapas e tipos de processos. Essa abordagem permite uma configuração flexível e a integração de metadados personalizados, facilitando a criação de interfaces interativas para a gestão de processos dentro do WordPress.
