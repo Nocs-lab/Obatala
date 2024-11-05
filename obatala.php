@@ -69,7 +69,6 @@ class Nocs_ObatalaPlugin {
 		// Register the custom post types and taxonomies
 		add_action('init', ['Obatala\Entities\Process', 'init']);
 		add_action('init', ['Obatala\Entities\ProcessType', 'init']);
-		add_action('init', ['Obatala\Entities\Sector', 'init']);
 
 		// Register and enqueue scripts and styles
 		// Register and enqueue scripts and styles
