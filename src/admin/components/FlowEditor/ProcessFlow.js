@@ -22,7 +22,7 @@ const edgeTypes = {
   buttonedge: ButtonEdge,
 };
 
-const ProcessFlow = forwardRef(({ initialData }, ref) => {
+const ProcessFlow = forwardRef(({ initialData, onSave, onCancel}, ref,) => {
   const {
     nodes,
     edges,
@@ -62,7 +62,7 @@ const ProcessFlow = forwardRef(({ initialData }, ref) => {
   }, [nodes, edges]);
 
   return (
-    <div style={{ width: "100%", height: "650px", position: "relative" }}>
+    <div style={{ width: "100%", height: "60vh", position: "relative" }}>
       {errors.length > 0 && (
         <div style={{ color: "red", padding: "10px" }}>
           <strong>Validation Errors:</strong>
@@ -97,7 +97,10 @@ const ProcessFlow = forwardRef(({ initialData }, ref) => {
           <Background />
         </ReactFlow>
 
-        <ProcessControls />
+        <ProcessControls 
+          onSave={onSave}
+          onCancel={onCancel}
+        />
       </DrawerProvider>
     </div>
   );
