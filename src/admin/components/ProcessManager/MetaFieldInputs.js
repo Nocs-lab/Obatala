@@ -7,6 +7,7 @@ import {
   SelectControl,
   RadioControl,
 } from "@wordpress/components";
+import { upload } from "@wordpress/icons";
 import TainacanSearchControls from "../Tainacan/TainacanSearch";
 
 const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId, initalValue}) => {

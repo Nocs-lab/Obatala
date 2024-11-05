@@ -49,8 +49,7 @@ export const fetchProcesses = () => {
 };
 
 export const fetchSectors = () => {
-    return apiFetch({ path: `/obatala/v1/all_sector_obatala` });
-    
+    return apiFetch({ path: `/obatala/v1/all_sector_obatala` });   
 }; 
 
 export const saveSector = async (sector, editingSector) => {
@@ -61,4 +60,22 @@ export const saveSector = async (sector, editingSector) => {
 
 export const deleteSector = (id) => {
     return apiFetch({ path: `/obatala/v1/delete_sector_obatala/${id}`, method: 'DELETE' });
+};
+
+export const fetchUsers = () => {
+  return apiFetch({ path: `/obatala/v1/sector_obatala/users_obatala` });   
+};
+
+export const fetchUsersBySector = (id) => {
+  return apiFetch({ path: `/obatala/v1/sector_obatala/${id}/users` });   
+};
+
+export const assignUserToSector = (data) => {
+  const path = `/obatala/v1/associate_user_to_sector`;
+  const method = 'POST';
+  return apiFetch({ path: path, method, data: data });   
+};
+
+export const deleteSectorUser = (sectorId, data) => {
+  return apiFetch({ path: `/obatala/v1/sector_obatala/${sectorId}/remove_user`, method: 'POST', data: data });
 };

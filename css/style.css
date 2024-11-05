@@ -71,13 +71,30 @@ h2 {
 h2:has(+ span.badge) {
   margin-bottom: 1rem;
 }
-
-main > .notice-container {
-  margin: 1rem var(--gap-external) 2rem;
-}
 /* #endregion */
 
 /* #region Forms */
+.combobox-selection {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+  width: 100%;
+}
+.combobox-selection .combobox-selected {
+  background-color: var(--primary-50);
+  display: flex;
+  align-items: center;
+  padding-left: 0.5rem;
+}
+.combobox-selection .combobox-selected .components-button.has-icon {
+  height: 30px;
+  padding: 0;
+}
+.combobox-selection + .components-button {
+  margin-top: .5rem;
+}
 .components-base-control,
 .components-base-control:not(.components-checkbox-control)
   + div:has(> .components-base-control) {
@@ -87,8 +104,7 @@ main > .notice-container {
   + .components-base-control,
 .components-base-control:not(.components-checkbox-control)
   + div:has(> .components-base-control),
-.components-base-control + .components-button,
-.selected-steps + .components-button {
+.components-base-control + .components-button {
   margin-top: 1rem;
 }
 .components-base-control__field > label {
@@ -147,24 +163,6 @@ form .components-button-group .components-button {
 }
 .components-combobox-control__suggestions-container > .components-flex {
   height: 38px;
-}
-.selected-steps {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.25rem;
-  margin-top: 0.5rem;
-  width: 100%;
-}
-.selected-steps .selected-step {
-  background-color: var(--primary-50);
-  display: flex;
-  align-items: center;
-  padding-left: 0.5rem;
-}
-.selected-steps .selected-step .components-button.has-icon {
-  height: 30px;
-  padding: 0;
 }
 form.centered {
   margin: 2rem auto;
@@ -235,9 +233,26 @@ table.wp-list-table th {
 }
 /* #endregion */
 
+/* #region Modal */
+.components-modal__header .components-modal__header-heading {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.components-modal__header .components-modal__header-heading .badge {
+  font-size: .8rem;
+}
+/* #endregion */
+
 /* #region Notice */
 .notice-container {
-  margin: 1rem var(--gap-external) 2rem;
+  margin-top: 1rem;
+  margin-bottom: 2rem;
+}
+main > .notice-container {
+  margin-left: var(--gap-external);
+  margin-right: var(--gap-external);
 }
 /* #endregion */
 
@@ -735,6 +750,12 @@ button .components-spinner {
 }
 .title-container strong {
   font-weight: 800;
+}
+.title-container-table {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 .actions {
   display: flex;

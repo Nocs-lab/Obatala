@@ -63,6 +63,7 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
     
             const metaUpdateData = {
                 current_stage: 0,
+                process_type: selectedProcessModel.id,
                 access_level: accessLevel,
                 flowData: metaFields.flowData
             };
@@ -83,7 +84,6 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
     
             // Atualiza o objeto savedProcess com os metas
             savedProcess.meta = metaUpdateData;
-    
             onProcessSaved(savedProcess);
             setNewProcessTitle('');
             setNewProcessType('');

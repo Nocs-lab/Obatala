@@ -38,7 +38,7 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete }) => {
                     <Tooltip text="Delete">
                         <Button
                             icon={<Icon icon={trash} />}
-                            onClick={() => onDelete(row.original.id)}
+                            onClick={() => onDelete(row.original)}
                         />
                     </Tooltip>
                 </ButtonGroup>

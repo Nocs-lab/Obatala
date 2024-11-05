@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import {
     Button,
     ButtonGroup,
     Icon,
     Spinner,
     Modal,
-    Notice
+    Notice,
+    __experimentalConfirmDialog as ConfirmDialog 
 } from '@wordpress/components';
 import { plus } from "@wordpress/icons";
 import { fetchProcessModels, saveProcessType, deleteProcessType, updateProcessTypeMeta } from '../api/apiRequests';
 import ProcessTypeForm from './ProcessTypeManager/ProcessTypeForm';
 import ProcessTypeList from './ProcessTypeManager/ProcessTypeList';
+import Reducer, { initialState } from '../redux/reducer';
 
 const ProcessTypeManager = () => {
     const [processTypes, setProcessTypes] = useState([]);
@@ -18,6 +20,8 @@ const ProcessTypeManager = () => {
     const [editingProcessType, setEditingProcessType] = useState(null);
     const [addingProcessType, setAddingProcessType] = useState(null);
     const [notice, setNotice] = useState(null);
+
+    const [state, dispatch] = useReducer(Reducer, initialState)
 
     useEffect(() => {
         loadProcessTypes();
@@ -64,10 +68,10 @@ const ProcessTypeManager = () => {
         }
     };
 
-    const handleDeleteProcessType = (id) => {
-        deleteProcessType(id)
+    const handleDeleteProcessType = (processModel) => {
+        deleteProcessType(processModel.id)
             .then(() => {
-                const updatedProcessTypes = processTypes.filter(type => type.id !== id);
+                const updatedProcessTypes = processTypes.filter(type => type.id !== processModel.id);
                 setProcessTypes(updatedProcessTypes);
             })
             .catch(error => {
@@ -90,7 +94,12 @@ const ProcessTypeManager = () => {
     const handleCancel = () => {
         setEditingProcessType(null);
         setAddingProcessType(null);
+        dispatch({ type: 'CLOSE_MODAL' });
     };
+
+    const handleConfirmDelete = (processModel) => {
+        dispatch({type: 'OPEN_MODAL_PROCESS_MODEL', payload: processModel})
+    }
 
     if (isLoading) {
         return <Spinner />;
@@ -118,10 +127,21 @@ const ProcessTypeManager = () => {
             )}
             <div className="panel-container">
                 <main>
+                    <ConfirmDialog
+                        isOpen={state.isOpen}
+                        onConfirm={() => {
+                            handleDeleteProcessType(state.processModel);
+                            dispatch({type: 'CLOSE_MODAL'})
+                        }}
+                        onCancel={ handleCancel }
+                    >
+                        Are you sure you want to delete process model {state.processModel?.title.rendered}?
+                    </ConfirmDialog>
+
                     <ProcessTypeList
                         processTypes={processTypes}
                         onEdit={handleEditProcessType}
-                        onDelete={handleDeleteProcessType}
+                        onDelete={handleConfirmDelete}
                     />
                 </main>
                 {addingProcessType && (
