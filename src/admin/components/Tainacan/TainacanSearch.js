@@ -5,7 +5,7 @@ import ItemCard from './TainacanSearch/ItemCard';
 
 const TainacanSearchControls = ({onFieldChange, initialValue = [], isEditable}) => {
     const [query, setQuery] = useState('');
-    const [results, setResults] = useState([]);
+    const [results, setResults] = useState(initialValue ? initialValue : []);
     const [loading, setLoading] = useState(false);
     const [selectedItems, setSelectedItems] = useState([]);
 
@@ -96,7 +96,7 @@ const TainacanSearchControls = ({onFieldChange, initialValue = [], isEditable}) 
     const removeSelectedItem = (itemId) => {
         setSelectedItems((prevSelected) => prevSelected.filter((item) => item.id !== itemId));
     };
-
+    console.log('results: ', results);
     return (
         <div style={{ width: '800px', margin: 'auto' }}>
             {isEditable && (
@@ -153,19 +153,11 @@ const TainacanSearchControls = ({onFieldChange, initialValue = [], isEditable}) 
             {loading && <div>Carregando...</div>}
             
             <div style={{ marginTop: '20px' }}>
-                 {initialValue.length > 0  ? (
-                     initialValue.map((result) => (
+                    {results.map((result) => (
                         result.type === 'Collection'
-                            ? <CollectionCard key={result.id} collection={result}  />
-                            : <ItemCard key={result.id} item={result} />
-                    ))
-                ) : (
-                    results.map((result) => (
-                        result.type === 'Collection'
-                            ? <CollectionCard key={result.id} collection={result} onSelect={() => handleSelectItem(result)} isSelected={selectedItems.some((item) => item.id === result.id)} />
-                            : <ItemCard key={result.id} item={result} onSelect={() => handleSelectItem(result)} isSelected={selectedItems.some((item) => item.id === result.id)} />
-                )))}
-               
+                            ? <CollectionCard key={result.id} collection={result} onSelect={() => handleSelectItem(result)} isSelected={selectedItems.some((item) => item.id === result.id)} isEditable={isEditable} />
+                            : <ItemCard key={result.id} item={result} onSelect={() => handleSelectItem(result)} isSelected={selectedItems.some((item) => item.id === result.id)} isEditable={isEditable} />
+                    ))}
             </div>
         </div>
     );

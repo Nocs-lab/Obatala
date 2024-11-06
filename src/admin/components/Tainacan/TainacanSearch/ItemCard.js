@@ -1,19 +1,19 @@
 import React from 'react';
 
-const ItemCard = ({ item, onSelect, isSelected }) => {
+const ItemCard = ({ item, onSelect, isSelected, isEditable }) => {
     return (
         <div
-            onClick={onSelect}
+            onClick={isEditable ? onSelect : undefined}
             style={{
                 display: 'flex',
                 alignItems: 'flex-start',
                 padding: '16px',
                 borderRadius: '8px',
-                border: isSelected ? '2px solid blue' : '1px solid #ddd',
+                border: isSelected && isEditable ? '2px solid blue' : '1px solid #ddd',
                 marginBottom: '16px',
                 boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-                cursor: 'pointer',
-                backgroundColor: isSelected ? '#f0f8ff' : 'white'
+                cursor: isEditable ? 'default' :'pointer',
+                backgroundColor: isSelected && isEditable ? '#f0f8ff' : 'white'
             }}
         >
             {/* Imagem à Esquerda */}

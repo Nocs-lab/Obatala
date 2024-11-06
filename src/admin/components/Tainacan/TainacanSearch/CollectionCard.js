@@ -1,13 +1,13 @@
 import React from "react";
 
-const CollectionCard = ({ collection, onSelect, isSelected }) => {
+const CollectionCard = ({ collection, onSelect, isSelected, isEditable }) => {
   return (
     <div
-      onClick={onSelect}
+      onClick={isEditable ? onSelect : undefined}
       style={{
         padding: "16px",
         borderRadius: "8px",
-        border: isSelected ? "2px solid blue" : "1px solid #ddd",
+        border: isSelected && isEditable ? "2px solid blue" : "1px solid #ddd",
         marginBottom: "16px",
         boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.1)",
         display: "flex",
@@ -15,7 +15,7 @@ const CollectionCard = ({ collection, onSelect, isSelected }) => {
         alignItems: "center",
         alignItems: "flex-start",
         cursor: "pointer",
-        backgroundColor: isSelected ? "#f0f8ff" : "white",
+        backgroundColor: isSelected && isEditable ? "#f0f8ff" : "white",
       }}
     >
       {collection.thumbnailUrl && (
