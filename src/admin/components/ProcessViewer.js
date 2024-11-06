@@ -262,13 +262,65 @@ const ProcessViewer = () => {
             </div>
 
             <div className="panel-container three-columns">
+                <article>
+                    <div class="accordion">
+                        {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
+                            <div class="accordion-item" key={`${orderedSteps[currentStep].id}-${currentStep}`}>
+                                <h2 class="accordion-header">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                                        {`${options[currentStep].label}`}
+                                        <span className="badge default ms-auto">Setor: Recepção</span>
+                                    </button>
+                                </h2>
+                                <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
+                                    <div class="accordion-body">
+                                        {options[currentStep].fields.length > 0 ? (
+                                            <form className="centered" onSubmit={handleSubmit}>
+                                                <ul className="meta-fields-list">
+                                                    {Array.isArray(options[currentStep].fields) ? options[currentStep].fields.map((field, idx) => (
+                                                        <li key={`${orderedSteps[currentStep].id}-meta-${idx}`} className="meta-field-item">
+                                                            <MetaFieldInputs 
+                                                                field={field} 
+                                                                fieldId={field.id} 
+                                                                initalValue={formValues[orderedSteps[currentStep].id]?.[field.id] || ''}
+                                                                isEditable={!submittedSteps[currentStep]} 
+                                                                onFieldChange={handleFieldChange} 
+                                                            />
+                                                        </li>
+                                                    )) : null}
+                                                </ul>
+                                                <div className="action-bar">
+                                                    <Button
+                                                        variant="primary"
+                                                        type="submit"
+                                                        disabled={!isSubmitEnabled || submittedSteps[currentStep]}
+                                                        >Submit
+                                                    </Button>
+                                                </div>
+                                            </form>
+                                        ) : (
+                                            <Notice status="warning" isDismissible={false}>No fields found for this Step.</Notice>
+                                        )}
+                                        <footer>
+                                            Última atualização em 21/10/2024 por João da Silva
+                                        </footer>
+                                    </div>
+                                </div>
+                            </div>
+                        ) : (
+                            <Notice status="warning" isDismissible={false}>
+                            No steps found for this process.
+                            </Notice>
+                        )}
+                    </div>
+
+
                 <MetroNavigation
                     options={options}
                     currentStep={currentStep}
                     onStepChange={(newStep) => setCurrentStep(newStep)}
                     submittedSteps={submittedSteps}
                 />
-                <main>
                 {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
                     <Panel key={`${orderedSteps[currentStep].id}-${currentStep}`}>
                         <PanelHeader>
@@ -315,7 +367,7 @@ const ProcessViewer = () => {
                     No steps found for this process.
                     </Notice>
                 )}
-                </main>
+                </article>
                 <aside>
                     <Panel>
                         <PanelHeader>Comments</PanelHeader>

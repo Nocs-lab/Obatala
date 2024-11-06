@@ -387,11 +387,11 @@ ol.list-group .list-group-item::before {
   margin-left: var(--gap-external);
   margin-right: var(--gap-external);
 }
-.panel-container main {
+.panel-container article {
   flex-basis: 65%;
   flex-grow: 1;
 }
-.panel-container.three-columns main {
+.panel-container.three-columns article {
   flex-basis: 55%;
 }
 .panel-container aside {
@@ -628,7 +628,7 @@ button .components-spinner {
     padding-left: 0;
     padding-right: 0;
   }
-  .panel-container.three-columns main {
+  .panel-container.three-columns article {
     flex-basis: 100%;
   }
 }

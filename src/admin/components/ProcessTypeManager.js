@@ -106,7 +106,7 @@ const ProcessTypeManager = () => {
     }
 
     return (
-        <div>
+        <main>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
             <div className="title-container">
                 <h2>Process Models</h2>
@@ -126,7 +126,7 @@ const ProcessTypeManager = () => {
                 </div>
             )}
             <div className="panel-container">
-                <main>
+                <article>
                     <ConfirmDialog
                         isOpen={state.isOpen}
                         onConfirm={() => {
@@ -143,7 +143,7 @@ const ProcessTypeManager = () => {
                         onEdit={handleEditProcessType}
                         onDelete={handleConfirmDelete}
                     />
-                </main>
+                </article>
                 {addingProcessType && (
                     <Modal
                         title="Add process model"
@@ -159,7 +159,7 @@ const ProcessTypeManager = () => {
                     </Modal>
                 )}
             </div>
-        </div>
+        </main>
     );
 };
 
