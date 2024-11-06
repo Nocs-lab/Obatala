@@ -177,7 +177,12 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
       );
       case "search":
           return (
-            <TainacanSearchControls />
+            <TainacanSearchControls 
+                onFieldChange={(selectedItems) =>
+                    onFieldChange(fieldId, selectedItems)}
+                initialValue={initalValue}
+                isEditable={isEditable}
+            />
           )
     default:
       return null;
