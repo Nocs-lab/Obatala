@@ -71,6 +71,12 @@ h2 {
 h2:has(+ span.badge) {
   margin-bottom: 1rem;
 }
+h2 small {
+  display: block;
+  font-size: 1rem;
+  font-weight: 300;
+  padding-bottom: .75rem;
+}
 /* #endregion */
 
 /* #region Forms */
