@@ -11,7 +11,11 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
     useEffect(() => {
         if (editingProcess) {
             console.log( editingProcess )
-            setAccessLevel(editingProcess.meta.access_level);
+            setAccessLevel(
+                Array.isArray(editingProcess.meta.access_level)
+                ? editingProcess.meta.access_level[0]
+                : editingProcess.meta.access_level
+            );
             setNewProcessTitle(editingProcess.title.rendered);
             setNewProcessType(editingProcess.meta.process_type);
         }
