@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
-  Panel,
   Icon,
-  PanelRow,
   Spinner,
   Notice,
   TextControl,
@@ -120,94 +118,89 @@ const processDataEditor = () => {
   if (!processData) {
       return <div>Loading...</div>;
   }
-  return (
-    <main>
-      <span className="brand">
-          <strong>Obatala</strong> Curatorial Process Management
-      </span>
+    return (
+        <main>
+            <span className="brand">
+                <strong>Obatala</strong> Curatorial Process Management
+            </span>
 
-      {isEditing === "title" ? (
-        <div className="inline-edition mt-2 mb-1">
-            <TextControl
-                value={title}
-                onChange={(value) => setTitle(value)}
-                autoFocus
-            />
-            <ButtonGroup>
-                <Tooltip text="Save">
-                    <Button icon={<Icon icon={check} />} onClick={handleSave} />
-                </Tooltip>
-                <Tooltip text="Cancel">
-                    <Button
-                        onClick={handleCancel}
-                        icon={<Icon icon={closeSmall} />}
-                  />
-                </Tooltip>
-            </ButtonGroup>
-        </div>
-      ) : (
-        <div className="title-container">
-            <h2 onClick={() => handleEdit("title")}>
-                Edit Process Model: <strong>{title}</strong>
-            </h2>
-            <Tooltip text="Edit">
-                <Button
-                    onClick={() => handleEdit("title")}
-                    icon={<Icon icon={edit} />}
-                    className="me-auto"
-                />
-            </Tooltip>
-        </div>
-      )}
+            {isEditing === "title" ? (
+                <div className="inline-edition mt-2 mb-1">
+                    <TextControl
+                        value={title}
+                        onChange={(value) => setTitle(value)}
+                        autoFocus
+                    />
+                    <ButtonGroup>
+                        <Tooltip text="Save">
+                            <Button icon={<Icon icon={check} />} onClick={handleSave} />
+                        </Tooltip>
+                        <Tooltip text="Cancel">
+                            <Button
+                                onClick={handleCancel}
+                                icon={<Icon icon={closeSmall} />}
+                        />
+                        </Tooltip>
+                    </ButtonGroup>
+                </div>
+            ) : (
+                <div className="title-container">
+                    <h2 onClick={() => handleEdit("title")}>
+                        Edit Process Model: <strong>{title}</strong>
+                    </h2>
+                    <Tooltip text="Edit">
+                        <Button
+                            onClick={() => handleEdit("title")}
+                            icon={<Icon icon={edit} />}
+                            className="me-auto"
+                        />
+                    </Tooltip>
+                </div>
+            )}
 
-      {isEditing === "description" ? (
-        <div className="inline-edition mb-2">
-            <TextControl
-                value={description}
-                onChange={(value) => setDescription(value)}
-                autoFocus
-            />
-            <ButtonGroup>
-                <Button icon={<Icon icon={check} />} onClick={handleSave} />
-                <Button onClick={handleCancel} icon={<Icon icon={closeSmall} />} />
-            </ButtonGroup>
-        </div>
-      ) : (
-        <div className="title-container mb-2">
-            <p onClick={() => handleEdit("description")}>{description}</p>
-            <Tooltip text="Edit">
-                <Button
-                  onClick={() => handleEdit("description")}
-                  icon={<Icon icon={edit} />}
-                  className="me-auto"
-                />
-            </Tooltip>
-        </div>
-      )}
+            {isEditing === "description" ? (
+                <div className="inline-edition mb-2">
+                    <TextControl
+                        value={description}
+                        onChange={(value) => setDescription(value)}
+                        autoFocus
+                    />
+                    <ButtonGroup>
+                        <Button icon={<Icon icon={check} />} onClick={handleSave} />
+                        <Button onClick={handleCancel} icon={<Icon icon={closeSmall} />} />
+                    </ButtonGroup>
+                </div>
+            ) : (
+                <div className="title-container mb-2">
+                    <p onClick={() => handleEdit("description")}>{description}</p>
+                    <Tooltip text="Edit">
+                        <Button
+                        onClick={() => handleEdit("description")}
+                        icon={<Icon icon={edit} />}
+                        className="me-auto"
+                        />
+                    </Tooltip>
+                </div>
+            )}
 
-      {notice && (
-          <div className="notice-container">
-              <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                  {notice.message}
-              </Notice>
-          </div>
-      )}
+            {notice && (
+                <div className="notice-container">
+                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                        {notice.message}
+                    </Notice>
+                </div>
+            )}
 
-      <Panel>
-          <PanelRow>
-              {/* Passa o flowData carregado como initialData para o ProcessFlow */}
-              <FlowProvider>
-                  <ProcessFlow 
+            <FlowProvider>
+                <ProcessFlow 
                     ref={flowRef} 
                     initialData={flowData}
                     onSave={handleSave}
                     onCancel={handleCancelEditProcessType}
                     />
-              </FlowProvider>
-          </PanelRow>
-      </Panel>
-    </main>
-  );
+            </FlowProvider>
+        </main>
+    );
 };
 
 export default processDataEditor;
