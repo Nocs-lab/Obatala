@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useCallback  } from "react";
 import {
-  Spinner,
-  Notice,
-  Panel,
-  PanelHeader,
-  PanelBody,
-  PanelRow,
-  Button,
+    Icon,
+    Spinner,
+    Notice,
+    Panel,
+    PanelHeader,
+    PanelBody,
+    PanelRow,
+    Button,
 } from "@wordpress/components";
 import apiFetch from "@wordpress/api-fetch";
 import MetroNavigation from "./ProcessManager/MetroNavigation";
@@ -258,7 +259,8 @@ const ProcessViewer = () => {
                     >
                     {process.meta.access_level}
                 </span>
-                <span className="badge default">70% concluído</span>
+                <span className="badge default"><Icon icon="yes"/> 70% concluído</span>
+                <span className="badge default"><Icon icon="admin-users"/> Criado por: José da Silva</span>
             </div>
 
             <div className="panel-container three-columns">

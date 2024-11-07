@@ -107,45 +107,44 @@ const SortableField = ({ id, nodeId, title, type, config }) => {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition: transition || "transform 250ms ease",
-    backgroundColor: isDragging ? "#e0f7fa" : "#f9f9f9",
     opacity: isDragging ? 0.8 : 1,
     cursor: isDragging ? "grabbing" : "pointer",
     boxShadow: isDragging ? "0 4px 8px rgba(0, 0, 0, 0.1)" : "none",
   };
 
-  return (
-    <li ref={setNodeRef} style={style} {...attributes}>
-      <LabelWithIcon label={config ? config.label : label} type={type} />
-      <ButtonGroup>
-        <Tooltip text="Edit">
-          <Button
-            icon={<Icon icon={edit}/>}
-            onClick={() => toggleDrawer(renderFieldControls())}
-            size="small"
-            />
-        </Tooltip>
-        {/* Passa o nodeId e o id do campo para remover */}
-        <Tooltip text="Remove">
-          <Button
-            icon={<Icon icon={trash}/>}
-            onClick={() => removeFieldFromNode(nodeId, id)} // Aqui você passa o nodeId e o id do campo
-            size="small"
-            />
-        </Tooltip>
-      </ButtonGroup>
+    return (
+        <li ref={setNodeRef} style={style} {...attributes}>
+            <LabelWithIcon label={config ? config.label : label} type={type} />
+            <ButtonGroup>
+                <Tooltip text="Edit">
+                <Button
+                    icon={<Icon icon={edit}/>}
+                    onClick={() => toggleDrawer(renderFieldControls())}
+                    size="small"
+                    />
+                </Tooltip>
+                {/* Passa o nodeId e o id do campo para remover */}
+                <Tooltip text="Remove">
+                <Button
+                    icon={<Icon icon={trash}/>}
+                    onClick={() => removeFieldFromNode(nodeId, id)} // Aqui você passa o nodeId e o id do campo
+                    size="small"
+                    />
+                </Tooltip>
+            </ButtonGroup>
 
-      {/* Drag handle */}
-      <div
-        {...listeners} // Listeners aplicados ao ícone de arraste
-        className="flow-grabber"
-        onClick={(e) => e.stopPropagation()} // Evita a expansão ao clicar no drag handle
-      >
-        <span role="img" aria-label="drag">
-          ⠿
-        </span>
-      </div>
-    </li>
-  );
+            {/* Drag handle */}
+            <div
+                {...listeners} // Listeners aplicados ao ícone de arraste
+                className="flow-grabber"
+                onClick={(e) => e.stopPropagation()} // Evita a expansão ao clicar no drag handle
+            >
+                <span role="img" aria-label="drag">
+                ⠿
+                </span>
+            </div>
+        </li>
+    );
 };
 
 export default SortableField;

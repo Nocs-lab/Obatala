@@ -47,85 +47,87 @@ const NodeContent = ({ id, data = {} }) => {
     updateNodeName(id, e);
   };
 
-  return (
-    <div className="flow-container">
-      {/* Node Drag Handle */}
-      <NodeHandle nodeId={id} />
+    return (
+        <>
+            {/* Node Drag Handle */}
+            <NodeHandle nodeId={id} />
 
-      {/* Connection Handles */}
-      <Handle type="target" position={Position.Left} />
-      <Handle type="source" position={Position.Right} />
+            {/* Connection Handles */}
+            <Handle type="target" position={Position.Left} />
+            <Handle type="source" position={Position.Right} />
 
-      {/* Node Name */}
-      <TextControl
-        value={stageName}
-        label="Step name"
-        onChange={handleStageNameChange}
-        placeholder="Digite o nome da etapa"
-      />
+            {/* Node Name */}
+            <TextControl
+                value={stageName}
+                label="Step name"
+                onChange={handleStageNameChange}
+                placeholder="Digite o nome da etapa"
+            />
 
-      {/* List of Fields */}
-      <div className="flow-fields">
-        <DragAndDropList nodeId={id} fields={fields} updateFields={updateFields} />
-      </div>
+            {/* List of Fields */}
+            {fields.length > 0 && (
+                <div className="flow-fields">
+                    <DragAndDropList nodeId={id} fields={fields} updateFields={updateFields} />
+                </div>
+            )}
 
-      {/* Toolbar with Add and Delete */}
-      <NodeToolbar isVisible={isSelected} position="right">
-        <div
-          style={{
-            backgroundColor: "#fff",
-            padding: "10px",
-            borderRadius: "4px",
-            border: "1px solid #ddd",
-          }}
-        >
-          {isAddingFields ? (
-            <>
-              <h4>Adicionar Campo</h4>
-              <ul style={{ listStyle: "none", padding: 0 }}>
-                {FIELD_OPTIONS.map((option) => (
-                  <li
-                    className="node-meta-list"
-                    key={option.id}
-                    onClick={() => addFieldToNode(option.id)}
-                    style={{ padding: "5px", cursor: "pointer" }}
-                  >
-                    {option.label}
-                  </li>
-                ))}
-              </ul>
-              <button
-                onClick={() => setIsAddingFields(false)}
+            {/* Toolbar with Add and Delete */}
+            <NodeToolbar isVisible={isSelected} position="right">
+                <div
                 style={{
-                  marginTop: "10px",
-                  backgroundColor: "#ddd",
-                  color: "#333",
-                  border: "none",
-                  borderRadius: "4px",
-                  padding: "5px 10px",
-                  cursor: "pointer",
+                    backgroundColor: "#fff",
+                    padding: "10px",
+                    borderRadius: "4px",
+                    border: "1px solid #ddd",
                 }}
-              >
-                Cancelar
-              </button>
-            </>
-          ) : (
-            <>
-              <div style={{
-                width: "20px",
-                height: "20px",
-              }}
-                onClick={() => setIsAddingFields(true)}
-                className="btn max-btn"
-              ></div>
+                >
+                {isAddingFields ? (
+                    <>
+                    <h4>Adicionar Campo</h4>
+                    <ul style={{ listStyle: "none", padding: 0 }}>
+                        {FIELD_OPTIONS.map((option) => (
+                        <li
+                            className="node-meta-list"
+                            key={option.id}
+                            onClick={() => addFieldToNode(option.id)}
+                            style={{ padding: "5px", cursor: "pointer" }}
+                        >
+                            {option.label}
+                        </li>
+                        ))}
+                    </ul>
+                    <button
+                        onClick={() => setIsAddingFields(false)}
+                        style={{
+                        marginTop: "10px",
+                        backgroundColor: "#ddd",
+                        color: "#333",
+                        border: "none",
+                        borderRadius: "4px",
+                        padding: "5px 10px",
+                        cursor: "pointer",
+                        }}
+                    >
+                        Cancelar
+                    </button>
+                    </>
+                ) : (
+                    <>
+                    <div style={{
+                        width: "20px",
+                        height: "20px",
+                    }}
+                        onClick={() => setIsAddingFields(true)}
+                        className="btn max-btn"
+                    ></div>
 
-              {/* Remover nó */}
-            </>
-          )}
-        </div>
-      </NodeToolbar>
-    </div>
-  );
+                    {/* Remover nó */}
+                    </>
+                )}
+                </div>
+            </NodeToolbar>
+        </>
+    );
 };
 
 export default NodeContent;

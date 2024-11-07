@@ -1,5 +1,32 @@
 /* this gets exported as style.css and can be used for the default theming */
 /* these are the necessary styles for React/Svelte Flow, they get used by base.css and style.css */
+.flow-container {
+  background-color: var(--primary-50);
+  border-radius: var(--border-radius);
+  display: grid;
+  gap: var(--gap);
+  grid-template-areas: 'title buttons'
+    'flow flow';
+  grid-template-rows: max-content;
+  height: 60vh;
+  margin-left: var(--gap-external);
+  margin-right: var(--gap-external);
+  padding: var(--gap);
+  width: calc(100% - (2 * var(--gap-external)));
+}
+.flow-container > h3 {
+  font-size: 1.25rem;
+  font-weight: 300;
+  grid-area: title;
+  margin-top: 0;
+}
+.flow-container .components-button-group {
+  grid-area: buttons;
+  justify-self: end;
+}
+.flow-content {
+  grid-area: flow;
+}
 .react-flow {
   direction: ltr;
 
@@ -96,28 +123,32 @@
   --xy-edge-label-color-default: #f8f8f8;
 }
 .react-flow .react-flow__node {
+  border-bottom: 3px solid var(--primary);
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+  box-shadow: 0 20px 25px -5px #0000001a,0 8px 10px -6px #0000001a;
   max-width: 230px;
 }
-.flow-container .react-flow__handle {
+.react-flow__node .react-flow__handle {
   background-color: var(--primary);
   min-width: 10px;
   min-height: 10px;
 }
-.flow-container .react-flow__handle:hover {
+.react-flow__node .react-flow__handle:hover {
   background-color: var(--primary-500);
 }
-.flow-container .components-base-control {
-  background-color: var(--gray-100);
-  padding: .5rem;
+.react-flow__node .components-base-control {
+  background-color: var(--white);
+  padding: .5rem 1rem;
 }
-.flow-container .components-base-control__field > label {
+.react-flow__node .components-base-control__field > label {
   margin-bottom: 0.1rem;
   text-transform: none;
   color: var(--gray-600);
   font-weight: 400;
   font-size: .6rem;
 }
-.flow-container .components-text-control__input {
+.react-flow__node .components-text-control__input {
   font-size: .65rem;
   font-weight: 600;
   height: 26px !important;
@@ -125,23 +156,24 @@
   min-height: 26px !important;
 }
 .flow-fields {
-  background-color: var(--gray-100);
+  background-color: var(--white);
 }
 .flow-fields ul:not(:empty) {
   margin: 0;
-  padding: .5rem;
+  padding: .5rem 1rem;
 }
 .flow-fields ul li {
-  border: 1px solid var(--gray-400);
+  border: 1px solid var(--gray-200);
   border-radius: 3px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-size: .65rem;
+  gap: .5rem;
   padding: .2rem;
 }
 .flow-fields .step-label {
-  line-height: 1.35em;
+  font-size: .6rem;
   margin-right: auto;
 }
 .flow-fields .components-button-group {
@@ -667,20 +699,20 @@ svg.react-flow__connectionline {
 
 
 /* custom handle */
-.custom-drag-handle{
-  height: 20px;
-  background:#ccc;
+.custom-drag-handle {
+  border-top-left-radius: var(--border-radius);
+  border-top-right-radius: var(--border-radius);
+  min-height: 20px;
+  background-color: var(--white);
   background-size: 12.73px 12.73px;
   cursor: drag;
   text-align: center;
-  color: white;
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
+  color: var(--primary-600);
   user-select: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 2%;
+  padding: .75rem 1rem 0;
 }
 
 /* custom handle buttons */
@@ -765,7 +797,6 @@ svg.react-flow__connectionline {
 }
 .step-icon {
   display: flex;
-	margin-right: .25rem;
 }
 
 .edgebutton {
