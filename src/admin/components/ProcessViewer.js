@@ -13,6 +13,8 @@ import MetroNavigation from "./ProcessManager/MetroNavigation";
 import MetaFieldInputs from "./ProcessManager/MetaFieldInputs";
 import CommentForm from "./ProcessManager/CommentForm";
 import { set } from "date-fns";
+import { useSelect } from '@wordpress/data';
+import { store as coreStore } from '@wordpress/core-data';
 
 const ProcessViewer = () => {
   const [process, setProcess] = useState(null);
@@ -25,7 +27,8 @@ const ProcessViewer = () => {
   const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
   const [flowNodes, setFlowNodes] = useState([]);
   const [orderedSteps, setOrderedSteps] = useState([]);
-
+  const user = useSelect((select) => select(coreStore).getCurrentUser(), []);
+  
   const getProcessIdFromUrl = () => {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get("process_id");

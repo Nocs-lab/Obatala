@@ -79,3 +79,17 @@ export const assignUserToSector = (data) => {
 export const deleteSectorUser = (sectorId, data) => {
   return apiFetch({ path: `/obatala/v1/sector_obatala/${sectorId}/remove_user`, method: 'POST', data: data });
 };
+
+export const get_flow_data = async (userId, processId) => {
+  try {
+      
+      // Inclui o JSON serializado na URL
+      const url = `/process_type/${processId}/get_node?user=${userId}`;
+      await apiFetch({
+          path: url,
+          method: 'GET',
+      });
+  } catch (error) {
+      console.error("Erro ao enviar dados do usuário:", error);
+  }
+};

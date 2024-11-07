@@ -3,6 +3,9 @@ namespace Obatala\Api;
 
 defined('ABSPATH') || exit;
 
+use WP_REST_Response;
+use Obatala\Entities\Sector;
+
 class ProcessTypeApi extends ObatalaAPI {
   
 
@@ -41,6 +44,12 @@ class ProcessTypeApi extends ObatalaAPI {
                 ]
             ]
         ]);
+
+        $this->add_route('process_type/(?P<id>\d+)/get_node', [
+            'methods' => 'GET',
+            'callback' => [$this,'get_node'],
+            'permission_callback' => '__return_true', // Ajuste conforme necessário
+            ]);
     }
 
     protected function get_meta_args() {
@@ -190,5 +199,25 @@ class ProcessTypeApi extends ObatalaAPI {
         } else {
             return new WP_REST_Response('Erro ao associar o setor', 500);
         }
+    }
+
+    public function get_node($request){
+        $process_id = $request['id'];
+        $user_id = $request->get_param('user');
+        $permission = Sector::check_permission($user_id,$process_id);
+
+        // Verificar se o processo existe
+        $process = get_post($process_id);
+        if (!$process || $process->post_type !== 'process_type') {
+            return new WP_REST_Response('Processo não encontrado ou tipo de processo inválido', 404);
+        }
+
+        if($permission['status'] === true){
+            // Obter os dados do flowData do processo
+            $flow_data = get_post_meta($process_id, 'flowData', true);
+
+            return new WP_REST_Response($flow_data, 200 );
+        }
+        return new WP_REST_Response($permission['message'], 403 );
     }
 }

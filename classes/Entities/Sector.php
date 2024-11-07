@@ -4,6 +4,7 @@ namespace Obatala\Entities;
 
 defined('ABSPATH') || exit;
 
+use Random\Engine\Secure;
 use WP_REST_Response;
 
 class Sector {
@@ -397,5 +398,56 @@ class Sector {
         update_user_meta($user_id, 'associated_sector', $sectors);
 
         return new WP_REST_Response('Usuário removido do setor com sucesso', 200);
+    }
+
+    public static function check_permission($user_id, $process_id) {
+
+        if ($user_id === 0) {
+          return [
+            'status' => false,
+            'message' => 'Usuário não autenticado.'
+            ];
+        }
+    
+        // Pega os setores associados ao usuário
+        $user_sectors = get_user_meta($user_id, 'associated_sector', false);
+    
+        // Pega o sector_id atual do precess
+        $sector_id = get_post_meta($process_id,'current_sector', true);
+
+        // pega as permisoes do usuario
+        $capabilities = get_user_meta($user_id, 'wp_capabilities', true);
+
+        // Verifica se o usuário possui setores associados
+        if (!empty($user_sectors) && is_array($user_sectors)) {
+          // Verifica se algum setor do usuário é igual ao setor_id fornecido
+          foreach ($user_sectors as $sector) {
+            if (in_array($sector_id, $sector)) {
+              return [
+                'status' => true,
+                'message' => 'Permissão concedida.',
+                'cargo' => $capabilities
+                ];
+            }
+          }
+              return [
+                  'status' => false,
+                  'message' => 'Usuário não possui permissão.'
+              ];
+          } else {
+          return [
+            'status' => false,
+            'message' => 'Usuário não possui setores vinculados.'
+            ];
+        }
+    }
+
+    public static function recebe_dados_usuario( $request ) {
+        $user_id = $request->get_param('user'); 
+        $permission = self::check_permission($user_id , 180);
+        if ($permission['status'] === true){
+            return new WP_REST_Response($permission['message'], 200 );
+        }
+        return new WP_REST_Response($permission['message'], 403 );
     }
 }

@@ -3,7 +3,7 @@
 namespace Obatala\Api;
 
 defined('ABSPATH') || exit;
-
+use WP_REST_Response;
 
 class SectorApi extends ObatalaAPI {
 
@@ -121,6 +121,12 @@ class SectorApi extends ObatalaAPI {
                     }
                 ],
             ]
+        ]);
+
+        $this->add_route('sector_obatala/teste-user-data', [
+        'methods' => 'GET',
+        'callback' => ['Obatala\Entities\Sector','recebe_dados_usuario'],
+        'permission_callback' => '__return_true', // Ajuste conforme necessário
         ]);
     }
 }
