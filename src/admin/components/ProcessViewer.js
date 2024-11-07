@@ -15,6 +15,7 @@ import CommentForm from "./ProcessManager/CommentForm";
 import { set } from "date-fns";
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
+import { get_flow_data } from '../api/apiRequests';
 
 const ProcessViewer = () => {
   const [process, setProcess] = useState(null);

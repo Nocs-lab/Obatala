@@ -441,13 +441,4 @@ class Sector {
             ];
         }
     }
-
-    public static function recebe_dados_usuario( $request ) {
-        $user_id = $request->get_param('user'); 
-        $permission = self::check_permission($user_id , 180);
-        if ($permission['status'] === true){
-            return new WP_REST_Response($permission['message'], 200 );
-        }
-        return new WP_REST_Response($permission['message'], 403 );
-    }
 }
