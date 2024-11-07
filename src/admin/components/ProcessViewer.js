@@ -132,6 +132,7 @@ const handleFieldChange = (fieldId, newValue) => {
 };
 
 const handleSubmit = async (e) => {
+  setIsLoading(true);
   e.preventDefault();
 
   const stepId = orderedSteps[currentStep].id;
@@ -169,6 +170,8 @@ const handleSubmit = async (e) => {
           ...prev,
           [currentStep]: true, 
       }));
+      setIsLoading(false);
+      
 
   } catch (error) {
       console.error('Error saving metadata:', error);

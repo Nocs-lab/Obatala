@@ -12,7 +12,7 @@ const ItemCard = ({ item, onSelect, isSelected, isEditable }) => {
                 border: isSelected && isEditable ? '2px solid blue' : '1px solid #ddd',
                 marginBottom: '16px',
                 boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-                cursor: isEditable ? 'default' :'pointer',
+                cursor: 'pointer',
                 backgroundColor: isSelected && isEditable ? '#f0f8ff' : 'white'
             }}
         >
