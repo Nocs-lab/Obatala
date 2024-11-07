@@ -19,6 +19,7 @@
   font-weight: 300;
   grid-area: title;
   margin-top: 0;
+  margin-bottom: 0;
 }
 .flow-container .components-button-group {
   grid-area: buttons;
@@ -178,21 +179,14 @@
 }
 .flow-fields .components-button-group {
   display: inline-flex;
-  margin-left: .5rem;
+  gap: .2rem;
 }
-.flow-fields .flow-grabber {
-  background-color: var(--gray-400);
-  border-radius: 3px;
-  color: var(--white);
-  cursor: grab;
-  display: flex;
-  align-self: stretch;
-  align-items: center;
-  margin-left: .5rem;
-  padding: 4px;
-}
-.flow-fields .flow-grabber:hover {
-  background-color: var(--gray-500);
+.flow-fields .components-button-group .components-button.is-small.has-icon:not(.has-text) {
+  box-shadow: 0 0 0;
+  color: var(--primary-600);
+  height: 18px;
+  min-width: 18px;
+  width: 18px;
 }
 .react-flow__background {
   background-color: var(--xy-background-color, var(--xy-background-color-props, var(--xy-background-color-default)));
