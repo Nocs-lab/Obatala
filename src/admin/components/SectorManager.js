@@ -91,6 +91,7 @@ const SectorManager = () => {
                     setNotice({ status: 'error', message: 'Cannot deleting sector linked to a user.' }); 
                 }
                 console.error('Error deleting process type:', error);
+                setIsLoading(false);
             });
     };
 
