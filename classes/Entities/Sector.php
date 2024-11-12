@@ -401,43 +401,39 @@ class Sector {
     }
 
     public static function check_permission($user_id, $process_id) {
-
         if ($user_id === 0) {
-          return [
-            'status' => false,
-            'message' => 'Usuário não autenticado.'
+            return [
+                'status' => false,
+                'message' => 'Usuário não autenticado.'
             ];
         }
-    
+
         // Pega os setores associados ao usuário
         $user_sectors = get_user_meta($user_id, 'associated_sector', false);
-    
-        // Pega o sector_id atual do precess
-        $sector_id = get_post_meta($process_id,'current_sector', true);
 
-        // pega as permisoes do usuario
-        $capabilities = get_user_meta($user_id, 'wp_capabilities', true);
+        // Pega o flowData do processo
+        $flowData = get_post_meta($process_id, 'flowData', true);
 
-        // Verifica se o usuário possui setores associados
-        if (!empty($user_sectors) && is_array($user_sectors)) {
-          // Verifica se algum setor do usuário é igual ao setor_id fornecido
-          foreach ($user_sectors as $sector) {
-            if (in_array($sector_id, $sector)) {
-              return [
-                'status' => true,
-                'message' => 'Permissão concedida.',
-                'cargo' => $capabilities
-                ];
+        // Verifica se o usuário possui setores associados e se flowData está no formato esperado
+        if (!empty($user_sectors) && is_array($user_sectors) && !empty($flowData['nodes'])) {
+            // Verifica cada nó do processo
+            foreach ($flowData['nodes'] as $node) {
+                // Verifica se `sector_obatala` do nó está em `user_sectors`
+                if (in_array($node['sector_obatala'], $user_sectors[0])) {
+                    return [
+                        'status' => true,
+                        'message' => 'Permissão concedida.'
+                    ];
+                }
             }
-          }
-              return [
-                  'status' => false,
-                  'message' => 'Usuário não possui permissão.'
-              ];
-          } else {
-          return [
-            'status' => false,
-            'message' => 'Usuário não possui setores vinculados.'
+            return [
+                'status' => false,
+                'message' => 'Usuário não possui permissão.',
+            ];
+        } else {
+            return [
+                'status' => false,
+                'message' => 'Usuário não possui setores vinculados ou flowData está vazio.'
             ];
         }
     }

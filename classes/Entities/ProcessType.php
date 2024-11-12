@@ -142,6 +142,12 @@ class ProcessType {
                                         'sector_id' => [
                                             'type' => 'string'
                                         ]
+                                    ],
+                                    'sector_obatala' =>[
+                                        'type' => 'string',
+                                        'sector_id' => [
+                                            'type' => 'string'
+                                        ]
                                     ]
                                 ],
                             ],
