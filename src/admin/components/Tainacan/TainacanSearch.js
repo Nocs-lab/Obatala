@@ -1,13 +1,19 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { TextControl } from '@wordpress/components';
 import CollectionCard from './TainacanSearch/CollectionCard';
 import ItemCard from './TainacanSearch/ItemCard';
 
-const TainacanSearchControls = () => {
+const TainacanSearchControls = ({onFieldChange, initialValue = [], isEditable}) => {
     const [query, setQuery] = useState('');
-    const [results, setResults] = useState([]);
+    const [results, setResults] = useState(initialValue ? initialValue : []);
     const [loading, setLoading] = useState(false);
     const [selectedItems, setSelectedItems] = useState([]);
+
+    useEffect(() => {
+        
+        onFieldChange(selectedItems);
+ 
+    }, [selectedItems])
 
     const handleSearch = async (input) => {
         setQuery(input);
@@ -90,9 +96,10 @@ const TainacanSearchControls = () => {
     const removeSelectedItem = (itemId) => {
         setSelectedItems((prevSelected) => prevSelected.filter((item) => item.id !== itemId));
     };
-
+    console.log('results: ', results);
     return (
         <div style={{ width: '800px', margin: 'auto' }}>
+            {isEditable && (
             <TextControl
                 label="Search Tainacan"
                 value={query}
@@ -105,9 +112,10 @@ const TainacanSearchControls = () => {
                     border: '1px solid #ccc'
                 }}
             />
-
+            )}
             {/* Lista de Itens Selecionados como Badges */}
             <div style={{ marginTop: '8px', display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                
                 {selectedItems.map((item) => (
                     <div
                         key={item.id}
@@ -122,6 +130,7 @@ const TainacanSearchControls = () => {
                         }}
                     >
                         {item.title}
+                        {isEditable && (
                         <button
                             onClick={() => removeSelectedItem(item.id)}
                             style={{
@@ -135,18 +144,20 @@ const TainacanSearchControls = () => {
                         >
                             &times;
                         </button>
+                        )}
                     </div>
                 ))}
+            
             </div>
 
             {loading && <div>Carregando...</div>}
-
+            
             <div style={{ marginTop: '20px' }}>
-                {results.map((result) => (
-                    result.type === 'Collection'
-                        ? <CollectionCard key={result.id} collection={result} onSelect={() => handleSelectItem(result)} isSelected={selectedItems.some((item) => item.id === result.id)} />
-                        : <ItemCard key={result.id} item={result} onSelect={() => handleSelectItem(result)} isSelected={selectedItems.some((item) => item.id === result.id)} />
-                ))}
+                    {results.map((result) => (
+                        result.type === 'Collection'
+                            ? <CollectionCard key={result.id} collection={result} onSelect={() => handleSelectItem(result)} isSelected={selectedItems.some((item) => item.id === result.id)} isEditable={isEditable} />
+                            : <ItemCard key={result.id} item={result} onSelect={() => handleSelectItem(result)} isSelected={selectedItems.some((item) => item.id === result.id)} isEditable={isEditable} />
+                    ))}
             </div>
         </div>
     );
