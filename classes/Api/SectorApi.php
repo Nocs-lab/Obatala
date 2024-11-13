@@ -3,7 +3,7 @@
 namespace Obatala\Api;
 
 defined('ABSPATH') || exit;
-
+use WP_REST_Response;
 
 class SectorApi extends ObatalaAPI {
 
