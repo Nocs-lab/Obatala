@@ -26,7 +26,7 @@ const ProcessControls = ({onSave, onCancel}) => {
   
     return (
         <>
-            <ButtonGroup style={{ position: "absolute", top: 0, right: 0, zIndex: 1000 }}>
+            <ButtonGroup>
                 <Button variant="primary" type="submit" onClick={onSave}>
                     Save changes
                 </Button>
@@ -34,7 +34,7 @@ const ProcessControls = ({onSave, onCancel}) => {
                     Cancel changes
                 </Button>
                 <Button variant="secondary" onClick={addNewNode}>
-                    Add Step
+                    Add step
                 </Button>
                 <Button variant="secondary" onClick={onExport}>
                     Exportar JSON

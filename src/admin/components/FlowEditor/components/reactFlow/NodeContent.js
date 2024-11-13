@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Handle, Position, useReactFlow } from "@xyflow/react";
 import DragAndDropList from "../dragables/DragAndDropList";
 import NodeHandle from "./NodeHandle";
 import { NodeToolbar } from "@xyflow/react";
-import { TextControl } from "@wordpress/components";
+import { TextControl, ComboboxControl } from "@wordpress/components";
 import { useFlowContext } from "../../context/FlowContext";
 import { set } from "date-fns";
+import { fetchSectors } from "../../../../api/apiRequests";
 
 const FIELD_OPTIONS = [
   { id: "text", label: "Texto" },
@@ -20,18 +21,47 @@ const FIELD_OPTIONS = [
   { id: "search", label: "Busca em Tainacan" },
 ];
 
-const NodeContent = ({ id, data = {} }) => {
+const NodeContent = ({ id, data  = {} }) => {
   const {
     fields = [],
     updateFields = () => {},
   } = data;
 
+  const [sectors, setSectors] = useState([]);
+
   const { selectedNodes } = useReactFlow();
   const [isAddingFields, setIsAddingFields] = useState(false);
   const { updateNodeName } = useFlowContext();
+  const {updateNodeSector} = useFlowContext();
+
   const isSelected = selectedNodes?.some((node) => node.id === id);
   const [stageName, setStageName] = useState(data?.stageName || "");
+  const {nodes} = useFlowContext();
+  const filteredNode = nodes.find(node => node.id === id);
+  const [sector, setSector] = useState(filteredNode?.sector_obatala || '');
+  
+  useEffect(() => {
+    console.log(filteredNode)
+    loadSectors();
+  }, []);
 
+  const loadSectors = () => {
+    fetchSectors()
+        .then(data => {
+            const sectors = Object.entries(data).map(([key, value]) => ({
+                id: key,
+                name: value.nome,
+                description: value.descricao,
+                status: value.status,
+            }));
+
+            setSectors(sectors);
+        })
+        .catch(error => {
+            console.error('Error fetching sectors:', error);
+        });
+  };
+  
   const addFieldToNode = (fieldId) => {
     const newField = {
       id: `${fieldId}-${fields.length + 1}`,
@@ -47,85 +77,102 @@ const NodeContent = ({ id, data = {} }) => {
     updateNodeName(id, e);
   };
 
-  return (
-    <div className="flow-container">
-      {/* Node Drag Handle */}
-      <NodeHandle nodeId={id} />
+  const handleStageSectorChange = (value) => {
+    setSector(value);
+    updateNodeSector(id, [value]);
+  };
 
-      {/* Connection Handles */}
-      <Handle type="target" position={Position.Left} />
-      <Handle type="source" position={Position.Right} />
+ return (
+        <>
+            {/* Node Drag Handle */}
+            <NodeHandle nodeId={id} />
 
-      {/* Node Name */}
-      <TextControl
-        value={stageName}
-        label="Step name"
-        onChange={handleStageNameChange}
-        placeholder="Digite o nome da etapa"
-      />
+            {/* Connection Handles */}
+            <Handle type="target" position={Position.Left} />
+            <Handle type="source" position={Position.Right} />
 
-      {/* List of Fields */}
-      <div className="flow-fields">
-        <DragAndDropList nodeId={id} fields={fields} updateFields={updateFields} />
-      </div>
+            {/* Node Name */}
+            <TextControl
+                value={stageName}
+                label="Step name"
+                onChange={handleStageNameChange}
+                placeholder="Digite o nome da etapa"
+            />
 
-      {/* Toolbar with Add and Delete */}
-      <NodeToolbar isVisible={isSelected} position="right">
-        <div
-          style={{
-            backgroundColor: "#fff",
-            padding: "10px",
-            borderRadius: "4px",
-            border: "1px solid #ddd",
-          }}
-        >
-          {isAddingFields ? (
-            <>
-              <h4>Adicionar Campo</h4>
-              <ul style={{ listStyle: "none", padding: 0 }}>
-                {FIELD_OPTIONS.map((option) => (
-                  <li
-                    className="node-meta-list"
-                    key={option.id}
-                    onClick={() => addFieldToNode(option.id)}
-                    style={{ padding: "5px", cursor: "pointer" }}
-                  >
-                    {option.label}
-                  </li>
-                ))}
-              </ul>
-              <button
-                onClick={() => setIsAddingFields(false)}
+            <ComboboxControl
+                label="Select a Sector"
+                value={sector}
+                options={sectors.map(sector => ({ 
+                    label: sector.name, 
+                    value: sector.id,
+                }))}
+                onChange={handleStageSectorChange}
+            />
+
+            {/* List of Fields */}
+            {fields.length > 0 && (
+                <div className="flow-fields">
+                    <DragAndDropList nodeId={id} fields={fields} updateFields={updateFields} />
+                </div>
+            )}
+
+            {/* Toolbar with Add and Delete */}
+            <NodeToolbar isVisible={isSelected} position="right">
+                <div
                 style={{
-                  marginTop: "10px",
-                  backgroundColor: "#ddd",
-                  color: "#333",
-                  border: "none",
-                  borderRadius: "4px",
-                  padding: "5px 10px",
-                  cursor: "pointer",
+                    backgroundColor: "#fff",
+                    padding: "10px",
+                    borderRadius: "4px",
+                    border: "1px solid #ddd",
                 }}
-              >
-                Cancelar
-              </button>
-            </>
-          ) : (
-            <>
-              <div style={{
-                width: "20px",
-                height: "20px",
-              }}
-                onClick={() => setIsAddingFields(true)}
-                className="btn max-btn"
-              ></div>
+                >
+                {isAddingFields ? (
+                    <>
+                    <h4>Adicionar Campo</h4>
+                    <ul style={{ listStyle: "none", padding: 0 }}>
+                        {FIELD_OPTIONS.map((option) => (
+                        <li
+                            className="node-meta-list"
+                            key={option.id}
+                            onClick={() => addFieldToNode(option.id)}
+                            style={{ padding: "5px", cursor: "pointer" }}
+                        >
+                            {option.label}
+                        </li>
+                        ))}
+                    </ul>
+                    <button
+                        onClick={() => setIsAddingFields(false)}
+                        style={{
+                        marginTop: "10px",
+                        backgroundColor: "#ddd",
+                        color: "#333",
+                        border: "none",
+                        borderRadius: "4px",
+                        padding: "5px 10px",
+                        cursor: "pointer",
+                        }}
+                    >
+                        Cancelar
+                    </button>
+                    </>
+                ) : (
+                    <>
+                    <div style={{
+                        width: "20px",
+                        height: "20px",
+                    }}
+                        onClick={() => setIsAddingFields(true)}
+                        className="btn max-btn"
+                    ></div>
 
-              {/* Remover nó */}
-            </>
-          )}
-        </div>
-      </NodeToolbar>
-    </div>
-  );
+                    {/* Remover nó */}
+                    </>
+                )}
+                </div>
+            </NodeToolbar>
+        </>
+    );
 };
 
 export default NodeContent;

@@ -71,6 +71,12 @@ h2 {
 h2:has(+ span.badge) {
   margin-bottom: 1rem;
 }
+h2 small {
+  display: block;
+  font-size: 1rem;
+  font-weight: 300;
+  padding-bottom: .75rem;
+}
 /* #endregion */
 
 /* #region Forms */
@@ -225,11 +231,22 @@ table.wp-list-table th {
 .badge.warning {
   background-color: var(--warning);
 }
+.badge.default {
+  background-color: transparent;
+  color: var(--gray-700);
+  font-weight: 400;
+  padding-left: .25rem;
+  padding-right: .25rem;
+}
+.badge .dashicon {
+  font-size: 1rem;
+  opacity: .75;
+}
 .badge-container {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
-  margin: -1rem var(--gap-external) 2rem;
+  margin: -.5rem var(--gap-external) 2rem;
 }
 /* #endregion */
 
