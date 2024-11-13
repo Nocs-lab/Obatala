@@ -20,6 +20,27 @@ class ProcessTypeApi extends ObatalaAPI {
             'permission_callback' => '__return_true',
             'args' => $this->get_meta_args(),
         ]);
+
+        // Rota para associar e gerenciar histórico de setores das etapas
+        $this->add_route('process_type/(?P<id>\d+)/assosiate_sector', [
+            'methods' => 'POST',
+            'callback' => [$this, 'assosiate_sector'],
+            'permission_callback' => '__return_true',
+            'args' => [
+                'sector_id' => [
+                    'required' => true,
+                    'validate_callback' => function($param) {
+                        return is_string($param);
+                    }
+                ],
+                'node_id' => [
+                    'required' => true,
+                    'validate_callback' => function($param) {
+                        return !empty($param) && is_string($param);
+                    }
+                ]
+            ]
+        ]);
     }
 
     protected function get_meta_args() {
@@ -94,7 +115,6 @@ class ProcessTypeApi extends ObatalaAPI {
         return rest_ensure_response($meta);
     }
     
-
     public function update_meta($request) {
         $post_id = (int) $request['id'];
     
@@ -124,4 +144,51 @@ class ProcessTypeApi extends ObatalaAPI {
         return rest_ensure_response('Meta updated successfully.');
     }
     
+    public function assosiate_sector($request) {
+        // Obter os parâmetros do request
+        $process_id = (int) $request['id'];
+        $sector_id = sanitize_text_field($request['sector_id']);
+        $node_id = sanitize_text_field($request['node_id']);
+        
+        // Verificar se o processo existe
+        $process = get_post($process_id);
+        if (!$process || $process->post_type !== 'process_type') {
+            return new WP_REST_Response('Processo não encontrado ou tipo de processo inválido', 404);
+        }
+    
+        // Obter os dados do flowData do processo
+        $flow_data = get_post_meta($process_id, 'flowData', true);
+    
+        // Verificar se o flowData está configurado corretamente
+        if (!isset($flow_data['nodes']) || !is_array($flow_data['nodes'])) {
+            return new WP_REST_Response('Os dados do fluxo não estão configurados corretamente', 400);
+        }
+    
+        // Procurar o nó correspondente ao node_id fornecido
+        $node_key = array_search($node_id, array_column($flow_data['nodes'], 'id'));
+        if ($node_key === false) {
+            return new WP_REST_Response('Nó não encontrado nos dados do fluxo', 404);
+        }
+    
+        // Atualizar o current_sector
+        update_post_meta($process_id, 'current_sector', $sector_id);
+    
+        // Adicionar o setor ao histórico da etapa (node)
+        if (!isset($flow_data['nodes'][$node_key]['sector_history'])) {
+            $flow_data['nodes'][$node_key]['sector_history'] = [];
+        }
+    
+        // Adicionar o novo setor ao histórico
+        $flow_data['nodes'][$node_key]['sector_history'][] = $sector_id;
+    
+        // Atualizar o flowData com o novo histórico
+        $updated = update_post_meta($process_id, 'flowData', $flow_data);
+    
+        // Verificar se a atualização foi bem-sucedida
+        if ($updated) {
+            return new WP_REST_Response('Setor associado com sucesso', 200);
+        } else {
+            return new WP_REST_Response('Erro ao associar o setor', 500);
+        }
+    }
 }

@@ -99,7 +99,7 @@ const UserManager = ({ sector}) => {
             <hr class="mt-2" />
              
             <div className='title-container-table'>
-                <h3>Related Users</h3>
+                <h3>Related users</h3>
                 <span className="badge">{sectorUsers.length}</span>
             </div>
 
@@ -121,7 +121,7 @@ const UserManager = ({ sector}) => {
                                 <td>{user.email}</td>
                                 <td>
                                     <ButtonGroup>
-                                        <Tooltip text="Delete">
+                                        <Tooltip text="Remove user from sector">
                                             <Button
                                                 icon={<Icon icon={trash} />}
                                                 onClick={() => handleDeleteUser(user)}
