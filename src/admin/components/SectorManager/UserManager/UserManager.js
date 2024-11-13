@@ -1,13 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import { Button, 
         ButtonGroup, 
         Icon, 
         Tooltip,
         Notice, 
-        Spinner } from '@wordpress/components';
+        Spinner,
+        __experimentalConfirmDialog as ConfirmDialog  
+    } from '@wordpress/components';
 import {trash} from '@wordpress/icons';
 import { assignUserToSector, deleteSectorUser, fetchUsers, fetchUsersBySector } from '../../../api/apiRequests';
 import UserSelect from './UserSelect';
+import Reducer, { initialState } from '../../../redux/reducer';
 
 
 const UserManager = ({ sector}) => {
@@ -15,6 +18,8 @@ const UserManager = ({ sector}) => {
     const [sectorUsers, setSectorUsers] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [notice, setNotice] = useState(null);
+
+    const [state, dispatch] = useReducer(Reducer, initialState)
 
     useEffect(() => {
         loadUsers();
@@ -74,7 +79,16 @@ const UserManager = ({ sector}) => {
                 console.error('Error removing users to sector:', error);
                 setNotice({ status: 'error', message: 'Error removing user.' })
             });
-    }
+    };
+
+    const handleConfirmDelete = (user) => {
+        console.log(user);
+        dispatch({type: 'OPEN_MODAL_USER', payload: user})
+    };
+
+    const handleCancel = () => {
+        dispatch({ type: 'CLOSE_MODAL' });
+    };
 
     if (isLoading) {
         return <Spinner />;
@@ -103,6 +117,17 @@ const UserManager = ({ sector}) => {
                 <span className="badge">{sectorUsers.length}</span>
             </div>
 
+            <ConfirmDialog
+                isOpen={state.isOpen}
+                onConfirm={() => {
+                    handleDeleteUser(state.user);
+                    dispatch({type: 'CLOSE_MODAL'})
+                }}
+                onCancel={ handleCancel }
+            >
+                Are you sure you want to delete user {state.user?.display_name}?
+            </ConfirmDialog>
+
             {sectorUsers.length > 0 ? (
                 <table className="wp-list-table widefat fixed striped mt-1">
                     <thead>
@@ -124,7 +149,7 @@ const UserManager = ({ sector}) => {
                                         <Tooltip text="Remove user from sector">
                                             <Button
                                                 icon={<Icon icon={trash} />}
-                                                onClick={() => handleDeleteUser(user)}
+                                                onClick={() => handleConfirmDelete(user)}
                                             />
                                         </Tooltip>
                                     </ButtonGroup>
