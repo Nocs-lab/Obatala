@@ -81,7 +81,7 @@ const NodeContent = ({ id, data  = {} }) => {
     setSector(value);
     updateNodeSector(id, [value]);
   };
-
+ 
  return (
         <>
             {/* Node Drag Handle */}
