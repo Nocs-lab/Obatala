@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
 import { addEdge, useNodesState, useEdgesState } from "@xyflow/react";
 import validateInitialData from "../helpers/dataValidator";
+import apiFetch from "@wordpress/api-fetch";
 
 // Cria o contexto para o fluxo
 const FlowContext = createContext();
@@ -10,6 +11,11 @@ export const useFlowContext = () => {
 };
 
 export const FlowProvider = ({ children }) => {
+  const getProcessIdFromUrl = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get("process_type_id");
+  };
+
   const [errors, setErrors] = useState([]);
   
   // Utilizando estados diretamente para nodes e edges
@@ -82,6 +88,40 @@ export const FlowProvider = ({ children }) => {
       )
     );
   };
+
+  const updateNodeSector = async (nodeId, sectorId) => {
+    const process_type_id = getProcessIdFromUrl();
+    try {
+        // Requisição para a rota personalizada para associar o setor
+        const response = await apiFetch({
+            path: `/obatala/v1/process_type/${process_type_id}/assosiate_sector`,
+            method: 'POST',
+            data: {
+                sector_id: sectorId[0], // array sectorId convertido para string
+                node_id: nodeId,
+            }
+        });
+
+        if (response) {
+            console.log('Setor associado com sucesso:', response);
+            setNodes((prevNodes) => 
+              prevNodes.map(node =>
+                  node.id === nodeId
+                      ? { 
+                          ...node, 
+                          sector_obatala: sectorId[0], 
+                          sector_history: node.sector_history 
+                              ? [...new Set([...node.sector_history, sectorId[0]])]
+                              : [sectorId[0]]
+                        }
+                      : node
+              )
+          );
+        }
+    } catch (error) {
+        console.error('Erro ao associar o setor:', error);
+    }
+};
 
   // Função para atualizar a posição de um nó
   const updateNodePosition = (nodeId, newPosition) => {
@@ -156,7 +196,7 @@ export const FlowProvider = ({ children }) => {
   
     if (validationResult.isValid || 1 === 1) {
       setNodes(
-        data.nodes.map(({ id, position, data: nodeData, measured, selected }) => ({
+        data.nodes.map(({ id, position, data: nodeData, measured, selected, sector_obatala, sector_history }) => ({
           id,
           type: "customNode",
           dragHandle: ".custom-drag-handle",
@@ -170,6 +210,8 @@ export const FlowProvider = ({ children }) => {
           },
           measured: measured || { width: 0, height: 0 }, // Inclui a medida
           selected: selected || false, // Inclui o estado de seleção
+          sector_obatala: sector_obatala || '',
+          sector_history: sector_history || []
         }))
       );
   
@@ -231,6 +273,7 @@ export const FlowProvider = ({ children }) => {
     removeFieldFromNode,
     updateFieldConfig,
     updateNodeName,
+    updateNodeSector,
     updateNodePosition,
     errors,
     onExport,
