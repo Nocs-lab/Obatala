@@ -119,62 +119,64 @@ const ProcessViewer = () => {
     };
 
     const handleFieldChange = (fieldId, newValue) => {
-    const stepId = orderedSteps[currentStep].id;
+        const stepId = orderedSteps[currentStep].id;
 
-    setFormValues(prevValues => ({
-        ...prevValues,
-        [stepId]: {
-            ...prevValues[stepId],
-            [fieldId]: newValue
-        }
-    }));
+        setFormValues(prevValues => ({
+            ...prevValues,
+            [stepId]: {
+                ...prevValues[stepId],
+                [fieldId]: newValue
+            }
+        }));
 
-    setIsSubmitEnabled(formValues);
+        setIsSubmitEnabled(formValues);
     };
 
     const handleSubmit = async (e) => {
-    e.preventDefault();
+        setIsLoading(true);
+        e.preventDefault();
 
-    const stepId = orderedSteps[currentStep].id;
-    
-    const fields = orderedSteps[currentStep].data.fields.map(field => ({
-        fieldId: field.id,
-        value: formValues[stepId]?.[field.id],
-    }));
-    
-    try {
-        const existingMetaData = await apiFetch({
-            path: `/obatala/v1/process_obatala/${process.id}/meta`,
-            method: 'GET',
-        });
-
-        const updatedStageData = {
-            ...existingMetaData.stageData,
-            [stepId]: { fields }
-        };
-
-
-        await apiFetch({
-            path: `/obatala/v1/process_obatala/${process.id}/meta`,
-            method: 'POST',
-            data: {
-                stageData: updatedStageData,
-                submittedStages: {
-                    ...existingMetaData.submittedStages,
-                    [stepId]: true,
-                }
-            }
-        });
-
-        setSubmittedSteps(prev => ({
-            ...prev,
-            [currentStep]: true, 
+        const stepId = orderedSteps[currentStep].id;
+        
+        const fields = orderedSteps[currentStep].data.fields.map(field => ({
+            fieldId: field.id,
+            value: formValues[stepId]?.[field.id],
         }));
+    
+        try {
+            const existingMetaData = await apiFetch({
+                path: `/obatala/v1/process_obatala/${process.id}/meta`,
+                method: 'GET',
+            });
 
-    } catch (error) {
-        console.error('Error saving metadata:', error);
-        setError('Error saving metadata.');
-    }
+            const updatedStageData = {
+                ...existingMetaData.stageData,
+                [stepId]: { fields }
+            };
+
+            await apiFetch({
+                path: `/obatala/v1/process_obatala/${process.id}/meta`,
+                method: 'POST',
+                data: {
+                    stageData: updatedStageData,
+                    submittedStages: {
+                        ...existingMetaData.submittedStages,
+                        [stepId]: true,
+                    }
+                }
+            });
+
+            setSubmittedSteps(prev => ({
+                ...prev,
+                [currentStep]: true, 
+            }));
+
+            setIsLoading(false);
+
+        } catch (error) {
+            console.error('Error saving metadata:', error);
+            setError('Error saving metadata.');
+        }
     };
 
     const getOrderedSteps = useCallback(() => {
@@ -218,54 +220,6 @@ const ProcessViewer = () => {
     if (isLoading) {
         return <Spinner />;
     }
-
-const handleSubmit = async (e) => {
-  setIsLoading(true);
-  e.preventDefault();
-
-  const stepId = orderedSteps[currentStep].id;
-  
-  const fields = orderedSteps[currentStep].data.fields.map(field => ({
-      fieldId: field.id,
-      value: formValues[stepId]?.[field.id],
-  }));
-  
-  try {
-      const existingMetaData = await apiFetch({
-          path: `/obatala/v1/process_obatala/${process.id}/meta`,
-          method: 'GET',
-      });
-
-      const updatedStageData = {
-          ...existingMetaData.stageData,
-          [stepId]: { fields }
-      };
-
-
-      await apiFetch({
-          path: `/obatala/v1/process_obatala/${process.id}/meta`,
-          method: 'POST',
-          data: {
-              stageData: updatedStageData,
-              submittedStages: {
-                  ...existingMetaData.submittedStages,
-                  [stepId]: true,
-              }
-          }
-      });
-
-      setSubmittedSteps(prev => ({
-          ...prev,
-          [currentStep]: true, 
-      }));
-      setIsLoading(false);
-      
-
-  } catch (error) {
-      console.error('Error saving metadata:', error);
-      setError('Error saving metadata.');
-  }
-};
 
     if (!process) {
         return (
