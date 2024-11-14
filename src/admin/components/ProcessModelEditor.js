@@ -101,12 +101,15 @@ const processDataEditor = () => {
             data: updatedData.meta,
         });
 
-        flowData.nodes.forEach((node) => {
-            if (node.tempSector ) {
-              updateNodeSector(node.id, node.tempSector); // Associa o setor temporário
-            }
-          });
-
+        await Promise.all(
+            flowData.nodes.map((node) => {
+                if (node.tempSector) {
+                    return updateNodeSector(node.id, node.tempSector);
+                }
+                return null;
+            })
+        );
+        
         setProcessData({
             ...processData,
             meta: updatedData.meta,

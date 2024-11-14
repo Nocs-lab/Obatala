@@ -85,7 +85,7 @@ export const FlowProvider = ({ children }) => {
     );
   };
 
-  const updateNodeSector = (nodeId, newValue) => {
+  const updateNodeTempSector = (nodeId, newValue) => {
     console.log('setor: ',newValue);
     setNodes((prevNodes) =>
       prevNodes.map((node) =>
@@ -247,7 +247,7 @@ export const FlowProvider = ({ children }) => {
     removeFieldFromNode,
     updateFieldConfig,
     updateNodeName,
-    updateNodeSector,
+    updateNodeTempSector,
     updateNodePosition,
     errors,
     onExport,

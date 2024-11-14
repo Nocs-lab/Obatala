@@ -32,7 +32,7 @@ const NodeContent = ({ id, data  = {} }) => {
   const { selectedNodes } = useReactFlow();
   const [isAddingFields, setIsAddingFields] = useState(false);
   const { updateNodeName } = useFlowContext();
-  const {updateNodeSector} = useFlowContext();
+  const {updateNodeTempSector} = useFlowContext();
 
   const isSelected = selectedNodes?.some((node) => node.id === id);
   const [stageName, setStageName] = useState(data?.stageName || "");
@@ -79,7 +79,7 @@ const NodeContent = ({ id, data  = {} }) => {
 
   const handleStageSectorChange = (value) => {
     setSector(value);
-    updateNodeSector(id, [value]);
+    updateNodeTempSector(id, [value]);
   };
  
  return (

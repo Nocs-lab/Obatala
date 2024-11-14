@@ -13,7 +13,7 @@ import apiFetch from "@wordpress/api-fetch";
 import MetroNavigation from "./ProcessManager/MetroNavigation";
 import MetaFieldInputs from "./ProcessManager/MetaFieldInputs";
 import CommentForm from "./ProcessManager/CommentForm";
-import { set } from "date-fns";
+import { fetchSectors } from "../api/apiRequests";
 
 const ProcessViewer = () => {
     const [process, setProcess] = useState(null);
@@ -26,6 +26,7 @@ const ProcessViewer = () => {
     const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
     const [flowNodes, setFlowNodes] = useState([]);
     const [orderedSteps, setOrderedSteps] = useState([]);
+    const [sectors, setSectors] = useState([]);
 
     const getProcessIdFromUrl = () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -50,6 +51,7 @@ const ProcessViewer = () => {
         const processId = getProcessIdFromUrl();
         if (processId) {
         setIsLoading(true);
+        loadSectors();
         apiFetch({ path: `/obatala/v1/process_obatala/${processId}?_embed` })
             .then((data) => {
             setProcess(data);
@@ -81,6 +83,29 @@ const ProcessViewer = () => {
         setIsLoading(false);
         }
     }, []);
+
+    const loadSectors = () => {
+        fetchSectors()
+            .then(data => {
+                const sectors = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    name: value.nome,
+                    description: value.descricao,
+                    status: value.status,
+                }));
+    
+                setSectors(sectors);
+            })
+            .catch(error => {
+                console.error('Error fetching sectors:', error);
+            });
+      
+    };
+    
+    const getSectorName = (sectorId) => {
+        const sector = sectors.find(sector => sector.id === sectorId);
+        return sector ? sector.name : "Unknown";
+    };
 
     const fetchMetaData = async (processId, steps) => {
         setIsLoading(true);
@@ -236,8 +261,8 @@ const ProcessViewer = () => {
     }
     console.log(process.meta.flowData);
     console.log(orderedSteps)
-    const options = orderedSteps.map(step => ({ label: step.data.stageName, value: step.id, fields: step.data.fields }));
-
+    const options = orderedSteps.map(step => ({ label: step.data.stageName, value: step.id, fields: step.data.fields, sector_stage: step.sector_obatala }));
+    console.log(options);
     return (
         <main>
             <span className="brand">
@@ -275,7 +300,9 @@ const ProcessViewer = () => {
                     <Panel key={`${orderedSteps[currentStep].id}-${currentStep}`}>
                         <PanelHeader>
                             <h3>{`${options[currentStep].label}`}</h3>
-                            <span className="badge default ms-auto">Setor: Recepção</span>
+                            <span className="badge default ms-auto">
+                                Setor: {getSectorName(options[currentStep].sector_stage)}
+                            </span>
                         </PanelHeader>
                         <PanelBody>
                             <PanelRow>
