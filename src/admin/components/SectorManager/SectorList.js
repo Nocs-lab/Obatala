@@ -1,117 +1,199 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import apiFetch from "@wordpress/api-fetch";
-import { Button, ButtonGroup, Icon, Tooltip, Panel, PanelHeader, PanelRow, Notice, Modal } from '@wordpress/components';
-import { edit, trash, people} from '@wordpress/icons';
+import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
+import { Button, ButtonGroup, Icon, Tooltip, Panel, PanelHeader, PanelRow, Notice, Modal, TextControl } from '@wordpress/components';
+import { edit, trash, people } from '@wordpress/icons';
 import UsersManager from './UserManager/UserManager';
 
-
-const SectorList = ({sectors, onEdit, onDelete}) => {
-    const filteredSectors = useMemo(() => sectors, [sectors]);
+const SectorList = ({ sectors, onEdit, onDelete }) => {
+    const data = useMemo(() => sectors, [sectors]);
     const [addingUsers, setAddingUsers] = useState(null);
-    const [usersSectors, setUsersSectors] = useState({});
-    
-    useEffect(() => {
-        if (filteredSectors.length > 0) {
-            loadSectorUsers();
-        }
-    }, [addingUsers]);
 
     const handleManagerUsers = (sector) => {
-        setAddingUsers(sector)
-    }
+        setAddingUsers(sector);
+    };
 
     const handleCancel = () => {
         setAddingUsers(null);
     };
 
+    // Função para buscar usuários do setor
+    const fetchUserCount = async (sectorId) => {
+        try {
+            const data = await apiFetch({ path: `/obatala/v1/sector_obatala/${sectorId}/users` });
+            return data.length;
+        } catch (error) {
+            console.error(`Erro ao buscar usuários do setor ${sectorId}:`, error);
+            return 0;
+        }
+    };
 
-    const loadSectorUsers = async () => {
-        const updatedSectors = await Promise.all(
-            filteredSectors.map(async (sector) => {
-                console.log(sector.id)
-                try {
-                    const data = await apiFetch({ path: `/obatala/v1/sector_obatala/${sector.id}/users` })
-                    return {...sector, userCount: data.length}
-                    
-                } catch (error) {
-                    console.error(`Erro ao buscar usuários do setor ${sector.id}:`, error);
-                    return { ...sector, userCount: 0 };
+    const columns = useMemo(() => [
+        {
+            Header: 'Title',
+            accessor: 'name'
+        },
+        {
+            Header: 'Description',
+            accessor: 'description',
+        },
+        {
+            Header: 'Number of Users',
+            accessor: 'userCount',
+            Cell: ({ row }) => {
+                const [userCount, setUserCount] = useState(null);
+
+                if (userCount === null) {
+                    fetchUserCount(row.original.id).then(count => setUserCount(count));
                 }
-            })
-        )
-        setUsersSectors(updatedSectors);
-    } 
+
+                return userCount !== null ? userCount : 'Loading...';
+            },
+        },
+        {
+            Header: 'Status',
+            accessor: 'status',
+            Cell: ({ value }) => (
+                <span className={`badge ${value === 'Active' ? 'success' : 'error'}`}>{value}</span>
+            ),
+        },
+        {
+            Header: 'Actions',
+            accessor: 'id',
+            Cell: ({ row }) => (
+                <ButtonGroup>
+                    <Tooltip text="Manage users">
+                        <Button
+                            icon={<Icon icon={people} />}
+                            onClick={() => handleManagerUsers(row.original)}
+                        />
+                    </Tooltip>
+                    <Tooltip text="Edit">
+                        <Button
+                            icon={<Icon icon={edit} />}
+                            onClick={() => onEdit(row.original)}
+                        />
+                    </Tooltip>
+                    <Tooltip text="Delete">
+                        <Button
+                            icon={<Icon icon={trash} />}
+                            onClick={() => onDelete(row.original)}
+                        />
+                    </Tooltip>
+                </ButtonGroup>
+            ),
+        },
+    ], [addingUsers]);
+
+    const {
+        getTableProps,
+        getTableBodyProps,
+        headerGroups,
+        page,
+        prepareRow,
+        canPreviousPage,
+        canNextPage,
+        pageOptions,
+        state: { pageIndex, globalFilter },
+        nextPage,
+        previousPage,
+        setPageSize,
+        setGlobalFilter,
+    } = useTable(
+        {
+            columns,
+            data,
+            initialState: { pageIndex: 0, pageSize: 10 },
+        },
+        useGlobalFilter,
+        useSortBy,
+        usePagination
+    );
+
     return (
         <Panel>
             <PanelHeader>
                 <h3>Existing sectors</h3>
-                <span className="badge">{filteredSectors.length}</span>
+                <span className="badge">{sectors.length}</span>
             </PanelHeader>
             <PanelRow>
-                {usersSectors.length > 0 ? (
-                    <table className="wp-list-table widefat fixed striped">
-                        <thead>
-                            <tr>
-                                <th>Title</th>
-                                <th>Description</th>
-                                <th>Number of users</th>
-                                <th>Status</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {usersSectors.map(sector => {
-                                return (
-                                    <tr key={sector.id}>
-                                        <td>{sector.name}</td>
-                                        <td>{sector.description}</td>
-                                        <td>{sector?.userCount}</td>
-                                        <td><span className={`badge ${sector.status == 'Active' ? 'success' : 'error'}`}>{sector.status}</span></td>
-                                        <td>
-                                            <ButtonGroup>
-                                                <Tooltip text="Manage users">
-                                                    <Button
-                                                        icon={<Icon icon={people} />}
-                                                        onClick={() => handleManagerUsers(sector)}
-                                                    />
-                                                </Tooltip>
-                                                <Tooltip text="Edit">
-                                                    <Button
-                                                        icon={<Icon icon={edit} />}
-                                                        onClick={() => onEdit(sector)}
-                                                    />
-                                                </Tooltip>
-                                                <Tooltip text="Delete">
-                                                    <Button
-                                                        icon={<Icon icon={trash} />}
-                                                        onClick={() => onDelete(sector)}
-                                                    />
-                                                </Tooltip>
-                                            </ButtonGroup>
-                                        </td>
+                <TextControl
+                    className="mb-1"
+                    value={globalFilter || ''}
+                    onChange={value => setGlobalFilter(value)}
+                    placeholder="Search by title or description"
+                    type="search"
+                />
+                {sectors.length > 0 ? (
+                    <>
+                        <table {...getTableProps()} className="wp-list-table widefat fixed striped table-view-list">
+                            <thead>
+                                {headerGroups.map(headerGroup => (
+                                    <tr {...headerGroup.getHeaderGroupProps()}>
+                                        {headerGroup.headers.map(column => (
+                                            <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                                {column.render('Header')}
+                                                <span>
+                                                    {column.isSorted
+                                                        ? column.isSortedDesc
+                                                            ? ' 🔽'
+                                                            : ' 🔼'
+                                                        : ''}
+                                                </span>
+                                            </th>
+                                        ))}
                                     </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
+                                ))}
+                            </thead>
+                            <tbody {...getTableBodyProps()}>
+                                {page.map(row => {
+                                    prepareRow(row);
+                                    return (
+                                        <tr {...row.getRowProps()}>
+                                            {row.cells.map(cell => (
+                                                <td {...cell.getCellProps()}>
+                                                    {cell.render('Cell')}
+                                                </td>
+                                            ))}
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                        <div className="pagination">
+                            <Button onClick={() => previousPage()} disabled={!canPreviousPage}>
+                                Previous
+                            </Button>
+                            <span>
+                                Page{' '}
+                                <strong>
+                                    {pageIndex + 1} of {pageOptions.length}
+                                </strong>{' '}
+                            </span>
+                            <Button onClick={() => nextPage()} disabled={!canNextPage}>
+                                Next
+                            </Button>
+                        </div>
+                    </>
                 ) : (
                     <Notice isDismissible={false} status="warning">No existing sectors.</Notice>
                 )}
-                 {addingUsers && (
-                <Modal
-                    title={<>Manager users: {addingUsers.name}</>}
-                    onRequestClose={handleCancel}
-                    isDismissible={true}
-                    size="large"
-                >
-                    <UsersManager
-                        sector={addingUsers}
-                    /> 
-                </Modal>
-            )}
+                {addingUsers && (
+                    <Modal
+                        title={<>Manager users: {addingUsers.name}</>}
+                        onRequestClose={handleCancel}
+                        isDismissible={true}
+                        size="large"
+                    >
+                        <UsersManager
+                            sector={addingUsers}
+                        />
+                    </Modal>
+                )}
             </PanelRow>
         </Panel>
     );
-}
+};
 
 export default SectorList;
+

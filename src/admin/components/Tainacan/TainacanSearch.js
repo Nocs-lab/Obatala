@@ -26,8 +26,8 @@ const TainacanSearchControls = ({onFieldChange, initialValue = [], isEditable}) 
 
         try {
             const [collectionsResponse, itemsResponse] = await Promise.all([
-                fetch(`/wordpress/wp-json/tainacan/v2/collections?search=${input}`),
-                fetch(`/wordpress/wp-json/tainacan/v2/items?search=${input}`)
+                fetch(`/wp-json/tainacan/v2/collections?search=${input}`),
+                fetch(`/wp-json/tainacan/v2/items?search=${input}`)
             ]);
 
             const collectionsData = await collectionsResponse.json();
