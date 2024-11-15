@@ -421,13 +421,15 @@ class Sector {
                 if (in_array($node['sector_obatala'], $user_sectors[0])) {
                     return [
                         'status' => true,
-                        'message' => 'Permissão concedida.'
+                        'message' => 'Permissão concedida.',
+                        'data_sector' => $user_sectors[0]
                     ];
                 }
             }
             return [
                 'status' => false,
                 'message' => 'Usuário não possui permissão.',
+                'data_sector' => $user_sectors[0]
             ];
         } else {
             return [
