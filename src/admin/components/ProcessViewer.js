@@ -92,7 +92,7 @@ const ProcessViewer = () => {
                 .then((result) => {
                     setFlowNodes(result.data);
                     setHasPermission(result.status);
-                    setSectorUser(result.data_sector[0])
+                    setSectorUser(result.data_sector)
                 
                 })
                 .catch((error) => {
@@ -272,7 +272,11 @@ const ProcessViewer = () => {
     };
 
     const isUserInSector = (stepSector) => {
-        return sectorUser === stepSector;
+        if (!Array.isArray(sectorUser)) {
+            console.error("sectorUser não é um array válido:", sectorUser);
+            return false;
+        }
+        return sectorUser.includes(stepSector);
     };
 
     if (!process) {
@@ -340,7 +344,6 @@ const ProcessViewer = () => {
                     />
                     <main>
                     {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
-                        isPublic || isUserInSector(options[currentStep].sector_stage) ? (
                         <Panel key={`${orderedSteps[currentStep].id}-${currentStep}`}>
                             <PanelHeader>
                                 <h3>{`${options[currentStep].label}`}</h3>
@@ -360,7 +363,7 @@ const ProcessViewer = () => {
                                                             fieldId={field.id} 
                                                             initalValue={formValues[orderedSteps[currentStep].id]?.[field.id] || ''}
                                                             isEditable={!submittedSteps[currentStep]}
-                                                            noHasPermission={isPublic && hasPermission === false || !isUserInSector(options[currentStep].sector_stage)} 
+                                                            noHasPermission={!isUserInSector(options[currentStep].sector_stage)} 
                                                             onFieldChange={handleFieldChange} 
                                                         />
                                                     </li>
@@ -391,24 +394,6 @@ const ProcessViewer = () => {
                                 </footer>
                             </PanelBody>
                         </Panel>
-                         ) : (
-                            <Panel>
-                                <PanelHeader>
-                                    <h3>{`${options[currentStep].label}`}</h3>
-                                    <span className="badge default ms-auto">
-                                        Setor: {getSectorName(options[currentStep].sector_stage)}
-                                    </span>
-                                </PanelHeader>
-                                <PanelBody>
-                                    <div className="notice-container" style={{padding: '10px 30px 10px 30px'}}>
-                                        <Notice status="error" isDismissible={false}>
-                                            You cannot access this step because the process is private.
-                                        </Notice>
-                                    </div>
-                                </PanelBody>
-                            </Panel>
-                            
-                        )
                        
                     ) : (
                         <div className="notice-container">
