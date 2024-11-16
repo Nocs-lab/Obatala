@@ -100,7 +100,7 @@ const NodeContent = ({ id, data  = {} }) => {
             />
 
             <ComboboxControl
-                label="Select a Sector"
+                label="Select a Group"
                 value={sector}
                 options={sectors.map(sector => ({ 
                     label: sector.name, 

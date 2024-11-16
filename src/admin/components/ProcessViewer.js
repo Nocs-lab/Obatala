@@ -348,7 +348,7 @@ const ProcessViewer = () => {
                             <PanelHeader>
                                 <h3>{`${options[currentStep].label}`}</h3>
                                 <span className="badge default ms-auto">
-                                    Setor: {getSectorName(options[currentStep].sector_stage)}
+                                    Grupo: {getSectorName(options[currentStep].sector_stage)}
                                 </span>
                             </PanelHeader>
                             <PanelBody>
