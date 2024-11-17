@@ -132,51 +132,6 @@ const ProcessViewer = () => {
     setIsSubmitEnabled(formValues);
     };
 
-    const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    const stepId = orderedSteps[currentStep].id;
-    
-    const fields = orderedSteps[currentStep].data.fields.map(field => ({
-        fieldId: field.id,
-        value: formValues[stepId]?.[field.id],
-    }));
-    
-    try {
-        const existingMetaData = await apiFetch({
-            path: `/obatala/v1/process_obatala/${process.id}/meta`,
-            method: 'GET',
-        });
-
-        const updatedStageData = {
-            ...existingMetaData.stageData,
-            [stepId]: { fields }
-        };
-
-
-        await apiFetch({
-            path: `/obatala/v1/process_obatala/${process.id}/meta`,
-            method: 'POST',
-            data: {
-                stageData: updatedStageData,
-                submittedStages: {
-                    ...existingMetaData.submittedStages,
-                    [stepId]: true,
-                }
-            }
-        });
-
-        setSubmittedSteps(prev => ({
-            ...prev,
-            [currentStep]: true, 
-        }));
-
-    } catch (error) {
-        console.error('Error saving metadata:', error);
-        setError('Error saving metadata.');
-    }
-    };
-
     const getOrderedSteps = useCallback(() => {
         if (flowNodes && flowNodes.nodes){
             const { edges, nodes } = flowNodes;
