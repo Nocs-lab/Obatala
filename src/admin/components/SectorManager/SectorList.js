@@ -113,7 +113,7 @@ const SectorList = ({ sectors, onEdit, onDelete }) => {
     return (
         <Panel>
             <PanelHeader>
-                <h3>Existing sectors</h3>
+                <h3>Existing groups</h3>
                 <span className="badge">{sectors.length}</span>
             </PanelHeader>
             <PanelRow>
@@ -176,7 +176,7 @@ const SectorList = ({ sectors, onEdit, onDelete }) => {
                         </div>
                     </>
                 ) : (
-                    <Notice isDismissible={false} status="warning">No existing sectors.</Notice>
+                    <Notice isDismissible={false} status="warning">No existing groups.</Notice>
                 )}
                 {addingUsers && (
                     <Modal

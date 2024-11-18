@@ -39,7 +39,9 @@ export const updateProcessTypeMeta = (id, meta) => {
     data: meta,
   });
 };
-
+export const fetchProcessTypeById = (id) => {
+  return apiFetch({path: `/obatala/v1/process_type/${id}`})
+}
 export const deleteProcessType = (id) => {
   return apiFetch({ path: `/obatala/v1/process_type/${id}`, method: "DELETE" });
 };
@@ -47,6 +49,10 @@ export const deleteProcessType = (id) => {
 export const fetchProcesses = () => {
   return apiFetch({ path: `/obatala/v1/process_obatala?per_page=100` });
 };
+
+export const fetchProcessById = (id) => {
+  return apiFetch({path: `/obatala/v1/process_obatala/${id}`})
+}
 
 export const fetchSectors = () => {
     return apiFetch({ path: `/obatala/v1/all_sector_obatala` });   
@@ -79,3 +85,7 @@ export const assignUserToSector = (data) => {
 export const deleteSectorUser = (sectorId, data) => {
   return apiFetch({ path: `/obatala/v1/sector_obatala/${sectorId}/remove_user`, method: 'POST', data: data });
 };
+
+export const fetchNodePermission = (processId, currentUserId) => {
+  return apiFetch({ path: `/obatala/v1/process_type/${processId}/get_node?user=${currentUserId}` })
+}

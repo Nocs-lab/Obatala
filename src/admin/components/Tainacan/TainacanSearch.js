@@ -3,7 +3,7 @@ import { TextControl } from '@wordpress/components';
 import CollectionCard from './TainacanSearch/CollectionCard';
 import ItemCard from './TainacanSearch/ItemCard';
 
-const TainacanSearchControls = ({onFieldChange, initialValue = [], isEditable}) => {
+const TainacanSearchControls = ({onFieldChange, initialValue = [], isEditable, noHasPermission}) => {
     const [query, setQuery] = useState('');
     const [results, setResults] = useState(initialValue ? initialValue : []);
     const [loading, setLoading] = useState(false);
@@ -103,6 +103,7 @@ const TainacanSearchControls = ({onFieldChange, initialValue = [], isEditable}) 
             <TextControl
                 label="Search Tainacan"
                 value={query}
+                disabled={noHasPermission}
                 onChange={handleSearch}
                 placeholder="Search for collections and/or items"
                 style={{

@@ -142,6 +142,9 @@
   background-color: var(--white);
   padding: .5rem 1rem;
 }
+.react-flow__node .components-base-control + div {
+  margin-top: -.5rem !important;
+}
 .react-flow__node .components-base-control__field > label {
   margin-bottom: 0.1rem;
   text-transform: none;
@@ -155,6 +158,12 @@
   height: 26px !important;
   margin-bottom: 0;
   min-height: 26px !important;
+}
+.react-flow__node .components-combobox-control__suggestions-container > .components-flex {
+  height: 26px;
+}
+.react-flow__node input.components-combobox-control__input[type=text] {
+  font-size: .75rem;
 }
 .flow-fields {
   background-color: var(--white);

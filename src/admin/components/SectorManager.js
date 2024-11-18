@@ -58,7 +58,7 @@ const SectorManager = () => {
                 savedSector = await saveSector(newSector);
             }
         
-            setNotice({ status: 'success', message: 'Sector successfully saved.' });
+            setNotice({ status: 'success', message: 'Group successfully saved.' });
             setEditingSector(null);
             setAddingSector(null);
             loadSectors();
@@ -66,9 +66,9 @@ const SectorManager = () => {
             console.error('Error saving sector:', error);
            
             if (error === 'Setor já existe' || error === 'Setor com o mesmo nome já existe') {
-                setNotice({ status: 'error', message: 'Sector already exists.' });
+                setNotice({ status: 'error', message: 'Group already exists.' });
             } else {
-                setNotice({ status: 'error', message: 'Error saving sector.' });
+                setNotice({ status: 'error', message: 'Error saving group.' });
             }
             setEditingSector(null);
             setAddingSector(null);
@@ -83,12 +83,12 @@ const SectorManager = () => {
                 const updatedSectors = sectors.filter(type => type.id !== sector.id);
                 setSectors(updatedSectors);
                 setIsLoading(false);
-                setNotice({ status: 'success', message: 'Sector successfully removed.' })
+                setNotice({ status: 'success', message: 'Group successfully removed.' })
                 
             })
             .catch(error => {
                 if(error === 'Erro ao deletar o setor, o setor esta vinculado a um usuario'){
-                    setNotice({ status: 'error', message: 'Cannot deleting sector linked to a user.' }); 
+                    setNotice({ status: 'error', message: 'Cannot deleting group linked to a user.' }); 
                 }
                 console.error('Error deleting process type:', error);
                 setIsLoading(false);
@@ -122,7 +122,7 @@ const SectorManager = () => {
         <main>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
             <div className="title-container">
-                <h2>Sector manager</h2>
+                <h2>Group manager</h2>
                 <ButtonGroup>
                     <Button variant="primary" 
                             icon={<Icon icon={plus}/>}
@@ -146,7 +146,7 @@ const SectorManager = () => {
                 }}
                 onCancel={ handleCancel }
             >
-                Are you sure you want to delete sector {state.sector?.name}?
+                Are you sure you want to delete group {state.sector?.name}?
             </ConfirmDialog>
 
             <SectorList sectors={sectors}
@@ -157,7 +157,7 @@ const SectorManager = () => {
             {/* Open modal to editing Sector */}
             {editingSector && (
                 <Modal
-                    title="Edit Sector"
+                    title="Edit Group"
                     onRequestClose={handleCancel}
                     isDismissible={true}
                 >
@@ -172,7 +172,7 @@ const SectorManager = () => {
             {/* Open modal to adding Sector */}
             {addingSector && (
                 <Modal
-                    title="Add sector"
+                    title="Add Group"
                     onRequestClose={handleCancel}
                     isDismissible={true}
                 >

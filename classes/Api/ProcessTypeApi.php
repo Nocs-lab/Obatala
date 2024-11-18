@@ -218,7 +218,8 @@ class ProcessTypeApi extends ObatalaAPI {
             if ($permission['status'] === true) {
                 return new WP_REST_Response([
                     'data' => $flow_data,
-                    'status' => true
+                    'status' => true,
+                    'data_sector' => $permission['data_sector']
                 ], 200);
             }
             return new WP_REST_Response($permission['message'], 403);
@@ -226,7 +227,8 @@ class ProcessTypeApi extends ObatalaAPI {
             return new WP_REST_Response([
                 'data' => $flow_data,
                 'status' => $permission['status'],
-                'message' => $permission['message']
+                'message' => $permission['message'],
+                'data_sector' => $permission['data_sector']
             ], 200);
         }
     }
