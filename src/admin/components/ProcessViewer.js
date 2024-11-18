@@ -179,7 +179,7 @@ const ProcessViewer = () => {
         }));
 
         setIsSubmitEnabled(formValues);
-        };
+    };
 
     const getOrderedSteps = useCallback(() => {
         if (flowNodes && flowNodes.nodes){
