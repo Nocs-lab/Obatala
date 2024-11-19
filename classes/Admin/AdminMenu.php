@@ -52,8 +52,8 @@ class AdminMenu {
             ],
             [
                 'parent_slug' => 'obatala-main', // Permitir acesso direto
-                'title' => 'Sector Manager',
-                'menu_title' => 'Sector Manager',
+                'title' => 'Group Manager',
+                'menu_title' => 'Group Manager',
                 'capability' => 'manage_options',
                 'slug' => 'sector_manager',
                 'callback' => 'render_page',

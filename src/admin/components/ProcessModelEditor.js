@@ -25,6 +25,11 @@ const processDataEditor = () => {
   const [description, setDescription] = useState("");
   const [isEditing, setIsEditing] = useState(null);
 
+  const getProcessIdFromUrl = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get("process_type_id");
+  };
+
   useEffect(() => {
     setIsLoading(true);
 
@@ -50,6 +55,25 @@ const processDataEditor = () => {
         });
   }, [id]);
 
+  const updateNodeSector = async (nodeId, sectorId) => {
+    const process_type_id = getProcessIdFromUrl();
+    try {
+        const response = await apiFetch({
+            path: `/obatala/v1/process_type/${process_type_id}/assosiate_sector`,
+            method: 'POST',
+            data: {
+                sector_id: sectorId,
+                node_id: nodeId,
+            }
+        });
+
+        if (response) {
+            console.log('Setor associado com sucesso:', response);
+        }
+    } catch (error) {
+        console.error('Erro ao associar o setor:', error);
+    }
+};
   const handleSave = async () => {
     try {
         const flowData = flowRef.current.getFlowData(); // Obtém os dados do flow
@@ -77,6 +101,15 @@ const processDataEditor = () => {
             data: updatedData.meta,
         });
 
+        await Promise.all(
+            flowData.nodes.map((node) => {
+                if (node.tempSector) {
+                    return updateNodeSector(node.id, node.tempSector);
+                }
+                return null;
+            })
+        );
+        
         setProcessData({
             ...processData,
             meta: updatedData.meta,

@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Handle, Position, useReactFlow } from "@xyflow/react";
 import DragAndDropList from "../dragables/DragAndDropList";
 import NodeHandle from "./NodeHandle";
 import { NodeToolbar } from "@xyflow/react";
-import { TextControl } from "@wordpress/components";
+import { TextControl, ComboboxControl } from "@wordpress/components";
 import { useFlowContext } from "../../context/FlowContext";
 import { set } from "date-fns";
+import { fetchSectors } from "../../../../api/apiRequests";
 
 const FIELD_OPTIONS = [
   { id: "text", label: "Texto" },
@@ -20,18 +21,47 @@ const FIELD_OPTIONS = [
   { id: "search", label: "Busca em Tainacan" },
 ];
 
-const NodeContent = ({ id, data = {} }) => {
+const NodeContent = ({ id, data  = {} }) => {
   const {
     fields = [],
     updateFields = () => {},
   } = data;
 
+  const [sectors, setSectors] = useState([]);
+
   const { selectedNodes } = useReactFlow();
   const [isAddingFields, setIsAddingFields] = useState(false);
   const { updateNodeName } = useFlowContext();
+  const {updateNodeTempSector} = useFlowContext();
+
   const isSelected = selectedNodes?.some((node) => node.id === id);
   const [stageName, setStageName] = useState(data?.stageName || "");
+  const {nodes} = useFlowContext();
+  const filteredNode = nodes.find(node => node.id === id);
+  const [sector, setSector] = useState(filteredNode?.sector_obatala || '');
+  
+  useEffect(() => {
+    console.log(filteredNode)
+    loadSectors();
+  }, []);
 
+  const loadSectors = () => {
+    fetchSectors()
+        .then(data => {
+            const sectors = Object.entries(data).map(([key, value]) => ({
+                id: key,
+                name: value.nome,
+                description: value.descricao,
+                status: value.status,
+            }));
+
+            setSectors(sectors);
+        })
+        .catch(error => {
+            console.error('Error fetching sectors:', error);
+        });
+  };
+  
   const addFieldToNode = (fieldId) => {
     const newField = {
       id: `${fieldId}-${fields.length + 1}`,
@@ -47,7 +77,12 @@ const NodeContent = ({ id, data = {} }) => {
     updateNodeName(id, e);
   };
 
-    return (
+  const handleStageSectorChange = (value) => {
+    setSector(value);
+    updateNodeTempSector(id, [value]);
+  };
+ 
+ return (
         <>
             {/* Node Drag Handle */}
             <NodeHandle nodeId={id} />
@@ -62,6 +97,16 @@ const NodeContent = ({ id, data = {} }) => {
                 label="Step name"
                 onChange={handleStageNameChange}
                 placeholder="Digite o nome da etapa"
+            />
+
+            <ComboboxControl
+                label="Group responsible"
+                value={sector}
+                options={sectors.map(sector => ({ 
+                    label: sector.name, 
+                    value: sector.id,
+                }))}
+                onChange={handleStageSectorChange}
             />
 
             {/* List of Fields */}

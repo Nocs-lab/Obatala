@@ -10,7 +10,7 @@ import {
 import { upload } from "@wordpress/icons";
 import TainacanSearchControls from "../Tainacan/TainacanSearch";
 
-const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId, initalValue}) => {
+const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId, initalValue, noHasPermission}) => {
   const [value, setValue] = useState(initalValue);
 
   const formatDate = (date) => {
@@ -40,7 +40,7 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
                 placeholder={field.config?.placeholder ?? "Enter a value..."}
                 value={value}
                 onChange={handleChange}
-                disabled={!isEditable}
+                disabled={!isEditable || noHasPermission}
                 required={field.config?.required ?? false}
                 minLength={field.config?.minLength}
                 maxLength={field.config?.maxLength}
@@ -64,7 +64,7 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
                 label={field.config?.label ?? "Unknow Title"}
                 currentDate={field.config?.dateValue}
                 onChange={(date) => handleChange(formatDate(date))}
-                disabled={!isEditable}
+                disabled={!isEditable || noHasPermission}
                 required={field.config?.required ?? false}
                 help={field.config?.helpText}
               />
@@ -86,7 +86,7 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
                 accept="image/*"
                 onChange={(event) => console.log(event.currentTarget.files)}
                 label={field.config?.label ?? "Unknow title"}
-                disabled={!isEditable}
+                disabled={!isEditable || noHasPermission}
                 required={field.config?.required ?? false}
                 help={field.config?.helpText}
                 icon={upload}
@@ -118,7 +118,7 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
                 value={value}
                 onChange={(value) => handleChange(value)}
                 type="number"
-                disabled={!isEditable}
+                disabled={!isEditable || noHasPermission}
                 required={field.config?.required ?? false}
                 help={field.config?.helpText}
               />
@@ -146,7 +146,7 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
                     .split(",")
                     .map((option) => ({ label: option, value: option })),
                 ]}
-                disabled={!isEditable}
+                disabled={!isEditable || noHasPermission}
                 required={field.config?.required ?? false}
                 help={field.config?.helpText}
               />
@@ -171,7 +171,7 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
                 options={field.config?.options
                   .split(",")
                   .map((option) => ({ label: option, value: option }))}
-                disabled={!isEditable}
+                disabled={!isEditable || noHasPermission}
                 required={field.config?.required ?? false}
                 help={field.config?.helpText}
               />
@@ -193,6 +193,7 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
             }
             initialValue={initalValue}
             isEditable={isEditable}
+                noHasPermission={noHasPermission}
           />
         );
       default:
