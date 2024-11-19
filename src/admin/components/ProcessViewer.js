@@ -26,6 +26,7 @@ const ProcessViewer = () => {
     const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
     const [flowNodes, setFlowNodes] = useState([]);
     const [orderedSteps, setOrderedSteps] = useState([]);
+    const [isStepSubmitEnabled, setIsStepSubmitEnabled] = useState({});
 
     const getProcessIdFromUrl = () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -119,14 +120,24 @@ const ProcessViewer = () => {
     };
 
     const handleFieldChange = (fieldId, newValue) => {
-    const stepId = orderedSteps[currentStep].id;
-
-    setFormValues(prevValues => ({
-        ...prevValues,
-        [stepId]: {
-            ...prevValues[stepId],
-            [fieldId]: newValue
-        }
+        const stepId = orderedSteps[currentStep].id;
+    
+        // Atualize os valores do formulário
+        setFormValues(prevValues => ({
+            ...prevValues,
+            [stepId]: {
+                ...prevValues[stepId],
+                [fieldId]: newValue,
+            },
+        }));
+            // Verifica se todos os campos da etapa atual foram preenchidos
+    const allFieldsFilled = orderedSteps[currentStep].data.fields.every((field) => {
+        const value = formValues[stepId]?.[field.id] || newValue;
+        return value !== undefined && value !== '';
+    });
+    setIsStepSubmitEnabled(prevState => ({
+        ...prevState,
+        [currentStep]: allFieldsFilled,
     }));
 
     setIsSubmitEnabled(formValues);
@@ -219,54 +230,6 @@ const ProcessViewer = () => {
         return <Spinner />;
     }
 
-const handleSubmit = async (e) => {
-  setIsLoading(true);
-  e.preventDefault();
-
-  const stepId = orderedSteps[currentStep].id;
-  
-  const fields = orderedSteps[currentStep].data.fields.map(field => ({
-      fieldId: field.id,
-      value: formValues[stepId]?.[field.id],
-  }));
-  
-  try {
-      const existingMetaData = await apiFetch({
-          path: `/obatala/v1/process_obatala/${process.id}/meta`,
-          method: 'GET',
-      });
-
-      const updatedStageData = {
-          ...existingMetaData.stageData,
-          [stepId]: { fields }
-      };
-
-
-      await apiFetch({
-          path: `/obatala/v1/process_obatala/${process.id}/meta`,
-          method: 'POST',
-          data: {
-              stageData: updatedStageData,
-              submittedStages: {
-                  ...existingMetaData.submittedStages,
-                  [stepId]: true,
-              }
-          }
-      });
-
-      setSubmittedSteps(prev => ({
-          ...prev,
-          [currentStep]: true, 
-      }));
-      setIsLoading(false);
-      
-
-  } catch (error) {
-      console.error('Error saving metadata:', error);
-      setError('Error saving metadata.');
-  }
-};
-
     if (!process) {
         return (
             <Notice status="warning" isDismissible={false}>
@@ -279,93 +242,112 @@ const handleSubmit = async (e) => {
     const options = orderedSteps.map(step => ({ label: step.data.stageName, value: step.id, fields: step.data.fields }));
 
     return (
-        <main>
-            <span className="brand">
-                <strong>Obatala</strong> Curatorial Process Viewer
-            </span>
-            <h2>
-                <small>
-                    {filteredProcessType
-                        ? filteredProcessType.title.rendered
-                        : "Process type title"}
-                </small>
-                {process.title?.rendered}
-            </h2>
-            <div className="badge-container">
-                <span
-                    className={`badge ${
-                        process.meta.access_level == "public" ? "success" : "warning"
-                    }`}
-                    >
-                    {process.meta.access_level}
-                </span>
-                <span className="badge default"><Icon icon="yes"/> 70% concluído</span>
-                <span className="badge default"><Icon icon="admin-users"/> Criado por: José da Silva</span>
-            </div>
+      <main>
+        <span className="brand">
+          <strong>Obatala</strong> Curatorial Process Viewer
+        </span>
+        <h2>
+          <small>
+            {filteredProcessType
+              ? filteredProcessType.title.rendered
+              : "Process type title"}
+          </small>
+          {process.title?.rendered}
+        </h2>
+        <div className="badge-container">
+          <span
+            className={`badge ${
+              process.meta.access_level == "public" ? "success" : "warning"
+            }`}
+          >
+            {process.meta.access_level}
+          </span>
+          <span className="badge default">
+            <Icon icon="yes" /> 70% concluído
+          </span>
+          <span className="badge default">
+            <Icon icon="admin-users" /> Criado por: José da Silva
+          </span>
+        </div>
 
-            <div className="panel-container three-columns">
-                <MetroNavigation
-                    options={options}
-                    currentStep={currentStep}
-                    onStepChange={(newStep) => setCurrentStep(newStep)}
-                    submittedSteps={submittedSteps}
-                />
-                <main>
-                {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
-                    <Panel key={`${orderedSteps[currentStep].id}-${currentStep}`}>
-                        <PanelHeader>
-                            <h3>{`${options[currentStep].label}`}</h3>
-                            <span className="badge default ms-auto">Setor: Recepção</span>
-                        </PanelHeader>
-                        <PanelBody>
-                            <PanelRow>
-                                {options[currentStep].fields.length > 0 ? (
-                                    <form className="centered" onSubmit={handleSubmit}>
-                                        <ul className="meta-fields-list">
-                                            {Array.isArray(options[currentStep].fields) ? options[currentStep].fields.map((field, idx) => (
-                                                <li key={`${orderedSteps[currentStep].id}-meta-${idx}`} className="meta-field-item">
-                                                    <MetaFieldInputs 
-                                                        field={field} 
-                                                        fieldId={field.id} 
-                                                        initalValue={formValues[orderedSteps[currentStep].id]?.[field.id] || ''}
-                                                        isEditable={!submittedSteps[currentStep]} 
-                                                        onFieldChange={handleFieldChange} 
-                                                    />
-                                                </li>
-                                            )) : null}
-                                        </ul>
-                                        <div className="action-bar">
-                                            <Button
-                                                variant="primary"
-                                                type="submit"
-                                                disabled={!isSubmitEnabled || submittedSteps[currentStep]}
-                                                >Submit
-                                            </Button>
-                                        </div>
-                                    </form>
-                                ) : (
-                                    <Notice status="warning" isDismissible={false}>No fields found for this Step.</Notice>
-                                )}
-                            </PanelRow>
-                            <footer>
-                                Última atualização em 21/10/2024 por João da Silva
-                            </footer>
-                        </PanelBody>
-                    </Panel>
-                ) : (
-                    <Notice status="warning" isDismissible={false}>
-                    No steps found for this process.
-                    </Notice>
-                )}
-                </main>
-                <aside>
-                    <Panel>
-                        <PanelHeader>Comments</PanelHeader>
-                        <CommentForm stepId={orderedSteps[currentStep]?.id || null} />
-                    </Panel>
-                </aside>
-            </div>
-        </main>
+        <div className="panel-container three-columns">
+          <MetroNavigation
+            options={options}
+            currentStep={currentStep}
+            onStepChange={(newStep) => setCurrentStep(newStep)}
+            submittedSteps={submittedSteps}
+          />
+          <main>
+            {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
+              <Panel key={`${orderedSteps[currentStep].id}-${currentStep}`}>
+                <PanelHeader>
+                  <h3>{`${options[currentStep].label}`}</h3>
+                  <span className="badge default ms-auto">Setor: Recepção</span>
+                </PanelHeader>
+                <PanelBody>
+                  <PanelRow>
+                    {options[currentStep].fields.length > 0 ? (
+                      <form className="centered" onSubmit={handleSubmit}>
+                        <ul className="meta-fields-list">
+                          {Array.isArray(options[currentStep].fields)
+                            ? options[currentStep].fields.map((field, idx) => (
+                                <li
+                                  key={`${orderedSteps[currentStep].id}-meta-${idx}`}
+                                  className="meta-field-item"
+                                >
+                                  <MetaFieldInputs
+                                    field={field}
+                                    fieldId={field.id}
+                                    initalValue={
+                                      formValues[
+                                        orderedSteps[currentStep].id
+                                      ]?.[field.id] || ""
+                                    }
+                                    isEditable={!submittedSteps[currentStep]}
+                                    onFieldChange={handleFieldChange}
+                                  />
+                                </li>
+                              ))
+                            : null}
+                        </ul>
+                        <div className="action-bar">
+                          <Button
+                            variant="primary"
+                            type="submit"
+                            disabled={
+                              !isStepSubmitEnabled[currentStep] ||
+                              submittedSteps[currentStep]
+                            }
+                          >
+                            Submit
+                          </Button>
+                        </div>
+                      </form>
+                    ) : (
+                      <Notice status="warning" isDismissible={false}>
+                        No fields found for this Step.
+                      </Notice>
+                    )}
+                  </PanelRow>
+                  <footer>
+                    Última atualização em 21/10/2024 por João da Silva
+                  </footer>
+                </PanelBody>
+              </Panel>
+            ) : (
+              <Notice status="warning" isDismissible={false}>
+                No steps found for this process.
+              </Notice>
+            )}
+          </main>
+          <aside>
+            <Panel>
+              <PanelHeader>Comments</PanelHeader>
+              <CommentForm stepId={orderedSteps[currentStep]?.id || null} />
+            </Panel>
+          </aside>
+        </div>
+      </main>
     );
 };
 

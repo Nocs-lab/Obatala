@@ -87,13 +87,12 @@ export const DatePickerControls = ({
       {/* Campo para seleção de data */}
       <label>Selecionar Data:</label>
       <DateTimePicker
-        currentDate={formValues.dateValue} // Use formValues para sincronizar o valor
+        currentDate={formValues.dateValue || ""}
         onChange={(value) => {
-          setFormValues((prev) => ({ ...prev, dateValue: value }));
+          setFormValues((prev) => ({ ...prev, dateValue: value || "" }));
         }}
-        is12Hour={false} // Define se o formato de hora é 12h
+        is12Hour={false}
         style={{ marginBottom: "10px" }}
-        help={errors.dateValue} // Exibe a mensagem de erro, se houver
       />
 
       {/* Campo para fornecer texto de ajuda */}
