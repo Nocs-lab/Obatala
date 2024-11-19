@@ -315,6 +315,7 @@ const ProcessViewer = () => {
                 <span className="badge default"><Icon icon="yes"/> 70% concluído</span>
                 <span className="badge default"><Icon icon="admin-users"/> Criado por: José da Silva</span>
             </div>
+
             {!isPublic && hasPermission === false ? (
                 <div style={{margin: '50px'}}>
                     <div className="notice-container">
@@ -322,10 +323,7 @@ const ProcessViewer = () => {
                             You do not have permission to access this process.
                         </Notice>
                     </div>
-
                 </div>
-                
-               
             ) : (
                 <>
                 {isPublic && hasPermission === false && (
@@ -379,14 +377,11 @@ const ProcessViewer = () => {
                                             </div>
                                         </form>
                                     ) : (
-
                                         <div className="notice-container">
                                             <Notice status="warning" isDismissible={false}>
                                                 No fields found for this Step.
                                             </Notice>
-
                                         </div>
-
                                     )}
                                 </PanelRow>
                                 <footer>
@@ -412,7 +407,6 @@ const ProcessViewer = () => {
                 </div>
                 </>
             )}        
-            
         </main>
     );
 };
