@@ -34,6 +34,7 @@ const ProcessViewer = () => {
     const [isPublic, setIsPublic] = useState(false);
 
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
+    const [isStepSubmitEnabled, setIsStepSubmitEnabled] = useState({});
 
     const getProcessIdFromUrl = () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -168,14 +169,24 @@ const ProcessViewer = () => {
     };
 
     const handleFieldChange = (fieldId, newValue) => {
-        const stepId = orderedSteps[currentStep].id;
-
-        setFormValues(prevValues => ({
-            ...prevValues,
-            [stepId]: {
-                ...prevValues[stepId],
-                [fieldId]: newValue
-            }
+            const stepId = orderedSteps[currentStep].id;
+    
+        // Atualize os valores do formulário
+            setFormValues(prevValues => ({
+                ...prevValues,
+                [stepId]: {
+                    ...prevValues[stepId],
+                    [fieldId]: newValue,
+            },
+            }));
+            // Verifica se todos os campos da etapa atual foram preenchidos
+    const allFieldsFilled = orderedSteps[currentStep].data.fields.every((field) => {
+        const value = formValues[stepId]?.[field.id] || newValue;
+        return value !== undefined && value !== '';
+    });
+    setIsStepSubmitEnabled(prevState => ({
+        ...prevState,
+        [currentStep]: allFieldsFilled,
         }));
 
         setIsSubmitEnabled(formValues);
