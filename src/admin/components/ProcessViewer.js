@@ -66,7 +66,8 @@ const ProcessViewer = () => {
             fetchProcessById(processId)
                 .then((data) => {
                     setProcess(data);
-                    setIsPublic(data.meta?.access_level?.[0] === 'public')
+                    setIsPublic(data.meta?.access_level?.[0] === 'Public' || data.meta?.access_level?.[0] === 'public' )
+                    //setIsPublic(data.meta?.access_level?.[0] === 'public')
 
                 const processTypeId = data.meta.process_type;
                 if (processTypeId) {
@@ -318,7 +319,7 @@ const ProcessViewer = () => {
             <div className="badge-container">
                 <span
                     className={`badge ${
-                        process.meta.access_level == "public" ? "success" : "warning"
+                        process.meta.access_level == "public" || process.meta.access_level == 'Public' ? "success" : "warning"
                     }`}
                     >
                     {process.meta.access_level}
@@ -326,6 +327,7 @@ const ProcessViewer = () => {
                 <span className="badge default"><Icon icon="yes"/> 70% concluído</span>
                 <span className="badge default"><Icon icon="admin-users"/> Criado por: José da Silva</span>
             </div>
+
             {!isPublic && hasPermission === false ? (
                 <div style={{margin: '50px'}}>
                     <div className="notice-container">
@@ -333,10 +335,7 @@ const ProcessViewer = () => {
                             You do not have permission to access this process.
                         </Notice>
                     </div>
-
                 </div>
-                
-               
             ) : (
                 <>
                 {isPublic && hasPermission === false && (
@@ -390,14 +389,11 @@ const ProcessViewer = () => {
                                             </div>
                                         </form>
                                     ) : (
-
                                         <div className="notice-container">
                                             <Notice status="warning" isDismissible={false}>
                                                 No fields found for this Step.
                                             </Notice>
-
                                         </div>
-
                                     )}
                                 </PanelRow>
                                 <footer>
@@ -423,7 +419,6 @@ const ProcessViewer = () => {
                 </div>
                 </>
             )}        
-            
         </main>
     );
 };

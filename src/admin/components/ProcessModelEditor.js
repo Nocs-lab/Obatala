@@ -101,14 +101,16 @@ const processDataEditor = () => {
             data: updatedData.meta,
         });
 
-        await Promise.all(
-            flowData.nodes.map((node) => {
-                if (node.tempSector) {
-                    return updateNodeSector(node.id, node.tempSector);
+        for (const node of flowData.nodes) {
+            if (node.tempSector) {
+                try {
+                    await updateNodeSector(node.id, node.tempSector);
+                    //node.tempSector = null;
+                } catch (error) {
+                    console.error(`Erro ao associar setor ao nó ${node.id}:`, error);
                 }
-                return null;
-            })
-        );
+            }
+        }
         
         setProcessData({
             ...processData,

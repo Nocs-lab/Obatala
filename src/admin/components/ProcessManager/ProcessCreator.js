@@ -5,7 +5,7 @@ import apiFetch from '@wordpress/api-fetch';
 const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel }) => {
     const [newProcessTitle, setNewProcessTitle] = useState('');
     const [newProcessType, setNewProcessType] = useState('');
-    const [accessLevel, setAccessLevel] = useState('public');
+    const [accessLevel, setAccessLevel] = useState('Public');
     const [notice, setNotice] = useState(null);
     
     useEffect(() => {

@@ -167,6 +167,9 @@ form .components-button-group .components-button {
   height: 38px !important;
   min-height: 38px !important;
 }
+.components-text-control__input[disabled] {
+  background-color: var(--gray-200);
+}
 .components-combobox-control__suggestions-container > .components-flex {
   height: 38px;
 }
