@@ -5,7 +5,7 @@ import apiFetch from '@wordpress/api-fetch';
 const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel }) => {
     const [newProcessTitle, setNewProcessTitle] = useState('');
     const [newProcessType, setNewProcessType] = useState('');
-    const [accessLevel, setAccessLevel] = useState('public');
+    const [accessLevel, setAccessLevel] = useState('Public');
     const [notice, setNotice] = useState(null);
     
     useEffect(() => {
@@ -104,7 +104,7 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
         onCancel();
         setNewProcessTitle('');
         setNewProcessType('');
-        setAccessLevel('public');
+        setAccessLevel('Public');
     };
 
     return (
@@ -123,10 +123,10 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
             />
 
             <SelectControl
-                 label="Process Type"
+                 label="Process Model"
                  value={newProcessType}
                  options={[
-                     { label: 'Select a process type...', value: '' },
+                     { label: 'Select a process model...', value: '' },
                      ...processTypes.map(type => ({ label: type.title.rendered, value: type.id }))
                  ]}
                  onChange={(value) => setNewProcessType(value)}
@@ -137,8 +137,8 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
                 label="Access Level"
                 value={accessLevel}
                 options={[
-                    { label: 'Public', value: 'public' },
-                    { label: 'Private', value: 'private' }
+                    { label: 'Public', value: 'Public' },
+                    { label: 'Private', value: 'Private' }
                 ]}
                 onChange={(value) => setAccessLevel(value)}
             />

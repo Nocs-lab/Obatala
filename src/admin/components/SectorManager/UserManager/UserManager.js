@@ -159,7 +159,7 @@ const UserManager = ({ sector}) => {
                     </tbody>
                 </table>
             ) : (
-                <Notice isDismissible={false} status="warning">No existing users for this sector.</Notice>
+                <Notice isDismissible={false} status="warning">No existing users for this group.</Notice>
             )}
         </>
     );

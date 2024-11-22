@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
 import { addEdge, useNodesState, useEdgesState } from "@xyflow/react";
 import validateInitialData from "../helpers/dataValidator";
+import apiFetch from "@wordpress/api-fetch";
 
 // Cria o contexto para o fluxo
 const FlowContext = createContext();
@@ -16,6 +17,7 @@ export const FlowProvider = ({ children }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
+  console.log('nodes', nodes)
   // Função para atualizar os campos de cada nó
   const updateFieldsForNode = (nodeId, newFields) => {
     setNodes((prevNodes) =>
@@ -82,6 +84,17 @@ export const FlowProvider = ({ children }) => {
       )
     );
   };
+
+  const updateNodeTempSector = (nodeId, newValue) => {
+    console.log('setor: ',newValue);
+    setNodes((prevNodes) =>
+      prevNodes.map((node) =>
+        node.id === nodeId
+          ? { ...node, tempSector: newValue[0]  }
+          : node
+      )
+    );
+  }
 
   // Função para atualizar a posição de um nó
   const updateNodePosition = (nodeId, newPosition) => {
@@ -156,7 +169,8 @@ export const FlowProvider = ({ children }) => {
   
     if (validationResult.isValid || 1 === 1) {
       setNodes(
-        data.nodes.map(({ id, position, data: nodeData, measured, selected }) => ({
+        data.nodes.map(({ id, position, data: nodeData, measured, selected, sector_obatala, sector_history, tempSector }) => ({
+          
           id,
           type: "customNode",
           dragHandle: ".custom-drag-handle",
@@ -168,11 +182,13 @@ export const FlowProvider = ({ children }) => {
             updateNodeName: (newName) => updateNodeName(id, newName),
             updatePosition: (newPosition) => updateNodePosition(id, newPosition),
           },
+          sector_obatala: sector_obatala || '',
+          sector_history: sector_history || [],
+          tempSector: sector_obatala ? null : tempSector,
           measured: measured || { width: 0, height: 0 }, // Inclui a medida
           selected: selected || false, // Inclui o estado de seleção
         }))
       );
-  
       setEdges(
         data.edges.map(({ id, source, target }) => ({
           id,
@@ -231,6 +247,7 @@ export const FlowProvider = ({ children }) => {
     removeFieldFromNode,
     updateFieldConfig,
     updateNodeName,
+    updateNodeTempSector,
     updateNodePosition,
     errors,
     onExport,
