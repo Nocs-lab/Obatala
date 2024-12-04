@@ -289,6 +289,9 @@ main > .notice-container {
 .ms-auto {
   margin-left: auto !important;
 }
+.ms-2 {
+  margin-left: 2rem !important;
+}
 .mt-1 {
   margin-top: 1rem;
 }

@@ -310,7 +310,7 @@ const ProcessViewer = () => {
             </span>
             <h2>
                 <small>
-                    {filteredProcessType
+                    Model: {filteredProcessType
                         ? filteredProcessType.title.rendered
                         : "Process type title"}
                 </small>

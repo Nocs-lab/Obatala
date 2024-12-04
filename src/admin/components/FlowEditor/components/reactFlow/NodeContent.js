@@ -82,97 +82,100 @@ const NodeContent = ({ id, data  = {} }) => {
     updateNodeTempSector(id, [value]);
   };
  
- return (
-        <>
-            {/* Node Drag Handle */}
-            <NodeHandle nodeId={id} />
+  return (
+    <div className="step-container">
+      {/* Node Drag Handle */}
+      <NodeHandle nodeId={id} />
 
-            {/* Connection Handles */}
-            <Handle type="target" position={Position.Left} />
-            <Handle type="source" position={Position.Right} />
+      {/* Connection Handles */}
+      <Handle type="target" position={Position.Left} />
+      <Handle type="source" position={Position.Right} />
 
-            {/* Node Name */}
-            <TextControl
-                value={stageName}
-                label="Step name"
-                onChange={handleStageNameChange}
-                placeholder="Digite o nome da etapa"
-            />
+      {/* Node Name */}
+      <TextControl
+          value={stageName}
+          label="Step name"
+          onChange={handleStageNameChange}
+          placeholder="Digite o nome da etapa"
+      />
 
-            <ComboboxControl
-                label="Group responsible"
-                value={sector}
-                options={sectors.map(sector => ({ 
-                    label: sector.name, 
-                    value: sector.id,
-                }))}
-                onChange={handleStageSectorChange}
-            />
+      <ComboboxControl
+          label="Group responsible"
+          value={sector}
+          options={sectors.map(sector => ({ 
+              label: sector.name, 
+              value: sector.id,
+          }))}
+          onChange={handleStageSectorChange}
+      />
 
-            {/* List of Fields */}
-            {fields.length > 0 && (
-                <div className="flow-fields">
-                    <DragAndDropList nodeId={id} fields={fields} updateFields={updateFields} />
-                </div>
-            )}
+      {/* List of Fields */}
+      <div className="components-base-control__field">
+        <label className="components-base-control__label">Fields</label>
+      </div>
+      {fields.length > 0 && (
+        <div className="flow-fields">
+          <DragAndDropList nodeId={id} fields={fields} updateFields={updateFields} />
+        </div>
+      )}
 
-            {/* Toolbar with Add and Delete */}
-            <NodeToolbar isVisible={isSelected} position="right">
-                <div
-                style={{
-                    backgroundColor: "#fff",
-                    padding: "10px",
-                    borderRadius: "4px",
-                    border: "1px solid #ddd",
-                }}
-                >
-                {isAddingFields ? (
-                    <>
-                    <h4>Adicionar Campo</h4>
-                    <ul style={{ listStyle: "none", padding: 0 }}>
-                        {FIELD_OPTIONS.map((option) => (
-                        <li
-                            className="node-meta-list"
-                            key={option.id}
-                            onClick={() => addFieldToNode(option.id)}
-                            style={{ padding: "5px", cursor: "pointer" }}
-                        >
-                            {option.label}
-                        </li>
-                        ))}
-                    </ul>
-                    <button
-                        onClick={() => setIsAddingFields(false)}
-                        style={{
-                        marginTop: "10px",
-                        backgroundColor: "#ddd",
-                        color: "#333",
-                        border: "none",
-                        borderRadius: "4px",
-                        padding: "5px 10px",
-                        cursor: "pointer",
-                        }}
-                    >
-                        Cancelar
-                    </button>
-                    </>
-                ) : (
-                    <>
-                    <div style={{
-                        width: "20px",
-                        height: "20px",
-                    }}
-                        onClick={() => setIsAddingFields(true)}
-                        className="btn max-btn"
-                    ></div>
+      {/* Toolbar with Add and Delete */}
+      <NodeToolbar isVisible={isSelected} position="right">
+        <div
+          style={{
+              backgroundColor: "#fff",
+              padding: "10px",
+              borderRadius: "4px",
+              border: "1px solid #ddd",
+          }}
+          >
+          {isAddingFields ? (
+            <>
+              <h4>Adicionar Campo</h4>
+              <ul style={{ listStyle: "none", padding: 0 }}>
+                  {FIELD_OPTIONS.map((option) => (
+                  <li
+                      className="node-meta-list"
+                      key={option.id}
+                      onClick={() => addFieldToNode(option.id)}
+                      style={{ padding: "5px", cursor: "pointer" }}
+                  >
+                      {option.label}
+                  </li>
+                  ))}
+              </ul>
+              <button
+                  onClick={() => setIsAddingFields(false)}
+                  style={{
+                  marginTop: "10px",
+                  backgroundColor: "#ddd",
+                  color: "#333",
+                  border: "none",
+                  borderRadius: "4px",
+                  padding: "5px 10px",
+                  cursor: "pointer",
+                  }}
+              >
+                Cancelar
+              </button>
+            </>
+          ) : (
+            <>
+              <div style={{
+                  width: "20px",
+                  height: "20px",
+              }}
+                  onClick={() => setIsAddingFields(true)}
+                  className="btn max-btn"
+              ></div>
 
-                    {/* Remover nó */}
-                    </>
-                )}
-                </div>
-            </NodeToolbar>
-        </>
-    );
+              {/* Remover nó */}
+            </>
+          )}
+        </div>
+      </NodeToolbar>
+    </div>
+  );
 };
 
 export default NodeContent;
