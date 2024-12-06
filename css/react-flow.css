@@ -8,7 +8,7 @@
   grid-template-areas: 'title buttons'
     'flow flow';
   grid-template-rows: max-content;
-  height: 60vh;
+  height: 70vh;
   margin-left: var(--gap-external);
   margin-right: var(--gap-external);
   padding: var(--gap);
@@ -138,12 +138,12 @@
 .react-flow__node .react-flow__handle:hover {
   background-color: var(--primary-500);
 }
-.react-flow__node .components-base-control {
+.react-flow__node .step-container {
   background-color: var(--white);
   padding: .5rem 1rem;
 }
 .react-flow__node .components-base-control + div {
-  margin-top: -.5rem !important;
+  margin-top: 0 !important;
 }
 .react-flow__node .components-base-control__field > label {
   margin-bottom: 0.1rem;
@@ -170,7 +170,6 @@
 }
 .flow-fields ul:not(:empty) {
   margin: 0;
-  padding: .5rem 1rem;
 }
 .flow-fields ul li {
   border: 1px solid var(--gray-200);
@@ -184,6 +183,7 @@
 }
 .flow-fields .step-label {
   font-size: .6rem;
+  line-height: 1.1em;
   margin-right: auto;
 }
 .flow-fields .components-button-group {
@@ -715,7 +715,7 @@ svg.react-flow__connectionline {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: .75rem 1rem 0;
+  padding-bottom: 1rem;
 }
 
 /* custom handle buttons */
