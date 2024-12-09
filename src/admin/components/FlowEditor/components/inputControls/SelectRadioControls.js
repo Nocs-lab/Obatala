@@ -1,11 +1,11 @@
-import React, { useState } from "react";
 import {
-  TextControl,
-  CheckboxControl,
-  TextareaControl,
-  RadioControl,
   Button,
+  CheckboxControl,
+  RadioControl,
+  TextareaControl,
+  TextControl,
 } from "@wordpress/components";
+import React, { useState } from "react";
 import * as Yup from "yup";
 import { useFlowContext } from "../../context/FlowContext";
 
@@ -64,7 +64,7 @@ export const SelectRadioControls = ({
   const optionArray = formValues.options.split(",").map((option) => option.trim());
 
   return (
-    <form>
+    <form onSubmit={validateFields}>
       {/* Campo para definir o Label */}
       <TextControl
         label="Label"
@@ -82,7 +82,6 @@ export const SelectRadioControls = ({
         onChange={(isChecked) =>
           setFormValues((prev) => ({ ...prev, required: isChecked }))
         }
-        style={{ marginBottom: "10px" }}
       />
 
       {/* Campo para definir as opções do Select/Radio */}
@@ -90,7 +89,7 @@ export const SelectRadioControls = ({
         label="Opções (separadas por vírgula)"
         value={formValues.options} // Use formValues para sincronizar o valor
         onChange={(value) => setFormValues((prev) => ({ ...prev, options: value }))}
-        placeholder="Opções, separadas por vírgula"
+        placeholder="Opções, separadas por vírgula" required
         style={{ marginBottom: "10px" }}
         help={errors.options} // Exibe a mensagem de erro, se houver
       />
@@ -127,7 +126,8 @@ export const SelectRadioControls = ({
           marginBottom: "10px",
           display: "block",
         }}
-        onClick={validateFields} // Valida os campos ao clicar em salvar
+        type="submit"
+        //onClick={} // Valida os campos ao clicar em salvar
       >
         Save
       </Button>
