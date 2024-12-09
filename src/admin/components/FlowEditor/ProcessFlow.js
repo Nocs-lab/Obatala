@@ -73,7 +73,6 @@ const ProcessFlow = forwardRef(({ initialData, onSave, onCancel}, ref,) => {
                     </ul>
                 </div>
             )}
-            <h3>Manage Process Model steps and fields:</h3>
             <ProcessControls 
                 onSave={onSave}
                 onCancel={onCancel}

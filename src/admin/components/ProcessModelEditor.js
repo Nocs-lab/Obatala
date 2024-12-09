@@ -34,25 +34,25 @@ const processDataEditor = () => {
     setIsLoading(true);
 
     apiFetch({ path: `/obatala/v1/process_type/${id}` })
-        .then((typeData) => {
-            console.log("Process model data:", typeData);
-            setProcessData(typeData);
-            setTitle(typeData.title.rendered);
-            setDescription(
-                Array.isArray(typeData.meta.description)
-                  ? typeData.meta.description[0]
-                  : typeData.meta.description || ""
-            );
-            // Extraindo flowData do processo carregado
-            const flowData = typeData.meta.flowData || { nodes: [], edges: [] };
-            setFlowData(flowData);
-            setIsLoading(false);
-        })
-        .catch((error) => {
-            console.error("Error fetching data:", error);
-            setNotice({ status: "error", message: "Error fetching process type." });
-            setIsLoading(false);
-        });
+      .then((typeData) => {
+          console.log("Process model data:", typeData);
+          setProcessData(typeData);
+          setTitle(typeData.title.rendered);
+          setDescription(
+              Array.isArray(typeData.meta.description)
+                ? typeData.meta.description[0]
+                : typeData.meta.description || ""
+          );
+          // Extraindo flowData do processo carregado
+          const flowData = typeData.meta.flowData || { nodes: [], edges: [] };
+          setFlowData(flowData);
+          setIsLoading(false);
+      })
+      .catch((error) => {
+          console.error("Error fetching data:", error);
+          setNotice({ status: "error", message: "Error fetching process type." });
+          setIsLoading(false);
+      });
   }, [id]);
 
   const updateNodeSector = async (nodeId, sectorId) => {
@@ -73,169 +73,170 @@ const processDataEditor = () => {
     } catch (error) {
         console.error('Erro ao associar o setor:', error);
     }
-};
+  };
+
   const handleSave = async () => {
     try {
-        const flowData = flowRef.current.getFlowData(); // Obtém os dados do flow
-        const updatedData = {
-            ...processData,
-            title: title,
-            meta: {
-              description: description,
-              flowData, // Armazena os dados de fluxo como meta
-            },
-        };
+      const flowData = flowRef.current.getFlowData(); // Obtém os dados do flow
+      const updatedData = {
+        ...processData,
+        title: title,
+        meta: {
+          description: description,
+          flowData, // Armazena os dados de fluxo como meta
+        },
+      };
 
-        console.log("Updated data:", updatedData);
+      // Evita recarregar a página
+      await apiFetch({
+        path: `/obatala/v1/process_type/${id}`,
+        method: "PUT",
+        data: updatedData,
+      });
 
-        // Evita recarregar a página
-        await apiFetch({
-            path: `/obatala/v1/process_type/${id}`,
-            method: "PUT",
-            data: updatedData,
-        });
+      await apiFetch({
+        path: `/obatala/v1/process_type/${id}/meta`,
+        method: "PUT",
+        data: updatedData.meta,
+      });
 
-        await apiFetch({
-            path: `/obatala/v1/process_type/${id}/meta`,
-            method: "PUT",
-            data: updatedData.meta,
-        });
-
-        for (const node of flowData.nodes) {
-            if (node.tempSector) {
-                try {
-                    await updateNodeSector(node.id, node.tempSector);
-                    //node.tempSector = null;
-                } catch (error) {
-                    console.error(`Erro ao associar setor ao nó ${node.id}:`, error);
-                }
-            }
+      for (const node of flowData.nodes) {
+        if (node.tempSector) {
+          try {
+            await updateNodeSector(node.id, node.tempSector);
+            //node.tempSector = null;
+          } catch (error) {
+            console.error(`Erro ao associar setor ao nó ${node.id}:`, error);
+          }
         }
+      }
         
-        setProcessData({
-            ...processData,
-            meta: updatedData.meta,
-        });
+      setProcessData({
+        ...processData,
+        meta: updatedData.meta,
+      });
 
-        setNotice({
-            status: "success",
-            message: "Process type and meta updated successfully.",
-        });
-        setIsEditing(null);
+      setNotice({
+        status: "success",
+        message: "Process type and meta updated successfully.",
+      });
+      setIsEditing(null);
     } catch (error) {
-        console.error(error);
-        setNotice({
-            status: "error",
-            message: `Error updating process type and meta: ${error}`,
-        });
+      console.error(error);
+      setNotice({
+          status: "error",
+          message: `Error updating process type and meta: ${error}`,
+      });
     } finally {
-        setIsLoading(false);
+      setIsLoading(false);
     }
   };
 
   const handleEdit = (field) => {
-      console.log(isEditing);
-      setIsEditing(field);
+    console.log(isEditing);
+    setIsEditing(field);
   };
 
   const handleCancel = () => {
-      setIsEditing(null);
+    setIsEditing(null);
   };
   
   const handleCancelEditProcessType = () => {
-      window.location.href = '?page=process-type-manager';
+    window.location.href = '?page=process-type-manager';
   };
 
   if (isLoading) {
-      return <Spinner />;
+    return <Spinner />;
   }
 
   if (!processData) {
-      return <div>Loading...</div>;
+    return <div>Loading...</div>;
   }
-    return (
-        <main>
-            <span className="brand">
-                <strong>Obatala</strong> Curatorial Process Management
-            </span>
 
-            {isEditing === "title" ? (
-                <div className="inline-edition mt-2 mb-1">
-                    <TextControl
-                        value={title}
-                        onChange={(value) => setTitle(value)}
-                        autoFocus
-                    />
-                    <ButtonGroup>
-                        <Tooltip text="Save">
-                            <Button icon={<Icon icon={check} />} onClick={handleSave} />
-                        </Tooltip>
-                        <Tooltip text="Cancel">
-                            <Button
-                                onClick={handleCancel}
-                                icon={<Icon icon={closeSmall} />}
-                        />
-                        </Tooltip>
-                    </ButtonGroup>
-                </div>
-            ) : (
-                <div className="title-container">
-                    <h2 onClick={() => handleEdit("title")}>
-                        Edit Process Model: <strong>{title}</strong>
-                    </h2>
-                    <Tooltip text="Edit">
-                        <Button
-                            onClick={() => handleEdit("title")}
-                            icon={<Icon icon={edit} />}
-                            className="me-auto"
-                        />
-                    </Tooltip>
-                </div>
-            )}
+  return (
+    <main>
+      <span className="brand">
+          <strong>Obatala</strong> Curatorial Process Management
+      </span>
 
-            {isEditing === "description" ? (
-                <div className="inline-edition mb-2">
-                    <TextControl
-                        value={description}
-                        onChange={(value) => setDescription(value)}
-                        autoFocus
-                    />
-                    <ButtonGroup>
-                        <Button icon={<Icon icon={check} />} onClick={handleSave} />
-                        <Button onClick={handleCancel} icon={<Icon icon={closeSmall} />} />
-                    </ButtonGroup>
-                </div>
-            ) : (
-                <div className="title-container mb-2">
-                    <p onClick={() => handleEdit("description")}>{description}</p>
-                    <Tooltip text="Edit">
-                        <Button
-                        onClick={() => handleEdit("description")}
-                        icon={<Icon icon={edit} />}
-                        className="me-auto"
-                        />
-                    </Tooltip>
-                </div>
-            )}
+      {isEditing === "title" ? (
+        <div className="inline-edition mt-2 mb-1">
+          <TextControl
+              value={title}
+              onChange={(value) => setTitle(value)}
+              autoFocus
+          />
+          <ButtonGroup>
+            <Tooltip text="Save">
+                <Button icon={<Icon icon={check} />} onClick={handleSave} />
+            </Tooltip>
+            <Tooltip text="Cancel">
+                <Button
+                    onClick={handleCancel}
+                    icon={<Icon icon={closeSmall} />}
+            />
+            </Tooltip>
+          </ButtonGroup>
+        </div>
+      ) : (
+        <div className="title-container">
+          <h2 onClick={() => handleEdit("title")}>
+            <small>Manage Process Model steps and fields</small>
+            <strong>{title}</strong>
+            <Tooltip text="Edit title">
+              <Button
+                onClick={() => handleEdit("title")}
+                icon={<Icon icon={edit} />}
+                className="ms-2"
+              />
+            </Tooltip>
+          </h2>
+        </div>
+      )}
 
-            {notice && (
-                <div className="notice-container">
-                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                        {notice.message}
-                    </Notice>
-                </div>
-            )}
+      {isEditing === "description" ? (
+        <div className="inline-edition mb-2">
+            <TextControl
+                value={description}
+                onChange={(value) => setDescription(value)}
+                autoFocus
+            />
+            <ButtonGroup>
+                <Button icon={<Icon icon={check} />} onClick={handleSave} />
+                <Button onClick={handleCancel} icon={<Icon icon={closeSmall} />} />
+            </ButtonGroup>
+        </div>
+      ) : (
+        <div className="title-container mb-1">
+            <p onClick={() => handleEdit("description")}>{description}</p>
+            <Tooltip text="Edit description">
+                <Button
+                onClick={() => handleEdit("description")}
+                icon={<Icon icon={edit} />}
+                className="me-auto"
+                />
+            </Tooltip>
+        </div>
+      )}
 
-            <FlowProvider>
-                <ProcessFlow 
-                    ref={flowRef} 
-                    initialData={flowData}
-                    onSave={handleSave}
-                    onCancel={handleCancelEditProcessType}
-                    />
-            </FlowProvider>
-        </main>
-    );
+      {notice && (
+        <div className="notice-container">
+            <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                {notice.message}
+            </Notice>
+        </div>
+      )}
+
+      <FlowProvider>
+        <ProcessFlow 
+            ref={flowRef} 
+            initialData={flowData}
+            onSave={handleSave}
+            onCancel={handleCancelEditProcessType}
+            />
+      </FlowProvider>
+    </main>
+  );
 };
 
 export default processDataEditor;
