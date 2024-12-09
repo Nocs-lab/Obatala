@@ -145,18 +145,18 @@ const ProcessTypeManager = () => {
             />
         </main>
         {addingProcessType && (
-            <Modal
-                title="Add process model"
-                onRequestClose={handleCancel}
-                isDismissible={true}
-                size="medium"
-            >
-                <ProcessTypeForm
-                    onSave={handleSaveProcessType}
-                    onCancel={handleCancel}
-                    editingProcessType={editingProcessType}
-                />
-            </Modal>
+          <Modal
+            title="Add process model"
+            onRequestClose={handleCancel}
+            isDismissible={true}
+            size="medium"
+          >
+            <ProcessTypeForm
+              onSave={handleSaveProcessType}
+              onCancel={handleCancel}
+              editingProcessType={editingProcessType}
+            />
+          </Modal>
         )}
       </div>
     </main>
