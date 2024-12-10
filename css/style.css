@@ -161,6 +161,7 @@ form .components-button-group .components-button {
 .components-flex.components-select-control {
   gap: 0.1rem;
 }
+.components-input-control__input,
 .components-select-control__input,
 .components-text-control__input {
   border-radius: var(--input-border-radius) !important;

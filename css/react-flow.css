@@ -813,7 +813,7 @@ svg.react-flow__connectionline {
   box-shadow: rgb(0 0 0 / 10%) 0px 0px 10px;
   height: 100%;
   overflow-y: auto;
-  padding: 3rem 1rem 1rem;
+  padding: 1rem;
   position: absolute;
   top: 0;
   left: 0;  
@@ -826,7 +826,7 @@ svg.react-flow__connectionline {
   flex-wrap: wrap;
 }
 .wp-drawer form > .components-base-control {
-  flex-basis: 100%;
+  flex-basis: 200px;
   flex-grow: 1;
   margin-top: 0 !important;
 }
@@ -834,8 +834,41 @@ svg.react-flow__connectionline {
 .wp-drawer form > .components-base-control.components-checkbox-control {
   flex-basis: 100px;
 }
+.wp-drawer form > h3,
+.wp-drawer form > .components-base-control:has(textarea) {
+  flex-basis: 100%;
+}
+.wp-drawer form > h3 {
+  margin-top: 0;
+}
+.wp-drawer form .components-number-control .components-input-base.components-flex {
+  gap: 0;
+}
+.wp-drawer form .components-number-control label {
+  text-transform: none !important;
+}
 .wp-drawer form .components-base-control__field {
   margin-bottom: 0;
+}
+.wp-drawer form .components-datetime__time {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.wp-drawer form .components-datetime__time-wrapper > div {
+  margin-top: 0 !important;
+}
+.wp-drawer form .components-datetime__time-wrapper .components-datetime__time-field.components-datetime__time-field-day {
+  width: 50px;
+}
+.wp-drawer form .components-datetime__time-wrapper .components-datetime__time-field.components-datetime__time-field-year {
+  width: 80px;
+}
+.wp-drawer form > fieldset {
+  border: 2px solid var(--primary-100);
+  border-radius: var(--border-radius);
+  flex-basis: 100%;
+  padding: 1rem;
 }
 
 /* Extras */

@@ -15,8 +15,8 @@ const SlidingDrawer = () => {
           <Button
             style={{
               position: "absolute",
-              top: 0,
-              right: 0,
+              top: ".5rem",
+              right: ".5rem",
             }}
             icon={<Icon icon={close} size={24} onClick={toggleDrawer} />}
           ></Button>

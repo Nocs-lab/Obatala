@@ -58,6 +58,8 @@ export const FileUploadControls = ({
 
   return (
     <form>
+      <h3>Edit file upload field</h3>
+
       {/* Campo para definir o Label */}
       <TextControl
         label="Label"
@@ -66,18 +68,16 @@ export const FileUploadControls = ({
           setFormValues((prev) => ({ ...prev, label: value }));
         }}
         placeholder="Digite o label"
-        style={{ marginBottom: "10px" }}
         help={errors.label} // Exibe a mensagem de erro, se houver
       />
 
       {/* Campo para definir o campo como obrigatório */}
       <CheckboxControl
-        label="Obrigatório"
+        label="Preenchimento obrigatório"
         checked={formValues.required} // Use formValues para sincronizar o valor
         onChange={(isChecked) =>
           setFormValues((prev) => ({ ...prev, required: isChecked }))
         }
-        style={{ marginBottom: "10px" }}
       />
 
       {/* Campo para fornecer texto de ajuda */}
@@ -88,21 +88,11 @@ export const FileUploadControls = ({
           setFormValues((prev) => ({ ...prev, helpText: value }))
         }
         placeholder="Digite um texto de ajuda"
-        style={{ marginBottom: "10px" }}
       />
 
       {/* Botão Salvar */}
       <Button
-        style={{
-          padding: "10px 20px",
-          backgroundColor: "#007bff",
-          color: "white",
-          border: "none",
-          borderRadius: "4px",
-          cursor: "pointer",
-          marginBottom: "10px",
-          display: "block",
-        }}
+        variant="primary"
         onClick={validateFields} // Valida os campos ao clicar em salvar
       >
         Save

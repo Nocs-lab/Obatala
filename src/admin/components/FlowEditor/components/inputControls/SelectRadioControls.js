@@ -65,39 +65,38 @@ export const SelectRadioControls = ({
 
   return (
     <form>
+      <h3>Edit select field</h3>
+
       {/* Campo para definir o Label */}
       <TextControl
         label="Label"
         value={formValues.label} // Use formValues para sincronizar o valor
         onChange={(value) => setFormValues((prev) => ({ ...prev, label: value }))}
         placeholder="Digite o label"
-        style={{ marginBottom: "10px" }}
         help={errors.label} // Exibe a mensagem de erro, se houver
       />
 
       {/* Campo para definir o campo como obrigatório */}
       <CheckboxControl
-        label="Obrigatório"
+        label="Preenchimento brigatório"
         checked={formValues.required} // Use formValues para sincronizar o valor
         onChange={(isChecked) =>
           setFormValues((prev) => ({ ...prev, required: isChecked }))
         }
-        style={{ marginBottom: "10px" }}
       />
 
       {/* Campo para definir as opções do Select/Radio */}
       <TextControl
-        label="Opções (separadas por vírgula)"
+        label="Opções de resposta (separadas por vírgula)"
         value={formValues.options} // Use formValues para sincronizar o valor
         onChange={(value) => setFormValues((prev) => ({ ...prev, options: value }))}
         placeholder="Opções, separadas por vírgula"
-        style={{ marginBottom: "10px" }}
         help={errors.options} // Exibe a mensagem de erro, se houver
       />
 
       {/* Visualização das opções como Radio */}
       <RadioControl
-        label="Pré-visualização das opções"
+        label="Pré-visualização das opções de resposta"
         options={optionArray.map((option) => ({
           label: option,
           value: option,
@@ -112,21 +111,10 @@ export const SelectRadioControls = ({
         value={formValues.helpText} // Use formValues para sincronizar o valor
         onChange={(value) => setFormValues((prev) => ({ ...prev, helpText: value }))}
         placeholder="Digite um texto de ajuda"
-        style={{ marginBottom: "10px" }}
       />
 
       {/* Botão Salvar */}
-      <Button
-        style={{
-          padding: "10px 20px",
-          backgroundColor: "#007bff",
-          color: "white",
-          border: "none",
-          borderRadius: "4px",
-          cursor: "pointer",
-          marginBottom: "10px",
-          display: "block",
-        }}
+      <Button variant="primary"
         onClick={validateFields} // Valida os campos ao clicar em salvar
       >
         Save
