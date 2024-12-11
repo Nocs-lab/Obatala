@@ -22,7 +22,7 @@ const CommentForm = ({ stepId }) => {
         })
         .catch((error) => {
             console.error('Error fetching comments:', error);
-            setNotice({ status: 'error', message: 'Error fetching comments.' });
+            //setNotice({ status: 'error', message: 'Error fetching comments.' });
         });
     };
 
