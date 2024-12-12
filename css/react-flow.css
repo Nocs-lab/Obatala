@@ -1,5 +1,7 @@
 /* this gets exported as style.css and can be used for the default theming */
 /* these are the necessary styles for React/Svelte Flow, they get used by base.css and style.css */
+
+/* Main container */
 .flow-container {
   background-color: var(--primary-50);
   border-radius: var(--border-radius);
@@ -28,6 +30,8 @@
 .flow-content {
   grid-area: flow;
 }
+
+/* Main component */
 .react-flow {
   direction: ltr;
 
@@ -128,7 +132,7 @@
   border-top-left-radius: var(--border-radius);
   border-top-right-radius: var(--border-radius);
   box-shadow: 0 20px 25px -5px #0000001a,0 8px 10px -6px #0000001a;
-  max-width: 230px;
+  max-width: 320px;
 }
 .react-flow__node .react-flow__handle {
   background-color: var(--primary);
@@ -140,62 +144,30 @@
 }
 .react-flow__node .step-container {
   background-color: var(--white);
-  padding: .5rem 1rem;
+  padding: .5rem 1rem 1rem;
 }
 .react-flow__node .components-base-control + div {
   margin-top: 0 !important;
 }
 .react-flow__node .components-base-control__field > label {
-  margin-bottom: 0.1rem;
-  text-transform: none;
   color: var(--gray-600);
   font-weight: 400;
-  font-size: .6rem;
+  font-size: 1rem;
+  line-height: 1.4;
+  text-transform: none;
 }
 .react-flow__node .components-text-control__input {
-  font-size: .65rem;
+  font-size: 1rem;
   font-weight: 600;
-  height: 26px !important;
+  height: 38px !important;
   margin-bottom: 0;
-  min-height: 26px !important;
-}
-.react-flow__node .components-combobox-control__suggestions-container > .components-flex {
-  height: 26px;
+  min-height: 38px !important;
 }
 .react-flow__node input.components-combobox-control__input[type=text] {
-  font-size: .75rem;
+  font-size: 1rem;
 }
-.flow-fields {
-  background-color: var(--white);
-}
-.flow-fields ul:not(:empty) {
-  margin: 0;
-}
-.flow-fields ul li {
-  border: 1px solid var(--gray-200);
-  border-radius: 3px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: .65rem;
-  gap: .5rem;
-  padding: .2rem;
-}
-.flow-fields .step-label {
-  font-size: .6rem;
-  line-height: 1.1em;
-  margin-right: auto;
-}
-.flow-fields .components-button-group {
-  display: inline-flex;
-  gap: .2rem;
-}
-.flow-fields .components-button-group .components-button.is-small.has-icon:not(.has-text) {
-  box-shadow: 0 0 0;
-  color: var(--primary-600);
-  height: 18px;
-  min-width: 18px;
-  width: 18px;
+.react-flow__node .components-combobox-control {
+  padding: .75rem 0;
 }
 .react-flow__background {
   background-color: var(--xy-background-color, var(--xy-background-color-props, var(--xy-background-color-default)));
@@ -213,14 +185,14 @@
   z-index: 1;
 }
 .react-flow__pane.draggable {
-    cursor: grab;
-  }
+  cursor: grab;
+}
 .react-flow__pane.dragging {
-    cursor: grabbing;
-  }
+  cursor: grabbing;
+}
 .react-flow__pane.selection {
-    cursor: pointer;
-  }
+  cursor: pointer;
+}
 .react-flow__viewport {
   transform-origin: 0 0;
   z-index: 2;
@@ -250,53 +222,53 @@
   position: absolute;
 }
 .react-flow .react-flow__edges svg {
-    overflow: visible;
-    position: absolute;
-    pointer-events: none;
-  }
+  overflow: visible;
+  position: absolute;
+  pointer-events: none;
+}
 .react-flow__edge {
   pointer-events: visibleStroke;
 }
 .react-flow__edge.selectable {
-    cursor: pointer;
-  }
+  cursor: pointer;
+}
 .react-flow__edge.animated path {
-    stroke-dasharray: 5;
-    animation: dashdraw 0.5s linear infinite;
-  }
+  stroke-dasharray: 5;
+  animation: dashdraw 0.5s linear infinite;
+}
 .react-flow__edge.animated path.react-flow__edge-interaction {
-    stroke-dasharray: none;
-    animation: none;
-  }
+  stroke-dasharray: none;
+  animation: none;
+}
 .react-flow__edge.inactive {
-    pointer-events: none;
-  }
+  pointer-events: none;
+}
 .react-flow__edge.selected,
-  .react-flow__edge:focus,
-  .react-flow__edge:focus-visible {
-    outline: none;
-  }
+.react-flow__edge:focus,
+.react-flow__edge:focus-visible {
+  outline: none;
+}
 .react-flow__edge.selected .react-flow__edge-path,
-  .react-flow__edge.selectable:focus .react-flow__edge-path,
-  .react-flow__edge.selectable:focus-visible .react-flow__edge-path {
-    stroke: var(--xy-edge-stroke-selected, var(--xy-edge-stroke-selected-default));
-  }
+.react-flow__edge.selectable:focus .react-flow__edge-path,
+.react-flow__edge.selectable:focus-visible .react-flow__edge-path {
+  stroke: var(--xy-edge-stroke-selected, var(--xy-edge-stroke-selected-default));
+}
 .react-flow__edge-textwrapper {
-    pointer-events: all;
-  }
+  pointer-events: all;
+}
 .react-flow__edge .react-flow__edge-text {
-    pointer-events: none;
-    -webkit-user-select: none;
-       -moz-user-select: none;
-            user-select: none;
-  }
+  pointer-events: none;
+  -webkit-user-select: none;
+      -moz-user-select: none;
+          user-select: none;
+}
 .react-flow__connection {
   pointer-events: none;
 }
 .react-flow__connection .animated {
-    stroke-dasharray: 5;
-    animation: dashdraw 0.5s linear infinite;
-  }
+  stroke-dasharray: 5;
+  animation: dashdraw 0.5s linear infinite;
+}
 svg.react-flow__connectionline {
   z-index: 1001;
   overflow: visible;
@@ -317,25 +289,25 @@ svg.react-flow__connectionline {
   cursor: default;
 }
 .react-flow__node.selectable {
-    cursor: pointer;
-  }
+  cursor: pointer;
+}
 .react-flow__node.draggable {
-    cursor: grab;
-    pointer-events: all;
-  }
+  cursor: grab;
+  pointer-events: all;
+}
 .react-flow__node.draggable.dragging {
-      cursor: grabbing;
-    }
+    cursor: grabbing;
+  }
 .react-flow__nodesselection {
   z-index: 3;
   transform-origin: left top;
   pointer-events: none;
 }
 .react-flow__nodesselection-rect {
-    position: absolute;
-    pointer-events: all;
-    cursor: grab;
-  }
+  position: absolute;
+  pointer-events: all;
+  cursor: grab;
+}
 .react-flow__handle {
   position: absolute;
   pointer-events: none;
@@ -348,33 +320,33 @@ svg.react-flow__connectionline {
   border-radius: 100%;
 }
 .react-flow__handle.connectingfrom {
-    pointer-events: all;
-  }
+  pointer-events: all;
+}
 .react-flow__handle.connectionindicator {
-    pointer-events: all;
-    cursor: crosshair;
-  }
+  pointer-events: all;
+  cursor: crosshair;
+}
 .react-flow__handle-bottom {
-    top: auto;
-    left: 50%;
-    bottom: 0;
-    transform: translate(-50%, 50%);
-  }
+  top: auto;
+  left: 50%;
+  bottom: 0;
+  transform: translate(-50%, 50%);
+}
 .react-flow__handle-top {
-    top: 0;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
 .react-flow__handle-left {
-    top: 50%;
-    left: 0;
-    transform: translate(-50%, -50%);
-  }
+  top: 50%;
+  left: 0;
+  transform: translate(-50%, -50%);
+}
 .react-flow__handle-right {
-    top: 50%;
-    right: 0;
-    transform: translate(50%, -50%);
-  }
+  top: 50%;
+  right: 0;
+  transform: translate(50%, -50%);
+}
 .react-flow__edgeupdater {
   cursor: move;
   pointer-events: all;
@@ -385,21 +357,21 @@ svg.react-flow__connectionline {
   margin: 15px;
 }
 .react-flow__panel.top {
-    top: 0;
-  }
+  top: 0;
+}
 .react-flow__panel.bottom {
-    bottom: 0;
-  }
+  bottom: 0;
+}
 .react-flow__panel.left {
-    left: 0;
-  }
+  left: 0;
+}
 .react-flow__panel.right {
-    right: 0;
-  }
+  right: 0;
+}
 .react-flow__panel.center {
-    left: 50%;
-    transform: translateX(-50%);
-  }
+  left: 50%;
+  transform: translateX(-50%);
+}
 .react-flow__attribution {
   font-size: 10px;
   background: var(--xy-attribution-background-color, var(--xy-attribution-background-color-default));
@@ -407,9 +379,9 @@ svg.react-flow__connectionline {
   margin: 0;
 }
 .react-flow__attribution a {
-    text-decoration: none;
-    color: #999;
-  }
+  text-decoration: none;
+  color: #999;
+}
 @keyframes dashdraw {
   from {
     stroke-dashoffset: 10;
@@ -442,102 +414,105 @@ svg.react-flow__connectionline {
     var(--xy-minimap-background-color, var(--xy-minimap-background-color-default))
   );
 }
+.react-flow__panel.react-flow__minimap {
+  display: none;
+}
 .react-flow__minimap-svg {
-    display: block;
-  }
+  display: block;
+}
 .react-flow__minimap-mask {
-    fill: var(
-      --xy-minimap-mask-background-color-props,
-      var(--xy-minimap-mask-background-color, var(--xy-minimap-mask-background-color-default))
-    );
-    stroke: var(
-      --xy-minimap-mask-stroke-color-props,
-      var(--xy-minimap-mask-stroke-color, var(--xy-minimap-mask-stroke-color-default))
-    );
-    stroke-width: var(
-      --xy-minimap-mask-stroke-width-props,
-      var(--xy-minimap-mask-stroke-width, var(--xy-minimap-mask-stroke-width-default))
-    );
-  }
+  fill: var(
+    --xy-minimap-mask-background-color-props,
+    var(--xy-minimap-mask-background-color, var(--xy-minimap-mask-background-color-default))
+  );
+  stroke: var(
+    --xy-minimap-mask-stroke-color-props,
+    var(--xy-minimap-mask-stroke-color, var(--xy-minimap-mask-stroke-color-default))
+  );
+  stroke-width: var(
+    --xy-minimap-mask-stroke-width-props,
+    var(--xy-minimap-mask-stroke-width, var(--xy-minimap-mask-stroke-width-default))
+  );
+}
 .react-flow__minimap-node {
-    fill: var(
-      --xy-minimap-node-background-color-props,
-      var(--xy-minimap-node-background-color, var(--xy-minimap-node-background-color-default))
-    );
-    stroke: var(
-      --xy-minimap-node-stroke-color-props,
-      var(--xy-minimap-node-stroke-color, var(--xy-minimap-node-stroke-color-default))
-    );
-    stroke-width: var(
-      --xy-minimap-node-stroke-width-props,
-      var(--xy-minimap-node-stroke-width, var(--xy-minimap-node-stroke-width-default))
-    );
-  }
+  fill: var(
+    --xy-minimap-node-background-color-props,
+    var(--xy-minimap-node-background-color, var(--xy-minimap-node-background-color-default))
+  );
+  stroke: var(
+    --xy-minimap-node-stroke-color-props,
+    var(--xy-minimap-node-stroke-color, var(--xy-minimap-node-stroke-color-default))
+  );
+  stroke-width: var(
+    --xy-minimap-node-stroke-width-props,
+    var(--xy-minimap-node-stroke-width, var(--xy-minimap-node-stroke-width-default))
+  );
+}
 .react-flow__background-pattern.dots {
-    fill: var(
-      --xy-background-pattern-color-props,
-      var(--xy-background-pattern-color, var(--xy-background-pattern-dots-color-default))
-    );
-  }
+  fill: var(
+    --xy-background-pattern-color-props,
+    var(--xy-background-pattern-color, var(--xy-background-pattern-dots-color-default))
+  );
+}
 .react-flow__background-pattern.lines {
-    stroke: var(
-      --xy-background-pattern-color-props,
-      var(--xy-background-pattern-color, var(--xy-background-pattern-lines-color-default))
-    );
-  }
+  stroke: var(
+    --xy-background-pattern-color-props,
+    var(--xy-background-pattern-color, var(--xy-background-pattern-lines-color-default))
+  );
+}
 .react-flow__background-pattern.cross {
-    stroke: var(
-      --xy-background-pattern-color-props,
-      var(--xy-background-pattern-color, var(--xy-background-pattern-cross-color-default))
-    );
-  }
+  stroke: var(
+    --xy-background-pattern-color-props,
+    var(--xy-background-pattern-color, var(--xy-background-pattern-cross-color-default))
+  );
+}
 .react-flow__controls {
   display: flex;
   flex-direction: column;
   box-shadow: var(--xy-controls-box-shadow, var(--xy-controls-box-shadow-default));
 }
 .react-flow__controls.horizontal {
-    flex-direction: row;
-  }
+  flex-direction: row;
+}
 .react-flow__controls-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 26px;
-    width: 26px;
-    padding: 4px;
-    border: none;
-    background: var(--xy-controls-button-background-color, var(--xy-controls-button-background-color-default));
-    border-bottom: 1px solid
-      var(
-        --xy-controls-button-border-color-props,
-        var(--xy-controls-button-border-color, var(--xy-controls-button-border-color-default))
-      );
-    color: var(
-      --xy-controls-button-color-props,
-      var(--xy-controls-button-color, var(--xy-controls-button-color-default))
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 26px;
+  width: 26px;
+  padding: 4px;
+  border: none;
+  background: var(--xy-controls-button-background-color, var(--xy-controls-button-background-color-default));
+  border-bottom: 1px solid
+    var(
+      --xy-controls-button-border-color-props,
+      var(--xy-controls-button-border-color, var(--xy-controls-button-border-color-default))
     );
-    cursor: pointer;
-    -webkit-user-select: none;
-       -moz-user-select: none;
-            user-select: none;
-  }
+  color: var(
+    --xy-controls-button-color-props,
+    var(--xy-controls-button-color, var(--xy-controls-button-color-default))
+  );
+  cursor: pointer;
+  -webkit-user-select: none;
+      -moz-user-select: none;
+          user-select: none;
+}
 .react-flow__controls-button svg {
-      width: 100%;
-      max-width: 12px;
-      max-height: 12px;
-      fill: currentColor;
-    }
+  width: 100%;
+  max-width: 12px;
+  max-height: 12px;
+  fill: currentColor;
+}
 .react-flow__edge.updating .react-flow__edge-path {
-      stroke: #777;
-    }
+  stroke: #777;
+}
 .react-flow__edge-text {
-    font-size: 10px;
-  }
+  font-size: 10px;
+}
 .react-flow__node.selectable:focus,
-  .react-flow__node.selectable:focus-visible {
-    outline: none;
-  }
+.react-flow__node.selectable:focus-visible {
+  outline: none;
+}
 .react-flow__node-input,
 .react-flow__node-default,
 .react-flow__node-output,
@@ -552,22 +527,22 @@ svg.react-flow__connectionline {
   background-color: var(--xy-node-background-color, var(--xy-node-background-color-default));
 }
 .react-flow__node-input.selectable:hover, .react-flow__node-default.selectable:hover, .react-flow__node-output.selectable:hover, .react-flow__node-group.selectable:hover {
-      box-shadow: var(--xy-node-boxshadow-hover, var(--xy-node-boxshadow-hover-default));
-    }
+  box-shadow: var(--xy-node-boxshadow-hover, var(--xy-node-boxshadow-hover-default));
+}
 .react-flow__node-input.selectable.selected,
-    .react-flow__node-input.selectable:focus,
-    .react-flow__node-input.selectable:focus-visible,
-    .react-flow__node-default.selectable.selected,
-    .react-flow__node-default.selectable:focus,
-    .react-flow__node-default.selectable:focus-visible,
-    .react-flow__node-output.selectable.selected,
-    .react-flow__node-output.selectable:focus,
-    .react-flow__node-output.selectable:focus-visible,
-    .react-flow__node-group.selectable.selected,
-    .react-flow__node-group.selectable:focus,
-    .react-flow__node-group.selectable:focus-visible {
-      box-shadow: var(--xy-node-boxshadow-selected, var(--xy-node-boxshadow-selected-default));
-    }
+.react-flow__node-input.selectable:focus,
+.react-flow__node-input.selectable:focus-visible,
+.react-flow__node-default.selectable.selected,
+.react-flow__node-default.selectable:focus,
+.react-flow__node-default.selectable:focus-visible,
+.react-flow__node-output.selectable.selected,
+.react-flow__node-output.selectable:focus,
+.react-flow__node-output.selectable:focus-visible,
+.react-flow__node-group.selectable.selected,
+.react-flow__node-group.selectable:focus,
+.react-flow__node-group.selectable:focus-visible {
+  box-shadow: var(--xy-node-boxshadow-selected, var(--xy-node-boxshadow-selected-default));
+}
 .react-flow__node-group {
   background-color: var(--xy-node-group-background-color, var(--xy-node-group-background-color-default));
 }
@@ -577,30 +552,30 @@ svg.react-flow__connectionline {
   border: var(--xy-selection-border, var(--xy-selection-border-default));
 }
 .react-flow__nodesselection-rect:focus,
-  .react-flow__nodesselection-rect:focus-visible,
-  .react-flow__selection:focus,
-  .react-flow__selection:focus-visible {
-    outline: none;
-  }
+.react-flow__nodesselection-rect:focus-visible,
+.react-flow__selection:focus,
+.react-flow__selection:focus-visible {
+  outline: none;
+}
 .react-flow__controls-button:hover {
-      background: var(
-        --xy-controls-button-background-color-hover-props,
-        var(--xy-controls-button-background-color-hover, var(--xy-controls-button-background-color-hover-default))
-      );
-      color: var(
-        --xy-controls-button-color-hover-props,
-        var(--xy-controls-button-color-hover, var(--xy-controls-button-color-hover-default))
-      );
-    }
+  background: var(
+    --xy-controls-button-background-color-hover-props,
+    var(--xy-controls-button-background-color-hover, var(--xy-controls-button-background-color-hover-default))
+  );
+  color: var(
+    --xy-controls-button-color-hover-props,
+    var(--xy-controls-button-color-hover, var(--xy-controls-button-color-hover-default))
+  );
+}
 .react-flow__controls-button:disabled {
-      pointer-events: none;
-    }
+  pointer-events: none;
+}
 .react-flow__controls-button:disabled svg {
-        fill-opacity: 0.4;
-      }
+  fill-opacity: 0.4;
+}
 .react-flow__controls-button:last-child {
-    border-bottom: none;
-  }
+  border-bottom: none;
+}
 .react-flow__resize-control {
   position: absolute;
 }
@@ -620,6 +595,7 @@ svg.react-flow__connectionline {
 .react-flow__resize-control.top.right {
   cursor: nesw-resize;
 }
+
 /* handle styles */
 .react-flow__resize-control.handle {
   width: 4px;
@@ -657,6 +633,7 @@ svg.react-flow__connectionline {
 .react-flow__resize-control.handle.bottom.right {
   left: 100%;
 }
+
 /* line styles */
 .react-flow__resize-control.line {
   border-color: var(--xy-resize-background-color, var(--xy-resize-background-color-default));
@@ -700,7 +677,6 @@ svg.react-flow__connectionline {
   fill: var(--xy-edge-label-color, var(--xy-edge-label-color-default));
 }
 
-
 /* custom handle */
 .custom-drag-handle {
   border-top-left-radius: var(--border-radius);
@@ -720,18 +696,16 @@ svg.react-flow__connectionline {
 
 /* custom handle buttons */
 .btn {
-  width: 8px;
-  height: 8px;
+  height: 12px;
   border-radius: 50%;
   position: relative;
   overflow: hidden;
   cursor: pointer;
+  width: 12px;
 }
-
 .btn:last-child {
   margin-right: 0;
 }
-
 .btn:before,
 .btn:after {
   content: "";
@@ -743,65 +717,161 @@ svg.react-flow__connectionline {
   opacity: 0;
   transition: all 300ms ease-in-out;
 }
-
-.close-btn {
-  background: #ff5d5b;
-  border: 1px solid #cf544d;
-}
-
-.min-btn {
-  background: #ffbb39;
-  border: 1px solid #cfa64e;
-}
-
-.max-btn {
-  background: #00cd4e;
-  border: 1px solid #0ea642;
-}
-
-/* Close btn */
-.close-btn:before,
-.max-btn:before,
-.close-btn:after,
-.max-btn:after {
-  width: 1px;
-  height: 70%;
-  background: #460100;
-}
-
-.close-btn:before {
-  transform: translate(-50%, -50%) rotate(45deg);
-}
-
-.close-btn:after {
-  transform: translate(-50%, -50%) rotate(-45deg);
-}
-
-.max-btn:before {
-  transform: translate(-50%, -50%) rotate(90deg);
-}
-
-.max-btn:after {
-  transform: translate(-50%, -50%);
-}
-
-/* min btn */
-.min-btn:before {
-  width: 70%;
-  height: 5px;
-  background: #460100;
-}
-
-/* Hover function */
 .btn:hover:before,
 .btn:hover:after {
   top: 50%;
   opacity: 1;
 }
-.step-icon {
+
+/* Close btn */
+.close-btn {
+  background: var(--error);
+}
+.close-btn:before,
+.close-btn:after {
+  width: 1px;
+  height: 70%;
+  background: var(--white);
+}
+.close-btn:before {
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+.close-btn:after {
+  transform: translate(-50%, -50%) rotate(-45deg);
+}
+
+/* List of fields */
+.flow-fields {
+  background-color: var(--white);
+}
+.flow-fields ul:not(:empty) {
+  margin: 0;
+}
+.flow-fields ul li {
+  border: 1px solid var(--gray-200);
+  border-radius: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: .65rem;
+  gap: .5rem;
+  padding: .5rem .2rem .5rem .5rem;
+}
+.flow-fields .step-label {
+  font-size: .9rem;
+  line-height: 1.1em;
+  margin-right: auto;
+}
+.flow-fields .components-button-group {
+  display: inline-flex;
+  gap: .2rem;
+}
+.flow-fields .components-button-group .components-button.is-small.has-icon:not(.has-text) {
+  box-shadow: 0 0 0;
+  color: var(--primary-600);
+  height: 18px;
+  min-width: 18px;
+  width: 18px;
+}
+.flow-fields .step-icon {
   display: flex;
 }
 
+/* Add fields */
+.node-meta-container {
+  background-color: var(--white);
+  border-left: 3px solid var(--primary-500);
+  border-top-right-radius: var(--border-radius);
+  border-bottom-right-radius: var(--border-radius);
+  box-shadow: 0 20px 25px -5px #0000001a, 0 8px 10px -6px #0000001a;
+  max-width: 50%;
+  padding: 2rem;    
+}
+.node-meta-container .node-meta-title {
+  margin-top: 0;
+}
+.node-meta-list-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+.node-meta-list {
+	background: var(--primary-100);
+  border-radius: var(--border-radius);
+  cursor: pointer;
+  list-style: none;
+  margin: 0;
+  padding: .35rem 1rem;
+}
+.node-meta-list:hover {
+	background: var(--primary-200);
+}
+
+/* Edit field */
+.wp-drawer {
+  background-color: var(--white);
+  box-shadow: rgb(0 0 0 / 10%) 0px 0px 10px;
+  height: 100%;
+  overflow-y: auto;
+  padding: 1rem;
+  position: absolute;
+  top: 0;
+  left: 0;  
+  width: 33%;
+  z-index: 1100;
+}
+.wp-drawer form {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.wp-drawer form > .components-base-control {
+  flex-basis: 200px;
+  flex-grow: 1;
+  margin-top: 0 !important;
+}
+.wp-drawer form > .components-base-control.components-number-control,
+.wp-drawer form > .components-base-control.components-checkbox-control {
+  flex-basis: 100px;
+}
+.wp-drawer form > h3,
+.wp-drawer form > .components-base-control:has(textarea) {
+  flex-basis: 100%;
+}
+.wp-drawer form > h3 {
+  margin-top: 0;
+}
+.wp-drawer form .components-number-control .components-input-base.components-flex {
+  gap: 0;
+}
+.wp-drawer form .components-number-control label {
+  text-transform: none !important;
+}
+.wp-drawer form .components-base-control__field {
+  margin-bottom: 0;
+}
+.wp-drawer form .components-datetime__time {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+.wp-drawer form .components-datetime__time-wrapper > div {
+  margin-top: 0 !important;
+}
+.wp-drawer form .components-datetime__time-wrapper .components-datetime__time-field.components-datetime__time-field-day {
+  width: 50px;
+}
+.wp-drawer form .components-datetime__time-wrapper .components-datetime__time-field.components-datetime__time-field-year {
+  width: 80px;
+}
+.wp-drawer form > fieldset {
+  border: 2px solid var(--primary-100);
+  border-radius: var(--border-radius);
+  flex-basis: 100%;
+  padding: 1rem;
+}
+
+/* Extras */
 .edgebutton {
   width: 20px;
   height: 20px;
@@ -812,11 +882,6 @@ svg.react-flow__connectionline {
   font-size: 12px;
   line-height: 1;
 }
-
 .edgebutton:hover {
   box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.08);
-}
-.node-meta-list:hover{
-	background: #f5f5f5;
-	border-radius: 3px;
 }
