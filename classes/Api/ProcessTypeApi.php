@@ -51,6 +51,12 @@ class ProcessTypeApi extends ObatalaAPI {
             'callback' => [$this, 'get_node'],
             'permission_callback' => '__return_true', // Ajuste conforme necessário
         ]);
+
+        $this->add_route('process_type/upload-doc', [
+            'methods' => 'POST',
+            'callback' => [$this, 'upload_doc'],
+            'permission_callback' => '__return_true',
+        ]);
     }
 
     protected function get_meta_args() {
@@ -230,6 +236,70 @@ class ProcessTypeApi extends ObatalaAPI {
                 'message' => $permission['message'],
                 'data_sector' => $permission['data_sector']
             ], 200);
+        }
+    }
+
+    public function upload_doc($request) {
+        // Verificar se o arquivo foi enviado
+        if (empty($_FILES['file'])) {
+            return new WP_REST_Response([
+                'error' => 'Nenhum arquivo enviado'
+            ], 400);
+        }
+
+        $file = $_FILES['file'];
+        $overrides = [
+            //'test_form' => false, // Ignora o teste do formulário
+            'mimes' => [
+                'doc' => 'application/msword',
+                'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+                'pdf' => 'application/pdf'
+            ],
+        ];
+
+        // Diretório de upload específico
+        $upload_dir = wp_upload_dir();
+        $custom_dir = $upload_dir['basedir'] . '/Obatala/';
+
+        // Criar o diretório, se não existir
+        if (!file_exists($custom_dir)) {
+            wp_mkdir_p($custom_dir);
+        }
+
+        // Criar ou verificar o arquivo .htaccess no diretório
+        //$htaccess_path = $custom_dir . '.htaccess';
+        // if (!file_exists($htaccess_path)) {
+        //     $htaccess_content = <<<EOT
+        //         <IfModule mod_rewrite.c>
+        //         RewriteEngine On
+        //         RewriteRule .* - [F,L]
+        //         </IfModule>
+        //         EOT;
+        //     file_put_contents($htaccess_path, $htaccess_content);
+        // }
+
+        $uploaded_file = wp_handle_upload($file, $overrides);
+
+        // Verifica erros e envia o arquivo para um diretorio personalizado
+        if (isset($uploaded_file['error'])) {
+            return new WP_REST_Response([
+                'error' => $uploaded_file['error']
+            ], 500);
+        } else {
+            // Move o arquivo para o diretório personalizado
+            $filename = sanitize_file_name($file['name']); // Sanitiza o nome do arquivo
+            $new_file_path = $custom_dir . '/' . $filename;
+
+            if (rename($uploaded_file['file'], $new_file_path)) {
+                return new WP_REST_Response([
+                    'success' => true,
+                    'message' => 'Arquivo enviado com sucesso',
+                ], 200);
+            } else {
+                return new WP_REST_Response([
+                    'error' => 'Erro ao salvar o arquivo'
+                ], 500);
+            }
         }
     }
 }
