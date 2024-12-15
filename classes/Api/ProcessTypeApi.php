@@ -243,7 +243,8 @@ class ProcessTypeApi extends ObatalaAPI {
         // Verificar se o arquivo foi enviado
         if (empty($_FILES['file'])) {
             return new WP_REST_Response([
-                'error' => 'Nenhum arquivo enviado'
+                'error' => 'Nenhum arquivo enviado',
+                'debug' => $_FILES
             ], 400);
         }
 
