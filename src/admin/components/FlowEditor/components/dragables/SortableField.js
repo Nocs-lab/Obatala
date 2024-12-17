@@ -93,6 +93,7 @@ const SortableField = ({ id, nodeId, title, type, config }) => {
             label={label}
             setLabel={setLabel}
             config={config}
+            isSelect={type==='select'}
           />
         );
       case "search":

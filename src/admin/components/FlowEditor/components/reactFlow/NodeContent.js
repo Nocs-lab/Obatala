@@ -7,19 +7,19 @@ import { Button, Icon, TextControl, ComboboxControl } from "@wordpress/component
 import { useFlowContext } from "../../context/FlowContext";
 import { set } from "date-fns";
 import { fetchSectors } from "../../../../api/apiRequests";
-import { plus } from '@wordpress/icons';
+import { cloudUpload, formatListNumberedRTL, formatRtl, mapMarker, paragraph, plus, search, widget } from '@wordpress/icons';
 
 const FIELD_OPTIONS = [
-  { id: "text", label: "Texto" },
-  { id: "email", label: "Email" },
-  { id: "phone", label: "Telefone" },
-  { id: "address", label: "Endereço" },
-  { id: "number", label: "Número" },
-  { id: "datepicker", label: "Date Picker" },
-  { id: "upload", label: "Upload de Arquivo" },
-  { id: "select", label: "Select (Múltiplas Opções)" },
-  { id: "radio", label: "Radio (Opções de Seleção)" },
-  { id: "search", label: "Busca em Tainacan" },
+  { id: "text", label: "Texto", icon: paragraph},
+  { id: "email", label: "Email", icon: paragraph},
+  { id: "phone", label: "Telefone", icon: paragraph },
+  { id: "address", label: "Endereço", icon: mapMarker },
+  { id: "number", label: "Número", icon: formatListNumberedRTL},
+  { id: "datepicker", label: "Date Picker", icon:widget },
+  { id: "upload", label: "Upload de Arquivo", icon:cloudUpload },
+  { id: "select", label: "Select (Múltiplas Opções)", icon:formatRtl },
+  { id: "radio", label: "Radio (Opções de Seleção)", icon: formatRtl },
+  { id: "search", label: "Busca em Tainacan", icon: search },
 ];
 
 const NodeContent = ({ id, data  = {} }) => {
@@ -130,13 +130,17 @@ const NodeContent = ({ id, data  = {} }) => {
             <h3 className="node-meta-title">Select a field to add:</h3>
             <ul className="node-meta-list-container">
               {FIELD_OPTIONS.map((option) => (
+                <div className="node-meta-list">
+                <Icon icon={option.icon}/>
                 <li
-                  className="node-meta-list"
+                  
                   key={option.id}
                   onClick={() => addFieldToNode(option.id)}
                 >
                     {option.label}
                 </li>
+                
+                </div>
               ))}
             </ul>
             <Button variant="secondary" onClick={() => setIsAddingFields(false)}>
