@@ -49,7 +49,7 @@ class ProcessTypeApi extends ObatalaAPI {
         $this->add_route('process_type/(?P<id>\d+)/get_node', [
             'methods' => 'GET',
             'callback' => [$this, 'get_node'],
-            'permission_callback' => '__return_true', // Ajuste conforme necessário
+            'permission_callback' => '__return_true', 
         ]);
 
         $this->add_route('process_type/upload-doc', [
@@ -240,6 +240,13 @@ class ProcessTypeApi extends ObatalaAPI {
     }
 
     public function upload_doc($request) {
+        
+        //$user_name = $request->get_param('user');
+
+        if (!function_exists('wp_handle_upload')) {
+            error_log('Incluindo file.php...');
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+        }
         // Verificar se o arquivo foi enviado
         if (empty($_FILES['file'])) {
             return new WP_REST_Response([
@@ -250,7 +257,7 @@ class ProcessTypeApi extends ObatalaAPI {
 
         $file = $_FILES['file'];
         $overrides = [
-            //'test_form' => false, // Ignora o teste do formulário
+            'test_form' => false,
             'mimes' => [
                 'doc' => 'application/msword',
                 'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -260,7 +267,7 @@ class ProcessTypeApi extends ObatalaAPI {
 
         // Diretório de upload específico
         $upload_dir = wp_upload_dir();
-        $custom_dir = $upload_dir['basedir'] . '/Obatala/';
+        $custom_dir = $upload_dir['basedir'] . '/obatala';
 
         // Criar o diretório, se não existir
         if (!file_exists($custom_dir)) {
@@ -268,14 +275,24 @@ class ProcessTypeApi extends ObatalaAPI {
         }
 
         // Criar ou verificar o arquivo .htaccess no diretório
-        //$htaccess_path = $custom_dir . '.htaccess';
+        // $htaccess_path = $custom_dir . '/.htaccess';
         // if (!file_exists($htaccess_path)) {
         //     $htaccess_content = <<<EOT
-        //         <IfModule mod_rewrite.c>
-        //         RewriteEngine On
-        //         RewriteRule .* - [F,L]
+        //         <IfModule mod_authz_core.c>
+        //             # Bloquear o acesso por padrão
+        //             Require all denied
+
+        //             # Permitir acesso ao dono do arquivo
+        //             <FilesMatch ".*">
+        //                 Require user %{REMOTE_USER}
+        //             </FilesMatch>
         //         </IfModule>
-        //         EOT;
+
+        //         # Proteger o próprio .htaccess contra acesso externo
+        //         <Files ".htaccess">
+        //             Require all denied
+        //         </Files>
+        //     EOT;
         //     file_put_contents($htaccess_path, $htaccess_content);
         // }
 
@@ -301,6 +318,6 @@ class ProcessTypeApi extends ObatalaAPI {
                     'error' => 'Erro ao salvar o arquivo'
                 ], 500);
             }
-        }
+        } 
     }
 }
