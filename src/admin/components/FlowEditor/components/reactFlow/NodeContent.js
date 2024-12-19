@@ -130,17 +130,15 @@ const NodeContent = ({ id, data  = {} }) => {
             <h3 className="node-meta-title">Select a field to add:</h3>
             <ul className="node-meta-list-container">
               {FIELD_OPTIONS.map((option) => (
-                <div className="node-meta-list">
-                <Icon icon={option.icon}/>
-                <li
-                  
-                  key={option.id}
-                  onClick={() => addFieldToNode(option.id)}
-                >
+                <li className="node-meta-list">
+                  <Icon icon={option.icon}/>
+                  <span
+                    key={option.id}
+                    onClick={() => addFieldToNode(option.id)}
+                  >
                     {option.label}
+                  </span>
                 </li>
-                
-                </div>
               ))}
             </ul>
             <Button variant="secondary" onClick={() => setIsAddingFields(false)}>
