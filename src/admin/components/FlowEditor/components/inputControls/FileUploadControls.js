@@ -25,6 +25,8 @@ export const FileUploadControls = ({
 }) => {
   const { updateFieldConfig } = useFlowContext(); // Usando a função do contexto
   const [errors, setErrors] = useState({}); // Estado para armazenar erros de validação
+  const { toggleDrawer } = useDrawer();  
+
   const [formValues, setFormValues] = useState({
     label: config ? config.label : label ? label : "",
     required: config ? config.required : false,
@@ -54,6 +56,7 @@ export const FileUploadControls = ({
         }
         setErrors(formattedErrors);
       });
+      toggleDrawer();
   };
 
   return (
