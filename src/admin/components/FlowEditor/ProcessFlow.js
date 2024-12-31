@@ -13,6 +13,9 @@ import ProcessControls from "./components/reactFlow/FlowButtons";
 import SlidingDrawer from "./components/SlidingDrawer";
 import { DrawerProvider } from "./context/DrawerContext";
 import { useFlowContext } from "./context/FlowContext";
+import { Button, Icon, Tooltip } from "@wordpress/components";
+import { fullscreen } from "@wordpress/icons";
+
 
 const nodeTypes = {
   customNode: NodeContent,
@@ -34,6 +37,21 @@ const ProcessFlow = forwardRef(({ initialData, onSave, onCancel}, ref,) => {
 
   const [errors, setErrors] = useState([]); // Armazena os erros de validação
   const [isOpen, setIsOpen] = useState(false);
+
+
+  // Função para alternar para tela cheia
+  const toggleFullScreen = () => {
+    const element = document.getElementById('flow-container'); 
+    
+    const isFullScreen = document.fullscreenElement;
+     if(isFullScreen) {
+      element.exitFullscreen();
+    }else {     
+      element.requestFullscreen();
+    }
+    
+  };
+  
 
   // Função para abrir/fechar a gaveta
   const toggleDrawer = () => {
@@ -62,7 +80,7 @@ const ProcessFlow = forwardRef(({ initialData, onSave, onCancel}, ref,) => {
   }, [nodes, edges]);
 
   return (
-    <div className="flow-container">
+    <div className="flow-container" id="flow-container" >
       {errors.length > 0 && (
         <div style={{ color: "red", padding: "10px" }}>
           <strong>Validation Errors:</strong>
@@ -77,6 +95,16 @@ const ProcessFlow = forwardRef(({ initialData, onSave, onCancel}, ref,) => {
         onSave={onSave}
         onCancel={onCancel}
       />
+      <Tooltip
+        text="Alternar tela cheia"
+      >
+          <Icon
+              onClick={() => toggleFullScreen()}
+              icon={fullscreen}
+              style={{cursor:'pointer'}}
+          />  
+      </Tooltip>
+
       <div className="flow-content">
         <DrawerProvider>
           <ReactFlow
