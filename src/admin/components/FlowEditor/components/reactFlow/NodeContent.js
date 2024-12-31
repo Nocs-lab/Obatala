@@ -7,18 +7,18 @@ import { Button, Icon, TextControl, ComboboxControl } from "@wordpress/component
 import { useFlowContext } from "../../context/FlowContext";
 import { set } from "date-fns";
 import { fetchSectors } from "../../../../api/apiRequests";
-import { cloudUpload, formatListNumberedRTL, formatRtl, mapMarker, paragraph, plus, search, widget } from '@wordpress/icons';
+import { file, mobile, mapMarker, paragraph, plus, search, calendar, keyboard, commentContent, listView } from '@wordpress/icons';
 
 const FIELD_OPTIONS = [
   { id: "text", label: "Texto", icon: paragraph},
-  { id: "email", label: "Email", icon: paragraph},
-  { id: "phone", label: "Telefone", icon: paragraph },
+  { id: "email", label: "Email", icon: commentContent},
+  { id: "phone", label: "Telefone", icon: mobile },
   { id: "address", label: "Endereço", icon: mapMarker },
-  { id: "number", label: "Número", icon: formatListNumberedRTL},
-  { id: "datepicker", label: "Date Picker", icon:widget },
-  { id: "upload", label: "Upload de Arquivo", icon:cloudUpload },
-  { id: "select", label: "Select (Múltiplas Opções)", icon:formatRtl },
-  { id: "radio", label: "Radio (Opções de Seleção)", icon: formatRtl },
+  { id: "number", label: "Número", icon: keyboard},
+  { id: "datepicker", label: "Date Picker", icon:calendar },
+  { id: "upload", label: "Upload de Arquivo", icon:file },
+  { id: "select", label: "Select (Múltiplas Opções)", icon:listView },
+  { id: "radio", label: "Radio (Opções de Seleção)", icon: listView },
   { id: "search", label: "Busca em Tainacan", icon: search },
 ];
 
