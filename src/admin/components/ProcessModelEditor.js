@@ -144,12 +144,7 @@ const processDataEditor = () => {
       </span>
       <div className="title-container">
        <h2>Manager Process Model</h2>
-       <FlowProvider>
-        <ProcessControls
-          onSave={handleSave}
-          onCancel={handleCancelEditProcessType}
-        />
-      </FlowProvider>
+
       </div>
       
       {notice && (
@@ -159,8 +154,15 @@ const processDataEditor = () => {
             </Notice>
         </div>
       )}
-
+      
       <FlowProvider>
+        <div className ='container-controls' style={{display:'flex', justifyContent:'end', padding:' 0px 40px 24px 0px'}}>
+            <ProcessControls
+              onSave={handleSave}
+              onCancel={handleCancelEditProcessType}
+            />
+        </div>
+       
         <ProcessFlow 
             ref={flowRef} 
             initialData={flowData}
