@@ -240,21 +240,18 @@ class ProcessTypeApi extends ObatalaAPI {
     }
 
     public function upload_doc($request) {
-        
-        //$user_name = $request->get_param('user');
-
+        // Carregar a função wp_handle_upload, se necessário
         if (!function_exists('wp_handle_upload')) {
-            error_log('Incluindo file.php...');
             require_once ABSPATH . 'wp-admin/includes/file.php';
         }
+    
         // Verificar se o arquivo foi enviado
         if (empty($_FILES['file'])) {
             return new WP_REST_Response([
                 'error' => 'Nenhum arquivo enviado',
-                'debug' => $_FILES
             ], 400);
         }
-
+    
         $file = $_FILES['file'];
         $overrides = [
             'test_form' => false,
@@ -264,63 +261,66 @@ class ProcessTypeApi extends ObatalaAPI {
                 'pdf' => 'application/pdf',
                 'jpg' => 'image/jpeg',
                 'jpeg' => 'image/jpeg',
-                'png' => 'image/png'
+                'png' => 'image/png',
             ],
         ];
-
-        // Diretório de upload específico
+    
+        // Diretório de upload personalizado
         $upload_dir = wp_upload_dir();
-        $custom_dir = $upload_dir['basedir'] . '/obatala';
-
-        // Criar o diretório, se não existir
-        if (!file_exists($custom_dir)) {
-            wp_mkdir_p($custom_dir);
+        $custom_dir = trailingslashit($upload_dir['basedir']) . 'obatala';
+    
+        // Criar o diretório, se necessário
+        if (!wp_mkdir_p($custom_dir)) {
+            return new WP_REST_Response([
+                'error' => 'Não foi possível criar o diretório de upload personalizado.',
+            ], 500);
         }
-
-        // Criar ou verificar o arquivo .htaccess no diretório
+    
+        // Configurar o arquivo .htaccess para proteção
         $htaccess_path = $custom_dir . '/.htaccess';
         if (!file_exists($htaccess_path)) {
             $htaccess_content = <<<EOT
                 <IfModule mod_authz_core.c>
                     # Bloquear o acesso por padrão
                     Require all denied
-
-                    # Permitir acesso ao dono do arquivo
-                    <FilesMatch ".*">
-                        Require user %{REMOTE_USER}
-                    </FilesMatch>
                 </IfModule>
-
+                
                 # Proteger o próprio .htaccess contra acesso externo
                 <Files ".htaccess">
                     Require all denied
                 </Files>
             EOT;
-            file_put_contents($htaccess_path, $htaccess_content);
-        }
-
-        $uploaded_file = wp_handle_upload($file, $overrides);
-
-        // Verifica erros e envia o arquivo para um diretorio personalizado
-        if (isset($uploaded_file['error'])) {
-            return new WP_REST_Response([
-                'error' => $uploaded_file['error']
-            ], 500);
-        } else {
-            // Move o arquivo para o diretório personalizado
-            $filename = sanitize_file_name($file['name']); // Sanitiza o nome do arquivo
-            $new_file_path = $custom_dir . '/' . $filename;
-
-            if (rename($uploaded_file['file'], $new_file_path)) {
+            if (file_put_contents($htaccess_path, $htaccess_content) === false) {
                 return new WP_REST_Response([
-                    'success' => true,
-                    'message' => 'Arquivo enviado com sucesso',
-                ], 200);
-            } else {
-                return new WP_REST_Response([
-                    'error' => 'Erro ao salvar o arquivo'
+                    'error' => 'Erro ao criar o arquivo .htaccess no diretório de upload.',
                 ], 500);
             }
-        } 
+        }
+    
+        // Fazer upload do arquivo
+        $uploaded_file = wp_handle_upload($file, $overrides);
+    
+        if (isset($uploaded_file['error'])) {
+            return new WP_REST_Response([
+                'error' => $uploaded_file['error'],
+            ], 500);
+        }
+    
+        // Mover o arquivo para o diretório personalizado
+        $filename = sanitize_file_name($file['name']);
+        $new_file_path = trailingslashit($custom_dir) . $filename;
+    
+        if (!rename($uploaded_file['file'], $new_file_path)) {
+            return new WP_REST_Response([
+                'error' => 'Erro ao salvar o arquivo no diretório personalizado.',
+            ], 500);
+        }
+    
+        // Retornar sucesso com o caminho do arquivo
+        return new WP_REST_Response([
+            'success' => true,
+            'message' => 'Arquivo enviado com sucesso.',
+            'file_path' => $new_file_path,
+        ], 200);
     }
 }
