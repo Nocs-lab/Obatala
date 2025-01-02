@@ -261,7 +261,10 @@ class ProcessTypeApi extends ObatalaAPI {
             'mimes' => [
                 'doc' => 'application/msword',
                 'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-                'pdf' => 'application/pdf'
+                'pdf' => 'application/pdf',
+                'jpg' => 'image/jpeg',
+                'jpeg' => 'image/jpeg',
+                'png' => 'image/png'
             ],
         ];
 
@@ -275,26 +278,26 @@ class ProcessTypeApi extends ObatalaAPI {
         }
 
         // Criar ou verificar o arquivo .htaccess no diretório
-        // $htaccess_path = $custom_dir . '/.htaccess';
-        // if (!file_exists($htaccess_path)) {
-        //     $htaccess_content = <<<EOT
-        //         <IfModule mod_authz_core.c>
-        //             # Bloquear o acesso por padrão
-        //             Require all denied
+        $htaccess_path = $custom_dir . '/.htaccess';
+        if (!file_exists($htaccess_path)) {
+            $htaccess_content = <<<EOT
+                <IfModule mod_authz_core.c>
+                    # Bloquear o acesso por padrão
+                    Require all denied
 
-        //             # Permitir acesso ao dono do arquivo
-        //             <FilesMatch ".*">
-        //                 Require user %{REMOTE_USER}
-        //             </FilesMatch>
-        //         </IfModule>
+                    # Permitir acesso ao dono do arquivo
+                    <FilesMatch ".*">
+                        Require user %{REMOTE_USER}
+                    </FilesMatch>
+                </IfModule>
 
-        //         # Proteger o próprio .htaccess contra acesso externo
-        //         <Files ".htaccess">
-        //             Require all denied
-        //         </Files>
-        //     EOT;
-        //     file_put_contents($htaccess_path, $htaccess_content);
-        // }
+                # Proteger o próprio .htaccess contra acesso externo
+                <Files ".htaccess">
+                    Require all denied
+                </Files>
+            EOT;
+            file_put_contents($htaccess_path, $htaccess_content);
+        }
 
         $uploaded_file = wp_handle_upload($file, $overrides);
 
