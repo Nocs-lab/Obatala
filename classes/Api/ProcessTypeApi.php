@@ -49,12 +49,18 @@ class ProcessTypeApi extends ObatalaAPI {
         $this->add_route('process_type/(?P<id>\d+)/get_node', [
             'methods' => 'GET',
             'callback' => [$this, 'get_node'],
-            'permission_callback' => '__return_true', 
+            'permission_callback' => '__return_true',
         ]);
 
-        $this->add_route('process_type/upload-doc', [
+        $this->add_route('process_type/upload', [
             'methods' => 'POST',
-            'callback' => [$this, 'upload_doc'],
+            'callback' => [$this, 'upload'],
+            'permission_callback' => '__return_true',
+        ]);
+
+        $this->add_route('process_type/download', [
+            'methods' => 'GET',
+            'callback' => [$this, 'download'],
             'permission_callback' => '__return_true',
         ]);
     }
@@ -239,19 +245,23 @@ class ProcessTypeApi extends ObatalaAPI {
         }
     }
 
-    public function upload_doc($request) {
+    public function upload($request) {
+        // Receber o grupo do request
+        //$group = sanitize_text_field($request->get_param('group')); 
+        $group = "teste";
+
         // Carregar a função wp_handle_upload, se necessário
         if (!function_exists('wp_handle_upload')) {
             require_once ABSPATH . 'wp-admin/includes/file.php';
         }
-    
+
         // Verificar se o arquivo foi enviado
         if (empty($_FILES['file'])) {
             return new WP_REST_Response([
                 'error' => 'Nenhum arquivo enviado',
             ], 400);
         }
-    
+
         $file = $_FILES['file'];
         $overrides = [
             'test_form' => false,
@@ -264,58 +274,66 @@ class ProcessTypeApi extends ObatalaAPI {
                 'png' => 'image/png',
             ],
         ];
-    
+
         // Diretório de upload personalizado
         $upload_dir = wp_upload_dir();
         $custom_dir = trailingslashit($upload_dir['basedir']) . 'obatala';
-    
+
         // Criar o diretório, se necessário
         if (!wp_mkdir_p($custom_dir)) {
             return new WP_REST_Response([
                 'error' => 'Não foi possível criar o diretório de upload personalizado.',
             ], 500);
         }
-    
+
         // Configurar o arquivo .htaccess para proteção
         $htaccess_path = $custom_dir . '/.htaccess';
         if (!file_exists($htaccess_path)) {
             $htaccess_content = <<<EOT
-                <IfModule mod_authz_core.c>
-                    # Bloquear o acesso por padrão
-                    Require all denied
-                </IfModule>
-                
-                # Proteger o próprio .htaccess contra acesso externo
-                <Files ".htaccess">
-                    Require all denied
-                </Files>
-            EOT;
+                    <IfModule mod_rewrite.c>
+                        RewriteEngine On
+
+                        # Bloquear acesso direto
+                        RewriteCond %{QUERY_STRING} !(group=.+)
+                        RewriteRule ^ - [F]
+                    </IfModule>
+                EOT;
             if (file_put_contents($htaccess_path, $htaccess_content) === false) {
                 return new WP_REST_Response([
                     'error' => 'Erro ao criar o arquivo .htaccess no diretório de upload.',
                 ], 500);
             }
         }
-    
+
         // Fazer upload do arquivo
         $uploaded_file = wp_handle_upload($file, $overrides);
-    
+
         if (isset($uploaded_file['error'])) {
             return new WP_REST_Response([
                 'error' => $uploaded_file['error'],
             ], 500);
         }
-    
+
         // Mover o arquivo para o diretório personalizado
         $filename = sanitize_file_name($file['name']);
         $new_file_path = trailingslashit($custom_dir) . $filename;
-    
+
         if (!rename($uploaded_file['file'], $new_file_path)) {
             return new WP_REST_Response([
                 'error' => 'Erro ao salvar o arquivo no diretório personalizado.',
             ], 500);
         }
-    
+
+        // Usar a função para garantir que o grupo existe
+        if (!self::ensure_group_exists($group)) {
+            return new WP_REST_Response(['error' => 'Não foi possível garantir a existência do grupo.'], 500);
+        }
+
+        // Alterar o grupo do arquivo para o especificado
+        if (!chgrp($new_file_path, $group)) {
+            return new WP_REST_Response(['error' => 'Erro ao alterar o grupo do arquivo.'], 500);
+        }
+
         // Retornar sucesso com o caminho do arquivo
         return new WP_REST_Response([
             'success' => true,
@@ -323,4 +341,70 @@ class ProcessTypeApi extends ObatalaAPI {
             'file_path' => $new_file_path,
         ], 200);
     }
+
+    function download(WP_REST_Request $request) {
+        $file_name = sanitize_file_name($request->get_param('file'));
+        $group = sanitize_text_field($request->get_param('group'));
+        $upload_dir = wp_upload_dir();
+        $custom_dir = trailingslashit($upload_dir['basedir']) . 'obatala';
+        $file_path = trailingslashit($custom_dir) . $file_name;
+
+        if (!file_exists($file_path)) {
+            return new WP_REST_Response(['error' => 'Arquivo não encontrado'], 404);
+        }
+
+        // Validar o grupo do arquivo
+        $file_group = posix_getgrgid(filegroup($file_path))['name'];
+        if ($file_group !== $group) {
+            return new WP_REST_Response(['error' => 'Acesso negado ao grupo especificado.'], 403);
+        }
+
+        // Retornar informações do arquivo, ao invés de forçar o download
+        $file_info = [
+            'file_name' => basename($file_path),
+            'file_url' => trailingslashit($upload_dir['baseurl']) . 'obatala/' . basename($file_path),
+            'mime_type' => mime_content_type($file_path),
+            'file_size' => filesize($file_path),
+        ];
+
+        return new WP_REST_Response($file_info, 200);
+    }
+
+    // Função para verificar e criar o grupo, se não existir no Windows
+    function ensure_group_exists($group) {
+        // Verificar se o grupo existe
+        $group_exists = shell_exec("net localgroup | find \"$group\"");
+
+        if (empty($group_exists)) {
+            // Criar o grupo se não existir
+            $create_group = shell_exec("net localgroup \"$group\" /add");
+
+            // Verifique se houve erro na criação do grupo
+            if ($create_group === null) {
+                error_log("Erro ao criar o grupo $group.");
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // Função para verificar e criar o grupo, se não existir no Linux
+    // function ensure_group_exists($group) {
+    //     // Verificar se o grupo existe usando o comando getent
+    //     $group_exists = shell_exec("getent group $group");
+
+    //     if (empty($group_exists)) {
+    //         // Criar o grupo se não existir
+    //         $create_group = shell_exec("sudo groupadd $group 2>&1");
+
+    //         // Verificar se houve erro na criação do grupo
+    //         if ($create_group === null || stripos($create_group, 'erro') !== false) {
+    //             error_log("Erro ao criar o grupo $group: $create_group");
+    //             return false;
+    //         }
+    //     }
+
+    //     return true;
+    // }
 }
