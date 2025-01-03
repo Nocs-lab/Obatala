@@ -428,20 +428,7 @@ ol.list-group .list-group-item::before {
   font-family: 'Dashicons';
   font-size: 1.2rem;
 }
-.navigation-point:nth-child(3)::after,
-.navigation-point:nth-child(4)::after,
-.navigation-point:nth-child(5)::after {
-  color: rgba(0, 0, 0, .35);
-  content: '\f110';
-  font-family: 'Dashicons';
-  font-size: 1.2rem;
-  margin-left: auto;
-}
-.navigation-point:nth-child(6) {
-  background-color: var(--gray-200);
-  color: var(--gray-600);
-  cursor: not-allowed;
-}
+
 .components-notice {
   margin-bottom: 2rem;
   padding-top: 0;

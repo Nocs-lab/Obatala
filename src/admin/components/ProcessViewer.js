@@ -35,6 +35,7 @@ const ProcessViewer = () => {
 
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
     const [isStepSubmitEnabled, setIsStepSubmitEnabled] = useState({});
+    const [countSubmettedSteps, setCountSubmettedSteps] = useState(0);
 
     const getProcessIdFromUrl = () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -109,6 +110,16 @@ const ProcessViewer = () => {
         setIsLoading(false);
         }
     }, [currentUser]);
+
+    useEffect(() => {
+        calculatePercentagem()
+    }, [countSubmettedSteps])
+
+    const calculatePercentagem = () => {
+        const result = (countSubmettedSteps / flowNodes?.nodes?.length) * 100;
+        console.log('count: ', countSubmettedSteps)
+        return result.toFixed(2);
+    }
 
     const loadSectors = () => {
         fetchSectors()
@@ -274,6 +285,7 @@ const ProcessViewer = () => {
                 ...prev,
                 [currentStep]: true, 
             }));
+            setCountSubmettedSteps(countSubmettedSteps + 1);
             setIsLoading(false);
             
 
@@ -324,7 +336,7 @@ const ProcessViewer = () => {
                     >
                     {process.meta.access_level}
                 </span>
-                <span className="badge default"><Icon icon="yes"/> 70% concluído</span>
+                <span className="badge default"><Icon icon="yes"/> {calculatePercentagem()}% concluído</span>
                 <span className="badge default"><Icon icon="admin-users"/> Criado por: José da Silva</span>
             </div>
 
