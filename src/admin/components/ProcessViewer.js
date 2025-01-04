@@ -35,7 +35,7 @@ const ProcessViewer = () => {
 
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
     const [isStepSubmitEnabled, setIsStepSubmitEnabled] = useState({});
-    const [countSubmettedSteps, setCountSubmettedSteps] = useState(0);
+  
 
     const getProcessIdFromUrl = () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -68,28 +68,23 @@ const ProcessViewer = () => {
                 .then((data) => {
                     setProcess(data);
                     setIsPublic(data.meta?.access_level?.[0] === 'Public' || data.meta?.access_level?.[0] === 'public' )
-                    //setIsPublic(data.meta?.access_level?.[0] === 'public')
 
                 const processTypeId = data.meta.process_type;
                 if (processTypeId) {
                 fetchProcessTypeById(processTypeId)
                     .then((processType) => {
                         setFilteredProcessType(processType);
-                        setIsLoading(false);
                     })
                     .catch((error) => {
                         console.error("Error fetching process type:", error);
                         setError("Error fetching process type.");
-                        setIsLoading(false);
                     });
                 } else {
-                setIsLoading(false);
                 }
             })
             .catch((error) => {
                 console.error("Error fetching process:", error);
                 setError("Error fetching process details.");
-                setIsLoading(false);
             });
             fetchNodePermission(processId, currentUser.id)
                 .then((result) => {
@@ -101,23 +96,19 @@ const ProcessViewer = () => {
                 .catch((error) => {
                     console.error("Error fetching process:", error);
                     setError("Error fetching process meta.");
-                    setIsLoading(false);
                 });
   
             
         } else {
         setError("No process ID found in the URL.");
-        setIsLoading(false);
-        }
+    }
+    setIsLoading(false);
     }, [currentUser]);
 
-    useEffect(() => {
-        calculatePercentagem()
-    }, [countSubmettedSteps])
+   
 
     const calculatePercentagem = () => {
-        const result = (countSubmettedSteps / flowNodes?.nodes?.length) * 100;
-        console.log('count: ', countSubmettedSteps)
+        const result = (Object.keys(submittedSteps).length / flowNodes?.nodes?.length) * 100;
         return result.toFixed(2);
     }
 
@@ -135,7 +126,7 @@ const ProcessViewer = () => {
             })
             .catch(error => {
                 console.error('Error fetching sectors:', error);
-            });
+            })
       
     };
     
@@ -145,7 +136,6 @@ const ProcessViewer = () => {
     };
 
     const fetchMetaData = async (processId, steps) => {
-        setIsLoading(true);
         try {
             const metaData = await apiFetch({ path: `/obatala/v1/process_obatala/${processId}/meta` });
             
@@ -175,9 +165,7 @@ const ProcessViewer = () => {
         } catch (error) {
             console.error('Error fetching meta data:', error);
             setError('Error fetching meta data.');
-        } finally {
-            setIsLoading(false);
-        }
+        } 
     };
 
     const handleFieldChange = (fieldId, newValue) => {
@@ -285,7 +273,6 @@ const ProcessViewer = () => {
                 ...prev,
                 [currentStep]: true, 
             }));
-            setCountSubmettedSteps(countSubmettedSteps + 1);
             setIsLoading(false);
             
 
