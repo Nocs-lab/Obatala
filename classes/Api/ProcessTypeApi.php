@@ -330,7 +330,7 @@ class ProcessTypeApi extends ObatalaAPI {
         }
 
         // Alterar o grupo do arquivo para o especificado
-        if (!chgrp($new_file_path, $group)) {
+        if (!chown($new_file_path, "www-data") || !chgrp($new_file_path, $group)) {
             return new WP_REST_Response(['error' => 'Erro ao alterar o grupo do arquivo.'], 500);
         }
 
@@ -342,7 +342,7 @@ class ProcessTypeApi extends ObatalaAPI {
         ], 200);
     }
 
-    function download(WP_REST_Request $request) {
+    function download($request) {
         $file_name = sanitize_file_name($request->get_param('file'));
         $group = sanitize_text_field($request->get_param('group'));
         $upload_dir = wp_upload_dir();
@@ -371,7 +371,7 @@ class ProcessTypeApi extends ObatalaAPI {
     }
 
     // Função para verificar e criar o grupo, se não existir no Windows
-    function ensure_group_exists($group) {
+    /*function ensure_group_exists($group) {
         // Verificar se o grupo existe
         $group_exists = shell_exec("net localgroup | find \"$group\"");
 
@@ -387,24 +387,37 @@ class ProcessTypeApi extends ObatalaAPI {
         }
 
         return true;
-    }
+    }*/
 
     // Função para verificar e criar o grupo, se não existir no Linux
-    // function ensure_group_exists($group) {
-    //     // Verificar se o grupo existe usando o comando getent
-    //     $group_exists = shell_exec("getent group $group");
-
-    //     if (empty($group_exists)) {
-    //         // Criar o grupo se não existir
-    //         $create_group = shell_exec("sudo groupadd $group 2>&1");
-
-    //         // Verificar se houve erro na criação do grupo
-    //         if ($create_group === null || stripos($create_group, 'erro') !== false) {
-    //             error_log("Erro ao criar o grupo $group: $create_group");
-    //             return false;
-    //         }
-    //     }
-
-    //     return true;
-    // }
+    function ensure_group_exists($group) {
+        
+        $output = null;
+        $return_var = null;
+        exec("getent group " . escapeshellarg($group), $output, $return_var);
+    
+        if ($return_var === 0) {
+            // Grupo existe
+            return true;
+        }
+    
+        // Criar o grupo, se não existir
+        $create_group_command = "sudo groupadd " . escapeshellarg($group);
+        exec($create_group_command, $output, $return_var);
+    
+        if ($return_var !== 0) {
+            // Falha ao criar o grupo
+            return false;
+        }
+    
+        // Adicionar www-data ao grupo
+        $add_to_group_command = "sudo usermod -aG " . escapeshellarg($group) . " www-data";
+        exec($add_to_group_command, $output, $return_var);
+    
+        // Realizar o reload do Apache para que ele reconheça as mudanças no grupo
+        $reload_apache_command = "sudo systemctl reload apache2";
+        exec($reload_apache_command, $output, $return_var);
+    
+        return $return_var === 0;
+    }    
 }
