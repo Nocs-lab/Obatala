@@ -2,6 +2,7 @@ import {
   Button,
   CheckboxControl,
   RadioControl,
+  SelectControl,
   TextareaControl,
   TextControl,
 } from "@wordpress/components";
@@ -24,7 +25,8 @@ export const SelectRadioControls = ({
   options,
   required,
   helpText,
-  config, // Recebendo a configuração do campo
+  config,
+  isSelect // Recebendo a configuração do campo
 }) => {
   const { updateFieldConfig } = useFlowContext(); // Usando a função do contexto
   const [errors, setErrors] = useState({}); // Estado para armazenar erros de validação
@@ -94,8 +96,19 @@ export const SelectRadioControls = ({
         help={errors.options} // Exibe a mensagem de erro, se houver
       />
 
-      {/* Visualização das opções como Radio */}
-      <RadioControl
+      {/* Visualização das opções como Radio e Select */}
+      {isSelect ? (
+        <SelectControl
+          label="Pré-visualização das opções de resposta"
+          options={optionArray.map((option) => ({
+            label: option,
+            value: option,
+          }))}
+          selected={null}
+          onChange={(value) => setFormValues((prev) => ({ ...prev, selectedOption: value }))}
+        />
+      ) : (
+        <RadioControl
         label="Pré-visualização das opções de resposta"
         options={optionArray.map((option) => ({
           label: option,
@@ -104,6 +117,8 @@ export const SelectRadioControls = ({
         selected={null}
         onChange={(value) => setFormValues((prev) => ({ ...prev, selectedOption: value }))}
       />
+      )}
+     
 
       {/* Campo para fornecer texto de ajuda */}
       <TextareaControl
