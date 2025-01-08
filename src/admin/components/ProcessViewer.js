@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback  } from "react";
+import React, { useState, useEffect, useCallback, useMemo  } from "react";
 import {
     Icon,
     Spinner,
@@ -16,6 +16,8 @@ import CommentForm from "./ProcessManager/CommentForm";
 import { fetchNodePermission, fetchProcessById, fetchProcessTypeById, fetchSectors } from "../api/apiRequests";
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
+import { format, parseISO } from "date-fns";
+import { ptBR } from "date-fns/locale/pt-BR";
 
 const ProcessViewer = () => {
     const [process, setProcess] = useState(null);
@@ -32,10 +34,13 @@ const ProcessViewer = () => {
     const [sectorUser, setSectorUser] = useState([]);
     const [hasPermission, setHasPermission] = useState(false);
     const [isPublic, setIsPublic] = useState(false);
+    //const [stageUpdateAt, setStageUpdateAt] = useState(null);
+   // const [userUpdateStage, setUserUpdateStage] = useState("");
+    const [currentStageData, setCurrentStageData] = useState({});
 
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
     const [isStepSubmitEnabled, setIsStepSubmitEnabled] = useState({});
-  
+    console.log(currentUser)
 
     const getProcessIdFromUrl = () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -150,6 +155,7 @@ const ProcessViewer = () => {
             setSubmittedSteps(prev => ({ ...prev, ...updatedSubmittedSteps }));
 
             const stageData = metaData.stageData || {};
+
             const updatedFormValues = steps.reduce((acc, step) => {
                 if (stageData[step.id]) {
                     acc[step.id] = stageData[step.id].fields.reduce((acc, field) => {
@@ -161,6 +167,16 @@ const ProcessViewer = () => {
             }, {});
 
             setFormValues(prev => ({ ...prev, ...updatedFormValues }));
+            
+            const updateCurrentStageData = steps.reduce((acc, step) => {
+                if (stageData[step.id]) {
+                    acc[step.id] = [stageData[step.id].updateAt, stageData[step.id].user];
+                }
+                return acc;
+            }, {});
+
+            setCurrentStageData(updateCurrentStageData);
+            
 
         } catch (error) {
             console.error('Error fetching meta data:', error);
@@ -253,7 +269,9 @@ const ProcessViewer = () => {
 
             const updatedStageData = {
                 ...existingMetaData.stageData,
-                [stepId]: { fields }
+                [stepId]: { fields, updateAt: new Date(),
+                    user: currentUser.name },
+               
             };
 
 
@@ -265,7 +283,8 @@ const ProcessViewer = () => {
                     submittedStages: {
                         ...existingMetaData.submittedStages,
                         [stepId]: true,
-                    }
+                    },
+                    
                 }
             });
 
@@ -290,6 +309,7 @@ const ProcessViewer = () => {
         return sectorUser.includes(stepSector);
     };
 
+
     if (!process) {
         return (
             <Notice status="warning" isDismissible={false}>
@@ -298,10 +318,25 @@ const ProcessViewer = () => {
         );
     }
 
-    console.log('orderedSteps',orderedSteps)
-    const options = orderedSteps.map(step => ({ label: step.data.stageName, value: step.id, fields: step.data.fields, sector_stage: step.sector_obatala }));
+    const options = orderedSteps.map(step => ({ 
+        label: step.data.stageName, 
+        value: step.id, 
+        fields: step.data.fields, 
+        sector_stage: step.sector_obatala,
+    }));
+
+    const lastUpdateStage = () => { 
+        const currentStepData = currentStageData[options[currentStep]?.value];
+        const user = currentStepData ? currentStepData[1] : 'Desconhecido'
+        const dateFormat = currentStepData ? format(parseISO(currentStepData[0]), "dd 'de' MMMM 'de' yyyy", {
+            locale: ptBR
+        }) : 'Data não disponível'
+
+        return {user, dateFormat}
+    }
+
     console.log(options);
-  
+
     return (
         <main>
             <span className="brand">
@@ -396,7 +431,11 @@ const ProcessViewer = () => {
                                     )}
                                 </PanelRow>
                                 <footer>
-                                    Última atualização em 21/10/2024 por João da Silva
+                                    {Object.keys(currentStageData).includes(options[currentStep]?.value) ?
+                                    `Última atualização em ${lastUpdateStage().dateFormat} por ${lastUpdateStage().user}`    
+                                    : 'Sem atualizações no momento'
+                                    }
+                                    
                                 </footer>
                             </PanelBody>
                         </Panel>
