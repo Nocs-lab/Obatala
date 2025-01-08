@@ -34,14 +34,12 @@ const ProcessViewer = () => {
     const [sectorUser, setSectorUser] = useState([]);
     const [hasPermission, setHasPermission] = useState(false);
     const [isPublic, setIsPublic] = useState(false);
-    //const [stageUpdateAt, setStageUpdateAt] = useState(null);
-   // const [userUpdateStage, setUserUpdateStage] = useState("");
     const [currentStageData, setCurrentStageData] = useState({});
 
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
+    const allAuthors = useSelect(select => select(coreStore).getUsers({ who: 'authors' }), []);
     const [isStepSubmitEnabled, setIsStepSubmitEnabled] = useState({});
-    console.log(currentUser)
-
+    
     const getProcessIdFromUrl = () => {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get("process_id");
@@ -335,8 +333,13 @@ const ProcessViewer = () => {
         return {user, dateFormat}
     }
 
-    console.log(options);
+    const authorsById = allAuthors ? allAuthors.reduce((acc, user) => {
+        acc[user.id] = user;
+        return acc;
+    }, {}) : {};
 
+    console.log(options);
+    
     return (
         <main>
             <span className="brand">
@@ -359,7 +362,7 @@ const ProcessViewer = () => {
                     {process.meta.access_level}
                 </span>
                 <span className="badge default"><Icon icon="yes"/> {calculatePercentagem()}% concluído</span>
-                <span className="badge default"><Icon icon="admin-users"/> Criado por: José da Silva</span>
+                <span className="badge default"><Icon icon="admin-users"/> Criado por: {authorsById[process?.author]?.name}</span>
             </div>
 
             {!isPublic && hasPermission === false ? (
