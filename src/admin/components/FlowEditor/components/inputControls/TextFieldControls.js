@@ -4,10 +4,19 @@ import {
   CheckboxControl,
   TextareaControl,
   Button,
+  SelectControl,
   __experimentalNumberControl as NumberControl,
+  Notice,
 } from "@wordpress/components";
 import * as Yup from "yup";
 import { useFlowContext } from "../../context/FlowContext";
+
+// Padrões regex predefinidos
+const predefinedPatterns = {
+  telefone: "^\\(\\d{2}\\) \\d{4,5}-\\d{4}$", // Ex: (11) 98765-4321
+  email: "^[\\w-.]+@[\\w-]+\\.[a-z]{2,}$", // Ex: exemplo@email.com
+  cep: "^\\d{5}-\\d{3}$", // Ex: 12345-678
+};
 
 // Esquema de validação usando Yup
 const validationSchema = Yup.object().shape({
@@ -20,7 +29,6 @@ const validationSchema = Yup.object().shape({
   maxLength: Yup.number()
     .min(Yup.ref("minLength"), "O tamanho máximo deve ser maior que o mínimo")
     .nullable(),
-  pattern: Yup.string().matches(/^(?:|\/.*\/)$/, "Padrão de Regex inválido"),
   helpText: Yup.string(),
 });
 
@@ -30,35 +38,56 @@ export const TextFieldControls = ({
   fieldType,
   label,
   setLabel,
-  config, // Recebendo a configuração do campo
+  config,
 }) => {
-  const { updateFieldConfig } = useFlowContext(); // Usando a função do contexto
-  const [errors, setErrors] = useState({}); // Estado para armazenar erros de validação
+  const { updateFieldConfig } = useFlowContext();
+  const [errors, setErrors] = useState({});
   const [formValues, setFormValues] = useState({
-    label:  config ? config.label : label ? label : "",
+    label: config ? config.label : label || "",
     placeholder: config ? config.placeholder : "",
     required: config ? config.required : false,
     minLength: config ? config.minLength : 0,
     maxLength: config ? config.maxLength : 100,
     pattern: config ? config.pattern : "",
     helpText: config ? config.helpText : "",
-  }); // Estado para armazenar os valores do formulário
+  });
+  const [message, setMessage] = useState(null); // Para exibir mensagem de sucesso ou erro
+
+  // Função para validar regex
+  const isValidRegex = (pattern) => {
+    try {
+      new RegExp(pattern);
+      return true;
+    } catch {
+      return false;
+    }
+  };
 
   // Função para validar os dados
   const validateFields = () => {
-    const data = formValues; // Use formValues para validar
+    const data = formValues;
 
-    // Usar o schema de validação do Yup
+    // Validação do regex
+    if (formValues.pattern && !isValidRegex(formValues.pattern)) {
+      setErrors((prev) => ({
+        ...prev,
+        pattern: "O padrão de Regex informado é inválido.",
+      }));
+      setMessage({
+        type: "error",
+        text: "Erro ao salvar. O padrão de Regex é inválido.",
+      });
+      return;
+    }
+
     validationSchema
       .validate(data, { abortEarly: false })
       .then(() => {
-        // Se a validação passar, limpar erros
         setErrors({});
-        // Atualizando o campo do nó ao salvar
         updateFieldConfig(nodeId, fieldId, formValues);
+        setMessage({ type: "success", text: "Configurações salvas com sucesso!" });
       })
       .catch((validationErrors) => {
-        // Se houver erros de validação, processá-los
         const formattedErrors = {};
         if (validationErrors.inner) {
           validationErrors.inner.forEach((error) => {
@@ -66,6 +95,10 @@ export const TextFieldControls = ({
           });
         }
         setErrors(formattedErrors);
+        setMessage({
+          type: "error",
+          text: "Erro ao salvar. Por favor, revise os campos.",
+        });
       });
   };
 
@@ -73,83 +106,110 @@ export const TextFieldControls = ({
     <form>
       <h3>Edit field</h3>
 
-      {/* Campo para definir o Label */}
+      {/* Mensagem de sucesso ou erro */}
+      {message && (
+        <Notice
+          status={message.type}
+          isDismissible
+          onRemove={() => setMessage(null)} // Atualiza o estado para null ao fechar
+        >
+          {message.text}
+        </Notice>
+      )}
+
       <TextControl
         label="Label"
-        value={formValues.label} // Use formValues para sincronizar o valor
+        value={formValues.label}
         onChange={(value) => {
           setFormValues((prev) => ({ ...prev, label: value }));
           setLabel(value);
         }}
         placeholder="Digite o label"
-        help={errors.label} // Exibe a mensagem de erro, se houver
+        help={errors.label}
       />
 
-      {/* Campo para definir o Placeholder */}
       <TextControl
         label="Placeholder"
-        value={formValues.placeholder} // Use formValues para sincronizar o valor
+        value={formValues.placeholder}
         onChange={(value) =>
           setFormValues((prev) => ({ ...prev, placeholder: value }))
         }
         placeholder="Digite o placeholder"
-        help={errors.placeholder} // Exibe a mensagem de erro, se houver
+        help={errors.placeholder}
       />
 
-      {/* Campo para definir o campo como obrigatório */}
       <CheckboxControl
         label="Preenchimento obrigatório"
-        checked={formValues.required} // Use formValues para sincronizar o valor
+        checked={formValues.required}
         onChange={(isChecked) =>
           setFormValues((prev) => ({ ...prev, required: isChecked }))
         }
       />
 
-      {/* Campo para definir o tamanho mínimo de caracteres */}
       <NumberControl
         label="Tamanho mínimo"
-        value={formValues.minLength} // Use formValues para sincronizar o valor
+        value={formValues.minLength}
         onChange={(value) =>
           setFormValues((prev) => ({ ...prev, minLength: value }))
         }
-        help={errors.minLength} // Exibe a mensagem de erro, se houver
+        help={errors.minLength}
       />
 
-      {/* Campo para definir o tamanho máximo de caracteres */}
       <NumberControl
         label="Tamanho máximo"
-        value={formValues.maxLength} // Use formValues para sincronizar o valor
+        value={formValues.maxLength}
         onChange={(value) =>
           setFormValues((prev) => ({ ...prev, maxLength: value }))
         }
-        help={errors.maxLength} // Exibe a mensagem de erro, se houver
+        help={errors.maxLength}
       />
 
-      {/* Campo para definir um padrão de validação usando regex */}
+      <SelectControl
+        label="Padrões Comuns"
+        value=""
+        options={[
+          { label: "Selecione um padrão", value: "" },
+          { label: "Telefone", value: "telefone" },
+          { label: "E-mail", value: "email" },
+          { label: "CEP", value: "cep" },
+        ]}
+        onChange={(value) => {
+          const pattern = predefinedPatterns[value] || "";
+          setFormValues((prev) => ({ ...prev, pattern }));
+        }}
+      />
+
       <TextControl
         label="Padrão de Validação (Regex)"
-        value={formValues.pattern} // Use formValues para sincronizar o valor
-        onChange={(value) =>
-          setFormValues((prev) => ({ ...prev, pattern: value }))
-        }
+        value={formValues.pattern}
+        onChange={(value) => {
+          setFormValues((prev) => ({ ...prev, pattern: value }));
+          if (value && !isValidRegex(value)) {
+            setErrors((prev) => ({
+              ...prev,
+              pattern: "O padrão de Regex informado é inválido.",
+            }));
+          } else {
+            setErrors((prev) => {
+              const { pattern, ...rest } = prev;
+              return rest;
+            });
+          }
+        }}
         placeholder="Digite um padrão de validação (Regex)"
-        help={errors.pattern} // Exibe a mensagem de erro, se houver
+        help={errors.pattern}
       />
 
-      {/* Campo para fornecer texto de ajuda */}
       <TextareaControl
         label="Texto de Ajuda"
-        value={formValues.helpText} // Use formValues para sincronizar o valor
+        value={formValues.helpText}
         onChange={(value) =>
           setFormValues((prev) => ({ ...prev, helpText: value }))
         }
         placeholder="Digite um texto de ajuda"
       />
 
-      {/* Botão Salvar */}
-      <Button variant="primary"
-        onClick={validateFields} // Valida os campos ao clicar em salvar
-      >
+      <Button variant="primary" onClick={validateFields}>
         Save
       </Button>
     </form>
