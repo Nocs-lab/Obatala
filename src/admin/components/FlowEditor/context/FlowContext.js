@@ -32,6 +32,7 @@ export const FlowProvider = ({ children }) => {
   // Função para remover um campo específico de um nó
   const removeFieldFromNode = (nodeId, fieldId) => {
     console.log("Removing field", fieldId, "from node", nodeId);
+    if (confirm(`Tem certeza que deseja remover o campo ${fieldId} do ${nodeId}?`)) {
     setNodes((prevNodes) =>
       prevNodes.map((node) =>
         node.id === nodeId
@@ -44,7 +45,7 @@ export const FlowProvider = ({ children }) => {
             }
           : node
       )
-    );
+    ); }
   };
 
   // Função para gravar as configurações de um campo específico
