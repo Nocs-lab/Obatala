@@ -367,8 +367,8 @@ class ProcessTypeApi extends ObatalaAPI {
     }
 
     public function download($request) {
-        $process_id = $request['id'];
-        $user_id = $request->get_param('user');
+        $process_id = intval($request['id']);
+        $user_id = intval($request->get_param('user'));
         $file_name = sanitize_file_name($request->get_param('file'));
 
         // Verificar permissão
