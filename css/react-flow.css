@@ -799,12 +799,18 @@ svg.react-flow__connectionline {
 	background: var(--primary-100);
   border-radius: var(--border-radius);
   cursor: pointer;
+  display: flex;
+  gap: .5rem;
   list-style: none;
   margin: 0;
   padding: .35rem 1rem;
 }
 .node-meta-list:hover {
 	background: var(--primary-200);
+}
+.node-meta-list svg {
+  height: 18px;
+  width: 18px;
 }
 
 /* Edit field */
