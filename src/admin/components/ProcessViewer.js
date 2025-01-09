@@ -32,8 +32,8 @@ const ProcessViewer = () => {
     const [orderedSteps, setOrderedSteps] = useState([]);
     const [sectors, setSectors] = useState([]);
     const [sectorUser, setSectorUser] = useState([]);
-    const [hasPermission, setHasPermission] = useState(false);
-    const [isPublic, setIsPublic] = useState(false);
+    const [hasPermission, setHasPermission] = useState(null);
+    const [isPublic, setIsPublic] = useState(null);
     const [currentStageData, setCurrentStageData] = useState({});
 
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
@@ -244,9 +244,7 @@ const ProcessViewer = () => {
         return [];
     }, [flowNodes]);
 
-    if (isLoading) {
-        return <Spinner />;
-    }
+
 
     const handleSubmit = async (e) => {
         setIsLoading(true);
@@ -290,6 +288,14 @@ const ProcessViewer = () => {
                 ...prev,
                 [currentStep]: true, 
             }));
+
+            setCurrentStageData(prev => ({
+                ...prev,
+                [stepId]: [new Date(), currentUser.name],
+            }));
+
+            console.log(currentStageData)
+
             setIsLoading(false);
             
 
@@ -308,7 +314,7 @@ const ProcessViewer = () => {
     };
 
 
-    if (!process) {
+    if (!isLoading && !process) {
         return (
             <Notice status="warning" isDismissible={false}>
                 No process found.
@@ -326,7 +332,7 @@ const ProcessViewer = () => {
     const lastUpdateStage = () => { 
         const currentStepData = currentStageData[options[currentStep]?.value];
         const user = currentStepData ? currentStepData[1] : 'Desconhecido'
-        const dateFormat = currentStepData ? format(parseISO(currentStepData[0]), "dd 'de' MMMM 'de' yyyy", {
+        const dateFormat = currentStepData && currentStepData[0] ? format(currentStepData[0], "dd 'de' MMMM 'de' yyyy", {
             locale: ptBR
         }) : 'Data não disponível'
 
@@ -342,6 +348,13 @@ const ProcessViewer = () => {
     
     return (
         <main>
+            {isLoading ? (
+                <>
+                
+                <Spinner />
+                </>
+            ) :(
+                <>
             <span className="brand">
                 <strong>Obatala</strong> Curatorial Process Viewer
             </span>
@@ -459,7 +472,9 @@ const ProcessViewer = () => {
                     </aside>
                 </div>
                 </>
-            )}        
+            )}   
+            </>
+        )}     
         </main>
     );
 };
