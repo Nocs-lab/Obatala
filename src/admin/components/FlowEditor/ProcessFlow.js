@@ -91,10 +91,6 @@ const ProcessFlow = forwardRef(({ initialData, onSave, onCancel}, ref,) => {
           </ul>
         </div>
       )}
-      <ProcessControls 
-        onSave={onSave}
-        onCancel={onCancel}
-      />
       <Tooltip
         text="Alternar tela cheia"
       >
@@ -104,7 +100,7 @@ const ProcessFlow = forwardRef(({ initialData, onSave, onCancel}, ref,) => {
               style={{cursor:'pointer'}}
           />  
       </Tooltip>
-
+      
       <div className="flow-content">
         <DrawerProvider>
           <ReactFlow
