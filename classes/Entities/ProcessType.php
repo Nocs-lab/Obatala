@@ -148,6 +148,12 @@ class ProcessType {
                                         'sector_id' => [
                                             'type' => 'string'
                                         ]
+                                    ],
+                                    'file' =>[
+                                        'type' => 'array',
+                                        'name' => [
+                                            'type' => 'string'
+                                        ]
                                     ]
                                 ],
                             ],

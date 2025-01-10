@@ -73,10 +73,7 @@ const ProcessFlow = forwardRef(({ initialData, onSave, onCancel}, ref,) => {
           </ul>
         </div>
       )}
-      <ProcessControls 
-        onSave={onSave}
-        onCancel={onCancel}
-      />
+
       <div className="flow-content">
         <DrawerProvider>
           <ReactFlow

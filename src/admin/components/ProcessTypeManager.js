@@ -80,12 +80,13 @@ const ProcessTypeManager = () => {
       });
   };
 
-  const handleAddProcessType = () => {
-    setAddingProcessType(true);
+  const handleManageProcessModel = (id) => {
+    window.location.href = `?page=process-type-editor&process_type_id=${id}`;
   };
 
-  const handleEditProcessType = (id) => {
-    window.location.href = `?page=process-type-editor&process_type_id=${id}`;
+  const handleEditModel = (model) => {
+    setEditingProcessType(model);
+    console.log(editingProcessType);
   };
 
   const handleAdd = () => {
@@ -141,13 +142,14 @@ const ProcessTypeManager = () => {
 
             <ProcessTypeList
                 processTypes={processTypes}
-                onEdit={handleEditProcessType}
+                onEdit={handleEditModel}
+                onManager={handleManageProcessModel}
                 onDelete={handleConfirmDelete}
             />
         </main>
-        {addingProcessType && (
+        {addingProcessType || editingProcessType ? (
           <Modal
-            title="Add process model"
+            title={ editingProcessType ? "Edit process model" : "Add process model"}
             onRequestClose={handleCancel}
             isDismissible={true}
             size="medium"
@@ -155,10 +157,10 @@ const ProcessTypeManager = () => {
             <ProcessTypeForm
               onSave={handleSaveProcessType}
               onCancel={handleCancel}
-              editingProcessType={editingProcessType}
+              editingProcessType={editingProcessType ? editingProcessType : null}
             />
           </Modal>
-        )}
+        ) :  null}
       </div>
     </main>
   );
