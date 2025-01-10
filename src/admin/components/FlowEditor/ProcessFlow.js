@@ -37,20 +37,32 @@ const ProcessFlow = forwardRef(({ initialData, onSave, onCancel}, ref,) => {
 
   const [errors, setErrors] = useState([]); // Armazena os erros de validação
   const [isOpen, setIsOpen] = useState(false);
+  const [openFullScreen, setOpenFullScreen] = useState(false);
 
 
   // Função para alternar para tela cheia
   const toggleFullScreen = () => {
     const element = document.getElementById('flow-container'); 
     
-    const isFullScreen = document.fullscreenElement;
-     if(isFullScreen) {
-      element.exitFullscreen();
+     if(document.fullscreenElement) {
+      document.exitFullscreen();
     }else {     
       element.requestFullscreen();
     }
     
   };
+
+  useEffect(() => {
+    const handleFullScreenChange = () => {
+      const isFullScreen = !!document.fullscreenElement;
+      setOpenFullScreen(isFullScreen);
+    }
+    document.addEventListener("fullscreenchange", handleFullScreenChange);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullScreenChange);
+    };
+  }, []);
   
 
   // Função para abrir/fechar a gaveta
@@ -90,6 +102,12 @@ const ProcessFlow = forwardRef(({ initialData, onSave, onCancel}, ref,) => {
             ))}
           </ul>
         </div>
+      )}
+      {openFullScreen && (
+          <ProcessControls
+              onSave={onSave}
+              onCancel={onCancel}
+          />
       )}
       <Tooltip
         text="Alternar tela cheia"
