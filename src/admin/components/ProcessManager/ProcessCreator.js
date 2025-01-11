@@ -113,9 +113,9 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
         setAccessLevel('Public');
     };
 
-    const types = processTypes.map((type) => type.meta);
-    const typesInactives = types?.status ? types.map((type) => type?.status?.includes("Inactive") )  : null;
-console.log(types)
+    const modelsActives = processTypes.filter((process) => process?.meta?.status[0] === 'Active');
+    console.log(modelsActives);
+
     return (
         <form onSubmit={handleSaveProcess}>
              {notice && (
@@ -137,9 +137,8 @@ console.log(types)
                  options={[
                      { label: 'Select a process model...', 
                        value: '', 
-                       disabled: typesInactives
                     },
-                     ...processTypes.map(type => ({ label: type.title.rendered, value: type.id }))
+                     ...modelsActives.map(type => ({ label: type.title.rendered, value: type.id }))
                      
                  ]}
                  
