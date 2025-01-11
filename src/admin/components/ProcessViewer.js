@@ -16,7 +16,7 @@ import CommentForm from "./ProcessManager/CommentForm";
 import { fetchNodePermission, fetchProcessById, fetchProcessTypeById, fetchSectors } from "../api/apiRequests";
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
-import { format, parseISO } from "date-fns";
+import { format } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
 
 const ProcessViewer = () => {
@@ -344,6 +344,13 @@ const ProcessViewer = () => {
         return acc;
     }, {}) : {};
 
+    const createAtProcess = () => {
+        const formatDate = format(process?.date, "dd 'de' MMMM 'de' yyyy", {
+            locale: ptBR
+        })
+        return formatDate;
+    }
+console.log(process)
     console.log(options);
     
     return (
@@ -376,6 +383,7 @@ const ProcessViewer = () => {
                 </span>
                 <span className="badge default"><Icon icon="yes"/> {calculatePercentagem()}% concluído</span>
                 <span className="badge default"><Icon icon="admin-users"/> Criado por: {authorsById[process?.author]?.name}</span>
+                <span className="badge default"><Icon icon="calendar"/> Criado em: {createAtProcess()}</span>
             </div>
 
             {!isPublic && hasPermission === false ? (
