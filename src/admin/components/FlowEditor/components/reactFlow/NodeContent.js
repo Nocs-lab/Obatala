@@ -7,19 +7,19 @@ import { Button, Icon, TextControl, ComboboxControl } from "@wordpress/component
 import { useFlowContext } from "../../context/FlowContext";
 import { set } from "date-fns";
 import { fetchSectors } from "../../../../api/apiRequests";
-import { plus } from '@wordpress/icons';
+import { file, mobile, mapMarker, paragraph, plus, search, calendar, keyboard, commentContent, listView } from '@wordpress/icons';
 
 const FIELD_OPTIONS = [
-  { id: "text", label: "Texto" },
-  { id: "email", label: "Email" },
-  { id: "phone", label: "Telefone" },
-  { id: "address", label: "Endereço" },
-  { id: "number", label: "Número" },
-  { id: "datepicker", label: "Date Picker" },
-  { id: "upload", label: "Upload de Arquivo" },
-  { id: "select", label: "Select (Múltiplas Opções)" },
-  { id: "radio", label: "Radio (Opções de Seleção)" },
-  { id: "search", label: "Busca em Tainacan" },
+  { id: "text", label: "Texto", icon: paragraph},
+  { id: "email", label: "Email", icon: commentContent},
+  { id: "phone", label: "Telefone", icon: mobile },
+  { id: "address", label: "Endereço", icon: mapMarker },
+  { id: "number", label: "Número", icon: keyboard},
+  { id: "datepicker", label: "Date Picker", icon:calendar },
+  { id: "upload", label: "Upload de Arquivo", icon:file },
+  { id: "select", label: "Select (Múltiplas Opções)", icon:listView },
+  { id: "radio", label: "Radio (Opções de Seleção)", icon: listView },
+  { id: "search", label: "Busca em Tainacan", icon: search },
 ];
 
 const NodeContent = ({ id, data  = {} }) => {
@@ -130,12 +130,14 @@ const NodeContent = ({ id, data  = {} }) => {
             <h3 className="node-meta-title">Select a field to add:</h3>
             <ul className="node-meta-list-container">
               {FIELD_OPTIONS.map((option) => (
-                <li
-                  className="node-meta-list"
-                  key={option.id}
-                  onClick={() => addFieldToNode(option.id)}
-                >
+                <li className="node-meta-list">
+                  <Icon icon={option.icon}/>
+                  <span
+                    key={option.id}
+                    onClick={() => addFieldToNode(option.id)}
+                  >
                     {option.label}
+                  </span>
                 </li>
               ))}
             </ul>

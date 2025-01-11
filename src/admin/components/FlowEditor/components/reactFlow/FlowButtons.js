@@ -36,12 +36,12 @@ const ProcessControls = ({onSave, onCancel}) => {
         <Button variant="secondary" onClick={addNewNode}>
           Add step
         </Button>
-        <Button variant="secondary" onClick={onExport}>
+         <Button variant="secondary" onClick={onExport}>
           Exportar JSON
         </Button>
         <Button variant="secondary" onClick={handleImportClick}>
           Importar JSON
-        </Button>
+        </Button> 
       </ButtonGroup>
       {/* Input invisível para carregar o arquivo JSON */}
       <input

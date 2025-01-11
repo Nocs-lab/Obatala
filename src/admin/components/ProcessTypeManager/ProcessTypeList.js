@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
 import { Button, ButtonGroup, Icon, Tooltip, Panel, PanelHeader, PanelRow, Notice, TextControl } from '@wordpress/components';
-import { edit, trash, yes, no } from '@wordpress/icons';
+import { edit, trash, yes, no, seen } from '@wordpress/icons';
 import { format } from 'date-fns';
 
-const ProcessTypeList = ({ processTypes, onEdit, onDelete }) => {
+const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager }) => {
     const columns = useMemo(() => [
         {
             Header: 'Title',
@@ -29,10 +29,10 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete }) => {
             accessor: 'id',
             Cell: ({ row }) => (
                 <ButtonGroup>
-                    <Tooltip text="Edit">
+                    <Tooltip text="Edit Title">
                         <Button
                             icon={<Icon icon={edit} />}
-                            onClick={() => onEdit(row.original.id)}
+                            onClick={() => onEdit(row.original)}
                         />
                     </Tooltip>
                     <Tooltip text="Delete">
@@ -41,10 +41,16 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete }) => {
                             onClick={() => onDelete(row.original)}
                         />
                     </Tooltip>
+                    <Tooltip text='Manager Process Model'>
+                        <Button
+                        icon={<Icon icon={seen}/>}
+                        onClick={() => onManager(row.original.id)}
+                        />
+                    </Tooltip>
                 </ButtonGroup>
             ),
         },
-    ], [onEdit, onDelete]);
+    ], [onEdit, onDelete, onManager]);
 
     const data = useMemo(() => processTypes, [processTypes]);
 
