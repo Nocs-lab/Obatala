@@ -122,8 +122,18 @@ const processDataEditor = () => {
       setIsLoading(false);
     }
   };
-
-
+  
+  // Função para alternar para tela cheia
+  const toggleFullScreen = () => {
+    const element = document.getElementById('flow-container'); 
+    
+     if(document.fullscreenElement) {
+      document.exitFullscreen();
+    }else {     
+      element.requestFullscreen();
+    }
+    
+  };
   
   const handleCancelEditProcessType = () => {
     window.location.href = '?page=process-type-manager';
@@ -136,7 +146,7 @@ const processDataEditor = () => {
   if (!processData) {
     return <div>Loading...</div>;
   }
-
+  
   return (
     <main>
       <span className="brand">
@@ -160,6 +170,7 @@ const processDataEditor = () => {
             <ProcessControls
               onSave={handleSave}
               onCancel={handleCancelEditProcessType}
+              toggleFullScreen={toggleFullScreen}
             />
         </div>
        

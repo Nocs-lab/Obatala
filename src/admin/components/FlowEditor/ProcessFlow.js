@@ -13,8 +13,6 @@ import ProcessControls from "./components/reactFlow/FlowButtons";
 import SlidingDrawer from "./components/SlidingDrawer";
 import { DrawerProvider } from "./context/DrawerContext";
 import { useFlowContext } from "./context/FlowContext";
-import { Button, Icon, Tooltip } from "@wordpress/components";
-import { fullscreen } from "@wordpress/icons";
 
 
 const nodeTypes = {
@@ -39,18 +37,6 @@ const ProcessFlow = forwardRef(({ initialData, onSave, onCancel}, ref,) => {
   const [isOpen, setIsOpen] = useState(false);
   const [openFullScreen, setOpenFullScreen] = useState(false);
 
-
-  // Função para alternar para tela cheia
-  const toggleFullScreen = () => {
-    const element = document.getElementById('flow-container'); 
-    
-     if(document.fullscreenElement) {
-      document.exitFullscreen();
-    }else {     
-      element.requestFullscreen();
-    }
-    
-  };
 
   useEffect(() => {
     const handleFullScreenChange = () => {
@@ -109,15 +95,6 @@ const ProcessFlow = forwardRef(({ initialData, onSave, onCancel}, ref,) => {
               onCancel={onCancel}
           />
       )}
-      <Tooltip
-        text="Alternar tela cheia"
-      >
-          <Icon
-              onClick={() => toggleFullScreen()}
-              icon={fullscreen}
-              style={{cursor:'pointer'}}
-          />  
-      </Tooltip>
       
       <div className="flow-content">
         <DrawerProvider>

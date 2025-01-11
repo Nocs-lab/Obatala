@@ -1,8 +1,9 @@
 import React, { useRef } from "react";
 import { useFlowContext } from "../../context/FlowContext";
-import { Button, ButtonGroup } from "@wordpress/components";
+import { Button, ButtonGroup, Icon, Tooltip } from "@wordpress/components";
+import { fullscreen } from "@wordpress/icons";
 
-const ProcessControls = ({onSave, onCancel}) => {
+const ProcessControls = ({onSave, onCancel, toggleFullScreen}) => {
 
   const { addNewNode, onExport, onImport } = useFlowContext();
 
@@ -41,7 +42,13 @@ const ProcessControls = ({onSave, onCancel}) => {
         </Button>
         <Button variant="secondary" onClick={handleImportClick}>
           Importar JSON
-        </Button> 
+        </Button>
+        <Button
+          variant="secondary"
+          onClick={toggleFullScreen}
+          icon={fullscreen}
+        />
+        
       </ButtonGroup>
       {/* Input invisível para carregar o arquivo JSON */}
       <input
