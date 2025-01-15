@@ -108,8 +108,6 @@ const ProcessViewer = () => {
     setIsLoading(false);
     }, [currentUser]);
 
-   
-
     const calculatePercentagem = () => {
         const result = (Object.keys(submittedSteps).length / flowNodes?.nodes?.length) * 100;
         return result.toFixed(2);
@@ -231,7 +229,7 @@ const ProcessViewer = () => {
             };
 
             initialStep.forEach(node => visit(node.id));
-            
+
             nodes.forEach(node => {
                 if (!visited.has(node.id)) {
                     orderedSteps.push(node);
@@ -239,12 +237,9 @@ const ProcessViewer = () => {
             });
             
             return orderedSteps;
-
         }
         return [];
     }, [flowNodes]);
-
-
 
     const handleSubmit = async (e) => {
         setIsLoading(true);
@@ -294,7 +289,6 @@ const ProcessViewer = () => {
                 [stepId]: [new Date(), currentUser.name],
             }));
 
-            console.log(currentStageData)
 
             setIsLoading(false);
             
@@ -350,138 +344,137 @@ const ProcessViewer = () => {
         })
         return formatDate;
     }
-console.log(process)
-    console.log(options);
+
     
     return (
         <main>
             {isLoading ? (
-                <>
-                
-                <Spinner />
+                <>        
+                    <Spinner />
                 </>
             ) :(
                 <>
-            <span className="brand">
-                <strong>Obatala</strong> Curatorial Process Viewer
-            </span>
-            <h2>
-                <small>
-                    Model: {filteredProcessType
-                        ? filteredProcessType.title.rendered
-                        : "Process type title"}
-                </small>
-                {process.title?.rendered}
-            </h2>
-            <div className="badge-container">
-                <span
-                    className={`badge ${
-                        process.meta.access_level == "public" || process.meta.access_level == 'Public' ? "success" : "warning"
-                    }`}
-                    >
-                    {process.meta.access_level}
-                </span>
-                <span className="badge default"><Icon icon="yes"/> {calculatePercentagem()}% concluído</span>
-                <span className="badge default"><Icon icon="admin-users"/> Criado por: {authorsById[process?.author]?.name}</span>
-                <span className="badge default"><Icon icon="calendar"/> Criado em: {createAtProcess()}</span>
-            </div>
+                    <span className="brand">
+                        <strong>Obatala</strong> Curatorial Process Viewer
+                    </span>
+                    <h2>
+                        <small>
+                            Model: {filteredProcessType
+                                ? filteredProcessType.title.rendered
+                                : "Process type title"}
+                        </small>
+                        {process.title?.rendered}
+                    </h2>
+                    <div className="badge-container">
+                        <span
+                            className={`badge ${
+                                process.meta.access_level == "public" || process.meta.access_level == 'Public' ? "success" : "warning"
+                            }`}
+                            >
+                            {process.meta.access_level}
+                        </span>
+                        <span className="badge default"><Icon icon="yes"/> {calculatePercentagem()}% concluído</span>
+                        <span className="badge default"><Icon icon="admin-users"/> Criado por: 
+                            {authorsById[process?.author]?.name} em {createAtProcess()}
+                        </span>
+                    </div>
 
-            {!isPublic && hasPermission === false ? (
-                <div style={{margin: '50px'}}>
-                    <div className="notice-container">
-                        <Notice status="error" isDismissible={false}> 
-                            You do not have permission to access this process.
-                        </Notice>
-                    </div>
-                </div>
-            ) : (
-                <>
-                {isPublic && hasPermission === false && (
-                    <div className="notice-container">
-                        <Notice status="warning" isDismissible={false}>
-                            You can only view this process.
-                        </Notice>
-                    </div>
-                )}
-                <div className="panel-container three-columns">
-                    <MetroNavigation
-                        options={options}
-                        currentStep={currentStep}
-                        onStepChange={(newStep) => setCurrentStep(newStep)}
-                        submittedSteps={submittedSteps}
-                    />
-                    <main>
-                    {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
-                        <Panel key={`${orderedSteps[currentStep].id}-${currentStep}`}>
-                            <PanelHeader>
-                                <h3>{`${options[currentStep].label}`}</h3>
-                                <span className="badge default ms-auto">
-                                    Grupo: {getSectorName(options[currentStep].sector_stage)}
-                                </span>
-                            </PanelHeader>
-                            <PanelBody>
-                                <PanelRow>
-                                    {options[currentStep].fields.length > 0 ? (
-                                        <form className="centered" onSubmit={handleSubmit}>
-                                            <ul className="meta-fields-list">
-                                                {Array.isArray(options[currentStep].fields) ? options[currentStep].fields.map((field, idx) => (
-                                                    <li key={`${orderedSteps[currentStep].id}-meta-${idx}`} className="meta-field-item">
-                                                        <MetaFieldInputs 
-                                                            field={field} 
-                                                            fieldId={field.id} 
-                                                            initalValue={formValues[orderedSteps[currentStep].id]?.[field.id] || ''}
-                                                            isEditable={!submittedSteps[currentStep]}
-                                                            noHasPermission={!isUserInSector(options[currentStep].sector_stage)} 
-                                                            onFieldChange={handleFieldChange} 
-                                                        />
-                                                    </li>
-                                                )) : null}
-                                            </ul>
-                                            <div className="action-bar">
-                                                <Button
-                                                    variant="primary"
-                                                    type="submit"
-                                                    disabled={!isSubmitEnabled || submittedSteps[currentStep] || !isUserInSector(options[currentStep].sector_stage)}
-                                                    >Submit
-                                                </Button>
-                                            </div>
-                                        </form>
-                                    ) : (
-                                        <div className="notice-container">
-                                            <Notice status="warning" isDismissible={false}>
-                                                No fields found for this Step.
-                                            </Notice>
-                                        </div>
-                                    )}
-                                </PanelRow>
-                                <footer>
-                                    {Object.keys(currentStageData).includes(options[currentStep]?.value) ?
-                                    `Última atualização em ${lastUpdateStage().dateFormat} por ${lastUpdateStage().user}`    
-                                    : 'Sem atualizações no momento'
-                                    }
-                                    
-                                </footer>
-                            </PanelBody>
-                        </Panel>
-                       
-                    ) : (
-                        <div className="notice-container">
-                            <Notice status="warning" isDismissible={false}>
-                            No steps found for this process.
-                            </Notice>
+                    {!isPublic && hasPermission === false ? (
+                        <div style={{margin: '50px'}}>
+                            <div className="notice-container">
+                                <Notice status="error" isDismissible={false}> 
+                                    You do not have permission to access this process.
+                                </Notice>
+                            </div>
                         </div>
-                    )}
-                    </main>
-                    <aside>
-                        <Panel>
-                            <PanelHeader>Comments</PanelHeader>
-                            <CommentForm stepId={orderedSteps[currentStep]?.id || null} />
-                        </Panel>
-                    </aside>
-                </div>
+                    ) : (
+                        <>
+                        {isPublic && hasPermission === false && (
+                            <div className="notice-container">
+                                <Notice status="warning" isDismissible={false}>
+                                    You can only view this process.
+                                </Notice>
+                            </div>
+                        )}
+                        <div className="panel-container three-columns">
+                            <MetroNavigation
+                                options={options}
+                                currentStep={currentStep}
+                                onStepChange={(newStep) => setCurrentStep(newStep)}
+                                submittedSteps={submittedSteps}
+                            />
+                            <main>
+                            {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
+                                <Panel key={`${orderedSteps[currentStep].id}-${currentStep}`}>
+                                    <PanelHeader>
+                                        <h3>{`${options[currentStep].label}`}</h3>
+                                        <span className="badge default ms-auto">
+                                            Grupo: {getSectorName(options[currentStep].sector_stage)}
+                                        </span>
+                                    </PanelHeader>
+                                    <PanelBody>
+                                        <PanelRow>
+                                            {options[currentStep].fields.length > 0 ? (
+                                                <form className="centered" onSubmit={handleSubmit}>
+                                                    <ul className="meta-fields-list">
+                                                        {Array.isArray(options[currentStep].fields) ? options[currentStep].fields.map((field, idx) => (
+                                                            <li key={`${orderedSteps[currentStep].id}-meta-${idx}`} className="meta-field-item">
+                                                                <MetaFieldInputs 
+                                                                    field={field} 
+                                                                    fieldId={field.id} 
+                                                                    initalValue={formValues[orderedSteps[currentStep].id]?.[field.id] || ''}
+                                                                    isEditable={!submittedSteps[currentStep]}
+                                                                    noHasPermission={!isUserInSector(options[currentStep].sector_stage)} 
+                                                                    onFieldChange={handleFieldChange} 
+                                                                />
+                                                            </li>
+                                                        )) : null}
+                                                    </ul>
+                                                    <div className="action-bar">
+                                                        <Button
+                                                            variant="primary"
+                                                            type="submit"
+                                                            disabled={!isSubmitEnabled || submittedSteps[currentStep] || !isUserInSector(options[currentStep].sector_stage)}
+                                                            >Submit
+                                                        </Button>
+                                                    </div>
+                                                </form>
+                                            ) : (
+                                                <div className="notice-container">
+                                                    <Notice status="warning" isDismissible={false}>
+                                                        No fields found for this Step.
+                                                    </Notice>
+                                                </div>
+                                            )}
+                                        </PanelRow>
+                                        <footer>
+                                            {Object.keys(currentStageData).includes(options[currentStep]?.value) ?
+                                            `Última atualização em ${lastUpdateStage().dateFormat} por ${lastUpdateStage().user}`    
+                                            : 'Sem atualizações no momento'
+                                            }
+                                            
+                                        </footer>
+                                    </PanelBody>
+                                </Panel>
+                            
+                            ) : (
+                                <div className="notice-container">
+                                    <Notice status="warning" isDismissible={false}>
+                                    No steps found for this process.
+                                    </Notice>
+                                </div>
+                            )}
+                            </main>
+                            <aside>
+                                <Panel>
+                                    <PanelHeader>Comments</PanelHeader>
+                                    <CommentForm stepId={orderedSteps[currentStep]?.id || null} />
+                                </Panel>
+                            </aside>
+                        </div>
+                        </>
+                    )}   
                 </>
-            )}   
-            </>
         )}     
         </main>
     );
