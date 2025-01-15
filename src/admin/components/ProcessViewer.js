@@ -32,6 +32,8 @@ const ProcessViewer = () => {
     const [sectorUser, setSectorUser] = useState([]);
     const [hasPermission, setHasPermission] = useState(false);
     const [isPublic, setIsPublic] = useState(false);
+    const [uploadedFiles, setUploadedFiles] = useState({});
+    const [fileInfo, setFileInfo] = useState(null);
 
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
     const [isStepSubmitEnabled, setIsStepSubmitEnabled] = useState({});
@@ -170,22 +172,36 @@ const ProcessViewer = () => {
     };
 
     const handleFieldChange = (fieldId, newValue) => {
-            const stepId = orderedSteps[currentStep].id;
-    
-        // Atualize os valores do formulário
+        const stepId = orderedSteps[currentStep].id;
+        console.log(newValue)
+
+        if(newValue instanceof FileList) {
+            setUploadedFiles(prev => ({
+                ...prev,
+                [stepId]:{
+                    ...prev[stepId],
+                    [fieldId]: [newValue[0]],
+                },
+            }))
+            setFileInfo({name: newValue[0].name, size: newValue[0].size });
+            
+        }else {
+            // Atualize os valores do formulário
             setFormValues(prevValues => ({
                 ...prevValues,
                 [stepId]: {
                     ...prevValues[stepId],
                     [fieldId]: newValue,
-            },
+                },
             }));
-            // Verifica se todos os campos da etapa atual foram preenchidos
-    const allFieldsFilled = orderedSteps[currentStep].data.fields.every((field) => {
+        }
+    
+         // Verifica se todos os campos da etapa atual foram preenchidos
+        const allFieldsFilled = orderedSteps[currentStep].data.fields.every((field) => {
         const value = formValues[stepId]?.[field.id] || newValue;
         return value !== undefined && value !== '';
-    });
-    setIsStepSubmitEnabled(prevState => ({
+        });
+        setIsStepSubmitEnabled(prevState => ({
         ...prevState,
         [currentStep]: allFieldsFilled,
         }));
@@ -236,28 +252,64 @@ const ProcessViewer = () => {
     }
 
     const handleSubmit = async (e) => {
-        setIsLoading(true);
         e.preventDefault();
-
+        setIsLoading(true);
+    
         const stepId = orderedSteps[currentStep].id;
-        
         const fields = orderedSteps[currentStep].data.fields.map(field => ({
             fieldId: field.id,
-            value: formValues[stepId]?.[field.id],
+            value: formValues[stepId]?.[field.id] || uploadedFiles[stepId]?.[field.id]?.[0]?.name,
         }));
-        
+    
+        // Upload de arquivos 
+        let uploadFailed = false;
+    
+        if (uploadedFiles[stepId]) {
+            for (const [fieldId, files] of Object.entries(uploadedFiles[stepId])) {
+                if (!files || !Array.isArray(files) || files.length === 0) {
+                    console.log(`Nenhum arquivo encontrado para o campo ${fieldId}, ignorando upload.`);
+                    continue; 
+                }
+    
+                const file = files[0];
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('id', process.id);
+                formData.append('node_id', stepId);
+    
+                try {
+                    const response = await apiFetch({
+                        path: `/obatala/v1/process_type/upload`,
+                        method: "POST",
+                        body: formData,
+                    });
+                    console.log(`Arquivo para o campo ${fieldId} enviado com sucesso.`, response);
+
+                } catch (error) {
+                    console.error(`Erro ao enviar arquivo para o campo ${fieldId}:`, error);
+                    uploadFailed = true;
+                    break; 
+                }
+            }
+    
+            if (uploadFailed) {
+                setIsLoading(false);
+                return; 
+            }
+        }
+    
+        // Salvar metadados
         try {
             const existingMetaData = await apiFetch({
                 path: `/obatala/v1/process_obatala/${process.id}/meta`,
                 method: 'GET',
             });
-
+    
             const updatedStageData = {
                 ...existingMetaData.stageData,
                 [stepId]: { fields }
             };
-
-
+    
             await apiFetch({
                 path: `/obatala/v1/process_obatala/${process.id}/meta`,
                 method: 'POST',
@@ -269,21 +321,54 @@ const ProcessViewer = () => {
                     }
                 }
             });
-
+    
             setSubmittedSteps(prev => ({
                 ...prev,
-                [currentStep]: true, 
+                [currentStep]: true,
             }));
-            setIsLoading(false);
-            
-
+    
         } catch (error) {
-            console.error('Error saving metadata:', error);
-            setError('Error saving metadata.');
+            console.error('Erro ao salvar metadados:', error);
+
+        } finally {
+            setIsLoading(false);
         }
     };
 
-    const isUserInSector = (stepSector) => {
+    const handleDownload = async () => {
+        
+        try {
+
+            const data = new URLSearchParams({
+                id: process.id,
+                user: currentUser.id,
+                file: fileInfo.name,
+            });
+
+    
+            const response = await apiFetch({
+                path: `/obatala/v1/process_type/download?${data}`,
+            });
+    
+            if (response.success) {
+                const { file_url } = response;
+                const link = document.createElement('a');
+                link.href = file_url;
+                link.download = fileInfo.name;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+    
+            } else {
+                console.error('Erro ao tentar realizar o download:', response);
+            }
+        } catch (error) {
+            console.error('Erro na requisição de download:', error);
+        }
+    };
+    
+    
+   const isUserInSector = (stepSector) => {
         if (!Array.isArray(sectorUser)) {
             console.error("sectorUser não é um array válido:", sectorUser);
             return false;
@@ -302,6 +387,7 @@ const ProcessViewer = () => {
     console.log('orderedSteps',orderedSteps)
     const options = orderedSteps.map(step => ({ label: step.data.stageName, value: step.id, fields: step.data.fields, sector_stage: step.sector_obatala }));
     console.log(options);
+    console.log('files ', uploadedFiles)
   
     return (
         <main>
@@ -371,10 +457,12 @@ const ProcessViewer = () => {
                                                         <MetaFieldInputs 
                                                             field={field} 
                                                             fieldId={field.id} 
-                                                            initalValue={formValues[orderedSteps[currentStep].id]?.[field.id] || ''}
+                                                            initalValue={formValues[orderedSteps[currentStep].id]?.[field.id] || uploadedFiles[orderedSteps[currentStep].id]?.[field.id]?.[0]?.name}
                                                             isEditable={!submittedSteps[currentStep]}
                                                             noHasPermission={!isUserInSector(options[currentStep].sector_stage)} 
-                                                            onFieldChange={handleFieldChange} 
+                                                            onFieldChange={handleFieldChange}
+                                                            fileInfo={fileInfo}
+                                                            handleDownload={handleDownload}
                                                         />
                                                     </li>
                                                 )) : null}

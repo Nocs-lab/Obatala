@@ -7,11 +7,12 @@ import {
   SelectControl,
   RadioControl,
 } from "@wordpress/components";
-import { upload } from "@wordpress/icons";
+import { file, upload } from "@wordpress/icons";
 import TainacanSearchControls from "../Tainacan/TainacanSearch";
 
-const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId, initalValue, noHasPermission}) => {
+const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId, initalValue, noHasPermission, fileInfo, handleDownload}) => {
   const [value, setValue] = useState(initalValue);
+  
 
   const formatDate = (date) => {
     const d = new Date(date);
@@ -21,12 +22,11 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
     return `${day}/${month}/${year}`;
   };
 
-  const handleChange = (newValue) => {
+  const handleChange = ( newValue) => {
     setValue(newValue);
     onFieldChange(fieldId, newValue);
-
+   
   };
-
     switch (field.type) {
       case "text":
       case "email":
@@ -45,6 +45,7 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
                 minLength={field.config?.minLength}
                 maxLength={field.config?.maxLength}
                 help={field.config?.helpText}
+                
               />
             ) : (
               <dl className="description-list">
@@ -82,9 +83,11 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
         return (
           <div className="meta-field-wrapper">
             {isEditable ? (
+              <>
               <FormFileUpload
                 accept="image/*"
-                onChange={(event) => console.log(event.currentTarget.files)}
+                value={value}
+                onChange={(event) => handleChange(event.currentTarget.files)}
                 label={field.config?.label ?? "Unknow title"}
                 disabled={!isEditable || noHasPermission}
                 required={field.config?.required ?? false}
@@ -96,13 +99,23 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
               >
                 Upload
               </FormFileUpload>
+
+              {fileInfo && (
+              <div style={{ marginTop: "10px" }}>
+                <p>Arquivo: {fileInfo?.name}</p>
+                <p>Tamanho: {fileInfo?.size} KB</p>
+
+                
+              </div>
+          )}
+              </>
             ) : (
-              <dl className="description-list">
-                <div className="list-item">
-                  <dt>{field.config?.label}</dt>
-                  <dd>{initalValue}</dd>
-                </div>
-              </dl>
+              <button
+                  type="button"
+                  onClick={handleDownload}
+                >
+                  {initalValue}
+                </button>
             )}
           </div>
         );

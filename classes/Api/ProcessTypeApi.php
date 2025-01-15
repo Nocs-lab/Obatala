@@ -363,6 +363,7 @@ class ProcessTypeApi extends ObatalaAPI {
             'success' => true,
             'message' => 'Arquivo enviado com sucesso.',
             'file_path' => $new_file_path,
+            'file_name' => $filename
         ], 200);
     }
 
