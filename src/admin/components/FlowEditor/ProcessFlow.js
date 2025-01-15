@@ -23,7 +23,7 @@ const edgeTypes = {
   buttonedge: ButtonEdge,
 };
 
-const ProcessFlow = forwardRef(({ initialData, onSave, onCancel}, ref,) => {
+const ProcessFlow = forwardRef(({ initialData, onSave, onCancel,toggleFullScreen}, ref,) => {
   const {
     nodes,
     edges,
@@ -93,6 +93,7 @@ const ProcessFlow = forwardRef(({ initialData, onSave, onCancel}, ref,) => {
           <ProcessControls
               onSave={onSave}
               onCancel={onCancel}
+              toggleFullScreen={toggleFullScreen}
           />
       )}
       

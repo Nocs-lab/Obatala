@@ -153,7 +153,7 @@ const processDataEditor = () => {
           <strong>Obatala</strong> Curatorial Process Management
       </span>
       <div className="title-container">
-       <h2>Manager Process Model</h2>
+       <h2>Manage steps: {processData.title.rendered}</h2>
 
       </div>
       
@@ -166,20 +166,21 @@ const processDataEditor = () => {
       )}
       
       <FlowProvider>
-        <div className ='container-controls' style={{display:'flex', justifyContent:'end', padding:' 0px 40px 24px 0px'}}>
-            <ProcessControls
+          <div className ='container-controls' style={{display:'flex', justifyContent:'end', padding:' 0px 40px 24px 0px'}}>
+              <ProcessControls
+                onSave={handleSave}
+                onCancel={handleCancelEditProcessType}
+                toggleFullScreen={toggleFullScreen}
+              />
+          </div>
+       
+          <ProcessFlow 
+              ref={flowRef} 
+              initialData={flowData}
               onSave={handleSave}
               onCancel={handleCancelEditProcessType}
               toggleFullScreen={toggleFullScreen}
-            />
-        </div>
-       
-        <ProcessFlow 
-            ref={flowRef} 
-            initialData={flowData}
-            onSave={handleSave}
-            onCancel={handleCancelEditProcessType}
-            />
+          />
       </FlowProvider>
     </main>
   );
