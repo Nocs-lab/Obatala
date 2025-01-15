@@ -4,7 +4,7 @@ import { Button, ButtonGroup } from "@wordpress/components";
 
 const ProcessControls = ({onSave, onCancel}) => {
 
-  const { addNewNode, onExport, onImport } = useFlowContext();
+  const { addNewNode, addNewNodeConditional, onExport, onImport } = useFlowContext();
 
   const fileInputRef = useRef(null);
 
@@ -35,6 +35,9 @@ const ProcessControls = ({onSave, onCancel}) => {
         </Button>
         <Button variant="secondary" onClick={addNewNode}>
           Add step
+        </Button>
+        <Button variant="secondary" onClick={addNewNodeConditional}>
+          Add Conditional
         </Button>
          <Button variant="secondary" onClick={onExport}>
           Exportar JSON

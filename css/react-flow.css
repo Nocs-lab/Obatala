@@ -694,6 +694,47 @@ svg.react-flow__connectionline {
   padding-bottom: 1rem;
 }
 
+.container-handle{
+  display: flex;
+  justify-content: center; /* Centraliza horizontalmente */
+  align-items: center;    /* Centraliza verticalmente */
+  height: 100vh;          /* Altura da tela (ou ajuste conforme necessário) */
+  background-color: #f0f0f0;
+}
+
+.content-handle{
+  background-color: #ccc;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+/* custom conditional */
+.bpmn-conditional-operator {
+  width: 100px; /* Largura do losango */
+  height: 100px; /* Altura do losango */
+  transform: rotate(45deg); /* Rotação para formar um losango */
+  border: 4px solid black; /* Borda do losango */
+  background-color: white; /* Fundo branco */
+  cursor: drag;
+  text-align: center;
+  color: var(--primary-600);
+  user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 20px;
+}
+
+.bpmn-conditional-operator::after {
+  content: ""; 
+  position: absolute;
+  width: 50px; /* Largura do símbolo dentro */
+  height: 2px; /* Espessura da linha interna */
+  background-color: black;
+  top: 50%; /* Centraliza verticalmente */
+  left: 25%; /* Ajusta horizontalmente */
+  transform: translateY(-50%); /* Ajuste fino para centralizar */
+}
 /* custom handle buttons */
 .btn {
   height: 12px;
