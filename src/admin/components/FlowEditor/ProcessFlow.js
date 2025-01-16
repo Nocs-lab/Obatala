@@ -13,9 +13,11 @@ import ProcessControls from "./components/reactFlow/FlowButtons";
 import SlidingDrawer from "./components/SlidingDrawer";
 import { DrawerProvider } from "./context/DrawerContext";
 import { useFlowContext } from "./context/FlowContext";
+import NodeInicio from './components/reactFlow/NodeInicio';
 
 const nodeTypes = {
   customNode: NodeContent,
+  nodeInicio: NodeInicio,
 };
 
 const edgeTypes = {
@@ -30,6 +32,7 @@ const ProcessFlow = forwardRef(({ initialData, onSave, onCancel}, ref,) => {
     onEdgesChangeHandler,
     onConnect,
     initializeData,
+    addNodeInicio,
   } = useFlowContext();
 
   const [errors, setErrors] = useState([]); // Armazena os erros de validação

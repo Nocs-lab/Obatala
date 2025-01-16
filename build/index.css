@@ -1,3 +1,6 @@
+/*!************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./css/react-flow.css ***!
+  \************************************************************************************************************************************************************************/
 /* this gets exported as style.css and can be used for the default theming */
 /* these are the necessary styles for React/Svelte Flow, they get used by base.css and style.css */
 
@@ -17,6 +20,8 @@
   width: calc(100% - (2 * var(--gap-external)));
 }
 .flow-container > h3 {
+  -ms-grid-row: 1;
+  -ms-grid-column: 1;
   font-size: 1.25rem;
   font-weight: 300;
   grid-area: title;
@@ -24,10 +29,15 @@
   margin-bottom: 0;
 }
 .flow-container .components-button-group {
+  -ms-grid-row: 1;
+  -ms-grid-column: 3;
   grid-area: buttons;
   justify-self: end;
 }
 .flow-content {
+  -ms-grid-row: 3;
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 3;
   grid-area: flow;
 }
 
@@ -687,7 +697,9 @@ svg.react-flow__connectionline {
   cursor: drag;
   text-align: center;
   color: var(--primary-600);
-  user-select: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -708,7 +720,9 @@ svg.react-flow__connectionline {
   color: var(--primary-600);
   font-size: 14px;
   font-weight: bold;
-  user-select: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
 }
 
 .node-content {
@@ -916,3 +930,6 @@ svg.react-flow__connectionline {
 .edgebutton:hover {
   box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.08);
 }
+
+
+/*# sourceMappingURL=index.css.map*/

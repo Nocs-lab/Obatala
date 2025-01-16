@@ -128,6 +128,26 @@ export const FlowProvider = ({ children }) => {
     onEdgesChange(changes);
   };
 
+  const addNodeInicio = () => {
+    // if (nodes.length == 0) {
+    //   const NodePosition = { x: 50, y: 50 };
+    // }
+    const Inicio = {
+      id: "NodeInicio",
+      type: "nodeInicio",
+      dragHandle: ".custom-drag-handle .node-inicio",
+      position: { x: 50, y: 50 },
+      data: {fields: [],
+        stageName: "NodeInicio",
+        updateFields: (newFields) => updateFieldsForNode("NodeInicio", newFields),
+        updateNodeName: (newName) => updateNodeName("NodeInicio", newName),
+        updatePosition: (newPosition) =>
+          updateNodePosition("NodeInicio", newPosition),
+      },
+    };
+    setNodes((prevNodes) => [...prevNodes, Inicio]);
+  };
+
   // Função para adicionar novos nós
   const addNewNode = () => {
     const newNodeId = `Etapa ${nodes.length + 1}`;
@@ -253,6 +273,7 @@ export const FlowProvider = ({ children }) => {
     errors,
     onExport,
     onImport,
+    addNodeInicio,
   };
 
   return <FlowContext.Provider value={value}>{children}</FlowContext.Provider>;
