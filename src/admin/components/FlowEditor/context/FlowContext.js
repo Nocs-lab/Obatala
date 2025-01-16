@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
 import { addEdge, useNodesState, useEdgesState } from "@xyflow/react";
 import validateInitialData from "../helpers/dataValidator";
 import apiFetch from "@wordpress/api-fetch";
@@ -17,7 +17,31 @@ export const FlowProvider = ({ children }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-  console.log('nodes', nodes)
+  //Função para adicionar um nó inicial
+  const addNodeInicio = () => {
+    const Inicio = {
+      id: "NodeInicio",
+      type: "nodeInicio",
+      dragHandle: ".custom-drag-handle .node-inicio",
+      position: { x: 50, y: 50 },
+      data: {fields: [],
+        stageName: "NodeInicio",
+        updateFields: (newFields) => updateFieldsForNode("NodeInicio", newFields),
+        updateNodeName: (newName) => updateNodeName("NodeInicio", newName),
+        updatePosition: (newPosition) =>
+          updateNodePosition("NodeInicio", newPosition),
+      },
+    };
+    setNodes((prevNodes) => [...prevNodes, Inicio]);
+  };
+
+  // Verifica se é necessário adicionar o nó inicial
+  useEffect(() => {
+    if (nodes.length === 0) {
+      addNodeInicio();
+    }
+  }, [nodes]);
+
   // Função para atualizar os campos de cada nó
   const updateFieldsForNode = (nodeId, newFields) => {
     setNodes((prevNodes) =>
@@ -128,26 +152,7 @@ export const FlowProvider = ({ children }) => {
     onEdgesChange(changes);
   };
 
-  const addNodeInicio = () => {
-    // if (nodes.length == 0) {
-    //   const NodePosition = { x: 50, y: 50 };
-    // }
-    const Inicio = {
-      id: "NodeInicio",
-      type: "nodeInicio",
-      dragHandle: ".custom-drag-handle .node-inicio",
-      position: { x: 50, y: 50 },
-      data: {fields: [],
-        stageName: "NodeInicio",
-        updateFields: (newFields) => updateFieldsForNode("NodeInicio", newFields),
-        updateNodeName: (newName) => updateNodeName("NodeInicio", newName),
-        updatePosition: (newPosition) =>
-          updateNodePosition("NodeInicio", newPosition),
-      },
-    };
-    setNodes((prevNodes) => [...prevNodes, Inicio]);
-  };
-
+  
   // Função para adicionar novos nós
   const addNewNode = () => {
     const newNodeId = `Etapa ${nodes.length + 1}`;
