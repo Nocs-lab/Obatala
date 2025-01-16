@@ -4,6 +4,8 @@ import { Handle, Position, useReactFlow } from "@xyflow/react";
 
 const NodeConditional = (node) => {
   
+  console.log("Condicional: " + node);
+  
   const [isVisibleToolbar, setIsVisibleToolbar] = useState(false); // Estado para exibir a toolbar
   const modalRef = useRef(null); // Referência para o modal
   const containerRef = useRef(null); // Referência para o nó condicional
