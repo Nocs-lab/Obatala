@@ -1,10 +1,16 @@
 import React, { useState, useEffect, useRef } from "react";
 import NodeHandle from "./NodeHandle";
 import { Handle, Position, useReactFlow } from "@xyflow/react";
+import { useFlowContext } from "../../context/FlowContext";
 
 const NodeConditional = (node) => {
-  
-  console.log("Condicional: " + node);
+
+  //console.log("Condicional: ", node);
+  const { edges } = useFlowContext();
+  //console.log("Edges:", edges);
+  const matchedEdgeInput = edges.find(edge => edge.target === node.id);
+  const matchedEdgeOutput = edges.filter(edge => edge.source === node.id);
+  //console.log("Out: ", matchedEdgeOutput);
   
   const [isVisibleToolbar, setIsVisibleToolbar] = useState(false); // Estado para exibir a toolbar
   const modalRef = useRef(null); // Referência para o modal
@@ -87,11 +93,15 @@ const NodeConditional = (node) => {
           
           <h2>Condition Settings</h2>
           <hr />
-          <h1>Input Stage: Stage 1 </h1>
-          <h1>Output Stages: Stage 2 && Stage 3</h1>
+          <h1>Input Stage: {matchedEdgeInput.source}</h1>
+          <h1>Output Stages: {
+                  matchedEdgeOutput.map((edge) => (edge.target))
+                  }
+          </h1>
           <hr />
           <h1>If Field 1 receives value 1, go to Stage 2</h1>
           <h1>If Field 1 receives value 2, go to Stage 3</h1>
+    
         </div>
       )}
     </div>
