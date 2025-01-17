@@ -2,14 +2,16 @@ import React, { useState, useEffect, useRef } from "react";
 import NodeHandle from "./NodeHandle";
 import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { useFlowContext } from "../../context/FlowContext";
+import { Tooltip } from "@wordpress/components";
+
 
 const NodeConditional = (node) => {
   const { edges } = useFlowContext();
   const { nodes } = useFlowContext();
 
-  const matchedEdgeInput = edges.find(edge => edge.target === node.id);
-  const matchedEdgeOutput = edges.filter(edge => edge.source === node.id);
-  const nodeInput = nodes.find(node => node.id === matchedEdgeInput.source);
+  const matchedEdgeInput = edges.find(edge => edge?.target === node.id);
+  const matchedEdgeOutput = edges.filter(edge => edge?.source === node.id);
+  const nodeInput = nodes.find(node => node.id === matchedEdgeInput?.source);
 
   let radioFields = [];
   if (nodeInput?.data?.fields && Array.isArray(nodeInput.data.fields)) {
@@ -70,14 +72,17 @@ const NodeConditional = (node) => {
   };
 
   return (
+
     <div 
       ref={containerRef} 
-      className="bpmn-conditional-operator" 
+      className="bpmn-conditional-operator custom-drag-handle" 
       onClick={handleClick} 
     >
       <Handle type="target" position={Position.Left} style={{ top: "100%", right: "-8px" }} />
       <Handle type="source" position={Position.Right} style={{ top: "0", right: "0px" }} />
-      <NodeHandle nodeId={node.id} />
+      <Tooltip text="Remove step">
+        <div className="btn close-btn" onClick={() => removeNode(node.id)}></div>
+      </Tooltip>
 
       {isVisibleToolbar && (
         <div 
