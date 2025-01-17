@@ -6,13 +6,13 @@ import {
   FormFileUpload,
   SelectControl,
   RadioControl,
+  Button,
 } from "@wordpress/components";
-import { file, upload } from "@wordpress/icons";
+import { download, upload } from "@wordpress/icons";
 import TainacanSearchControls from "../Tainacan/TainacanSearch";
 
-const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId, initalValue, noHasPermission, fileInfo, handleDownload}) => {
+const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId, initalValue, noHasPermission, fileInfo, handleDownload, stepId}) => {
   const [value, setValue] = useState(initalValue);
-  
 
   const formatDate = (date) => {
     const d = new Date(date);
@@ -83,39 +83,42 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
         return (
           <div className="meta-field-wrapper">
             {isEditable ? (
-              <>
-              <FormFileUpload
-                accept="image/*"
-                value={value}
-                onChange={(event) => handleChange(event.currentTarget.files)}
-                label={field.config?.label ?? "Unknow title"}
-                disabled={!isEditable || noHasPermission}
-                required={field.config?.required ?? false}
-                help={field.config?.helpText}
-                icon={upload}
-                style={{
-                  border: "1px dashed #ccc",
-                }}
-              >
-                Upload
-              </FormFileUpload>
+              <div >
+                  <FormFileUpload
+                      accept=".doc,.docx,.pdf,.jpg,.jpeg,.png"
+                      value={value}
+                      onChange={(event) => handleChange(event.currentTarget.files)}
+                      label={field.config?.label ?? "Unknow title"}
+                      disabled={!isEditable || noHasPermission}
+                      required={field.config?.required ?? false}
+                      help={field.config?.helpText}
+                      icon={upload}
+                      style={{
+                        border: "1px dashed #ccc",
+                      }}
+                  >
+                      Upload
+                  </FormFileUpload>
 
-              {fileInfo && (
-              <div style={{ marginTop: "10px" }}>
-                <p>Arquivo: {fileInfo?.name}</p>
-                <p>Tamanho: {fileInfo?.size} KB</p>
-
-                
+                  {fileInfo[stepId]?.[fieldId] && (
+                      <div>
+                          <p><strong>Arquivo:</strong> {fileInfo[stepId][fieldId].name}</p>
+                      </div>
+                  )}
               </div>
-          )}
-              </>
             ) : (
-              <button
-                  type="button"
-                  onClick={handleDownload}
-                >
-                  {initalValue}
-                </button>
+              <div>
+                  <p><strong>Arquivo:</strong></p>
+                  <Button
+                        variant="secondary"
+                        onClick={() => handleDownload(fieldId)}
+                        iconPosition="left"
+                        icon={download}
+                      
+                      >
+                        {initalValue}
+                  </Button>
+              </div>
             )}
           </div>
         );

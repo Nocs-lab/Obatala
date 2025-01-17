@@ -33,7 +33,8 @@ const ProcessViewer = () => {
     const [hasPermission, setHasPermission] = useState(false);
     const [isPublic, setIsPublic] = useState(false);
     const [uploadedFiles, setUploadedFiles] = useState({});
-    const [fileInfo, setFileInfo] = useState(null);
+    const [fileInfo, setFileInfo] = useState({});
+    const [notice, setNotice] = useState(null);
 
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
     const [isStepSubmitEnabled, setIsStepSubmitEnabled] = useState({});
@@ -173,20 +174,25 @@ const ProcessViewer = () => {
 
     const handleFieldChange = (fieldId, newValue) => {
         const stepId = orderedSteps[currentStep].id;
-        console.log(newValue)
 
         if(newValue instanceof FileList) {
+            const file = newValue[0];
             setUploadedFiles(prev => ({
                 ...prev,
                 [stepId]:{
                     ...prev[stepId],
-                    [fieldId]: [newValue[0]],
+                    [fieldId]: [file],
                 },
             }))
-            setFileInfo({name: newValue[0].name, size: newValue[0].size });
+            setFileInfo(prev => ({
+            ...prev,
+            [stepId]: {
+                ...prev[stepId],
+                [fieldId]: { name: file.name, size: file.size },
+            },
+        }));
             
         }else {
-            // Atualize os valores do formulário
             setFormValues(prevValues => ({
                 ...prevValues,
                 [stepId]: {
@@ -267,7 +273,6 @@ const ProcessViewer = () => {
         if (uploadedFiles[stepId]) {
             for (const [fieldId, files] of Object.entries(uploadedFiles[stepId])) {
                 if (!files || !Array.isArray(files) || files.length === 0) {
-                    console.log(`Nenhum arquivo encontrado para o campo ${fieldId}, ignorando upload.`);
                     continue; 
                 }
     
@@ -283,10 +288,10 @@ const ProcessViewer = () => {
                         method: "POST",
                         body: formData,
                     });
-                    console.log(`Arquivo para o campo ${fieldId} enviado com sucesso.`, response);
-
+                    setNotice({ status: 'success', message: 'Uploaded successfully.' });
+                    setFileInfo({ name: file.name, size: file.size });
                 } catch (error) {
-                    console.error(`Erro ao enviar arquivo para o campo ${fieldId}:`, error);
+                    setNotice({ status: 'error', message: `Erro ao enviar arquivo para o campo ${fieldId}: ${error}`});
                     uploadFailed = true;
                     break; 
                 }
@@ -335,40 +340,57 @@ const ProcessViewer = () => {
         }
     };
 
-    const handleDownload = async () => {
-        
+    const handleDownload = async (fieldId) => {
         try {
+            const stepId = orderedSteps[currentStep].id;
 
-            const data = new URLSearchParams({
+            const params = new URLSearchParams({
                 id: process.id,
                 user: currentUser.id,
-                file: fileInfo.name,
+                file: formValues[orderedSteps[currentStep].id][fieldId] || 
+                      uploadedFiles[orderedSteps[currentStep].id][fieldId]?.[0]?.name,
+                node_id: stepId 
+            });
+            const response = await apiFetch({
+                path: `/obatala/v1/process_type/download?${params}`,
+                method: 'GET',
+                parse: false
             });
 
-    
-            const response = await apiFetch({
-                path: `/obatala/v1/process_type/download?${data}`,
-            });
-    
-            if (response.success) {
-                const { file_url } = response;
+                const blob = await response.blob(); 
+
+                const url = window.URL.createObjectURL(blob);
                 const link = document.createElement('a');
-                link.href = file_url;
-                link.download = fileInfo.name;
+                link.href = url;
+    
+                //Pega nome do arquivo
+                const contentDisposition = response.headers.get('content-disposition');
+                const fileName = contentDisposition
+                    ? contentDisposition.split('filename=')[1]?.replace(/"/g, '') || 'download.pdf'
+                    : 'download.pdf';
+
+                link.setAttribute('download', fileName);
+    
                 document.body.appendChild(link);
+    
                 link.click();
+    
                 document.body.removeChild(link);
     
-            } else {
-                console.error('Erro ao tentar realizar o download:', response);
-            }
+                window.URL.revokeObjectURL(url);
+            
         } catch (error) {
-            console.error('Erro na requisição de download:', error);
-        }
+            if(error.status === 403 || error?.error && error?.error ===  'Permissao negada') {
+                setNotice({ status: 'error', message: 'Você não tem permissão para baixar este arquivo.'});
+
+            }else {
+                setNotice({ status: 'error', message: 'Ocorreu um erro ao tentar baixar o arquivo.'});
+            }
+            console.error('Erro ao tentar baixar o arquivo:', error);
+        } 
     };
     
-    
-   const isUserInSector = (stepSector) => {
+    const isUserInSector = (stepSector) => {
         if (!Array.isArray(sectorUser)) {
             console.error("sectorUser não é um array válido:", sectorUser);
             return false;
@@ -384,10 +406,7 @@ const ProcessViewer = () => {
         );
     }
 
-    console.log('orderedSteps',orderedSteps)
     const options = orderedSteps.map(step => ({ label: step.data.stageName, value: step.id, fields: step.data.fields, sector_stage: step.sector_obatala }));
-    console.log(options);
-    console.log('files ', uploadedFiles)
   
     return (
         <main>
@@ -413,6 +432,13 @@ const ProcessViewer = () => {
                 <span className="badge default"><Icon icon="yes"/> 70% concluído</span>
                 <span className="badge default"><Icon icon="admin-users"/> Criado por: José da Silva</span>
             </div>
+            {notice && (
+            <div className="notice-container">
+            <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                {notice.message}
+            </Notice>
+            </div>
+        )}
 
             {!isPublic && hasPermission === false ? (
                 <div style={{margin: '50px'}}>
@@ -463,6 +489,7 @@ const ProcessViewer = () => {
                                                             onFieldChange={handleFieldChange}
                                                             fileInfo={fileInfo}
                                                             handleDownload={handleDownload}
+                                                            stepId = {orderedSteps[currentStep].id}
                                                         />
                                                     </li>
                                                 )) : null}

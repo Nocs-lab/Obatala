@@ -312,17 +312,8 @@ class ProcessTypeApi extends ObatalaAPI {
             ], 500);
         }
 
-
-        // Modificar o nome do arquivo
-        $process_name = get_the_title($process_id);
         $filename = sanitize_file_name($file['name']);
-        $filename_parts = pathinfo($filename);
-        $new_filename = $process_name . '-' .
-            $node_id . '-' . $filename_parts['filename'] . '.' .
-            $filename_parts['extension'];
 
-        // Mover o arquivo para o diretório personalizado
-        $filename = sanitize_file_name($new_filename);
         $new_file_path = trailingslashit($custom_dir) . $filename;
 
         if (!rename($uploaded_file['file'], $new_file_path)) {
@@ -371,41 +362,52 @@ class ProcessTypeApi extends ObatalaAPI {
         $process_id = intval($request['id']);
         $user_id = intval($request->get_param('user'));
         $file_name = sanitize_file_name($request->get_param('file'));
-
+    
         // Verificar permissão
         $permission = Sector::check_permission($user_id, $process_id);
-
+    
         if (!$permission['status']) {
             return new WP_REST_Response(
                 [
-                    'error' => 'Permissão negada',
+                    'error' => 'Permissao negada',
                     'status' => $permission['message']
                 ],
                 403
             );
         }
-
+    
         // Caminho do arquivo
         $upload_dir = wp_upload_dir();
         $custom_dir = trailingslashit($upload_dir['basedir']) . 'obatala';
         $file_path = trailingslashit($custom_dir) . $file_name;
-
+    
         if (!file_exists($file_path)) {
             return new WP_REST_Response(
                 ['error' => 'Arquivo não encontrado'],
                 404
             );
         }
-
-        // Gerar a URL para o arquivo e retornar para o cliente
-        $file_url = trailingslashit($upload_dir['baseurl']) . 'obatala/' . $file_name;
-
-        return new WP_REST_Response(
-            [
-                'success' => true,
-                'file_url' => $file_url,
-            ],
-            200
-        );
+      
+        // Usar a função wp_send_file para forçar o download
+        return $this->wp_send_file($file_path);
+    }
+    
+    private function wp_send_file($file_path) {
+        // Força o download do arquivo
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="' . basename($file_path) . '"');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($file_path));
+        
+        // Limpar buffers de saída antes de enviar o arquivo
+        ob_clean();
+        flush();
+        
+        // Ler e enviar o arquivo
+        readfile($file_path);
+        exit;
     }
 }
