@@ -10,7 +10,6 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
     
     useEffect(() => {
         if (editingProcess) {
-            console.log( editingProcess )
             setAccessLevel(
                 Array.isArray(editingProcess.meta.access_level)
                 ? editingProcess.meta.access_level[0]
@@ -29,7 +28,6 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
         }
         // get process model id
         const selectedProcessModel = processTypes.find(type => type.id === parseInt(newProcessType));
-        console.log('processID', selectedProcessModel)
         if (!selectedProcessModel) {
             setNotice({ status: 'error', message: 'Invalid process type selected.' });
             return;
@@ -63,7 +61,6 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
             const metaFields = await apiFetch({ path: `/obatala/v1/process_type/${selectedProcessModel.id}/meta` })
     
             // Atualiza o meta para o processocom os dados do fluxo
-            console.log(metaFields)
             if(metaFields.status === 'Inactive'){
                 setNotice({ status: 'error', message:'The process cannot be created because the selected process model is inactive' });
 
@@ -114,7 +111,6 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
     };
 
     const modelsActives = processTypes.filter((process) => process?.meta?.status[0] === 'Active');
-    console.log(modelsActives);
 
     return (
         <form onSubmit={handleSaveProcess}>
