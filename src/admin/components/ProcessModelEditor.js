@@ -152,10 +152,6 @@ const processDataEditor = () => {
       <span className="brand">
           <strong>Obatala</strong> Curatorial Process Management
       </span>
-      <div className="title-container">
-       <h2>Manage steps: {processData.title.rendered}</h2>
-
-      </div>
       
       {notice && (
         <div className="notice-container">
@@ -166,13 +162,15 @@ const processDataEditor = () => {
       )}
       
       <FlowProvider>
-          <div className ='container-controls' style={{display:'flex', justifyContent:'end', padding:' 0px 40px 24px 0px'}}>
+      <div className="title-container">
+          <h2>Manage steps: {processData.title.rendered}</h2>
               <ProcessControls
-                onSave={handleSave}
-                onCancel={handleCancelEditProcessType}
-                toggleFullScreen={toggleFullScreen}
+                  onSave={handleSave}
+                  onCancel={handleCancelEditProcessType}
+                  toggleFullScreen={toggleFullScreen}
               />
-          </div>
+      </div>
+          
        
           <ProcessFlow 
               ref={flowRef} 
