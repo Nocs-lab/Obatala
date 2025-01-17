@@ -34,6 +34,7 @@ const ProcessViewer = () => {
     const [sectorUser, setSectorUser] = useState([]);
     const [hasPermission, setHasPermission] = useState(false);
     const [isPublic, setIsPublic] = useState(false);
+    const [currentStageData, setCurrentStageData] = useState({});
     const [uploadedFiles, setUploadedFiles] = useState({});
     const [fileInfo, setFileInfo] = useState({});
     const [notice, setNotice] = useState(null);
@@ -339,6 +340,11 @@ const ProcessViewer = () => {
                 ...prev,
                 [currentStep]: true,
             }));
+
+            setCurrentStageData(prev => ({
+                ...prev,
+                [stepId]: [new Date(), currentUser.name],
+            }));
     
         } catch (error) {
             console.error('Erro ao salvar metadados:', error);
@@ -473,7 +479,7 @@ const ProcessViewer = () => {
                             {process.meta.access_level}
                         </span>
                         <span className="badge default"><Icon icon="yes"/> {calculatePercentagem()}% concluído</span>
-                        <span className="badge default"><Icon icon="admin-users"/> Criado por: 
+                        <span className="badge default"><Icon icon="admin-users"/> Criado por:  
                             {authorsById[process?.author]?.name} em {createAtProcess()}
                         </span>
                     </div>
