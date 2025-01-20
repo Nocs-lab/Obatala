@@ -29,7 +29,6 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
 
     switch (field.type) {
       case "text":
-      case "email":
       case "phone":
       case "address":
         return (
@@ -45,6 +44,7 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
                 minLength={field.config?.minLength}
                 maxLength={field.config?.maxLength}
                 help={field.config?.helpText}
+                pattern={field.config?.pattern || undefined}
               />
             ) : (
               <dl className="description-list">
@@ -196,6 +196,32 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
                 noHasPermission={noHasPermission}
           />
         );
+        case "email":
+          return (
+            <div className="meta-field-wrapper">
+              {isEditable ? (
+                <TextControl
+                  label={field.config?.label ?? "Unknow Title"}
+                  placeholder={field.config?.placeholder ?? "Enter a value..."}
+                  value={value}
+                  type="email"
+                  onChange={handleChange}
+                  disabled={!isEditable || noHasPermission}
+                  required={field.config?.required ?? false}
+                  minLength={field.config?.minLength}
+                  maxLength={field.config?.maxLength}
+                  help={field.config?.helpText}
+                />
+              ) : (
+                <dl className="description-list">
+                  <div className="list-item">
+                    <dt>{field.config?.label}</dt>
+                    <dd>{initalValue}</dd>
+                  </div>
+                </dl>
+              )}
+            </div>
+          );  
       default:
         return null;
     }

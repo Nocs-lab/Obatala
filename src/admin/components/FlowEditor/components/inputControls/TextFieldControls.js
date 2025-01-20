@@ -13,9 +13,9 @@ import { useFlowContext } from "../../context/FlowContext";
 
 // Padrões regex predefinidos
 const predefinedPatterns = {
-  telefone: "^\\(\\d{2}\\) \\d{4,5}-\\d{4}$", // Ex: (11) 98765-4321
-  email: "^[\\w-.]+@[\\w-]+\\.[a-z]{2,}$", // Ex: exemplo@email.com
-  cep: "^\\d{5}-\\d{3}$", // Ex: 12345-678
+  telefone: "([0-9]{2,3})?(([0-9]{2}))([0-9]{4,5})([0-9]{4})", // Ex: (11) 98765-4321
+  //email: "^[\\w-.]+@[\\w-]+\\.[a-z]{2,}$", // Ex: exemplo@email.com
+  cep: "([0-9]{5})(-?)([0-9]{3})", // Ex: 12345-678
 };
 
 // Esquema de validação usando Yup
@@ -170,7 +170,7 @@ export const TextFieldControls = ({
         options={[
           { label: "Selecione um padrão", value: "" },
           { label: "Telefone", value: "telefone" },
-          { label: "E-mail", value: "email" },
+          //{ label: "E-mail", value: "email" },
           { label: "CEP", value: "cep" },
         ]}
         onChange={(value) => {
@@ -197,7 +197,14 @@ export const TextFieldControls = ({
           }
         }}
         placeholder="Digite um padrão de validação (Regex)"
-        help={errors.pattern}
+        help={formValues.pattern ?`Modelo: ${
+          formValues.pattern === predefinedPatterns.telefone
+            ? "5511987654321, 11987654321, 9843216789"
+            : formValues.pattern === predefinedPatterns.cep
+            ? "00000-000"
+            : "Informe um padrão de regex válido."
+        }`: ""}
+        //help={errors.pattern}
       />
 
       <TextareaControl
