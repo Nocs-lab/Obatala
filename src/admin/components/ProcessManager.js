@@ -3,6 +3,7 @@ import { Spinner, Button, Notice, Panel, PanelHeader, PanelRow, Icon, ButtonGrou
 import apiFetch from '@wordpress/api-fetch';
 import ProcessCreator from './ProcessManager/ProcessCreator';
 import { edit, seen, plus } from '@wordpress/icons';
+import ProcessList from './ProcessManager/ProcessList';
 
 const ProcessManager = ({ onSelectProcess }) => {
     const [processTypes, setProcessTypes] = useState([]);
@@ -143,60 +144,13 @@ const ProcessManager = ({ onSelectProcess }) => {
         </div>
       )}
 
-      <Panel>
-        <PanelHeader>
-          <h3>Existing processes</h3>
-          <span className="badge">{processes.length}</span>
-        </PanelHeader>
-        <PanelRow>
-          {processes.length > 0 ? (
-            <table className="wp-list-table widefat fixed striped">
-              <thead>
-                <tr>
-                  <th>Title</th>
-                  <th>Process Model</th>
-                  <th>Status</th>
-                  <th>Access Level</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                  {processes.map(process => {
-                      const typeMapping = processTypeMappings.find(m => m.processId == process.id);
-                      const processType = typeMapping ? processTypes.find(type => type.id == typeMapping.processTypeId) : null;
-
-                      return (
-                          <tr key={process.id}>
-                              <td>{process.title.rendered}</td>
-                              <td>{processType ? processType.title.rendered : ''}</td>
-                              <td>{process.meta.current_stage || 'Not Started'}</td>
-                              <td><span className={`badge ${process.meta.access_level == 'public' || process.meta.access_level == 'Public' ? 'success' : 'warning'}`}>{process.meta.access_level}</span></td>
-                              <td>
-                                  <ButtonGroup>
-                                    <Tooltip text="View">
-                                      <Button
-                                        icon={<Icon icon={seen} />} 
-                                        onClick={() => handleSelectProcess(process.id)}
-                                        />
-                                    </Tooltip>
-                                    <Tooltip text="Edit">
-                                      <Button
-                                        icon={<Icon icon={edit} />}
-                                        onClick={() => handleEditProcess(process)}
-                                      />
-                                    </Tooltip>
-                                  </ButtonGroup>
-                              </td>
-                          </tr>
-                      );
-                  })}
-              </tbody>
-            </table>
-          ) : (
-              <Notice isDismissible={false} status="warning">No existing processes.</Notice>
-          )}
-        </PanelRow>
-      </Panel>
+      <ProcessList
+          processes={processes}
+          onEdit={handleEditProcess}
+          onViewProcess={handleSelectProcess}
+          processTypeMappings={processTypeMappings}
+          processTypes={processTypes}
+      />
         {editingProcess && (
                 <Modal
                     title="Edit Process"

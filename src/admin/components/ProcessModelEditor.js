@@ -12,6 +12,8 @@ import apiFetch from "@wordpress/api-fetch";
 import ProcessFlow from "./FlowEditor/ProcessFlow";
 import { FlowProvider } from "./FlowEditor/context/FlowContext";
 import { closeSmall, edit, check } from "@wordpress/icons";
+import ProcessControls from "./FlowEditor/components/reactFlow/FlowButtons";
+import { DrawerProvider } from "./FlowEditor/context/DrawerContext";
 
 const processDataEditor = () => {
   const params = new URLSearchParams(window.location.search);
@@ -21,9 +23,7 @@ const processDataEditor = () => {
   const [isLoading, setIsLoading] = useState(true);
   const flowRef = useRef(null); // Referência para acessar os dados do fluxo
   const [flowData, setFlowData] = useState({ nodes: [], edges: [] }); // Novo estado para o flowData
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [isEditing, setIsEditing] = useState(null);
+
 
   const getProcessIdFromUrl = () => {
     const urlParams = new URLSearchParams(window.location.search);
@@ -37,12 +37,6 @@ const processDataEditor = () => {
       .then((typeData) => {
           console.log("Process model data:", typeData);
           setProcessData(typeData);
-          setTitle(typeData.title.rendered);
-          setDescription(
-              Array.isArray(typeData.meta.description)
-                ? typeData.meta.description[0]
-                : typeData.meta.description || ""
-          );
           // Extraindo flowData do processo carregado
           const flowData = typeData.meta.flowData || { nodes: [], edges: [] };
           setFlowData(flowData);
@@ -80,9 +74,7 @@ const processDataEditor = () => {
       const flowData = flowRef.current.getFlowData(); // Obtém os dados do flow
       const updatedData = {
         ...processData,
-        title: title,
         meta: {
-          description: description,
           flowData, // Armazena os dados de fluxo como meta
         },
       };
@@ -120,7 +112,6 @@ const processDataEditor = () => {
         status: "success",
         message: "Process type and meta updated successfully.",
       });
-      setIsEditing(null);
     } catch (error) {
       console.error(error);
       setNotice({
@@ -132,14 +123,7 @@ const processDataEditor = () => {
     }
   };
 
-  const handleEdit = (field) => {
-    console.log(isEditing);
-    setIsEditing(field);
-  };
 
-  const handleCancel = () => {
-    setIsEditing(null);
-  };
   
   const handleCancelEditProcessType = () => {
     window.location.href = '?page=process-type-manager';
@@ -158,67 +142,11 @@ const processDataEditor = () => {
       <span className="brand">
           <strong>Obatala</strong> Curatorial Process Management
       </span>
+      <div className="title-container">
+       <h2>Manager Process Model</h2>
 
-      {isEditing === "title" ? (
-        <div className="inline-edition mt-2 mb-1">
-          <TextControl
-              value={title}
-              onChange={(value) => setTitle(value)}
-              autoFocus
-          />
-          <ButtonGroup>
-            <Tooltip text="Save">
-                <Button icon={<Icon icon={check} />} onClick={handleSave} />
-            </Tooltip>
-            <Tooltip text="Cancel">
-                <Button
-                    onClick={handleCancel}
-                    icon={<Icon icon={closeSmall} />}
-            />
-            </Tooltip>
-          </ButtonGroup>
-        </div>
-      ) : (
-        <div className="title-container">
-          <h2 onClick={() => handleEdit("title")}>
-            <small>Manage Process Model steps and fields</small>
-            <strong>{title}</strong>
-            <Tooltip text="Edit title">
-              <Button
-                onClick={() => handleEdit("title")}
-                icon={<Icon icon={edit} />}
-                className="ms-2"
-              />
-            </Tooltip>
-          </h2>
-        </div>
-      )}
-
-      {isEditing === "description" ? (
-        <div className="inline-edition mb-2">
-            <TextControl
-                value={description}
-                onChange={(value) => setDescription(value)}
-                autoFocus
-            />
-            <ButtonGroup>
-                <Button icon={<Icon icon={check} />} onClick={handleSave} />
-                <Button onClick={handleCancel} icon={<Icon icon={closeSmall} />} />
-            </ButtonGroup>
-        </div>
-      ) : (
-        <div className="title-container mb-1">
-            <p onClick={() => handleEdit("description")}>{description}</p>
-            <Tooltip text="Edit description">
-                <Button
-                onClick={() => handleEdit("description")}
-                icon={<Icon icon={edit} />}
-                className="me-auto"
-                />
-            </Tooltip>
-        </div>
-      )}
-
+      </div>
+      
       {notice && (
         <div className="notice-container">
             <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
@@ -226,8 +154,15 @@ const processDataEditor = () => {
             </Notice>
         </div>
       )}
-
+      
       <FlowProvider>
+        <div className ='container-controls' style={{display:'flex', justifyContent:'end', padding:' 0px 40px 24px 0px'}}>
+            <ProcessControls
+              onSave={handleSave}
+              onCancel={handleCancelEditProcessType}
+            />
+        </div>
+       
         <ProcessFlow 
             ref={flowRef} 
             initialData={flowData}
