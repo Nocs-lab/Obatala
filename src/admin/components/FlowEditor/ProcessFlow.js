@@ -14,6 +14,7 @@ import SlidingDrawer from "./components/SlidingDrawer";
 import { DrawerProvider } from "./context/DrawerContext";
 import { useFlowContext } from "./context/FlowContext";
 
+
 const nodeTypes = {
   customNode: NodeContent,
 };
@@ -22,7 +23,7 @@ const edgeTypes = {
   buttonedge: ButtonEdge,
 };
 
-const ProcessFlow = forwardRef(({ initialData, onSave, onCancel}, ref,) => {
+const ProcessFlow = forwardRef(({ initialData, onSave, onCancel,toggleFullScreen}, ref,) => {
   const {
     nodes,
     edges,
@@ -34,6 +35,21 @@ const ProcessFlow = forwardRef(({ initialData, onSave, onCancel}, ref,) => {
 
   const [errors, setErrors] = useState([]); // Armazena os erros de validação
   const [isOpen, setIsOpen] = useState(false);
+  const [openFullScreen, setOpenFullScreen] = useState(false);
+
+
+  useEffect(() => {
+    const handleFullScreenChange = () => {
+      const isFullScreen = !!document.fullscreenElement;
+      setOpenFullScreen(isFullScreen);
+    }
+    document.addEventListener("fullscreenchange", handleFullScreenChange);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullScreenChange);
+    };
+  }, []);
+  
 
   // Função para abrir/fechar a gaveta
   const toggleDrawer = () => {
@@ -62,7 +78,7 @@ const ProcessFlow = forwardRef(({ initialData, onSave, onCancel}, ref,) => {
   }, [nodes, edges]);
 
   return (
-    <div className="flow-container">
+    <div className="flow-container" id="flow-container" >
       {errors.length > 0 && (
         <div style={{ color: "red", padding: "10px" }}>
           <strong>Validation Errors:</strong>
@@ -73,7 +89,14 @@ const ProcessFlow = forwardRef(({ initialData, onSave, onCancel}, ref,) => {
           </ul>
         </div>
       )}
-
+      {openFullScreen && (
+          <ProcessControls
+              onSave={onSave}
+              onCancel={onCancel}
+              toggleFullScreen={toggleFullScreen}
+          />
+      )}
+      
       <div className="flow-content">
         <DrawerProvider>
           <ReactFlow

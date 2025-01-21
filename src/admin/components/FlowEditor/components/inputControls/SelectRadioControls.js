@@ -30,6 +30,8 @@ export const SelectRadioControls = ({
 }) => {
   const { updateFieldConfig } = useFlowContext(); // Usando a função do contexto
   const [errors, setErrors] = useState({}); // Estado para armazenar erros de validação
+  const { toggleDrawer } = useDrawer();  
+
   const [formValues, setFormValues] = useState({
     label: config ? config.label : label ? label : "",
     options: config ? config.options : options ? options : "",
@@ -60,6 +62,7 @@ export const SelectRadioControls = ({
         }
         setErrors(formattedErrors);
       });
+      toggleDrawer();
   };
 
   // Converte as opções separadas por vírgula em um array
