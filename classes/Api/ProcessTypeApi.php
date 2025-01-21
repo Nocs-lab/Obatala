@@ -248,6 +248,7 @@ class ProcessTypeApi extends ObatalaAPI {
     public function upload($request) {
         $process_id = $request['id'];
         $node_id = sanitize_text_field($request['node_id']);
+        
         // Carregar a função wp_handle_upload, se necessário
         if (!function_exists('wp_handle_upload')) {
             require_once ABSPATH . 'wp-admin/includes/file.php';
@@ -313,9 +314,7 @@ class ProcessTypeApi extends ObatalaAPI {
         }
 
         $filename = sanitize_file_name($file['name']);
-
         $new_file_path = trailingslashit($custom_dir) . $filename;
-
         if (!rename($uploaded_file['file'], $new_file_path)) {
             return new WP_REST_Response([
                 'error' => 'Erro ao salvar o arquivo no diretório personalizado.',
@@ -365,7 +364,6 @@ class ProcessTypeApi extends ObatalaAPI {
     
         // Verificar permissão
         $permission = Sector::check_permission($user_id, $process_id);
-    
         if (!$permission['status']) {
             return new WP_REST_Response(
                 [

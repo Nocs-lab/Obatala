@@ -371,32 +371,26 @@ const ProcessViewer = () => {
                 parse: false
             });
 
-                const blob = await response.blob(); 
+            const blob = await response.blob(); 
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+    
+            //Pega nome do arquivo
+            const contentDisposition = response.headers.get('content-disposition');
+            const fileName = contentDisposition
+                ? contentDisposition.split('filename=')[1]?.replace(/"/g, '') || 'download.pdf'
+                : 'download.pdf';
 
-                const url = window.URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-    
-                //Pega nome do arquivo
-                const contentDisposition = response.headers.get('content-disposition');
-                const fileName = contentDisposition
-                    ? contentDisposition.split('filename=')[1]?.replace(/"/g, '') || 'download.pdf'
-                    : 'download.pdf';
-
-                link.setAttribute('download', fileName);
-    
-                document.body.appendChild(link);
-    
-                link.click();
-    
-                document.body.removeChild(link);
-    
-                window.URL.revokeObjectURL(url);
+            link.setAttribute('download', fileName);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
             
         } catch (error) {
             if(error.status === 403 || error?.error && error?.error ===  'Permissao negada') {
                 setNotice({ status: 'error', message: 'Você não tem permissão para baixar este arquivo.'});
-
             }else {
                 setNotice({ status: 'error', message: 'Ocorreu um erro ao tentar baixar o arquivo.'});
             }
