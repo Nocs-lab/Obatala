@@ -122,8 +122,18 @@ const processDataEditor = () => {
       setIsLoading(false);
     }
   };
-
-
+  
+  // Função para alternar para tela cheia
+  const toggleFullScreen = () => {
+    const element = document.getElementById('flow-container'); 
+    
+     if(document.fullscreenElement) {
+      document.exitFullscreen();
+    }else {     
+      element.requestFullscreen();
+    }
+    
+  };
   
   const handleCancelEditProcessType = () => {
     window.location.href = '?page=process-type-manager';
@@ -136,16 +146,12 @@ const processDataEditor = () => {
   if (!processData) {
     return <div>Loading...</div>;
   }
-
+  
   return (
     <main>
       <span className="brand">
           <strong>Obatala</strong> Curatorial Process Management
       </span>
-      <div className="title-container">
-       <h2>Manager Process Model</h2>
-
-      </div>
       
       {notice && (
         <div className="notice-container">
@@ -156,19 +162,23 @@ const processDataEditor = () => {
       )}
       
       <FlowProvider>
-        <div className ='container-controls' style={{display:'flex', justifyContent:'end', padding:' 0px 40px 24px 0px'}}>
-            <ProcessControls
+      <div className="title-container">
+          <h2>Manage steps: {processData.title.rendered}</h2>
+              <ProcessControls
+                  onSave={handleSave}
+                  onCancel={handleCancelEditProcessType}
+                  toggleFullScreen={toggleFullScreen}
+              />
+      </div>
+          
+       
+          <ProcessFlow 
+              ref={flowRef} 
+              initialData={flowData}
               onSave={handleSave}
               onCancel={handleCancelEditProcessType}
-            />
-        </div>
-       
-        <ProcessFlow 
-            ref={flowRef} 
-            initialData={flowData}
-            onSave={handleSave}
-            onCancel={handleCancelEditProcessType}
-            />
+              toggleFullScreen={toggleFullScreen}
+          />
       </FlowProvider>
     </main>
   );
