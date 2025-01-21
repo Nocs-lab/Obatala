@@ -10,7 +10,6 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
     
     useEffect(() => {
         if (editingProcess) {
-            console.log( editingProcess )
             setAccessLevel(
                 Array.isArray(editingProcess.meta.access_level)
                 ? editingProcess.meta.access_level[0]
@@ -29,7 +28,6 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
         }
         // get process model id
         const selectedProcessModel = processTypes.find(type => type.id === parseInt(newProcessType));
-        console.log('processID', selectedProcessModel)
         if (!selectedProcessModel) {
             setNotice({ status: 'error', message: 'Invalid process type selected.' });
             return;
@@ -63,37 +61,42 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
             const metaFields = await apiFetch({ path: `/obatala/v1/process_type/${selectedProcessModel.id}/meta` })
     
             // Atualiza o meta para o processocom os dados do fluxo
-            console.log(metaFields)            
-    
-            const metaUpdateData = {
-                current_stage: 0,
-                process_type: selectedProcessModel.id,
-                access_level: accessLevel,
-                flowData: metaFields.flowData
-            };
-    
-            // Atualiza o meta para o processo 
-            await apiFetch({
-                path: `/obatala/v1/process_obatala/${savedProcess.id}/meta`,
-                method: 'POST',
-                data: metaUpdateData
-            });
+            if(metaFields.status === 'Inactive'){
+                setNotice({ status: 'error', message:'The process cannot be created because the selected process model is inactive' });
 
-            await apiFetch({
-                path: `/obatala/v1/process_obatala/${savedProcess.id}/process_type`,
-                method: 'POST',
-                data: {process_type: selectedProcessModel.id}
-            });
-
+            }else {
+                const metaUpdateData = {
+                    current_stage: 0,
+                    process_type: selectedProcessModel.id,
+                    access_level: accessLevel,
+                    flowData: metaFields.flowData
+                };
+        
+                // Atualiza o meta para o processo 
+                await apiFetch({
+                    path: `/obatala/v1/process_obatala/${savedProcess.id}/meta`,
+                    method: 'POST',
+                    data: metaUpdateData
+                });
     
-            // Atualiza o objeto savedProcess com os metas
-            savedProcess.meta = metaUpdateData;
-            onProcessSaved(savedProcess);
-            setNewProcessTitle('');
-            setNewProcessType('');
-            setAccessLevel('public');
-            setNotice({ status: 'success', message: editingProcess ? 'Process updated successfully.' : 'Process created successfully.' });
-        } catch (error) {
+                await apiFetch({
+                    path: `/obatala/v1/process_obatala/${savedProcess.id}/process_type`,
+                    method: 'POST',
+                    data: {process_type: selectedProcessModel.id}
+                });
+    
+        
+                // Atualiza o objeto savedProcess com os metas
+                savedProcess.meta = metaUpdateData;
+                onProcessSaved(savedProcess);
+                setNewProcessTitle('');
+                setNewProcessType('');
+                setAccessLevel('public');
+                setNotice({ status: 'success', message: editingProcess ? 'Process updated successfully.' : 'Process created successfully.' });
+            
+            }          
+    
+           } catch (error) {
             console.error('Error creating process:', error);
             setNotice({ status: 'error', message: 'Error creating process.' });
         }
@@ -106,6 +109,8 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
         setNewProcessType('');
         setAccessLevel('Public');
     };
+
+    const modelsActives = processTypes.filter((process) => process?.meta?.status[0] === 'Active');
 
     return (
         <form onSubmit={handleSaveProcess}>
@@ -126,9 +131,13 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
                  label="Process Model"
                  value={newProcessType}
                  options={[
-                     { label: 'Select a process model...', value: '' },
-                     ...processTypes.map(type => ({ label: type.title.rendered, value: type.id }))
+                     { label: 'Select a process model...', 
+                       value: '', 
+                    },
+                     ...modelsActives.map(type => ({ label: type.title.rendered, value: type.id }))
+                     
                  ]}
+                 
                  onChange={(value) => setNewProcessType(value)}
                  disabled={!!editingProcess}
             />       

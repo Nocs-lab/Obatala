@@ -25,6 +25,13 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager }) => {
             Cell: ({ value }) => (value ? value.length : 0),
         },
         {
+            Header: 'Status',
+            accessor: 'meta.status[0]',
+            Cell: ({ value }) => (
+                <span className={`badge ${value === 'Active' ? 'success' : 'error'}`}>{value}</span>
+            ),
+        },
+        {
             Header: 'Actions',
             accessor: 'id',
             Cell: ({ row }) => (
