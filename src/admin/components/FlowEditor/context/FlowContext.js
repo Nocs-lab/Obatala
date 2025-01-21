@@ -18,27 +18,45 @@ export const FlowProvider = ({ children }) => {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   //Função para adicionar um nó inicial
-  const addNodeInicio = () => {
-    const Inicio = {
-      id: "NodeInicio",
-      type: "nodeInicio",
-      dragHandle: ".custom-drag-handle .node-inicio",
-      position: { x: 50, y: 50 },
+  const addFirstNode = () => {
+    const First = {
+      id: "First",
+      type: "firstNode",
+      dragHandle: ".custom-drag-handle2",
+      position: { x: -150, y: 50 },
       data: {fields: [],
-        stageName: "NodeInicio",
-        updateFields: (newFields) => updateFieldsForNode("NodeInicio", newFields),
-        updateNodeName: (newName) => updateNodeName("NodeInicio", newName),
+        stageName: "First",
+        updateFields: (newFields) => updateFieldsForNode("First", newFields),
+        updateNodeName: (newName) => updateNodeName("First", newName),
         updatePosition: (newPosition) =>
-          updateNodePosition("NodeInicio", newPosition),
+          updateNodePosition("First", newPosition),
       },
     };
-    setNodes((prevNodes) => [...prevNodes, Inicio]);
+    setNodes((prevNodes) => [...prevNodes, First]);
+  };
+
+  const addLastNode = () => {
+    const Last = {
+      id: "Last",
+      type: "lastNode",
+      dragHandle: ".custom-drag-handle2",
+      position: { x: 250, y: 50},
+      data: {fields: [],
+        stageName: "Last",
+        updateFields: (newFields) => updateFieldsForNode("Last", newFields),
+        updateNodeName: (newName) => updateNodeName("Last", newName),
+        updatePosition: (newPosition) =>
+          updateNodePosition("Last", newPosition),
+      },
+    };
+    setNodes((prevNodes) => [...prevNodes, Last]);
   };
 
   // Verifica se é necessário adicionar o nó inicial
   useEffect(() => {
     if (nodes.length === 0) {
-      addNodeInicio();
+      addFirstNode();
+      addLastNode();
     }
   }, [nodes]);
 
@@ -278,7 +296,8 @@ export const FlowProvider = ({ children }) => {
     errors,
     onExport,
     onImport,
-    addNodeInicio,
+    addFirstNode,
+    addLastNode,
   };
 
   return <FlowContext.Provider value={value}>{children}</FlowContext.Provider>;
