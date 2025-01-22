@@ -22,9 +22,17 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
   };
 
   const handleChange = (newValue) => {
-    setValue(newValue);
-    onFieldChange(fieldId, newValue);
-
+    setValue(newValue); // Permite ao usuário digitar qualquer coisa
+    onFieldChange(fieldId, newValue); // Propaga a mudança
+  
+    // Validação posterior, para indicar erro ao usuário
+    const isValid =
+      !field.config?.pattern || new RegExp(field.config.pattern).test(newValue);
+  
+    if (!isValid) {
+      // Exibir mensagem de erro
+      console.log("Valor inválido");
+    }
   };
 
     switch (field.type) {

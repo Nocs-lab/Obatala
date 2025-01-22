@@ -13,7 +13,7 @@ import { useFlowContext } from "../../context/FlowContext";
 
 // Padrões regex predefinidos
 const predefinedPatterns = {
-  telefone: "([0-9]{2,3})?(([0-9]{2}))([0-9]{4,5})([0-9]{4})", // Ex: (11) 98765-4321
+  telefone: "^[0-9]{11}$", // Ex: 11987654321
   //email: "^[\\w-.]+@[\\w-]+\\.[a-z]{2,}$", // Ex: exemplo@email.com
   cep: "([0-9]{5})(-?)([0-9]{3})", // Ex: 12345-678
 };
@@ -197,9 +197,9 @@ export const TextFieldControls = ({
           }
         }}
         placeholder="Digite um padrão de validação (Regex)"
-        help={formValues.pattern ?`Modelo: ${
+        help={formValues.pattern ?`Formato: ${
           formValues.pattern === predefinedPatterns.telefone
-            ? "5511987654321, 11987654321, 9843216789"
+            ? "11987654321"
             : formValues.pattern === predefinedPatterns.cep
             ? "00000-000"
             : "Informe um padrão de regex válido."
