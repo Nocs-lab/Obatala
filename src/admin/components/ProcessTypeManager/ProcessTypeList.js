@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
 import { Button, ButtonGroup, Icon, Tooltip, Panel, PanelHeader, PanelRow, Notice, TextControl } from '@wordpress/components';
-import { edit, trash, yes, no, seen } from '@wordpress/icons';
+import { edit, trash, layout } from '@wordpress/icons';
 import { format } from 'date-fns';
 
 const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager }) => {
@@ -25,26 +25,33 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager }) => {
             Cell: ({ value }) => (value ? value.length : 0),
         },
         {
+            Header: 'Status',
+            accessor: 'meta.status[0]',
+            Cell: ({ value }) => (
+                <span className={`badge ${value === 'Active' ? 'success' : 'error'}`}>{value}</span>
+            ),
+        },
+        {
             Header: 'Actions',
             accessor: 'id',
             Cell: ({ row }) => (
                 <ButtonGroup>
-                    <Tooltip text="Edit Title">
+                    <Tooltip text='Manage steps'>
+                        <Button
+                            icon={<Icon icon={layout}/>}
+                            onClick={() => onManager(row.original.id)}
+                        >Manage steps</Button>
+                    </Tooltip>
+                    <Tooltip text="Edit general data">
                         <Button
                             icon={<Icon icon={edit} />}
                             onClick={() => onEdit(row.original)}
                         />
                     </Tooltip>
-                    <Tooltip text="Delete">
+                    <Tooltip text="Delete process model">
                         <Button
                             icon={<Icon icon={trash} />}
                             onClick={() => onDelete(row.original)}
-                        />
-                    </Tooltip>
-                    <Tooltip text='Manager Process Model'>
-                        <Button
-                        icon={<Icon icon={seen}/>}
-                        onClick={() => onManager(row.original.id)}
                         />
                     </Tooltip>
                 </ButtonGroup>

@@ -1,6 +1,14 @@
 {
     "name": "nocs-obatala",
+<<<<<<< HEAD
     "version": "1.2.30",
+=======
+
+    "version": "1.2.31",
+
+
+
+>>>>>>> development
     "private": true,
     "description": "Curatorial process manager for Tainacan",
     "author": "Nocs Lab",

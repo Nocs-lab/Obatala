@@ -10,6 +10,7 @@ import {
 } from "@wordpress/components";
 import * as Yup from "yup";
 import { useFlowContext } from "../../context/FlowContext";
+import { useDrawer } from "../../context/DrawerContext";
 
 // Padrões regex predefinidos
 const predefinedPatterns = {
@@ -40,8 +41,9 @@ export const TextFieldControls = ({
   setLabel,
   config,
 }) => {
-  const { updateFieldConfig } = useFlowContext();
-  const [errors, setErrors] = useState({});
+  const { updateFieldConfig } = useFlowContext(); // Usando a função do contexto
+  const [errors, setErrors] = useState({}); // Estado para armazenar erros de validação
+  const { toggleDrawer } = useDrawer();  
   const [formValues, setFormValues] = useState({
     label: config ? config.label : label || "",
     placeholder: config ? config.placeholder : "",
@@ -100,6 +102,7 @@ export const TextFieldControls = ({
           text: "Erro ao salvar. Por favor, revise os campos.",
         });
       });
+    toggleDrawer()
   };
 
   return (

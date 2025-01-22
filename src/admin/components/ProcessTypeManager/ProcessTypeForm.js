@@ -5,11 +5,13 @@ import {
   TextControl,
   Notice,
   PanelRow,
+  SelectControl,
 } from "@wordpress/components";
 
 const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [status, setStatus] = useState("");
   const [notice, setNotice] = useState(null);
 
   useEffect(() => {
@@ -19,6 +21,11 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
         Array.isArray(editingProcessType.meta.description)
           ? editingProcessType.meta.description[0]
           : editingProcessType.meta.description || ""
+      );
+      setStatus(
+        Array.isArray(editingProcessType.meta.status)
+          ? editingProcessType.meta.status[0]
+          : editingProcessType.meta.status || ""
       );
     }
   }, [editingProcessType]);
@@ -35,7 +42,8 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
       title,
       status: "publish",
       meta: {
-        description
+        description,
+        status: editingProcessType ? status : "Active" 
       },
     };
 
@@ -70,6 +78,18 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
                 value={description}
                 onChange={(value) => setDescription(value)}
             />
+
+            {editingProcessType && (
+              <SelectControl
+                label="Status"
+                value={status}
+                options={[
+                  { label: 'Active', value: 'Active' },
+                  { label: 'Inactive', value: 'Inactive' }
+              ]}
+              onChange={(value) => setStatus(value)}    
+              />
+            )}
     
             <ButtonGroup>
                 <Button variant="link" onClick={onCancel}>

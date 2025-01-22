@@ -129,17 +129,23 @@ h2 small {
   box-shadow: inset 0 0 0 1px var(--primary);
   color: var(--primary);
 }
+.components-button-group {
+  display: flex;
+}
 .components-button-group .components-button.is-primary {
   border-radius: var(--input-border-radius) !important;
 }
-.components-button-group .components-button:first-child {
+.components-button-group .components-button:first-of-type {
   border-radius: var(--input-border-radius) 0 0 var(--input-border-radius);
 }
-.components-button-group .components-button:last-child {
+.components-button-group .components-button:last-of-type {
   border-radius: 0 var(--input-border-radius) var(--input-border-radius) 0;
 }
-.components-button-group .components-button:only-child {
+.components-button-group .components-button:only-of-type {
   border-radius: var(--input-border-radius);
+}
+.components-button-group .components-dropdown.components-dropdown-menu {
+  margin-left: .5rem;
 }
 form .components-button-group {
   display: flex;

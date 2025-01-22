@@ -131,6 +131,7 @@ class ProcessTypeApi extends ObatalaAPI {
             'accept_tainacan_items' => (bool) get_post_meta($post_id, 'accept_tainacan_items', true),
             'generate_tainacan_items' => (bool) get_post_meta($post_id, 'generate_tainacan_items', true),
             'description' => get_post_meta($post_id, 'description', true) ?: '',
+            'status' => get_post_meta($post_id, 'status', true) ?: '',
             'step_order' => get_post_meta($post_id, 'step_order', true) ?: [],
             'flowData' => $flowData ?: [],
         ];
@@ -145,6 +146,7 @@ class ProcessTypeApi extends ObatalaAPI {
             'accept_tainacan_items',
             'generate_tainacan_items',
             'description',
+            'status',
             'step_order',
             'flowData',
         ];

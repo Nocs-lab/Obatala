@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import apiFetch from "@wordpress/api-fetch";
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
-import { Button, ButtonGroup, Icon, Tooltip, Panel, PanelHeader, PanelRow, Notice, Modal, TextControl } from '@wordpress/components';
+import { Button, ButtonGroup, Tooltip, Panel, PanelHeader, PanelRow, Notice, Modal, TextControl } from '@wordpress/components';
 import { edit, trash, people } from '@wordpress/icons';
 import UsersManager from './UserManager/UserManager';
 
@@ -64,19 +64,19 @@ const SectorList = ({ sectors, onEdit, onDelete }) => {
           <ButtonGroup>
               <Tooltip text="Manage users">
                   <Button
-                      icon={<Icon icon={people} />}
+                      icon={people}
                       onClick={() => handleManagerUsers(row.original)}
-                  />
+                  >Manage users</Button>
               </Tooltip>
               <Tooltip text="Edit">
                   <Button
-                      icon={<Icon icon={edit} />}
+                      icon={edit}
                       onClick={() => onEdit(row.original)}
                   />
               </Tooltip>
               <Tooltip text="Delete">
                   <Button
-                      icon={<Icon icon={trash} />}
+                      icon={trash}
                       onClick={() => onDelete(row.original)}
                   />
               </Tooltip>
