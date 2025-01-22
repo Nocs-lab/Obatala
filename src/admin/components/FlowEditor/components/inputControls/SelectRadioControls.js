@@ -9,6 +9,7 @@ import {
 import React, { useState } from "react";
 import * as Yup from "yup";
 import { useFlowContext } from "../../context/FlowContext";
+import { useDrawer } from "../../context/DrawerContext";
 
 // Esquema de validação usando Yup
 const validationSchema = Yup.object().shape({
