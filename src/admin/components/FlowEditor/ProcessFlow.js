@@ -13,10 +13,14 @@ import ProcessControls from "./components/reactFlow/FlowButtons";
 import SlidingDrawer from "./components/SlidingDrawer";
 import { DrawerProvider } from "./context/DrawerContext";
 import { useFlowContext } from "./context/FlowContext";
+import FirstNode from './components/reactFlow/FirstNode';
+import LastNode from './components/reactFlow/LastNode';
 import NodeConditional from "./components/reactFlow/NodeConditional";
 
 const nodeTypes = {
   customNode: NodeContent,
+  firstNode: FirstNode,
+  lastNode: LastNode,
   customNodeConditional: NodeConditional
 };
 

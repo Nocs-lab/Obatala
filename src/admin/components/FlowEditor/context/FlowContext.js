@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
 import { addEdge, useNodesState, useEdgesState } from "@xyflow/react";
 import validateInitialData from "../helpers/dataValidator";
 
@@ -15,6 +15,49 @@ export const FlowProvider = ({ children }) => {
   // Utilizando estados diretamente para nodes e edges
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+
+  //Função para adicionar um nó inicial
+  const addFirstNode = () => {
+    const First = {
+      id: "First",
+      type: "firstNode",
+      dragHandle: ".custom-drag-handle2",
+      position: { x: -150, y: 50 },
+      data: {fields: [],
+        stageName: "First",
+        updateFields: (newFields) => updateFieldsForNode("First", newFields),
+        updateNodeName: (newName) => updateNodeName("First", newName),
+        updatePosition: (newPosition) =>
+          updateNodePosition("First", newPosition),
+      },
+    };
+    setNodes((prevNodes) => [...prevNodes, First]);
+  };
+
+  const addLastNode = () => {
+    const Last = {
+      id: "Last",
+      type: "lastNode",
+      dragHandle: ".custom-drag-handle2",
+      position: { x: 250, y: 50},
+      data: {fields: [],
+        stageName: "Last",
+        updateFields: (newFields) => updateFieldsForNode("Last", newFields),
+        updateNodeName: (newName) => updateNodeName("Last", newName),
+        updatePosition: (newPosition) =>
+          updateNodePosition("Last", newPosition),
+      },
+    };
+    setNodes((prevNodes) => [...prevNodes, Last]);
+  };
+
+  // Verifica se é necessário adicionar o nó inicial
+  useEffect(() => {
+    if (nodes.length === 0) {
+      addFirstNode();
+      addLastNode();
+    }
+  }, [nodes]);
 
   // Função para atualizar os campos de cada nó
   const updateFieldsForNode = (nodeId, newFields) => {
@@ -116,6 +159,7 @@ export const FlowProvider = ({ children }) => {
     onEdgesChange(changes);
   };
 
+  
   // Função para adicionar novos nós
   const addNewNode = () => {
     const count = nodes.filter((node) => node.id.startsWith("Etapa")).length;
@@ -280,6 +324,8 @@ export const FlowProvider = ({ children }) => {
     errors,
     onExport,
     onImport,
+    addFirstNode,
+    addLastNode,
   };
 
   return <FlowContext.Provider value={value}>{children}</FlowContext.Provider>;

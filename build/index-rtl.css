@@ -1,3 +1,6 @@
+/*!************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./css/react-flow.css ***!
+  \************************************************************************************************************************************************************************/
 /* this gets exported as style.css and can be used for the default theming */
 /* these are the necessary styles for React/Svelte Flow, they get used by base.css and style.css */
 
@@ -11,12 +14,14 @@
     'flow flow';
   grid-template-rows: max-content;
   height: 70vh;
-  margin-left: var(--gap-external);
   margin-right: var(--gap-external);
+  margin-left: var(--gap-external);
   padding: var(--gap);
   width: calc(100% - (2 * var(--gap-external)));
 }
 .flow-container > h3 {
+  -ms-grid-row: 1;
+  -ms-grid-column: 1;
   font-size: 1.25rem;
   font-weight: 300;
   grid-area: title;
@@ -24,16 +29,21 @@
   margin-bottom: 0;
 }
 .flow-container .components-button-group {
+  -ms-grid-row: 1;
+  -ms-grid-column: 3;
   grid-area: buttons;
   justify-self: end;
 }
 .flow-content {
+  -ms-grid-row: 3;
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 3;
   grid-area: flow;
 }
 
 /* Main component */
 .react-flow {
-  direction: ltr;
+  direction: rtl;
 
   --xy-edge-stroke-default: #b1b1b7;
   --xy-edge-stroke-width-default: 1;
@@ -129,8 +139,8 @@
 }
 .react-flow .react-flow__node {
   border-bottom: 3px solid var(--primary);
-  border-top-left-radius: var(--border-radius);
   border-top-right-radius: var(--border-radius);
+  border-top-left-radius: var(--border-radius);
   box-shadow: 0 20px 25px -5px #0000001a,0 8px 10px -6px #0000001a;
   max-width: 320px;
 }
@@ -179,7 +189,7 @@
   width: 100%;
   height: 100%;
   top: 0;
-  left: 0;
+  right: 0;
 }
 .react-flow__pane {
   z-index: 1;
@@ -194,7 +204,7 @@
   cursor: pointer;
 }
 .react-flow__viewport {
-  transform-origin: 0 0;
+  transform-origin: 100% 0;
   z-index: 2;
   pointer-events: none;
 }
@@ -276,7 +286,7 @@ svg.react-flow__connectionline {
 }
 .react-flow__nodes {
   pointer-events: none;
-  transform-origin: 0 0;
+  transform-origin: 100% 0;
 }
 .react-flow__node {
   position: absolute;
@@ -284,7 +294,7 @@ svg.react-flow__connectionline {
      -moz-user-select: none;
           user-select: none;
   pointer-events: all;
-  transform-origin: 0 0;
+  transform-origin: 100% 0;
   box-sizing: border-box;
   cursor: default;
 }
@@ -300,7 +310,7 @@ svg.react-flow__connectionline {
   }
 .react-flow__nodesselection {
   z-index: 3;
-  transform-origin: left top;
+  transform-origin: right top;
   pointer-events: none;
 }
 .react-flow__nodesselection-rect {
@@ -328,24 +338,24 @@ svg.react-flow__connectionline {
 }
 .react-flow__handle-bottom {
   top: auto;
-  left: 50%;
+  right: 50%;
   bottom: 0;
-  transform: translate(-50%, 50%);
+  transform: translate(50%, 50%);
 }
 .react-flow__handle-top {
   top: 0;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  right: 50%;
+  transform: translate(50%, -50%);
 }
 .react-flow__handle-left {
   top: 50%;
-  left: 0;
-  transform: translate(-50%, -50%);
+  right: 0;
+  transform: translate(50%, -50%);
 }
 .react-flow__handle-right {
   top: 50%;
-  right: 0;
-  transform: translate(50%, -50%);
+  left: 0;
+  transform: translate(-50%, -50%);
 }
 .react-flow__edgeupdater {
   cursor: move;
@@ -363,14 +373,14 @@ svg.react-flow__connectionline {
   bottom: 0;
 }
 .react-flow__panel.left {
-  left: 0;
-}
-.react-flow__panel.right {
   right: 0;
 }
+.react-flow__panel.right {
+  left: 0;
+}
 .react-flow__panel.center {
-  left: 50%;
-  transform: translateX(-50%);
+  right: 50%;
+  transform: translateX(50%);
 }
 .react-flow__attribution {
   font-size: 10px;
@@ -395,14 +405,14 @@ svg.react-flow__connectionline {
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
-  left: 0;
+  right: 0;
   top: 0;
 }
 .react-flow__viewport-portal {
   position: absolute;
   width: 100%;
   height: 100%;
-  left: 0;
+  right: 0;
   top: 0;
   -webkit-user-select: none;
      -moz-user-select: none;
@@ -589,11 +599,11 @@ svg.react-flow__connectionline {
 }
 .react-flow__resize-control.top.left,
 .react-flow__resize-control.bottom.right {
-  cursor: nwse-resize;
+  cursor: nesw-resize;
 }
 .react-flow__resize-control.bottom.left,
 .react-flow__resize-control.top.right {
-  cursor: nesw-resize;
+  cursor: nwse-resize;
 }
 
 /* handle styles */
@@ -603,35 +613,35 @@ svg.react-flow__connectionline {
   border: 1px solid #fff;
   border-radius: 1px;
   background-color: var(--xy-resize-background-color, var(--xy-resize-background-color-default));
-  transform: translate(-50%, -50%);
+  transform: translate(50%, -50%);
 }
 .react-flow__resize-control.handle.left {
-  left: 0;
+  right: 0;
   top: 50%;
 }
 .react-flow__resize-control.handle.right {
-  left: 100%;
+  right: 100%;
   top: 50%;
 }
 .react-flow__resize-control.handle.top {
-  left: 50%;
+  right: 50%;
   top: 0;
 }
 .react-flow__resize-control.handle.bottom {
-  left: 50%;
+  right: 50%;
   top: 100%;
 }
 .react-flow__resize-control.handle.top.left {
-  left: 0;
+  right: 0;
 }
 .react-flow__resize-control.handle.bottom.left {
-  left: 0;
+  right: 0;
 }
 .react-flow__resize-control.handle.top.right {
-  left: 100%;
+  right: 100%;
 }
 .react-flow__resize-control.handle.bottom.right {
-  left: 100%;
+  right: 100%;
 }
 
 /* line styles */
@@ -643,23 +653,23 @@ svg.react-flow__connectionline {
 .react-flow__resize-control.line.left,
 .react-flow__resize-control.line.right {
   width: 1px;
-  transform: translate(-50%, 0);
+  transform: translate(50%, 0);
   top: 0;
   height: 100%;
 }
 .react-flow__resize-control.line.left {
-  left: 0;
-  border-left-width: 1px;
+  right: 0;
+  border-right-width: 1px;
 }
 .react-flow__resize-control.line.right {
-  left: 100%;
-  border-right-width: 1px;
+  right: 100%;
+  border-left-width: 1px;
 }
 .react-flow__resize-control.line.top,
 .react-flow__resize-control.line.bottom {
   height: 1px;
   transform: translate(0, -50%);
-  left: 0;
+  right: 0;
   width: 100%;
 }
 .react-flow__resize-control.line.top {
@@ -679,15 +689,17 @@ svg.react-flow__connectionline {
 
 /* custom handle */
 .custom-drag-handle {
- /border-top-left-radius: var(--border-radius);
   border-top-right-radius: var(--border-radius);
+  border-top-left-radius: var(--border-radius);
   min-height: 20px;
   background-color: var(--white);
   background-size: 12.73px 12.73px;
   cursor: drag;
   text-align: center;
   color: var(--primary-600);
-  user-select: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -708,7 +720,9 @@ svg.react-flow__connectionline {
   color: var(--primary-300);
   font-size: 14px;
   font-weight: bold;
-  user-select: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
 }
 
 .custom-drag-handle2.node-last {
@@ -724,7 +738,9 @@ svg.react-flow__connectionline {
   color: var(--primary-300);
   font-size: 14px;
   font-weight: bold;
-  user-select: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
   position: relative;
 }
 
@@ -745,22 +761,6 @@ svg.react-flow__connectionline {
   height: 100%;
 }
 
-/* custom conditional */
-.bpmn-conditional-operator {
-  width: 100px; /* Largura do losango */
-  height: 100px; /* Altura do losango */
-  transform: rotate(45deg); /* Rotação para formar um losango */
-  border: 4px solid black; /* Borda do losango */
-  background-color: white; /* Fundo branco */
-  cursor: drag;
-  text-align: center;
-  color: var(--primary-600);
-  user-select: none;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  min-height: 20px;
-}
 /* custom handle buttons */
 .btn {
   height: 12px;
@@ -771,15 +771,15 @@ svg.react-flow__connectionline {
   width: 12px;
 }
 .btn:last-child {
-  margin-right: 0;
+  margin-left: 0;
 }
 .btn:before,
 .btn:after {
   content: "";
   position: absolute;
   top: 100%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  right: 50%;
+  transform: translate(50%, -50%);
   border-radius: 4px;
   opacity: 0;
   transition: all 300ms ease-in-out;
@@ -801,10 +801,10 @@ svg.react-flow__connectionline {
   background: var(--white);
 }
 .close-btn:before {
-  transform: translate(-50%, -50%) rotate(45deg);
+  transform: translate(50%, -50%) rotate(-45deg);
 }
 .close-btn:after {
-  transform: translate(-50%, -50%) rotate(-45deg);
+  transform: translate(50%, -50%) rotate(45deg);
 }
 
 /* List of fields */
@@ -822,12 +822,12 @@ svg.react-flow__connectionline {
   justify-content: space-between;
   font-size: .65rem;
   gap: .5rem;
-  padding: .5rem .2rem .5rem .5rem;
+  padding: .5rem .5rem .5rem .2rem;
 }
 .flow-fields .step-label {
   font-size: .9rem;
   line-height: 1.1em;
-  margin-right: auto;
+  margin-left: auto;
 }
 .flow-fields .components-button-group {
   display: inline-flex;
@@ -847,9 +847,9 @@ svg.react-flow__connectionline {
 /* Add fields */
 .node-meta-container {
   background-color: var(--white);
-  border-left: 3px solid var(--primary-500);
-  border-top-right-radius: var(--border-radius);
-  border-bottom-right-radius: var(--border-radius);
+  border-right: 3px solid var(--primary-500);
+  border-top-left-radius: var(--border-radius);
+  border-bottom-left-radius: var(--border-radius);
   box-shadow: 0 20px 25px -5px #0000001a, 0 8px 10px -6px #0000001a;
   max-width: 50%;
   padding: 2rem;    
@@ -889,7 +889,7 @@ svg.react-flow__connectionline {
   padding: 1rem;
   position: absolute;
   top: 0;
-  left: 0;  
+  right: 0;  
   width: 33%;
   z-index: 1100;
 }
@@ -958,3 +958,4 @@ svg.react-flow__connectionline {
 .edgebutton:hover {
   box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.08);
 }
+
