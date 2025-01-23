@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import NodeHandle from "./NodeHandle";
 import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { useFlowContext } from "../../context/FlowContext";
 import { Tooltip } from "@wordpress/components";
@@ -45,11 +44,6 @@ const NodeConditional = (node) => {
     };
   }, []);
 
-  // Função para fechar a toolbar
-  const handleCancel = () => {
-    setIsVisibleToolbar(false);
-  };
-
   // Função para verificar se o valor já foi selecionado
   const isValueSelected = (value) => {
     return selectedFields.some((field) => field.value === value);
@@ -71,8 +65,26 @@ const NodeConditional = (node) => {
     });
   };
 
-  return (
+  // Função para verificar os campos antes de salvar
+  const handleSave = () => {
+    // Verifica se todos os selects estão preenchidos
+    const areAllFieldsFilled = matchedEdgeOutput.every(
+      (edge, index) => selectedFields[index]?.value
+    );
 
+    if (!selectedField) {
+      alert("Please select a field for the first line.");
+      return;
+    }
+
+    if (!areAllFieldsFilled) {
+      alert("Please fill out all select fields before saving.");
+      return;
+    }
+  };
+
+
+  return (
     <div 
       ref={containerRef} 
       className="bpmn-conditional-operator custom-drag-handle" 
@@ -92,7 +104,7 @@ const NodeConditional = (node) => {
             position: "absolute",
             top: "50px",
             right: "10px",
-            width: "600px",
+            width: "700px",
             backgroundColor: "#fff",
             padding: "20px",
             boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
@@ -110,23 +122,27 @@ const NodeConditional = (node) => {
           <h1>Output Stages:</h1>
           {matchedEdgeOutput.map((edge, index) => (
             <h1 key={index}>
-              If
-              <select
-                value={selectedField}
-                onChange={(e) => {
-                  setSelectedField(e.target.value);
-                  // Atualiza todos os campos com o novo selectedField
-                  setSelectedFields((prev) => prev.map((field) => ({ ...field, field: e.target.value })));
-                }}
-                style={{ margin: "0 10px" }}
-              >
-                <option value="" disabled>Select a field</option>
-                {radioFields.map((field, fieldIndex) => (
-                  <option key={fieldIndex} value={field.config?.label || field.title || field.id}>
-                    {field.config?.label || field.title || field.id}
-                  </option>
-                ))}
-              </select>
+              {index === 0 && "If"} {/* Exibe "If" apenas na primeira linha */}
+              {index === 0 ? (
+                <select
+                  value={selectedField}
+                  onChange={(e) => {
+                    setSelectedField(e.target.value);
+                    // Atualiza todos os campos com o novo selectedField
+                    setSelectedFields((prev) => prev.map((field) => ({ ...field, field: e.target.value })));
+                  }}
+                  style={{ margin: "0 10px" }}
+                >
+                  <option value="" disabled>Select a field</option>
+                  {radioFields.map((field, fieldIndex) => (
+                    <option key={fieldIndex} value={field.config?.label || field.title || field.id}>
+                      {field.config?.label || field.title || field.id}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <span style={{ margin: "0 100px" }}></span>
+              )}
               receives
               <select
                 value={selectedFields[index]?.value || ""}
@@ -150,6 +166,20 @@ const NodeConditional = (node) => {
             </h1>
           ))}
           <hr />
+          <button
+            onClick={handleSave} // Chama a função de verificação
+            style={{
+              padding: "10px 20px",
+              backgroundColor: "#4CAF50",
+              color: "#fff",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+              fontSize: "16px",
+            }}
+          >
+            Save
+          </button>
         </div>
       )}
     </div>
