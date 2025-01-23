@@ -1,10 +1,10 @@
 import React, { useState, useMemo } from 'react';
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
 import { Button, ButtonGroup, Icon, Tooltip, Panel, PanelHeader, PanelRow, Notice, TextControl } from '@wordpress/components';
-import { edit, trash, yes, no } from '@wordpress/icons';
+import { edit, trash, layout } from '@wordpress/icons';
 import { format } from 'date-fns';
 
-const ProcessTypeList = ({ processTypes, onEdit, onDelete }) => {
+const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager }) => {
     const columns = useMemo(() => [
         {
             Header: 'Title',
@@ -21,30 +21,43 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete }) => {
         },
         {
             Header: 'Number of Steps',
-            accessor: 'meta.step_order',
+            accessor: 'meta.flowData.nodes',
             Cell: ({ value }) => (value ? value.length : 0),
+        },
+        {
+            Header: 'Status',
+            accessor: 'meta.status[0]',
+            Cell: ({ value }) => (
+                <span className={`badge ${value === 'Active' ? 'success' : 'error'}`}>{value}</span>
+            ),
         },
         {
             Header: 'Actions',
             accessor: 'id',
             Cell: ({ row }) => (
                 <ButtonGroup>
-                    <Tooltip text="Edit">
+                    <Tooltip text='Manage steps'>
+                        <Button
+                            icon={<Icon icon={layout}/>}
+                            onClick={() => onManager(row.original.id)}
+                        >Manage steps</Button>
+                    </Tooltip>
+                    <Tooltip text="Edit general data">
                         <Button
                             icon={<Icon icon={edit} />}
-                            onClick={() => onEdit(row.original.id)}
+                            onClick={() => onEdit(row.original)}
                         />
                     </Tooltip>
-                    <Tooltip text="Delete">
+                    <Tooltip text="Delete process model">
                         <Button
                             icon={<Icon icon={trash} />}
-                            onClick={() => onDelete(row.original.id)}
+                            onClick={() => onDelete(row.original)}
                         />
                     </Tooltip>
                 </ButtonGroup>
             ),
         },
-    ], [onEdit, onDelete]);
+    ], [onEdit, onDelete, onManager]);
 
     const data = useMemo(() => processTypes, [processTypes]);
 
@@ -76,7 +89,7 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete }) => {
     return (
         <Panel>
             <PanelHeader>
-                <h3>Existing Process Types</h3>
+                <h3>Existing process models</h3>
                 <span className="badge">{processTypes.length}</span>
             </PanelHeader>
             <PanelRow>
@@ -85,6 +98,7 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete }) => {
                     value={globalFilter || ''}
                     onChange={value => setGlobalFilter(value)}
                     placeholder="Search by title or description"
+                    type="search"
                 />
                 {processTypes.length > 0 ? (
                     <>
@@ -148,7 +162,7 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete }) => {
                         </div>
                     </>
                 ) : (
-                    <Notice isDismissible={false} status="warning">No existing process types.</Notice>
+                    <Notice isDismissible={false} status="warning">No existing process models.</Notice>
                 )}
             </PanelRow>
         </Panel>

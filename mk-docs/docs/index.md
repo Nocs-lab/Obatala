@@ -1,246 +1,210 @@
-# Documentação do Plugin Obatala
+# Documentação do Plugin
 
 ## Visão Geral
 
-O plugin Obatala foi desenvolvido para gerenciar processos curatoriais dentro da plataforma WordPress, utilizando as funcionalidades do plugin Tainacan, um sistema avançado de gestão de coleções digitais. Este documento serve como um estudo de caso detalhado sobre como o plugin foi estruturado, abordando desde a gestão de permissões até a integração com a API do Tainacan.
+O plugin foi desenvolvido para gerenciar funcionalidades administrativas e de interface dentro da plataforma WordPress. Este documento detalha as classes principais que compõem o sistema, como `AdminMenu`, `Enqueuer` e `SettingsPage`, explicando suas responsabilidades e interações.
 
 ## Conceitos Envolvidos
 
-### Custom Post Type para Processos Curatoriais
+### Gerenciamento de Menus Administrativos
 
-O plugin define um tipo de post personalizado, `processos`, para lidar com os dados curatoriais. Cada processo é uma instância desse tipo de post, o que permite o uso de funcionalidades nativas do WordPress, como a edição, exclusão, e visualização em uma interface padronizada.
+A classe `AdminMenu` é responsável por gerenciar a adição de menus no painel administrativo do WordPress. Estes menus permitem que os administradores acessem páginas de configuração e funcionalidades específicas do plugin.
 
-### Metadatum e Collection do Tainacan
+### Enfileiramento de Scripts e Estilos
 
-Não definido
+A classe `Enqueuer` lida com o enfileiramento de scripts e estilos (JavaScript e CSS) necessários para o funcionamento correto do plugin tanto no front-end quanto no back-end.
 
-### Gerenciamento de Permissões Personalizadas
+### Páginas de Configuração
 
-O plugin implementa um sistema de permissões que define quem pode visualizar, criar, editar ou deletar os processos curatoriais. Isso é realizado através da definição de capacidades específicas dentro do WordPress, garantindo que apenas usuários autorizados tenham acesso a essas funcionalidades.
+A classe `SettingsPage` é responsável por criar e gerenciar as páginas de configuração do plugin dentro do painel administrativo, onde o usuário pode ajustar as opções e salvar suas preferências.
 
-### Taxonomias para Organização
-
-Taxonomias personalizadas são usadas para categorizar e organizar os processos curatoriais. Essas taxonomias ajudam na filtragem e na busca dentro do sistema, facilitando o gerenciamento de grandes volumes de dados.
-
-### Interface de Usuário e AJAX
-
-O plugin faz uso intenso de AJAX para a interação com a interface de usuário, proporcionando uma experiência fluida e dinâmica sem a necessidade de recarregar a página. Isso é especialmente importante em sistemas de gerenciamento de conteúdo onde a eficiência e a velocidade são cruciais.
-
-## Diagrama de Caso de Uso
-
-```mermaid
-flowchart LR
-    Curador -->|Criar Processo| CriarP[("Criar Processo")]
-    Curador -->|Editar Processo| EditarP[("Editar Processo")]
-    Curador -->|Visualizar Processo| VisualizarP[("Visualizar Processo")]
-    Administrador -->|Configurar Permissões| ConfigPerm[("Configurar Permissões")]
-    Administrador -->|Gerenciar Taxonomias| GerenciarT[("Gerenciar Taxonomias")]
-    Sistema -->|Processar Requisições AJAX| ProcAJAX[("Processar Requisições AJAX")]
-    Sistema -->|Persistir Dados| PersistirD[("Persistir Dados")]
-
-    CriarP -->|Extend| GerenciarT
-    EditarP -->|Extend| GerenciarT
-    VisualizarP -->|Extend| ProcAJAX
-
-```
-
-Este diagrama ilustra os principais casos de uso envolvendo diferentes atores dentro do sistema. Ele destaca como os curadores interagem com o sistema para criar, editar e visualizar processos, enquanto os administradores configuram permissões e gerenciam taxonomias. O sistema é responsável por processar as requisições AJAX e persistir os dados.
-
-## Defesa do Projeto
-
-A escolha de integrar o plugin Obatala com o Tainacan justifica-se pela robustez do Tainacan na gestão de coleções e metadados, o que é essencial para o gerenciamento de processos curatoriais complexos. O uso de AJAX e a customização de permissões proporcionam uma interface segura, eficiente e amigável para os usuários.
-
-A implementação de taxonomias personalizadas e o uso de tipos de post customizados garantem que o plugin seja flexível e adaptável às necessidades específicas do gerenciamento curatorial, facilitando a expansão e a customização futura.
-
-Este documento fornece uma visão clara e detalhada do funcionamento e da estrutura do plugin Obatala, servindo como um guia para desenvolvedores, administradores e curadores que irão trabalhar com o sistema.
-
-## Explicação do Diagrama de Classes do Plugin Obatala
-
-O diagrama de classes anexo ilustra uma visão simplificada da organização do plugin e o relacionamento entre as diversas entidades figurantes.
-
-### Explicação do Diagrama de Classes do Plugin Obatala
-
-O diagrama de classes abaixo ilustra a estrutura e as interações entre os principais componentes do plugin Obatala para WordPress. Este plugin é utilizado para a gestão de processos curatoriais, integrando funcionalidades do Tainacan com a flexibilidade dos custom post types do WordPress.
+## Diagrama de Classes
 
 ```mermaid
 classDiagram
-    class Processo {
-        Um tipo de post para 
-        organização de processos
-        onde as etapas são agrupadas
+    class AdminMenu {
+        +init() void
+        +add_admin_pages() void
+        +render_main_page() void
+        +render_page() void
+        +enqueue_scripts() void
+        -pages array
     }
 
-    class TipoProcesso{
-        Um tipo de post que serve
-        como mock para os processos
+    class Enqueuer {
+        +init() void
+        +enqueue_admin_scripts(hook) void
+        -pages array
     }
 
-    class Setor {
-        User roles com permissões
-        customizadas
+    class SettingsPage {
+        +register_settings() void
+        +create_settings_page() void
+        +some_setting_field_render() void
+        +enable_feature_field_render() void
+        +api_key_field_render() void
+        -some_setting string
+        -enable_feature bool
+        -api_key string
     }
 
-    class Colecao {
-        Uma coleção
-        do Tainacan
-    }
-
-    class Item {
-        Um item de coleção
-        do Tainacan
-    }
-
-    class Etapa {
-        Um tipo de post que
-        recebe campos customizados
-        dinamicamente criados
-    }
-
-    class Notificacao {
-        Emails e notificações
-        enviadas ao usuários
-    }
-
-    class Pessoa {
-        Usuários do wordpress
-        com roles do plugin
-    }
-
-    class Arquivo {
-        Anexos de posts
-        padrão wordpress
-    }
-
-    class Comentario {
-        Comentários em posts
-        padrão wordpress
-    }
-    class MetaDado{
-        Campos customizados que se
-        traduzem em formulários
-    }
-
-    
-    Processo "1" -- "*" Item : interage com
-    Processo "1" -- "*" Colecao : interage com
-    
-    Processo "1" -- "*" Notificacao : dispara
-    Processo "1" -- "*" Notificacao : possui
-    Etapa "1" -- "*" Comentario : possui
-    Etapa "1" -- "*" Arquivo : possui
-    
-    
-
-    TipoProcesso "1" -- "*" Processo: obtem modelo do
-    
-    Pessoa "1" -- "*" Setor: pertence a
-    Pessoa "1" -- "*" Comentario : publica
-    Processo "1" -- "*" Arquivo : anexa
-    TipoProcesso "1" -- "*" Etapa: obtem
-    Etapa "*" -- "1" Setor : pertence a
-    MetaDado "*" -- "1" Etapa : possui
-    
-    Colecao "1" -- "*" Item : possui
-
+    AdminMenu --> SettingsPage : registra e exibe
+    Enqueuer --> AdminMenu : enfileira scripts/estilos
+    SettingsPage --> AdminMenu : renderiza configuração
 ```
 
-### Descrição das Classes
+## Explicação do Diagrama de Classes
 
-#### **Processo**
-- **Função**: Representa um processo específico que agrupa várias etapas.
-- **Uso**: Este tipo de post é a entidade principal onde os processos são organizados e gerenciados. Cada processo pode interagir com itens e coleções do Tainacan, além de disparar e possuir notificações associadas ao seu progresso.
+O diagrama de classes acima representa as principais interações entre as classes `AdminMenu`, `Enqueuer` e `SettingsPage`.
 
-#### **TipoProcesso**
-- **Função**: Serve como um modelo ou template para a criação de novos processos.
-- **Uso**: Define a estrutura básica de um processo, incluindo uma lista de etapas (`Etapa`). Quando um novo `Processo` é criado, ele herda o modelo do `TipoProcesso`.
+- **AdminMenu**: Gerencia a adição de menus e submenus no painel administrativo do WordPress.
+- **Enqueuer**: Responsável por carregar os scripts e estilos necessários para a interface do plugin.
+- **SettingsPage**: Cria e gerencia as páginas de configuração no painel administrativo, sendo associada diretamente ao menu gerido pela `AdminMenu`.
 
-#### **Setor**
-- **Função**: Representa grupos de usuários com permissões específicas.
-- **Uso**: Usado para definir permissões e organizar usuários (`Pessoa`) em grupos que interagem com as etapas (`Etapa`) do processo.
+## Descrição das Classes
 
-#### **Colecao**
-- **Função**: Representa uma coleção do Tainacan.
-- **Uso**: Cada `Processo` pode interagir com uma ou mais coleções, facilitando a gestão e a visualização dos itens relacionados.
+### AdminMenu
+Classe responsável por gerenciar os menus administrativos do plugin Obatala no WordPress.
 
-#### **Item**
-- **Função**: Representa um item dentro de uma coleção do Tainacan.
-- **Uso**: Os itens são entidades individuais em uma coleção que podem ser associadas a processos, proporcionando um vínculo direto entre os dados curatoriais e os processos.
+#### Função
+Gerencia o menu principal e os submenus, criando páginas de administração para o plugin Obatala no WordPress.
 
-#### **Etapa**
-- **Função**: Representa uma fase ou passo de um processo.
-- **Uso**: Cada `Etapa` armazena campos personalizados (`MetaDado`) que são utilizados na interface do processo. As etapas estão associadas a setores (`Setor`), têm anexos (`Arquivo`) e podem ter comentários (`Comentario`).
+#### Responsabilidades
 
-#### **Notificacao**
-- **Função**: Gera e envia notificações e emails aos usuários.
-- **Uso**: Notificações são enviadas durante a execução do processo para informar os usuários sobre atualizações importantes, como mudanças de status ou conclusão de etapas.
+- **init()**  
+  Método de inicialização principal que adiciona as ações para registrar as páginas de administração (`add_admin_pages`) e enfileirar scripts (`enqueue_scripts`) no painel do WordPress.
 
-#### **Pessoa**
-- **Função**: Representa os usuários do WordPress com funções definidas pelo plugin.
-- **Uso**: Usuários podem pertencer a setores (`Setor`), interagir com processos, adicionar comentários (`Comentario`) e anexar arquivos.
+- **add_admin_pages()**  
+  Adiciona a página principal e submenus ao painel administrativo. Utiliza o array `self::$pages` para definir as configurações de cada item de menu.
 
-#### **Arquivo**
-- **Função**: Anexa documentos ou arquivos ao processo.
-- **Uso**: Arquivos são usados para associar documentos relevantes a processos ou etapas específicos. Eles seguem o padrão de anexos do WordPress.
+  - **Menu Principal**: Cria o menu principal usando as configurações do array `self::$pages['main']`, incluindo título, permissão, ícone e posição.
+  - **Submenus**: Adiciona submenus ao menu principal com as configurações de `self::$pages['submenus']`, permitindo definir permissões e callbacks específicos.
 
-#### **Comentario**
-- **Função**: Registra observações e discussões em posts.
-- **Uso**: Comentários são usados para discussões e observações em processos ou etapas, seguindo o padrão de comentários do WordPress.
+- **render_main_page()**  
+  Exibe a página principal do menu Obatala. Apresenta uma mensagem de boas-vindas e orienta o usuário a selecionar uma opção do submenu.  
+  Inclui um estilo CSS inline para ocultar submenus específicos no menu lateral.
 
-#### **MetaDado**
-- **Função**: Define campos personalizados que se traduzem em formulários.
-- **Uso**: Os metadados especificam os tipos de campos personalizados exibidos nas etapas (`Etapa`). Eles são usados para capturar informações específicas necessárias para cada fase do processo.
+- **render_page()**  
+  Renderiza uma página de administração com base no ID da página atual. Verifica o ID da tela atual e exibe uma div correspondente ao submenu ativo.
 
-### Relações Entre as Classes
+- **enqueue_scripts()**  
+  Enfileira os scripts e estilos necessários para o funcionamento do menu de administração. Adiciona um estilo CSS para garantir que o menu principal e submenus estejam sempre visíveis ao serem selecionados.
 
-1. **Processo e Itens/Coleções**:
-      - Um `Processo` pode interagir com múltiplos `Itens` e `Colecoes` do Tainacan, permitindo a gestão de recursos curatoriais dentro do processo.
+#### Estrutura do Menu
 
-2. **Processo e Notificações**:
-      - Um `Processo` pode disparar e possuir múltiplas `Notificacoes` ao longo de sua execução, mantendo os usuários informados sobre o progresso.
+A estrutura do menu é configurada no atributo `self::$pages` da classe `AdminMenu`, conforme o exemplo a seguir:
 
-3. **Etapa e Comentários/Arquivos**:
-      - Cada `Etapa` pode possuir vários `Comentarios` e `Arquivos`, permitindo interações ricas e a inclusão de documentos importantes.
+```php
+<?php
+  private static $pages = [
+      'main' => [
+          'title' => 'Obatala',
+          'menu_title' => 'Obatala',
+          'capability' => 'manage_options',
+          'slug' => 'obatala-main',
+          'callback' => 'render_main_page',
+          'icon' => 'dashicons-admin-site',
+          'position' => 2
+      ],
+      'submenus' => [
+          [
+              'parent_slug' => 'obatala-main',
+              'title' => 'Process Manager',
+              'menu_title' => 'Process Manager',
+              'capability' => 'manage_options',
+              'slug' => 'process-manager',
+              'callback' => 'render_page',
+              'show_in_menu' => true
+          ],
+          [
+              'parent_slug' => 'obatala-main',
+              'title' => 'Process Viewer',
+              'menu_title' => 'Process Viewer',
+              'capability' => 'read',
+              'slug' => 'process-viewer',
+              'callback' => 'render_page',
+              'show_in_menu' => true
+          ],
+      ]
+  ];
+?>
+```
 
-4. **TipoProcesso e Processos**:
-      - Um `TipoProcesso` serve como modelo para múltiplos `Processos`, definindo sua estrutura e as etapas a serem seguidas.
+### Enqueuer
+Classe responsável por gerenciar o enfileiramento de scripts e estilos no painel administrativo do plugin Obatala no WordPress.
 
-5. **Pessoa e Setor**:
-      - Usuários (`Pessoa`) podem pertencer a um `Setor`, que define suas permissões e seu papel no processo.
+#### Função
+Enfileira os scripts e estilos necessários para as páginas de administração específicas do plugin Obatala, garantindo que recursos como JavaScript e CSS estejam disponíveis quando o usuário acessa as páginas administrativas.
 
-6. **TipoProcesso e Etapas**:
-      - Um `TipoProcesso` define uma lista de `Etapa` que especifica as fases que os processos baseados nesse tipo seguirão.
+#### Responsabilidades
 
-7. **Etapa e Setor**:
-      - Cada `Etapa` pertence a um `Setor`, que define quem tem permissão para interagir com essa etapa.
+- **init()**  
+  Método de inicialização principal que adiciona uma ação para enfileirar scripts (`enqueue_admin_scripts`) no painel administrativo do WordPress.
 
-8. **MetaDado e Etapa**:
-      - `MetaDado` são associados a `Etapa`, definindo os campos personalizados que serão exibidos e preenchidos durante a execução da etapa.
+- **enqueue_admin_scripts($hook)**  
+  Enfileira os scripts e estilos necessários para as páginas administrativas específicas do plugin. Este método verifica se o `$hook` atual corresponde a uma das páginas definidas em `self::$pages`.  
+  Quando uma correspondência é encontrada, são registrados e enfileirados:
 
-9. **Colecao e Itens**:
-      - Uma `Colecao` pode conter múltiplos `Itens`, representando uma coleção de objetos curatoriais gerenciada pelo Tainacan.
+  - **Script Principal do Plugin**: Carrega o JavaScript do plugin a partir do arquivo `build/index.js`, utilizando as dependências e versão especificadas no arquivo `index.asset.php`.
+  
+  - **Estilo Principal do Plugin**: Carrega o arquivo CSS principal do plugin (`css/style.css`) para estilizar as páginas administrativas.
+  
+  - **Estilo React Flow**: Enfileira o estilo do React Flow (`css/react-flow.css`) para garantir a correta renderização de componentes interativos no plugin.
 
-### Subclasses de Administração
+#### Estrutura das Páginas
 
-#### **4. AdminMenu**
-- **Descrição**: Gerencia a adição de menus administrativos no WordPress.
-- **Responsabilidades**:
-  - Registrar páginas de configuração e outras interfaces administrativas relacionadas ao plugin.
+A lista de páginas é armazenada no atributo `self::$pages`, que define os identificadores de páginas específicas para o enfileiramento de recursos.
 
-#### **5. SettingsPage**
-- **Descrição**: Provê uma interface para configuração das opções do plugin.
-- **Responsabilidades**:
-  - Criar e gerenciar campos e seções de configuração.
-  - Salvar e recuperar as configurações do plugin.
+```php
+<?php
+  private static $pages = [
+      'obatala_page_process-manager' => 'process-manager',
+      'obatala_page_process-type-manager' => 'process-type-manager',
+      'obatala_page_process-viewer' => 'process-viewer',
+      'obatala_page_process-step-manager' => 'process-step-manager',
+      'obatala_page_process-type-editor' => 'process-type-editor',
+      'obatala_page_sector_manager' => 'sector_manager'
+  ];
+?>
+```
 
-### Uso de Namespaces e Autoload
+### Classe SettingsPage
+A classe `SettingsPage` é responsável por registrar e renderizar as configurações personalizadas para o plugin Obatala no painel administrativo do WordPress.
 
-O uso de namespaces é essencial para evitar conflitos de nomes com outras partes do WordPress ou outros plugins. O plugin utiliza o namespace `Obatala` para todos os seus componentes. O autoload configurado através do Composer garante que todas as classes sejam carregadas automaticamente conforme necessário, sem a necessidade de `require` ou `include` manual.
+#### Função
+Esta classe facilita a criação de uma página de configurações com campos personalizados, como caixas de texto e checkbox, permitindo que o administrador configure o plugin diretamente pelo painel de administração do WordPress.
 
-### Integração com WordPress e Tainacan
+#### Responsabilidades
 
-- **WordPress Hooks e Filters**: O plugin emprega ganchos (`hooks`) do WordPress para integrar e estender funcionalidades, como adicionar tipos de posts personalizados e alterar o painel administrativo.
-- **Tainacan API**: Aproveita funcionalidades do Tainacan para gerenciar coleções e metadados, assegurando uma integração profunda com este plugin de gestão de coleções digitais. Essa integração é crucial para manter a consistência e eficácia na gestão de processos curatoriais.
+- **register_settings()**  
+  Registra os campos de configuração, agrupando-os em uma seção e adicionando os campos individuais.
 
-### Considerações Finais
+- **some_setting_field_render()**     
+  Renderiza um campo de texto some_setting para ajustes específicos.
 
-Este documento e a descrição correspondente ressaltam a estrutura modular e a extensibilidade do plugin Obatala, evidenciando como ele se integra eficientemente ao ecossistema do WordPress e ao plugin Tainacan. Esta abordagem não apenas facilita o desenvolvimento e a manutenção mas também assegura que o plugin pode ser expandido ou adaptado conforme necessidades futuras.
+- **enable_feature_field_render()**  
+  Renderiza um checkbox enable_feature para ativar ou desativar uma funcionalidade.
+
+- **api_key_field_render()**  
+  Renderiza o campo api_key, permitindo ao administrador inserir uma chave de API.
+
+- **create_settings_page()**  
+  Gera a interface da página de configurações, exibindo o formulário de submissão.
+
+#### Estrutura do Código
+
+Abaixo estão exemplos do código que compõe cada campo de configuração:
+
+#### Estrutura de Registro
+
+```php
+<?php
+  register_setting('obatala_settings_group', 'some_setting');
+  register_setting('obatala_settings_group', 'enable_feature');
+  register_setting('obatala_settings_group', 'api_key');
+?>
+```
+
+## Considerações Finais
+
+Esta documentação detalha a estrutura básica do plugin, explicando como as classes interagem para fornecer funcionalidades administrativas no WordPress. O uso de namespaces e o enfileiramento adequado de scripts garantem que o plugin opere de forma eficiente e compatível com o ambiente do WordPress.

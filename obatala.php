@@ -7,9 +7,8 @@ require_once __DIR__ . '/vendor/autoload.php';
 /*
 	Plugin Name: Obatala - Plugin de Gestão de Processos Curatoriais para WordPress
 	Description: Adiciona funcionalidades de gestão de processos curatoriais para o plugin Tainacan
-	Version: beta.0.1
-	Author: Douglas de Araújo
-	Author URI: github.com/everbero
+	Version: 1.2.33
+	Author: NOCs
 	License: GPLv2 or later
 	Text Domain: obatala
 */
@@ -67,9 +66,8 @@ class Nocs_ObatalaPlugin {
 		\Obatala\Admin\Enqueuer::init();
 
 		// Register the custom post types and taxonomies
-		add_action('init', ['Obatala\Entities\ProcessCollection', 'init']);
-		add_action('init', ['Obatala\Entities\ProcessStepCollection', 'init']);
-		add_action('init', ['Obatala\Entities\ProcessTypeCollection', 'init']);
+		add_action('init', ['Obatala\Entities\Process', 'init']);
+		add_action('init', ['Obatala\Entities\ProcessType', 'init']);
 
 		// Register and enqueue scripts and styles
 		// Register and enqueue scripts and styles
@@ -86,18 +84,15 @@ class Nocs_ObatalaPlugin {
 	private function register_api_endpoints() {
 		$custom_post_type_api = new \Obatala\Api\CustomPostTypeApi();
 		$custom_post_type_api->register();
-		
-		$process_custom_fields = new \Obatala\Api\ProcessCustomFields();
+
+		$process_custom_fields = new \Obatala\Api\ProcessApi();
 		$process_custom_fields->register();
 
-		$custom_metadata_api = new \Obatala\Api\StepMetadataApi();
-		$custom_metadata_api->register();
-
-		$process_step_custom_fields = new \Obatala\Api\ProcessStepCustomFields();
-		$process_step_custom_fields->register();
-
-		$process_type_custom_fields = new \Obatala\Api\ProcessTypeCustomFields();
+		$process_type_custom_fields = new \Obatala\Api\ProcessTypeApi();
 		$process_type_custom_fields->register();
+
+		$sector_api = new \Obatala\Api\SectorApi();
+		$sector_api->register();
 	}
 
 

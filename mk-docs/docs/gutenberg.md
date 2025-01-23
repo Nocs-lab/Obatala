@@ -13,10 +13,10 @@ No arquivo principal `obatala.php`, enfileiramos os scripts necessários para ca
 
 ```php
 <?php
-
-public function admin_enqueue_scripts( $hook ) {
-    \Obatala\Admin\Enqueuer::enqueue_admin_scripts( $hook );
-}
+    public function admin_enqueue_scripts( $hook ) {
+        \Obatala\Admin\Enqueuer::enqueue_admin_scripts( $hook );
+    }
+?>
 ```
 
 ### Passo 2: Registro das Páginas de Administração
@@ -25,25 +25,25 @@ Na classe `AdminMenu`, registramos as páginas de administração. Cada página 
 
 ```php
 <?php
+    namespace Obatala\Admin;
 
-namespace Obatala\Admin;
-
-class AdminMenu {
-    public static function add_admin_pages() {
-        add_menu_page(
-            __('Exemplo', 'obatala'),
-            __('Exemplo', 'obatala'),
-            'manage_options',
-            'exemplo',
-            [self::class, 'funcao_exemplo'],
-            'dashicons-admin-generic',
-            8
-        );
+    class AdminMenu {
+        public static function add_admin_pages() {
+            add_menu_page(
+                __('Exemplo', 'obatala'),
+                __('Exemplo', 'obatala'),
+                'manage_options',
+                'exemplo',
+                [self::class, 'funcao_exemplo'],
+                'dashicons-admin-generic',
+                8
+            );
+        }
+        public static function funcao_exemplo() {
+            echo '<div id="id-exemplo"></div>';
+        }
     }
-    public static function funcao_exemplo() {
-        echo '<div id="id-exemplo"></div>';
-    }
-}
+?>
 ```
 
 ### Passo 3: Enfileiramento Condicional de Scripts
@@ -52,37 +52,37 @@ A classe `Enqueuer` verifica se o hook da página atual corresponde a um dos hoo
 
 ```php
 <?php
+    namespace Obatala\Admin;
 
-namespace Obatala\Admin;
+    class Enqueuer {
+        private static $pages = [
+            'toplevel_page_exemplo' => 'exemplo',
+        ];
 
-class Enqueuer {
-    private static $pages = [
-        'toplevel_page_exemplo' => 'exemplo',
-    ];
+        public static function enqueue_admin_scripts($hook) {
+            if (array_key_exists($hook, self::$pages)) {
+                $asset_file = include OBATALA_PLUGIN_DIR . 'build/index.asset.php';
 
-    public static function enqueue_admin_scripts($hook) {
-        if (array_key_exists($hook, self::$pages)) {
-            $asset_file = include OBATALA_PLUGIN_DIR . 'build/index.asset.php';
+                wp_register_script(
+                    'obatala-admin-scripts',
+                    OBATALA_PLUGIN_URL . 'build/index.js',
+                    $asset_file['dependencies'],
+                    $asset_file['version'],
+                    true
+                );
+                wp_enqueue_script('obatala-admin-scripts');
 
-            wp_register_script(
-                'obatala-admin-scripts',
-                OBATALA_PLUGIN_URL . 'build/index.js',
-                $asset_file['dependencies'],
-                $asset_file['version'],
-                true
-            );
-            wp_enqueue_script('obatala-admin-scripts');
-
-            wp_register_style(
-                'obatala-admin-styles',
-                OBATALA_PLUGIN_URL . 'css/style.css',
-                ['wp-components'],
-                $asset_file['version']
-            );
-            wp_enqueue_style('obatala-admin-styles');
+                wp_register_style(
+                    'obatala-admin-styles',
+                    OBATALA_PLUGIN_URL . 'css/style.css',
+                    ['wp-components'],
+                    $asset_file['version']
+                );
+                wp_enqueue_style('obatala-admin-styles');
+            }
         }
     }
-}
+?>
 ```
 
 ### Passo 4: Renderização com React
@@ -100,7 +100,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (exemploElement) {
         render(<Exemplo />, exemploElement);
     }
-
 });
 ```
 

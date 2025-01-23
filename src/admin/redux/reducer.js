@@ -1,17 +1,20 @@
 export const initialState = {
     isOpen: false, 
-    deleteProcessType: null,
-    deleteStep: null, 
+    processModel: null,
+    sector: null,
+    user: null 
 };
  
 function Reducer(state = initialState, action) {
     switch (action.type) {
-      case 'OPEN_MODAL_PROCESS_TYPE':
-        return { ...state, isOpen: true, deleteProcessType: action.payload };
-      case 'OPEN_MODAL_STEP':
-        return { ...state, isOpen: true, deleteStep: action.payload };
+      case 'OPEN_MODAL_PROCESS_MODEL':
+        return { ...state, isOpen: true, processModel: action.payload };
+      case 'OPEN_MODAL_SECTOR':
+        return { ...state, isOpen: true, sector: action.payload };
+      case 'OPEN_MODAL_USER':
+        return { ...state, isOpen: true, user: action.payload };
       case 'CLOSE_MODAL':
-        return { ...state, isOpen: false, deleteProcessType: null, deleteStep: null };
+        return { ...state, isOpen: false, processModel: null, sector: null, user: null };
       default:
         return state;
     }

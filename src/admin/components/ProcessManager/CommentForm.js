@@ -22,7 +22,7 @@ const CommentForm = ({ stepId }) => {
         })
         .catch((error) => {
             console.error('Error fetching comments:', error);
-            setNotice({ status: 'error', message: 'Error fetching comments.' });
+            //setNotice({ status: 'error', message: 'Error fetching comments.' });
         });
     };
 
@@ -67,7 +67,7 @@ const CommentForm = ({ stepId }) => {
                         value={comment}
                         onChange={(value) => setComment(value)}
                     />
-                    <Button isPrimary onClick={handleCommentSubmit}>Submit</Button>
+                    <Button variant="primary" onClick={handleCommentSubmit}>Submit</Button>
                 </PanelRow>
             </PanelBody>
             {comments.length > 0 && (

@@ -5,31 +5,34 @@ import apiFetch from '@wordpress/api-fetch';
 const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel }) => {
     const [newProcessTitle, setNewProcessTitle] = useState('');
     const [newProcessType, setNewProcessType] = useState('');
-    const [accessLevel, setAccessLevel] = useState('public');
+    const [accessLevel, setAccessLevel] = useState('Public');
     const [notice, setNotice] = useState(null);
     
     useEffect(() => {
         if (editingProcess) {
-            console.log( editingProcess )
-            setAccessLevel(editingProcess.meta.access_level);
+            setAccessLevel(
+                Array.isArray(editingProcess.meta.access_level)
+                ? editingProcess.meta.access_level[0]
+                : editingProcess.meta.access_level
+            );
             setNewProcessTitle(editingProcess.title.rendered);
             setNewProcessType(editingProcess.meta.process_type);
         }
     }, [editingProcess]);
 
-    const handleSaveProcess = async () => {
+    const handleSaveProcess = async (e) => {
+        e.preventDefault();
         if (!newProcessTitle || !newProcessType) {
             setNotice({ status: 'error', message: 'Please provide a title and select a process type.' });
             return;
         }
-    
-        const selectedProcessType = processTypes.find(type => type.id === parseInt(newProcessType));
-    
-        if (!selectedProcessType) {
+        // get process model id
+        const selectedProcessModel = processTypes.find(type => type.id === parseInt(newProcessType));
+        if (!selectedProcessModel) {
             setNotice({ status: 'error', message: 'Invalid process type selected.' });
             return;
         }
-    
+
         const newProcess = {
             title: newProcessTitle,
             status: 'publish',
@@ -38,7 +41,6 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
     
         try {
             let savedProcess;
-    
             if (editingProcess) {
                 // Atualiza o processo
                 savedProcess = await apiFetch({
@@ -54,51 +56,47 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
                     data: newProcess
                 });
             }
+            
+            // get our process type meta fields
+            const metaFields = await apiFetch({ path: `/obatala/v1/process_type/${selectedProcessModel.id}/meta` })
     
-            console.log(savedProcess);
-    
-            const stepOrder = selectedProcessType.meta.step_order || [];
-            const metaFieldsPromises = stepOrder.map(stepId => 
-                apiFetch({ path: `/obatala/v1/process_step/${stepId}/meta` })
-            );
-    
-            const metaFieldsResults = await Promise.all(metaFieldsPromises);
-    
-            const stepOrderWithMeta = stepOrder.map((stepId, index) => ({
-                step_id: stepId,
-                meta_fields: metaFieldsResults[index]
-            }));
-    
-            const metaUpdateData = {
-                step_order: stepOrderWithMeta,
-                process_type: selectedProcessType.id,
-                current_stage: 0,
-                access_level: accessLevel
-            };
-    
-            // Atualiza o meta para o processo 
-            await apiFetch({
-                path: `/obatala/v1/process_obatala/${savedProcess.id}/meta`,
-                method: 'POST',
-                data: metaUpdateData
-            });
+            // Atualiza o meta para o processocom os dados do fluxo
+            if(metaFields.status === 'Inactive'){
+                setNotice({ status: 'error', message:'The process cannot be created because the selected process model is inactive' });
 
-            await apiFetch({
-                path: `/obatala/v1/process_obatala/${savedProcess.id}/process_type`,
-                method: 'POST',
-                data: {process_type: selectedProcessType.id}
-            });
-
+            }else {
+                const metaUpdateData = {
+                    current_stage: 0,
+                    process_type: selectedProcessModel.id,
+                    access_level: accessLevel,
+                    flowData: metaFields.flowData
+                };
+        
+                // Atualiza o meta para o processo 
+                await apiFetch({
+                    path: `/obatala/v1/process_obatala/${savedProcess.id}/meta`,
+                    method: 'POST',
+                    data: metaUpdateData
+                });
     
-            // Atualiza o objeto savedProcess com os metas
-            savedProcess.meta = metaUpdateData;
+                await apiFetch({
+                    path: `/obatala/v1/process_obatala/${savedProcess.id}/process_type`,
+                    method: 'POST',
+                    data: {process_type: selectedProcessModel.id}
+                });
     
-            onProcessSaved(savedProcess);
-            setNewProcessTitle('');
-            setNewProcessType('');
-            setAccessLevel('public');
-            setNotice({ status: 'success', message: editingProcess ? 'Process updated successfully.' : 'Process created successfully.' });
-        } catch (error) {
+        
+                // Atualiza o objeto savedProcess com os metas
+                savedProcess.meta = metaUpdateData;
+                onProcessSaved(savedProcess);
+                setNewProcessTitle('');
+                setNewProcessType('');
+                setAccessLevel('public');
+                setNotice({ status: 'success', message: editingProcess ? 'Process updated successfully.' : 'Process created successfully.' });
+            
+            }          
+    
+           } catch (error) {
             console.error('Error creating process:', error);
             setNotice({ status: 'error', message: 'Error creating process.' });
         }
@@ -109,11 +107,13 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
         onCancel();
         setNewProcessTitle('');
         setNewProcessType('');
-        setAccessLevel('public');
+        setAccessLevel('Public');
     };
 
+    const modelsActives = processTypes.filter((process) => process?.meta?.status[0] === 'Active');
+
     return (
-        <div>
+        <form onSubmit={handleSaveProcess}>
              {notice && (
                 <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
                     {notice.message}
@@ -128,12 +128,16 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
             />
 
             <SelectControl
-                 label="Process Type"
+                 label="Process Model"
                  value={newProcessType}
                  options={[
-                     { label: 'Select a process type...', value: '' },
-                     ...processTypes.map(type => ({ label: type.title.rendered, value: type.id }))
+                     { label: 'Select a process model...', 
+                       value: '', 
+                    },
+                     ...modelsActives.map(type => ({ label: type.title.rendered, value: type.id }))
+                     
                  ]}
+                 
                  onChange={(value) => setNewProcessType(value)}
                  disabled={!!editingProcess}
             />       
@@ -142,17 +146,17 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
                 label="Access Level"
                 value={accessLevel}
                 options={[
-                    { label: 'Public', value: 'public' },
-                    { label: 'Private', value: 'private' }
+                    { label: 'Public', value: 'Public' },
+                    { label: 'Private', value: 'Private' }
                 ]}
                 onChange={(value) => setAccessLevel(value)}
             />
             <div style={{display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px'}}>
                 <Button isSecondary onClick={handleCancel}>Cancel</Button>
-                <Button isPrimary onClick={handleSaveProcess}>Save</Button>
+                <Button isPrimary type="submit">Save</Button>
             </div>
             
-        </div>
+        </form>
      
     );
 };
