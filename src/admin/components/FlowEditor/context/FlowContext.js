@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
 import { addEdge, useNodesState, useEdgesState } from "@xyflow/react";
 import validateInitialData from "../helpers/dataValidator";
-import apiFetch from "@wordpress/api-fetch";
 
 // Cria o contexto para o fluxo
 const FlowContext = createContext();
@@ -17,7 +16,6 @@ export const FlowProvider = ({ children }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-  console.log('nodes', nodes)
   // Função para atualizar os campos de cada nó
   const updateFieldsForNode = (nodeId, newFields) => {
     setNodes((prevNodes) =>
@@ -31,7 +29,6 @@ export const FlowProvider = ({ children }) => {
 
   // Função para remover um campo específico de um nó
   const removeFieldFromNode = (nodeId, fieldId) => {
-    console.log("Removing field", fieldId, "from node", nodeId);
     if (confirm(`Tem certeza que deseja remover o campo ${fieldId} do ${nodeId}?`)) {
     setNodes((prevNodes) =>
       prevNodes.map((node) =>
@@ -50,14 +47,6 @@ export const FlowProvider = ({ children }) => {
 
   // Função para gravar as configurações de um campo específico
   const updateFieldConfig = (nodeId, fieldId, newConfig) => {
-    console.log(
-      "Updating field",
-      fieldId,
-      "from node",
-      nodeId,
-      "with config",
-      newConfig
-    );
     setNodes((prevNodes) =>
       prevNodes.map((node) =>
         node.id === nodeId
@@ -87,7 +76,6 @@ export const FlowProvider = ({ children }) => {
   };
 
   const updateNodeTempSector = (nodeId, newValue) => {
-    console.log('setor: ',newValue);
     setNodes((prevNodes) =>
       prevNodes.map((node) =>
         node.id === nodeId
@@ -241,7 +229,6 @@ export const FlowProvider = ({ children }) => {
       );
     } else {
       setErrors(validationResult.errors);
-      console.error("Validation errors:", validationResult.errors);
     }
   };
 
@@ -271,7 +258,6 @@ export const FlowProvider = ({ children }) => {
       initializeData(importedData);
     } else {
       setErrors(validationResult.errors);
-      console.error("Validation errors:", validationResult.errors);
     }
   };
 
