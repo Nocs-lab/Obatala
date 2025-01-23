@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
 import { addEdge, useNodesState, useEdgesState } from "@xyflow/react";
 import validateInitialData from "../helpers/dataValidator";
-import apiFetch from "@wordpress/api-fetch";
 
 // Cria o contexto para o fluxo
 const FlowContext = createContext();
@@ -73,7 +72,6 @@ export const FlowProvider = ({ children }) => {
 
   // Função para remover um campo específico de um nó
   const removeFieldFromNode = (nodeId, fieldId) => {
-    console.log("Removing field", fieldId, "from node", nodeId);
     if (confirm(`Tem certeza que deseja remover o campo ${fieldId} do ${nodeId}?`)) {
     setNodes((prevNodes) =>
       prevNodes.map((node) =>
@@ -92,14 +90,6 @@ export const FlowProvider = ({ children }) => {
 
   // Função para gravar as configurações de um campo específico
   const updateFieldConfig = (nodeId, fieldId, newConfig) => {
-    console.log(
-      "Updating field",
-      fieldId,
-      "from node",
-      nodeId,
-      "with config",
-      newConfig
-    );
     setNodes((prevNodes) =>
       prevNodes.map((node) =>
         node.id === nodeId
@@ -129,7 +119,6 @@ export const FlowProvider = ({ children }) => {
   };
 
   const updateNodeTempSector = (nodeId, newValue) => {
-    console.log('setor: ',newValue);
     setNodes((prevNodes) =>
       prevNodes.map((node) =>
         node.id === nodeId
@@ -173,7 +162,9 @@ export const FlowProvider = ({ children }) => {
   
   // Função para adicionar novos nós
   const addNewNode = () => {
-    const newNodeId = `Etapa ${nodes.length + 1}`;
+    const count = nodes.filter((node) => node.id.startsWith("Etapa")).length;
+
+    const newNodeId = `Etapa ${count + 1}`;
     const lastNode = nodes[nodes.length - 1];
     const newNodePosition = lastNode
       ? { x: lastNode.position.x + 50, y: lastNode.position.y + 50 }
@@ -182,6 +173,34 @@ export const FlowProvider = ({ children }) => {
     const newNode = {
       id: newNodeId,
       type: "customNode",
+      dragHandle: ".custom-drag-handle",
+      position: newNodePosition,
+      data: {
+        fields: [],
+        stageName: `${newNodeId}`,
+        updateFields: (newFields) => updateFieldsForNode(newNodeId, newFields),
+        updateNodeName: (newName) => updateNodeName(newNodeId, newName),
+        updatePosition: (newPosition) =>
+          updateNodePosition(newNodeId, newPosition),
+      },
+    };
+
+    setNodes((prevNodes) => [...prevNodes, newNode]);
+  };
+
+  // Função para adicionar novos nós
+  const addNewNodeConditional = () => {
+    const count = nodes.filter((node) => node.id.startsWith("Condicional")).length;
+
+    const newNodeId = `Condicional ${count + 1}`;
+    const lastNode = nodes[nodes.length - 1];
+    const newNodePosition = lastNode
+      ? { x: lastNode.position.x + 350, y: lastNode.position.y + 50 }
+      : { x: 50, y: 50 };
+
+    const newNode = {
+      id: newNodeId,
+      type: "customNodeConditional",
       dragHandle: ".custom-drag-handle",
       position: newNodePosition,
       data: {
@@ -213,25 +232,36 @@ export const FlowProvider = ({ children }) => {
   
     if (validationResult.isValid || 1 === 1) {
       setNodes(
-        data.nodes.map(({ id, position, data: nodeData, measured, selected, sector_obatala, sector_history, tempSector }) => ({
-          
-          id,
-          type: "customNode",
-          dragHandle: ".custom-drag-handle",
-          position,
-          data: {
-            fields: nodeData.fields || [],
-            stageName: nodeData.stageName || "",
-            updateFields: (newFields) => updateFieldsForNode(id, newFields),
-            updateNodeName: (newName) => updateNodeName(id, newName),
-            updatePosition: (newPosition) => updateNodePosition(id, newPosition),
-          },
-          sector_obatala: sector_obatala || '',
-          sector_history: sector_history || [],
-          tempSector: sector_obatala ? null : tempSector,
-          measured: measured || { width: 0, height: 0 }, // Inclui a medida
-          selected: selected || false, // Inclui o estado de seleção
-        }))
+        data.nodes.map(
+          ({
+            id,
+            position,
+            type, 
+            data: nodeData,
+            measured,
+            selected,
+            sector_obatala,
+            sector_history,
+            tempSector,
+          }) => ({
+            id,
+            type: type, 
+            dragHandle: ".custom-drag-handle",
+            position,
+            data: {
+              fields: nodeData.fields || [],
+              stageName: nodeData.stageName || "",
+              updateFields: (newFields) => updateFieldsForNode(id, newFields),
+              updateNodeName: (newName) => updateNodeName(id, newName),
+              updatePosition: (newPosition) => updateNodePosition(id, newPosition),
+            },
+            sector_obatala: sector_obatala || "",
+            sector_history: sector_history || [],
+            tempSector: sector_obatala ? null : tempSector,
+            measured: measured || { width: 0, height: 0 }, // Inclui a medida
+            selected: selected || false, // Inclui o estado de seleção
+          })
+        )
       );
       setEdges(
         data.edges.map(({ id, source, target }) => ({
@@ -243,10 +273,8 @@ export const FlowProvider = ({ children }) => {
       );
     } else {
       setErrors(validationResult.errors);
-      console.error("Validation errors:", validationResult.errors);
     }
   };
-  
 
   // Função para exportar os dados do fluxo
   const onExport = () => {
@@ -274,7 +302,6 @@ export const FlowProvider = ({ children }) => {
       initializeData(importedData);
     } else {
       setErrors(validationResult.errors);
-      console.error("Validation errors:", validationResult.errors);
     }
   };
 
@@ -285,6 +312,7 @@ export const FlowProvider = ({ children }) => {
     onEdgesChangeHandler,
     onConnect,
     addNewNode,
+    addNewNodeConditional,
     removeNode,
     initializeData,
     updateFieldsForNode,
