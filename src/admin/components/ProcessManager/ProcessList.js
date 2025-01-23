@@ -85,20 +85,20 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
 
     return (
         <Panel>
-                <PanelHeader>
-                    <h3>Existing Processes</h3>
-                    <span className="badge">{processes.length}</span>
-                </PanelHeader>
-                <PanelRow>
-                    <TextControl
-                        className="mb-1"
-                        value={globalFilter || ''}
-                        onChange={value => setGlobalFilter(value)}
-                        placeholder="Search by title"
-                        type="search"
-                    />
-                    {processes.length > 0 ? (
-                        <>
+            <PanelHeader>
+                <h3>Existing Processes</h3>
+                <span className="badge">{processes.length}</span>
+            </PanelHeader>
+            <PanelRow>
+                <TextControl
+                    className="mb-1"
+                    value={globalFilter || ''}
+                    onChange={value => setGlobalFilter(value)}
+                    placeholder="Search by title"
+                    type="search"
+                />
+                {processes.length > 0 ? (
+                    <>
                         <table {...getTableProps()} className="wp-list-table widefat fixed striped table-view-list">
                             <thead>
                                 {headerGroups.map(headerGroup => {
@@ -158,11 +158,11 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
                             </Button>
                         </div>
                     </>
-                    ) : (
-                        <Notice isDismissible={false} status="warning">No existing processes.</Notice>
-                    )}
-                </PanelRow>
-            </Panel>
+                ) : (
+                    <Notice isDismissible={false} status="warning">No existing processes.</Notice>
+                )}
+            </PanelRow>
+        </Panel>
     );
 };
 

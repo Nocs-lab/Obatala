@@ -82,7 +82,6 @@ const UserManager = ({ sector}) => {
     };
 
     const handleConfirmDelete = (user) => {
-        console.log(user);
         dispatch({type: 'OPEN_MODAL_USER', payload: user})
     };
 
