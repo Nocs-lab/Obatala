@@ -77,53 +77,50 @@ const ProcessFlow = forwardRef(({ initialData, onSave, onCancel,toggleFullScreen
     console.log("Nodes:", nodes, "Edges:", edges);
   }, [nodes, edges]);
 
-  return (
-    <div className="flow-container" id="flow-container" >
-      {errors.length > 0 && (
-        <div style={{ color: "red", padding: "10px" }}>
-          <strong>Validation Errors:</strong>
-          <ul>
-            {errors.map((error, index) => (
-              <li key={index}>{error}</li>
-            ))}
-          </ul>
+    return (
+        <div className="flow-container" id="flow-container">
+            {errors.length > 0 && (
+                <div style={{ color: "red", padding: "10px" }}>
+                    <strong>Validation Errors:</strong>
+                    <ul>
+                        {errors.map((error, index) => (
+                        <li key={index}>{error}</li>
+                        ))}
+                    </ul>
+                </div>
+            )}
+            {openFullScreen && (
+                <ProcessControls
+                    onSave={onSave}
+                    onCancel={onCancel}
+                    toggleFullScreen={toggleFullScreen}
+                />
+            )}
+            <DrawerProvider>
+                <ReactFlow
+                    nodes={nodes.map((node) => ({
+                    ...node,
+                    data: {
+                    ...node.data,
+                    },
+                    }))}
+                    edges={edges}
+                    onNodesChange={onNodesChangeHandler}
+                    onEdgesChange={onEdgesChangeHandler} // Atualiza os edges com as mudanças
+                    onConnect={onConnect} // Conecta nós e atualiza edges
+                    nodeTypes={nodeTypes}
+                    edgeTypes={edgeTypes}
+                    fitView
+                    proOptions={{ hideAttribution: true }}
+                    >
+                    <SlidingDrawer toggleDrawer={toggleDrawer} />
+                    <Controls />
+                    <MiniMap />
+                    <Background />
+                </ReactFlow>
+            </DrawerProvider>
         </div>
-      )}
-      {openFullScreen && (
-          <ProcessControls
-              onSave={onSave}
-              onCancel={onCancel}
-              toggleFullScreen={toggleFullScreen}
-          />
-      )}
-      
-      <div className="flow-content">
-        <DrawerProvider>
-          <ReactFlow
-            nodes={nodes.map((node) => ({
-              ...node,
-              data: {
-              ...node.data,
-              },
-            }))}
-            edges={edges}
-            onNodesChange={onNodesChangeHandler}
-            onEdgesChange={onEdgesChangeHandler} // Atualiza os edges com as mudanças
-            onConnect={onConnect} // Conecta nós e atualiza edges
-            nodeTypes={nodeTypes}
-            edgeTypes={edgeTypes}
-            fitView
-            proOptions={{ hideAttribution: true }}
-            >
-            <SlidingDrawer toggleDrawer={toggleDrawer} />
-            <Controls />
-            <MiniMap />
-            <Background />
-          </ReactFlow>
-        </DrawerProvider>
-      </div>
-    </div>
-  );
+    );
 });
 
 export default ProcessFlow;

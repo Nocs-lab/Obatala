@@ -17,7 +17,6 @@ export const FlowProvider = ({ children }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-  console.log('nodes', nodes)
   // Função para atualizar os campos de cada nó
   const updateFieldsForNode = (nodeId, newFields) => {
     setNodes((prevNodes) =>
@@ -31,7 +30,6 @@ export const FlowProvider = ({ children }) => {
 
   // Função para remover um campo específico de um nó
   const removeFieldFromNode = (nodeId, fieldId) => {
-    console.log("Removing field", fieldId, "from node", nodeId);
     if (confirm(`Tem certeza que deseja remover o campo ${fieldId} do ${nodeId}?`)) {
     setNodes((prevNodes) =>
       prevNodes.map((node) =>
@@ -50,14 +48,6 @@ export const FlowProvider = ({ children }) => {
 
   // Função para gravar as configurações de um campo específico
   const updateFieldConfig = (nodeId, fieldId, newConfig) => {
-    console.log(
-      "Updating field",
-      fieldId,
-      "from node",
-      nodeId,
-      "with config",
-      newConfig
-    );
     setNodes((prevNodes) =>
       prevNodes.map((node) =>
         node.id === nodeId
@@ -87,7 +77,6 @@ export const FlowProvider = ({ children }) => {
   };
 
   const updateNodeTempSector = (nodeId, newValue) => {
-    console.log('setor: ',newValue);
     setNodes((prevNodes) =>
       prevNodes.map((node) =>
         node.id === nodeId
