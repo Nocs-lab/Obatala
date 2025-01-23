@@ -3,10 +3,8 @@ import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { useFlowContext } from "../../context/FlowContext";
 import { Tooltip } from "@wordpress/components";
 
-
 const NodeConditional = (node) => {
-  const { edges } = useFlowContext();
-  const { nodes } = useFlowContext();
+  const { edges, nodes, removeNode } = useFlowContext();
 
   const matchedEdgeInput = edges.find(edge => edge?.target === node.id);
   const matchedEdgeOutput = edges.filter(edge => edge?.source === node.id);
@@ -118,53 +116,63 @@ const NodeConditional = (node) => {
         >
           <h2>Condition Settings</h2>
           <hr />
-          <h1>Input Stage: {matchedEdgeInput.source}</h1>
+          <h1>Input Stage: {matchedEdgeInput?.source || "No input stage"}</h1>
           <h1>Output Stages:</h1>
-          {matchedEdgeOutput.map((edge, index) => (
-            <h1 key={index}>
-              {index === 0 && "If"} {/* Exibe "If" apenas na primeira linha */}
-              {index === 0 ? (
-                <select
-                  value={selectedField}
-                  onChange={(e) => {
-                    setSelectedField(e.target.value);
-                    // Atualiza todos os campos com o novo selectedField
-                    setSelectedFields((prev) => prev.map((field) => ({ ...field, field: e.target.value })));
-                  }}
-                  style={{ margin: "0 10px" }}
-                >
-                  <option value="" disabled>Select a field</option>
-                  {radioFields.map((field, fieldIndex) => (
-                    <option key={fieldIndex} value={field.config?.label || field.title || field.id}>
-                      {field.config?.label || field.title || field.id}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <span style={{ margin: "0 100px" }}></span>
-              )}
-              receives
-              <select
-                value={selectedFields[index]?.value || ""}
-                onChange={(e) => handleValueChange(index, e.target.value)}
-                style={{ margin: "0 10px" }}
-                disabled={!selectedField}
-              >
-                <option value="" disabled>Select a value</option>
-                {selectedField &&
-                  radioFields
-                    .find((field) => field.config?.label === selectedField)
-                    ?.config?.options
-                    ?.split(",")
-                    .map((option, optionIndex) => (
-                      <option key={optionIndex} value={option.trim()}>
-                        {option.trim()}
+          {matchedEdgeOutput?.length > 0 ? (
+            matchedEdgeOutput.map((edge, index) => (
+              <h1 key={index}>
+                {index === 0 && "If"} {/* Exibe "If" apenas na primeira linha */}
+                {index === 0 ? (
+                  <select
+                    value={selectedField}
+                    onChange={(e) => {
+                      setSelectedField(e.target.value);
+                      // Atualiza todos os campos com o novo selectedField
+                      setSelectedFields((prev) =>
+                        prev.map((field) => ({ ...field, field: e.target.value }))
+                      );
+                    }}
+                    style={{ margin: "0 10px" }}
+                  >
+                    <option value="" disabled>Select a field</option>
+                    {radioFields.map((field, fieldIndex) => (
+                      <option
+                        key={fieldIndex}
+                        value={field.config?.label || field.title || field.id}
+                      >
+                        {field.config?.label || field.title || field.id}
                       </option>
                     ))}
-              </select>
-              , go to {edge.target}
-            </h1>
-          ))}
+                  </select>
+                ) : (
+                  <span style={{ margin: "0 100px" }}></span>
+                )}
+                receives
+                <select
+                  value={selectedFields[index]?.value || ""}
+                  onChange={(e) => handleValueChange(index, e.target.value)}
+                  style={{ margin: "0 10px" }}
+                  disabled={!selectedField}
+                >
+                  <option value="" disabled>Select a value</option>
+                  {selectedField &&
+                    radioFields
+                      .find((field) => field.config?.label === selectedField)
+                      ?.config?.options
+                      ?.split(",")
+                      .map((option, optionIndex) => (
+                        <option key={optionIndex} value={option.trim()}>
+                          {option.trim()}
+                        </option>
+                      ))}
+                </select>
+                , go to {edge.target}
+              </h1>
+            ))
+          ) : (
+            <h1>No output stages</h1>
+          )}
+
           <hr />
           <button
             onClick={handleSave} // Chama a função de verificação
