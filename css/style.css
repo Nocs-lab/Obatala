@@ -75,7 +75,6 @@ h2 small {
   display: block;
   font-size: 1rem;
   font-weight: 300;
-  padding-bottom: .75rem;
 }
 /* #endregion */
 
@@ -113,8 +112,11 @@ h2 small {
 .components-base-control + .components-button {
   margin-top: 1rem;
 }
+.components-base-control.components-checkbox-control {
+  padding-top: 1.1rem;
+}
 .components-base-control__field > label {
-  margin-bottom: 0.1rem;
+  margin-bottom: .1rem;
   text-transform: none;
 }
 .components-button {
@@ -129,17 +131,23 @@ h2 small {
   box-shadow: inset 0 0 0 1px var(--primary);
   color: var(--primary);
 }
+.components-button-group {
+  display: flex;
+}
 .components-button-group .components-button.is-primary {
   border-radius: var(--input-border-radius) !important;
 }
-.components-button-group .components-button:first-child {
+.components-button-group .components-button:first-of-type {
   border-radius: var(--input-border-radius) 0 0 var(--input-border-radius);
 }
-.components-button-group .components-button:last-child {
+.components-button-group .components-button:last-of-type {
   border-radius: 0 var(--input-border-radius) var(--input-border-radius) 0;
 }
-.components-button-group .components-button:only-child {
+.components-button-group .components-button:only-of-type {
   border-radius: var(--input-border-radius);
+}
+.components-button-group .components-dropdown.components-dropdown-menu {
+  margin-left: .5rem;
 }
 form .components-button-group {
   display: flex;
@@ -175,7 +183,7 @@ form .components-button-group .components-button {
   height: 38px;
 }
 form.centered {
-  margin: 2rem auto;
+  margin: 0 auto;
   max-width: 800px;
   width: 100%;
 }
@@ -428,20 +436,7 @@ ol.list-group .list-group-item::before {
   font-family: 'Dashicons';
   font-size: 1.2rem;
 }
-.navigation-point:nth-child(3)::after,
-.navigation-point:nth-child(4)::after,
-.navigation-point:nth-child(5)::after {
-  color: rgba(0, 0, 0, .35);
-  content: '\f110';
-  font-family: 'Dashicons';
-  font-size: 1.2rem;
-  margin-left: auto;
-}
-.navigation-point:nth-child(6) {
-  background-color: var(--gray-200);
-  color: var(--gray-600);
-  cursor: not-allowed;
-}
+
 .components-notice {
   margin-bottom: 2rem;
   padding-top: 0;
@@ -760,12 +755,15 @@ button .components-spinner {
 }
 .title-container {
   display: flex;
-  align-items: center;
+  align-items: end;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 2rem;
-  margin-left: var(--gap-external);
-  margin-right: var(--gap-external);
+  margin: 0 var(--gap-external) 1.5rem;
+}
+.title-container h2 {
+  line-height: 1em;
+  margin-bottom: 0;
 }
 .title-container p {
   font-size: 1rem;
@@ -804,7 +802,7 @@ button .components-spinner {
 }
 .meta-field-wrapper .components-base-control__field > label,
 .meta-field-wrapper .components-input-control__label {
-  font-size: 1rem;
+  font-size: .85rem;
 }
 
 /* Oculta os itens de menu específicos usando classes gerais para o painel de administração */

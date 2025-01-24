@@ -1,66 +1,63 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
 import { Button, ButtonGroup, Icon, Tooltip, Panel, PanelHeader, PanelRow, Notice, TextControl } from '@wordpress/components';
-import { edit, trash, layout } from '@wordpress/icons';
-import { format } from 'date-fns';
+import { edit, seen} from '@wordpress/icons';
 
-const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager }) => {
+const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, processTypes }) => {
     const columns = useMemo(() => [
         {
-            Header: 'Title',
+            Header: 'Process Title',
             accessor: 'title.rendered',
         },
         {
-            Header: 'Description',
-            accessor: 'description',
-        },
-        {
-            Header: 'Created At',
-            accessor: 'date',
-            Cell: ({ value }) => format(new Date(value), 'MM/dd/yyyy'),
-        },
-        {
-            Header: 'Number of Steps',
-            accessor: 'meta.flowData.nodes',
-            Cell: ({ value }) => (value ? value.length : 0),
+            Header: 'Process Model Title',
+            Cell: ({row}) => {
+                const typeMapping = processTypeMappings.find(m => m.processId === row.original.id);
+                const processType = typeMapping ? processTypes.find(type => type.id == typeMapping.processTypeId) : null;
+  
+                return processType ? processType.title.rendered : 'Unknown Model'
+            }
         },
         {
             Header: 'Status',
-            accessor: 'meta.status[0]',
-            Cell: ({ value }) => (
-                <span className={`badge ${value === 'Active' ? 'success' : 'error'}`}>{value}</span>
+            accessor: 'meta.current_stage',
+        },
+        {
+          Header: 'Access Level',
+          accessor: 'meta.access_level',
+          Cell: ({ value }) => (
+  
+              <span className={`badge ${value == 'public' || value == 'Public' ? 'success' : 'warning'}`}>
+                  {value}
+              </span> 
             ),
         },
         {
             Header: 'Actions',
             accessor: 'id',
             Cell: ({ row }) => (
-                <ButtonGroup>
-                    <Tooltip text='Manage steps'>
-                        <Button
-                            icon={<Icon icon={layout}/>}
-                            onClick={() => onManager(row.original.id)}
-                        >Manage steps</Button>
-                    </Tooltip>
-                    <Tooltip text="Edit general data">
-                        <Button
-                            icon={<Icon icon={edit} />}
-                            onClick={() => onEdit(row.original)}
-                        />
-                    </Tooltip>
-                    <Tooltip text="Delete process model">
-                        <Button
-                            icon={<Icon icon={trash} />}
-                            onClick={() => onDelete(row.original)}
-                        />
-                    </Tooltip>
-                </ButtonGroup>
+              <ButtonGroup>
+              <Tooltip text="View">
+                  <Button
+                  icon={<Icon icon={seen} />} 
+                  onClick={() => onViewProcess(row.original.id)}
+                  />
+  
+              </Tooltip>
+              <Tooltip text="Edit">
+                  <Button
+                  icon={<Icon icon={edit} />}
+                  onClick={() => onEdit(row.original)}
+              />
+  
+              </Tooltip>
+          </ButtonGroup>
             ),
         },
-    ], [onEdit, onDelete, onManager]);
-
-    const data = useMemo(() => processTypes, [processTypes]);
-
+    ], [processTypeMappings, processTypes]);
+  
+    const data = useMemo(() => processes, [processes]);
+  
     const {
         getTableProps,
         getTableBodyProps,
@@ -89,18 +86,18 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager }) => {
     return (
         <Panel>
             <PanelHeader>
-                <h3>Existing process models</h3>
-                <span className="badge">{processTypes.length}</span>
+                <h3>Existing Processes</h3>
+                <span className="badge">{processes.length}</span>
             </PanelHeader>
             <PanelRow>
                 <TextControl
                     className="mb-1"
                     value={globalFilter || ''}
                     onChange={value => setGlobalFilter(value)}
-                    placeholder="Search by title or description"
+                    placeholder="Search by title"
                     type="search"
                 />
-                {processTypes.length > 0 ? (
+                {processes.length > 0 ? (
                     <>
                         <table {...getTableProps()} className="wp-list-table widefat fixed striped table-view-list">
                             <thead>
@@ -162,11 +159,11 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager }) => {
                         </div>
                     </>
                 ) : (
-                    <Notice isDismissible={false} status="warning">No existing process models.</Notice>
+                    <Notice isDismissible={false} status="warning">No existing processes.</Notice>
                 )}
             </PanelRow>
         </Panel>
     );
 };
 
-export default ProcessTypeList;
+export default ProcessList;
