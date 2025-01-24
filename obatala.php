@@ -7,8 +7,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 /*
 	Plugin Name: Obatala - Plugin de Gestão de Processos Curatoriais para WordPress
 	Description: Adiciona funcionalidades de gestão de processos curatoriais para o plugin Tainacan
-	Version: 1.2.28
-	Author: Douglas de Araújo
+	Version: 1.3.0
 	Author URI: github.com/everbero
 	License: GPLv2 or later
 	Text Domain: obatala
