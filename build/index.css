@@ -689,7 +689,7 @@ svg.react-flow__connectionline {
 
 /* custom handle */
 .custom-drag-handle {
-  border-top-left-radius: var(--border-radius);
+ /border-top-left-radius: var(--border-radius);
   border-top-right-radius: var(--border-radius);
   min-height: 20px;
   background-color: var(--white);
@@ -761,6 +761,24 @@ svg.react-flow__connectionline {
   height: 100%;
 }
 
+/* custom conditional */
+.bpmn-conditional-operator {
+  width: 100px; /* Largura do losango */
+  height: 100px; /* Altura do losango */
+  transform: rotate(45deg); /* Rotação para formar um losango */
+  border: 4px solid black; /* Borda do losango */
+  background-color: white; /* Fundo branco */
+  cursor: drag;
+  text-align: center;
+  color: var(--primary-600);
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 20px;
+}
 /* custom handle buttons */
 .btn {
   height: 12px;
