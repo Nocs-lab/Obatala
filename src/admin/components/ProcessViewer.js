@@ -202,7 +202,7 @@ const ProcessViewer = () => {
                 [fieldId]: { name: file.name, size: file.size },
             },
         }));
-            
+           
         }else {
             setFormValues(prevValues => ({
                 ...prevValues,
@@ -277,6 +277,7 @@ const ProcessViewer = () => {
         let uploadFailed = false;
     
         if (uploadedFiles[stepId]) {
+            console.log(uploadedFiles[stepId])
             for (const [fieldId, files] of Object.entries(uploadedFiles[stepId])) {
                 if (!files || !Array.isArray(files) || files.length === 0) {
                     continue; 
@@ -294,6 +295,14 @@ const ProcessViewer = () => {
                         method: "POST",
                         body: formData,
                     });
+                    setFormValues(prev => ({
+                        ...prev,
+                        [stepId]: {
+                            ...prev[stepId],
+                            [fieldId]: file.name,
+                        }
+                    }));
+                    
                     setNotice({ status: 'success', message: 'Uploaded successfully.' });
                     setFileInfo({ name: file.name, size: file.size });
                 } catch (error) {
@@ -355,14 +364,22 @@ const ProcessViewer = () => {
     const handleDownload = async (fieldId) => {
         try {
             const stepId = orderedSteps[currentStep].id;
-
+            console.log(uploadedFiles[stepId])
+            const file = 
+            formValues[stepId]?.[fieldId] || 
+            uploadedFiles[stepId]?.[fieldId]?.[0]?.name;
+    
+            if (!file) {
+                setNotice({ status: 'error', message: 'Arquivo não encontrado para download.' });
+                return;
+            }
             const params = new URLSearchParams({
                 id: process.id,
                 user: currentUser.id,
-                file: formValues[orderedSteps[currentStep].id][fieldId] || 
-                      uploadedFiles[orderedSteps[currentStep].id][fieldId]?.[0]?.name,
+                file: file,
                 node_id: stepId 
             });
+            console.log(uploadedFiles[orderedSteps[currentStep].id], formValues[orderedSteps[currentStep].id][fieldId])
             const response = await apiFetch({
                 path: `/obatala/v1/process_type/download?${params}`,
                 method: 'GET',

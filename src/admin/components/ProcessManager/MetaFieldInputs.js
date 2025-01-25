@@ -92,11 +92,12 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
                 <div className="meta-field-wrapper">
                   {isEditable ? (
                     <div >
+                      <p>{field.config?.label ?? "Unknow title"}</p>
                         <FormFileUpload
                             accept=".doc,.docx,.pdf,.jpg,.jpeg,.png"
                             value={value}
                             onChange={(event) => handleChange(event.currentTarget.files)}
-                            label={field.config?.label ?? "Unknow title"}
+                            
                             disabled={!isEditable || noHasPermission}
                             required={field.config?.required ?? false}
                             help={field.config?.helpText}
@@ -116,7 +117,7 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
                     </div>
                   ) : (
                     <div>
-                        <p><strong>Arquivo:</strong></p>
+                        <p><strong>{field.config?.label ?? "Unknow title"}</strong></p>
                         <Button
                               variant="secondary"
                               onClick={() => handleDownload(fieldId)}
