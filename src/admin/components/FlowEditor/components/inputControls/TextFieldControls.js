@@ -15,7 +15,6 @@ import { useDrawer } from "../../context/DrawerContext";
 // Padrões regex predefinidos
 const predefinedPatterns = {
   telefone: "^[0-9]{11}$", // Ex: 11987654321
-  //email: "^[\\w-.]+@[\\w-]+\\.[a-z]{2,}$", // Ex: exemplo@email.com
   cep: "([0-9]{5})(-?)([0-9]{3})", // Ex: 12345-678
 };
 
@@ -173,12 +172,24 @@ export const TextFieldControls = ({
         options={[
           { label: "Selecione um padrão", value: "" },
           { label: "Telefone", value: "telefone" },
-          //{ label: "E-mail", value: "email" },
           { label: "CEP", value: "cep" },
         ]}
         onChange={(value) => {
           const pattern = predefinedPatterns[value] || "";
-          setFormValues((prev) => ({ ...prev, pattern }));
+          setFormValues((prev) => ({
+            ...prev,
+            pattern,
+            required: !!pattern || prev.required,
+            helpText: pattern
+              ? `Formato: ${
+                  value === "telefone"
+                    ? "11987654321"
+                    : value === "cep"
+                    ? "00000-000"
+                    : ""
+                }`
+              : prev.helpText, // Define o texto de ajuda com base no padrão
+          }));
         }}
       />
 
@@ -186,7 +197,20 @@ export const TextFieldControls = ({
         label="Padrão de Validação (Regex)"
         value={formValues.pattern}
         onChange={(value) => {
-          setFormValues((prev) => ({ ...prev, pattern: value }));
+          setFormValues((prev) => ({
+            ...prev,
+            pattern: value,
+            required: value.trim() !== "" || prev.required,
+            helpText: value
+              ? `Formato: ${
+                  value === predefinedPatterns.telefone
+                    ? "11987654321"
+                    : value === predefinedPatterns.cep
+                    ? "00000-000"
+                    : "(Altere no Texto de Ajuda)"
+                }`
+              : prev.helpText, // Define o texto de ajuda se o Regex for alterado
+          }));
           if (value && !isValidRegex(value)) {
             setErrors((prev) => ({
               ...prev,
@@ -200,14 +224,7 @@ export const TextFieldControls = ({
           }
         }}
         placeholder="Digite um padrão de validação (Regex)"
-        help={formValues.pattern ?`Formato: ${
-          formValues.pattern === predefinedPatterns.telefone
-            ? "11987654321"
-            : formValues.pattern === predefinedPatterns.cep
-            ? "00000-000"
-            : "Informe um padrão de regex válido."
-        }`: ""}
-        //help={errors.pattern}
+        help={formValues.helpText}
       />
 
       <TextareaControl
