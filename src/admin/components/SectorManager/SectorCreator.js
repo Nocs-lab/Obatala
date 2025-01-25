@@ -16,7 +16,6 @@ const SectorCreator = ({onSave, editingSector, onCancel}) => {
 
     useEffect(() => {
       if (editingSector) {
-        console.log(editingSector)
           setTitle(editingSector.name);
           setDescription(
             Array.isArray(editingSector.description)
@@ -46,7 +45,6 @@ const SectorCreator = ({onSave, editingSector, onCancel}) => {
                 message: "Sector saved successfully.",
               });
         } catch (error) {
-              console.log(error);
               setNotice({ status: "error", message: "Error saving sector." });
         }
     };

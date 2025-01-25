@@ -5,30 +5,15 @@
 .flow-container {
   background-color: var(--primary-50);
   border-radius: var(--border-radius);
-  display: grid;
-  gap: var(--gap);
-  grid-template-areas: 'title buttons'
-    'flow flow';
-  grid-template-rows: max-content;
   height: 70vh;
   margin-left: var(--gap-external);
   margin-right: var(--gap-external);
   padding: var(--gap);
   width: calc(100% - (2 * var(--gap-external)));
 }
-.flow-container > h3 {
-  font-size: 1.25rem;
-  font-weight: 300;
-  grid-area: title;
-  margin-top: 0;
-  margin-bottom: 0;
-}
-.flow-container .components-button-group {
-  grid-area: buttons;
-  justify-self: end;
-}
-.flow-content {
-  grid-area: flow;
+.flow-container > .components-button-group {
+  justify-content: flex-end;
+  margin-bottom: 1rem;
 }
 
 /* Main component */

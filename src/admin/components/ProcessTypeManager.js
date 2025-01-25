@@ -86,7 +86,6 @@ const ProcessTypeManager = () => {
 
   const handleEditModel = (model) => {
     setEditingProcessType(model);
-    console.log(editingProcessType);
   };
 
   const handleAdd = () => {

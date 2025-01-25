@@ -320,7 +320,6 @@ const ProcessViewer = () => {
                 ...existingMetaData.stageData,
                 [stepId]: { fields, updateAt: new Date(),
                     user: currentUser.name },
-               
             };
     
             await apiFetch({
@@ -332,7 +331,6 @@ const ProcessViewer = () => {
                         ...existingMetaData.submittedStages,
                         [stepId]: true,
                     },
-                    
                 }
             });
     
@@ -406,7 +404,6 @@ const ProcessViewer = () => {
         return sectorUser.includes(stepSector);
     };
 
-
     if (!isLoading && !process) {
         return (
             <Notice status="warning" isDismissible={false}>
@@ -444,7 +441,6 @@ const ProcessViewer = () => {
         return formatDate;
     }
 
-    
     return (
         <main>
            {isLoading ? (
@@ -456,14 +452,16 @@ const ProcessViewer = () => {
                     <span className="brand">
                         <strong>Obatala</strong> Curatorial Process Viewer
                     </span>
-                    <h2>
-                        <small>
-                            Model: {filteredProcessType
-                                ? filteredProcessType.title.rendered
-                                : "Process type title"}
-                        </small>
-                        {process.title?.rendered}
-                    </h2>
+                    <div className="title-container">
+                        <h2>
+                            <small>
+                                Model: {filteredProcessType
+                                    ? filteredProcessType.title.rendered
+                                    : "Process type title"}
+                            </small>
+                            {process.title?.rendered}
+                        </h2>
+                    </div>
                     <div className="badge-container">
                         <span
                             className={`badge ${

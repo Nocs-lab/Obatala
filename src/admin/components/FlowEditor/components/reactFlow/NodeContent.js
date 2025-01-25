@@ -42,7 +42,6 @@ const NodeContent = ({ id, data  = {} }) => {
   const [sector, setSector] = useState(filteredNode?.sector_obatala || '');
   
   useEffect(() => {
-    console.log(filteredNode)
     loadSectors();
   }, []);
 
