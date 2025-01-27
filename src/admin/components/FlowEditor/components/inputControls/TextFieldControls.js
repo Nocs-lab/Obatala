@@ -16,6 +16,14 @@ import { useDrawer } from "../../context/DrawerContext";
 const predefinedPatterns = {
   telefone: "^[0-9]{11}$", // Ex: 11987654321
   cep: "([0-9]{5})(-?)([0-9]{3})", // Ex: 12345-678
+  EvitarAbreviacao: "^[A-ZÁÉÍÓÚÜÑ][A-Za-z0-9áéíóúüñ]*[.]$",
+  CapitalizarInicialNomeProprio: "^([A-Z0-9]){1}(.)*",
+  NaoUsarCapitalizacao: "[a-z]+",
+  NumerosInteirosEfracoesDecimais: "^[0-9]+([.][0-9]+)?$",
+  NaoVazio: ".+",
+  Naoutilizarapostrofo : "^[^']*$",
+  registroHoraMinutosSegundos: "^([0-1]?[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$",
+  registroDiaMêsAno: "^(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[0-2])/[0-9]{4}$",
 };
 
 // Esquema de validação usando Yup
@@ -165,7 +173,7 @@ export const TextFieldControls = ({
         }
         help={errors.maxLength}
       />
-
+    
       <SelectControl
         label="Padrões Comuns"
         value=""
@@ -173,6 +181,14 @@ export const TextFieldControls = ({
           { label: "Selecione um padrão", value: "" },
           { label: "Telefone", value: "telefone" },
           { label: "CEP", value: "cep" },
+          { label: "Evitar abreviação", value: "EvitarAbreviacao" },
+          { label: "Capitalizar Inicial de Nome Próprio", value: "CapitalizarInicialNomeProprio" },
+          { label: "Nao Usar Capitalizacao", value: "NaoUsarCapitalizacao" },
+          { label: "Numeros Inteiros e Fracões Decimais", value: "NumerosInteirosEfracoesDecimais" },
+          { label: "Nao Vazio", value: "NaoVazio" },
+          { label: "Não utilizar apóstrofo", value: "Naoutilizarapostrofo" },
+          { label: "Registro de Hora, Minutos e Segundos", value: "registroHoraMinutosSegundos" },
+          { label: "Registro de Dia, Mês e Ano", value: "registroDiaMêsAno" },
         ]}
         onChange={(value) => {
           const pattern = predefinedPatterns[value] || "";
@@ -186,13 +202,29 @@ export const TextFieldControls = ({
                     ? "11987654321"
                     : value === "cep"
                     ? "00000-000"
+                    : value === "EvitarAbreviacao"
+                    ? "A entrada deve começar com uma letra maiúscula (incluindo caracteres acentuados), seguida por letras, números ou caracteres acentuados, e terminar com um ponto final. Ex: João Silva."
+                    : value === "CapitalizarInicialNomeProprio"
+                    ? "Capitalize as iniciais de nomes próprios e da primeira palavra, para outros termos use letras minúsculas."
+                    : value === "NaoUsarCapitalizacao"
+                    ? "Não use letras maiúsculas. Ex: Nome, Sobrenome"
+                    : value === "NumerosInteirosEfracoesDecimais"
+                    ? "Utilizar números inteiros ou frações decimais. Ex: 123 ou 123.45"
+                    : value === "NaoVazio"
+                    ? "O campo não pode ser vazio."
+                    : value === "Naoutilizarapostrofo"
+                    ? "Não utilizar apóstrofo. Ex: 'olá'"
+                    : value === "registroHoraMinutosSegundos"
+                    ? "Utilizar o formato HH:MM:SS. Ex: 12:34:56"
+                    : value === "registroDiaMêsAno"
+                    ? "Utilizar o formato DD/MM/YYYY. Ex: 31/12/2021, 9/5/2022"
                     : ""
                 }`
               : prev.helpText, // Define o texto de ajuda com base no padrão
           }));
         }}
       />
-
+  
       <TextControl
         label="Padrão de Validação (Regex)"
         value={formValues.pattern}
@@ -208,6 +240,22 @@ export const TextFieldControls = ({
                       ? "11987654321"
                       : value === predefinedPatterns.cep
                       ? "00000-000"
+                      : value === predefinedPatterns.EvitarAbreviacao
+                      ? "A entrada deve começar com uma letra maiúscula (incluindo caracteres acentuados), seguida por letras, números ou caracteres acentuados, e terminar com um ponto final. Ex: João Silva."
+                      : value === predefinedPatterns.CapitalizarInicialNomeProprio
+                      ? "Capitalize as iniciais de nomes próprios e da primeira palavra, para outros termos use letras minúsculas."
+                      : value === predefinedPatterns.NaoUsarCapitalizacao
+                      ? "Não use letras maiúsculas. Ex: Nome, Sobrenome"
+                      : value === predefinedPatterns.NumerosInteirosEfracoesDecimais
+                      ? "Utilizar números inteiros ou frações decimais. Ex: 123 ou 123.45"
+                      : value === predefinedPatterns.NaoVazio
+                      ? "O campo não pode ser vazio."
+                      : value === predefinedPatterns.Naoutilizarapostrofo
+                      ? "Não utilizar apóstrofo. Ex: 'Olá'"
+                      : value === predefinedPatterns.registroHoraMinutosSegundos
+                      ? "Utilizar o formato HH:MM:SS. Ex: 12:34:56"
+                      : value === predefinedPatterns.registroDiaMêsAno
+                      ? "Utilizar o formato DD/MM/YYYY. Ex: 31/12/2021, 9/5/2022"
                       : "(Altere no Texto de Ajuda)"
                   }`
                 : "", // Limpa o texto de ajuda se o campo de regex estiver vazio
