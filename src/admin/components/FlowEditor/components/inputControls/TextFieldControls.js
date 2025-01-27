@@ -197,20 +197,30 @@ export const TextFieldControls = ({
         label="Padrão de Validação (Regex)"
         value={formValues.pattern}
         onChange={(value) => {
-          setFormValues((prev) => ({
-            ...prev,
-            pattern: value,
-            required: value.trim() !== "" || prev.required,
-            helpText: value
-              ? `Formato: ${
-                  value === predefinedPatterns.telefone
-                    ? "11987654321"
-                    : value === predefinedPatterns.cep
-                    ? "00000-000"
-                    : "(Altere no Texto de Ajuda)"
-                }`
-              : prev.helpText, // Define o texto de ajuda se o Regex for alterado
-          }));
+          setFormValues((prev) => {
+            const updatedValues = {
+              ...prev,
+              pattern: value,
+              required: !!value.trim(),
+              helpText: value
+                ? `Formato: ${
+                    value === predefinedPatterns.telefone
+                      ? "11987654321"
+                      : value === predefinedPatterns.cep
+                      ? "00000-000"
+                      : "(Altere no Texto de Ajuda)"
+                  }`
+                : "", // Limpa o texto de ajuda se o campo de regex estiver vazio
+            };
+
+            if (!value.trim()) {
+              // Se o campo de regex for apagado
+              updatedValues.required = false; // Desmarca a obrigatoriedade
+            }
+
+            return updatedValues;
+          });
+
           if (value && !isValidRegex(value)) {
             setErrors((prev) => ({
               ...prev,
