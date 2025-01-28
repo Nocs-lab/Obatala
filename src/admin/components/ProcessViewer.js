@@ -32,9 +32,12 @@ const ProcessViewer = () => {
     const [orderedSteps, setOrderedSteps] = useState([]);
     const [sectors, setSectors] = useState([]);
     const [sectorUser, setSectorUser] = useState([]);
-    const [hasPermission, setHasPermission] = useState(null);
-    const [isPublic, setIsPublic] = useState(null);
+    const [hasPermission, setHasPermission] = useState(false);
+    const [isPublic, setIsPublic] = useState(false);
     const [currentStageData, setCurrentStageData] = useState({});
+    const [uploadedFiles, setUploadedFiles] = useState({});
+    const [fileInfo, setFileInfo] = useState({});
+    const [notice, setNotice] = useState(null);
 
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
     const allAuthors = useSelect(select => select(coreStore).getUsers({ who: 'authors' }), []);
@@ -182,24 +185,42 @@ const ProcessViewer = () => {
 
     const handleFieldChange = (fieldId, newValue) => {
         const stepId = orderedSteps[currentStep].id;
-    
-        // Atualize os valores do formulário
-        setFormValues(prevValues => ({
-            ...prevValues,
+
+        if(newValue instanceof FileList) {
+            const file = newValue[0];
+            setUploadedFiles(prev => ({
+                ...prev,
+                [stepId]:{
+                    ...prev[stepId],
+                    [fieldId]: [file],
+                },
+            }))
+            setFileInfo(prev => ({
+            ...prev,
             [stepId]: {
-                ...prevValues[stepId],
-                [fieldId]: newValue,
+                ...prev[stepId],
+                [fieldId]: { name: file.name, size: file.size },
             },
         }));
-
-        // Verifica se todos os campos da etapa atual foram preenchidos
+           
+        }else {
+            setFormValues(prevValues => ({
+                ...prevValues,
+                [stepId]: {
+                    ...prevValues[stepId],
+                    [fieldId]: newValue,
+                },
+            }));
+        }
+    
+         // Verifica se todos os campos da etapa atual foram preenchidos
         const allFieldsFilled = orderedSteps[currentStep].data.fields.every((field) => {
-            const value = formValues[stepId]?.[field.id] || newValue;
-            return value !== undefined && value !== '';
+        const value = formValues[stepId]?.[field.id] || newValue;
+        return value !== undefined && value !== '';
         });
         setIsStepSubmitEnabled(prevState => ({
-            ...prevState,
-            [currentStep]: allFieldsFilled,
+        ...prevState,
+        [currentStep]: allFieldsFilled,
         }));
 
         setIsSubmitEnabled(formValues);
@@ -243,28 +264,73 @@ const ProcessViewer = () => {
     }, [flowNodes]);
 
     const handleSubmit = async (e) => {
-        setIsLoading(true);
         e.preventDefault();
-
+        setIsLoading(true);
+    
         const stepId = orderedSteps[currentStep].id;
-        
         const fields = orderedSteps[currentStep].data.fields.map(field => ({
             fieldId: field.id,
-            value: formValues[stepId]?.[field.id],
+            value: formValues[stepId]?.[field.id] || uploadedFiles[stepId]?.[field.id]?.[0]?.name,
         }));
-        
+    
+        // Upload de arquivos 
+        let uploadFailed = false;
+    
+        if (uploadedFiles[stepId]) {
+            console.log(uploadedFiles[stepId])
+            for (const [fieldId, files] of Object.entries(uploadedFiles[stepId])) {
+                if (!files || !Array.isArray(files) || files.length === 0) {
+                    continue; 
+                }
+    
+                const file = files[0];
+                const formData = new FormData();
+                formData.append('file', file);
+                formData.append('id', process.id);
+                formData.append('node_id', stepId);
+    
+                try {
+                    const response = await apiFetch({
+                        path: `/obatala/v1/process_type/upload`,
+                        method: "POST",
+                        body: formData,
+                    });
+                    setFormValues(prev => ({
+                        ...prev,
+                        [stepId]: {
+                            ...prev[stepId],
+                            [fieldId]: file.name,
+                        }
+                    }));
+                    
+                    setNotice({ status: 'success', message: 'Uploaded successfully.' });
+                    setFileInfo({ name: file.name, size: file.size });
+                } catch (error) {
+                    setNotice({ status: 'error', message: `Erro ao enviar arquivo para o campo ${fieldId}: ${error}`});
+                    uploadFailed = true;
+                    break; 
+                }
+            }
+    
+            if (uploadFailed) {
+                setIsLoading(false);
+                return; 
+            }
+        }
+    
+        // Salvar metadados
         try {
             const existingMetaData = await apiFetch({
                 path: `/obatala/v1/process_obatala/${process.id}/meta`,
                 method: 'GET',
             });
-
+    
             const updatedStageData = {
                 ...existingMetaData.stageData,
                 [stepId]: { fields, updateAt: new Date(),
                     user: currentUser.name },
             };
-
+    
             await apiFetch({
                 path: `/obatala/v1/process_obatala/${process.id}/meta`,
                 method: 'POST',
@@ -276,25 +342,77 @@ const ProcessViewer = () => {
                     },
                 }
             });
-
+    
             setSubmittedSteps(prev => ({
                 ...prev,
-                [currentStep]: true, 
+                [currentStep]: true,
             }));
 
             setCurrentStageData(prev => ({
                 ...prev,
                 [stepId]: [new Date(), currentUser.name],
             }));
-
-            setIsLoading(false);
-
+    
         } catch (error) {
-            console.error('Error saving metadata:', error);
-            setError('Error saving metadata.');
+            console.error('Erro ao salvar metadados:', error);
+
+        } finally {
+            setIsLoading(false);
         }
     };
 
+    const handleDownload = async (fieldId) => {
+        try {
+            const stepId = orderedSteps[currentStep].id;
+            console.log(uploadedFiles[stepId])
+            const file = 
+            formValues[stepId]?.[fieldId] || 
+            uploadedFiles[stepId]?.[fieldId]?.[0]?.name;
+    
+            if (!file) {
+                setNotice({ status: 'error', message: 'Arquivo não encontrado para download.' });
+                return;
+            }
+            const params = new URLSearchParams({
+                id: process.id,
+                user: currentUser.id,
+                file: file,
+                node_id: stepId 
+            });
+            console.log(uploadedFiles[orderedSteps[currentStep].id], formValues[orderedSteps[currentStep].id][fieldId])
+            const response = await apiFetch({
+                path: `/obatala/v1/process_type/download?${params}`,
+                method: 'GET',
+                parse: false
+            });
+
+            const blob = await response.blob(); 
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+    
+            //Pega nome do arquivo
+            const contentDisposition = response.headers.get('content-disposition');
+            const fileName = contentDisposition
+                ? contentDisposition.split('filename=')[1]?.replace(/"/g, '') || 'download.pdf'
+                : 'download.pdf';
+
+            link.setAttribute('download', fileName);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+            
+        } catch (error) {
+            if(error.status === 403 || error?.error && error?.error ===  'Permissao negada') {
+                setNotice({ status: 'error', message: 'Você não tem permissão para baixar este arquivo.'});
+            }else {
+                setNotice({ status: 'error', message: 'Ocorreu um erro ao tentar baixar o arquivo.'});
+            }
+            console.error('Erro ao tentar baixar o arquivo:', error);
+        } 
+    };
+    
     const isUserInSector = (stepSector) => {
         if (!Array.isArray(sectorUser)) {
             console.error("sectorUser não é um array válido:", sectorUser);
@@ -342,8 +460,10 @@ const ProcessViewer = () => {
 
     return (
         <main>
-            {isLoading ? (
-                <Spinner />
+           {isLoading ? (
+                <>        
+                    <Spinner />
+                </>
             ) :(
                 <>
                     <span className="brand">
@@ -368,8 +488,18 @@ const ProcessViewer = () => {
                             {process.meta.access_level}
                         </span>
                         <span className="badge default"><Icon icon="yes"/> {calculatePercentagem()}% concluído</span>
-                        <span className="badge default"><Icon icon="admin-users"/> Criado por: {authorsById[process?.author]?.name} em {createAtProcess()}</span>
+                        <span className="badge default"><Icon icon="admin-users"/> Criado por:  
+                            {authorsById[process?.author]?.name} em {createAtProcess()}
+                        </span>
                     </div>
+                    {notice && (
+            <div className="notice-container">
+            <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                {notice.message}
+            </Notice>
+            </div>
+        )}
+
 
                     {!isPublic && hasPermission === false ? (
                         <div style={{margin: '50px'}}>
@@ -381,87 +511,92 @@ const ProcessViewer = () => {
                         </div>
                     ) : (
                         <>
-                            {isPublic && hasPermission === false && (
+                        {isPublic && hasPermission === false && (
+                            <div className="notice-container">
+                                <Notice status="warning" isDismissible={false}>
+                                    You can only view this process.
+                                </Notice>
+                            </div>
+                        )}
+                        <div className="panel-container three-columns">
+                            <MetroNavigation
+                                options={options}
+                                currentStep={currentStep}
+                                onStepChange={(newStep) => setCurrentStep(newStep)}
+                                submittedSteps={submittedSteps}
+                            />
+                            <main>
+                            {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
+                                <Panel key={`${orderedSteps[currentStep].id}-${currentStep}`}>
+                                    <PanelHeader>
+                                        <h3>{`${options[currentStep].label}`}</h3>
+                                        <span className="badge default ms-auto">
+                                            Grupo: {getSectorName(options[currentStep].sector_stage)}
+                                        </span>
+                                    </PanelHeader>
+                                    <PanelBody>
+                                        <PanelRow>
+                                            {options[currentStep].fields.length > 0 ? (
+                                                <form className="centered" onSubmit={handleSubmit}>
+                                                    <ul className="meta-fields-list">
+                                                        {Array.isArray(options[currentStep].fields) ? options[currentStep].fields.map((field, idx) => (
+                                                            <li key={`${orderedSteps[currentStep].id}-meta-${idx}`} className="meta-field-item">
+                                                                <MetaFieldInputs 
+                                                                    field={field} 
+                                                                    fieldId={field.id} 
+                                                                    initalValue={formValues[orderedSteps[currentStep].id]?.[field.id] || uploadedFiles[orderedSteps[currentStep].id]?.[field.id]?.[0]?.name}
+                                                                    isEditable={!submittedSteps[currentStep]}
+                                                                    noHasPermission={!isUserInSector(options[currentStep].sector_stage)} 
+                                                                    onFieldChange={handleFieldChange}
+                                                                    fileInfo={fileInfo}
+                                                                    handleDownload={handleDownload}
+                                                                    stepId = {orderedSteps[currentStep].id} 
+                                                                />
+                                                            </li>
+                                                        )) : null}
+                                                    </ul>
+                                                    <div className="action-bar">
+                                                        <Button
+                                                            variant="primary"
+                                                            type="submit"
+                                                            disabled={!isSubmitEnabled || submittedSteps[currentStep] || !isUserInSector(options[currentStep].sector_stage)}
+                                                            >Submit
+                                                        </Button>
+                                                    </div>
+                                                </form>
+                                            ) : (
+                                                <div className="notice-container">
+                                                    <Notice status="warning" isDismissible={false}>
+                                                        No fields found for this Step.
+                                                    </Notice>
+                                                </div>
+                                            )}
+                                        </PanelRow>
+                                        <footer>
+                                            {Object.keys(currentStageData).includes(options[currentStep]?.value) ?
+                                            `Última atualização em ${lastUpdateStage().dateFormat} por ${lastUpdateStage().user}`    
+                                            : 'Sem atualizações no momento'
+                                            }
+                                            
+                                        </footer>
+                                    </PanelBody>
+                                </Panel>
+                            
+                            ) : (
                                 <div className="notice-container">
                                     <Notice status="warning" isDismissible={false}>
-                                        You can only view this process.
+                                    No steps found for this process.
                                     </Notice>
                                 </div>
                             )}
-                            <div className="panel-container three-columns">
-                                <MetroNavigation
-                                    options={options}
-                                    currentStep={currentStep}
-                                    onStepChange={(newStep) => setCurrentStep(newStep)}
-                                    submittedSteps={submittedSteps}
-                                />
-                                <main>
-                                    {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
-                                        <Panel key={`${orderedSteps[currentStep].id}-${currentStep}`}>
-                                            <PanelHeader>
-                                                <h3>{`${options[currentStep].label}`}</h3>
-                                                <span className="badge default ms-auto">
-                                                    Grupo: {getSectorName(options[currentStep].sector_stage)}
-                                                </span>
-                                            </PanelHeader>
-                                            <PanelBody>
-                                                <PanelRow>
-                                                    {options[currentStep].fields.length > 0 ? (
-                                                        <form className="centered" onSubmit={handleSubmit}>
-                                                            <ul className="meta-fields-list">
-                                                                {Array.isArray(options[currentStep].fields) ? options[currentStep].fields.map((field, idx) => (
-                                                                    <li key={`${orderedSteps[currentStep].id}-meta-${idx}`} className="meta-field-item">
-                                                                        <MetaFieldInputs 
-                                                                            field={field} 
-                                                                            fieldId={field.id} 
-                                                                            initalValue={formValues[orderedSteps[currentStep].id]?.[field.id] || ''}
-                                                                            isEditable={!submittedSteps[currentStep]}
-                                                                            noHasPermission={!isUserInSector(options[currentStep].sector_stage)} 
-                                                                            onFieldChange={handleFieldChange} 
-                                                                        />
-                                                                    </li>
-                                                                )) : null}
-                                                            </ul>
-                                                            <div className="action-bar">
-                                                                <Button
-                                                                    variant="primary"
-                                                                    type="submit"
-                                                                    disabled={!isSubmitEnabled || submittedSteps[currentStep] || !isUserInSector(options[currentStep].sector_stage)}
-                                                                    >Submit
-                                                                </Button>
-                                                            </div>
-                                                        </form>
-                                                    ) : (
-                                                        <div className="notice-container">
-                                                            <Notice status="warning" isDismissible={false}>
-                                                                No fields found for this Step.
-                                                            </Notice>
-                                                        </div>
-                                                    )}
-                                                </PanelRow>
-                                                <footer>
-                                                    {Object.keys(currentStageData).includes(options[currentStep]?.value) ?
-                                                    `Última atualização em ${lastUpdateStage().dateFormat} por ${lastUpdateStage().user}`    
-                                                    : 'Sem atualizações no momento'
-                                                    }
-                                                </footer>
-                                            </PanelBody>
-                                        </Panel>
-                                    ) : (
-                                        <div className="notice-container">
-                                            <Notice status="warning" isDismissible={false}>
-                                            No steps found for this process.
-                                            </Notice>
-                                        </div>
-                                    )}
-                                </main>
-                                <aside>
-                                    <Panel>
-                                        <PanelHeader>Comments</PanelHeader>
-                                        <CommentForm stepId={orderedSteps[currentStep]?.id || null} />
-                                    </Panel>
-                                </aside>
-                            </div>
+                            </main>
+                            <aside>
+                                <Panel>
+                                    <PanelHeader>Comments</PanelHeader>
+                                    <CommentForm stepId={orderedSteps[currentStep]?.id || null} />
+                                </Panel>
+                            </aside>
+                        </div>
                         </>
                     )}   
                 </>

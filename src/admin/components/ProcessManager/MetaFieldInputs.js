@@ -1,17 +1,18 @@
 
 import React, { useState} from "react";
 import {
-    TextControl,
-    DatePicker,
-    FormFileUpload,
-    SelectControl,
-    RadioControl,
+  TextControl,
+  DatePicker,
+  FormFileUpload,
+  SelectControl,
+  RadioControl,
+  Button,
 } from "@wordpress/components";
-import { upload } from "@wordpress/icons";
+import { download, upload } from "@wordpress/icons";
 import TainacanSearchControls from "../Tainacan/TainacanSearch";
 
-const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId, initalValue, noHasPermission}) => {
-    const [value, setValue] = useState(initalValue);
+const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId, initalValue, noHasPermission, fileInfo, handleDownload, stepId}) => {
+  const [value, setValue] = useState(initalValue);
 
     const formatDate = (date) => {
         const d = new Date(date);
@@ -86,34 +87,50 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
                     )}
                 </div>
             );
-        case "upload":
-            return (
+            case "upload":
+              return (
                 <div className="meta-field-wrapper">
-                    {isEditable ? (
+                  {isEditable ? (
+                    <div >
+                      <p>{field.config?.label ?? "Unknow title"}</p>
                         <FormFileUpload
-                            accept="image/*"
-                            onChange={(event) => console.log(event.currentTarget.files)}
-                            label={field.config?.label ?? "Unknow title"}
+                            accept=".doc,.docx,.pdf,.jpg,.jpeg,.png"
+                            value={value}
+                            onChange={(event) => handleChange(event.currentTarget.files)}
+                            
                             disabled={!isEditable || noHasPermission}
                             required={field.config?.required ?? false}
                             help={field.config?.helpText}
                             icon={upload}
                             style={{
-                            border: "1px dashed #ccc",
+                              border: "1px dashed #ccc",
                             }}
                         >
                             Upload
                         </FormFileUpload>
-                    ) : (
-                        <dl className="description-list">
-                            <div className="list-item">
-                            <dt>{field.config?.label}</dt>
-                            <dd>{initalValue}</dd>
+      
+                        {fileInfo[stepId]?.[fieldId] && (
+                            <div>
+                                <p><strong>Arquivo:</strong> {fileInfo[stepId][fieldId].name}</p>
                             </div>
-                        </dl>
-                    )}
+                        )}
+                    </div>
+                  ) : (
+                    <div>
+                        <p><strong>{field.config?.label ?? "Unknow title"}</strong></p>
+                        <Button
+                              variant="secondary"
+                              onClick={() => handleDownload(fieldId)}
+                              iconPosition="left"
+                              icon={download}
+                            
+                            >
+                              {initalValue}
+                        </Button>
+                    </div>
+                  )}
                 </div>
-            );
+              );
         case "number":
             return (
                 <div className="meta-field-wrapper">
