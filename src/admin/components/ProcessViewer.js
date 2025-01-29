@@ -18,6 +18,7 @@ import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
+import MetaFieldDisplay from "./ProcessManager/MetaFieldDisplay";
 
 const ProcessViewer = () => {
     const [process, setProcess] = useState(null);
@@ -204,11 +205,13 @@ const ProcessViewer = () => {
         }));
            
         }else {
+            const valueToSave = Array.isArray(newValue) ? newValue : [newValue];
+
             setFormValues(prevValues => ({
                 ...prevValues,
                 [stepId]: {
                     ...prevValues[stepId],
-                    [fieldId]: newValue,
+                    [fieldId]: valueToSave,
                 },
             }));
         }
@@ -216,6 +219,9 @@ const ProcessViewer = () => {
          // Verifica se todos os campos da etapa atual foram preenchidos
         const allFieldsFilled = orderedSteps[currentStep].data.fields.every((field) => {
         const value = formValues[stepId]?.[field.id] || newValue;
+        if (Array.isArray(value)) {
+            return value.length > 0;
+        }
         return value !== undefined && value !== '';
         });
         setIsStepSubmitEnabled(prevState => ({
@@ -457,7 +463,7 @@ const ProcessViewer = () => {
         })
         return formatDate;
     }
-
+    console.log(currentUser)
     return (
         <main>
            {isLoading ? (
@@ -536,7 +542,15 @@ const ProcessViewer = () => {
                                     </PanelHeader>
                                     <PanelBody>
                                         <PanelRow>
+                                            {!isUserInSector(options[currentStep].sector_stage) && (
+                                                <div className="notice-container">
+                                                <Notice status="warning" isDismissible={false}>
+                                                    You can only view this step.
+                                                </Notice>
+                                            </div>
+                                            )}
                                             {options[currentStep].fields.length > 0 ? (
+                                                  !submittedSteps[currentStep] ? (
                                                 <form className="centered" onSubmit={handleSubmit}>
                                                     <ul className="meta-fields-list">
                                                         {Array.isArray(options[currentStep].fields) ? options[currentStep].fields.map((field, idx) => (
@@ -555,15 +569,32 @@ const ProcessViewer = () => {
                                                             </li>
                                                         )) : null}
                                                     </ul>
-                                                    <div className="action-bar">
-                                                        <Button
-                                                            variant="primary"
-                                                            type="submit"
-                                                            disabled={!isSubmitEnabled || submittedSteps[currentStep] || !isUserInSector(options[currentStep].sector_stage)}
-                                                            >Submit
-                                                        </Button>
-                                                    </div>
+                                                    {!submittedSteps[currentStep] && (
+                                                        <div className="action-bar">
+                                                            <Button
+                                                                variant="primary"
+                                                                type="submit"
+                                                                disabled={!isSubmitEnabled || submittedSteps[currentStep] || !isUserInSector(options[currentStep].sector_stage)}
+                                                                >Submit
+                                                            </Button>
+                                                        </div>
+                                                    )}
+                                                   
                                                 </form>
+                                                  ) : (
+                                                    <ul className="meta-fields-list">
+                                                    {Array.isArray(options[currentStep].fields) ? options[currentStep].fields.map((field, idx) => (
+                                                        <li key={`${orderedSteps[currentStep].id}-meta-${idx}`} className="meta-field-item">
+                                                            <MetaFieldDisplay 
+                                                                field={field} 
+                                                                value={formValues[orderedSteps[currentStep].id]?.[field.id] || uploadedFiles[orderedSteps[currentStep].id]?.[field.id]?.[0]?.name}
+                                                                handleDownload={handleDownload}
+                                                                fieldId={field.id}
+                                                            />
+                                                        </li>
+                                                    )) : null}
+                                                </ul>
+                                                  )
                                             ) : (
                                                 <div className="notice-container">
                                                     <Notice status="warning" isDismissible={false}>
