@@ -463,13 +463,11 @@ const ProcessViewer = () => {
         })
         return formatDate;
     }
-    console.log(currentUser)
+
     return (
         <main>
            {isLoading ? (
-                <>        
-                    <Spinner />
-                </>
+                <Spinner />
             ) :(
                 <>
                     <span className="brand">
@@ -499,13 +497,12 @@ const ProcessViewer = () => {
                         </span>
                     </div>
                     {notice && (
-            <div className="notice-container">
-            <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                {notice.message}
-            </Notice>
-            </div>
-        )}
-
+                        <div className="notice-container">
+                            <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                                {notice.message}
+                            </Notice>
+                        </div>
+                    )}
 
                     {!isPublic && hasPermission === false ? (
                         <div style={{margin: '50px'}}>
@@ -544,10 +541,10 @@ const ProcessViewer = () => {
                                         <PanelRow>
                                             {!isUserInSector(options[currentStep].sector_stage) && (
                                                 <div className="notice-container">
-                                                <Notice status="warning" isDismissible={false}>
-                                                    You can only view this step.
-                                                </Notice>
-                                            </div>
+                                                    <Notice status="warning" isDismissible={false}>
+                                                        You can only view this step.
+                                                    </Notice>
+                                                </div>
                                             )}
                                             {options[currentStep].fields.length > 0 ? (
                                                   !submittedSteps[currentStep] ? (
@@ -579,22 +576,20 @@ const ProcessViewer = () => {
                                                             </Button>
                                                         </div>
                                                     )}
-                                                   
                                                 </form>
-                                                  ) : (
-                                                    <ul className="meta-fields-list">
+                                            ) : (
+                                                <dl className="description-list">
                                                     {Array.isArray(options[currentStep].fields) ? options[currentStep].fields.map((field, idx) => (
-                                                        <li key={`${orderedSteps[currentStep].id}-meta-${idx}`} className="meta-field-item">
-                                                            <MetaFieldDisplay 
-                                                                field={field} 
-                                                                value={formValues[orderedSteps[currentStep].id]?.[field.id] || uploadedFiles[orderedSteps[currentStep].id]?.[field.id]?.[0]?.name}
-                                                                handleDownload={handleDownload}
-                                                                fieldId={field.id}
-                                                            />
-                                                        </li>
+                                                        <MetaFieldDisplay 
+                                                            key={`${orderedSteps[currentStep].id}-meta-${idx}`}
+                                                            field={field} 
+                                                            value={formValues[orderedSteps[currentStep].id]?.[field.id] || uploadedFiles[orderedSteps[currentStep].id]?.[field.id]?.[0]?.name}
+                                                            handleDownload={handleDownload}
+                                                            fieldId={field.id}
+                                                        />
                                                     )) : null}
-                                                </ul>
-                                                  )
+                                                </dl>
+                                            )
                                             ) : (
                                                 <div className="notice-container">
                                                     <Notice status="warning" isDismissible={false}>

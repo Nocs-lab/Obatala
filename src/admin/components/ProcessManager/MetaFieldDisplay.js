@@ -11,23 +11,19 @@ const MetaFieldDisplay = ({ field, value, handleDownload, fieldId }) => {
         case "email":
             return (
                 value && (
-                <dl className="description-list">
                     <div className="list-item">
                         <dt>{field.config?.label}</dt>
                         <dd>{value}</dd>
                     </div>
-                </dl>
                 )
             );
         case "datepicker":
             return (
                 value && (
-                <dl className="description-list">
                     <div className="list-item">
                         <dt>{field.config?.label}</dt>
                         <dd>{value}</dd>
                     </div>
-                </dl>
                 )
             );
         case "upload":
@@ -51,23 +47,19 @@ const MetaFieldDisplay = ({ field, value, handleDownload, fieldId }) => {
         case "radio":
             return (
                 value && (
-                <dl className="description-list">
                     <div className="list-item">
                         <dt>{field.config?.label}</dt>
                         <dd>{value}</dd>
                     </div>
-                </dl>
                 )
             );
         case "search":
             return (
                 value && (
-                <dl className="description-list">
                     <div className="list-item">
                         <dt>{field.config?.label}</dt>
                         <dd>{value}</dd>
                     </div>
-                </dl>
                 )
             );
         default:
