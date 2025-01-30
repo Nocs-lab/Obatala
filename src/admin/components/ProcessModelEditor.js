@@ -69,9 +69,51 @@ const processDataEditor = () => {
     }
   };
 
+  // funçao para verificar se todos os nos estao conectados
+  const areAllNodesConnected = (nodes, edges) => {
+    if (nodes.length === 0) return true; // Nenhum nó para verificar
+
+    // Criar um mapa de adjacência
+    const adjacencyList = new Map();
+    nodes.forEach(node => adjacencyList.set(node.id, []));
+
+    edges.forEach(({ source, target }) => {
+      adjacencyList.get(source).push(target);
+      adjacencyList.get(target).push(source); // Grafo não-direcionado
+    });
+
+    // Fazer BFS/DFS para verificar conectividade
+    const visited = new Set();
+    const stack = [nodes[0].id]; // Começamos pelo primeiro nó
+
+    while (stack.length > 0) {
+      const node = stack.pop();
+      if (!visited.has(node)) {
+        visited.add(node);
+        adjacencyList.get(node).forEach(neighbor => {
+          if (!visited.has(neighbor)) {
+            stack.push(neighbor);
+          }
+        });
+      }
+    }
+
+    return visited.size === nodes.length;
+  }; 
+  
   const handleSave = async () => {
     try {
       const flowData = flowRef.current.getFlowData(); // Obtém os dados do flow
+      
+      //verifica se todos os nos estão conectados 
+      if (!areAllNodesConnected(flowData.nodes, flowData.edges)) {
+        setNotice({
+          status: "error",
+          message: "There are disconnected nodes. Please connect all nodes before saving.",
+        });
+        return; // Interrompe a execução caso existam nós isolados
+      }
+
       const updatedData = {
         ...processData,
         meta: {

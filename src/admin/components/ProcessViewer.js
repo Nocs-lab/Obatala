@@ -196,11 +196,12 @@ const ProcessViewer = () => {
     const getOrderedSteps = useCallback(() => {
         if (flowNodes && flowNodes.nodes){
             const { edges, nodes } = flowNodes;
+            const filteredNodes = nodes.filter(node => node.id !== "First" && node.id !== "Last");
             const nodeMap = new Map(nodes.map(node => [node.id, node]));
             const sources = new Set(edges.map(edge => edge.source));
             const targets = new Set(edges.map(edge => edge.target));
 
-            const initialStep = nodes.filter(node => sources.has(node.id) && !targets.has(node.id));
+            const initialStep = filteredNodes.filter(node => sources.has(node.id) && !targets.has(node.id));
             
             const orderedSteps = [];
             const visited = new Set();
@@ -219,7 +220,7 @@ const ProcessViewer = () => {
 
             initialStep.forEach(node => visit(node.id));
             
-            nodes.forEach(node => {
+            filteredNodes.forEach(node => {
                 if (!visited.has(node.id)) {
                     orderedSteps.push(node);
                 }

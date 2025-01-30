@@ -11,6 +11,7 @@ export const useFlowContext = () => {
 
 export const FlowProvider = ({ children }) => {
   const [errors, setErrors] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(false);
   
   // Utilizando estados diretamente para nodes e edges
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -18,12 +19,17 @@ export const FlowProvider = ({ children }) => {
 
   //Função para adicionar um nó inicial
   const addFirstNode = () => {
+    const lastNode = nodes[nodes.length - 1];
+    const newNodePosition = lastNode
+      ? { x: lastNode.position.x - 50, y: lastNode.position.y + 50 }
+      : { x: -200, y: 130 };
     const First = {
       id: "First",
       type: "firstNode",
-      dragHandle: ".custom-drag-handle2",
-      position: { x: -150, y: 50 },
-      data: {fields: [],
+      dragHandle: ".custom-drag-handle",
+      position: newNodePosition,
+      data: {
+        fields: [],
         stageName: "First",
         updateFields: (newFields) => updateFieldsForNode("First", newFields),
         updateNodeName: (newName) => updateNodeName("First", newName),
@@ -35,12 +41,17 @@ export const FlowProvider = ({ children }) => {
   };
 
   const addLastNode = () => {
+    const lastNode = nodes[nodes.length - 1];
+    const newNodePosition = lastNode
+      ? { x: lastNode.position.x + 50, y: lastNode.position.y + 50 }
+      : { x: 460, y: 130 };
     const Last = {
       id: "Last",
       type: "lastNode",
-      dragHandle: ".custom-drag-handle2",
-      position: { x: 250, y: 50},
-      data: {fields: [],
+      dragHandle: ".custom-drag-handle",
+      position: newNodePosition,
+      data: {
+        fields: [],
         stageName: "Last",
         updateFields: (newFields) => updateFieldsForNode("Last", newFields),
         updateNodeName: (newName) => updateNodeName("Last", newName),
@@ -53,11 +64,14 @@ export const FlowProvider = ({ children }) => {
 
   // Verifica se é necessário adicionar o nó inicial
   useEffect(() => {
-    if (nodes.length === 0) {
+    if (!isLoaded) {
+      setIsLoaded(true);
+    } else if (nodes.length === 0) {
       addFirstNode();
       addLastNode();
+      addNewNode();
     }
-  }, [nodes]);
+  }, [isLoaded, nodes]);
 
   // Função para atualizar os campos de cada nó
   const updateFieldsForNode = (nodeId, newFields) => {

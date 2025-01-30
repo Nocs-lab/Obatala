@@ -691,51 +691,10 @@ svg.react-flow__connectionline {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: 1rem;
+  /*padding-bottom: 1rem;*/
+  overflow: visible;
+  padding-bottom: 0;
 }
-
-/* construindo indicador de inicio*/
-.custom-drag-handle2.node-inicio {
-  border-radius: 50%;
-  width: 100px;
-  height: 100px;
-  background-color: var(--white);
-  border: 1px solid var(--black);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: drag;
-  color: var(--primary-300);
-  font-size: 14px;
-  font-weight: bold;
-  user-select: none;
-}
-
-.custom-drag-handle2.node-last {
-  border-radius: 50%;
-  width: 100px;
-  height: 100px;
-  background-color: var(--white);
-  border: 4px solid var(--black); /* Reduzindo a espessura */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: drag;
-  color: var(--primary-300);
-  font-size: 14px;
-  font-weight: bold;
-  user-select: none;
-  position: relative;
-}
-
-.custom-drag-handle2.node-last .node-content {
-  width: 70%; /* Tamanho do anel interno */
-  height: 70%;
-  border-radius: 50%;
-  border: 5px solid var(--black); /* Espessura do anel interno */
-  background-color: transparent;
-}
-
 
 .node-content {
   display: flex;
