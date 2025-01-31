@@ -1,16 +1,16 @@
-import React, { useState } from "react";
 import {
-  TextControl,
-  CheckboxControl,
-  TextareaControl,
   Button,
-  SelectControl,
-  __experimentalNumberControl as NumberControl,
+  CheckboxControl,
   Notice,
+  __experimentalNumberControl as NumberControl,
+  SelectControl,
+  TextareaControl,
+  TextControl,
 } from "@wordpress/components";
+import React, { useState } from "react";
 import * as Yup from "yup";
-import { useFlowContext } from "../../context/FlowContext";
 import { useDrawer } from "../../context/DrawerContext";
+import { useFlowContext } from "../../context/FlowContext";
 
 // Padrões regex predefinidos
 const predefinedPatterns = {
@@ -111,7 +111,7 @@ export const TextFieldControls = ({
       });
     toggleDrawer()
   };
-
+console.log(fieldType)
   return (
     <form>
       <h3>Edit field</h3>
@@ -173,117 +173,124 @@ export const TextFieldControls = ({
         }
         help={errors.maxLength}
       />
-    
-      <SelectControl
-        label="Padrões Comuns"
-        value=""
-        options={[
-          { label: "Selecione um padrão", value: "" },
-          { label: "Telefone", value: "telefone" },
-          { label: "CEP", value: "cep" },
-          { label: "Evitar abreviação", value: "EvitarAbreviacao" },
-          { label: "Capitalizar Inicial de Nome Próprio", value: "CapitalizarInicialNomeProprio" },
-          { label: "Nao Usar Capitalizacao", value: "NaoUsarCapitalizacao" },
-          { label: "Numeros Inteiros e Fracões Decimais", value: "NumerosInteirosEfracoesDecimais" },
-          { label: "Nao Vazio", value: "NaoVazio" },
-          { label: "Não utilizar apóstrofo", value: "Naoutilizarapostrofo" },
-          { label: "Registro de Hora, Minutos e Segundos", value: "registroHoraMinutosSegundos" },
-          { label: "Registro de Dia, Mês e Ano", value: "registroDiaMêsAno" },
-        ]}
-        onChange={(value) => {
-          const pattern = predefinedPatterns[value] || "";
-          setFormValues((prev) => ({
-            ...prev,
-            pattern,
-            required: !!pattern || prev.required,
-            helpText: pattern
-              ? `Formato: ${
-                  value === "telefone"
-                    ? "11987654321"
-                    : value === "cep"
-                    ? "00000-000"
-                    : value === "EvitarAbreviacao"
-                    ? "A entrada deve começar com uma letra maiúscula (incluindo caracteres acentuados), seguida por letras, números ou caracteres acentuados, e terminar com um ponto final. Ex: João Silva."
-                    : value === "CapitalizarInicialNomeProprio"
-                    ? "Capitalize as iniciais de nomes próprios e da primeira palavra, para outros termos use letras minúsculas."
-                    : value === "NaoUsarCapitalizacao"
-                    ? "Não use letras maiúsculas. Ex: Nome, Sobrenome"
-                    : value === "NumerosInteirosEfracoesDecimais"
-                    ? "Utilizar números inteiros ou frações decimais. Ex: 123 ou 123.45"
-                    : value === "NaoVazio"
-                    ? "O campo não pode ser vazio."
-                    : value === "Naoutilizarapostrofo"
-                    ? "Não utilizar apóstrofo. Ex: 'olá'"
-                    : value === "registroHoraMinutosSegundos"
-                    ? "Utilizar o formato HH:MM:SS. Ex: 12:34:56"
-                    : value === "registroDiaMêsAno"
-                    ? "Utilizar o formato DD/MM/YYYY. Ex: 31/12/2021, 9/5/2022"
-                    : ""
-                }`
-              : prev.helpText, // Define o texto de ajuda com base no padrão
-          }));
-        }}
-      />
-  
-      <TextControl
-        label="Padrão de Validação (Regex)"
-        value={formValues.pattern}
-        onChange={(value) => {
-          setFormValues((prev) => {
-            const updatedValues = {
-              ...prev,
-              pattern: value,
-              required: !!value.trim(),
-              helpText: value
-                ? `Formato: ${
-                    value === predefinedPatterns.telefone
-                      ? "11987654321"
-                      : value === predefinedPatterns.cep
-                      ? "00000-000"
-                      : value === predefinedPatterns.EvitarAbreviacao
-                      ? "A entrada deve começar com uma letra maiúscula (incluindo caracteres acentuados), seguida por letras, números ou caracteres acentuados, e terminar com um ponto final. Ex: João Silva."
-                      : value === predefinedPatterns.CapitalizarInicialNomeProprio
-                      ? "Capitalize as iniciais de nomes próprios e da primeira palavra, para outros termos use letras minúsculas."
-                      : value === predefinedPatterns.NaoUsarCapitalizacao
-                      ? "Não use letras maiúsculas. Ex: Nome, Sobrenome"
-                      : value === predefinedPatterns.NumerosInteirosEfracoesDecimais
-                      ? "Utilizar números inteiros ou frações decimais. Ex: 123 ou 123.45"
-                      : value === predefinedPatterns.NaoVazio
-                      ? "O campo não pode ser vazio."
-                      : value === predefinedPatterns.Naoutilizarapostrofo
-                      ? "Não utilizar apóstrofo. Ex: 'Olá'"
-                      : value === predefinedPatterns.registroHoraMinutosSegundos
-                      ? "Utilizar o formato HH:MM:SS. Ex: 12:34:56"
-                      : value === predefinedPatterns.registroDiaMêsAno
-                      ? "Utilizar o formato DD/MM/YYYY. Ex: 31/12/2021, 9/5/2022"
-                      : "(Altere no Texto de Ajuda)"
-                  }`
-                : "", // Limpa o texto de ajuda se o campo de regex estiver vazio
-            };
 
-            if (!value.trim()) {
-              // Se o campo de regex for apagado
-              updatedValues.required = false; // Desmarca a obrigatoriedade
-            }
+      {fieldType !== "email" && (
+        <>
+          <SelectControl
+            label="Padrões Comuns"
+            value=""
+            options={[
+              { label: "Selecione um padrão", value: "" },
+              { label: "Telefone", value: "telefone" },
+              { label: "CEP", value: "cep" },
+              { label: "Evitar abreviação", value: "EvitarAbreviacao" },
+              { label: "Capitalizar Inicial de Nome Próprio", value: "CapitalizarInicialNomeProprio",},
+              { label: "Não Usar Capitalizacao", value: "NaoUsarCapitalizacao",},
+              { label: "Numeros Inteiros e Fracões Decimais", value: "NumerosInteirosEfracoesDecimais", },
+              { label: "Não Vazio", value: "NaoVazio" },
+              { label: "Não utilizar apóstrofo", value: "Naoutilizarapostrofo",},
+              { label: "Registro de Hora, Minutos e Segundos", value: "registroHoraMinutosSegundos", },
+              { label: "Registro de Dia, Mês e Ano", value: "registroDiaMêsAno", },
+            ]}
+            onChange={(value) => {
+              const pattern = predefinedPatterns[value] || "";
+              setFormValues((prev) => ({
+                ...prev,
+                pattern,
+                required: !!pattern || prev.required,
+                helpText: pattern
+                  ? `Formato: ${
+                      value === "telefone"
+                        ? "11987654321"
+                        : value === "cep"
+                        ? "00000-000"
+                        : value === "EvitarAbreviacao"
+                        ? "A entrada deve começar com uma letra maiúscula (incluindo caracteres acentuados), seguida por letras, números ou caracteres acentuados, e terminar com um ponto final. Ex: João Silva."
+                        : value === "CapitalizarInicialNomeProprio"
+                        ? "Capitalize as iniciais de nomes próprios e da primeira palavra, para outros termos use letras minúsculas."
+                        : value === "NaoUsarCapitalizacao"
+                        ? "Não use letras maiúsculas. Ex: Nome, Sobrenome"
+                        : value === "NumerosInteirosEfracoesDecimais"
+                        ? "Utilizar números inteiros ou frações decimais. Ex: 123 ou 123.45"
+                        : value === "NaoVazio"
+                        ? "O campo não pode ser vazio."
+                        : value === "Naoutilizarapostrofo"
+                        ? "Não utilizar apóstrofo. Ex: 'olá'"
+                        : value === "registroHoraMinutosSegundos"
+                        ? "Utilizar o formato HH:MM:SS. Ex: 12:34:56"
+                        : value === "registroDiaMêsAno"
+                        ? "Utilizar o formato DD/MM/YYYY. Ex: 31/12/2021, 9/5/2022"
+                        : ""
+                    }`
+                  : prev.helpText, // Define o texto de ajuda com base no padrão
+              }));
+            }}
+          />
 
-            return updatedValues;
-          });
+          <TextControl
+            label="Padrão de Validação (Regex)"
+            value={formValues.pattern}
+            onChange={(value) => {
+              setFormValues((prev) => {
+                const updatedValues = {
+                  ...prev,
+                  pattern: value,
+                  required: !!value.trim(),
+                  helpText: value
+                    ? `Formato: ${
+                        value === predefinedPatterns.telefone
+                          ? "11987654321"
+                          : value === predefinedPatterns.cep
+                          ? "00000-000"
+                          : value === predefinedPatterns.EvitarAbreviacao
+                          ? "A entrada deve começar com uma letra maiúscula (incluindo caracteres acentuados), seguida por letras, números ou caracteres acentuados, e terminar com um ponto final. Ex: João Silva."
+                          : value ===
+                            predefinedPatterns.CapitalizarInicialNomeProprio
+                          ? "Capitalize as iniciais de nomes próprios e da primeira palavra, para outros termos use letras minúsculas."
+                          : value === predefinedPatterns.NaoUsarCapitalizacao
+                          ? "Não use letras maiúsculas. Ex: Nome, Sobrenome"
+                          : value ===
+                            predefinedPatterns.NumerosInteirosEfracoesDecimais
+                          ? "Utilizar números inteiros ou frações decimais. Ex: 123 ou 123.45"
+                          : value === predefinedPatterns.NaoVazio
+                          ? "O campo não pode ser vazio."
+                          : value === predefinedPatterns.Naoutilizarapostrofo
+                          ? "Não utilizar apóstrofo. Ex: 'Olá'"
+                          : value ===
+                            predefinedPatterns.registroHoraMinutosSegundos
+                          ? "Utilizar o formato HH:MM:SS. Ex: 12:34:56"
+                          : value === predefinedPatterns.registroDiaMêsAno
+                          ? "Utilizar o formato DD/MM/YYYY. Ex: 31/12/2021, 9/5/2022"
+                          : "(Altere no Texto de Ajuda)"
+                      }`
+                    : "", // Limpa o texto de ajuda se o campo de regex estiver vazio
+                };
 
-          if (value && !isValidRegex(value)) {
-            setErrors((prev) => ({
-              ...prev,
-              pattern: "O padrão de Regex informado é inválido.",
-            }));
-          } else {
-            setErrors((prev) => {
-              const { pattern, ...rest } = prev;
-              return rest;
-            });
-          }
-        }}
-        placeholder="Digite um padrão de validação (Regex)"
-        help={formValues.helpText}
-      />
+                if (!value.trim()) {
+                  // Se o campo de regex for apagado
+                  updatedValues.required = false; // Desmarca a obrigatoriedade
+                }
+
+                return updatedValues;
+              });
+
+              if (value && !isValidRegex(value)) {
+                setErrors((prev) => ({
+                  ...prev,
+                  pattern: "O padrão de Regex informado é inválido.",
+                }));
+              } else {
+                setErrors((prev) => {
+                  const { pattern, ...rest } = prev;
+                  return rest;
+                });
+              }
+            }}
+            placeholder="Digite um padrão de validação (Regex)"
+            help={formValues.helpText}
+          />
+        </>
+      )}
 
       <TextareaControl
         label="Texto de Ajuda"
