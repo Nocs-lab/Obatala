@@ -91,7 +91,11 @@ const NodeConditional = (node) => {
       <Handle type="target" position={Position.Left} style={{ top: "100%", right: "-8px" }} />
       <Handle type="source" position={Position.Right} style={{ top: "0", right: "0px" }} />
       <Tooltip text="Remove step">
-        <div className="btn close-btn" onClick={() => removeNode(node.id)}></div>
+        <div className="btn close-btn" 
+             onClick={(event) =>{
+              event.stopPropagation(); // Impede a propagação do clique
+              removeNode(node.id);
+             }}></div>
       </Tooltip>
 
       {isVisibleToolbar && (
@@ -186,7 +190,7 @@ const NodeConditional = (node) => {
               fontSize: "16px",
             }}
           >
-            Save
+            Apply
           </button>
         </div>
       )}
