@@ -44,6 +44,7 @@ const ProcessViewer = () => {
     const allAuthors = useSelect(select => select(coreStore).getUsers({ who: 'authors' }), []);
     const [isStepSubmitEnabled, setIsStepSubmitEnabled] = useState({});
     
+    
     const getProcessIdFromUrl = () => {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get("process_id");
@@ -283,7 +284,6 @@ const ProcessViewer = () => {
         let uploadFailed = false;
     
         if (uploadedFiles[stepId]) {
-            console.log(uploadedFiles[stepId])
             for (const [fieldId, files] of Object.entries(uploadedFiles[stepId])) {
                 if (!files || !Array.isArray(files) || files.length === 0) {
                     continue; 
@@ -370,7 +370,6 @@ const ProcessViewer = () => {
     const handleDownload = async (fieldId) => {
         try {
             const stepId = orderedSteps[currentStep].id;
-            console.log(uploadedFiles[stepId])
             const file = 
             formValues[stepId]?.[fieldId] || 
             uploadedFiles[stepId]?.[fieldId]?.[0]?.name;
@@ -385,7 +384,6 @@ const ProcessViewer = () => {
                 file: file,
                 node_id: stepId 
             });
-            console.log(uploadedFiles[orderedSteps[currentStep].id], formValues[orderedSteps[currentStep].id][fieldId])
             const response = await apiFetch({
                 path: `/obatala/v1/process_type/download?${params}`,
                 method: 'GET',
@@ -463,7 +461,6 @@ const ProcessViewer = () => {
         })
         return formatDate;
     }
-
     return (
         <main>
            {isLoading ? (
@@ -533,9 +530,12 @@ const ProcessViewer = () => {
                                 <Panel key={`${orderedSteps[currentStep].id}-${currentStep}`}>
                                     <PanelHeader>
                                         <h3>{`${options[currentStep].label}`}</h3>
-                                        <span className="badge default ms-auto">
-                                            Grupo: {getSectorName(options[currentStep].sector_stage)}
-                                        </span>
+                                        {options[currentStep].sector_stage && (
+                                            <span className="badge default ms-auto">
+                                                Grupo: {getSectorName(options[currentStep].sector_stage)}
+                                            </span>
+                                        )}
+                                        
                                     </PanelHeader>
                                     <PanelBody>
                                         <PanelRow>

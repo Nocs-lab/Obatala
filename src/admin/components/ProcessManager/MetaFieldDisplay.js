@@ -43,13 +43,21 @@ const MetaFieldDisplay = ({ field, value, handleDownload, fieldId }) => {
                 )
                 
             );
-        case "select":
         case "radio":
             return (
                 value && (
                     <div className="list-item">
                         <dt>{field.config?.label}</dt>
                         <dd>{value}</dd>
+                    </div>
+                )
+            );
+        case "select":
+            return (
+                value && (
+                    <div className="list-item">
+                        <dt>{field.config?.label}</dt>
+                        <dd> {value.join(", ")}</dd>
                     </div>
                 )
             );

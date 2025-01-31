@@ -4,11 +4,14 @@ import {
   TextControl,
   DatePicker,
   FormFileUpload,
-  SelectControl,
+  //SelectControl,
   RadioControl,
+  ComboboxControl,
+  Button,
 } from "@wordpress/components";
-import {  upload } from "@wordpress/icons";
+import {  closeSmall, upload } from "@wordpress/icons";
 import TainacanSearchControls from "../Tainacan/TainacanSearch";
+import { __experimentalSelectControl as SelectControl } from '@wordpress/components';
 
 const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId, initalValue, noHasPermission, fileInfo, stepId}) => {
   const [value, setValue] = useState(initalValue);
@@ -118,21 +121,36 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
         case "select":
             return (
                 <div className="meta-field-wrapper">
-                   <SelectControl
-                        label={field.config?.label ?? "Unknow title"}
-                        value={value}
-                        onChange={(newValue) => handleChange(newValue)}
-                        options={[
-                        { label: "Selecione uma opção", value: "" },
-                        ...field.config?.options
-                            .split(",")
-                            .map((option) => ({ label: option, value: option })),
-                        ]}
-                        
-                        disabled={!isEditable || noHasPermission}
-                        required={field.config?.required ?? false}
-                        help={field.config?.helpText}
-                    />        
+                    <ComboboxControl
+                        label={field.config?.label ?? "Select Options"}
+                        value={value || []}
+                        options={field.config?.options.split(",").map((option) => ({
+                            label: option.trim(),
+                            value: option.trim(),
+                        }))}
+                        onChange={(selectedValue) => {
+                            if (selectedValue && !value?.includes(selectedValue)) {
+                                handleChange([...(value || []), selectedValue]);
+                            }
+                        }}
+                    />
+                    {Array.isArray(value) && value.length > 0 && (
+                        <div className="combobox-selection">
+                            {value.map((selected) => (
+                                <div key={selected} className="combobox-selected">
+                                    {selected}
+                                    <Button
+                                        icon={closeSmall}
+                                        onClick={() => {
+                                            const updatedValues = value.filter((v) => v !== selected);
+                                            handleChange(updatedValues);
+                                        }}
+                                        className="remove-option-button"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    )}
                 </div>
             );
         case "radio":
