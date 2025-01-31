@@ -8,6 +8,7 @@ import {
 } from "@wordpress/components";
 import * as Yup from "yup";
 import { useFlowContext } from "../../context/FlowContext";
+import { useDrawer } from "../../context/DrawerContext";
 
 // Esquema de validação usando Yup
 const validationSchema = Yup.object().shape({
@@ -37,6 +38,8 @@ export const NumberFieldControls = ({
 }) => {
   const { updateFieldConfig } = useFlowContext(); // Usando a função do contexto
   const [errors, setErrors] = useState({}); // Estado para armazenar erros de validação
+  const { toggleDrawer } = useDrawer();  
+  
   const [formValues, setFormValues] = useState({
     label: config ? config.label : label ? label : "",
     min: config ? config.min : min ? min : null,
@@ -69,6 +72,7 @@ export const NumberFieldControls = ({
         }
         setErrors(formattedErrors);
       });
+      toggleDrawer()
   };
 
   return (

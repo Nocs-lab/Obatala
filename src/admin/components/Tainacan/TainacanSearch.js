@@ -96,7 +96,6 @@ const TainacanSearchControls = ({onFieldChange, initialValue = [], isEditable, n
     const removeSelectedItem = (itemId) => {
         setSelectedItems((prevSelected) => prevSelected.filter((item) => item.id !== itemId));
     };
-    console.log('results: ', results);
     return (
         <div style={{ width: '800px', margin: 'auto' }}>
             {isEditable && (

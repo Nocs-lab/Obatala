@@ -53,6 +53,7 @@ const ProcessTypeManager = () => {
           }
           const meta = {
               description: processType.meta.description || '',
+              status: processType.meta.status || ''
           };
 
           await updateProcessTypeMeta(savedProcessType.id, meta);
@@ -85,7 +86,6 @@ const ProcessTypeManager = () => {
 
   const handleEditModel = (model) => {
     setEditingProcessType(model);
-    console.log(editingProcessType);
   };
 
   const handleAdd = () => {

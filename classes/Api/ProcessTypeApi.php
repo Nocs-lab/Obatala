@@ -131,6 +131,7 @@ class ProcessTypeApi extends ObatalaAPI {
             'accept_tainacan_items' => (bool) get_post_meta($post_id, 'accept_tainacan_items', true),
             'generate_tainacan_items' => (bool) get_post_meta($post_id, 'generate_tainacan_items', true),
             'description' => get_post_meta($post_id, 'description', true) ?: '',
+            'status' => get_post_meta($post_id, 'status', true) ?: '',
             'step_order' => get_post_meta($post_id, 'step_order', true) ?: [],
             'flowData' => $flowData ?: [],
         ];
@@ -145,6 +146,7 @@ class ProcessTypeApi extends ObatalaAPI {
             'accept_tainacan_items',
             'generate_tainacan_items',
             'description',
+            'status',
             'step_order',
             'flowData',
         ];
@@ -248,6 +250,7 @@ class ProcessTypeApi extends ObatalaAPI {
     public function upload($request) {
         $process_id = $request['id'];
         $node_id = sanitize_text_field($request['node_id']);
+        
         // Carregar a função wp_handle_upload, se necessário
         if (!function_exists('wp_handle_upload')) {
             require_once ABSPATH . 'wp-admin/includes/file.php';
@@ -312,19 +315,8 @@ class ProcessTypeApi extends ObatalaAPI {
             ], 500);
         }
 
-
-        // Modificar o nome do arquivo
-        $process_name = get_the_title($process_id);
         $filename = sanitize_file_name($file['name']);
-        $filename_parts = pathinfo($filename);
-        $new_filename = $process_name . '-' .
-            $node_id . '-' . $filename_parts['filename'] . '.' .
-            $filename_parts['extension'];
-
-        // Mover o arquivo para o diretório personalizado
-        $filename = sanitize_file_name($new_filename);
         $new_file_path = trailingslashit($custom_dir) . $filename;
-
         if (!rename($uploaded_file['file'], $new_file_path)) {
             return new WP_REST_Response([
                 'error' => 'Erro ao salvar o arquivo no diretório personalizado.',
@@ -363,6 +355,7 @@ class ProcessTypeApi extends ObatalaAPI {
             'success' => true,
             'message' => 'Arquivo enviado com sucesso.',
             'file_path' => $new_file_path,
+            'file_name' => $filename
         ], 200);
     }
 
@@ -373,11 +366,11 @@ class ProcessTypeApi extends ObatalaAPI {
     
         // Verificar permissão
         $permission = Sector::check_permission($user_id, $process_id);
-    
+
         if (!$permission['status']) {
             return new WP_REST_Response(
                 [
-                    'error' => 'Permissão negada',
+                    'error' => 'Permissao negada',
                     'status' => $permission['message']
                 ],
                 403
@@ -394,9 +387,8 @@ class ProcessTypeApi extends ObatalaAPI {
                 ['error' => 'Arquivo não encontrado'],
                 404
             );
-        }
-    
-        // Usar a função `wp_send_file` para forçar o download
+        }    
+        // Usar a função wp_send_file para forçar o download
         return $this->wp_send_file($file_path);
     }
     

@@ -8,7 +8,6 @@ import {
 import SortableField from "./SortableField"; // Certifique-se de estar importando corretamente o SortableField
 
 const DragAndDropList = ({nodeId, fields = [], updateFields }) => {
-  console.log(fields);
   // Função para lidar com o fim do arraste
   const handleDragEnd = (event) => {
     const { active, over } = event;
@@ -35,7 +34,6 @@ const DragAndDropList = ({nodeId, fields = [], updateFields }) => {
       >
         <ul>
           {fields.map(({ id, title, type, config }) => (
-            console.log(title, 'title'),
             <SortableField
               key={id}
               nodeId={nodeId}
