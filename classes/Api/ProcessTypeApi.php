@@ -366,6 +366,7 @@ class ProcessTypeApi extends ObatalaAPI {
     
         // Verificar permissão
         $permission = Sector::check_permission($user_id, $process_id);
+
         if (!$permission['status']) {
             return new WP_REST_Response(
                 [
@@ -386,8 +387,7 @@ class ProcessTypeApi extends ObatalaAPI {
                 ['error' => 'Arquivo não encontrado'],
                 404
             );
-        }
-      
+        }    
         // Usar a função wp_send_file para forçar o download
         return $this->wp_send_file($file_path);
     }

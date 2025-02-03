@@ -1,3 +1,6 @@
+/*!************************************************************************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js??ruleSet[1].rules[2].use[1]!./node_modules/postcss-loader/dist/cjs.js??ruleSet[1].rules[2].use[2]!./css/react-flow.css ***!
+  \************************************************************************************************************************************************************************/
 /* this gets exported as style.css and can be used for the default theming */
 /* these are the necessary styles for React/Svelte Flow, they get used by base.css and style.css */
 
@@ -5,15 +8,37 @@
 .flow-container {
   background-color: var(--primary-50);
   border-radius: var(--border-radius);
+  display: grid;
+  gap: var(--gap);
+  grid-template-areas: 'title buttons'
+    'flow flow';
+  grid-template-rows: max-content;
   height: 70vh;
   margin-left: var(--gap-external);
   margin-right: var(--gap-external);
   padding: var(--gap);
   width: calc(100% - (2 * var(--gap-external)));
 }
-.flow-container > .components-button-group {
-  justify-content: flex-end;
-  margin-bottom: 1rem;
+.flow-container > h3 {
+  -ms-grid-row: 1;
+  -ms-grid-column: 1;
+  font-size: 1.25rem;
+  font-weight: 300;
+  grid-area: title;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.flow-container .components-button-group {
+  -ms-grid-row: 1;
+  -ms-grid-column: 3;
+  grid-area: buttons;
+  justify-self: end;
+}
+.flow-content {
+  -ms-grid-row: 3;
+  -ms-grid-column: 1;
+  -ms-grid-column-span: 3;
+  grid-area: flow;
 }
 
 /* Main component */
@@ -672,14 +697,61 @@ svg.react-flow__connectionline {
   cursor: drag;
   text-align: center;
   color: var(--primary-600);
-  user-select: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  /*padding-bottom: 1rem;*/
-  overflow: visible;
-  padding-bottom: 0;
+  padding-bottom: 1rem;
 }
+
+/* construindo indicador de inicio*/
+.custom-drag-handle2.node-inicio {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  background-color: var(--white);
+  border: 1px solid var(--black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: drag;
+  color: var(--primary-300);
+  font-size: 14px;
+  font-weight: bold;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+}
+
+.custom-drag-handle2.node-last {
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  background-color: var(--white);
+  border: 4px solid var(--black); /* Reduzindo a espessura */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: drag;
+  color: var(--primary-300);
+  font-size: 14px;
+  font-weight: bold;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  position: relative;
+}
+
+.custom-drag-handle2.node-last .node-content {
+  width: 70%; /* Tamanho do anel interno */
+  height: 70%;
+  border-radius: 50%;
+  border: 5px solid var(--black); /* Espessura do anel interno */
+  background-color: transparent;
+}
+
 
 .node-content {
   display: flex;
@@ -699,7 +771,9 @@ svg.react-flow__connectionline {
   cursor: drag;
   text-align: center;
   color: var(--primary-600);
-  user-select: none;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -902,3 +976,6 @@ svg.react-flow__connectionline {
 .edgebutton:hover {
   box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.08);
 }
+
+
+/*# sourceMappingURL=index.css.map*/

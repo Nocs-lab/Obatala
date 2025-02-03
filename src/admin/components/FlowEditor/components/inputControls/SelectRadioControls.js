@@ -70,7 +70,12 @@ export const SelectRadioControls = ({
   const optionArray = formValues.options.split(",").map((option) => option.trim());
 
   return (
-    <form onSubmit={validateFields}>
+    <form
+      onSubmit={(event) => {
+        event.preventDefault(); // Evita o recarregamento da página
+        validateFields(); // Chama a função de validação
+      }}
+    >
       <h3>Edit select field</h3>
 
       {/* Campo para definir o Label */}
