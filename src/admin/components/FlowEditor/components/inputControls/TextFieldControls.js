@@ -232,11 +232,14 @@ console.log(fieldType)
             value={formValues.pattern}
             onChange={(value) => {
               setFormValues((prev) => {
-                const updatedValues = {
+                const matchedPattern = Object.entries(predefinedPatterns).find(
+                  ([, regex]) => regex === value
+                );
+                return {
                   ...prev,
                   pattern: value,
                   required: !!value.trim(),
-                  helpText: value
+                  helpText: matchedPattern
                     ? `Formato: ${
                         value === predefinedPatterns.telefone
                           ? "11987654321"
@@ -261,7 +264,7 @@ console.log(fieldType)
                           ? "Utilizar o formato HH:MM:SS. Ex: 12:34:56"
                           : value === predefinedPatterns.registroDiaMêsAno
                           ? "Utilizar o formato DD/MM/YYYY. Ex: 31/12/2021, 9/5/2022"
-                          : "(Altere no Texto de Ajuda)"
+                          : ""
                       }`
                     : "", // Limpa o texto de ajuda se o campo de regex estiver vazio
                 };
