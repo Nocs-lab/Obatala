@@ -13,6 +13,9 @@ import { fetchProcessModels, saveProcessType, deleteProcessType, updateProcessTy
 import ProcessTypeForm from './ProcessTypeManager/ProcessTypeForm';
 import ProcessTypeList from './ProcessTypeManager/ProcessTypeList';
 import Reducer, { initialState } from '../redux/reducer';
+import { useSelect } from '@wordpress/data';
+import { store as coreStore } from '@wordpress/core-data';
+
 
 const ProcessTypeManager = () => {
   const [processTypes, setProcessTypes] = useState([]);
@@ -20,8 +23,10 @@ const ProcessTypeManager = () => {
   const [editingProcessType, setEditingProcessType] = useState(null);
   const [addingProcessType, setAddingProcessType] = useState(null);
   const [notice, setNotice] = useState(null);
-
   const [state, dispatch] = useReducer(Reducer, initialState)
+
+  const allAuthors = useSelect(select => select(coreStore).getUsers({ who: 'authors' }), []);
+  
 
   useEffect(() => {
       loadProcessTypes();
@@ -51,11 +56,14 @@ const ProcessTypeManager = () => {
           } else {
               savedProcessType = await saveProcessType(processType);
           }
+          console.log(processType.meta.updateAt,processType.meta.user);
+          
           const meta = {
               description: processType.meta.description || '',
-              status: processType.meta.status || ''
+              status: processType.meta.status || '',
+              updateAt: processType.meta.updateAt,
+              user: processType.meta.user || ''
           };
-
           await updateProcessTypeMeta(savedProcessType.id, meta);
 
           setNotice({ status: 'success', message: 'Process model saved successfully.' });
@@ -100,7 +108,13 @@ const ProcessTypeManager = () => {
 
   const handleConfirmDelete = (processModel) => {
     dispatch({type: 'OPEN_MODAL_PROCESS_MODEL', payload: processModel})
-  }
+  };
+
+  const authorsById = allAuthors ? allAuthors.reduce((acc, user) => {
+    acc[user.id] = user;
+    return acc;
+  }, {}) : {};
+
 
   if (isLoading) {
     return <Spinner />;
@@ -144,6 +158,7 @@ const ProcessTypeManager = () => {
                 onEdit={handleEditModel}
                 onManager={handleManageProcessModel}
                 onDelete={handleConfirmDelete}
+                authorsById={authorsById}
             />
         </main>
         {addingProcessType || editingProcessType ? (

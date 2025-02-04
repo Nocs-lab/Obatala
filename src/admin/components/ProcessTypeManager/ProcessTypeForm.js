@@ -7,12 +7,15 @@ import {
   PanelRow,
   SelectControl,
 } from "@wordpress/components";
+import { useSelect } from "@wordpress/data";
+import { store as coreStore } from '@wordpress/core-data';
 
 const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [status, setStatus] = useState("");
   const [notice, setNotice] = useState(null);
+  const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
 
   useEffect(() => {
     if (editingProcessType && editingProcessType.meta) {
@@ -43,7 +46,9 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
       status: "publish",
       meta: {
         description,
-        status: editingProcessType ? status : "Active" 
+        status: editingProcessType ? status : "Active" ,
+        updateAt: new Date(),
+        user: currentUser.name
       },
     };
 

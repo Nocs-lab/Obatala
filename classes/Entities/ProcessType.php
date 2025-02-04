@@ -43,7 +43,7 @@ class ProcessType {
             'has_archive'        => true,
             'hierarchical'       => false,
             'menu_position'      => 99,
-            'supports'           => array('title'),
+            'supports'           => array('title', 'author',),
             'show_in_rest'       => true,
             'menu_icon'          => 'dashicons-media-document'
         );

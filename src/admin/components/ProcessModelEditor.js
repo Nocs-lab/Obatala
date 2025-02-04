@@ -9,6 +9,10 @@ import { FlowProvider } from "./FlowEditor/context/FlowContext";
 import ProcessControls from "./FlowEditor/components/reactFlow/FlowButtons";
 import { DrawerProvider } from "./FlowEditor/context/DrawerContext";
 
+import { useSelect } from "@wordpress/data";
+import { store as coreStore } from '@wordpress/core-data';
+import { update } from "@wordpress/icons";
+
 const processDataEditor = () => {
     const params = new URLSearchParams(window.location.search);
     const id = params.get("process_type_id");
@@ -17,6 +21,7 @@ const processDataEditor = () => {
     const [isLoading, setIsLoading] = useState(true);
     const flowRef = useRef(null); // Referência para acessar os dados do fluxo
     const [flowData, setFlowData] = useState({ nodes: [], edges: [] }); // Novo estado para o flowData
+    const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
 
     const getProcessIdFromUrl = () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -106,6 +111,8 @@ const processDataEditor = () => {
         ...processData,
         meta: {
           flowData, // Armazena os dados de fluxo como meta
+          updateAt: new Date(),
+          user: currentUser?.name
         },
       };
 
