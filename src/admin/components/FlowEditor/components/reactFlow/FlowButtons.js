@@ -36,8 +36,8 @@ const { addNewNode, addNewNodeConditional, onExport, onImport } = useFlowContext
                 <Button icon={plus} variant="secondary" onClick={addNewNode}>
                     Add step
                 </Button>
-                <Button variant="secondary" onClick={addNewNodeConditional}>
-                  Add Conditional
+                <Button icon={plus} variant="secondary" onClick={addNewNodeConditional}>
+                  Add conditional
                 </Button>
                 <Button
                     variant="secondary"
