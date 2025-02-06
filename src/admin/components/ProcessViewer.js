@@ -73,7 +73,7 @@ const ProcessViewer = () => {
             fetchProcessById(processId)
                 .then((data) => {
                     setProcess(data);
-                    setIsPublic(data.meta?.access_level?.[0] === 'Public' || data.meta?.access_level?.[0] === 'public' )
+                    setIsPublic(data.meta?.access_level?.[0] === 'Not restricted' || data.meta?.access_level?.[0] === 'not restricted' )
 
                 const processTypeId = data.meta.process_type;
                 if (processTypeId) {
@@ -483,7 +483,7 @@ const ProcessViewer = () => {
                     <div className="badge-container">
                         <span
                             className={`badge ${
-                                process.meta.access_level == "public" || process.meta.access_level == 'Public' ? "success" : "warning"
+                                process.meta.access_level == "not restricted" || process.meta.access_level == 'Not restricted' ? "success" : "warning"
                             }`}
                             >
                             {process.meta.access_level}

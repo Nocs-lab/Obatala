@@ -27,7 +27,7 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
           accessor: 'meta.access_level',
           Cell: ({ value }) => (
   
-              <span className={`badge ${value == 'public' || value == 'Public' ? 'success' : 'warning'}`}>
+              <span className={`badge ${value == 'Not restricted' || value == 'not restricted' ? 'success' : 'warning'}`}>
                   {value}
               </span> 
             ),
