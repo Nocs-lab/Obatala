@@ -43,7 +43,7 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
         case "phone":
         case "address":
             return (
-                <div className="meta-field-wrapper">
+                <div className={`meta-field ${field.config?.required ? "required" : ""}`}>
                     <TextControl
                         label={field.config?.label ?? "Unknow Title"}
                         placeholder={field.config?.placeholder ?? "Enter a value..."}
@@ -61,7 +61,7 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
             );
         case "datepicker":
             return (
-                <div className="meta-field-wrapper">
+                <div className="meta-field sm">
                     <DatePicker
                         label={field.config?.label ?? "Unknow Title"}
                         currentDate={field.config?.dateValue}
@@ -74,36 +74,34 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
             );
             case "upload":
               return (
-                <div className="meta-field-wrapper">
-                    <div >
-                      <p>{field.config?.label ?? "Unknow title"}</p>
-                        <FormFileUpload
-                            accept=".doc,.docx,.pdf,.jpg,.jpeg,.png"
-                            value={value}
-                            onChange={(event) => handleChange(event.currentTarget.files)}
-                            
-                            disabled={!isEditable || noHasPermission}
-                            required={field.config?.required ?? false}
-                            help={field.config?.helpText}
-                            icon={upload}
-                            style={{
-                              border: "1px dashed #ccc",
-                            }}
-                        >
-                            Upload
-                        </FormFileUpload>
-      
-                        {fileInfo[stepId]?.[fieldId] && (
-                            <div>
-                                <p><strong>Arquivo:</strong> {fileInfo[stepId][fieldId].name}</p>
-                            </div>
-                        )}
-                    </div>
+                <div class="meta-field">
+                    <p>{field.config?.label ?? "Unknow title"}</p>
+                    <FormFileUpload
+                        accept=".doc,.docx,.pdf,.jpg,.jpeg,.png"
+                        value={value}
+                        onChange={(event) => handleChange(event.currentTarget.files)}
+                        
+                        disabled={!isEditable || noHasPermission}
+                        required={field.config?.required ?? false}
+                        help={field.config?.helpText}
+                        icon={upload}
+                        style={{
+                            border: "1px dashed #ccc",
+                        }}
+                    >
+                        Upload
+                    </FormFileUpload>
+    
+                    {fileInfo[stepId]?.[fieldId] && (
+                        <div>
+                            <p><strong>Arquivo:</strong> {fileInfo[stepId][fieldId].name}</p>
+                        </div>
+                    )}
                 </div>
               );
         case "number":
             return (
-                <div className="meta-field-wrapper">
+                <div className="meta-field sm">
                     <TextControl
                         label={field.config?.label ?? "Unknow title"}
                         min={field.config?.min}
@@ -120,7 +118,7 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
             );
         case "select":
             return (
-                <div className="meta-field-wrapper">
+                <div className="meta-field">
                     <ComboboxControl
                         label={field.config?.label ?? "Select Options"}
                         value={value || []}
@@ -155,7 +153,7 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
             );
         case "radio":
             return (
-                <div className="meta-field-wrapper">
+                <div className="meta-field">
                     <RadioControl
                         label={field.config?.label ?? "Unknow Title"}
                         selected={value}
@@ -182,7 +180,7 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
             );
         case "email":
             return (
-                <div className="meta-field-wrapper">
+                <div className={`meta-field md ${field.config?.required ? "required" : ""}`}>
                     <TextControl
                         label={field.config?.label ?? "Unknow Title"}
                         placeholder={field.config?.placeholder ?? "Enter a value..."}

@@ -143,7 +143,7 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
             />       
 
             <SelectControl
-                label="Access Level"
+                label="Access level"
                 value={accessLevel}
                 options={[
                     { label: 'Not restricted', value: 'Not restricted' },

@@ -176,16 +176,24 @@ form .components-button-group .components-button {
   height: 38px !important;
   min-height: 38px !important;
 }
+.components-input-control__input[required],
+.components-select-control__input[required],
+.components-text-control__input[required] {
+  border-color: var(--primary-500);
+}
+.components-input-control__input[required]:focus,
+.components-select-control__input[required]:focus,
+.components-text-control__input[required]:focus {
+  border-color: var(--primary-600);
+}
 .components-text-control__input[disabled] {
   background-color: var(--gray-200);
 }
 .components-combobox-control__suggestions-container > .components-flex {
   height: 38px;
 }
-form.centered {
-  margin: 0 auto;
-  max-width: 800px;
-  width: 100%;
+.components-base-control__help {
+  margin-bottom: 0 !important;
 }
 .inline-edition {
   display: flex;
@@ -220,6 +228,12 @@ table.wp-list-table td {
 }
 table.wp-list-table th {
   font-weight: 500;
+}
+th[role="columnheader"] {
+  font-weight: 300 !important;
+}
+th[role="columnheader"][title="Toggle SortBy"] {
+  font-weight: 600 !important;
 }
 /* #endregion */
 
@@ -794,15 +808,29 @@ button .components-spinner {
   padding: 1rem 0;
   width: 100%;
 }
-.meta-field-item {
-  display: flex;
-  align-items: center;
-  flex-basis: 100%;
-  margin-bottom: 2rem;
-  gap: 1rem;
-}
 .meta-field-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
   width: 100%;
+}
+.meta-field-wrapper > .meta-field {
+  flex-basis: 500px;
+  flex-grow: 1;
+}
+.meta-field-wrapper > .meta-field.md {
+  flex-basis: 200px;
+}
+.meta-field-wrapper > .meta-field.sm {
+  flex-basis: 100px;
+}
+.meta-field-wrapper > .meta-field.required::after {
+  color: var(--primary-400);
+  content: "Preenchimento obrigatório.";
+  font-size: .75rem;
+}
+.meta-field-wrapper + .action-bar {
+  margin-top: var(--gap);
 }
 .meta-field-wrapper .components-base-control__field > label,
 .meta-field-wrapper .components-input-control__label {
