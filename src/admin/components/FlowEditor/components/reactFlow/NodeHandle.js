@@ -6,6 +6,7 @@ import { Tooltip } from "@wordpress/components";
 const NodeHandle = (id) => {
   const {removeNode} = useFlowContext();
   return (
+    
     <div
       className="custom-drag-handle"
     >

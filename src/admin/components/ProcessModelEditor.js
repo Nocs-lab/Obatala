@@ -57,30 +57,72 @@ const processDataEditor = () => {
         }
     };
 
-    const handleSave = async () => {
-        try {
-            const flowData = flowRef.current.getFlowData(); // Obtém os dados do flow
-            const updatedData = {
-                ...processData,
-                meta: {
-                flowData, // Armazena os dados de fluxo como meta
-                },
-            };
+  // funçao para verificar se todos os nos estao conectados
+  const areAllNodesConnected = (nodes, edges) => {
+    if (nodes.length === 0) return true; // Nenhum nó para verificar
 
-            // Evita recarregar a página
-            await apiFetch({
-                path: `/obatala/v1/process_type/${id}`,
-                method: "PUT",
-                data: updatedData,
-            });
+    // Criar um mapa de adjacência
+    const adjacencyList = new Map();
+    nodes.forEach(node => adjacencyList.set(node.id, []));
 
-            await apiFetch({
-                path: `/obatala/v1/process_type/${id}/meta`,
-                method: "PUT",
-                data: updatedData.meta,
-            });
+    edges.forEach(({ source, target }) => {
+      adjacencyList.get(source).push(target);
+      adjacencyList.get(target).push(source); // Grafo não-direcionado
+    });
 
-            for (const node of flowData.nodes) {
+    // Fazer BFS/DFS para verificar conectividade
+    const visited = new Set();
+    const stack = [nodes[0].id]; // Começamos pelo primeiro nó
+
+    while (stack.length > 0) {
+      const node = stack.pop();
+      if (!visited.has(node)) {
+        visited.add(node);
+        adjacencyList.get(node).forEach(neighbor => {
+          if (!visited.has(neighbor)) {
+            stack.push(neighbor);
+          }
+        });
+      }
+    }
+
+    return visited.size === nodes.length;
+  }; 
+
+  const handleSave = async () => {
+    try {
+      const flowData = flowRef.current.getFlowData(); // Obtém os dados do flow
+      
+      //verifica se todos os nos estão conectados 
+      if (!areAllNodesConnected(flowData.nodes, flowData.edges)) {
+        setNotice({
+          status: "error",
+          message: "There are disconnected nodes. Please connect all nodes before saving.",
+        });
+        return; // Interrompe a execução caso existam nós isolados
+      }
+
+      const updatedData = {
+        ...processData,
+        meta: {
+          flowData, // Armazena os dados de fluxo como meta
+        },
+      };
+
+      // Evita recarregar a página
+      await apiFetch({
+        path: `/obatala/v1/process_type/${id}`,
+        method: "PUT",
+        data: updatedData,
+      });
+
+      await apiFetch({
+        path: `/obatala/v1/process_type/${id}/meta`,
+        method: "PUT",
+        data: updatedData.meta,
+      });
+
+          for (const node of flowData.nodes) {
                 if (node.tempSector) {
                     try {
                         await updateNodeSector(node.id, node.tempSector);
