@@ -490,8 +490,7 @@ const ProcessViewer = () => {
                             {process.meta.access_level}
                         </span>
                         <span className="badge default"><Icon icon="yes"/> {calculatePercentagem()}% concluído</span>
-                        <span className="badge default"><Icon icon="admin-users"/> Criado por:  
-                            {authorsById[process?.author]?.name} em {createAtProcess()}
+                        <span className="badge default"><Icon icon="admin-users"/> Criado por: {authorsById[process?.author]?.name} em {createAtProcess()}
                         </span>
                     </div>
                     {notice && (
@@ -549,24 +548,23 @@ const ProcessViewer = () => {
                                             )}
                                             {options[currentStep].fields.length > 0 ? (
                                                   !submittedSteps[currentStep] ? (
-                                                <form className="centered" onSubmit={handleSubmit}>
-                                                    <ul className="meta-fields-list">
+                                                <form onSubmit={handleSubmit}>
+                                                    <div className="meta-field-wrapper">
                                                         {Array.isArray(options[currentStep].fields) ? options[currentStep].fields.map((field, idx) => (
-                                                            <li key={`${orderedSteps[currentStep].id}-meta-${idx}`} className="meta-field-item">
-                                                                <MetaFieldInputs 
-                                                                    field={field} 
-                                                                    fieldId={field.id} 
-                                                                    initalValue={formValues[orderedSteps[currentStep].id]?.[field.id] || uploadedFiles[orderedSteps[currentStep].id]?.[field.id]?.[0]?.name}
-                                                                    isEditable={!submittedSteps[currentStep]}
-                                                                    noHasPermission={!isUserInSector(options[currentStep].sector_stage)} 
-                                                                    onFieldChange={handleFieldChange}
-                                                                    fileInfo={fileInfo}
-                                                                    handleDownload={handleDownload}
-                                                                    stepId = {orderedSteps[currentStep].id} 
-                                                                />
-                                                            </li>
+                                                            <MetaFieldInputs 
+                                                                key={`${orderedSteps[currentStep].id}-meta-${idx}`}
+                                                                field={field} 
+                                                                fieldId={field.id} 
+                                                                initalValue={formValues[orderedSteps[currentStep].id]?.[field.id] || uploadedFiles[orderedSteps[currentStep].id]?.[field.id]?.[0]?.name}
+                                                                isEditable={!submittedSteps[currentStep]}
+                                                                noHasPermission={!isUserInSector(options[currentStep].sector_stage)} 
+                                                                onFieldChange={handleFieldChange}
+                                                                fileInfo={fileInfo}
+                                                                handleDownload={handleDownload}
+                                                                stepId = {orderedSteps[currentStep].id} 
+                                                            />
                                                         )) : null}
-                                                    </ul>
+                                                    </div>
                                                     {!submittedSteps[currentStep] && (
                                                         <div className="action-bar">
                                                             <Button

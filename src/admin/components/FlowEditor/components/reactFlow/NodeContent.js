@@ -82,72 +82,72 @@ const NodeContent = ({ id, data  = {} }) => {
     updateNodeTempSector(id, [value]);
   };
  
-  return (
-    <div className="step-container">
-      {/* Node Drag Handle */}
-      <NodeHandle nodeId={id} />
+    return (
+        <div className="step-container">
+            {/* Node Drag Handle */}
+            <NodeHandle nodeId={id} />
 
-      {/* Connection Handles */}
-      <Handle type="target" position={Position.Left} />
-      <Handle type="source" position={Position.Right} />
+            {/* Connection Handles */}
+            <Handle type="target" position={Position.Left} />
+            <Handle type="source" position={Position.Right} />
 
-      {/* Node Name */}
-      <TextControl
-        value={stageName}
-        label="Step name"
-        onChange={handleStageNameChange}
-        placeholder="Digite o nome da etapa"
-      />
+            {/* Node Name */}
+            <TextControl
+                value={stageName}
+                label="Step name"
+                onChange={handleStageNameChange}
+                placeholder="Digite o nome da etapa"
+            />
 
-      <ComboboxControl
-        label="Group responsible"
-        value={sector}
-        options={sectors.map(sector => ({ 
-          label: sector.name, 
-          value: sector.id,
-        }))}
-        onChange={handleStageSectorChange}
-      />
+            <ComboboxControl
+                label="Group responsible"
+                value={sector}
+                options={sectors.map(sector => ({ 
+                label: sector.name, 
+                value: sector.id,
+                }))}
+                onChange={handleStageSectorChange}
+            />
 
-      {/* List of Fields */}
-      <div className="components-base-control__field">
-        <label className="components-base-control__label">Fields</label>
-      </div>
-      {fields.length > 0 && (
-        <div className="flow-fields">
-          <DragAndDropList nodeId={id} fields={fields} updateFields={updateFields} />
-        </div>
-      )}
-      <Button variant="primary" size="small" icon={<Icon icon={plus}/>} onClick={() => setIsAddingFields(true)}>
-        Add field
-      </Button>
-
-      {/* Toolbar with Add and Delete */}
-      {isAddingFields && (
-        <NodeToolbar isVisible={isSelected} position="right">
-          <div className="node-meta-container">
-            <h3 className="node-meta-title">Select a field to add:</h3>
-            <ul className="node-meta-list-container">
-              {FIELD_OPTIONS.map((option) => (
-                <li className="node-meta-list">
-                  <Icon icon={option.icon}/>
-                  <span
-                    key={option.id}
-                    onClick={() => addFieldToNode(option.id)}
-                  >
-                    {option.label}
-                  </span>
-                </li>
-              ))}
-            </ul>
-            <Button variant="secondary" onClick={() => setIsAddingFields(false)}>
-              Cancelar
+            {/* List of Fields */}
+            <div className="components-base-control__field">
+                <label className="components-base-control__label">Fields</label>
+            </div>
+            {fields.length > 0 && (
+                <div className="flow-fields">
+                <DragAndDropList nodeId={id} fields={fields} updateFields={updateFields} />
+                </div>
+            )}
+            <Button variant="primary" size="small" icon={<Icon icon={plus}/>} onClick={() => setIsAddingFields(true)}>
+                Add field
             </Button>
-          </div>
-        </NodeToolbar>
-      )}
-    </div>
-  );
+
+            {/* Toolbar with Add and Delete */}
+            {isAddingFields && (
+                <NodeToolbar isVisible={isSelected} position="right">
+                <div className="node-meta-container">
+                    <h3 className="node-meta-title">Select a field to add:</h3>
+                    <ul className="node-meta-list-container">
+                    {FIELD_OPTIONS.map((option) => (
+                        <li className="node-meta-list">
+                        <Icon icon={option.icon}/>
+                        <span
+                            key={option.id}
+                            onClick={() => addFieldToNode(option.id)}
+                        >
+                            {option.label}
+                        </span>
+                        </li>
+                    ))}
+                    </ul>
+                    <Button variant="secondary" onClick={() => setIsAddingFields(false)}>
+                    Cancelar
+                    </Button>
+                </div>
+                </NodeToolbar>
+            )}
+            </div>
+    );
 };
 
 export default NodeContent;
