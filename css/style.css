@@ -368,17 +368,21 @@ form .action-bar {
 .description-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem 4rem;
+  gap: 2rem 4rem;
   width: 100%;
 }
 .description-list .list-item {
-  flex-basis: 150px;
+  flex-basis: 200px;
   flex-grow: 1;
 }
 .description-list dt {
   color: var(--gray-600);
 }
+.description-list dt::after {
+  content: ":";
+}
 .description-list dd {
+  font-size: .9rem;
   margin: 0;
 }
 .list-group-item { /* not used */
