@@ -33,7 +33,7 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
   const handleSave = async (event) => {
     event.preventDefault();
 
-    if (!title && !description) {
+    if (!title || !description) {
       setNotice({ status: "error", message: "Title and description are required." });
       return;
     }
