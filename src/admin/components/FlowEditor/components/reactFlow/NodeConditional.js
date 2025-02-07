@@ -23,7 +23,7 @@ const NodeConditional = (node) => {
 
     // Função para alternar a visibilidade da barra de ferramentas
     const handleClick = (event) => {
-        if (containerRef.current && containerRef.current.contains(event.target)) {
+        if (!isVisibleToolbar && containerRef.current && containerRef.current.contains(event.target)) {
             setIsVisibleToolbar(true);
         }
     };
@@ -31,7 +31,7 @@ const NodeConditional = (node) => {
     // Fechar o modal quando clicar fora dele
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (modalRef.current && !modalRef.current.contains(event.target) && containerRef.current && !containerRef.current.contains(event.target)) {
+            if (modalRef.current && !modalRef.current.contains(event.target)) {
                 setIsVisibleToolbar(false);
             }
         };
@@ -79,8 +79,15 @@ const NodeConditional = (node) => {
             alert("Please fill out all select fields before saving.");
             return;
         }
+
+        alert("Changes applied successfully.");
+        setIsVisibleToolbar(false);
     };
 
+    const handleCloseToolbar = (event) => {
+        event.stopPropagation();
+        setIsVisibleToolbar(false);
+    };
 
     return (
         <div 
@@ -90,14 +97,6 @@ const NodeConditional = (node) => {
             >
             <Handle type="target" position={Position.Left} style={{ top: "42px", left: "-8px" }} />
             <Handle type="source" position={Position.Right} style={{ top: "-10px", right: "-3px" }} />
-            <Tooltip text="Remove step">
-                <div className="btn close-btn" 
-                    onClick={(event) =>{
-                    event.stopPropagation(); // Impede a propagação do clique
-                    removeNode(node.id);
-                    }}></div>
-            </Tooltip>
-
             {isVisibleToolbar && (
                 <div 
                     ref={modalRef}
@@ -113,7 +112,21 @@ const NodeConditional = (node) => {
                         transition: "transform 0.3s ease"
                     }}
                     >
-                <h3>Condition settings</h3>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <h3>Condition settings</h3>
+                    <button 
+                        onClick={handleCloseToolbar} 
+                        style={{
+                            background: "none",
+                            border: "none",
+                            fontSize: "20px",
+                            cursor: "pointer",
+                            color: "#333"
+                            }}
+                        >
+                            ✖
+                    </button>
+                </div>
                 <hr />
                 <dl>
                     <dt>Input stage:</dt>
@@ -190,6 +203,19 @@ const NodeConditional = (node) => {
                 >
                     Apply
                 </button>
+
+                <button   
+                    onClick={() => removeNode(node.id)} 
+                    style={{
+                    padding: "10px 20px",
+                    backgroundColor: "red",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                    fontSize: "16px",
+                    }}
+                >Remove</button>
                 </div>
             )}
         </div>
