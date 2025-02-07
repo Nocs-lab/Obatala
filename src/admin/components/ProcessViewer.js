@@ -18,6 +18,7 @@ import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
+import MetaFieldDisplay from "./ProcessManager/MetaFieldDisplay";
 
 const ProcessViewer = () => {
     const [process, setProcess] = useState(null);
@@ -42,6 +43,7 @@ const ProcessViewer = () => {
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
     const allAuthors = useSelect(select => select(coreStore).getUsers({ who: 'authors' }), []);
     const [isStepSubmitEnabled, setIsStepSubmitEnabled] = useState({});
+    
     
     const getProcessIdFromUrl = () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -73,7 +75,7 @@ const ProcessViewer = () => {
             fetchProcessById(processId)
                 .then((data) => {
                     setProcess(data);
-                    setIsPublic(data.meta?.access_level?.[0] === 'Public' || data.meta?.access_level?.[0] === 'public' )
+                    setIsPublic(data.meta?.access_level?.[0] === 'Not restricted' || data.meta?.access_level?.[0] === 'not restricted' )
 
                 const processTypeId = data.meta.process_type;
                 if (processTypeId) {
@@ -204,11 +206,13 @@ const ProcessViewer = () => {
         }));
            
         }else {
+            const valueToSave = Array.isArray(newValue) ? newValue : [newValue];
+
             setFormValues(prevValues => ({
                 ...prevValues,
                 [stepId]: {
                     ...prevValues[stepId],
-                    [fieldId]: newValue,
+                    [fieldId]: valueToSave,
                 },
             }));
         }
@@ -216,6 +220,9 @@ const ProcessViewer = () => {
          // Verifica se todos os campos da etapa atual foram preenchidos
         const allFieldsFilled = orderedSteps[currentStep].data.fields.every((field) => {
         const value = formValues[stepId]?.[field.id] || newValue;
+        if (Array.isArray(value)) {
+            return value.length > 0;
+        }
         return value !== undefined && value !== '';
         });
         setIsStepSubmitEnabled(prevState => ({
@@ -278,7 +285,6 @@ const ProcessViewer = () => {
         let uploadFailed = false;
     
         if (uploadedFiles[stepId]) {
-            console.log(uploadedFiles[stepId])
             for (const [fieldId, files] of Object.entries(uploadedFiles[stepId])) {
                 if (!files || !Array.isArray(files) || files.length === 0) {
                     continue; 
@@ -365,7 +371,6 @@ const ProcessViewer = () => {
     const handleDownload = async (fieldId) => {
         try {
             const stepId = orderedSteps[currentStep].id;
-            console.log(uploadedFiles[stepId])
             const file = 
             formValues[stepId]?.[fieldId] || 
             uploadedFiles[stepId]?.[fieldId]?.[0]?.name;
@@ -380,7 +385,6 @@ const ProcessViewer = () => {
                 file: file,
                 node_id: stepId 
             });
-            console.log(uploadedFiles[orderedSteps[currentStep].id], formValues[orderedSteps[currentStep].id][fieldId])
             const response = await apiFetch({
                 path: `/obatala/v1/process_type/download?${params}`,
                 method: 'GET',
@@ -458,13 +462,10 @@ const ProcessViewer = () => {
         })
         return formatDate;
     }
-
     return (
         <main>
            {isLoading ? (
-                <>        
-                    <Spinner />
-                </>
+                <Spinner />
             ) :(
                 <>
                     <span className="brand">
@@ -483,24 +484,22 @@ const ProcessViewer = () => {
                     <div className="badge-container">
                         <span
                             className={`badge ${
-                                process.meta.access_level == "public" || process.meta.access_level == 'Public' ? "success" : "warning"
+                                process.meta.access_level == "not restricted" || process.meta.access_level == 'Not restricted' ? "success" : "warning"
                             }`}
                             >
                             {process.meta.access_level}
                         </span>
                         <span className="badge default"><Icon icon="yes"/> {calculatePercentagem()}% concluído</span>
-                        <span className="badge default"><Icon icon="admin-users"/> Criado por:  
-                            {authorsById[process?.author]?.name} em {createAtProcess()}
+                        <span className="badge default"><Icon icon="admin-users"/> Criado por: {authorsById[process?.author]?.name} em {createAtProcess()}
                         </span>
                     </div>
                     {notice && (
-            <div className="notice-container">
-            <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                {notice.message}
-            </Notice>
-            </div>
-        )}
-
+                        <div className="notice-container">
+                            <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                                {notice.message}
+                            </Notice>
+                        </div>
+                    )}
 
                     {!isPublic && hasPermission === false ? (
                         <div style={{margin: '50px'}}>
@@ -531,40 +530,65 @@ const ProcessViewer = () => {
                                 <Panel key={`${orderedSteps[currentStep].id}-${currentStep}`}>
                                     <PanelHeader>
                                         <h3>{`${options[currentStep].label}`}</h3>
-                                        <span className="badge default ms-auto">
-                                            Grupo: {getSectorName(options[currentStep].sector_stage)}
-                                        </span>
+                                        {options[currentStep].sector_stage && (
+                                            <span className="badge default ms-auto">
+                                                Grupo: {getSectorName(options[currentStep].sector_stage)}
+                                            </span>
+                                        )}
+                                        
                                     </PanelHeader>
                                     <PanelBody>
                                         <PanelRow>
+                                            {!isUserInSector(options[currentStep].sector_stage) && (
+                                                <div className="notice-container">
+                                                    <Notice status="warning" isDismissible={false}>
+                                                        You can only view this step.
+                                                    </Notice>
+                                                </div>
+                                            )}
                                             {options[currentStep].fields.length > 0 ? (
-                                                <form className="centered" onSubmit={handleSubmit}>
-                                                    <ul className="meta-fields-list">
+                                                  !submittedSteps[currentStep] ? (
+                                                <form onSubmit={handleSubmit}>
+                                                    <div className="meta-field-wrapper">
                                                         {Array.isArray(options[currentStep].fields) ? options[currentStep].fields.map((field, idx) => (
-                                                            <li key={`${orderedSteps[currentStep].id}-meta-${idx}`} className="meta-field-item">
-                                                                <MetaFieldInputs 
-                                                                    field={field} 
-                                                                    fieldId={field.id} 
-                                                                    initalValue={formValues[orderedSteps[currentStep].id]?.[field.id] || uploadedFiles[orderedSteps[currentStep].id]?.[field.id]?.[0]?.name}
-                                                                    isEditable={!submittedSteps[currentStep]}
-                                                                    noHasPermission={!isUserInSector(options[currentStep].sector_stage)} 
-                                                                    onFieldChange={handleFieldChange}
-                                                                    fileInfo={fileInfo}
-                                                                    handleDownload={handleDownload}
-                                                                    stepId = {orderedSteps[currentStep].id} 
-                                                                />
-                                                            </li>
+                                                            <MetaFieldInputs 
+                                                                key={`${orderedSteps[currentStep].id}-meta-${idx}`}
+                                                                field={field} 
+                                                                fieldId={field.id} 
+                                                                initalValue={formValues[orderedSteps[currentStep].id]?.[field.id] || uploadedFiles[orderedSteps[currentStep].id]?.[field.id]?.[0]?.name}
+                                                                isEditable={!submittedSteps[currentStep]}
+                                                                noHasPermission={!isUserInSector(options[currentStep].sector_stage)} 
+                                                                onFieldChange={handleFieldChange}
+                                                                fileInfo={fileInfo}
+                                                                handleDownload={handleDownload}
+                                                                stepId = {orderedSteps[currentStep].id} 
+                                                            />
                                                         )) : null}
-                                                    </ul>
-                                                    <div className="action-bar">
-                                                        <Button
-                                                            variant="primary"
-                                                            type="submit"
-                                                            disabled={!isSubmitEnabled || submittedSteps[currentStep] || !isUserInSector(options[currentStep].sector_stage)}
-                                                            >Submit
-                                                        </Button>
                                                     </div>
+                                                    {!submittedSteps[currentStep] && (
+                                                        <div className="action-bar">
+                                                            <Button
+                                                                variant="primary"
+                                                                type="submit"
+                                                                disabled={!isSubmitEnabled || submittedSteps[currentStep] || !isUserInSector(options[currentStep].sector_stage)}
+                                                                >Submit
+                                                            </Button>
+                                                        </div>
+                                                    )}
                                                 </form>
+                                            ) : (
+                                                <dl className="description-list">
+                                                    {Array.isArray(options[currentStep].fields) ? options[currentStep].fields.map((field, idx) => (
+                                                        <MetaFieldDisplay 
+                                                            key={`${orderedSteps[currentStep].id}-meta-${idx}`}
+                                                            field={field} 
+                                                            value={formValues[orderedSteps[currentStep].id]?.[field.id] || uploadedFiles[orderedSteps[currentStep].id]?.[field.id]?.[0]?.name}
+                                                            handleDownload={handleDownload}
+                                                            fieldId={field.id}
+                                                        />
+                                                    )) : null}
+                                                </dl>
+                                            )
                                             ) : (
                                                 <div className="notice-container">
                                                     <Notice status="warning" isDismissible={false}>
