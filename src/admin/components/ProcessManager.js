@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { Spinner, Button, Notice, Panel, PanelHeader, PanelRow, Icon, ButtonGroup, Tooltip, Modal} from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import ProcessCreator from './ProcessManager/ProcessCreator';
@@ -14,6 +14,7 @@ const ProcessManager = ({ onSelectProcess }) => {
     const [selectedProcessId, setSelectedProcessId] = useState(null);
     const [addingProcess, setAddingProcess] = useState(null);
     const [editingProcess, setEditingProcess] = useState(null);
+    const [accessLevel, setAccessLevel] = useState(null);
     const [notice, setNotice] = useState(null);
 
   useEffect(() => {
@@ -110,13 +111,22 @@ const ProcessManager = ({ onSelectProcess }) => {
     setEditingProcess(process);
   };
 
-    const handleAddProcess = () => {
-        setAddingProcess(true);
-    };
-    const handleCancel = () => {
-        setEditingProcess(null);
-        setAddingProcess(null);
-    };
+  const handleAddProcess = () => {
+      setAddingProcess(true);
+  };
+  const handleCancel = () => {
+      setEditingProcess(null);
+      setAddingProcess(null);
+  };
+
+  const filteredProcess = useMemo(() => {
+      if (!accessLevel) return processes;
+      return processes.filter((process) => 
+        process
+          ? process.meta.access_level[0].includes(accessLevel) 
+          : true
+      );
+    }, [accessLevel, processes]);
 
 
   if (isLoading) {
@@ -145,11 +155,13 @@ const ProcessManager = ({ onSelectProcess }) => {
       )}
 
       <ProcessList
-          processes={processes}
+          processes={filteredProcess}
           onEdit={handleEditProcess}
           onViewProcess={handleSelectProcess}
           processTypeMappings={processTypeMappings}
           processTypes={processTypes}
+          accessLevel={accessLevel}
+          setAccessLevel={setAccessLevel}
       />
         {editingProcess && (
                 <Modal

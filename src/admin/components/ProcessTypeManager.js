@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect, useReducer, useMemo } from 'react';
 import {
     Button,
     ButtonGroup,
@@ -19,6 +19,7 @@ const ProcessTypeManager = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [editingProcessType, setEditingProcessType] = useState(null);
   const [addingProcessType, setAddingProcessType] = useState(null);
+  const [status, setStatus] = useState(null);
   const [notice, setNotice] = useState(null);
 
   const [state, dispatch] = useReducer(Reducer, initialState)
@@ -26,6 +27,7 @@ const ProcessTypeManager = () => {
   useEffect(() => {
       loadProcessTypes();
   }, []);
+
 
   const loadProcessTypes = () => {
     setIsLoading(true);
@@ -100,7 +102,17 @@ const ProcessTypeManager = () => {
 
   const handleConfirmDelete = (processModel) => {
     dispatch({type: 'OPEN_MODAL_PROCESS_MODEL', payload: processModel})
-  }
+  };
+
+  const filteredModels = useMemo(() => {
+    if (!status) return processTypes;
+    return processTypes.filter((processType) => 
+      processType
+        ? processType.meta.status[0].includes(status) 
+        : true
+    );
+  }, [status, processTypes]);
+  
 
   if (isLoading) {
     return <Spinner />;
@@ -140,10 +152,12 @@ const ProcessTypeManager = () => {
             </ConfirmDialog>
 
             <ProcessTypeList
-                processTypes={processTypes}
+                processTypes={filteredModels}
                 onEdit={handleEditModel}
                 onManager={handleManageProcessModel}
                 onDelete={handleConfirmDelete}
+                status={status}
+                setStatus={setStatus}
             />
         </main>
         {addingProcessType || editingProcessType ? (

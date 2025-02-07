@@ -2,12 +2,18 @@ import React, { useMemo } from 'react';
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
 import { Button, ButtonGroup, Icon, Tooltip, Panel, PanelHeader, PanelRow, Notice, TextControl } from '@wordpress/components';
 import { edit, seen} from '@wordpress/icons';
+import ProcessFilter from './ProcessFilters';
 
-const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, processTypes }) => {
+const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, processTypes, accessLevel, setAccessLevel }) => {
     const columns = useMemo(() => [
         {
             Header: 'Process Title',
             accessor: 'title.rendered',
+            Cell: ({ row }) => (
+                <a href={`?page=process-viewer&process_id=${row.original.id}`}>
+                        {row.original.title.rendered}
+                </a>
+            ),
         },
         {
             Header: 'Process Model Title',
@@ -96,6 +102,11 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
                     onChange={value => setGlobalFilter(value)}
                     placeholder="Search by title"
                     type="search"
+                />
+                <ProcessFilter
+                    accessLevel={accessLevel}
+                    setAccessLevel={setAccessLevel}
+
                 />
                 {processes.length > 0 ? (
                     <>

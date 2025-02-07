@@ -817,3 +817,10 @@ button .components-spinner {
   margin-left: var(--gap-external);
   margin-right: var(--gap-external);
 }
+
+.container_searchAndSelect {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  width: 100%;
+}

@@ -1,10 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
-import { Button, ButtonGroup, Icon, Tooltip, Panel, PanelHeader, PanelRow, Notice, TextControl } from '@wordpress/components';
-import { edit, trash, layout } from '@wordpress/icons';
+import { Button, ButtonGroup, Icon, Tooltip, Panel, PanelHeader, PanelRow, Notice, TextControl  } from '@wordpress/components';
+import { edit, trash, layout, close, more, filter } from '@wordpress/icons';
 import { format } from 'date-fns';
+import ProcessTypeFilter from './ProcessTypeFilters';
 
-const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager }) => {
+const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager,status, setStatus }) => {
     const columns = useMemo(() => [
         {
             Header: 'Title',
@@ -86,6 +87,7 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager }) => {
         usePagination
     );
 
+    
     return (
         <Panel>
             <PanelHeader>
@@ -93,13 +95,19 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager }) => {
                 <span className="badge">{processTypes.length}</span>
             </PanelHeader>
             <PanelRow>
-                <TextControl
-                    className="mb-1"
-                    value={globalFilter || ''}
-                    onChange={value => setGlobalFilter(value)}
-                    placeholder="Search by title or description"
-                    type="search"
-                />
+                <div className='container_searchAndSelect'>
+                    <TextControl
+                        className="mb-1"
+                        value={globalFilter || ''}
+                        onChange={value => setGlobalFilter(value)}
+                        placeholder="Search by title or description"
+                        type="search"
+                    />
+                    <ProcessTypeFilter
+                        status={status}
+                        setStatus={setStatus}
+                    />         
+                </div>    
                 {processTypes.length > 0 ? (
                     <>
                         <table {...getTableProps()} className="wp-list-table widefat fixed striped table-view-list">
