@@ -30,15 +30,15 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager, authorsByI
             accessor: 'meta',
             Cell: ({ value }) => (
                 <p>
-                   { value.updateAt ? format(value.updateAt[0], "dd 'de' MMM 'de' yyyy 'às' pp 'por' ",
-                                        {
-                                            locale: ptBR
-                                        }
-                    )  : ''}
+                   { value.updateAt 
+                        ? format(value.updateAt[0], "dd 'de' MMM 'de' yyyy 'às' pp 'por' ",
+                            {
+                                locale: ptBR
+                            })  
+                        : ''
+                    }
                     {value.user ? value.user[0] : ''}
                 </p>
-                
-                
             ),
         },
         {
