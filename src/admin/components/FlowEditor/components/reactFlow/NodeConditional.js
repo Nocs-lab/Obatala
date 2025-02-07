@@ -23,7 +23,7 @@ const NodeConditional = (node) => {
 
     // Função para alternar a visibilidade da barra de ferramentas
     const handleClick = (event) => {
-        if (containerRef.current && containerRef.current.contains(event.target)) {
+        if (!isVisibleToolbar && containerRef.current && containerRef.current.contains(event.target)) {
             setIsVisibleToolbar(true);
         }
     };
@@ -79,6 +79,9 @@ const NodeConditional = (node) => {
             alert("Please fill out all select fields before saving.");
             return;
         }
+
+        alert("Changes applied successfully.");
+        setIsVisibleToolbar(false);
     };
 
     const handleCloseToolbar = (event) => {
