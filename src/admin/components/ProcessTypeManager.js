@@ -23,11 +23,10 @@ const ProcessTypeManager = () => {
   const [editingProcessType, setEditingProcessType] = useState(null);
   const [addingProcessType, setAddingProcessType] = useState(null);
   const [notice, setNotice] = useState(null);
-  const [state, dispatch] = useReducer(Reducer, initialState)
-
+  const [state, dispatch] = useReducer(Reducer, initialState);
+  
   const allAuthors = useSelect(select => select(coreStore).getUsers({ who: 'authors' }), []);
   
-
   useEffect(() => {
       loadProcessTypes();
   }, []);
@@ -55,9 +54,7 @@ const ProcessTypeManager = () => {
 
           } else {
               savedProcessType = await saveProcessType(processType);
-          }
-          console.log(processType.meta.updateAt,processType.meta.user);
-          
+          }          
           const meta = {
               description: processType.meta.description || '',
               status: processType.meta.status || '',
