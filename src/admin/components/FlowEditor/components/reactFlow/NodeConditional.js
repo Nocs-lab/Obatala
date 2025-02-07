@@ -31,7 +31,7 @@ const NodeConditional = (node) => {
     // Fechar o modal quando clicar fora dele
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (modalRef.current && !modalRef.current.contains(event.target) && containerRef.current && !containerRef.current.contains(event.target)) {
+            if (modalRef.current && !modalRef.current.contains(event.target)) {
                 setIsVisibleToolbar(false);
             }
         };
@@ -81,6 +81,10 @@ const NodeConditional = (node) => {
         }
     };
 
+    const handleCloseToolbar = (event) => {
+        event.stopPropagation();
+        setIsVisibleToolbar(false);
+    };
 
     return (
         <div 
@@ -90,15 +94,6 @@ const NodeConditional = (node) => {
             >
             <Handle type="target" position={Position.Left} style={{ top: "42px", left: "-8px" }} />
             <Handle type="source" position={Position.Right} style={{ top: "-10px", right: "-3px" }} />
-            {/*
-            <Tooltip text="Remove step">
-                <div className="btn close-btn" 
-                    onClick={(event) =>{
-                    event.stopPropagation(); // Impede a propagação do clique
-                    removeNode(node.id);
-                    }}></div>
-            </Tooltip> 
-            */}
             {isVisibleToolbar && (
                 <div 
                     ref={modalRef}
@@ -114,7 +109,21 @@ const NodeConditional = (node) => {
                         transition: "transform 0.3s ease"
                     }}
                     >
-                <h3>Condition settings</h3>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <h3>Condition settings</h3>
+                    <button 
+                        onClick={handleCloseToolbar} 
+                        style={{
+                            background: "none",
+                            border: "none",
+                            fontSize: "20px",
+                            cursor: "pointer",
+                            color: "#333"
+                            }}
+                        >
+                            ✖
+                    </button>
+                </div>
                 <hr />
                 <dl>
                     <dt>Input stage:</dt>
