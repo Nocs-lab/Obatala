@@ -340,6 +340,7 @@ export const FlowProvider = ({ children }) => {
     onImport,
     addFirstNode,
     addLastNode,
+    setNodes,
   };
 
   return <FlowContext.Provider value={value}>{children}</FlowContext.Provider>;
