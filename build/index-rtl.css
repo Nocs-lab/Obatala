@@ -682,9 +682,8 @@ svg.react-flow__connectionline {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  /*padding-bottom: 1rem;*/
+  padding-bottom: 1rem;
   overflow: visible;
-  padding-bottom: 0;
 }
 
 .node-content {
@@ -716,6 +715,32 @@ svg.react-flow__connectionline {
 .bpmn-conditional-operator .wp-drawer {
   height: auto;
   right: auto;
+}
+
+.bpmn-start-end-node {
+  border-radius: 50%;
+  box-shadow: 0 4px 6px rgba(0,0,0,.1);
+  color: var(--white);
+  cursor: grab;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 70px;
+  position: relative;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+          user-select: none;
+  width: 70px;
+}
+.bpmn-start-node {
+  background-color: var(--success);
+}
+.bpmn-end-node {
+  background-color: var(--error);
+}
+.bpmn-start-end-node:hover span::before {
+  content: "⠿";
+  padding-left: .25rem;
 }
 
 /* custom handle buttons */

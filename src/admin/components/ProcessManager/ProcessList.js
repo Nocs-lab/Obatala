@@ -6,11 +6,11 @@ import { edit, seen} from '@wordpress/icons';
 const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, processTypes }) => {
     const columns = useMemo(() => [
         {
-            Header: 'Process Title',
+            Header: 'Process',
             accessor: 'title.rendered',
         },
         {
-            Header: 'Process Model Title',
+            Header: 'Model',
             Cell: ({row}) => {
                 const typeMapping = processTypeMappings.find(m => m.processId === row.original.id);
                 const processType = typeMapping ? processTypes.find(type => type.id == typeMapping.processTypeId) : null;
@@ -23,11 +23,11 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
             accessor: 'meta.current_stage',
         },
         {
-          Header: 'Access Level',
+          Header: 'Access level',
           accessor: 'meta.access_level',
           Cell: ({ value }) => (
   
-              <span className={`badge ${value == 'public' || value == 'Public' ? 'success' : 'warning'}`}>
+              <span className={`badge ${value == 'Not restricted' || value == 'not restricted' ? 'success' : 'warning'}`}>
                   {value}
               </span> 
             ),
