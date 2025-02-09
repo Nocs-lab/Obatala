@@ -236,7 +236,7 @@ const ProcessViewer = () => {
     const getOrderedSteps = useCallback(() => {
         if (flowNodes && flowNodes.nodes){
             const { edges, nodes } = flowNodes;
-            const filteredNodes = nodes.filter(node => node.id !== "First" && node.id !== "Last");
+            const filteredNodes = nodes.filter(node => node.id !== "Start" && node.id !== "End");
             const nodeMap = new Map(nodes.map(node => [node.id, node]));
             const sources = new Set(edges.map(edge => edge.source));
             const targets = new Set(edges.map(edge => edge.target));
