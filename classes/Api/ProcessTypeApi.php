@@ -147,6 +147,8 @@ class ProcessTypeApi extends ObatalaAPI {
             'generate_tainacan_items',
             'description',
             'status',
+            'updateAt',
+            'user',
             'step_order',
             'flowData',
         ];
