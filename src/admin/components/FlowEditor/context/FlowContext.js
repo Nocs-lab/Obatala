@@ -132,6 +132,22 @@ export const FlowProvider = ({ children }) => {
     );
   };
 
+  const updateNodeCondition = (nodeId, conditionData) => {
+    setNodes((prevNodes) =>
+      prevNodes.map((node) =>
+        node.id === nodeId
+          ? {
+              ...node,
+              data: {
+                ...node.data,
+                condition: conditionData
+              }
+            }
+          : node
+      )
+    );
+  };
+
   const updateNodeTempSector = (nodeId, newValue) => {
     setNodes((prevNodes) =>
       prevNodes.map((node) =>
@@ -265,6 +281,7 @@ export const FlowProvider = ({ children }) => {
             data: {
               fields: nodeData.fields || [],
               stageName: nodeData.stageName || "",
+              condition: nodeData.condition || {}, // Garante que condition é preservado
               updateFields: (newFields) => updateFieldsForNode(id, newFields),
               updateNodeName: (newName) => updateNodeName(id, newName),
               updatePosition: (newPosition) => updateNodePosition(id, newPosition),
@@ -338,6 +355,8 @@ export const FlowProvider = ({ children }) => {
     errors,
     onExport,
     onImport,
+    setNodes,
+    updateNodeCondition
     addStartNode,
     addEndNode,
   };
