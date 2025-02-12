@@ -18,48 +18,48 @@ export const FlowProvider = ({ children }) => {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   //Função para adicionar um nó inicial
-  const addFirstNode = () => {
-    const lastNode = nodes[nodes.length - 1];
-    const newNodePosition = lastNode
-      ? { x: lastNode.position.x - 50, y: lastNode.position.y + 50 }
+  const addStartNode = () => {
+    const startNode = nodes[nodes.length - 1];
+    const newNodePosition = startNode
+      ? { x: startNode.position.x - 50, y: startNode.position.y + 50 }
       : { x: -200, y: 130 };
-    const First = {
-      id: "First",
-      type: "firstNode",
+    const Start = {
+      id: "Start",
+      type: "startNode",
       dragHandle: ".custom-drag-handle",
       position: newNodePosition,
       data: {
         fields: [],
-        stageName: "First",
-        updateFields: (newFields) => updateFieldsForNode("First", newFields),
-        updateNodeName: (newName) => updateNodeName("First", newName),
+        stageName: "Start",
+        updateFields: (newFields) => updateFieldsForNode("Start", newFields),
+        updateNodeName: (newName) => updateNodeName("Start", newName),
         updatePosition: (newPosition) =>
-          updateNodePosition("First", newPosition),
+          updateNodePosition("Start", newPosition),
       },
     };
-    setNodes((prevNodes) => [...prevNodes, First]);
+    setNodes((prevNodes) => [...prevNodes, Start]);
   };
 
-  const addLastNode = () => {
-    const lastNode = nodes[nodes.length - 1];
-    const newNodePosition = lastNode
-      ? { x: lastNode.position.x + 50, y: lastNode.position.y + 50 }
+  const addEndNode = () => {
+    const endNode = nodes[nodes.length - 1];
+    const newNodePosition = endNode
+      ? { x: endNode.position.x + 50, y: endNode.position.y + 50 }
       : { x: 460, y: 130 };
-    const Last = {
-      id: "Last",
-      type: "lastNode",
+    const End = {
+      id: "End",
+      type: "endNode",
       dragHandle: ".custom-drag-handle",
       position: newNodePosition,
       data: {
         fields: [],
-        stageName: "Last",
-        updateFields: (newFields) => updateFieldsForNode("Last", newFields),
-        updateNodeName: (newName) => updateNodeName("Last", newName),
+        stageName: "End",
+        updateFields: (newFields) => updateFieldsForNode("End", newFields),
+        updateNodeName: (newName) => updateNodeName("End", newName),
         updatePosition: (newPosition) =>
-          updateNodePosition("Last", newPosition),
+          updateNodePosition("End", newPosition),
       },
     };
-    setNodes((prevNodes) => [...prevNodes, Last]);
+    setNodes((prevNodes) => [...prevNodes, End]);
   };
 
   // Verifica se é necessário adicionar o nó inicial
@@ -67,8 +67,8 @@ export const FlowProvider = ({ children }) => {
     if (!isLoaded) {
       setIsLoaded(true);
     } else if (nodes.length === 0) {
-      addFirstNode();
-      addLastNode();
+      addStartNode();
+      addEndNode();
       addNewNode();
     }
   }, [isLoaded, nodes]);
@@ -355,10 +355,10 @@ export const FlowProvider = ({ children }) => {
     errors,
     onExport,
     onImport,
-    addFirstNode,
-    addLastNode,
     setNodes,
     updateNodeCondition
+    addStartNode,
+    addEndNode,
   };
 
   return <FlowContext.Provider value={value}>{children}</FlowContext.Provider>;
