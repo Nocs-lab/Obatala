@@ -4,7 +4,7 @@ import { useFlowContext } from "../../context/FlowContext";
 import { Tooltip } from "@wordpress/components";
 
 const NodeConditional = (node) => {
-  const { edges, nodes, removeNode, setNodes } = useFlowContext();
+  const { edges, nodes, removeNode, setNodes, updateNodeCondition } = useFlowContext();
   
   const matchedEdgeInput = edges.find(edge => edge?.target === node.id);
   const matchedEdgeOutput = edges.filter(edge => edge?.source === node.id);
@@ -41,6 +41,18 @@ const NodeConditional = (node) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  useEffect(() => {
+    if (node.data.condition) {
+      setSelectedField((prev) => prev || node.data.condition.condition || '');
+      setSelectedFields((prev) =>
+        prev.length ? prev : node.data.condition.outputNodes?.map(output => ({
+          id: output.nodeId,
+          value: output.conditionValue
+        })) || []
+      );
+    }
+  }, [node.data.condition]); 
 
   // Função para verificar se o valor já foi selecionado
   const isValueSelected = (value) => {
@@ -103,23 +115,26 @@ const NodeConditional = (node) => {
       return;
     }
 
-    const updatedNodes = nodes.map((node) => ({
-      ...node, // Mantém todos os dados do node
-      data: {
-        ...node.data, // Mantém todos os dados dentro de node.data
-        condition: { // Adiciona ou sobrescreve a parte condition
-          inputNode: matchedEdgeInput?.source || '',
-          condition: selectedField,
-          outputNodes: matchedEdgeOutput.map((edge, index) => ({
-            conditionValue: selectedFields[index]?.value,
-            nodeId: edge.target
-          }))
-        }
-      }
-    }));
+    const updatedCondition = {
+      inputNode: node.data.condition?.inputNode || '',
+      condition: selectedField,
+      outputNodes: selectedFields.map((field) => ({
+        conditionValue: field.value,
+        nodeId: field.id
+      }))
+    };
 
-    // Atualiza o estado global dos nodes
-    setNodes(updatedNodes);
+    // Atualiza o estado do nó localmente
+    setNodes((prevNodes) =>
+      prevNodes.map((n) =>
+        n.id === node.id && JSON.stringify(n.data.condition) !== JSON.stringify(updatedCondition)
+          ? { ...n, data: { ...n.data, condition: updatedCondition } }
+          : n
+      )
+    );
+
+    updateNodeCondition(node.id, updatedCondition);
+
 
     alert("Changes applied successfully.");
     setIsVisibleToolbar(false);
