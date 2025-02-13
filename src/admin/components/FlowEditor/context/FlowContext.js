@@ -356,7 +356,7 @@ export const FlowProvider = ({ children }) => {
     onExport,
     onImport,
     setNodes,
-    updateNodeCondition
+    updateNodeCondition,
     addStartNode,
     addEndNode,
   };
