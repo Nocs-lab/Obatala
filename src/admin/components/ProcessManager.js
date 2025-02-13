@@ -15,6 +15,7 @@ const ProcessManager = ({ onSelectProcess }) => {
     const [addingProcess, setAddingProcess] = useState(null);
     const [editingProcess, setEditingProcess] = useState(null);
     const [accessLevel, setAccessLevel] = useState(null);
+    const [modelFilter, setModelFilter] = useState(null);
     const [notice, setNotice] = useState(null);
 
   useEffect(() => {
@@ -120,15 +121,18 @@ const ProcessManager = ({ onSelectProcess }) => {
   };
 
   const filteredProcess = useMemo(() => {
-      if (!accessLevel) return processes;
-      return processes.filter((process) => 
-        process
-          ? process.meta.access_level[0].includes(accessLevel) 
-          : true
-      );
-    }, [accessLevel, processes]);
-
-
+    return processes.filter(process => {
+      const matchesAccessLevel = accessLevel
+        ? process?.meta?.access_level?.[0].includes(accessLevel)
+        : true; 
+      const matchesProcessType = modelFilter
+        ? process?.meta?.process_type?.[0].includes(modelFilter.toString())
+        : true;
+  
+      return matchesAccessLevel && matchesProcessType;
+    });
+  }, [accessLevel, modelFilter, processes]);
+  
   if (isLoading) {
     return <Spinner />;
   }
@@ -162,6 +166,8 @@ const ProcessManager = ({ onSelectProcess }) => {
           processTypes={processTypes}
           accessLevel={accessLevel}
           setAccessLevel={setAccessLevel}
+          modelFilter={modelFilter}
+          setModelFilter={setModelFilter}
       />
         {editingProcess && (
                 <Modal

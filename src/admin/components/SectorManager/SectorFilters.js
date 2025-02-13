@@ -1,15 +1,20 @@
 import { Button, DropdownMenu, MenuGroup, MenuItem } from '@wordpress/components';
 import { close, settings } from '@wordpress/icons';
 
-const ProcessFilter = ({ accessLevel, setAccessLevel, modelFilter, setModelFilter, processTypes }) => {
-  const optionsLevel = [
-    { title: "Restricted", value: "Restricted" },
-    { title: "Not Restricted", value: "Not restricted" },
-  ];
+const SectorFilter = ({ status, setStatus, group, setGroup }) => {
+    const options = [
+        { title: "Active", value: "Active" },
+        { title: "Inactive", value: "Inactive" },
+    ];
+
+    const options2 = [
+      { title: "All", value: "" },
+      { title: "My Groups", value: "my groups" },
+    ]
 
   const handleClearFilters = () => {
-    setAccessLevel('');
-    setModelFilter('');
+    setStatus('');
+    setGroup('');
   }
 
   return (
@@ -22,11 +27,11 @@ const ProcessFilter = ({ accessLevel, setAccessLevel, modelFilter, setModelFilte
         {({ onClose }) => (
           <div style={{ display: "flex", gap: "16px" }}>
             <MenuGroup label="Access Level">
-              {optionsLevel.map(option => (
+              {options.map(option => (
                 <MenuItem
                   key={option.value}
                   onClick={() => {
-                    setAccessLevel(option.value);
+                    setStatus(option.value);
                     onClose();
                   }}
                 >
@@ -34,27 +39,26 @@ const ProcessFilter = ({ accessLevel, setAccessLevel, modelFilter, setModelFilte
                 </MenuItem>
               ))}
             </MenuGroup>
-
-           <MenuGroup label="Process Type">
-            {processTypes.map(option => (
+            <MenuGroup label="Groups">
+              {options2.map(option => (
                 <MenuItem
-                  key={option.id}
+                  key={option.value}
                   onClick={() => {
-                    setModelFilter(option.id);
+                    setGroup(option.value);
                     onClose();
                   }}
                 >
-                  {option.title.rendered}
+                  {option.title}
                 </MenuItem>
               ))}
-            </MenuGroup> 
+            </MenuGroup>
           </div>
         )}
       </DropdownMenu>
 
       
 
-      {(accessLevel || modelFilter) && (
+      {(status || group) && (
         <Button
           icon={close}
           onClick={() => handleClearFilters()}
@@ -65,4 +69,4 @@ const ProcessFilter = ({ accessLevel, setAccessLevel, modelFilter, setModelFilte
   );
 };
 
-export default ProcessFilter;
+export default SectorFilter;
