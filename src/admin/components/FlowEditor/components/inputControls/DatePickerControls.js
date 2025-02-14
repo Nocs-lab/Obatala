@@ -34,10 +34,10 @@ export const DatePickerControls = ({
     label: config ? config.label : label ? label : "",
     required: config ? config.required : false,
     dateValue: config
-    ? config.dateValue
-    : dateValue
-    ? new Date().toISOString().split("T")[0] // Define a data padrão como hoje
-    : new Date().toISOString().split("T")[0], // Sempre inicializa com a data de hoje
+      ? config.dateValue
+      : dateValue
+      ? new Date().toISOString().split("T")[0] // Define a data padrão como hoje
+      : new Date().toISOString().split("T")[0], // Sempre inicializa com a data de hoje
     helpText: config ? config.helpText : "",
   }); // Estado para armazenar os valores do formulário
 
@@ -82,15 +82,15 @@ export const DatePickerControls = ({
       />
 
       {/* Campo para seleção de data */}
-        <input
-          type="date"
-          value={formValues.dateValue || ""}
-          onChange={(e) => {
-            setFormValues((prev) => ({ ...prev, dateValue: e.target.value }));
-          }}
-          style={{ display: "none" }}
-        />
-        {errors.dateValue && <p className="error-message">{errors.dateValue}</p>}
+      <input
+        type="date"
+        value={formValues.dateValue || ""}
+        onChange={(e) => {
+          setFormValues((prev) => ({ ...prev, dateValue: e.target.value }));
+        }}
+        style={{ display: "none" }}
+      />
+      {errors.dateValue && <p className="error-message">{errors.dateValue}</p>}
 
       {/* Campo para definir o campo como obrigatório */}
       <CheckboxControl
