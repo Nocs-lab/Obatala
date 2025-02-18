@@ -16,6 +16,13 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager, authorsByI
             accessor: 'description',
         },
         {
+            Header: 'Status',
+            accessor: 'meta.status[0]',
+            Cell: ({ value }) => (
+                <span className={`badge ${value === 'Active' ? 'success' : 'error'}`}>{value}</span>
+            ),
+        },
+        {
             Header: 'Created At',
             accessor: 'date',
             Cell: ({ value }) => format(new Date(value), 'MM/dd/yyyy'),
@@ -31,7 +38,7 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager, authorsByI
             Cell: ({ value }) => (
                 <p>
                    { value.updateAt 
-                        ? format(value.updateAt[0], "dd 'de' MMM 'de' yyyy 'às' pp 'por' ",
+                        ? format(value.updateAt[0], "MM/dd/yyyy 'às' pp 'por' ",
                             {
                                 locale: ptBR
                             })  
@@ -39,18 +46,6 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager, authorsByI
                     }
                     {value.user ? value.user[0] : ''}
                 </p>
-            ),
-        },
-        {
-            Header: 'Number of Steps',
-            accessor: 'meta.flowData.nodes',
-            Cell: ({ value }) => (value ? value.length : 0),
-        },
-        {
-            Header: 'Status',
-            accessor: 'meta.status[0]',
-            Cell: ({ value }) => (
-                <span className={`badge ${value === 'Active' ? 'success' : 'error'}`}>{value}</span>
             ),
         },
         {
