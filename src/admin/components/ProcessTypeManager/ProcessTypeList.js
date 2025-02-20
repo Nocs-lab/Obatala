@@ -6,7 +6,7 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import ProcessTypeFilter from './ProcessTypeFilters';
 
-const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager }) => {
+const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager, status, setStatus, authorsById }) => {
     const columns = useMemo(() => [
         {
             Header: 'Title',
@@ -18,14 +18,19 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager }) => {
         },
         {
             Header: 'Created At',
-            accessor: 'date',
-            Cell: ({ value }) => format(new Date(value), 'MM/dd/yyyy'),
+            //accessor: 'date',
+            Cell: ({ row }) => (
+                <p>
+                    {format(new Date(row.original.date), "MM/dd/yyyy 'por' ")}
+                    {authorsById[row.original.author]?.name}
+                </p>
+            )
         },
-        {
+       /*  {
             Header: 'Created By',
             accessor: 'author',
             Cell: ({ value }) => authorsById[value]?.name,
-        },
+        }, */
         {
             Header: 'Last update',
             accessor: 'meta',
