@@ -25,9 +25,10 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
             }
         },
         {
-            Header: 'Status',
-            accessor: 'meta.current_stage',
-
+            Header: 'Current Step',
+            accessor: row => row.meta?.current_stage 
+                ? `${row.meta.current_stage} - ${row.meta.groupResponsible || 'No group'}`
+                : 'Not started'
         },
         {
           Header: 'Access level',
