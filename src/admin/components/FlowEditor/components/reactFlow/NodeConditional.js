@@ -4,7 +4,7 @@ import { useFlowContext } from "../../context/FlowContext";
 import { Tooltip } from "@wordpress/components";
 
 const NodeConditional = (node) => {
-    const { edges, nodes, removeNode } = useFlowContext();
+    const { edges, nodes, removeNode, setNodes, updateNodeCondition } = useFlowContext();
 
     const matchedEdgeInput = edges.find(edge => edge?.target === node.id);
     const matchedEdgeOutput = edges.filter(edge => edge?.source === node.id);
@@ -23,7 +23,7 @@ const NodeConditional = (node) => {
 
     // Função para alternar a visibilidade da barra de ferramentas
     const handleClick = (event) => {
-        if (containerRef.current && containerRef.current.contains(event.target)) {
+        if (!isVisibleToolbar && containerRef.current && containerRef.current.contains(event.target)) {
             setIsVisibleToolbar(true);
         }
     };
@@ -31,7 +31,7 @@ const NodeConditional = (node) => {
     // Fechar o modal quando clicar fora dele
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (modalRef.current && !modalRef.current.contains(event.target) && containerRef.current && !containerRef.current.contains(event.target)) {
+            if (modalRef.current && !modalRef.current.contains(event.target)) {
                 setIsVisibleToolbar(false);
             }
         };
@@ -41,6 +41,18 @@ const NodeConditional = (node) => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
+
+    useEffect(() => {
+        if (node.data.condition) {
+            setSelectedField((prev) => prev || node.data.condition.condition || '');
+            setSelectedFields((prev) =>
+                prev.length ? prev : node.data.condition.outputNodes?.map(output => ({
+                    id: output.nodeId,
+                    value: output.conditionValue
+                })) || []
+            );
+        }
+    }, [node.data.condition]);
 
     // Função para verificar se o valor já foi selecionado
     const isValueSelected = (value) => {
@@ -59,8 +71,31 @@ const NodeConditional = (node) => {
         setSelectedFields((prev) => {
             const updatedFields = [...prev];
             updatedFields[fieldIndex] = { ...updatedFields[fieldIndex], value };
+
+            // Atualiza a configuração do campo no node específico
+            updateFieldConfig(node.id, updatedFields[fieldIndex].id, { value });
+
             return updatedFields;
         });
+    };
+
+    // Função para atualizar a configuração do campo no node específico
+    const updateFieldConfig = (nodeId, fieldId, newConfig) => {
+        setNodes((prevNodes) =>
+            prevNodes.map((node) =>
+                node.id === nodeId
+                    ? {
+                        ...node,
+                        data: {
+                            ...node.data,
+                            fields: node.data.fields.map((field) =>
+                                field.id === fieldId ? { ...field, config: newConfig } : field
+                            ),
+                        },
+                    }
+                    : node
+            )
+        );
     };
 
     // Função para verificar os campos antes de salvar
@@ -79,27 +114,47 @@ const NodeConditional = (node) => {
             alert("Please fill out all select fields before saving.");
             return;
         }
+
+        const updatedCondition = {
+            inputNode: node.data.condition?.inputNode || '',
+            condition: selectedField,
+            outputNodes: selectedFields.map((field) => ({
+                conditionValue: field.value,
+                nodeId: field.id
+            }))
+        };
+
+        // Atualiza o estado do nó localmente
+        setNodes((prevNodes) =>
+            prevNodes.map((n) =>
+                n.id === node.id && JSON.stringify(n.data.condition) !== JSON.stringify(updatedCondition)
+                    ? { ...n, data: { ...n.data, condition: updatedCondition } }
+                    : n
+            )
+        );
+
+        updateNodeCondition(node.id, updatedCondition);
+
+
+        alert("Changes applied successfully.");
+        setIsVisibleToolbar(false);
     };
 
+    const handleCloseToolbar = (event) => {
+        event.stopPropagation();
+        setIsVisibleToolbar(false);
+    };
 
     return (
-        <div 
-            ref={containerRef} 
-            className="bpmn-conditional-operator custom-drag-handle" 
-            onClick={handleClick} 
-            >
+        <div
+            ref={containerRef}
+            className="bpmn-conditional-operator custom-drag-handle"
+            onClick={handleClick}
+        >
             <Handle type="target" position={Position.Left} style={{ top: "42px", left: "-8px" }} />
             <Handle type="source" position={Position.Right} style={{ top: "-10px", right: "-3px" }} />
-            <Tooltip text="Remove step">
-                <div className="btn close-btn" 
-                    onClick={(event) =>{
-                    event.stopPropagation(); // Impede a propagação do clique
-                    removeNode(node.id);
-                    }}></div>
-            </Tooltip>
-
             {isVisibleToolbar && (
-                <div 
+                <div
                     ref={modalRef}
                     className="wp-drawer"
                     style={{
@@ -112,84 +167,113 @@ const NodeConditional = (node) => {
                         transform: "rotate(-45deg)",
                         transition: "transform 0.3s ease"
                     }}
-                    >
-                <h3>Condition settings</h3>
-                <hr />
-                <dl>
-                    <dt>Input stage:</dt>
-                    <dd>{matchedEdgeInput?.source || "No input stage"}</dd>
-                    <dt>Output stages:</dt>
-                    {matchedEdgeOutput?.length > 0 ? (
-                        matchedEdgeOutput.map((edge, index) => (
-                        <dd key={index}>
-                            {index === 0 && "If"} {/* Exibe "If" apenas na primeira linha */}
-                            {index === 0 ? (
-                            <select
-                                value={selectedField}
-                                onChange={(e) => {
-                                setSelectedField(e.target.value);
-                                // Atualiza todos os campos com o novo selectedField
-                                setSelectedFields((prev) =>
-                                    prev.map((field) => ({ ...field, field: e.target.value }))
-                                );
-                                }}
-                                style={{ margin: "0 10px" }}
-                            >
-                                <option value="" disabled>Select a field</option>
-                                {radioFields.map((field, fieldIndex) => (
-                                <option
-                                    key={fieldIndex}
-                                    value={field.config?.label || field.title || field.id}
-                                >
-                                    {field.config?.label || field.title || field.id}
-                                </option>
-                                ))}
-                            </select>
-                            ) : (
-                            <span style={{ margin: "0 100px" }}></span>
-                            )}
-                            receives
-                            <select
-                            value={selectedFields[index]?.value || ""}
-                            onChange={(e) => handleValueChange(index, e.target.value)}
-                            style={{ margin: "0 10px" }}
-                            disabled={!selectedField}
-                            >
-                            <option value="" disabled>Select a value</option>
-                            {selectedField &&
-                                radioFields
-                                .find((field) => field.config?.label === selectedField)
-                                ?.config?.options
-                                ?.split(",")
-                                .map((option, optionIndex) => (
-                                    <option key={optionIndex} value={option.trim()}>
-                                    {option.trim()}
-                                    </option>
-                                ))}
-                            </select>
-                            , go to {edge.target}
-                        </dd>
-                        ))
-                    ) : (
-                        <dd>No output stages</dd>
-                    )}
-                </dl>
-
-                <hr />
-                <button
-                    onClick={handleSave} // Chama a função de verificação
-                    style={{
-                    padding: "10px 20px",
-                    backgroundColor: "#4CAF50",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "5px",
-                    cursor: "pointer",
-                    fontSize: "16px",
-                    }}
                 >
-                    Apply
-                </button>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <h3>Condition settings</h3>
+                        <button
+                            onClick={handleCloseToolbar}
+                            style={{
+                                background: "none",
+                                border: "none",
+                                fontSize: "20px",
+                                cursor: "pointer",
+                                color: "#333"
+                            }}
+                        >
+                            ✖
+                        </button>
+                    </div>
+                    <hr />
+                    <dl>
+                        <dt>Input stage:</dt>
+                        <dd>{matchedEdgeInput?.source || "No input stage"}</dd>
+                        <dt>Output stages:</dt>
+                        {matchedEdgeOutput?.length > 0 ? (
+                            matchedEdgeOutput.map((edge, index) => (
+                                <dd key={index}>
+                                    {index === 0 && "If"} {/* Exibe "If" apenas na primeira linha */}
+                                    {index === 0 ? (
+                                        <select
+                                            value={selectedField}
+                                            onChange={(e) => {
+                                                setSelectedField(e.target.value);
+                                                // Atualiza todos os campos com o novo selectedField
+                                                setSelectedFields((prev) =>
+                                                    prev.map((field) => ({ ...field, field: e.target.value }))
+                                                );
+                                            }}
+                                            style={{ margin: "0 10px" }}
+                                        >
+                                            <option value="" disabled>Select a field</option>
+                                            {radioFields.map((field, fieldIndex) => (
+                                                <option
+                                                    key={fieldIndex}
+                                                    value={field.config?.label || field.title || field.id}
+                                                >
+                                                    {field.config?.label || field.title || field.id}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    ) : (
+                                        <span style={{ margin: "0 100px" }}></span>
+                                    )}
+                                    receives
+                                    <select
+                                        value={selectedFields[index]?.value || ""}
+                                        onChange={(e) => handleValueChange(index, e.target.value)}
+                                        style={{ margin: "0 10px" }}
+                                        disabled={!selectedField}
+                                    >
+                                        <option value="" disabled>Select a value</option>
+                                        {selectedField &&
+                                            radioFields
+                                                .find((field) => field.config?.label === selectedField)
+                                                ?.config?.options
+                                                ?.split(",")
+                                                .map((option, optionIndex) => (
+                                                    <option key={optionIndex} value={option.trim()}>
+                                                        {option.trim()}
+                                                    </option>
+                                                ))}
+                                    </select>
+                                    , go to {edge.target}
+                                </dd>
+                            ))
+                        ) : (
+                            <dd>No output stages</dd>
+                        )}
+                    </dl>
+
+                    <hr />
+                    <button
+                        onClick={handleSave} // Chama a função de verificação
+                        style={{
+                            padding: "10px 20px",
+                            backgroundColor: "#4CAF50",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                            fontSize: "16px",
+                        }}
+                    >
+                        Apply
+                    </button>
+
+                    <button
+                        onClick={() => removeNode(node.id)}
+                        style={{
+                            padding: "10px 20px",
+                            backgroundColor: "red",
+                            color: "#fff",
+                            border: "none",
+                            borderRadius: "5px",
+                            cursor: "pointer",
+                            fontSize: "16px",
+                        }}
+                    >
+                        Remove
+                    </button>
                 </div>
             )}
         </div>

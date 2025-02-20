@@ -2,7 +2,7 @@ import React from 'react';
 import { Handle } from '@xyflow/react';
 import '../../../../../../css/react-flow.css';
 
-const LastNode = ({ id, data }) => {
+const EndNode = ({ id, data }) => {
     return (
         <div className="bpmn-start-end-node bpmn-end-node custom-drag-handle">
             <span>{id}</span>
@@ -11,4 +11,4 @@ const LastNode = ({ id, data }) => {
     );
 };
 
-export default LastNode;
+export default EndNode;

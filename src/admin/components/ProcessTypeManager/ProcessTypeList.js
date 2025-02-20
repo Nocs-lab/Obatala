@@ -3,9 +3,10 @@ import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table
 import { Button, ButtonGroup, Icon, Tooltip, Panel, PanelHeader, PanelRow, Notice, TextControl  } from '@wordpress/components';
 import { edit, trash, layout, close, more, filter } from '@wordpress/icons';
 import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 import ProcessTypeFilter from './ProcessTypeFilters';
 
-const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager,status, setStatus }) => {
+const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager }) => {
     const columns = useMemo(() => [
         {
             Header: 'Title',
@@ -19,6 +20,27 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager,status, set
             Header: 'Created At',
             accessor: 'date',
             Cell: ({ value }) => format(new Date(value), 'MM/dd/yyyy'),
+        },
+        {
+            Header: 'Created By',
+            accessor: 'author',
+            Cell: ({ value }) => authorsById[value]?.name,
+        },
+        {
+            Header: 'Last update',
+            accessor: 'meta',
+            Cell: ({ value }) => (
+                <p>
+                   { value.updateAt 
+                        ? format(value.updateAt[0], "dd 'de' MMM 'de' yyyy 'às' pp 'por' ",
+                            {
+                                locale: ptBR
+                            })  
+                        : ''
+                    }
+                    {value.user ? value.user[0] : ''}
+                </p>
+            ),
         },
         {
             Header: 'Number of Steps',

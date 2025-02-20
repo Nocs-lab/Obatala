@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import {
   TextControl,
   CheckboxControl,
-  DateTimePicker,
   TextareaControl,
   Button,
 } from "@wordpress/components";
@@ -29,12 +28,16 @@ export const DatePickerControls = ({
 }) => {
   const { updateFieldConfig } = useFlowContext(); // Usando a função do contexto
   const [errors, setErrors] = useState({}); // Estado para armazenar erros de validação
-  const { toggleDrawer } = useDrawer();  
+  const { toggleDrawer } = useDrawer();
 
   const [formValues, setFormValues] = useState({
     label: config ? config.label : label ? label : "",
     required: config ? config.required : false,
-    dateValue: config ? config.dateValue : dateValue ? dateValue : new Date(),
+    dateValue: config
+      ? config.dateValue
+      : dateValue
+      ? new Date().toISOString().split("T")[0] // Define a data padrão como hoje
+      : new Date().toISOString().split("T")[0], // Sempre inicializa com a data de hoje
     helpText: config ? config.helpText : "",
   }); // Estado para armazenar os valores do formulário
 
@@ -61,7 +64,7 @@ export const DatePickerControls = ({
         }
         setErrors(formattedErrors);
       });
-      toggleDrawer();
+    toggleDrawer();
   };
 
   return (
@@ -79,16 +82,15 @@ export const DatePickerControls = ({
       />
 
       {/* Campo para seleção de data */}
-      <fieldset>
-        <legend>Select date:</legend>
-        <DateTimePicker
-          currentDate={formValues.dateValue || ""}
-          onChange={(value) => {
-            setFormValues((prev) => ({ ...prev, dateValue: value || "" }));
-          }}
-          is12Hour={false}
-        />
-      </fieldset>
+      <input
+        type="date"
+        value={formValues.dateValue || ""}
+        onChange={(e) => {
+          setFormValues((prev) => ({ ...prev, dateValue: e.target.value }));
+        }}
+        style={{ display: "none" }}
+      />
+      {errors.dateValue && <p className="error-message">{errors.dateValue}</p>}
 
       {/* Campo para definir o campo como obrigatório */}
       <CheckboxControl
