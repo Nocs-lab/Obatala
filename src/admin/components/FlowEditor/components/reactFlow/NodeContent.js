@@ -7,7 +7,7 @@ import { Button, Icon, TextControl, ComboboxControl } from "@wordpress/component
 import { useFlowContext } from "../../context/FlowContext";
 import { set } from "date-fns";
 import { fetchSectors } from "../../../../api/apiRequests";
-import { file, mobile, mapMarker, paragraph, plus, search, calendar, keyboard, commentContent, listView } from '@wordpress/icons';
+import { close, file, mobile, mapMarker, paragraph, plus, search, calendar, keyboard, commentContent, listView } from '@wordpress/icons';
 
 const FIELD_OPTIONS = [
   { id: "text", label: "Texto", icon: paragraph},
@@ -125,8 +125,11 @@ const NodeContent = ({ id, data  = {} }) => {
             {/* Toolbar with Add and Delete */}
             {isAddingFields && (
                 <NodeToolbar isVisible={isSelected} position="right">
-                <div className="node-meta-container">
-                    <h3 className="node-meta-title">Select a field to add:</h3>
+                <div className="wp-drawer node-meta-container">
+                    <Button className="close-button"
+                        icon={<Icon icon={close} size={24} onClick={() => setIsAddingFields(false)} />}
+                    ></Button>
+                    <h3 className="title">Select a field to add:</h3>
                     <ul className="node-meta-list-container">
                     {FIELD_OPTIONS.map((option) => (
                         <li className="node-meta-list">
@@ -140,13 +143,10 @@ const NodeContent = ({ id, data  = {} }) => {
                         </li>
                     ))}
                     </ul>
-                    <Button variant="secondary" onClick={() => setIsAddingFields(false)}>
-                    Cancelar
-                    </Button>
                 </div>
                 </NodeToolbar>
             )}
-            </div>
+        </div>
     );
 };
 
