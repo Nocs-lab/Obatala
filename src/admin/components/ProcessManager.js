@@ -121,16 +121,15 @@ const ProcessManager = ({ onSelectProcess }) => {
   };
 
   const filteredProcess = useMemo(() => {
-    return processes.filter(process => {
-      const matchesAccessLevel = accessLevel
-        ? process?.meta?.access_level?.[0].includes(accessLevel)
-        : true; 
-      const matchesProcessType = modelFilter
-        ? process?.meta?.process_type?.[0].includes(modelFilter.toString())
-        : true;
-  
-      return matchesAccessLevel && matchesProcessType;
-    });
+      return processes.filter(process => {
+          const matchesAccessLevel = accessLevel
+              ? process?.meta?.access_level?.[0].includes(accessLevel)
+              : true; 
+          const matchesProcessType = modelFilter
+              ? process?.meta?.process_type?.[0].includes(modelFilter.toString())
+              : true;
+          return matchesAccessLevel && matchesProcessType;
+      });
   }, [accessLevel, modelFilter, processes]);
   
   if (isLoading) {
@@ -138,71 +137,74 @@ const ProcessManager = ({ onSelectProcess }) => {
   }
 
   return (
-    <main>
-      <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
-      <div className="title-container">
-        <h2>Process Manager</h2>
-        <ButtonGroup>
-          <Button variant="primary" 
-            icon={<Icon icon={plus}/>}
-            onClick={handleAddProcess}
-            >Add new</Button>
-        </ButtonGroup>
-      </div>
+      <main>
+          <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
+          <div className="title-container">
+              <h2>Process Manager</h2>
+              <ButtonGroup>
+                  <Button 
+                      variant="primary" 
+                      icon={<Icon icon={plus}/>}
+                      onClick={handleAddProcess}
+                  >
+                      Add new
+                  </Button>
+              </ButtonGroup>
+          </div>
 
-      {notice && (
-        <div className="notice-container">
-          <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-            {notice.message}
-          </Notice>
-        </div>
-      )}
-
-      <ProcessList
-          processes={filteredProcess}
-          onEdit={handleEditProcess}
-          onViewProcess={handleSelectProcess}
-          processTypeMappings={processTypeMappings}
-          processTypes={processTypes}
-          accessLevel={accessLevel}
-          setAccessLevel={setAccessLevel}
-          modelFilter={modelFilter}
-          setModelFilter={setModelFilter}
-      />
-        {editingProcess && (
-                <Modal
-                    title="Edit Process"
-                    onRequestClose={handleCancel}
-                    isDismissible={true}
-                >
-                    <ProcessCreator 
-                        processTypes={processTypes} 
-                        onProcessSaved={handleProcessSaved} 
-                        editingProcess={editingProcess}
-                        onCancel={handleCancel} 
-                    />
-                </Modal>
+        {notice && (
+            <div className="notice-container">
+                <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                    {notice.message}
+                </Notice>
+            </div>
         )}
-        {addingProcess && (
+
+        <ProcessList
+            processes={filteredProcess}
+            onEdit={handleEditProcess}
+            onViewProcess={handleSelectProcess}
+            processTypeMappings={processTypeMappings}
+            processTypes={processTypes}
+            accessLevel={accessLevel}
+            setAccessLevel={setAccessLevel}
+            modelFilter={modelFilter}
+            setModelFilter={setModelFilter}
+        />
+        {editingProcess && (
             <Modal
-                title="Add new process"
+                title="Edit Process"
                 onRequestClose={handleCancel}
                 isDismissible={true}
             >
                 <ProcessCreator 
                     processTypes={processTypes} 
-                    onProcessSaved={handleProcessSaved}
-                    onCancel={handleCancel}
+                    onProcessSaved={handleProcessSaved} 
+                    editingProcess={editingProcess}
+                    onCancel={handleCancel} 
                 />
             </Modal>
-        )}
-        {selectedProcessId && (
-            <div>
-                {/* Render your ProcessViewer component or call onSelectProcess with selectedProcessId */}
-                {onSelectProcess(selectedProcessId)}
-            </div>
-        )}
-    </main>
+          )}
+          {addingProcess && (
+              <Modal
+                  title="Add new process"
+                  onRequestClose={handleCancel}
+                  isDismissible={true}
+              >
+                  <ProcessCreator 
+                      processTypes={processTypes} 
+                      onProcessSaved={handleProcessSaved}
+                      onCancel={handleCancel}
+                  />
+              </Modal>
+          )}
+          {selectedProcessId && (
+              <div>
+                  {/* Render your ProcessViewer component or call onSelectProcess with selectedProcessId */}
+                  {onSelectProcess(selectedProcessId)}
+              </div>
+          )}
+      </main>
   );
 };
 
