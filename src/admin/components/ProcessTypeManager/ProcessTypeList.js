@@ -124,7 +124,7 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager, authorsByI
                 />
                 {processTypes.length > 0 ? (
                     <>
-                        <table {...getTableProps()} className="wp-list-table widefat fixed striped table-view-list">
+                        <table {...getTableProps()} className="wp-list-table widefat striped table-view-list">
                             <thead>
                                 {headerGroups.map(headerGroup => {
                                     const { key: headerGroupKey, ...headerGroupProps } = headerGroup.getHeaderGroupProps();
