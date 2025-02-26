@@ -2,12 +2,18 @@ import React, { useMemo } from 'react';
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
 import { Button, ButtonGroup, Icon, Tooltip, Panel, PanelHeader, PanelRow, Notice, TextControl } from '@wordpress/components';
 import { edit, seen} from '@wordpress/icons';
+import ProcessFilter from './ProcessFilters';
 
-const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, processTypes }) => {
+const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, processTypes, accessLevel, setAccessLevel, modelFilter, setModelFilter }) => {
     const columns = useMemo(() => [
         {
             Header: 'Process',
             accessor: 'title.rendered',
+            Cell: ({ row }) => (
+                <a href={`?page=process-viewer&process_id=${row.original.id}`}>
+                        {row.original.title.rendered}
+                </a>
+            ),
         },
         {
             Header: 'Model',
@@ -19,8 +25,10 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
             }
         },
         {
-            Header: 'Status',
-            accessor: 'meta.current_stage',
+            Header: 'Current Step',
+            accessor: row => row.meta?.current_stage 
+                ? `${row.meta.current_stage} - ${row.meta.groupResponsible || 'No group'}`
+                : 'Not started'
         },
         {
           Header: 'Access level',
@@ -90,13 +98,22 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
                 <span className="badge">{processes.length}</span>
             </PanelHeader>
             <PanelRow>
-                <TextControl
-                    className="mb-1"
-                    value={globalFilter || ''}
-                    onChange={value => setGlobalFilter(value)}
-                    placeholder="Search by title"
-                    type="search"
-                />
+                <div className='container_searchAndSelect'>
+                    <TextControl
+                        className="mb-1"
+                        value={globalFilter || ''}
+                        onChange={value => setGlobalFilter(value)}
+                        placeholder="Search by title"
+                        type="search"
+                    />
+                    <ProcessFilter
+                        accessLevel={accessLevel}
+                        setAccessLevel={setAccessLevel}
+                        modelFilter={modelFilter}
+                        setModelFilter={setModelFilter}
+                        processTypes={processTypes}
+                    />
+                </div>
                 {processes.length > 0 ? (
                     <>
                         <table {...getTableProps()} className="wp-list-table widefat fixed striped table-view-list">
