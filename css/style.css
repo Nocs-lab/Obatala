@@ -131,6 +131,13 @@ h2 small {
   box-shadow: inset 0 0 0 1px var(--primary);
   color: var(--primary);
 }
+.components-button-container {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 1rem;
+}
 .components-button-group {
   display: flex;
 }
@@ -234,6 +241,7 @@ th[role="columnheader"] {
 }
 th[role="columnheader"][title="Toggle SortBy"] {
   font-weight: 600 !important;
+  line-height: 1em;
 }
 /* #endregion */
 

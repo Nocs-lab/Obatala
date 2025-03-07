@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { useFlowContext } from "../../context/FlowContext";
-import { Tooltip } from "@wordpress/components";
+import { Button, Icon } from "@wordpress/components";
+import { close } from "@wordpress/icons";
 
 const NodeConditional = (node) => {
     const { edges, nodes, removeNode, setNodes, updateNodeCondition } = useFlowContext();
@@ -135,7 +136,6 @@ const NodeConditional = (node) => {
 
         updateNodeCondition(node.id, updatedCondition);
 
-
         alert("Changes applied successfully.");
         setIsVisibleToolbar(false);
     };
@@ -160,7 +160,7 @@ const NodeConditional = (node) => {
                     style={{
                         top: "50px",
                         right: "10px",
-                        width: "700px",
+                        width: "500px",
                         zIndex: 10,
                         borderRadius: "8px",
                         maxHeight: "500px",
@@ -168,21 +168,10 @@ const NodeConditional = (node) => {
                         transition: "transform 0.3s ease"
                     }}
                 >
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                        <h3>Condition settings</h3>
-                        <button
-                            onClick={handleCloseToolbar}
-                            style={{
-                                background: "none",
-                                border: "none",
-                                fontSize: "20px",
-                                cursor: "pointer",
-                                color: "#333"
-                            }}
-                        >
-                            ✖
-                        </button>
-                    </div>
+                    <Button className="close-button"
+                        icon={<Icon icon={close} size={24} onClick={handleCloseToolbar} />}
+                    ></Button>
+                    <h3 class="title">Condition settings</h3>
                     <hr />
                     <dl>
                         <dt>Input stage:</dt>
@@ -202,7 +191,6 @@ const NodeConditional = (node) => {
                                                     prev.map((field) => ({ ...field, field: e.target.value }))
                                                 );
                                             }}
-                                            style={{ margin: "0 10px" }}
                                         >
                                             <option value="" disabled>Select a field</option>
                                             {radioFields.map((field, fieldIndex) => (
@@ -221,7 +209,6 @@ const NodeConditional = (node) => {
                                     <select
                                         value={selectedFields[index]?.value || ""}
                                         onChange={(e) => handleValueChange(index, e.target.value)}
-                                        style={{ margin: "0 10px" }}
                                         disabled={!selectedField}
                                     >
                                         <option value="" disabled>Select a value</option>
@@ -235,8 +222,7 @@ const NodeConditional = (node) => {
                                                         {option.trim()}
                                                     </option>
                                                 ))}
-                                    </select>
-                                    , go to {edge.target}
+                                    </select> then go to {edge.target}.
                                 </dd>
                             ))
                         ) : (
@@ -245,35 +231,18 @@ const NodeConditional = (node) => {
                     </dl>
 
                     <hr />
-                    <button
-                        onClick={handleSave} // Chama a função de verificação
-                        style={{
-                            padding: "10px 20px",
-                            backgroundColor: "#4CAF50",
-                            color: "#fff",
-                            border: "none",
-                            borderRadius: "5px",
-                            cursor: "pointer",
-                            fontSize: "16px",
-                        }}
-                    >
-                        Apply
-                    </button>
-
-                    <button
-                        onClick={() => removeNode(node.id)}
-                        style={{
-                            padding: "10px 20px",
-                            backgroundColor: "red",
-                            color: "#fff",
-                            border: "none",
-                            borderRadius: "5px",
-                            cursor: "pointer",
-                            fontSize: "16px",
-                        }}
-                    >
-                        Remove
-                    </button>
+                    <div className="components-button-container">
+                        <Button variant="tertiary-outline" size="small"
+                            onClick={() => removeNode(node.id)}
+                        >
+                            Remove
+                        </Button>
+                        <Button variant="primary"
+                            onClick={handleSave}
+                        >
+                            Apply
+                        </Button>
+                    </div>
                 </div>
             )}
         </div>
