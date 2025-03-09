@@ -39,27 +39,27 @@ const ProcessManager = ({ onSelectProcess }) => {
     const fetchProcesses = async () => {
         setIsLoading(true);
         try {
-        const data = await apiFetch({
-            path: `/obatala/v1/process_obatala?per_page=100&_embed`,
-        });
-        if (data && Array.isArray(data)) {
-            setProcesses(data);
-            await fetchProcessModelsForProcesses(data);
-        } else {
-            console.error("No processes data returned.");
-            setProcesses([]); // Garanta que processes seja sempre um array
-        }
+            const data = await apiFetch({
+                path: `/obatala/v1/process_obatala?per_page=100&_embed`,
+            });
+            if (data && Array.isArray(data)) {
+                setProcesses(data);
+                await fetchProcessModelsForProcesses(data);
+            } else {
+                console.error("No processes data returned.");
+                setProcesses([]); // Garanta que processes seja sempre um array
+            }
         } catch (error) {
-        console.error("Error fetching processes:", error);
+            console.error("Error fetching processes:", error);
         } finally {
-        setIsLoading(false);
+            setIsLoading(false);
         }
     };
 
     const fetchProcessModelsForProcesses = async (processes) => {
         if (!processes || processes.length === 0) {
-        console.error("No processes available for fetching process types.");
-        return;
+            console.error("No processes available for fetching process types.");
+            return;
         }
 
         const promises = processes.map(async (process) => {
@@ -75,9 +75,9 @@ const ProcessManager = ({ onSelectProcess }) => {
             );
             return { processId: process.id, processTypeId: null };
         }
-        });
+    });
 
-        const results = await Promise.all(promises);
+    const results = await Promise.all(promises);
         setProcessTypeMappings(results);
     };
 
