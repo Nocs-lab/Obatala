@@ -736,7 +736,7 @@ svg.react-flow__connectionline {
   background-color: var(--success);
 }
 .bpmn-end-node {
-  background-color: var(--error);
+  background-color: var(--danger);
 }
 .bpmn-start-end-node:hover span::before {
   content: "⠿";
@@ -774,7 +774,7 @@ svg.react-flow__connectionline {
 
 /* Close btn */
 .close-btn {
-  background: var(--error);
+  background: var(--danger);
 }
 .close-btn:before,
 .close-btn:after {

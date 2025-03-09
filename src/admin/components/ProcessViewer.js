@@ -473,15 +473,6 @@ const ProcessViewer = () => {
         return formatDate;
     }
 
-    const accordionButtonStyle = {
-        border: 'none', // Remove a borda do botão
-        backgroundColor: '#f4f4f4', // Exemplo de cor de fundo
-        padding: '10px',
-        width: '100%',
-        textAlign: 'left',
-        cursor: 'pointer',
-    };
-
     return (
         <main>
             {isLoading ? (
@@ -536,104 +527,101 @@ const ProcessViewer = () => {
                                     </Notice>
                                 </div>
                             )}
-                            <div className="panel-container three-columns">
-                                <main>
-                                    <div className="accordion">
-                                        {options.map((step, index) => (
-                                            <div key={index} className="accordion-item">
-                                                <button className="accordion-title" onClick={() => toggleAccordion(index)} style={accordionButtonStyle}>
-                                                    <h2 className="accordion-header">
-                                                        <button className="accordion-button" aria-expanded={activeIndex === index} aria-controls={`accordion-content-${index}`}>
-                                                            {step.label}
-                                                        </button>
-                                                    </h2>
-                                                </button>
-                                                {activeIndex === index && (
-                                                    <div className="accordion-content">
-                                                        {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
-                                                            <>
-                                                                <h3>{`${options[currentStep].label}`}</h3>
-                                                                {options[currentStep].sector_stage && (
-                                                                    <span className="badge default ms-auto">
-                                                                        Grupo: {getSectorName(options[currentStep].sector_stage)}
-                                                                    </span>
-                                                                )}
-                                                                {!isUserInSector(options[currentStep].sector_stage) && (
-                                                                    <div className="notice-container">
-                                                                        <Notice status="warning" isDismissible={false}>
-                                                                            You can only view this step.
-                                                                        </Notice>
-                                                                    </div>
-                                                                )}
-                                                                {options[currentStep].fields.length > 0 ? (
-                                                                    !submittedSteps[currentStep] ? (
-                                                                        <form onSubmit={handleSubmit}>
-                                                                            <div className="meta-field-wrapper">
-                                                                                {Array.isArray(options[currentStep].fields) ? options[currentStep].fields.map((field, idx) => (
-                                                                                    <MetaFieldInputs
-                                                                                        key={`${orderedSteps[currentStep].id}-meta-${idx}`}
-                                                                                        field={field}
-                                                                                        fieldId={field.id}
-                                                                                        initalValue={formValues[orderedSteps[currentStep].id]?.[field.id] || uploadedFiles[orderedSteps[currentStep].id]?.[field.id]?.[0]?.name}
-                                                                                        isEditable={!submittedSteps[currentStep]}
-                                                                                        noHasPermission={!isUserInSector(options[currentStep].sector_stage)}
-                                                                                        onFieldChange={handleFieldChange}
-                                                                                        fileInfo={fileInfo}
-                                                                                        handleDownload={handleDownload}
-                                                                                        stepId={orderedSteps[currentStep].id}
-                                                                                    />
-                                                                                )) : null}
-                                                                            </div>
-                                                                            {!submittedSteps[currentStep] && (
-                                                                                <div className="action-bar">
-                                                                                    <Button
-                                                                                        variant="primary"
-                                                                                        type="submit"
-                                                                                        disabled={!isSubmitEnabled || submittedSteps[currentStep] || !isUserInSector(options[currentStep].sector_stage)}
-                                                                                    >Submit
-                                                                                    </Button>
-                                                                                </div>
-                                                                            )}
-                                                                        </form>
-                                                                    ) : (
-                                                                        <dl className="description-list">
+                            <div className="panel-container">
+                                <div className="accordion">
+                                    {options.map((step, index) => (
+                                        <div key={index} className="accordion-item">
+                                            <button className="accordion-header" onClick={() => toggleAccordion(index)} aria-expanded={activeIndex === index} aria-controls={`accordion-content-${index}`}>
+                                                <span className="status success">Concluído</span>
+                                                <h2 className="accordion-title me-auto">
+                                                    {step.label}
+                                                </h2>
+                                                <span className="badge info">
+                                                    {Object.keys(currentStageData).includes(options[currentStep]?.value) ?
+                                                        `Última atualização em ${lastUpdateStage().dateFormat} por ${lastUpdateStage().user}`
+                                                        : 'Sem atualizações no momento'}
+                                                </span>
+                                                {options[currentStep].sector_stage && (
+                                                    <span className="badge info">
+                                                        Grupo: {getSectorName(options[currentStep].sector_stage)}
+                                                    </span>
+                                                )}
+                                            </button>
+                                            {activeIndex === index && (
+                                                <div className="accordion-content">
+                                                    {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
+                                                        <>
+                                                            {!isUserInSector(options[currentStep].sector_stage) && (
+                                                                <div className="notice-container">
+                                                                    <Notice status="warning" isDismissible={false}>
+                                                                        You can only view this step.
+                                                                    </Notice>
+                                                                </div>
+                                                            )}
+                                                            {options[currentStep].fields.length > 0 ? (
+                                                                !submittedSteps[currentStep] ? (
+                                                                    <form onSubmit={handleSubmit}>
+                                                                        <div className="meta-field-wrapper">
                                                                             {Array.isArray(options[currentStep].fields) ? options[currentStep].fields.map((field, idx) => (
-                                                                                <MetaFieldDisplay
+                                                                                <MetaFieldInputs
                                                                                     key={`${orderedSteps[currentStep].id}-meta-${idx}`}
                                                                                     field={field}
-                                                                                    value={formValues[orderedSteps[currentStep].id]?.[field.id] || uploadedFiles[orderedSteps[currentStep].id]?.[field.id]?.[0]?.name}
-                                                                                    handleDownload={handleDownload}
                                                                                     fieldId={field.id}
+                                                                                    initalValue={formValues[orderedSteps[currentStep].id]?.[field.id] || uploadedFiles[orderedSteps[currentStep].id]?.[field.id]?.[0]?.name}
+                                                                                    isEditable={!submittedSteps[currentStep]}
+                                                                                    noHasPermission={!isUserInSector(options[currentStep].sector_stage)}
+                                                                                    onFieldChange={handleFieldChange}
+                                                                                    fileInfo={fileInfo}
+                                                                                    handleDownload={handleDownload}
+                                                                                    stepId={orderedSteps[currentStep].id}
                                                                                 />
                                                                             )) : null}
-                                                                        </dl>
-                                                                    )
+                                                                        </div>
+                                                                        {!submittedSteps[currentStep] && (
+                                                                            <div className="action-bar">
+                                                                                <Button
+                                                                                    variant="primary"
+                                                                                    type="submit"
+                                                                                    disabled={!isSubmitEnabled || submittedSteps[currentStep] || !isUserInSector(options[currentStep].sector_stage)}
+                                                                                >Submit
+                                                                                </Button>
+                                                                            </div>
+                                                                        )}
+                                                                    </form>
                                                                 ) : (
-                                                                    <div className="notice-container">
-                                                                        <Notice status="warning" isDismissible={false}>
-                                                                            No fields found for this Step.
-                                                                        </Notice>
-                                                                    </div>
-                                                                )}
-                                                                <footer>
-                                                                    {Object.keys(currentStageData).includes(options[currentStep]?.value) ?
-                                                                        `Última atualização em ${lastUpdateStage().dateFormat} por ${lastUpdateStage().user}`
-                                                                        : 'Sem atualizações no momento'}
-                                                                </footer>
-                                                            </>
-                                                        ) : (
-                                                            <div className="notice-container">
-                                                                <Notice status="warning" isDismissible={false}>
-                                                                    No steps found for this process.
-                                                                </Notice>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        ))}
-                                    </div>
-                                </main>
+                                                                    <dl className="description-list">
+                                                                        {Array.isArray(options[currentStep].fields) ? options[currentStep].fields.map((field, idx) => (
+                                                                            <MetaFieldDisplay
+                                                                                key={`${orderedSteps[currentStep].id}-meta-${idx}`}
+                                                                                field={field}
+                                                                                value={formValues[orderedSteps[currentStep].id]?.[field.id] || uploadedFiles[orderedSteps[currentStep].id]?.[field.id]?.[0]?.name}
+                                                                                handleDownload={handleDownload}
+                                                                                fieldId={field.id}
+                                                                            />
+                                                                        )) : null}
+                                                                    </dl>
+                                                                )
+                                                            ) : (
+                                                                <div className="notice-container">
+                                                                    <Notice status="warning" isDismissible={false}>
+                                                                        No fields found for this Step.
+                                                                    </Notice>
+                                                                </div>
+                                                            )}
+                                                            
+                                                        </>
+                                                    ) : (
+                                                        <div className="notice-container">
+                                                            <Notice status="warning" isDismissible={false}>
+                                                                No steps found for this process.
+                                                            </Notice>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
                                 <aside>
                                     <Panel>
                                         <PanelHeader>Comments</PanelHeader>
