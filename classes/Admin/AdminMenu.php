@@ -10,14 +10,23 @@ class AdminMenu {
             'capability' => 'manage_options',
             'slug' => 'obatala-main',
             'callback' => 'render_main_page',
-            'icon' => 'dashicons-admin-site',
+            'icon' => 'dashicons-portfolio',
             'position' => 2
         ],
         'submenus' => [
             [
                 'parent_slug' => 'obatala-main',
-                'title' => 'Process Manager',
-                'menu_title' => 'Process Manager',
+                'title' => 'Dashboard',
+                'menu_title' => 'Dashboard',
+                'capability' => 'manage_options',
+                'slug' => 'obatala-main',
+                'callback' => 'render_main_page',
+                'show_in_menu' => true
+            ],
+            [
+                'parent_slug' => 'obatala-main',
+                'title' => 'Processes',
+                'menu_title' => 'Processes',
                 'capability' => 'manage_options',
                 'slug' => 'process-manager',
                 'callback' => 'render_page',
@@ -25,35 +34,17 @@ class AdminMenu {
             ],
             [
                 'parent_slug' => 'obatala-main',
-                'title' => 'Process Viewer',
-                'menu_title' => 'Process Viewer',
-                'capability' => 'read',
-                'slug' => 'process-viewer',
-                'callback' => 'render_page',
-                'show_in_menu' => true
-            ],
-            [
-                'parent_slug' => 'obatala-main',
-                'title' => 'Process Models',
-                'menu_title' => 'Process Models',
+                'title' => 'Process models',
+                'menu_title' => 'Process models',
                 'capability' => 'edit_posts',
                 'slug' => 'process-type-manager',
                 'callback' => 'render_page',
                 'show_in_menu' => true
             ],
             [
-                'parent_slug' => 'obatala-main',
-                'title' => 'Process Type Editor',
-                'menu_title' => 'Process Type Editor',
-                'capability' => 'manage_options',
-                'slug' => 'process-type-editor',
-                'callback' => 'render_page',
-                'show_in_menu' => true
-            ],
-            [
                 'parent_slug' => 'obatala-main', // Permitir acesso direto
-                'title' => 'Group Manager',
-                'menu_title' => 'Group Manager',
+                'title' => 'Group manager',
+                'menu_title' => 'Group manager',
                 'capability' => 'manage_options',
                 'slug' => 'sector_manager',
                 'callback' => 'render_page',
@@ -116,11 +107,6 @@ class AdminMenu {
     public static function render_main_page() {
         echo '<h1>' . __('Bem-vindo ao Obatala', 'obatala') . '</h1>';
         echo '<p>' . __('Selecione uma opção do submenu para começar.', 'obatala') . '</p>';
-        echo '<style>.wp-admin #toplevel_page_obatala-main .wp-submenu li a[href*="process-viewer"],
-                .wp-admin #toplevel_page_obatala-main .wp-submenu li a[href*="process-step-editor"],
-                .wp-admin #toplevel_page_obatala-main .wp-submenu li a[href*="process-type-editor"] {
-                    display: none;
-                }</style>';
     }
 
     /**

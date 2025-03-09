@@ -24,7 +24,7 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager, status, se
             ),
         },
         {
-            Header: 'Created At',
+            Header: 'Created at',
             //accessor: 'date',
             Cell: ({ row }) => (
                 <p>
@@ -109,13 +109,8 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager, status, se
         usePagination
     );
 
-    
     return (
         <Panel>
-            <PanelHeader>
-                <h3>Existing process models</h3>
-                <span className="badge">{processTypes.length}</span>
-            </PanelHeader>
             <PanelRow>
                 <div className='container_searchAndSelect'>
                     <TextControl

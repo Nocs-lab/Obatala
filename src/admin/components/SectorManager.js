@@ -158,11 +158,12 @@ const SectorManager = () => {
           <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
           <div className="title-container">
               <h2>Group manager</h2>
+              <span className="badge">{filteredSectors.length}</span>
               <ButtonGroup>
                   <Button variant="primary" 
-                          icon={<Icon icon={plus}/>}
-                          onClick={handleAdd}
-                          >Add new</Button>
+                        icon={<Icon icon={plus}/>}
+                        onClick={handleAdd}
+                        >Add new</Button>
               </ButtonGroup>
           </div>
           {notice && (
