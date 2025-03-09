@@ -13,7 +13,7 @@ import UserSelect from './UserSelect';
 import Reducer, { initialState } from '../../../redux/reducer';
 
 
-const UserManager = ({ sector}) => {
+const UserManager = ({sector,loadSectorsUsers}) => {
     const [users, setUsers] = useState([]);
     const [sectorUsers, setSectorUsers] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -57,8 +57,11 @@ const UserManager = ({ sector}) => {
                 const data = { user_id: userId, sector_id: sector.id };
                 return assignUserToSector(data);
             }));
-            loadSectorUsers(sector.id);
             setNotice({ status: 'success', message: 'Users successfully added.' });
+            setTimeout(() => {
+                loadSectorUsers(sector.id);
+                loadSectorsUsers();
+            }, 2000); 
         } catch (error) {
             console.error('Error adding users:', error);
             setNotice({ status: 'error', message: 'Error adding users.' });
@@ -72,8 +75,11 @@ const UserManager = ({ sector}) => {
             .then(() => {
                 const updatedUsers = sectorUsers.filter(type => type.id !== user.id);
                 setSectorUsers(updatedUsers);
-                loadSectorUsers(sector.id);
                 setNotice({ status: 'success', message: 'User successfully removed.' })
+                setTimeout(() => {
+                    loadSectorUsers(sector.id);
+                    loadSectorsUsers();
+                }, 2000); 
             })
             .catch(error => {
                 console.error('Error removing users to sector:', error);

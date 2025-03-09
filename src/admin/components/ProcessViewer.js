@@ -280,6 +280,8 @@ const ProcessViewer = () => {
         setIsLoading(true);
 
         const stepId = orderedSteps[currentStep].id;
+        const currentStage = orderedSteps[currentStep]?.data?.stageName;
+        const group = getSectorName(orderedSteps[currentStep].sector_obatala);
         const fields = orderedSteps[currentStep].data.fields.map(field => ({
             fieldId: field.id,
             value: formValues[stepId]?.[field.id] || uploadedFiles[stepId]?.[field.id]?.[0]?.name,
@@ -353,6 +355,8 @@ const ProcessViewer = () => {
                         ...existingMetaData.submittedStages,
                         [stepId]: true,
                     },
+                    current_stage: currentStage,
+                    groupResponsible: group
                 }
             });
 
@@ -477,7 +481,6 @@ const ProcessViewer = () => {
         textAlign: 'left',
         cursor: 'pointer',
     };
-
 
     return (
         <main>

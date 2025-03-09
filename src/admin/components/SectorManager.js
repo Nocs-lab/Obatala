@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect, useReducer, useMemo } from 'react';
 import {
     Spinner,
     Button,
@@ -10,21 +10,28 @@ import {
 } from '@wordpress/components';
 import { plus } from "@wordpress/icons";
 import SectorCreator from './SectorManager/SectorCreator';
-import { deleteSector, fetchSectors, saveSector } from '../api/apiRequests';
+import { deleteSector, fetchSectors, fetchSectorsUsers, saveSector } from '../api/apiRequests';
 import SectorList from './SectorManager/SectorList';
 import Reducer, { initialState } from '../redux/reducer';
+import { useSelect } from '@wordpress/data';
+import { store as coreStore } from '@wordpress/core-data';
 
 const SectorManager = () => {
     const [sectors, setSectors] = useState([])
+    const [sectorsUsers, setSectorsUsers] = useState([])
     const [editingSector, setEditingSector] = useState(null);
     const [addingSector, setAddingSector] = useState(null);
+    const [status, setStatus] = useState(null);
+    const [group, setGroup] = useState(null);
     const [isLoading, setIsLoading] = useState(false)
     const [notice, setNotice] = useState(null);
 
+    const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
     const [state, dispatch] = useReducer(Reducer, initialState)
 
     useEffect(() => {
         loadSectors();
+        loadSectorsUsers();
     }, []);
 
     const loadSectors = () => {
@@ -46,6 +53,19 @@ const SectorManager = () => {
                 setIsLoading(false);
             });
     };
+
+    const loadSectorsUsers = () => {
+        setIsLoading(true);
+        fetchSectorsUsers()
+            .then(data => {
+                setSectorsUsers(data);
+                setIsLoading(false);
+            })
+            .catch(error => {
+                console.error('Error fetching sectors:', error);
+                setIsLoading(false);
+            });
+    }
 
     const handleSectorSaved = async (newSector) => {
         setIsLoading(true);
@@ -112,7 +132,22 @@ const SectorManager = () => {
 
     const handleConfirmDelete = (sector) => {
         dispatch({type: 'OPEN_MODAL_SECTOR', payload: sector})
-    }
+    };
+
+    const filteredSectors = useMemo(() => {
+        return sectors.filter(sector => {
+          const matchesStatus = status
+            ? sector?.status.includes(status)
+            : true; 
+          const matchesGroups = group === 'my groups'
+            ? sectorsUsers.some(sectorUser =>  sectorUser.sector_id === sector.id &&  sectorUser.users.some(user => user.ID === currentUser?.id))
+            : true;
+      
+          return matchesStatus && matchesGroups;
+        });
+    }, [status, group, sectors, sectorsUsers]);
+    
+    console.log(sectorsUsers)
 
     if (isLoading) {
         return <Spinner />;
@@ -149,9 +184,14 @@ const SectorManager = () => {
               Are you sure you want to delete group {state.sector?.name}?
           </ConfirmDialog>
 
-          <SectorList sectors={sectors}
-                      onEdit={handleEdit}
-                      onDelete={handleConfirmDelete}
+          <SectorList sectors={filteredSectors}
+                onEdit={handleEdit}
+                onDelete={handleConfirmDelete}
+                status={status}
+                setStatus={setStatus}
+                group={group}
+                setGroup={setGroup}
+                loadSectorsUsers={loadSectorsUsers}
           />
 
           {/* Open modal to editing Sector */}

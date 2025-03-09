@@ -116,18 +116,18 @@ const processDataEditor = () => {
         },
       };
 
-      // Evita recarregar a página
-      await apiFetch({
-        path: `/obatala/v1/process_type/${id}`,
-        method: "PUT",
-        data: updatedData,
-      });
+        // Evita recarregar a página
+        await apiFetch({
+            path: `/obatala/v1/process_type/${id}`,
+            method: "PUT",
+            data: updatedData,
+        });
 
-      await apiFetch({
-        path: `/obatala/v1/process_type/${id}/meta`,
-        method: "PUT",
-        data: updatedData.meta,
-      });
+        await apiFetch({
+            path: `/obatala/v1/process_type/${id}/meta`,
+            method: "PUT",
+            data: updatedData.meta,
+        });
 
           for (const node of flowData.nodes) {
                 if (node.tempSector) {

@@ -66,7 +66,6 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
 
             }else {
                 const metaUpdateData = {
-                    current_stage: 0,
                     process_type: selectedProcessModel.id,
                     access_level: accessLevel,
                     flowData: metaFields.flowData

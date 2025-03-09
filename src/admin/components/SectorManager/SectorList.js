@@ -4,8 +4,9 @@ import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table
 import { Button, ButtonGroup, Tooltip, Panel, PanelHeader, PanelRow, Notice, Modal, TextControl } from '@wordpress/components';
 import { edit, trash, people } from '@wordpress/icons';
 import UsersManager from './UserManager/UserManager';
+import SectorFilter from './SectorFilters';
 
-const SectorList = ({ sectors, onEdit, onDelete }) => {
+const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGroup, loadSectorsUsers }) => {
   const data = useMemo(() => sectors, [sectors]);
   const [addingUsers, setAddingUsers] = useState(null);
 
@@ -112,85 +113,94 @@ const SectorList = ({ sectors, onEdit, onDelete }) => {
 
   return (
     <Panel>
-      <PanelHeader>
-          <h3>Existing groups</h3>
-          <span className="badge">{sectors.length}</span>
-      </PanelHeader>
-      <PanelRow>
-          <TextControl
-              className="mb-1"
-              value={globalFilter || ''}
-              onChange={value => setGlobalFilter(value)}
-              placeholder="Search by title or description"
-              type="search"
-          />
-          {sectors.length > 0 ? (
-              <>
-                  <table {...getTableProps()} className="wp-list-table widefat fixed striped table-view-list">
-                      <thead>
-                          {headerGroups.map(headerGroup => (
-                              <tr {...headerGroup.getHeaderGroupProps()}>
-                                  {headerGroup.headers.map(column => (
-                                      <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                          {column.render('Header')}
-                                          <span>
-                                              {column.isSorted
-                                                  ? column.isSortedDesc
-                                                      ? ' 🔽'
-                                                      : ' 🔼'
-                                                  : ''}
-                                          </span>
-                                      </th>
-                                  ))}
-                              </tr>
-                          ))}
-                      </thead>
-                      <tbody {...getTableBodyProps()}>
-                          {page.map(row => {
-                              prepareRow(row);
-                              return (
-                                  <tr {...row.getRowProps()}>
-                                      {row.cells.map(cell => (
-                                          <td {...cell.getCellProps()}>
-                                              {cell.render('Cell')}
-                                          </td>
-                                      ))}
-                                  </tr>
-                              );
-                          })}
-                      </tbody>
-                  </table>
-                  <div className="pagination">
-                      <Button onClick={() => previousPage()} disabled={!canPreviousPage}>
-                          Previous
-                      </Button>
-                      <span>
-                          Page{' '}
-                          <strong>
-                              {pageIndex + 1} of {pageOptions.length}
-                          </strong>{' '}
-                      </span>
-                      <Button onClick={() => nextPage()} disabled={!canNextPage}>
-                          Next
-                      </Button>
-                  </div>
-              </>
-          ) : (
-              <Notice isDismissible={false} status="warning">No existing groups.</Notice>
-          )}
-          {addingUsers && (
-              <Modal
-                  title={<>Manager users: {addingUsers.name}</>}
-                  onRequestClose={handleCancel}
-                  isDismissible={true}
-                  size="large"
-              >
-                  <UsersManager
-                      sector={addingUsers}
-                  />
-              </Modal>
-          )}
-      </PanelRow>
+        <PanelHeader>
+            <h3>Existing groups</h3>
+            <span className="badge">{sectors.length}</span>
+        </PanelHeader>
+        <PanelRow>
+            <div className='container_searchAndSelect'>
+                <TextControl
+                    className="mb-1"
+                    value={globalFilter || ''}
+                    onChange={value => setGlobalFilter(value)}
+                    placeholder="Search by title or description"
+                    type="search"
+                />
+                <SectorFilter
+                    status={status}
+                    setStatus={setStatus}
+                    group={group}
+                    setGroup={setGroup} 
+                />
+            </div>
+            {sectors.length > 0 ? (
+                <>
+                    <table {...getTableProps()} className="wp-list-table widefat fixed striped table-view-list">
+                        <thead>
+                            {headerGroups.map(headerGroup => (
+                                <tr {...headerGroup.getHeaderGroupProps()}>
+                                    {headerGroup.headers.map(column => (
+                                        <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                            {column.render('Header')}
+                                            <span>
+                                                {column.isSorted
+                                                    ? column.isSortedDesc
+                                                        ? ' 🔽'
+                                                        : ' 🔼'
+                                                    : ''}
+                                            </span>
+                                        </th>
+                                    ))}
+                                </tr>
+                            ))}
+                        </thead>
+                        <tbody {...getTableBodyProps()}>
+                            {page.map(row => {
+                                prepareRow(row);
+                                return (
+                                    <tr {...row.getRowProps()}>
+                                        {row.cells.map(cell => (
+                                            <td {...cell.getCellProps()}>
+                                                {cell.render('Cell')}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </table>
+                    <div className="pagination">
+                        <Button onClick={() => previousPage()} disabled={!canPreviousPage}>
+                            Previous
+                        </Button>
+                        <span>
+                            Page{' '}
+                            <strong>
+                                {pageIndex + 1} of {pageOptions.length}
+                            </strong>{' '}
+                        </span>
+                        <Button onClick={() => nextPage()} disabled={!canNextPage}>
+                            Next
+                        </Button>
+                    </div>
+                </>
+            ) : (
+                <Notice isDismissible={false} status="warning">No existing groups.</Notice>
+            )}
+            {addingUsers && (
+                <Modal
+                    title={<>Manager users: {addingUsers.name}</>}
+                    onRequestClose={handleCancel}
+                    isDismissible={true}
+                    size="large"
+                >
+                    <UsersManager
+                        sector={addingUsers}
+                        loadSectorsUsers={loadSectorsUsers}
+                    />
+                </Modal>
+            )}
+        </PanelRow>
     </Panel>
   );
 };
