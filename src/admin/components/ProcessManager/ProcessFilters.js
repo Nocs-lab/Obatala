@@ -13,7 +13,7 @@ const ProcessFilter = ({ accessLevel, setAccessLevel, modelFilter, setModelFilte
     }
 
     return (
-        <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <>
             <DropdownMenu
                 icon={settings}
                 label="Filter"
@@ -59,7 +59,7 @@ const ProcessFilter = ({ accessLevel, setAccessLevel, modelFilter, setModelFilte
                     label="Clear"
                 />
             )}
-        </div>
+        </>
     );
 };
 

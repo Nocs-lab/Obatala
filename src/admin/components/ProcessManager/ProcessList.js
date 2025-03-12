@@ -11,7 +11,7 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
             accessor: 'title.rendered',
             Cell: ({ row }) => (
                 <a href={`?page=process-viewer&process_id=${row.original.id}`}>
-                        {row.original.title.rendered}
+                    {row.original.title.rendered}
                 </a>
             ),
         },
@@ -25,7 +25,7 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
             }
         },
         {
-            Header: 'Current Step',
+            Header: 'Current step',
             accessor: row => row.meta?.current_stage 
                 ? `${row.meta.current_stage} - ${row.meta.groupResponsible || 'No group'}`
                 : 'Not started'
@@ -34,7 +34,6 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
           Header: 'Access level',
           accessor: 'meta.access_level',
           Cell: ({ value }) => (
-  
               <span className={`badge ${value == 'Not restricted' || value == 'not restricted' ? 'success' : 'warning'}`}>
                   {value}
               </span> 
@@ -44,22 +43,20 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
             Header: 'Actions',
             accessor: 'id',
             Cell: ({ row }) => (
-              <ButtonGroup>
-              <Tooltip text="View">
-                  <Button
-                  icon={<Icon icon={seen} />} 
-                  onClick={() => onViewProcess(row.original.id)}
-                  />
-  
-              </Tooltip>
-              <Tooltip text="Edit">
-                  <Button
-                  icon={<Icon icon={edit} />}
-                  onClick={() => onEdit(row.original)}
-              />
-  
-              </Tooltip>
-          </ButtonGroup>
+                <ButtonGroup>
+                    <Tooltip text="View">
+                        <Button
+                            icon={<Icon icon={seen} />} 
+                            onClick={() => onViewProcess(row.original.id)}
+                        />
+                    </Tooltip>
+                    <Tooltip text="Edit">
+                        <Button
+                            icon={<Icon icon={edit} />}
+                            onClick={() => onEdit(row.original)}
+                        />
+                    </Tooltip>
+                </ButtonGroup>
             ),
         },
     ], [processTypeMappings, processTypes]);
@@ -93,10 +90,6 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
 
     return (
         <Panel>
-            <PanelHeader>
-                <h3>Existing Processes</h3>
-                <span className="badge">{processes.length}</span>
-            </PanelHeader>
             <PanelRow>
                 <div className='container_searchAndSelect'>
                     <TextControl

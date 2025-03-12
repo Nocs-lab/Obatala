@@ -17,7 +17,14 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager, status, se
             accessor: 'description',
         },
         {
-            Header: 'Created At',
+            Header: 'Status',
+            accessor: 'meta.status[0]',
+            Cell: ({ value }) => (
+                <span className={`badge ${value === 'Active' ? 'success' : 'error'}`}>{value}</span>
+            ),
+        },
+        {
+            Header: 'Created at',
             //accessor: 'date',
             Cell: ({ row }) => (
                 <p>
@@ -37,7 +44,7 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager, status, se
             Cell: ({ value }) => (
                 <p>
                    { value.updateAt 
-                        ? format(value.updateAt[0], "dd 'de' MMM 'de' yyyy 'às' pp 'por' ",
+                        ? format(value.updateAt[0], "MM/dd/yyyy 'às' pp 'por' ",
                             {
                                 locale: ptBR
                             })  
@@ -45,18 +52,6 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager, status, se
                     }
                     {value.user ? value.user[0] : ''}
                 </p>
-            ),
-        },
-        {
-            Header: 'Number of Steps',
-            accessor: 'meta.flowData.nodes',
-            Cell: ({ value }) => (value ? value.length : 0),
-        },
-        {
-            Header: 'Status',
-            accessor: 'meta.status[0]',
-            Cell: ({ value }) => (
-                <span className={`badge ${value === 'Active' ? 'success' : 'error'}`}>{value}</span>
             ),
         },
         {
@@ -114,13 +109,8 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager, status, se
         usePagination
     );
 
-    
     return (
         <Panel>
-            <PanelHeader>
-                <h3>Existing process models</h3>
-                <span className="badge">{processTypes.length}</span>
-            </PanelHeader>
             <PanelRow>
                 <div className='container_searchAndSelect'>
                     <TextControl
