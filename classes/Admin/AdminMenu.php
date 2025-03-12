@@ -16,6 +16,15 @@ class AdminMenu {
         'submenus' => [
             [
                 'parent_slug' => 'obatala-main',
+                'title' => 'Dashboard',
+                'menu_title' => 'Dashboard',
+                'capability' => 'manage_options',
+                'slug' => 'obatala-main',
+                'callback' => 'render_main_page',
+                'show_in_menu' => true
+            ],
+            [
+                'parent_slug' => 'obatala-main',
                 'title' => 'Process Manager',
                 'menu_title' => 'Process Manager',
                 'capability' => 'manage_options',
@@ -42,7 +51,7 @@ class AdminMenu {
                 'show_in_menu' => true
             ],
             [
-                'parent_slug' => 'obatala-main', // Permitir acesso direto
+                'parent_slug' => 'obatala-main',
                 'title' => 'Group Manager',
                 'menu_title' => 'Group Manager',
                 'capability' => 'manage_options',
