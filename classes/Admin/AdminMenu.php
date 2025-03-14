@@ -16,19 +16,19 @@ class AdminMenu {
         'submenus' => [
             [
                 'parent_slug' => 'obatala-main',
-                'title' => 'Process Manager',
-                'menu_title' => 'Process Manager',
+                'title' => 'Dashboard',
+                'menu_title' => 'Dashboard',
                 'capability' => 'manage_options',
-                'slug' => 'process-manager',
-                'callback' => 'render_page',
+                'slug' => 'obatala-main',
+                'callback' => 'render_main_page',
                 'show_in_menu' => true
             ],
             [
                 'parent_slug' => 'obatala-main',
-                'title' => 'Process Viewer',
-                'menu_title' => 'Process Viewer',
-                'capability' => 'read',
-                'slug' => 'process-viewer',
+                'title' => 'Process Manager',
+                'menu_title' => 'Process Manager',
+                'capability' => 'manage_options',
+                'slug' => 'process-manager',
                 'callback' => 'render_page',
                 'show_in_menu' => true
             ],
@@ -51,14 +51,23 @@ class AdminMenu {
                 'show_in_menu' => true
             ],
             [
-                'parent_slug' => 'obatala-main', // Permitir acesso direto
+                'parent_slug' => 'obatala-main',
                 'title' => 'Group Manager',
                 'menu_title' => 'Group Manager',
                 'capability' => 'manage_options',
                 'slug' => 'sector_manager',
                 'callback' => 'render_page',
                 'show_in_menu' => true
-            ]
+            ],
+            [
+                'parent_slug' => 'obatala-main',
+                'title' => 'Process Viewer',
+                'menu_title' => 'Process Viewer',
+                'capability' => 'read',
+                'slug' => 'process-viewer',
+                'callback' => 'render_page',
+                'show_in_menu' => true
+            ] 
         ]
     ];
 
@@ -116,41 +125,75 @@ class AdminMenu {
     public static function render_main_page() {
         echo '<h1>' . __('Bem-vindo ao Obatala', 'obatala') . '</h1>';
         echo '<p>' . __('Selecione uma opção do submenu para começar.', 'obatala') . '</p>';
-        echo '<style>.wp-admin #toplevel_page_obatala-main .wp-submenu li a[href*="process-viewer"],
-                .wp-admin #toplevel_page_obatala-main .wp-submenu li a[href*="process-step-editor"],
-                .wp-admin #toplevel_page_obatala-main .wp-submenu li a[href*="process-type-editor"] {
-                    display: none;
-                }</style>';
     }
 
     /**
      * Renderiza a página de administração correta com base no slug da página atual.
      */
     public static function render_page() {
+        // Verificar se estamos no contexto correto da tela
         $screen = get_current_screen();
+    
+        if (!$screen || empty($screen->id)) {
+            // Não pode continuar sem o contexto de tela, então mostramos uma mensagem.
+            echo '<h1>Página não encontrada</h1>';
+            return;
+        }
+    
         $page_id = $screen->id;
-
-        // Renderiza a div correspondente com base no ID da tela
-        if (strpos($page_id, 'obatala_page_') === 0) {
-            echo '<div id="' . str_replace('_', '-', substr($page_id, strlen('obatala_page_'))) . '"></div>';
+    
+        // Agora podemos fazer a comparação sem os erros
+        if (is_string($page_id) && strpos($page_id, 'obatala_page_') === 0) {
+            $id_cleaned = str_replace('_', '-', substr($page_id, strlen('obatala_page_')));
+            echo '<div id="' . esc_attr($id_cleaned) . '"></div>';
         } else {
-            echo '<h1>Page Not Found</h1>';
+            echo '<h1>Página não encontrada</h1>';
         }
     }
+    
 
     /**
      * Enfileira os scripts necessários para garantir o comportamento do menu.
      */
     public static function enqueue_scripts() {
         add_action('admin_footer', function () {
-            echo '<style>
-                #toplevel_page_obatala-main.wp-menu-open > .wp-submenu {
-                    display: block;
+            ?>
+            <script type="text/javascript">
+                // Quando a página do admin for carregada, esconda os itens "Process Viewer" e "Process Type Editor"
+                document.addEventListener('DOMContentLoaded', function () {
+                    const processViewerItem = document.querySelector('#toplevel_page_obatala-main .wp-submenu li a[href*="process-viewer"]');
+                    const processTypeEditorItem = document.querySelector('#toplevel_page_obatala-main .wp-submenu li a[href*="process-type-editor"]');
+                    
+                    if (processViewerItem) {
+                        processViewerItem.parentElement.style.display = 'none'; // Esconde o item "Process Viewer"
+                    }
+
+                    if (processTypeEditorItem) {
+                        processTypeEditorItem.parentElement.style.display = 'none'; // Esconde o item "Process Type Editor"
+                    }
+
+                    // Exibe os itens "Process Viewer" e "Process Type Editor" quando o usuário clicar no item principal do menu
+                    const menuItem = document.querySelector('#toplevel_page_obatala-main');
+                    if (menuItem) {
+                        menuItem.addEventListener('click', function () {
+                            if (processViewerItem) {
+                                processViewerItem.parentElement.style.display = 'block'; // Exibe o item "Process Viewer"
+                            }
+                            if (processTypeEditorItem) {
+                                processTypeEditorItem.parentElement.style.display = 'block'; // Exibe o item "Process Type Editor"
+                            }
+                        });
+                    }
+                });
+            </script>
+            <style>
+                /* Esconde os itens "Process Viewer" e "Process Type Editor" por padrão */
+                #toplevel_page_obatala-main .wp-submenu li a[href*="process-viewer"],
+                #toplevel_page_obatala-main .wp-submenu li a[href*="process-type-editor"] {
+                    display: none;
                 }
-                #toplevel_page_obatala-main:hover > .wp-submenu {
-                    display: block;
-                }
-            </style>';
+            </style>
+            <?php
         });
     }
 }

@@ -1,10 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
-import { Button, ButtonGroup, Icon, Tooltip, Panel, PanelHeader, PanelRow, Notice, TextControl } from '@wordpress/components';
-import { edit, trash, layout } from '@wordpress/icons';
+import { Button, ButtonGroup, Icon, Tooltip, Panel, PanelHeader, PanelRow, Notice, TextControl  } from '@wordpress/components';
+import { edit, trash, layout, close, more, filter } from '@wordpress/icons';
 import { format } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
+import ProcessTypeFilter from './ProcessTypeFilters';
 
-const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager }) => {
+const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager, status, setStatus, authorsById }) => {
     const columns = useMemo(() => [
         {
             Header: 'Title',
@@ -15,20 +17,41 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager }) => {
             accessor: 'description',
         },
         {
-            Header: 'Created At',
-            accessor: 'date',
-            Cell: ({ value }) => format(new Date(value), 'MM/dd/yyyy'),
-        },
-        {
-            Header: 'Number of Steps',
-            accessor: 'meta.flowData.nodes',
-            Cell: ({ value }) => (value ? value.length : 0),
-        },
-        {
             Header: 'Status',
             accessor: 'meta.status[0]',
             Cell: ({ value }) => (
                 <span className={`badge ${value === 'Active' ? 'success' : 'error'}`}>{value}</span>
+            ),
+        },
+        {
+            Header: 'Created at',
+            //accessor: 'date',
+            Cell: ({ row }) => (
+                <p>
+                    {format(new Date(row.original.date), "MM/dd/yyyy 'por' ")}
+                    {authorsById[row.original.author]?.name}
+                </p>
+            )
+        },
+       /*  {
+            Header: 'Created By',
+            accessor: 'author',
+            Cell: ({ value }) => authorsById[value]?.name,
+        }, */
+        {
+            Header: 'Last update',
+            accessor: 'meta',
+            Cell: ({ value }) => (
+                <p>
+                   { value.updateAt 
+                        ? format(value.updateAt[0], "MM/dd/yyyy 'às' pp 'por' ",
+                            {
+                                locale: ptBR
+                            })  
+                        : ''
+                    }
+                    {value.user ? value.user[0] : ''}
+                </p>
             ),
         },
         {
@@ -88,21 +111,23 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager }) => {
 
     return (
         <Panel>
-            <PanelHeader>
-                <h3>Existing process models</h3>
-                <span className="badge">{processTypes.length}</span>
-            </PanelHeader>
             <PanelRow>
-                <TextControl
-                    className="mb-1"
-                    value={globalFilter || ''}
-                    onChange={value => setGlobalFilter(value)}
-                    placeholder="Search by title or description"
-                    type="search"
-                />
+                <div className='container_searchAndSelect'>
+                    <TextControl
+                        className="mb-1"
+                        value={globalFilter || ''}
+                        onChange={value => setGlobalFilter(value)}
+                        placeholder="Search by title or description"
+                        type="search"
+                    />
+                    <ProcessTypeFilter
+                        status={status}
+                        setStatus={setStatus}
+                    />         
+                </div>    
                 {processTypes.length > 0 ? (
                     <>
-                        <table {...getTableProps()} className="wp-list-table widefat fixed striped table-view-list">
+                        <table {...getTableProps()} className="wp-list-table widefat striped table-view-list">
                             <thead>
                                 {headerGroups.map(headerGroup => {
                                     const { key: headerGroupKey, ...headerGroupProps } = headerGroup.getHeaderGroupProps();

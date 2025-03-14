@@ -4,8 +4,7 @@ import { Button, ButtonGroup, DropdownMenu } from "@wordpress/components";
 import { check, closeSmall, fullscreen, menu, plus } from "@wordpress/icons";
 
 const ProcessControls = ({onSave, onCancel, toggleFullScreen}) => {
-
-    const { addNewNode, onExport, onImport } = useFlowContext();
+const { addNewNode, addNewNodeConditional, onExport, onImport } = useFlowContext();
 
     const fileInputRef = useRef(null);
 
@@ -36,6 +35,9 @@ const ProcessControls = ({onSave, onCancel, toggleFullScreen}) => {
                 </Button>
                 <Button icon={plus} variant="secondary" onClick={addNewNode}>
                     Add step
+                </Button>
+                <Button icon={plus} variant="secondary" onClick={addNewNodeConditional}>
+                  Add conditional
                 </Button>
                 <Button
                     variant="secondary"

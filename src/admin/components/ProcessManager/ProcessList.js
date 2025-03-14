@@ -2,15 +2,21 @@ import React, { useMemo } from 'react';
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
 import { Button, ButtonGroup, Icon, Tooltip, Panel, PanelHeader, PanelRow, Notice, TextControl } from '@wordpress/components';
 import { edit, seen} from '@wordpress/icons';
+import ProcessFilter from './ProcessFilters';
 
-const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, processTypes }) => {
+const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, processTypes, accessLevel, setAccessLevel, modelFilter, setModelFilter }) => {
     const columns = useMemo(() => [
         {
-            Header: 'Process Title',
+            Header: 'Process',
             accessor: 'title.rendered',
+            Cell: ({ row }) => (
+                <a href={`?page=process-viewer&process_id=${row.original.id}`}>
+                    {row.original.title.rendered}
+                </a>
+            ),
         },
         {
-            Header: 'Process Model Title',
+            Header: 'Model',
             Cell: ({row}) => {
                 const typeMapping = processTypeMappings.find(m => m.processId === row.original.id);
                 const processType = typeMapping ? processTypes.find(type => type.id == typeMapping.processTypeId) : null;
@@ -19,15 +25,16 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
             }
         },
         {
-            Header: 'Status',
-            accessor: 'meta.current_stage',
+            Header: 'Current step',
+            accessor: row => row.meta?.current_stage 
+                ? `${row.meta.current_stage} - ${row.meta.groupResponsible || 'No group'}`
+                : 'Not started'
         },
         {
-          Header: 'Access Level',
+          Header: 'Access level',
           accessor: 'meta.access_level',
           Cell: ({ value }) => (
-  
-              <span className={`badge ${value == 'public' || value == 'Public' ? 'success' : 'warning'}`}>
+              <span className={`badge ${value == 'Not restricted' || value == 'not restricted' ? 'success' : 'warning'}`}>
                   {value}
               </span> 
             ),
@@ -36,22 +43,20 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
             Header: 'Actions',
             accessor: 'id',
             Cell: ({ row }) => (
-              <ButtonGroup>
-              <Tooltip text="View">
-                  <Button
-                  icon={<Icon icon={seen} />} 
-                  onClick={() => onViewProcess(row.original.id)}
-                  />
-  
-              </Tooltip>
-              <Tooltip text="Edit">
-                  <Button
-                  icon={<Icon icon={edit} />}
-                  onClick={() => onEdit(row.original)}
-              />
-  
-              </Tooltip>
-          </ButtonGroup>
+                <ButtonGroup>
+                    <Tooltip text="View">
+                        <Button
+                            icon={<Icon icon={seen} />} 
+                            onClick={() => onViewProcess(row.original.id)}
+                        />
+                    </Tooltip>
+                    <Tooltip text="Edit">
+                        <Button
+                            icon={<Icon icon={edit} />}
+                            onClick={() => onEdit(row.original)}
+                        />
+                    </Tooltip>
+                </ButtonGroup>
             ),
         },
     ], [processTypeMappings, processTypes]);
@@ -85,21 +90,26 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
 
     return (
         <Panel>
-            <PanelHeader>
-                <h3>Existing Processes</h3>
-                <span className="badge">{processes.length}</span>
-            </PanelHeader>
             <PanelRow>
-                <TextControl
-                    className="mb-1"
-                    value={globalFilter || ''}
-                    onChange={value => setGlobalFilter(value)}
-                    placeholder="Search by title"
-                    type="search"
-                />
+                <div className='container_searchAndSelect'>
+                    <TextControl
+                        className="mb-1"
+                        value={globalFilter || ''}
+                        onChange={value => setGlobalFilter(value)}
+                        placeholder="Search by title"
+                        type="search"
+                    />
+                    <ProcessFilter
+                        accessLevel={accessLevel}
+                        setAccessLevel={setAccessLevel}
+                        modelFilter={modelFilter}
+                        setModelFilter={setModelFilter}
+                        processTypes={processTypes}
+                    />
+                </div>
                 {processes.length > 0 ? (
                     <>
-                        <table {...getTableProps()} className="wp-list-table widefat fixed striped table-view-list">
+                        <table {...getTableProps()} className="wp-list-table widefat striped table-view-list">
                             <thead>
                                 {headerGroups.map(headerGroup => {
                                     const { key: headerGroupKey, ...headerGroupProps } = headerGroup.getHeaderGroupProps();

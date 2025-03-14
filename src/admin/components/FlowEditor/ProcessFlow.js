@@ -13,10 +13,16 @@ import ProcessControls from "./components/reactFlow/FlowButtons";
 import SlidingDrawer from "./components/SlidingDrawer";
 import { DrawerProvider } from "./context/DrawerContext";
 import { useFlowContext } from "./context/FlowContext";
+import StartNode from './components/reactFlow/StartNode';
+import EndNode from './components/reactFlow/EndNode';
+import NodeConditional from "./components/reactFlow/NodeConditional";
 
 
 const nodeTypes = {
   customNode: NodeContent,
+  startNode: StartNode,
+  endNode: EndNode,
+  customNodeConditional: NodeConditional
 };
 
 const edgeTypes = {

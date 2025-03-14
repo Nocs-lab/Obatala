@@ -43,7 +43,7 @@ class ProcessType {
             'has_archive'        => true,
             'hierarchical'       => false,
             'menu_position'      => 99,
-            'supports'           => array('title'),
+            'supports'           => array('title', 'author',),
             'show_in_rest'       => true,
             'menu_icon'          => 'dashicons-media-document'
         );
@@ -136,6 +136,25 @@ class ProcessType {
                                     'stageName' => [
                                         'type' => 'string',
                                         'description' => 'Name of the stage (node)',
+                                    ],
+                                    'condition' => [
+                                        'type' => 'object',
+                                        'description' => 'Conditional settings for the node',
+                                        'properties' => [
+                                            'inputNode' => ['type' => 'string', 'description' => 'ID of the input node'],
+                                            'condition' => ['type' => 'string', 'description' => 'Condition to check'],
+                                            'outputNodes' => [
+                                                'type' => 'array',
+                                                'description' => 'List of output nodes',
+                                                'items' => [
+                                                    'type' => 'object',
+                                                    'properties' => [
+                                                        'conditionValue' => ['type' => 'string', 'description' => 'Condition value to match'],
+                                                        'nodeId' => ['type' => 'string', 'description' => 'ID of the output node'],
+                                                    ],
+                                                ],
+                                            ],
+                                        ],
                                     ],
                                     'sector_history' => [
                                         'type' => 'array',
