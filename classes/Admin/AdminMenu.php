@@ -19,8 +19,8 @@ class AdminMenu {
                 'title' => 'Dashboard',
                 'menu_title' => 'Dashboard',
                 'capability' => 'manage_options',
-                'slug' => 'obatala-main',
-                'callback' => 'render_main_page',
+                'slug' => 'dashboard',
+                'callback' => 'render_page',
                 'show_in_menu' => true
             ],
             [
@@ -158,42 +158,46 @@ class AdminMenu {
     public static function enqueue_scripts() {
         add_action('admin_footer', function () {
             ?>
-            <script type="text/javascript">
-                // Quando a página do admin for carregada, esconda os itens "Process Viewer" e "Process Type Editor"
-                document.addEventListener('DOMContentLoaded', function () {
-                    const processViewerItem = document.querySelector('#toplevel_page_obatala-main .wp-submenu li a[href*="process-viewer"]');
-                    const processTypeEditorItem = document.querySelector('#toplevel_page_obatala-main .wp-submenu li a[href*="process-type-editor"]');
-                    
-                    if (processViewerItem) {
-                        processViewerItem.parentElement.style.display = 'none'; // Esconde o item "Process Viewer"
-                    }
+<script type="text/javascript">
+// Quando a página do admin for carregada, esconda os itens "Process Viewer" e "Process Type Editor"
+document.addEventListener('DOMContentLoaded', function() {
+    const processViewerItem = document.querySelector(
+        '#toplevel_page_obatala-main .wp-submenu li a[href*="process-viewer"]');
+    const processTypeEditorItem = document.querySelector(
+        '#toplevel_page_obatala-main .wp-submenu li a[href*="process-type-editor"]');
 
-                    if (processTypeEditorItem) {
-                        processTypeEditorItem.parentElement.style.display = 'none'; // Esconde o item "Process Type Editor"
-                    }
+    if (processViewerItem) {
+        processViewerItem.parentElement.style.display = 'none'; // Esconde o item "Process Viewer"
+    }
 
-                    // Exibe os itens "Process Viewer" e "Process Type Editor" quando o usuário clicar no item principal do menu
-                    const menuItem = document.querySelector('#toplevel_page_obatala-main');
-                    if (menuItem) {
-                        menuItem.addEventListener('click', function () {
-                            if (processViewerItem) {
-                                processViewerItem.parentElement.style.display = 'block'; // Exibe o item "Process Viewer"
-                            }
-                            if (processTypeEditorItem) {
-                                processTypeEditorItem.parentElement.style.display = 'block'; // Exibe o item "Process Type Editor"
-                            }
-                        });
-                    }
-                });
-            </script>
-            <style>
-                /* Esconde os itens "Process Viewer" e "Process Type Editor" por padrão */
-                #toplevel_page_obatala-main .wp-submenu li a[href*="process-viewer"],
-                #toplevel_page_obatala-main .wp-submenu li a[href*="process-type-editor"] {
-                    display: none;
-                }
-            </style>
-            <?php
+    if (processTypeEditorItem) {
+        processTypeEditorItem.parentElement.style.display = 'none'; // Esconde o item "Process Type Editor"
+    }
+
+    // Exibe os itens "Process Viewer" e "Process Type Editor" quando o usuário clicar no item principal do menu
+    const menuItem = document.querySelector('#toplevel_page_obatala-main');
+    if (menuItem) {
+        menuItem.addEventListener('click', function() {
+            if (processViewerItem) {
+                processViewerItem.parentElement.style.display =
+                    'block'; // Exibe o item "Process Viewer"
+            }
+            if (processTypeEditorItem) {
+                processTypeEditorItem.parentElement.style.display =
+                    'block'; // Exibe o item "Process Type Editor"
+            }
+        });
+    }
+});
+</script>
+<style>
+/* Esconde os itens "Process Viewer" e "Process Type Editor" por padrão */
+#toplevel_page_obatala-main .wp-submenu li a[href*="process-viewer"],
+#toplevel_page_obatala-main .wp-submenu li a[href*="process-type-editor"] {
+    display: none;
+}
+</style>
+<?php
         });
     }
 }
