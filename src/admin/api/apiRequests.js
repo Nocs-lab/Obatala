@@ -1,57 +1,56 @@
 import apiFetch from "@wordpress/api-fetch";
 
 export const fetchProcessModels = () => {
-  return apiFetch({
-    path: `/obatala/v1/process_type?per_page=100&_embed`,
-  }).then((data) => {
-    console.log("Fetched process types:", data); // Adiciona log para verificar os dados
-    return data.map((item) => {
-      return {
-        ...item,
-        description: item.meta.description ? String(item.meta.description) : "",
-        step_order: item.meta.step_order,
-      };
+    return apiFetch({
+      path: `/obatala/v1/process_type?per_page=100&_embed`,
+    }).then((data) => {
+        return data.map((item) => {
+            return {
+                ...item,
+                description: item.meta.description ? String(item.meta.description) : "",
+                step_order: item.meta.step_order,
+            };
+        });
     });
-  });
 };
 
 // Função para desserializar
 const maybeUnserialize = (data) => {
-  try {
-    return JSON.parse(data);
-  } catch (e) {
-    return [];
-  }
+    try {
+        return JSON.parse(data);
+    } catch (e) {
+        return [];
+    }
 };
 
 export const saveProcessType = (processType, editingProcessType) => {
-  const path = editingProcessType
-    ? `/obatala/v1/process_type/${editingProcessType.id}`
-    : `/obatala/v1/process_type`;
-  const method = editingProcessType ? "PUT" : "POST";
-  return apiFetch({ path, method, data: processType });
+    const path = editingProcessType
+      ? `/obatala/v1/process_type/${editingProcessType.id}`
+      : `/obatala/v1/process_type`;
+    const method = editingProcessType ? "PUT" : "POST";
+    return apiFetch({ path, method, data: processType });
 };
 
 export const updateProcessTypeMeta = (id, meta) => {
-  return apiFetch({
-    path: `/obatala/v1/process_type/${id}/meta`,
-    method: "PUT",
-    data: meta,
-  });
+    return apiFetch({
+        path: `/obatala/v1/process_type/${id}/meta`,
+        method: "PUT",
+        data: meta,
+    });
 };
 export const fetchProcessTypeById = (id) => {
-  return apiFetch({path: `/obatala/v1/process_type/${id}`})
+    return apiFetch({path: `/obatala/v1/process_type/${id}`})
 }
 export const deleteProcessType = (id) => {
-  return apiFetch({ path: `/obatala/v1/process_type/${id}`, method: "DELETE" });
+    return apiFetch({ path: `/obatala/v1/process_type/${id}`, method: "DELETE" });
 };
 
 export const fetchProcesses = () => {
-  return apiFetch({ path: `/obatala/v1/process_obatala?per_page=100` });
+    return apiFetch({ path: `/obatala/v1/process_obatala?per_page=100` });
 };
 
 export const fetchProcessById = (id) => {
-  return apiFetch({path: `/obatala/v1/process_obatala/${id}`})
+    return apiFetch({path: `/obatala/v1/process_obatala/${id}`})
 }
 
 export const fetchSectors = () => {
@@ -59,7 +58,7 @@ export const fetchSectors = () => {
 }; 
 
 export const fetchSectorsUsers = () => {
-  return apiFetch({ path: `/obatala/v1/sector_obatala/sectors_with_users` });   
+    return apiFetch({ path: `/obatala/v1/sector_obatala/sectors_with_users` });   
 }; 
 
 export const saveSector = async (sector, editingSector) => {
@@ -73,23 +72,23 @@ export const deleteSector = (id) => {
 };
 
 export const fetchUsers = () => {
-  return apiFetch({ path: `/obatala/v1/sector_obatala/users_obatala` });   
+    return apiFetch({ path: `/obatala/v1/sector_obatala/users_obatala` });   
 };
 
 export const fetchUsersBySector = (id) => {
-  return apiFetch({ path: `/obatala/v1/sector_obatala/${id}/users` });   
+    return apiFetch({ path: `/obatala/v1/sector_obatala/${id}/users` });   
 };
 
 export const assignUserToSector = (data) => {
-  const path = `/obatala/v1/associate_user_to_sector`;
-  const method = 'POST';
-  return apiFetch({ path: path, method, data: data });   
+    const path = `/obatala/v1/associate_user_to_sector`;
+    const method = 'POST';
+    return apiFetch({ path: path, method, data: data });   
 };
 
 export const deleteSectorUser = (sectorId, data) => {
-  return apiFetch({ path: `/obatala/v1/sector_obatala/${sectorId}/remove_user`, method: 'POST', data: data });
+    return apiFetch({ path: `/obatala/v1/sector_obatala/${sectorId}/remove_user`, method: 'POST', data: data });
 };
 
 export const fetchNodePermission = (processId, currentUserId) => {
-  return apiFetch({ path: `/obatala/v1/process_type/${processId}/get_node?user=${currentUserId}` })
+    return apiFetch({ path: `/obatala/v1/process_type/${processId}/get_node?user=${currentUserId}` })
 }
