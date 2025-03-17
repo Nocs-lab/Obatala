@@ -57,3 +57,33 @@ jobs:
           asset_content_type: application/zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: wainting upload
+        run: sleep 12
+
+  updatePlugin:
+    runs-on: ubuntu-latest
+    needs: create_release
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Create .env file
+        run: echo "${{ secrets.ENVS_PLUGIN_UPDATE }}" > .env
+
+      - name: Download obatala.zip
+        run: curl -L -o ./developer/obatala.zip https://github.com/Nocs-lab/Obatala/releases/latest/download/obatala.zip   
+
+      - name: Configs Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.9'
+
+      - name: Instalar o Playwright e o Chromium
+        run: |
+           pip install playwright
+           playwright install chromium
+           pip install python-dotenv 
+
+      - name: Run script update
+        run: python ./developer/updatePlugin.py
