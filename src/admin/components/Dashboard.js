@@ -212,8 +212,8 @@ const DashboardPage = () => {
                                     <table className="wp-list-table widefat fixed striped table-view-list">
                                         <thead>
                                             <tr>
-                                            <th>Model</th>
-                                            <th>Quantidade</th>
+                                            <th>Setor</th>
+                                            <th>Descrição</th>
                                             <th>Status</th>
                                             </tr>
                                         </thead>
@@ -242,7 +242,7 @@ const DashboardPage = () => {
                                 <table className="wp-list-table widefat fixed striped table-view-list" >
                                     <thead>
                                         <tr>
-                                        <th>Name</th>
+                                        <th>Nome</th>
                                         <th>Quantidade</th>
                                         </tr>
                                     </thead>

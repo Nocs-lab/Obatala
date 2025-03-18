@@ -16,15 +16,6 @@ class AdminMenu {
         'submenus' => [
             [
                 'parent_slug' => 'obatala-main',
-                'title' => 'Dashboard',
-                'menu_title' => 'Dashboard',
-                'capability' => 'manage_options',
-                'slug' => 'dashboard',
-                'callback' => 'render_page',
-                'show_in_menu' => true
-            ],
-            [
-                'parent_slug' => 'obatala-main',
                 'title' => 'Process Manager',
                 'menu_title' => 'Process Manager',
                 'capability' => 'manage_options',
@@ -123,8 +114,7 @@ class AdminMenu {
      * Renderiza a página principal do menu.
      */
     public static function render_main_page() {
-        echo '<h1>' . __('Bem-vindo ao Obatala', 'obatala') . '</h1>';
-        echo '<p>' . __('Selecione uma opção do submenu para começar.', 'obatala') . '</p>';
+        echo '<div id="dashboard"></div>';
     }
 
     /**
