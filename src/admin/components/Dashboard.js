@@ -19,9 +19,7 @@ import Reducer, { initialState } from '../redux/reducer';
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 import apiFetch from '@wordpress/api-fetch';
-import process from '../../assets/terms.svg'
-import workflow from '../../assets/workflow.svg'
-import team from '../../assets/team.svg'
+
 
 const DashboardPage = () => {
     const [processTypes, setProcessTypes] = useState([]);
@@ -175,33 +173,21 @@ const DashboardPage = () => {
                                     <h1>{processes.length}</h1>
                                     <h3>Processos criados</h3>
                             </PanelRow>
-                            <PanelRow>
-                                <div className="icon-container">
-                                    <img src={process} alt="Svg Process" width="60px" height="60px" />
-                                </div>                            
-                            </PanelRow>
+                         
                         </Panel>
                         <Panel>
                             <PanelRow>
                                 <h1>{processTypes.length}</h1>
                                 <h3>Modelos criados</h3>
                             </PanelRow>
-                            <PanelRow>
-                                <div className="icon-container">
-                                    <img src={workflow} alt='Svg WorkFlow' width={'60px'} height={'60px'} />
-                                </div>
-                            </PanelRow>
+                         
                         </Panel>
                         <Panel>
                             <PanelRow>
                                 <h1>{sectors.length}</h1>
                                 <h3>Grupos criados</h3>
                             </PanelRow>
-                            <PanelRow>                                
-                                <div className="icon-container">
-                                    <img src={team} alt='Svg Team' width={'60px'} height={'60px'} />
-                                </div>  
-                            </PanelRow>
+                         
                         </Panel>
                     </div>
                     <div className='container-tables'>

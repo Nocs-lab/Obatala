@@ -930,8 +930,10 @@ button .components-spinner {
   display: flex;
   flex-direction: row;
   height: fit-content;
+  width: 100%;
   gap: 16px;
   margin-top: 1rem;
+  
 }
 
 .container-cards > .components-panel {
@@ -939,7 +941,7 @@ button .components-spinner {
   flex-direction: row;
   text-align: center;
   margin-top: 0;
-  width: 100%;
+  
   height: fit-content;
 }
 
@@ -948,6 +950,7 @@ button .components-spinner {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 100%;
 }
 
 .container-cards > .components-panel > .components-panel__row > h3 {
