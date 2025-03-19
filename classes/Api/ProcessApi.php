@@ -230,7 +230,7 @@ class ProcessApi extends ObatalaAPI {
     
         $formatted_comments = array_map(function($comment) {
             return [
-                'comment_ID'          => $comment->comment_ID,
+                'comment_ID'          => (int) $comment->comment_ID,
                 'comment_author'      => $comment->comment_author,
                 'comment_author_email'=> $comment->comment_author_email,
                 'comment_content'     => $comment->comment_content,
