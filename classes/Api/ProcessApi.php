@@ -5,6 +5,7 @@ namespace Obatala\Api;
 defined('ABSPATH') || exit;
 
 use WP_REST_Response; // Certifique-se de importar a classe WP_REST_Response
+use Obatala\Entities\Sector;
 
 class ProcessApi extends ObatalaAPI {
 
@@ -143,22 +144,39 @@ class ProcessApi extends ObatalaAPI {
 
     public function add_comment($request) {
         $post_id = (int) $request['id'];
-        $user_id = (int) $request->get_param('user');
+        $user_id = (int) $request->get_param('user_id'); // ID do usuário autenticado
         $body = sanitize_text_field($request->get_param('text'));
     
         // Verifica se o post existe
         if (!get_post($post_id)) {
-            return new WP_Error('invalid_post', 'O post especificado não existe.', ['status' => 404]);
+            return new WP_REST_Response([
+                'message' => 'The specified post does not exist.',
+            ], 404);
+        }
+        
+        // Verificar permissão
+        $permission = Sector::check_permission($user_id, $post_id);
+    
+        if (!$permission['status']) {
+            return new WP_REST_Response(
+                [
+                    'error' => 'Permission denied',
+                    'status' => $permission['message']
+                ],
+                403
+            );
         }
     
         // Verifica se o comentário está vazio
         if (empty($body)) {
-            return new WP_Error('empty_comment', 'O comentário não pode estar vazio.', ['status' => 400]);
+            return new WP_REST_Response([
+                'message' => 'The comment cannot be empty.',
+            ], 400);
         }
     
         // Pega os dados do usuário, se existir
         $user = get_userdata($user_id);
-        $author_name = $user ? $user->display_name : 'Anônimo';
+        $author_name = $user ? $user->display_name : 'Anonymous';
         $author_email = $user ? $user->user_email : '';
     
         // Dados do novo comentário
@@ -176,11 +194,13 @@ class ProcessApi extends ObatalaAPI {
         $comment_id = wp_insert_comment($comment_data);
     
         if (!$comment_id) {
-            return new WP_Error('db_error', 'Erro ao inserir o comentário.', ['status' => 500]);
+            return new WP_REST_Response([
+                'message' => 'Error while inserting the comment.',
+            ], 500);
         }
     
         return new WP_REST_Response([
-            'message' => 'Comentário adicionado com sucesso.',
+            'message' => 'Comment added successfully.',
             'comment_id' => $comment_id,
         ], 200);
     }
@@ -189,14 +209,28 @@ class ProcessApi extends ObatalaAPI {
     public function get_comments($request) {
         $post_id = (int) $request['id'];
         $comments = get_comments(['post_id' => $post_id]); // Busca os comentários do post
+        $user_id = (int) $request->get_param('user_id'); // ID do usuário autenticado
+        
+        // Verificar permissão
+        $permission = Sector::check_permission($user_id, $post_id);
+    
+        if (!$permission['status']) {
+            return new WP_REST_Response(
+                [
+                    'error' => 'Permission denied',
+                    'status' => $permission['message']
+                ],
+                403
+            );
+        }
     
         if (empty($comments)) {
-            return new WP_REST_Response(['message' => 'Nenhum comentário encontrado'], 200);
+            return new WP_REST_Response(['message' => 'No comments found.'], 200);
         }
     
         $formatted_comments = array_map(function($comment) {
             return [
-                'coment_ID'           => $comment->comment_ID,
+                'comment_ID'          => $comment->comment_ID,
                 'comment_author'      => $comment->comment_author,
                 'comment_author_email'=> $comment->comment_author_email,
                 'comment_content'     => $comment->comment_content,
@@ -212,19 +246,27 @@ class ProcessApi extends ObatalaAPI {
     public function update_comment($request) {
         $comment_id = (int) $request['id'];
         $body = sanitize_text_field($request->get_param('text'));
+        $user_id = (int) $request->get_param('user_id'); // ID do usuário autenticado
     
         // Verifica se o comentário existe
         $comment = get_comment($comment_id);
         if (!$comment) {
             return new WP_REST_Response([
-                'message' => 'O comentário especificado não existe.',
+                'message' => 'The specified comment does not exist.',
             ], 404);
+        }
+    
+        // Verifica se o usuário autenticado é o dono do comentário
+        if ((int) $comment->user_id !== $user_id) {
+            return new WP_REST_Response([
+                'message' => 'You do not have permission to edit this comment.',
+            ], 403); // 403 = Forbidden
         }
     
         // Verifica se o novo texto do comentário está vazio
         if (empty($body)) {
             return new WP_REST_Response([
-                'message' => 'O comentário não pode estar vazio.',
+                'message' => 'The comment cannot be empty.',
             ], 400);
         }
     
@@ -239,12 +281,12 @@ class ProcessApi extends ObatalaAPI {
     
         if (!$updated) {
             return new WP_REST_Response([
-                'message' => 'Erro ao atualizar o comentário.',
+                'message' => 'Error while updating the comment.',
             ], 500);
         }
     
         return new WP_REST_Response([
-            'message' => 'Comentário atualizado com sucesso.',
+            'message' => 'Comment updated successfully.',
             'comment_id' => $comment_id,
         ], 200);
     }
@@ -252,13 +294,21 @@ class ProcessApi extends ObatalaAPI {
     //Remover um comentário específico
     public function delete_comment($request) {
         $comment_id = (int) $request['id'];
+        $user_id = (int) $request->get_param('user_id'); // ID do usuário autenticado
     
         // Verifica se o comentário existe
         $comment = get_comment($comment_id);
         if (!$comment) {
             return new WP_REST_Response([
-                'message' => 'O comentário especificado não existe.',
+                'message' => 'The specified comment does not exist.',
             ], 404);
+        }
+    
+        // Verifica se o usuário autenticado é o dono do comentário
+        if ((int) $comment->user_id !== $user_id) {
+            return new WP_REST_Response([
+                'message' => 'You do not have permission to delete this comment.',
+            ], 403); // 403 = Forbidden
         }
     
         // Deleta o comentário
@@ -266,12 +316,12 @@ class ProcessApi extends ObatalaAPI {
     
         if (!$deleted) {
             return new WP_REST_Response([
-                'message' => 'Erro ao deletar o comentário.',
+                'message' => 'Error while deleting the comment.',
             ], 500);
         }
     
         return new WP_REST_Response([
-            'message' => 'Comentário deletado com sucesso.',
+            'message' => 'Comment deleted successfully.',
             'comment_id' => $comment_id,
         ], 200);
     }
