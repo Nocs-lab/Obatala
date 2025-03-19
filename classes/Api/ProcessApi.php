@@ -66,7 +66,8 @@ class ProcessApi extends ObatalaAPI {
             'callback' => [$this, 'update_meta'],
             'permission_callback' => '__return_true',
         ]);
-        // Rota para obter todos os comentários associados a um step
+
+        // Rota para obter todos os comentários associados a um processo
         $this->add_route('process_obatala/(?P<id>\d+)/comments', [
             'methods' => 'GET',
             'callback' => [$this, 'get_comments'],
@@ -79,20 +80,21 @@ class ProcessApi extends ObatalaAPI {
             'methods' => 'POST',
             'callback' => [$this, 'add_comment'],
             'permission_callback' => '__return_true',
-            'args' => [
-                'content' => [
-                    'required' => true,
-                    'validate_callback' => function($param) {
-                        return !empty($param);
-                    }
-                ],
-                'author' => [
-                    'required' => false,
-                ]
-            ]
         ]);
 
+        //Rota para editar um comentario de um processo
+        $this->add_route('/process_obatala/comment/(?P<id>\d+)', [
+            'methods' => 'PUT',
+            'callback' => [$this, 'update_comment'],
+            'permission_callback' => '__return_true',
+        ]);
 
+        //Rota para deletar um comentario de um processo
+        $this->add_route('/process_obatala/comment/(?P<id>\d+)', [
+            'methods' => 'DELETE',
+            'callback' => [$this, 'delete_comment'],
+            'permission_callback' => '__return_true',
+        ]);
     }
     
     public function get_current_stage($request) {
@@ -137,50 +139,141 @@ class ProcessApi extends ObatalaAPI {
         }
         return true;
     }
-    public function get_comments($request) {
-        $post_id = (int) $request['id'];
-        
-        // Obtém todos os comentários associados ao post
-        $comments = get_comments(['post_id' => $post_id]);
-        
-        if ($comments) {
-            // Se necessário, formatar os comentários para incluir apenas campos relevantes
-            $formatted_comments = array_map(function($comment) {
-                return [
-                    'id' => $comment->comment_ID,
-                    'content' => $comment->comment_content,
-                    'author' => $comment->comment_author,
-                    'date' => $comment->comment_date,
-                ];
-            }, $comments);
-            
-            return $formatted_comments;
-        } else {
-            return new WP_REST_Response('No comments found.', 404);
-        }
-    }
     
 
     public function add_comment($request) {
         $post_id = (int) $request['id'];
-        $content = sanitize_text_field($request['content']);
-        $author = isset($request['author']) ? sanitize_text_field($request['author']) : '';
-
-        $commentdata = [
-            'comment_post_ID' => $post_id,
-            'comment_content' => $content,
-            'comment_author' => $author,
-            'comment_approved' => 1,
-        ];
-
-        $comment_id = wp_insert_comment($commentdata);
-
-        if ($comment_id) {
-            return new WP_REST_Response('Comment added successfully', 200);
-        } else {
-            return new WP_REST_Response('Error adding comment', 500);
+        $user_id = (int) $request->get_param('user');
+        $body = sanitize_text_field($request->get_param('text'));
+    
+        // Verifica se o post existe
+        if (!get_post($post_id)) {
+            return new WP_Error('invalid_post', 'O post especificado não existe.', ['status' => 404]);
         }
+    
+        // Verifica se o comentário está vazio
+        if (empty($body)) {
+            return new WP_Error('empty_comment', 'O comentário não pode estar vazio.', ['status' => 400]);
+        }
+    
+        // Pega os dados do usuário, se existir
+        $user = get_userdata($user_id);
+        $author_name = $user ? $user->display_name : 'Anônimo';
+        $author_email = $user ? $user->user_email : '';
+    
+        // Dados do novo comentário
+        $comment_data = [
+            'comment_post_ID'      => $post_id,
+            'comment_author'       => $author_name,
+            'comment_author_email' => $author_email,
+            'comment_content'      => $body,
+            'user_id'              => $user_id,
+            'comment_date'         => current_time('mysql'),
+            'comment_approved'     => 1, // Define como aprovado automaticamente
+        ];
+    
+        // Insere o comentário
+        $comment_id = wp_insert_comment($comment_data);
+    
+        if (!$comment_id) {
+            return new WP_Error('db_error', 'Erro ao inserir o comentário.', ['status' => 500]);
+        }
+    
+        return new WP_REST_Response([
+            'message' => 'Comentário adicionado com sucesso.',
+            'comment_id' => $comment_id,
+        ], 200);
     }
 
+    //Retorna todos os comentarios realizados em um processo 
+    public function get_comments($request) {
+        $post_id = (int) $request['id'];
+        $comments = get_comments(['post_id' => $post_id]); // Busca os comentários do post
+    
+        if (empty($comments)) {
+            return new WP_REST_Response(['message' => 'Nenhum comentário encontrado'], 200);
+        }
+    
+        $formatted_comments = array_map(function($comment) {
+            return [
+                'coment_ID'           => $comment->comment_ID,
+                'comment_author'      => $comment->comment_author,
+                'comment_author_email'=> $comment->comment_author_email,
+                'comment_content'     => $comment->comment_content,
+                'user_id'             => (int) $comment->user_id,
+                'comment_date'        => $comment->comment_date,
+            ];
+        }, $comments);
+    
+        return new WP_REST_Response($formatted_comments, 200);
+    }
+
+    //Atualiza um comentario especifico
+    public function update_comment($request) {
+        $comment_id = (int) $request['id'];
+        $body = sanitize_text_field($request->get_param('text'));
+    
+        // Verifica se o comentário existe
+        $comment = get_comment($comment_id);
+        if (!$comment) {
+            return new WP_REST_Response([
+                'message' => 'O comentário especificado não existe.',
+            ], 404);
+        }
+    
+        // Verifica se o novo texto do comentário está vazio
+        if (empty($body)) {
+            return new WP_REST_Response([
+                'message' => 'O comentário não pode estar vazio.',
+            ], 400);
+        }
+    
+        // Dados atualizados do comentário
+        $comment_data = [
+            'comment_ID'           => $comment_id,
+            'comment_content'      => $body,
+        ];
+    
+        // Atualiza o comentário
+        $updated = wp_update_comment($comment_data);
+    
+        if (!$updated) {
+            return new WP_REST_Response([
+                'message' => 'Erro ao atualizar o comentário.',
+            ], 500);
+        }
+    
+        return new WP_REST_Response([
+            'message' => 'Comentário atualizado com sucesso.',
+            'comment_id' => $comment_id,
+        ], 200);
+    }
+
+    //Remover um comentário específico
+    public function delete_comment($request) {
+        $comment_id = (int) $request['id'];
+    
+        // Verifica se o comentário existe
+        $comment = get_comment($comment_id);
+        if (!$comment) {
+            return new WP_REST_Response([
+                'message' => 'O comentário especificado não existe.',
+            ], 404);
+        }
+    
+        // Deleta o comentário
+        $deleted = wp_delete_comment($comment_id, true); // O segundo parâmetro 'true' força a exclusão, mesmo que seja um comentário aprovado
+    
+        if (!$deleted) {
+            return new WP_REST_Response([
+                'message' => 'Erro ao deletar o comentário.',
+            ], 500);
+        }
+    
+        return new WP_REST_Response([
+            'message' => 'Comentário deletado com sucesso.',
+            'comment_id' => $comment_id,
+        ], 200);
+    }
 
 }
