@@ -1,21 +1,13 @@
-import React, { useState, useEffect, useReducer, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
-    Button,
-    ButtonGroup,
     Icon,
-    Spinner,
-    Modal,
     Notice,
-    __experimentalConfirmDialog as ConfirmDialog, 
     Panel,
     PanelRow,
     PanelHeader
 } from '@wordpress/components';
-import { people, plus, starFilled } from "@wordpress/icons";
+import { people,  starFilled } from "@wordpress/icons";
 import { fetchProcessModels, fetchSectors, fetchSectorsUsers, } from '../api/apiRequests';
-import ProcessTypeForm from './ProcessTypeManager/ProcessTypeForm';
-import ProcessTypeList from './ProcessTypeManager/ProcessTypeList';
-import Reducer, { initialState } from '../redux/reducer';
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 import apiFetch from '@wordpress/api-fetch';
