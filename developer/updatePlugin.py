@@ -70,7 +70,7 @@ with sync_playwright() as p:
     pathPlugin()
     loginCuradoria(page)
     deactivePlugin(page)
-    if not new_plugin_executado()
+    if not new_plugin_executado:
         newPlugin(page)  # Só será chamado se não tiver sido executada.
 
     
