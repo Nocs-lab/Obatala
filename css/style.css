@@ -45,11 +45,11 @@
   height: 5px;
 }
 ::-webkit-scrollbar-thumb {
-  background-color: var(--primary-600);
+  background-color: var(--primary-800);
   border-radius: var(--border-radius);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background-color: var(--primary-800);
+  background-color: var(--primary-700);
 }
 /* #endregion */
 
@@ -392,6 +392,42 @@ form .action-bar {
   display: flex;
   width: 100%;
 }
+.card-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+  margin-left: var(--gap-external);
+  margin-right: var(--gap-external);
+}
+.card-container .card-item {
+  background-color: var(--white);
+  border: 0 none;
+  border-radius: var(--border-radius);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+  gap: var(--gap);
+  padding: 1rem var(--gap);
+}
+.card-container a.card-item {
+  background-color: var(--primary-400);
+  color: var(--white);
+  text-decoration: none;
+}
+.card-container a.card-item:hover {
+  background-color: var(--primary-600);
+}
+.card-container .description {
+  font-size: 1.25rem;
+}
+.card-container .indicator {
+  font-size: 3rem;
+  font-weight: 600;
+}
+.card-container .user-photo {
+  border-radius: 50%;
+}
 .chat-container {  
   max-height: 400px;
   overflow-y: auto;
@@ -485,6 +521,13 @@ ol.list-group .list-group-item::before {
 .panel-container > div {
   flex-basis: 65%;
   flex-grow: 1;
+}
+.panel-container > .components-panel {
+  flex-basis: 45%;
+  flex-grow: 1;
+}
+.panel-container > .components-panel + .components-panel {
+  margin-top: 0;
 }
 .panel-container aside {
   flex-basis: 180px;
@@ -622,9 +665,8 @@ main > .components-notice {
 
 /* Extra */
 .brand {
-  background-color: var(--gray-200);
-  border-top: 4px solid var(--primary-600);
-  color: var(--primary-700);
+  background-color: var(--primary-600);
+  color: var(--white);
   display: flex;
   flex-wrap: wrap;
   gap: 2.5rem;
@@ -921,6 +963,7 @@ button .components-spinner {
   align-items: flex-start;
   width: 100%;
 }
+
 .container_searchAndSelect .components-button {
   color: var(--primary-600);
 }
