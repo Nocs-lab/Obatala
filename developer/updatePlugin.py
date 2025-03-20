@@ -23,21 +23,25 @@ def loginCuradoria(page):
         print(f"Erro ao realizar login: {e}")
         sys.exit(1) # Interrompe o script em caso de erro
 
+new_plugin_executado = False  # Váriável de controle
+
 def deactivePlugin(page):
+    global new_plugin_executado
     try:
         page.goto(page_plugin)
         page.click('[data-slug="obatala-plugin-de-gestao-de-processos-curatoriais-para-wordpress"] .row-actions.visible >> text=Deactivate')
         if page.wait_for_selector('text=Plugin deactivated.', timeout=5000):
             print("Desativação do plugin antigo: Sucesso")
     except Exception as e:
-        print(f"Erro ao desativar plugin: {e}")
-        sys.exit(1) 
+        print("Nenhum plugin ativo encontrado, adicionando nova versão...")
+        if not new_plugin_executado:
+            newPlugin(page)
+            new_plugin_executado = True  # Marca como executado
 
 def pathPlugin():
     plugin_path = "./developer/obatala.zip"
     if os.path.exists(plugin_path):
         print("Plugin encontrado.")
-        # Continue com o processamento do plugin
     else:
         print("Plugin não encontrado.")
         sys.exit(1) 
@@ -54,7 +58,7 @@ def newPlugin(page):
         page.click('xpath=/html/body/div[1]/div[2]/div[2]/div[1]/div[2]/p[4]/a[1]')
         page.wait_for_load_state("networkidle")
         if page.wait_for_selector('text=Plugin activated.', timeout=5000):
-            print("Ativação do novo plugin: Sucesso")
+            print("Adição do novo plugin: Sucesso")
     except Exception as e:
         print(f"Erro ao adicionar novo plugin: {e}")
         sys.exit(1) 
@@ -66,7 +70,9 @@ with sync_playwright() as p:
     pathPlugin()
     loginCuradoria(page)
     deactivePlugin(page)
-    newPlugin(page)
+    if not new_plugin_executado()
+        newPlugin(page)  # Só será chamado se não tiver sido executada.
+
     
 
 
