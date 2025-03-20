@@ -157,7 +157,7 @@ const SectorManager = () => {
       <main>
           <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
           <div className="title-container">
-              <h2>Group manager</h2>
+              <h2>Groups</h2>
               <span className="badge">{filteredSectors.length}</span>
               <ButtonGroup>
                   <Button variant="primary" 

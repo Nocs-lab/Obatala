@@ -9,7 +9,6 @@ require_once __DIR__ . '/vendor/autoload.php';
 	Description: Adiciona funcionalidades de gestão de processos curatoriais para o plugin Tainacan
 
 	Version: 1.4.14
-
 	Author: NOCs
 	License: GPLv2 or later
 	Text Domain: obatala

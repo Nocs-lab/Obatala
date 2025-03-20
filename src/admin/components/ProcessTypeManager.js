@@ -130,7 +130,7 @@ const ProcessTypeManager = () => {
         <main>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
             <div className="title-container">
-                <h2>Process models</h2>
+                <h2>Models</h2>
                 <span className="badge">{filteredModels.length}</span>
                 <ButtonGroup>
                     <Button 
