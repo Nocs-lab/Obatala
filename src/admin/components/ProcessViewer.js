@@ -485,7 +485,7 @@ const ProcessViewer = () => {
                     <div className="title-container">
                         <h2>
                             <small>
-                                Model: {filteredProcessType
+                                {filteredProcessType
                                     ? filteredProcessType.title.rendered
                                     : "Process type title"}
                             </small>
@@ -500,7 +500,8 @@ const ProcessViewer = () => {
                             {process.meta.access_level}
                         </span>
                         <span className="badge default"><Icon icon="yes" /> {calculatePercentagem()}% concluído</span>
-                        <span className="badge default"><Icon icon="admin-users" /> Criado por: {authorsById[process?.author]?.name} em {createAtProcess()}
+                        <span className="badge success"><Icon icon="yes" /> 100% concluído</span>
+                        <span className="badge default"><Icon icon="admin-users" /> Aberto por: {authorsById[process?.author]?.name} em {createAtProcess()}
                         </span>
                     </div>
                     {notice && (
@@ -536,21 +537,24 @@ const ProcessViewer = () => {
                                                 <h2 className="accordion-title me-auto">
                                                     {step.label}
                                                 </h2>
-                                                <span className="badge info">
+                                                <div className="badge-container">
                                                     {Object.keys(currentStageData).includes(options[currentStep]?.value) ?
-                                                        `Última atualização em ${lastUpdateStage().dateFormat} por ${lastUpdateStage().user}`
-                                                        : 'Sem atualizações no momento'}
-                                                </span>
-                                                {options[currentStep].sector_stage && (
-                                                    <span className="badge info">
-                                                        Grupo: {getSectorName(options[currentStep].sector_stage)}
-                                                    </span>
-                                                )}
+                                                        <span className="badge success">Concluído em {lastUpdateStage().dateFormat}</span>
+                                                        : <span className="badge danger">Pendente</span>}
+                                                    {options[currentStep].sector_stage && (
+                                                        <span className="badge info" title={`Grupo responsável: ${getSectorName(options[currentStep].sector_stage)}`}>
+                                                            <Icon icon="groups" /> {getSectorName(options[currentStep].sector_stage)}
+                                                        </span>
+                                                    )}
+                                                </div>
                                             </button>
                                             {activeIndex === index && (
                                                 <div className="accordion-content">
                                                     {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
                                                         <>
+                                                            <div className="badge-container mb-2">
+                                                                <span className="badge success">Concluído por José Silva</span>
+                                                            </div>
                                                             {!isUserInSector(options[currentStep].sector_stage) && (
                                                                 <div className="notice-container">
                                                                     <Notice status="warning" isDismissible={false}>
