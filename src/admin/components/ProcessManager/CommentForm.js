@@ -1,30 +1,38 @@
-// CommentForm.js
 import React, { useState, useEffect } from "react";
-import { TextControl, Button, Notice, PanelBody, PanelRow } from "@wordpress/components";
-import apiFetch from "@wordpress/api-fetch";
+import { addComment, deleteComment, fetchProcessComments, updateComment } from "../../api/apiRequests";
+import { useSelect } from '@wordpress/data';
+import { store as coreStore } from '@wordpress/core-data';
+import { TextControl, Button, Notice, PanelBody, PanelRow, DropdownMenu } from "@wordpress/components";
+import {
+    menu,
+    edit,
+    trash,
+} from '@wordpress/icons';
 
-const CommentForm = ({ stepId }) => {
+const CommentForm = ({ processId }) => {
     const [comment, setComment] = useState('');
+    const [editingComment, setEditingComment] = useState(null);
+    const [editContent, setEditContent] = useState('');
     const [comments, setComments] = useState([]);
     const [notice, setNotice] = useState(null);
 
+    const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
+    
     useEffect(() => {
         fetchComments();
-    }, [stepId]);
+    }, [processId]); 
 
     const fetchComments = () => {
-        apiFetch({
-            path: `/obatala/v1/process_obatala/${stepId}/comments`, // Atualize o caminho se necessário
-            method: 'GET',
-        })
+        fetchProcessComments(processId,currentUser.id)
         .then(data => {
+            console.log(data);
             setComments(data);
         })
         .catch((error) => {
             console.error('Error fetching comments:', error);
             //setNotice({ status: 'error', message: 'Error fetching comments.' });
         });
-    };
+    }; 
 
     const handleCommentSubmit = () => {
         if (!comment) {
@@ -33,15 +41,11 @@ const CommentForm = ({ stepId }) => {
         }
 
         const newComment = {
-            content: comment,
-            step_id: stepId, // Use stepId para vincular o comentário
+            text: comment,
+            user_id: currentUser.id, 
         };
 
-        apiFetch({
-            path: `/obatala/v1/process_obatala/${stepId}/comment`, // Atualize o caminho se necessário
-            method: 'POST',
-            data: newComment,
-        })
+        addComment(processId,newComment)
         .then(() => {
             setComment('');
             setNotice({ status: 'success', message: 'Comment added successfully.' });
@@ -50,6 +54,41 @@ const CommentForm = ({ stepId }) => {
         .catch((error) => {
             console.error('Error adding comment:', error);
             setNotice({ status: 'error', message: 'Error adding comment.' });
+        });
+    };
+
+    const handleDeleteComment = (commentId) => {
+        deleteComment(commentId,currentUser.id)
+        .then(() => {
+            fetchComments();
+        })
+        .catch((error) => {
+            console.error('Error deleting comment:', error);
+            //setNotice({ status: 'error', message: 'Error deleting comments.' });
+        });
+    };
+
+    const handleEditComment = (commentId) => {
+        if (!editContent) {
+            setNotice({ status: 'error', message: 'Please enter a comment.' });
+            return;
+        }
+
+        const newComment = {
+            text: editContent,
+            user_id: currentUser.id, 
+        };
+
+        updateComment(commentId,newComment)
+        .then(() => {
+            setEditingComment(null);
+            setEditContent('');
+            setNotice({ status: 'success', message: 'Comment updated successfully.' });
+            fetchComments(); // Recarregar os comentários após editar
+        })
+        .catch((error) => {
+            console.error('Error updating comment:', error);
+            setNotice({ status: 'error', message: 'Error updating comment.' });
         });
     };
 
@@ -76,11 +115,38 @@ const CommentForm = ({ stepId }) => {
                         <div className="chat-container">
                             <div className="chat-messages">
                                 {comments.map((comment) => (
-                                    <div key={comment.id} className={`chat-message ${comment.author ? 'received' : 'sent'}`}>
-                                        <div className="message-content">
-                                            <strong>{comment.author || 'Anonymous'}:</strong> {comment.content}
-                                            <div className="message-date">{new Date(comment.date).toLocaleString()}</div>
-                                        </div>
+                                    <div key={comment.comment_ID} className={`chat-message ${comment.comment_author ? 'received' : 'sent'}`}>
+                                        {editingComment === comment.comment_ID ? (
+                                            <>
+                                                <TextControl value={editContent} onChange={(value) => setEditContent(value)} />
+                                                <Button variant="primary" onClick={() => handleEditComment(comment.comment_ID)}>Save</Button>
+                                                <Button variant="secondary" onClick={() => setEditingComment(null)}>Cancel</Button>
+                                            </>
+                                        ) : (
+                                            <div className="message-content">
+                                                <strong>{comment.comment_author || 'Anonymous'}:</strong> {comment.comment_content}
+                                                <div className="message-date">{new Date(comment.comment_date).toLocaleString()}</div>
+                                                <DropdownMenu
+                                                    icon={ menu }
+                                                    label="Select a direction"
+                                                    controls={[
+                                                        {
+                                                            title: 'Delete',
+                                                            icon: trash,
+                                                            onClick: () => handleDeleteComment(comment.comment_ID),
+                                                        },
+                                                        {
+                                                            title: 'Edit',
+                                                            icon: edit,
+                                                            onClick: () => {
+                                                                setEditingComment(comment.comment_ID);
+                                                                setEditContent(comment.comment_content);
+                                                            }
+                                                        },
+                                                    ]}
+                                                />
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
                             </div>
