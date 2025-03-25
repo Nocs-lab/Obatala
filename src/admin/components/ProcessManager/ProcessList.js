@@ -8,13 +8,13 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
     const columns = useMemo(
       () => [
         {
-          Header: "Process",
-          accessor: "title.rendered",
-          Cell: ({ row }) => (
-            <a href={`?page=process-viewer&process_id=${row.original.id}`}>
-              {row.original.title.rendered}
-            </a>
-          ),
+            Header: "Process",
+            accessor: "title.rendered",
+            Cell: ({ row }) => (
+                <a href={`?page=process-viewer&process_id=${row.original.id}`}>
+                    {row.original.title.rendered}
+                </a>
+            ),
         },
         {
           Header: "Model",
@@ -56,35 +56,35 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
           ),
         },
         {
-          Header: "Actions",
-          accessor: "id",
-          Cell: ({ row }) => (
-            <ButtonGroup>
-              <Tooltip text="View">
-                <Button
-                  icon={<Icon icon={seen} />}
-                  onClick={() => onViewProcess(row.original.id)}
-                />
-              </Tooltip>
-              <Tooltip text="Edit">
-                <Button
-                  icon={<Icon icon={edit} />}
-                  onClick={() => onEdit(row.original)}
-                />
-              </Tooltip>
-              <Tooltip text="View Timeline">
-                <Button
-                  icon={<Icon icon={chartBar} />}
-                  onClick={() =>
-                    window.open(
-                      `?page=process-viewer&process_id=${row.original.id}&view=timeline`,
-                      "_blank"
-                    )
-                  }
-                />
-              </Tooltip>
-            </ButtonGroup>
-          ),
+            Header: "Actions",
+            accessor: "id",
+            Cell: ({ row }) => (
+                <ButtonGroup>
+                    <Tooltip text="View">
+                        <Button
+                            icon={<Icon icon={seen} />}
+                            onClick={() => onViewProcess(row.original.id)}
+                        />
+                    </Tooltip>
+                    <Tooltip text="Edit">
+                        <Button
+                            icon={<Icon icon={edit} />}
+                            onClick={() => onEdit(row.original)}
+                        />
+                    </Tooltip>
+                    <Tooltip text="View Timeline">
+                        <Button
+                            icon={<Icon icon={chartBar} />}
+                            onClick={() =>
+                                window.open(
+                                    `?page=process-viewer&process_id=${row.original.id}&view=timeline`,
+                                    "_blank"
+                                )
+                            }
+                        />
+                    </Tooltip>
+                </ButtonGroup>
+            ),
         },
       ],
       [processTypeMappings, processTypes]
