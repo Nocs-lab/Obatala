@@ -273,7 +273,7 @@ th[role="columnheader"][title="Toggle SortBy"] {
   color: var(--primary);
   flex-basis: 300px;
   flex-grow: 1;
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   margin: 0;
 }
 .accordion-header:hover .accordion-title {
@@ -489,7 +489,9 @@ form .action-bar {
   flex-grow: 1;
 }
 .description-list dt {
-  color: var(--gray-600);
+  color: var(--gray-800);
+  font-size: .75rem;
+  font-weight: 500;
 }
 .description-list dt::after {
   content: ":";
@@ -607,7 +609,7 @@ main > .components-notice {
   color: var(--primary);
   font-size: 1rem;
   font-weight: 300;
-  padding: 1.5rem var(--gap);
+  padding: 1rem var(--gap);
 }
 .components-panel__body-toggle.components-button:hover {
   color: var(--primary-900);
