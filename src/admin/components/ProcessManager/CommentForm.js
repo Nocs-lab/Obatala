@@ -53,6 +53,9 @@ const CommentForm = ({ processId }) => {
         })
         .catch((error) => {
             console.error('Error adding comment:', error);
+            if (error?.error === 'Permission denied')
+                setNotice({ status: 'error', message: 'You do not have permission to comment on this process.' });
+            
             setNotice({ status: 'error', message: 'Error adding comment.' });
         });
     };
@@ -63,8 +66,12 @@ const CommentForm = ({ processId }) => {
             fetchComments();
         })
         .catch((error) => {
-            console.error('Error deleting comment:', error);
-            //setNotice({ status: 'error', message: 'Error deleting comments.' });
+            console.error(error?.message);
+            if (error?.message === 'You do not have permission to delete this comment.'){
+                setNotice({ status: 'error', message: 'You do not have permission to delete this comment.' });
+            }else{
+                setNotice({ status: 'error', message: 'Error deleting comments.' }); 
+            }
         });
     };
 
@@ -88,7 +95,11 @@ const CommentForm = ({ processId }) => {
         })
         .catch((error) => {
             console.error('Error updating comment:', error);
-            setNotice({ status: 'error', message: 'Error updating comment.' });
+            if (error?.message === 'You do not have permission to edit this comment.'){
+                setNotice({ status: 'error', message: 'You do not have permission to edit this comment.' });
+            }else{
+                setNotice({ status: 'error', message: 'Error updating comment.' });
+            }
         });
     };
 
@@ -119,13 +130,17 @@ const CommentForm = ({ processId }) => {
                                         {editingComment === comment.comment_ID ? (
                                             <>
                                                 <TextControl value={editContent} onChange={(value) => setEditContent(value)} />
-                                                <Button variant="primary" onClick={() => handleEditComment(comment.comment_ID)}>Save</Button>
-                                                <Button variant="secondary" onClick={() => setEditingComment(null)}>Cancel</Button>
+                                                <div className="chat-content-buttons">
+                                                    <Button variant="secondary" onClick={() => setEditingComment(null)}>Cancel</Button>
+                                                    <Button variant="primary" onClick={() => handleEditComment(comment.comment_ID)}>Save</Button>
+                                                </div>
                                             </>
                                         ) : (
                                             <div className="message-content">
-                                                <strong>{comment.comment_author || 'Anonymous'}:</strong> {comment.comment_content}
-                                                <div className="message-date">{new Date(comment.comment_date).toLocaleString()}</div>
+                                                <div className="message">
+                                                    <strong>{comment.comment_author || 'Anonymous'}:</strong> {comment.comment_content}
+                                                    <div className="message-date">{new Date(comment.comment_date).toLocaleString()}</div>
+                                                </div> 
                                                 <DropdownMenu
                                                     icon={ menu }
                                                     label="Select a direction"
@@ -134,6 +149,7 @@ const CommentForm = ({ processId }) => {
                                                             title: 'Delete',
                                                             icon: trash,
                                                             onClick: () => handleDeleteComment(comment.comment_ID),
+                                                            isDisabled:currentUser.id !== comment.user_id
                                                         },
                                                         {
                                                             title: 'Edit',
@@ -141,7 +157,8 @@ const CommentForm = ({ processId }) => {
                                                             onClick: () => {
                                                                 setEditingComment(comment.comment_ID);
                                                                 setEditContent(comment.comment_content);
-                                                            }
+                                                            },
+                                                            isDisabled:currentUser.id !== comment.user_id
                                                         },
                                                     ]}
                                                 />

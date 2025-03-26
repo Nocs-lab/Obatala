@@ -274,6 +274,7 @@ class ProcessApi extends ObatalaAPI {
         $comment_data = [
             'comment_ID'           => $comment_id,
             'comment_content'      => $body,
+            'comment_date'         => current_time('mysql'),
         ];
     
         // Atualiza o comentário

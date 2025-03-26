@@ -431,8 +431,6 @@ form .action-bar {
 .chat-container {  
   max-height: 400px;
   overflow-y: auto;
-  padding-right: 1rem;
-  width: 100%;
 }
 .chat-messages {
   display: flex;
@@ -441,7 +439,7 @@ form .action-bar {
 }
 .chat-message {
   border-radius: var(--border-radius);
-  max-width: 70%;
+  max-width: 100%;
   padding: .75rem;
   position: relative;
   word-wrap: break-word;
@@ -454,7 +452,21 @@ form .action-bar {
   background-color: var(--white);
   align-self: flex-start;
 }
+.chat-content-buttons{
+  display: flex;
+  flex-direction: row;
+  gap: .25rem;
+  padding-top:.5rem ;
+  width: 100%;
+}
+
 .message-content {
+  display: flex;
+  flex-direction: row;
+  gap: .25rem;
+  width: 100%;
+}
+.message {
   display: flex;
   flex-direction: column;
   gap: .25rem;
