@@ -450,7 +450,6 @@ form .action-bar {
   width: 100%;
 }
 .chat-messages::-webkit-scrollbar {
-  padding-left: .5rem;
   scrollbar-width: thin;
   width: 6px;
 }
