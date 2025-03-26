@@ -17,43 +17,43 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
             ),
         },
         {
-          Header: "Model",
-          Cell: ({ row }) => {
-            const typeMapping = processTypeMappings.find(
-              (m) => m.processId === row.original.id
-            );
-            const processType = typeMapping
-              ? processTypes.find(
-                  (type) => type.id == typeMapping.processTypeId
-                )
-              : null;
-
-            return processType ? processType.title.rendered : "Unknown Model";
-          },
+            Header: "Model",
+            Cell: ({ row }) => {
+                const typeMapping = processTypeMappings.find(
+                    (m) => m.processId === row.original.id
+                );
+                const processType = typeMapping
+                    ? processTypes.find(
+                        (type) => type.id == typeMapping.processTypeId
+                    )
+                    : null;
+        
+                return processType ? processType.title.rendered : "Unknown Model";
+            },
         },
         {
-          Header: "Current step",
-          accessor: (row) =>
-            row.meta?.current_stage
-              ? `${row.meta.current_stage} - ${
-                  row.meta.groupResponsible || "No group"
-                }`
-              : "Not started",
+            Header: "Current step",
+            accessor: (row) =>
+                row.meta?.current_stage
+                ? `${row.meta.current_stage} - ${
+                    row.meta.groupResponsible || "No group"
+                    }`
+                : "Not started",
         },
         {
-          Header: "Access level",
-          accessor: "meta.access_level",
-          Cell: ({ value }) => (
-            <span
-              className={`badge ${
-                value == "Not restricted" || value == "not restricted"
-                  ? "success"
-                  : "warning"
-              }`}
-            >
-              {value}
-            </span>
-          ),
+            Header: "Access level",
+            accessor: "meta.access_level",
+            Cell: ({ value }) => (
+                <span
+                    className={`badge ${
+                        value == "Not restricted" || value == "not restricted"
+                            ? "success"
+                            : "warning"
+                    }`}
+                >
+                    {value}
+                </span>
+            ),
         },
         {
             Header: "Actions",
