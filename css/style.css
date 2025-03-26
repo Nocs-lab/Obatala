@@ -444,10 +444,18 @@ form .action-bar {
 .chat-messages {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: .5rem;
   max-height: 600px;
   overflow-y: auto;
   width: 100%;
+}
+.chat-messages::-webkit-scrollbar {
+  padding-left: .5rem;
+  scrollbar-width: thin;
+  width: 6px;
+}
+.components-panel__row > .chat-messages {
+  margin-top: -1rem;
 }
 .chat-message {
   border-radius: var(--border-radius);
@@ -470,23 +478,33 @@ form .action-bar {
   padding-top:.5rem ;
   width: 100%;
 }
-
-.message-content {
-  display: flex;
-  flex-direction: row;
-  gap: .25rem;
-  width: 100%;
-}
 .message {
-  display: flex;
-  flex-direction: column;
-  gap: .25rem;
+  background-color: var(--primary-50);
+  border-radius: var(--border-radius);
+  display: grid;
+  align-items: center;
+  grid-template-areas: 'date action'
+    'author action'
+    'message message';
+  padding: .5rem;
 }
 .message-date {
-  font-size: .8em;
   color: var(--gray-500);
-  padding-left: 1rem;
-  text-align: right;
+  font-size: .8em;
+  grid-area: date;
+}
+.message-author {
+  grid-area: author;
+  font-weight: 600;
+}
+.message-action {
+  grid-area: action;
+  justify-self: flex-end;
+}
+.message-text {
+  grid-area: message;
+  margin-top: .5rem;
+  margin-bottom: 0;
 }
 .description-list {
   display: flex;

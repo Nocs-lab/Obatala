@@ -130,11 +130,12 @@ const CommentForm = ({ processId }) => {
                                         </>
                                     ) : (
                                         <div className="message">
-                                            <strong>{comment.comment_author || 'Anonymous'}:</strong> {comment.comment_content}
-                                            <div className="message-date">{new Date(comment.comment_date).toLocaleString()}</div>
+                                            <span className="message-author">{comment.comment_author || 'Anonymous'}:</span>
+                                            <span className="message-date">{new Date(comment.comment_date).toLocaleString()}</span>
                                             <DropdownMenu
                                                 icon={ menu }
-                                                label="Select a direction"
+                                                className="message-action"
+                                                label="Select an action"
                                                 controls={[
                                                     {
                                                         title: 'Delete',
@@ -153,6 +154,7 @@ const CommentForm = ({ processId }) => {
                                                     },
                                                 ]}
                                             />
+                                            <p class="message-text">{comment.comment_content}</p>
                                         </div>
                                     )}
                                 </div>
