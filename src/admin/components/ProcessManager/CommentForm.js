@@ -19,10 +19,14 @@ const CommentForm = ({ processId }) => {
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
     
     useEffect(() => {
-        fetchComments();
-    }, [processId]); 
+        if (currentUser && processId) {
+            fetchComments();
+        }
+    }, [currentUser, processId]); 
 
     const fetchComments = () => {
+        if (!currentUser) return;
+
         fetchProcessComments(processId,currentUser.id)
         .then(data => {
             console.log(data);
@@ -30,7 +34,12 @@ const CommentForm = ({ processId }) => {
         })
         .catch((error) => {
             console.error('Error fetching comments:', error);
-            //setNotice({ status: 'error', message: 'Error fetching comments.' });
+            if (error?.status === 'Usuário não possui permissão.'){
+                setNotice({ status: 'warning', message: 'You do not have permission to view the comments for this process.' });
+            }else{
+                setNotice({ status: 'error', message: 'Error fetching comments.' }); 
+            }
+            
         });
     }; 
 
