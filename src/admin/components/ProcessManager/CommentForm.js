@@ -114,6 +114,53 @@ const CommentForm = ({ processId }) => {
 
     return (
         <>
+            {comments.length > 0 && (
+                <PanelBody title="Comments">
+                    <PanelRow>
+                        <div className="chat-messages">
+                            {comments.map((comment) => (
+                                <div key={comment.comment_ID} className={`chat-message ${comment.comment_author ? 'received' : 'sent'}`}>
+                                    {editingComment === comment.comment_ID ? (
+                                        <>
+                                            <TextControl value={editContent} onChange={(value) => setEditContent(value)} />
+                                            <div className="chat-content-buttons">
+                                                <Button variant="secondary" onClick={() => setEditingComment(null)}>Cancel</Button>
+                                                <Button variant="primary" onClick={() => handleEditComment(comment.comment_ID)}>Save</Button>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <div className="message">
+                                            <strong>{comment.comment_author || 'Anonymous'}:</strong> {comment.comment_content}
+                                            <div className="message-date">{new Date(comment.comment_date).toLocaleString()}</div>
+                                            <DropdownMenu
+                                                icon={ menu }
+                                                label="Select a direction"
+                                                controls={[
+                                                    {
+                                                        title: 'Delete',
+                                                        icon: trash,
+                                                        onClick: () => handleDeleteComment(comment.comment_ID),
+                                                        isDisabled:currentUser.id !== comment.user_id
+                                                    },
+                                                    {
+                                                        title: 'Edit',
+                                                        icon: edit,
+                                                        onClick: () => {
+                                                            setEditingComment(comment.comment_ID);
+                                                            setEditContent(comment.comment_content);
+                                                        },
+                                                        isDisabled:currentUser.id !== comment.user_id
+                                                    },
+                                                ]}
+                                            />
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </PanelRow>
+                </PanelBody>
+            )}
             <PanelBody title="Submit comment">
                 <PanelRow>
                     {notice && (
@@ -129,57 +176,6 @@ const CommentForm = ({ processId }) => {
                     <Button variant="primary" onClick={handleCommentSubmit}>Submit</Button>
                 </PanelRow>
             </PanelBody>
-            {comments.length > 0 && (
-                <PanelBody title="Comments">
-                    <PanelRow>
-                        <div className="chat-container">
-                            <div className="chat-messages">
-                                {comments.map((comment) => (
-                                    <div key={comment.comment_ID} className={`chat-message ${comment.comment_author ? 'received' : 'sent'}`}>
-                                        {editingComment === comment.comment_ID ? (
-                                            <>
-                                                <TextControl value={editContent} onChange={(value) => setEditContent(value)} />
-                                                <div className="chat-content-buttons">
-                                                    <Button variant="secondary" onClick={() => setEditingComment(null)}>Cancel</Button>
-                                                    <Button variant="primary" onClick={() => handleEditComment(comment.comment_ID)}>Save</Button>
-                                                </div>
-                                            </>
-                                        ) : (
-                                            <div className="message-content">
-                                                <div className="message">
-                                                    <strong>{comment.comment_author || 'Anonymous'}:</strong> {comment.comment_content}
-                                                    <div className="message-date">{new Date(comment.comment_date).toLocaleString()}</div>
-                                                </div> 
-                                                <DropdownMenu
-                                                    icon={ menu }
-                                                    label="Select a direction"
-                                                    controls={[
-                                                        {
-                                                            title: 'Delete',
-                                                            icon: trash,
-                                                            onClick: () => handleDeleteComment(comment.comment_ID),
-                                                            isDisabled:currentUser.id !== comment.user_id
-                                                        },
-                                                        {
-                                                            title: 'Edit',
-                                                            icon: edit,
-                                                            onClick: () => {
-                                                                setEditingComment(comment.comment_ID);
-                                                                setEditContent(comment.comment_content);
-                                                            },
-                                                            isDisabled:currentUser.id !== comment.user_id
-                                                        },
-                                                    ]}
-                                                />
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </PanelRow>
-                </PanelBody>
-            )}
         </>
     );
 };
