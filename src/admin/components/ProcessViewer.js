@@ -56,6 +56,7 @@ const ProcessViewer = () => {
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get("process_id");
     };
+    const processId = getProcessIdFromUrl();
 
     useEffect(() => {
         if (flowNodes && flowNodes.nodes && flowNodes.edges) {
@@ -629,7 +630,7 @@ const ProcessViewer = () => {
                                 <aside>
                                     <Panel>
                                         <PanelHeader>Comments</PanelHeader>
-                                        <CommentForm stepId={orderedSteps[currentStep]?.id || null} />
+                                        <CommentForm processId={processId || null} />
                                     </Panel>
                                 </aside>
                             </div>
