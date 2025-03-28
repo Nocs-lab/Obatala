@@ -490,7 +490,6 @@ const ProcessViewer = () => {
                     <div className="title-container">
                         <h2>
                             <small>
-                                Model:{" "}
                                 {filteredProcessType
                                     ? filteredProcessType.title.rendered
                                     : "Process type title"}
@@ -651,7 +650,7 @@ const ProcessViewer = () => {
                                         <CommentForm stepId={orderedSteps[currentStep]?.id || null} />
                                     </Panel>
                                     <Panel>
-                                        <PanelHeader>Timeline</PanelHeader>
+                                        <PanelHeader>History</PanelHeader>
                                         <Timeline
                                             stages={options}
                                             process={process}

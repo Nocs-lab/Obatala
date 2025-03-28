@@ -776,6 +776,7 @@ button .components-spinner {
 }
 
 .timeline-item {
+  margin-bottom: 0;
   position: relative;
   padding-bottom: 20px;
   padding-left: 30px;
@@ -784,11 +785,11 @@ button .components-spinner {
 
 .timeline-item:last-child {
   padding-bottom: 0;
-  border-left: 2px solid transparent;
 }
 
 .timeline-badge {
   position: absolute;
+  top: 15px;
   left: -10px;
   width: 20px;
   height: 20px;
@@ -806,20 +807,15 @@ button .components-spinner {
 }
 
 .timeline-content {
-  padding: 10px 15px;
-  background: var(--white);
+  background-color: var(--gray-100);
   border-radius: 4px;
+  padding: 1rem;
 }
 
-.timeline-content h4 {
+.timeline-content .timeline-title {
   margin-top: 0;
   margin-bottom: 5px;
   color: var(--primary-800);
-}
-
-.timeline-content p {
-  margin-bottom: 5px;
-  color: var(--gray-600);
 }
 
 .timeline-content time {
@@ -828,14 +824,10 @@ button .components-spinner {
 }
 
 .timeline-content p {
-  margin-bottom: 5px;
+  margin: 0;
   color: var(--gray-600);
   font-size: 0.9em;
   line-height: 1.4;
-}
-
-.timeline-content p:last-of-type {
-  margin-bottom: 8px;
 }
 
 .timeline-content time {

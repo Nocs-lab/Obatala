@@ -17,12 +17,11 @@ const Timeline = ({ stages, process, currentStageData, authorsById, sectors }) =
 
     return (
         <div className="timeline-container">
-            <h3>Histórico do Processo</h3>
             <ul className="timeline">
                 <li className="timeline-item">
                     <div className="timeline-badge success"></div>
                     <div className="timeline-content">
-                        <h4>Processo criado</h4>
+                        <h3 className="timeline-title">Processo criado</h3>
                         <p>Por: {authorsById[process?.author]?.name}</p>
                         <time>{formatDate(process?.date)}</time>
                     </div>
@@ -38,7 +37,7 @@ const Timeline = ({ stages, process, currentStageData, authorsById, sectors }) =
                         <li key={index} className="timeline-item">
                             <div className="timeline-badge primary"></div>
                             <div className="timeline-content">
-                                <h4>{step.label}</h4>
+                                <h3 className="timeline-title">{step.label}</h3>
                                 <p>Atualizado por: {stageData[1]}</p>
                                 {sectorName && (
                                     <p>Grupo responsável: {sectorName}</p>

@@ -1,7 +1,7 @@
 import React, { useMemo } from 'react';
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
 import { Button, ButtonGroup, Icon, Tooltip, Panel, PanelHeader, PanelRow, Notice, TextControl } from '@wordpress/components';
-import { edit, seen, chartBar } from '@wordpress/icons';
+import { edit, seen, listView } from '@wordpress/icons';
 import ProcessFilter from './ProcessFilters';
 
 const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, processTypes, accessLevel, setAccessLevel, modelFilter, setModelFilter }) => {
@@ -72,9 +72,9 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
                             onClick={() => onEdit(row.original)}
                         />
                     </Tooltip>
-                    <Tooltip text="View Timeline">
+                    <Tooltip text="History">
                         <Button
-                            icon={<Icon icon={chartBar} />}
+                            icon={<Icon icon={listView} />}
                             onClick={() =>
                                 window.open(
                                     `?page=process-viewer&process_id=${row.original.id}&view=timeline`,
