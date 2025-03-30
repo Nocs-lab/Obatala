@@ -13,6 +13,7 @@ import apiFetch from "@wordpress/api-fetch";
 import MetroNavigation from "./ProcessManager/MetroNavigation";
 import MetaFieldInputs from "./ProcessManager/MetaFieldInputs";
 import CommentForm from "./ProcessManager/CommentForm";
+import Timeline from "./ProcessManager/ProcessUserLog";
 import { fetchNodePermission, fetchProcessById, fetchProcessTypeById, fetchSectors } from "../api/apiRequests";
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
@@ -45,6 +46,10 @@ const ProcessViewer = () => {
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
     const allAuthors = useSelect(select => select(coreStore).getUsers({ who: 'authors' }), []);
     const [isStepSubmitEnabled, setIsStepSubmitEnabled] = useState({});
+
+    // Verifica se a URL possui o parâmetro view=timeline
+    const urlParams = new URLSearchParams(window.location.search);
+    const viewMode = urlParams.get('view');
 
     // Função para alternar o estado de um item do accordion
     const toggleAccordion = (index) => {
@@ -495,38 +500,50 @@ const ProcessViewer = () => {
                     </div>
                     <div className="badge-container">
                         <span
-                            className={`badge ${process.meta.access_level == "not restricted" || process.meta.access_level == 'Not restricted' ? "success" : "warning"
-                                }`}
+                            className={`badge ${
+                                process.meta.access_level == "not restricted" ||
+                                process.meta.access_level == "Not restricted"
+                                    ? "success"
+                                    : "warning"
+                            }`}
                         >
                             {process.meta.access_level}
                         </span>
                         <span className="badge default"><Icon icon="yes" /> {calculatePercentagem()}% concluído</span>
                         <span className="badge success"><Icon icon="yes" /> 100% concluído</span>
-                        <span className="badge default"><Icon icon="admin-users" /> Aberto por: {authorsById[process?.author]?.name} em {createAtProcess()}
-                        </span>
+                        <span className="badge default"><Icon icon="admin-users" /> Aberto por: {authorsById[process?.author]?.name} em {createAtProcess()}</span>
                     </div>
                     {notice && (
                         <div className="notice-container">
-                            <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                            <Notice
+                                status={notice.status}
+                                isDismissible
+                                onRemove={() => setNotice(null)}
+                            >
                                 {notice.message}
                             </Notice>
                         </div>
                     )}
-                    {!isPublic && hasPermission === false ? (
-                        <div style={{ margin: '50px' }}>
-                            <div className="notice-container">
-                                <Notice status="error" isDismissible={false}>
-                                    You do not have permission to access this process.
-                                </Notice>
-                            </div>
+                    {viewMode === "timeline" ? (
+                        <div className="timeline-full-view">
+                            <Timeline
+                                stages={options}
+                                process={process}
+                                currentStageData={currentStageData}
+                                authorsById={authorsById}
+                                sectors={sectors}
+                            />
                         </div>
                     ) : (
+                        /* Conteúdo normal */
                         <>
-                            {isPublic && hasPermission === false && (
-                                <div className="notice-container">
-                                    <Notice status="warning" isDismissible={false}>
-                                        You can only view this process.
-                                    </Notice>
+                            {!isPublic && hasPermission === false && (
+                                <div style={{ margin: "50px" }}>
+                                    <div className="notice-container">
+                                        <Notice status="error" isDismissible={false}>
+                                            You do not have permission to access this process.
+                                        </Notice>
+                                    </div>
                                 </div>
                             )}
                             <div className="panel-container">
@@ -584,11 +601,10 @@ const ProcessViewer = () => {
                                                                         </div>
                                                                         {!submittedSteps[currentStep] && (
                                                                             <div className="action-bar">
-                                                                                <Button
-                                                                                    variant="primary"
-                                                                                    type="submit"
+                                                                                <Button variant="primary" type="submit"
                                                                                     disabled={!isSubmitEnabled || submittedSteps[currentStep] || !isUserInSector(options[currentStep].sector_stage)}
-                                                                                >Submit
+                                                                                >
+                                                                                    Submit
                                                                                 </Button>
                                                                             </div>
                                                                         )}
@@ -599,21 +615,23 @@ const ProcessViewer = () => {
                                                                             <MetaFieldDisplay
                                                                                 key={`${orderedSteps[currentStep].id}-meta-${idx}`}
                                                                                 field={field}
-                                                                                value={formValues[orderedSteps[currentStep].id]?.[field.id] || uploadedFiles[orderedSteps[currentStep].id]?.[field.id]?.[0]?.name}
+                                                                                value={
+                                                                                    formValues[orderedSteps[currentStep].id]?.[field.id] || uploadedFiles[orderedSteps[currentStep].id]?.[field.id]?.[0]?.name
+                                                                                }
                                                                                 handleDownload={handleDownload}
                                                                                 fieldId={field.id}
                                                                             />
-                                                                        )) : null}
+                                                                        )): null}
                                                                     </dl>
                                                                 )
                                                             ) : (
                                                                 <div className="notice-container">
-                                                                    <Notice status="warning" isDismissible={false}>
+                                                                    <Notice status="warning" isDismissible={false}
+                                                                    >
                                                                         No fields found for this Step.
                                                                     </Notice>
                                                                 </div>
                                                             )}
-                                                            
                                                         </>
                                                     ) : (
                                                         <div className="notice-container">
@@ -632,6 +650,16 @@ const ProcessViewer = () => {
                                         <PanelHeader>Comments</PanelHeader>
                                         <CommentForm processId={processId || null} />
                                     </Panel>
+                                    <Panel>
+                                        <PanelHeader>History</PanelHeader>
+                                        <Timeline
+                                            stages={options}
+                                            process={process}
+                                            currentStageData={currentStageData}
+                                            authorsById={authorsById}
+                                            sectors={sectors}
+                                        />
+                                    </Panel>
                                 </aside>
                             </div>
                         </>
@@ -640,6 +668,6 @@ const ProcessViewer = () => {
             )}
         </main>
     );
-};
+}
 
 export default ProcessViewer;
