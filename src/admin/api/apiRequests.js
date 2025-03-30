@@ -92,3 +92,25 @@ export const deleteSectorUser = (sectorId, data) => {
 export const fetchNodePermission = (processId, currentUserId) => {
     return apiFetch({ path: `/obatala/v1/process_type/${processId}/get_node?user=${currentUserId}` })
 }
+
+export const addComment = (processId, data) => {
+    const path =  `/obatala/v1/process_obatala/${processId}/comment`;
+    const method = 'POST';
+    return apiFetch({path:path,method, data:data})
+}
+
+export const fetchProcessComments = (processId, user_id) => {
+    return apiFetch({path:`/obatala/v1/process_obatala/${processId}/comments?user_id=${user_id}`})
+}
+
+export const deleteComment = (commentId, user_id) => {
+    return apiFetch({path:`/obatala/v1/process_obatala/comment/${commentId}?user_id=${user_id}`, method: 'DELETE'})
+}
+
+export const updateComment = (commentId, meta) => {
+    return apiFetch({
+        path: `/obatala/v1/process_obatala/comment/${commentId}`,
+        method: "PUT",
+        data: meta,
+    });
+};

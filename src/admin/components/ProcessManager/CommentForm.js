@@ -1,30 +1,47 @@
-// CommentForm.js
 import React, { useState, useEffect } from "react";
-import { TextControl, Button, Notice, PanelBody, PanelRow } from "@wordpress/components";
-import apiFetch from "@wordpress/api-fetch";
+import { addComment, deleteComment, fetchProcessComments, updateComment } from "../../api/apiRequests";
+import { useSelect } from '@wordpress/data';
+import { store as coreStore } from '@wordpress/core-data';
+import { TextControl, Button, Notice, PanelBody, PanelRow, DropdownMenu } from "@wordpress/components";
+import {
+    menu,
+    edit,
+    trash,
+} from '@wordpress/icons';
 
-const CommentForm = ({ stepId }) => {
+const CommentForm = ({ processId }) => {
     const [comment, setComment] = useState('');
+    const [editingComment, setEditingComment] = useState(null);
+    const [editContent, setEditContent] = useState('');
     const [comments, setComments] = useState([]);
     const [notice, setNotice] = useState(null);
 
+    const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
+    
     useEffect(() => {
-        fetchComments();
-    }, [stepId]);
+        if (currentUser && processId) {
+            fetchComments();
+        }
+    }, [currentUser, processId]); 
 
     const fetchComments = () => {
-        apiFetch({
-            path: `/obatala/v1/process_obatala/${stepId}/comments`, // Atualize o caminho se necessário
-            method: 'GET',
-        })
+        if (!currentUser) return;
+
+        fetchProcessComments(processId,currentUser.id)
         .then(data => {
+            console.log(data);
             setComments(data);
         })
         .catch((error) => {
             console.error('Error fetching comments:', error);
-            //setNotice({ status: 'error', message: 'Error fetching comments.' });
+            if (error?.status === 'Usuário não possui permissão.'){
+                setNotice({ status: 'warning', message: 'You do not have permission to view the comments for this process.' });
+            }else{
+                setNotice({ status: 'error', message: 'Error fetching comments.' }); 
+            }
+            
         });
-    };
+    }; 
 
     const handleCommentSubmit = () => {
         if (!comment) {
@@ -33,15 +50,11 @@ const CommentForm = ({ stepId }) => {
         }
 
         const newComment = {
-            content: comment,
-            step_id: stepId, // Use stepId para vincular o comentário
+            text: comment,
+            user_id: currentUser.id, 
         };
 
-        apiFetch({
-            path: `/obatala/v1/process_obatala/${stepId}/comment`, // Atualize o caminho se necessário
-            method: 'POST',
-            data: newComment,
-        })
+        addComment(processId,newComment)
         .then(() => {
             setComment('');
             setNotice({ status: 'success', message: 'Comment added successfully.' });
@@ -49,12 +62,107 @@ const CommentForm = ({ stepId }) => {
         })
         .catch((error) => {
             console.error('Error adding comment:', error);
+            if (error?.error === 'Permission denied')
+                setNotice({ status: 'error', message: 'You do not have permission to comment on this process.' });
+            
             setNotice({ status: 'error', message: 'Error adding comment.' });
+        });
+    };
+
+    const handleDeleteComment = (commentId) => {
+        deleteComment(commentId,currentUser.id)
+        .then(() => {
+            fetchComments();
+        })
+        .catch((error) => {
+            console.error(error?.message);
+            if (error?.message === 'You do not have permission to delete this comment.'){
+                setNotice({ status: 'error', message: 'You do not have permission to delete this comment.' });
+            }else{
+                setNotice({ status: 'error', message: 'Error deleting comments.' }); 
+            }
+        });
+    };
+
+    const handleEditComment = (commentId) => {
+        if (!editContent) {
+            setNotice({ status: 'error', message: 'Please enter a comment.' });
+            return;
+        }
+
+        const newComment = {
+            text: editContent,
+            user_id: currentUser.id, 
+        };
+
+        updateComment(commentId,newComment)
+        .then(() => {
+            setEditingComment(null);
+            setEditContent('');
+            setNotice({ status: 'success', message: 'Comment updated successfully.' });
+            fetchComments(); // Recarregar os comentários após editar
+        })
+        .catch((error) => {
+            console.error('Error updating comment:', error);
+            if (error?.message === 'You do not have permission to edit this comment.'){
+                setNotice({ status: 'error', message: 'You do not have permission to edit this comment.' });
+            }else{
+                setNotice({ status: 'error', message: 'Error updating comment.' });
+            }
         });
     };
 
     return (
         <>
+            {comments.length > 0 && (
+                <PanelBody title="Comments">
+                    <PanelRow>
+                        <div className="chat-messages">
+                            {comments.map((comment) => (
+                                <div key={comment.comment_ID} className={`chat-message ${comment.comment_author ? 'received' : 'sent'}`}>
+                                    {editingComment === comment.comment_ID ? (
+                                        <>
+                                            <TextControl value={editContent} onChange={(value) => setEditContent(value)} />
+                                            <div className="chat-content-buttons">
+                                                <Button variant="secondary" onClick={() => setEditingComment(null)}>Cancel</Button>
+                                                <Button variant="primary" onClick={() => handleEditComment(comment.comment_ID)}>Save</Button>
+                                            </div>
+                                        </>
+                                    ) : (
+                                        <div className="message">
+                                            <span className="message-author">{comment.comment_author || 'Anonymous'}:</span>
+                                            <span className="message-date">{new Date(comment.comment_date).toLocaleString()}</span>
+                                            <DropdownMenu
+                                                icon={ menu }
+                                                className="message-action"
+                                                label="Select an action"
+                                                controls={[
+                                                    {
+                                                        title: 'Delete',
+                                                        icon: trash,
+                                                        onClick: () => handleDeleteComment(comment.comment_ID),
+                                                        isDisabled:currentUser.id !== comment.user_id
+                                                    },
+                                                    {
+                                                        title: 'Edit',
+                                                        icon: edit,
+                                                        onClick: () => {
+                                                            setEditingComment(comment.comment_ID);
+                                                            setEditContent(comment.comment_content);
+                                                        },
+                                                        isDisabled:currentUser.id !== comment.user_id
+                                                    },
+                                                ]}
+                                            />
+                                            <p class="message-text">{comment.comment_content}</p>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+                        </div>
+                    </PanelRow>
+                </PanelBody>
+            )}
             <PanelBody title="Submit comment">
                 <PanelRow>
                     {notice && (
@@ -70,24 +178,6 @@ const CommentForm = ({ stepId }) => {
                     <Button variant="primary" onClick={handleCommentSubmit}>Submit</Button>
                 </PanelRow>
             </PanelBody>
-            {comments.length > 0 && (
-                <PanelBody title="Comments">
-                    <PanelRow>
-                        <div className="chat-container">
-                            <div className="chat-messages">
-                                {comments.map((comment) => (
-                                    <div key={comment.id} className={`chat-message ${comment.author ? 'received' : 'sent'}`}>
-                                        <div className="message-content">
-                                            <strong>{comment.author || 'Anonymous'}:</strong> {comment.content}
-                                            <div className="message-date">{new Date(comment.date).toLocaleString()}</div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </PanelRow>
-                </PanelBody>
-            )}
         </>
     );
 };
