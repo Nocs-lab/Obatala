@@ -54,13 +54,18 @@ def newPlugin(page):
             page.click('xpath=//*[@id="pluginzip"]', timeout=5000)
             file_chooser = fc.value
             file_chooser.set_files("./developer/obatala.zip") # Path do plugin utilizado
-        page.click('xpath=//*[@id="install-plugin-submit"]')   
-        page.click('xpath=/html/body/div[1]/div[2]/div[2]/div[1]/div[2]/p[4]/a[1]')
+        page.click('xpath=//*[@id="install-plugin-submit"]')
         page.wait_for_load_state("networkidle")
-        if page.wait_for_selector('text=Plugin activated.', timeout=5000):
+        if page.is_visible('text=This plugin is already installed.'):
+            print("Tela de plugin existente detectada")
+            page.click('xpath=//*[@id="wpbody-content"]/div[2]/p[6]/a[1]')
+        else:
+            page.click('xpath=/html/body/div[1]/div[2]/div[2]/div[1]/div[2]/p[4]/a[1]')
+        page.wait_for_load_state("networkidle")
+        if page.is_visible('text=Plugin activated.') or page.is_visible('text=Plugin updated successfully.'):
             print("Adição do novo plugin: Sucesso")
     except Exception as e:
-        print(f"Erro ao adicionar novo plugin: {e}")
+        print(f"Erro ao adicionar/ativar novo plugin: {e}")
         sys.exit(1) 
 
 
