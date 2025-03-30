@@ -200,10 +200,9 @@ const DashboardPage = () => {
                                     ))}
                                 </tbody>
                             </table>
-                            ) : (
-                                <Notice isDismissible={false} status="warning">Sem resultados.</Notice>
-                            )
-                        }
+                        ) : (
+                            <Notice isDismissible={false} status="warning">Sem resultados.</Notice>
+                        )}
                     </PanelRow>
                 </Panel>
                 <Panel>
