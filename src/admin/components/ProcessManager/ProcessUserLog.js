@@ -2,7 +2,7 @@ import React from "react";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
 
-const Timeline = ({ stages, process, currentStageData, authorsById, sectors }) => {
+const ProcessUserLog = ({ stages, process, currentStageData, authorsById, sectors }) => {
     const formatDate = (date) => {
         return format(new Date(date), "dd 'de' MMMM 'de' yyyy 'às' HH:mm", {
             locale: ptBR
@@ -52,4 +52,4 @@ const Timeline = ({ stages, process, currentStageData, authorsById, sectors }) =
     );
 };
 
-export default Timeline;
+export default ProcessUserLog;
