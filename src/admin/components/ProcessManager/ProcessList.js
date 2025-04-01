@@ -74,14 +74,12 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
                     </Tooltip>
                     <Tooltip text="History">
                         <Button
-                            icon={<Icon icon={listView} />}
-                            onClick={() =>
-                                window.open(
-                                    `?page=process-viewer&process_id=${row.original.id}&view=timeline`,
-                                    "_blank"
-                                )
-                            }
-                        />
+                            icon={<Icon icon="backup" />}
+                            onClick={() => {
+                            const url = `?page=process-viewer&process_id=${row.original.id}&view=history`;
+                            window.location.href = url;
+                    }}
+                />
                     </Tooltip>
                 </ButtonGroup>
             ),
