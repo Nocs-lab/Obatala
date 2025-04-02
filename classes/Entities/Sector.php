@@ -326,6 +326,7 @@ class Sector {
             foreach ($setores as $id => $sector_data) {
                 $sector_id = $id;
                 $sector_name = $sector_data['nome'];
+                $sector_status = $sector_data['status'];
 
                 // Consulta todos os usuários que têm o meta_key 'associated_sector'
                 $user_query = get_users(array(
@@ -359,6 +360,7 @@ class Sector {
                 $sectors_with_users[] = [
                     'sector_id' => $sector_id,
                     'sector_name' => $sector_name,
+                    'sector_status' => $sector_status,
                     'users' => $users
                 ];
             }
@@ -417,8 +419,8 @@ class Sector {
         if (!empty($user_sectors) && is_array($user_sectors) && !empty($flowData['nodes'])) {
             // Verifica cada nó do processo
             foreach ($flowData['nodes'] as $node) {
-                // Verifica se `sector_obatala` do nó está em `user_sectors`
-                if (in_array($node['sector_obatala'], $user_sectors[0])) {
+                // Filtra os nós do tipo `customNode` e verifica se `sector_obatala` do nó está em `user_sectors`
+                if ($node['type'] === 'customNode' && in_array($node['sector_obatala'], $user_sectors[0])) {
                     return [
                         'status' => true,
                         'message' => 'Permissão concedida.',
