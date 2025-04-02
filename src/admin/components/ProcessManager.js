@@ -1,27 +1,38 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Spinner, Button, Notice, Panel, PanelHeader, PanelRow, Icon, ButtonGroup, Tooltip, Modal} from '@wordpress/components';
+import { Spinner, Button, Notice, Panel, PanelHeader, PanelRow, Icon, ButtonGroup, Tooltip, Modal, TabPanel} from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import ProcessCreator from './ProcessManager/ProcessCreator';
-import { edit, seen, plus } from '@wordpress/icons';
+import { plus } from '@wordpress/icons';
 import ProcessList from './ProcessManager/ProcessList';
+import { fetchUserProcesses } from '../api/apiRequests';
+import { useSelect } from '@wordpress/data';
+import { store as coreStore } from '@wordpress/core-data';
 
 const ProcessManager = ({ onSelectProcess }) => {
     const [processTypes, setProcessTypes] = useState([]);
     const [processes, setProcesses] = useState([]);
     const [processTypeMappings, setProcessTypeMappings] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [processSteps, setProcessSteps] = useState([]);
+    const [processUser, setProcessUser] = useState([]);
     const [selectedProcessId, setSelectedProcessId] = useState(null);
     const [addingProcess, setAddingProcess] = useState(null);
     const [editingProcess, setEditingProcess] = useState(null);
     const [accessLevel, setAccessLevel] = useState(null);
     const [modelFilter, setModelFilter] = useState(null);
     const [notice, setNotice] = useState(null);
+    const [tabValue, setTabValue] = useState(0);
+
+    const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
 
     useEffect(() => {
         fetchProcessModels();
         fetchProcesses();
     }, []);
+
+    useEffect(() => {
+        fetchProcessesUser();
+    }, [currentUser])
+    
 
     const fetchProcessModels = () => {
         apiFetch({ path: `/obatala/v1/process_type?per_page=100&_embed` })
@@ -34,6 +45,19 @@ const ProcessManager = ({ onSelectProcess }) => {
         .catch((error) => {
             console.error("Error fetching process types:", error);
         });
+    };
+
+    const fetchProcessesUser = () => {
+        setIsLoading(true);        
+        fetchUserProcesses(currentUser.id)
+            .then(data => {
+                setProcessUser(data);
+                setIsLoading(false);
+            })
+            .catch(error => {
+                console.error('Error fetching sectors:', error);
+                setIsLoading(false);
+            });
     };
 
     const fetchProcesses = async () => {
@@ -119,22 +143,35 @@ const ProcessManager = ({ onSelectProcess }) => {
         setAddingProcess(null);
     };
 
+    const filteredUserProcesses =useMemo(() => { 
+        return processes.filter(process => 
+            processUser?.includes(process.id)
+    )}, [processUser]);
+      
+    
     const filteredProcess = useMemo(() => {
-        return processes.filter(process => {
+        return tabValue === 0 ?  processes.filter(process => {
             const matchesAccessLevel = accessLevel
                 ? process?.meta?.access_level?.[0].includes(accessLevel)
                 : true; 
             const matchesProcessType = modelFilter
                 ? process?.meta?.process_type?.[0].includes(modelFilter.toString())
                 : true;
-            return matchesAccessLevel && matchesProcessType;
+            return matchesAccessLevel && matchesProcessType;})
+            :  filteredUserProcesses.filter(process => {
+                const matchesAccessLevel = accessLevel
+                    ? process?.meta?.access_level?.[0].includes(accessLevel)
+                    : true; 
+                const matchesProcessType = modelFilter
+                    ? process?.meta?.process_type?.[0].includes(modelFilter.toString())
+                    : true;
+                return matchesAccessLevel && matchesProcessType;
         });
-    }, [accessLevel, modelFilter, processes]);
+    }, [accessLevel, modelFilter, processes, tabValue]);
     
     if (isLoading) {
         return <Spinner />;
     }
-
     return (
         <main>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
@@ -159,6 +196,16 @@ const ProcessManager = ({ onSelectProcess }) => {
                     </Notice>
                 </div>
             )}
+            <TabPanel
+                className="process-tabs"
+                activeClass="active-tab"
+                onSelect={(tabName) =>{ 
+                    setTabValue(Number(tabName));}}
+                tabs={[
+                    { name: 0, title: 'All Processes' },
+                    { name: 1, title: 'My Processes' },
+                ]}
+            />
 
             <ProcessList
                 processes={filteredProcess}
