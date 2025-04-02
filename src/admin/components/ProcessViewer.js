@@ -5,7 +5,6 @@ import {
     Notice,
     Panel,
     PanelHeader,
-    PanelBody,
     PanelRow,
     Button,
 } from "@wordpress/components";
@@ -628,13 +627,15 @@ const ProcessViewer = () => {
                             </Panel>
                             <Panel>
                                 <PanelHeader>History</PanelHeader>
-                                <ProcessUserLog
-                                    stages={options}
-                                    process={process}
-                                    currentStageData={currentStageData}
-                                    authorsById={authorsById}
-                                    sectors={sectors}
-                                />
+                                <PanelRow>
+                                    <ProcessUserLog
+                                        stages={options}
+                                        process={process}
+                                        currentStageData={currentStageData}
+                                        authorsById={authorsById}
+                                        sectors={sectors}
+                                    />
+                                </PanelRow>
                             </Panel>
                         </aside>
                     </div>
