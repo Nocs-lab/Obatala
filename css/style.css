@@ -262,12 +262,19 @@ th[role="columnheader"][title="Toggle SortBy"] {
   color: var(--primary-600);
   font-family: 'Dashicons';
   font-size: 1.5rem;
+  width: 20px;
 }
 .accordion-header[aria-expanded="false"]::after {
   content: "\f347";
 }
 .accordion-header[aria-expanded="true"]::after {
   content: "\f343";
+}
+.accordion-header[disabled]::after {
+  content: "";
+}
+.accordion-header[disabled] {
+  cursor: not-allowed;
 }
 .accordion-title {
   color: var(--primary);
@@ -276,7 +283,10 @@ th[role="columnheader"][title="Toggle SortBy"] {
   font-size: 1.2rem;
   margin: 0;
 }
-.accordion-header:hover .accordion-title {
+.accordion-header[disabled] .accordion-title {
+  color: var(--gray-600);
+}
+.accordion-header:not([disabled]):hover .accordion-title {
   color: var(--primary-600);
 }
 .accordion-content {

@@ -539,18 +539,17 @@ const ProcessViewer = () => {
                                             disabled={isDisabled}
                                         >
                                             <span className={`status ${isCompleted ? 'success' : isDisabled ? 'danger' : 'warning'}`}>
-                                                {isCompleted ? 'Concluído' : 'Pendente'}
+                                                {isCompleted ? 'Completed' : 'Pending'}
                                             </span>
                                             <h2 className="accordion-title me-auto">{step.label}</h2>
                                             <div className="badge-container">
-                                                {isCompleted ? (
-                                                    <span className="badge success">
-                                                        Concluído em {lastUpdateStage(index).dateFormat}
-                                                    </span>
-                                                ) : (
-                                                    <span className="badge danger">Pendente</span>
-                                                )}
-                                                
+                                                <span className={`badge ${isCompleted ? 'success' : isDisabled ? 'danger' : 'warning'}`}>
+                                                    {isCompleted 
+                                                        ? `Completed on ${lastUpdateStage(index).dateFormat}` 
+                                                        : isDisabled 
+                                                            ? 'Pending' 
+                                                            : 'Pending input'}
+                                                </span>
                                                 {options[index].sector_stage && (
                                                     <span className="badge info" title={`Grupo responsável: ${getSectorName(options[index].sector_stage)}`}>
                                                         <Icon icon="groups" /> {getSectorName(options[index].sector_stage)}
