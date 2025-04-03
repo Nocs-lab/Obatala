@@ -178,53 +178,50 @@ const NodeConditional = (node) => {
                         <dd>{matchedEdgeInput?.source || "No input stage"}</dd>
                         <dt>Output stages:</dt>
                         {matchedEdgeOutput?.length > 0 ? (
-                            matchedEdgeOutput.map((edge, index) => (
-                                <dd key={index}>
-                                    {index === 0 && "If"} {/* Exibe "If" apenas na primeira linha */}
-                                    {index === 0 ? (
-                                        <select
-                                            value={selectedField}
-                                            onChange={(e) => {
-                                                setSelectedField(e.target.value);
-                                                // Atualiza todos os campos com o novo selectedField
-                                                setSelectedFields((prev) =>
-                                                    prev.map((field) => ({ ...field, field: e.target.value }))
-                                                );
-                                            }}
+                            <dd>
+                                <select
+                                    value={selectedField}
+                                    onChange={(e) => {
+                                        setSelectedField(e.target.value);
+                                        // Atualiza todos os campos com o novo selectedField
+                                        setSelectedFields((prev) =>
+                                            prev.map((field) => ({ ...field, field: e.target.value }))
+                                        );
+                                    }}
+                                >
+                                    <option value="" disabled>Select a field</option>
+                                    {radioFields.map((field, fieldIndex) => (
+                                        <option
+                                            key={fieldIndex}
+                                            value={field.config?.label || field.title || field.id}
                                         >
-                                            <option value="" disabled>Select a field</option>
-                                            {radioFields.map((field, fieldIndex) => (
-                                                <option
-                                                    key={fieldIndex}
-                                                    value={field.config?.label || field.title || field.id}
-                                                >
-                                                    {field.config?.label || field.title || field.id}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    ) : (
-                                        <span style={{ margin: "0 100px" }}></span>
-                                    )}
-                                    receives
-                                    <select
-                                        value={selectedFields[index]?.value || ""}
-                                        onChange={(e) => handleValueChange(index, e.target.value)}
-                                        disabled={!selectedField}
-                                    >
-                                        <option value="" disabled>Select a value</option>
-                                        {selectedField &&
-                                            radioFields
-                                                .find((field) => field.config?.label === selectedField)
-                                                ?.config?.options
-                                                ?.split(",")
-                                                .map((option, optionIndex) => (
-                                                    <option key={optionIndex} value={option.trim()}>
-                                                        {option.trim()}
-                                                    </option>
-                                                ))}
-                                    </select> then go to {edge.target}.
-                                </dd>
-                            ))
+                                            {field.config?.label || field.title || field.id}
+                                        </option>
+                                    ))}
+                                </select>
+                                {matchedEdgeOutput.map((edge, index) => (
+                                    <li key={index}>
+                                        receives
+                                        <select
+                                            value={selectedFields[index]?.value || ""}
+                                            onChange={(e) => handleValueChange(index, e.target.value)}
+                                            disabled={!selectedField}
+                                        >
+                                            <option value="" disabled>Select a value</option>
+                                            {selectedField &&
+                                                radioFields
+                                                    .find((field) => field.config?.label === selectedField)
+                                                    ?.config?.options
+                                                    ?.split(",")
+                                                    .map((option, optionIndex) => (
+                                                        <option key={optionIndex} value={option.trim()}>
+                                                            {option.trim()}
+                                                        </option>
+                                                    ))}
+                                        </select> then go to {edge.target}.
+                                    </li>
+                                ))}
+                            </dd>
                         ) : (
                             <dd>No output stages</dd>
                         )}

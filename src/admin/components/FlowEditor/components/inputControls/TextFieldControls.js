@@ -111,7 +111,7 @@ export const TextFieldControls = ({
       });
     toggleDrawer()
   };
-console.log(fieldType)
+
   return (
     <form>
       <h3>Edit field</h3>

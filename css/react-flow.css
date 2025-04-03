@@ -924,19 +924,19 @@ svg.react-flow__connectionline {
   font-weight: 600;
 }
 .wp-drawer dd {
-  background-color: var(--gray-100);
   margin: 0;
-  padding: .25rem;
 }
 .wp-drawer dd + dd {
   margin-top: .15rem;
 }
 .wp-drawer dd + dt {
-  margin-top: .5rem;
+  margin-top: .75rem;
 }
 .wp-drawer dd select {
-  margin-left: .35rem;
-  margin-right: .35rem;
+  margin: .15rem 0 .5rem;
+}
+.wp-drawer dd li select {
+  margin: 0 .35rem;
 }
 
 /* Extras */

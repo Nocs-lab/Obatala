@@ -5,7 +5,6 @@ import {
     Notice,
     Panel,
     PanelHeader,
-    PanelBody,
     PanelRow,
     Button,
 } from "@wordpress/components";
@@ -13,13 +12,15 @@ import apiFetch from "@wordpress/api-fetch";
 import MetroNavigation from "./ProcessManager/MetroNavigation";
 import MetaFieldInputs from "./ProcessManager/MetaFieldInputs";
 import CommentForm from "./ProcessManager/CommentForm";
-import Timeline from "./ProcessManager/ProcessUserLog";
+import ProcessUserLog from "./ProcessManager/ProcessUserLog";
 import { fetchNodePermission, fetchProcessById, fetchProcessTypeById, fetchSectors } from "../api/apiRequests";
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
 import MetaFieldDisplay from "./ProcessManager/MetaFieldDisplay";
+import ProcessHeader from './ProcessManager/ProcessHeader';
+import HistoryViewer from './ProcessManager/HistoryViewer';
 
 const ProcessViewer = () => {
     const [process, setProcess] = useState(null);
@@ -47,7 +48,6 @@ const ProcessViewer = () => {
     const allAuthors = useSelect(select => select(coreStore).getUsers({ who: 'authors' }), []);
     const [isStepSubmitEnabled, setIsStepSubmitEnabled] = useState({});
 
-    // Verifica se a URL possui o parâmetro view=timeline
     const urlParams = new URLSearchParams(window.location.search);
     const viewMode = urlParams.get('view');
 
@@ -483,36 +483,24 @@ const ProcessViewer = () => {
         <main>
             {isLoading ? (
                 <Spinner />
+            ) : viewMode === "history" ? (
+                    <HistoryViewer
+                        process={process}
+                        filteredProcessType={filteredProcessType}
+                        authorsById={authorsById}
+                        calculatePercentagem={calculatePercentagem}
+                        options={options}
+                        currentStageData={currentStageData}
+                        sectors={sectors}
+                    />
             ) : (
                 <>
-                    <span className="brand">
-                        <strong>Obatala</strong> Curatorial Process Viewer
-                    </span>
-                    <div className="title-container">
-                        <h2>
-                            <small>
-                                {filteredProcessType
-                                    ? filteredProcessType.title.rendered
-                                    : "Process type title"}
-                            </small>
-                            {process.title?.rendered}
-                        </h2>
-                    </div>
-                    <div className="badge-container">
-                        <span
-                            className={`badge ${
-                                process.meta.access_level == "not restricted" ||
-                                process.meta.access_level == "Not restricted"
-                                    ? "success"
-                                    : "warning"
-                            }`}
-                        >
-                            {process.meta.access_level}
-                        </span>
-                        <span className="badge default"><Icon icon="yes" /> {calculatePercentagem()}% concluído</span>
-                        <span className="badge success"><Icon icon="yes" /> 100% concluído</span>
-                        <span className="badge default"><Icon icon="admin-users" /> Aberto por: {authorsById[process?.author]?.name} em {createAtProcess()}</span>
-                    </div>
+                    <ProcessHeader
+                        process={process}
+                        filteredProcessType={filteredProcessType}
+                        authorsById={authorsById}
+                        calculatePercentagem={calculatePercentagem}
+                    />
                     {notice && (
                         <div className="notice-container">
                             <Notice
@@ -524,146 +512,133 @@ const ProcessViewer = () => {
                             </Notice>
                         </div>
                     )}
-                    {viewMode === "timeline" ? (
-                        <div className="timeline-full-view">
-                            <Timeline
-                                stages={options}
-                                process={process}
-                                currentStageData={currentStageData}
-                                authorsById={authorsById}
-                                sectors={sectors}
-                            />
+                    {!isPublic && hasPermission === false && (
+                        <div style={{ margin: "50px" }}>
+                            <div className="notice-container">
+                                <Notice status="error" isDismissible={false}>
+                                    You do not have permission to access this process.
+                                </Notice>
+                            </div>
                         </div>
-                    ) : (
-                        /* Conteúdo normal */
-                        <>
-                            {!isPublic && hasPermission === false && (
-                                <div style={{ margin: "50px" }}>
-                                    <div className="notice-container">
-                                        <Notice status="error" isDismissible={false}>
-                                            You do not have permission to access this process.
-                                        </Notice>
-                                    </div>
-                                </div>
-                            )}
-                            <div className="panel-container">
-                                <div className="accordion">
-                                    {options.map((step, index) => (
-                                        <div key={index} className="accordion-item">
-                                            <button className="accordion-header" onClick={() => toggleAccordion(index)} aria-expanded={activeIndex === index} aria-controls={`accordion-content-${index}`}>
-                                                <span className="status success">Concluído</span>
-                                                <h2 className="accordion-title me-auto">
-                                                    {step.label}
-                                                </h2>
-                                                <div className="badge-container">
-                                                    {Object.keys(currentStageData).includes(options[currentStep]?.value) ?
-                                                        <span className="badge success">Concluído em {lastUpdateStage().dateFormat}</span>
-                                                        : <span className="badge danger">Pendente</span>}
-                                                    {options[currentStep].sector_stage && (
-                                                        <span className="badge info" title={`Grupo responsável: ${getSectorName(options[currentStep].sector_stage)}`}>
-                                                            <Icon icon="groups" /> {getSectorName(options[currentStep].sector_stage)}
-                                                        </span>
-                                                    )}
-                                                </div>
-                                            </button>
-                                            {activeIndex === index && (
-                                                <div className="accordion-content">
-                                                    {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
-                                                        <>
-                                                            <div className="badge-container mb-2">
-                                                                <span className="badge success">Concluído por José Silva</span>
-                                                            </div>
-                                                            {!isUserInSector(options[currentStep].sector_stage) && (
-                                                                <div className="notice-container">
-                                                                    <Notice status="warning" isDismissible={false}>
-                                                                        You can only view this step.
-                                                                    </Notice>
-                                                                </div>
-                                                            )}
-                                                            {options[currentStep].fields.length > 0 ? (
-                                                                !submittedSteps[currentStep] ? (
-                                                                    <form onSubmit={handleSubmit}>
-                                                                        <div className="meta-field-wrapper">
-                                                                            {Array.isArray(options[currentStep].fields) ? options[currentStep].fields.map((field, idx) => (
-                                                                                <MetaFieldInputs
-                                                                                    key={`${orderedSteps[currentStep].id}-meta-${idx}`}
-                                                                                    field={field}
-                                                                                    fieldId={field.id}
-                                                                                    initalValue={formValues[orderedSteps[currentStep].id]?.[field.id] || uploadedFiles[orderedSteps[currentStep].id]?.[field.id]?.[0]?.name}
-                                                                                    isEditable={!submittedSteps[currentStep]}
-                                                                                    noHasPermission={!isUserInSector(options[currentStep].sector_stage)}
-                                                                                    onFieldChange={handleFieldChange}
-                                                                                    fileInfo={fileInfo}
-                                                                                    handleDownload={handleDownload}
-                                                                                    stepId={orderedSteps[currentStep].id}
-                                                                                />
-                                                                            )) : null}
-                                                                        </div>
-                                                                        {!submittedSteps[currentStep] && (
-                                                                            <div className="action-bar">
-                                                                                <Button variant="primary" type="submit"
-                                                                                    disabled={!isSubmitEnabled || submittedSteps[currentStep] || !isUserInSector(options[currentStep].sector_stage)}
-                                                                                >
-                                                                                    Submit
-                                                                                </Button>
-                                                                            </div>
-                                                                        )}
-                                                                    </form>
-                                                                ) : (
-                                                                    <dl className="description-list">
-                                                                        {Array.isArray(options[currentStep].fields) ? options[currentStep].fields.map((field, idx) => (
-                                                                            <MetaFieldDisplay
-                                                                                key={`${orderedSteps[currentStep].id}-meta-${idx}`}
-                                                                                field={field}
-                                                                                value={
-                                                                                    formValues[orderedSteps[currentStep].id]?.[field.id] || uploadedFiles[orderedSteps[currentStep].id]?.[field.id]?.[0]?.name
-                                                                                }
-                                                                                handleDownload={handleDownload}
-                                                                                fieldId={field.id}
-                                                                            />
-                                                                        )): null}
-                                                                    </dl>
-                                                                )
-                                                            ) : (
-                                                                <div className="notice-container">
-                                                                    <Notice status="warning" isDismissible={false}
-                                                                    >
-                                                                        No fields found for this Step.
-                                                                    </Notice>
-                                                                </div>
-                                                            )}
-                                                        </>
-                                                    ) : (
+                    )}
+                    <div className="panel-container">
+                        <div className="accordion">
+                            {options.map((step, index) => (
+                                <div key={index} className="accordion-item">
+                                    <button className="accordion-header" onClick={() => toggleAccordion(index)} aria-expanded={activeIndex === index} aria-controls={`accordion-content-${index}`}>
+                                        <span className="status success">Concluído</span>
+                                        <h2 className="accordion-title me-auto">
+                                            {step.label}
+                                        </h2>
+                                        <div className="badge-container">
+                                            {Object.keys(currentStageData).includes(options[currentStep]?.value) ?
+                                                <span className="badge success">Concluído em {lastUpdateStage().dateFormat}</span>
+                                                : <span className="badge danger">Pendente</span>}
+                                            {options[currentStep].sector_stage && (
+                                                <span className="badge info" title={`Grupo responsável: ${getSectorName(options[currentStep].sector_stage)}`}>
+                                                    <Icon icon="groups" /> {getSectorName(options[currentStep].sector_stage)}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </button>
+                                    {activeIndex === index && (
+                                        <div className="accordion-content">
+                                            {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
+                                                <>
+                                                    <div className="badge-container mb-2">
+                                                        <span className="badge success">Concluído por José Silva</span>
+                                                    </div>
+                                                    {!isUserInSector(options[currentStep].sector_stage) && (
                                                         <div className="notice-container">
                                                             <Notice status="warning" isDismissible={false}>
-                                                                No steps found for this process.
+                                                                You can only view this step.
                                                             </Notice>
                                                         </div>
                                                     )}
+                                                    {options[currentStep].fields.length > 0 ? (
+                                                        !submittedSteps[currentStep] ? (
+                                                            <form onSubmit={handleSubmit}>
+                                                                <div className="meta-field-wrapper">
+                                                                    {Array.isArray(options[currentStep].fields) ? options[currentStep].fields.map((field, idx) => (
+                                                                        <MetaFieldInputs
+                                                                            key={`${orderedSteps[currentStep].id}-meta-${idx}`}
+                                                                            field={field}
+                                                                            fieldId={field.id}
+                                                                            initalValue={formValues[orderedSteps[currentStep].id]?.[field.id] || uploadedFiles[orderedSteps[currentStep].id]?.[field.id]?.[0]?.name}
+                                                                            isEditable={!submittedSteps[currentStep]}
+                                                                            noHasPermission={!isUserInSector(options[currentStep].sector_stage)}
+                                                                            onFieldChange={handleFieldChange}
+                                                                            fileInfo={fileInfo}
+                                                                            handleDownload={handleDownload}
+                                                                            stepId={orderedSteps[currentStep].id}
+                                                                        />
+                                                                    )) : null}
+                                                                </div>
+                                                                {!submittedSteps[currentStep] && (
+                                                                    <div className="action-bar">
+                                                                        <Button variant="primary" type="submit"
+                                                                            disabled={!isSubmitEnabled || submittedSteps[currentStep] || !isUserInSector(options[currentStep].sector_stage)}
+                                                                        >
+                                                                            Submit
+                                                                        </Button>
+                                                                    </div>
+                                                                )}
+                                                            </form>
+                                                        ) : (
+                                                            <dl className="description-list">
+                                                                {Array.isArray(options[currentStep].fields) ? options[currentStep].fields.map((field, idx) => (
+                                                                    <MetaFieldDisplay
+                                                                        key={`${orderedSteps[currentStep].id}-meta-${idx}`}
+                                                                        field={field}
+                                                                        value={
+                                                                            formValues[orderedSteps[currentStep].id]?.[field.id] || uploadedFiles[orderedSteps[currentStep].id]?.[field.id]?.[0]?.name
+                                                                        }
+                                                                        handleDownload={handleDownload}
+                                                                        fieldId={field.id}
+                                                                    />
+                                                                )) : null}
+                                                            </dl>
+                                                        )
+                                                    ) : (
+                                                        <div className="notice-container">
+                                                            <Notice status="warning" isDismissible={false}
+                                                            >
+                                                                No fields found for this Step.
+                                                            </Notice>
+                                                        </div>
+                                                    )}
+                                                </>
+                                            ) : (
+                                                <div className="notice-container">
+                                                    <Notice status="warning" isDismissible={false}>
+                                                        No steps found for this process.
+                                                    </Notice>
                                                 </div>
                                             )}
                                         </div>
-                                    ))}
+                                    )}
                                 </div>
-                                <aside>
-                                    <Panel>
-                                        <PanelHeader>Comments</PanelHeader>
-                                        <CommentForm processId={processId || null} />
-                                    </Panel>
-                                    <Panel>
-                                        <PanelHeader>History</PanelHeader>
-                                        <Timeline
-                                            stages={options}
-                                            process={process}
-                                            currentStageData={currentStageData}
-                                            authorsById={authorsById}
-                                            sectors={sectors}
-                                        />
-                                    </Panel>
-                                </aside>
-                            </div>
-                        </>
-                    )}
+                            ))}
+                        </div>
+                        <aside>
+                            <Panel>
+                                <PanelHeader>Comments</PanelHeader>
+                                <CommentForm processId={processId || null} />
+                            </Panel>
+                            <Panel>
+                                <PanelHeader>History</PanelHeader>
+                                <PanelRow>
+                                    <ProcessUserLog
+                                        stages={options}
+                                        process={process}
+                                        currentStageData={currentStageData}
+                                        authorsById={authorsById}
+                                        sectors={sectors}
+                                    />
+                                </PanelRow>
+                            </Panel>
+                        </aside>
+                    </div>
                 </>
             )}
         </main>
