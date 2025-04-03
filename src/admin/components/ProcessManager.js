@@ -4,6 +4,7 @@ import apiFetch from '@wordpress/api-fetch';
 import ProcessCreator from './ProcessManager/ProcessCreator';
 import { edit, seen, plus } from '@wordpress/icons';
 import ProcessList from './ProcessManager/ProcessList';
+import BrandHeader from './BrandHeader';
 
 const ProcessManager = ({ onSelectProcess }) => {
     const [processTypes, setProcessTypes] = useState([]);
@@ -136,75 +137,77 @@ const ProcessManager = ({ onSelectProcess }) => {
     }
 
     return (
-        <main>
-            <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
-            <div className="title-container">
-                <h2>Processes</h2>
-                <span className="badge">{filteredProcess.length}</span>
-                <ButtonGroup>
-                    <Button 
-                        variant="primary" 
-                        icon={<Icon icon={plus}/>}
-                        onClick={handleAddProcess}
+        <>
+            <header><BrandHeader title="Sector Manager" /></header>
+            <main>
+                <div className="title-container">
+                    <h2>Processes</h2>
+                    <span className="badge">{filteredProcess.length}</span>
+                    <ButtonGroup>
+                        <Button
+                            variant="primary"
+                            icon={<Icon icon={plus} />}
+                            onClick={handleAddProcess}
+                        >
+                            Add new
+                        </Button>
+                    </ButtonGroup>
+                </div>
+
+                {notice && (
+                    <div className="notice-container">
+                        <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                            {notice.message}
+                        </Notice>
+                    </div>
+                )}
+
+                <ProcessList
+                    processes={filteredProcess}
+                    onEdit={handleEditProcess}
+                    onViewProcess={handleSelectProcess}
+                    processTypeMappings={processTypeMappings}
+                    processTypes={processTypes}
+                    accessLevel={accessLevel}
+                    setAccessLevel={setAccessLevel}
+                    modelFilter={modelFilter}
+                    setModelFilter={setModelFilter}
+                />
+                {editingProcess && (
+                    <Modal
+                        title="Edit Process"
+                        onRequestClose={handleCancel}
+                        isDismissible={true}
                     >
-                        Add new
-                    </Button>
-                </ButtonGroup>
-            </div>
-
-            {notice && (
-                <div className="notice-container">
-                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                        {notice.message}
-                    </Notice>
-                </div>
-            )}
-
-            <ProcessList
-                processes={filteredProcess}
-                onEdit={handleEditProcess}
-                onViewProcess={handleSelectProcess}
-                processTypeMappings={processTypeMappings}
-                processTypes={processTypes}
-                accessLevel={accessLevel}
-                setAccessLevel={setAccessLevel}
-                modelFilter={modelFilter}
-                setModelFilter={setModelFilter}
-            />
-            {editingProcess && (
-                <Modal
-                    title="Edit Process"
-                    onRequestClose={handleCancel}
-                    isDismissible={true}
-                >
-                    <ProcessCreator 
-                        processTypes={processTypes} 
-                        onProcessSaved={handleProcessSaved} 
-                        editingProcess={editingProcess}
-                        onCancel={handleCancel} 
-                    />
-                </Modal>
-            )}
-            {addingProcess && (
-                <Modal
-                    title="Add new process"
-                    onRequestClose={handleCancel}
-                    isDismissible={true}
-                >
-                    <ProcessCreator 
-                        processTypes={processTypes} 
-                        onProcessSaved={handleProcessSaved}
-                        onCancel={handleCancel}
-                    />
-                </Modal>
-            )}
-            {selectedProcessId && (
-                <div>
-                    {/* Render your ProcessViewer component or call onSelectProcess with selectedProcessId */}
-                    {onSelectProcess(selectedProcessId)}
-                </div>
-            )}
-        </main>
+                        <ProcessCreator
+                            processTypes={processTypes}
+                            onProcessSaved={handleProcessSaved}
+                            editingProcess={editingProcess}
+                            onCancel={handleCancel}
+                        />
+                    </Modal>
+                )}
+                {addingProcess && (
+                    <Modal
+                        title="Add new process"
+                        onRequestClose={handleCancel}
+                        isDismissible={true}
+                    >
+                        <ProcessCreator
+                            processTypes={processTypes}
+                            onProcessSaved={handleProcessSaved}
+                            onCancel={handleCancel}
+                        />
+                    </Modal>
+                )}
+                {selectedProcessId && (
+                    <div>
+                        {/* Render your ProcessViewer component or call onSelectProcess with selectedProcessId */}
+                        {onSelectProcess(selectedProcessId)}
+                    </div>
+                )}
+            </main>
+        </>
     );
 };
 

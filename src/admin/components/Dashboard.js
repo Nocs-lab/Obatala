@@ -11,7 +11,7 @@ import { fetchProcessModels, fetchSectors, fetchSectorsUsers, } from '../api/api
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 import apiFetch from '@wordpress/api-fetch';
-
+import BrandHeader from './BrandHeader';
 
 const DashboardPage = () => {
     const [processTypes, setProcessTypes] = useState([]);
@@ -155,83 +155,85 @@ const DashboardPage = () => {
     }; 
 
     return (
-        <main>
-            <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
-            <div className="title-container">
-                <h2>Dashboard</h2>
-            </div>
-
-            <div className="card-container">
-                <div className="card-item">
-                    <img src="https://placehold.co/40" className="user-photo" alt="Foto de NOME" />
-                    <span className="description">Olá, <strong>NOME</strong>!</span>
+        <>
+            <header><BrandHeader title="Dashboard" /></header>
+            <main>
+                <div className="title-container">
+                    <h2>Dashboard</h2>
                 </div>
-                <a href="/wp-admin/admin.php?page=process-manager" className="card-item">
-                    <span className="indicator">{processes.length}</span>
-                    <span className="description">Processes</span>
-                </a>
-                <a href="/wp-admin/admin.php?page=process-type-manager" className="card-item">
-                    <span className="indicator">{processTypes.length}</span>
-                    <span className="description">Models</span>
-                </a>
-                <a href="/wp-admin/admin.php?page=sector_manager" className="card-item">
-                    <span className="indicator">{sectors.length}</span>
-                    <span className="description">Groups</span>
-                </a>
-            </div>
-            <div className="panel-container mt-2">
-                <Panel>
-                    <PanelHeader>My groups</PanelHeader>
-                    <PanelRow>
-                        {matchesSectors.length > 0 ? (
-                            <table className="wp-list-table widefat fixed striped table-view-list">
-                                <thead>
-                                    <tr>
-                                        <th>Group</th>
-                                        <th>Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {matchesSectors.map((sector) => (
-                                        <tr key={sector.id}>
-                                            <td>{sector.name}</td>
-                                            <td>{sector.description}</td>
+
+                <div className="card-container">
+                    <div className="card-item">
+                        <img src="https://placehold.co/40" className="user-photo" alt="Foto de NOME" />
+                        <span className="description">Olá, <strong>NOME</strong>!</span>
+                    </div>
+                    <a href="/wp-admin/admin.php?page=process-manager" className="card-item">
+                        <span className="indicator">{processes.length}</span>
+                        <span className="description">Processes</span>
+                    </a>
+                    <a href="/wp-admin/admin.php?page=process-type-manager" className="card-item">
+                        <span className="indicator">{processTypes.length}</span>
+                        <span className="description">Models</span>
+                    </a>
+                    <a href="/wp-admin/admin.php?page=sector_manager" className="card-item">
+                        <span className="indicator">{sectors.length}</span>
+                        <span className="description">Groups</span>
+                    </a>
+                </div>
+                <div className="panel-container mt-2">
+                    <Panel>
+                        <PanelHeader>My groups</PanelHeader>
+                        <PanelRow>
+                            {matchesSectors.length > 0 ? (
+                                <table className="wp-list-table widefat fixed striped table-view-list">
+                                    <thead>
+                                        <tr>
+                                            <th>Group</th>
+                                            <th>Description</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        ) : (
-                            <Notice isDismissible={false} status="warning">Sem resultados.</Notice>
-                        )}
-                    </PanelRow>
-                </Panel>
-                <Panel>
-                    <PanelHeader>Top 5 most used models</PanelHeader>
-                    <PanelRow>
-                    {topModels.length > 0 ? (
-                        <table className="wp-list-table widefat fixed striped table-view-list" >
-                            <thead>
-                                <tr>
-                                <th>Nome</th>
-                                <th>Quantidade</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {topModels.map((sector) => (
-                                    <tr key={sector.modelId}>
-                                        <td>{sector.modelName}</td>
-                                        <td>{sector.count}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                        ) : (
-                            <Notice isDismissible={false} status="warning">Sem resultados.</Notice>
-                        )}
-                    </PanelRow>
-                </Panel>
-            </div>
-        </main>
+                                    </thead>
+                                    <tbody>
+                                        {matchesSectors.map((sector) => (
+                                            <tr key={sector.id}>
+                                                <td>{sector.name}</td>
+                                                <td>{sector.description}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            ) : (
+                                <Notice isDismissible={false} status="warning">Sem resultados.</Notice>
+                            )}
+                        </PanelRow>
+                    </Panel>
+                    <Panel>
+                        <PanelHeader>Top 5 most used models</PanelHeader>
+                        <PanelRow>
+                            {topModels.length > 0 ? (
+                                <table className="wp-list-table widefat fixed striped table-view-list" >
+                                    <thead>
+                                        <tr>
+                                            <th>Nome</th>
+                                            <th>Quantidade</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {topModels.map((sector) => (
+                                            <tr key={sector.modelId}>
+                                                <td>{sector.modelName}</td>
+                                                <td>{sector.count}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            ) : (
+                                <Notice isDismissible={false} status="warning">Sem resultados.</Notice>
+                            )}
+                        </PanelRow>
+                    </Panel>
+                </div>
+            </main>
+        </>
     );
 };
 

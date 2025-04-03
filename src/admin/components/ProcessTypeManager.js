@@ -15,7 +15,7 @@ import ProcessTypeList from './ProcessTypeManager/ProcessTypeList';
 import Reducer, { initialState } from '../redux/reducer';
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
-
+import BrandHeader from './BrandHeader';
 
 const ProcessTypeManager = () => {
     const [processTypes, setProcessTypes] = useState([]);
@@ -127,67 +127,69 @@ const ProcessTypeManager = () => {
     }
 
     return (
-        <main>
-            <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
-            <div className="title-container">
-                <h2>Models</h2>
-                <span className="badge">{filteredModels.length}</span>
-                <ButtonGroup>
-                    <Button 
-                        variant="primary" 
-                        icon={<Icon icon={plus} />}
-                        onClick={handleAdd}
-                    >
-                        Add process model
-                    </Button>
-                </ButtonGroup>
-            </div>
-            {notice && (
-                <div className="notice-container">
-                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                        {notice.message}
-                    </Notice>
+        <>
+            <header><BrandHeader title="Process Type Manager" /></header>
+            <main>
+                <div className="title-container">
+                    <h2>Models</h2>
+                    <span className="badge">{filteredModels.length}</span>
+                    <ButtonGroup>
+                        <Button
+                            variant="primary"
+                            icon={<Icon icon={plus} />}
+                            onClick={handleAdd}
+                        >
+                            Add process model
+                        </Button>
+                    </ButtonGroup>
                 </div>
-            )}
-            <div className="panel-container">
-                <main>
-                    <ConfirmDialog
-                        isOpen={state.isOpen}
-                        onConfirm={() => {
-                            handleDeleteProcessType(state.processModel);
-                            dispatch({type: 'CLOSE_MODAL'})
-                        }}
-                        onCancel={ handleCancel }
-                    >
-                        Are you sure you want to delete process model {state.processModel?.title.rendered}?
-                    </ConfirmDialog>
-
-                    <ProcessTypeList
-                        processTypes={filteredModels}
-                        onEdit={handleEditModel}
-                        onManager={handleManageProcessModel}
-                        onDelete={handleConfirmDelete}
-                        status={status}
-                        setStatus={setStatus}
-                        authorsById={authorsById}
-                    />
-                </main>
-                {addingProcessType || editingProcessType ? (
-                    <Modal
-                        title={ editingProcessType ? "Edit process model" : "Add process model"}
-                        onRequestClose={handleCancel}
-                        isDismissible={true}
-                        size="medium"
-                    >
-                        <ProcessTypeForm
-                            onSave={handleSaveProcessType}
+                {notice && (
+                    <div className="notice-container">
+                        <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                            {notice.message}
+                        </Notice>
+                    </div>
+                )}
+                <div className="panel-container">
+                    <main>
+                        <ConfirmDialog
+                            isOpen={state.isOpen}
+                            onConfirm={() => {
+                                handleDeleteProcessType(state.processModel);
+                                dispatch({ type: 'CLOSE_MODAL' })
+                            }}
                             onCancel={handleCancel}
-                            editingProcessType={editingProcessType ? editingProcessType : null}
+                        >
+                            Are you sure you want to delete process model {state.processModel?.title.rendered}?
+                        </ConfirmDialog>
+
+                        <ProcessTypeList
+                            processTypes={filteredModels}
+                            onEdit={handleEditModel}
+                            onManager={handleManageProcessModel}
+                            onDelete={handleConfirmDelete}
+                            status={status}
+                            setStatus={setStatus}
+                            authorsById={authorsById}
                         />
-                    </Modal>
-                ) :  null}
-            </div>
-        </main>
+                    </main>
+                    {addingProcessType || editingProcessType ? (
+                        <Modal
+                            title={editingProcessType ? "Edit process model" : "Add process model"}
+                            onRequestClose={handleCancel}
+                            isDismissible={true}
+                            size="medium"
+                        >
+                            <ProcessTypeForm
+                                onSave={handleSaveProcessType}
+                                onCancel={handleCancel}
+                                editingProcessType={editingProcessType ? editingProcessType : null}
+                            />
+                        </Modal>
+                    ) : null}
+                </div>
+            </main>
+        </>
     );
 };
 
