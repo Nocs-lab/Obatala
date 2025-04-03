@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Spinner, Button, Notice, Panel, PanelHeader, PanelRow, Icon, ButtonGroup, Tooltip, Modal, TabPanel} from '@wordpress/components';
+import { Spinner, Button, Notice, Icon, ButtonGroup, Modal, TabPanel} from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import ProcessCreator from './ProcessManager/ProcessCreator';
 import { plus } from '@wordpress/icons';
@@ -20,15 +20,15 @@ const ProcessManager = ({ onSelectProcess }) => {
     const [accessLevel, setAccessLevel] = useState(null);
     const [modelFilter, setModelFilter] = useState(null);
     const [notice, setNotice] = useState(null);
-    const [tabValue, setTabValue] = useState(0);
+    const [activeTab, setActiveTab] = useState('all'); 
 
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
 
     useEffect(() => {
         fetchProcessModels();
-        fetchProcesses();
+        fetchProcesses();        
     }, []);
-
+    
     useEffect(() => {
         fetchProcessesUser();
     }, [currentUser])
@@ -144,34 +144,29 @@ const ProcessManager = ({ onSelectProcess }) => {
     };
 
     const filteredUserProcesses =useMemo(() => { 
-        return processes.filter(process => 
-            processUser?.includes(process.id)
-    )}, [processUser]);
+        return Array.isArray(processUser)
+        ?   processes.filter(process => processUser?.includes(process.id))
+        : []
+    }, [processUser,processes]);
       
-    
     const filteredProcess = useMemo(() => {
-        return tabValue === 0 ?  processes.filter(process => {
-            const matchesAccessLevel = accessLevel
-                ? process?.meta?.access_level?.[0].includes(accessLevel)
-                : true; 
-            const matchesProcessType = modelFilter
-                ? process?.meta?.process_type?.[0].includes(modelFilter.toString())
-                : true;
-            return matchesAccessLevel && matchesProcessType;})
-            :  filteredUserProcesses.filter(process => {
-                const matchesAccessLevel = accessLevel
-                    ? process?.meta?.access_level?.[0].includes(accessLevel)
-                    : true; 
-                const matchesProcessType = modelFilter
-                    ? process?.meta?.process_type?.[0].includes(modelFilter.toString())
-                    : true;
-                return matchesAccessLevel && matchesProcessType;
+        const processList = activeTab === 'all' ? processes : filteredUserProcesses;  
+
+        return processList.filter(process => {
+            const matchesAccessLevel = !accessLevel || 
+                process?.meta?.access_level?.[0]?.includes(accessLevel);
+            
+            const matchesProcessType = !modelFilter || 
+                process?.meta?.process_type?.[0]?.includes(modelFilter.toString());
+            
+            return matchesAccessLevel && matchesProcessType;
         });
-    }, [accessLevel, modelFilter, processes, tabValue]);
+    }, [accessLevel, modelFilter, processes, filteredUserProcesses, activeTab]); 
     
     if (isLoading) {
         return <Spinner />;
     }
+    
     return (
         <main>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
@@ -196,28 +191,42 @@ const ProcessManager = ({ onSelectProcess }) => {
                     </Notice>
                 </div>
             )}
-            <TabPanel
-                className="process-tabs"
-                activeClass="active-tab"
-                onSelect={(tabName) =>{ 
-                    setTabValue(Number(tabName));}}
-                tabs={[
-                    { name: 0, title: 'All Processes' },
-                    { name: 1, title: 'My Processes' },
-                ]}
-            />
-
-            <ProcessList
-                processes={filteredProcess}
-                onEdit={handleEditProcess}
-                onViewProcess={handleSelectProcess}
-                processTypeMappings={processTypeMappings}
-                processTypes={processTypes}
-                accessLevel={accessLevel}
-                setAccessLevel={setAccessLevel}
-                modelFilter={modelFilter}
-                setModelFilter={setModelFilter}
-            />
+             <div className="panel-container">
+                <TabPanel
+                    className="process-tabs"
+                    activeClass="active-tab"
+                    onSelect={(tabName) => setActiveTab(tabName)}
+                    initialTabName="all"
+                    tabs={[
+                        { 
+                            name: 'all',
+                            title: 'All Processes',
+                            className: activeTab === 'all' ? 'is-active' : ''
+                        },
+                        { 
+                            name: 'my',
+                            title: 'My Processes',
+                            className: activeTab === 'my' ? 'is-active' : ''
+                        },
+                    ]}
+                >
+                    { ( { tab } ) => (
+                        <div>
+                            <ProcessList
+                                processes={filteredProcess}
+                                onEdit={handleEditProcess}
+                                onViewProcess={handleSelectProcess}
+                                processTypeMappings={processTypeMappings}
+                                processTypes={processTypes}
+                                accessLevel={accessLevel}
+                                setAccessLevel={setAccessLevel}
+                                modelFilter={modelFilter}
+                                setModelFilter={setModelFilter}
+                            />
+                        </div>
+                    ) }
+                </TabPanel>
+            </div>
             {editingProcess && (
                 <Modal
                     title="Edit Process"
@@ -251,6 +260,7 @@ const ProcessManager = ({ onSelectProcess }) => {
                     {onSelectProcess(selectedProcessId)}
                 </div>
             )}
+            
         </main>
     );
 };
