@@ -200,12 +200,12 @@ const ProcessManager = ({ onSelectProcess }) => {
                     tabs={[
                         { 
                             name: 'all',
-                            title: 'All Processes',
+                            title: 'All processes',
                             className: activeTab === 'all' ? 'is-active' : ''
                         },
                         { 
                             name: 'my',
-                            title: 'My Processes',
+                            title: 'My processes',
                             className: activeTab === 'my' ? 'is-active' : ''
                         },
                     ]}
