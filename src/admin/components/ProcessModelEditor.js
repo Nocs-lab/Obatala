@@ -107,15 +107,21 @@ const processDataEditor = () => {
         return; // Interrompe a execução caso existam nós isolados
       }
 
-       // verifica se todos os nós possuem tempSector definido
-       const nodesWithoutSector = flowData.nodes.filter(node => (!node.tempSector && !node.sector_obatala)   && node.type !== 'endNode' && node.type !== 'startNode');
+      // verifica se todos os nós possuem tempSector definido
+      const nodesWithoutSector = flowData.nodes.filter(node => {
+        const isIgnored = 
+          node.id === "Start" || 
+          node.id === "End" || 
+          node.id.startsWith("Condicional");
+      return !isIgnored && (!node.tempSector && !node.sector_obatala);
+      });
 
        if (nodesWithoutSector.length > 0) {
-           setNotice({
-               status: "error",
-               message: "All nodes must have a group assigned before saving.",
-           });
-           return; // Interrompe a execução caso existam nós sem setor
+        setNotice({
+          status: "error",
+          message: "All nodes must have a group assigned before saving.",
+        });
+        return; // Interrompe a execução caso existam nós sem setor
        }
 
       const updatedData = {

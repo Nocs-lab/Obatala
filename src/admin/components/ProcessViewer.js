@@ -124,8 +124,16 @@ const ProcessViewer = () => {
     }, [currentUser]);
 
     const calculatePercentagem = () => {
-        const result = (Object.keys(submittedSteps).length / flowNodes?.nodes?.length) * 100;
-        return result.toFixed(2);
+        // Filtra os nodes que não devem ser contados
+        const validNodes = flowNodes?.nodes?.filter(node => 
+            node.id !== "Start" && 
+            node.id !== "End" && 
+            !node.id.startsWith("Condicional")
+        ) || [];
+        
+        // Calcula a porcentagem baseada apenas nos nodes válidos
+        const result = (Object.keys(submittedSteps).length / validNodes.length) * 100;
+        return validNodes.length > 0 ? result.toFixed(2) : "0.00";
     }
 
     const loadSectors = () => {
@@ -485,15 +493,15 @@ const ProcessViewer = () => {
             {isLoading ? (
                 <Spinner />
             ) : viewMode === "history" ? (
-                    <HistoryViewer
-                        process={process}
-                        filteredProcessType={filteredProcessType}
-                        authorsById={authorsById}
-                        calculatePercentagem={calculatePercentagem}
-                        options={options}
-                        currentStageData={currentStageData}
-                        sectors={sectors}
-                    />
+                <HistoryViewer
+                    process={process}
+                    filteredProcessType={filteredProcessType}
+                    authorsById={authorsById}
+                    calculatePercentagem={calculatePercentagem}
+                    options={options}
+                    currentStageData={currentStageData}
+                    sectors={sectors}
+                />
             ) : (
                 <>
                     <ProcessHeader
@@ -501,6 +509,7 @@ const ProcessViewer = () => {
                         filteredProcessType={filteredProcessType}
                         authorsById={authorsById}
                         calculatePercentagem={calculatePercentagem}
+                        isComplete={parseFloat(calculatePercentagem()) === 100} // Adicionado para controle do badge
                     />
                     {notice && (
                         <div className="notice-container">
@@ -561,9 +570,15 @@ const ProcessViewer = () => {
                                             <div className="accordion-content">
                                                 {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
                                                     <>
-                                                        <div className="badge-container mb-2">
-                                                            <span className="badge success">Concluído por José Silva</span>
-                                                        </div>
+                                                        {/* Badge dinâmico de responsável */}
+                                                        {isCompleted && (
+                                                            <div className="badge-container mb-2">
+                                                                <span className="badge success">
+                                                                    Concluído por {lastUpdateStage(index).user}.
+                                                                </span>
+                                                            </div>
+                                                        )}
+    
                                                         {!isUserAllowed && (
                                                             <div className="notice-container">
                                                                 <Notice status="warning" isDismissible={false}>
