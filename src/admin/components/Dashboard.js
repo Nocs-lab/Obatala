@@ -4,7 +4,8 @@ import {
     Notice,
     Panel,
     PanelRow,
-    PanelHeader
+    PanelHeader,
+    Spinner
 } from '@wordpress/components';
 import { people,  starFilled } from "@wordpress/icons";
 import { fetchProcessModels, fetchSectors, fetchSectorsUsers, } from '../api/apiRequests';
@@ -20,6 +21,7 @@ const DashboardPage = () => {
     const [sectorsUsers, setSectorsUsers] = useState([])
     const [topModels, setTopModels] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+
     
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
     
@@ -102,7 +104,8 @@ const DashboardPage = () => {
     const sectorsUserLogged = useMemo(() => {
         return sectorsUsers.filter(sector => {
             const matchesUser = currentUser?.id
-                ? sector?.users?.some(user => user.ID === currentUser?.id)
+                ? sector?.users?.some(user => user.ID === currentUser?.id) &&
+                    sector?.sector_status === 'Active'
                 : true;
             return matchesUser;
         });
@@ -154,6 +157,9 @@ const DashboardPage = () => {
         return model ? model.title.rendered : 'Desconhecido';
     }; 
 
+    if (isLoading) {
+        return <Spinner />;
+    }
     return (
         <main>
             <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
@@ -163,8 +169,8 @@ const DashboardPage = () => {
 
             <div className="card-container">
                 <div className="card-item">
-                    <img src="https://placehold.co/40" className="user-photo" alt="Foto de NOME" />
-                    <span className="description">Olá, <strong>NOME</strong>!</span>
+                    <img src={currentUser.avatar_urls?.[48]} className="user-photo" alt={`Foto de ${currentUser?.name}`} />
+                    <span className="description">Olá, <strong>{currentUser.name}</strong>!</span>
                 </div>
                 <a href="/wp-admin/admin.php?page=process-manager" className="card-item">
                     <span className="indicator">{processes.length}</span>

@@ -147,8 +147,6 @@ const SectorManager = () => {
         });
     }, [status, group, sectors, sectorsUsers]);
     
-    console.log(sectorsUsers)
-
     if (isLoading) {
         return <Spinner />;
     }

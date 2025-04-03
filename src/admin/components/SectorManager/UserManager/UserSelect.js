@@ -50,7 +50,7 @@ const UserSelect = ({ users, sectorUsers, onSelectUser }) => {
                 </div>
             )}
             <Button 
-                variant="secondary" 
+                variant="primary" 
                 onClick={() => onSelectUser(selectedUser)}
                 disabled={selectedUser.length === 0}   
             >

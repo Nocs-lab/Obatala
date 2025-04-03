@@ -1,12 +1,12 @@
 import React from "react";
-import { format } from "date-fns";
+import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
+import { Icon } from "@wordpress/components";
+import { check, plus } from "@wordpress/icons";
 
 const ProcessUserLog = ({ stages, process, currentStageData, authorsById, sectors }) => {
     const formatDate = (date) => {
-        return format(new Date(date), "dd 'de' MMMM 'de' yyyy 'às' HH:mm", {
-            locale: ptBR
-        });
+        return formatDistanceToNow(new Date(date), { addSuffix: true, locale: ptBR });
     };
 
     const getSectorName = (sectorId) => {
@@ -19,12 +19,12 @@ const ProcessUserLog = ({ stages, process, currentStageData, authorsById, sector
         <div className="timeline-container">
             <ul className="timeline">
                 <li className="timeline-item">
-                    <div className="timeline-badge success"></div>
-                    <div className="timeline-content">
-                        <h3 className="timeline-title">Processo criado</h3>
-                        <p>Por: {authorsById[process?.author]?.name}</p>
-                        <time>{formatDate(process?.date)}</time>
-                    </div>
+                    <div className="timeline-badge primary"><Icon icon={plus} /></div>
+                    <p className="timeline-title"><strong>Processo criado</strong> <time>{formatDate(process?.date)}</time></p>
+                    <dl className="timeline-content">
+                        <dt>Responsável:</dt>
+                        <dd>{authorsById[process?.author]?.name}</dd>
+                    </dl>
                 </li>
                 
                 {stages.map((step, index) => {
@@ -35,15 +35,12 @@ const ProcessUserLog = ({ stages, process, currentStageData, authorsById, sector
                     
                     return (
                         <li key={index} className="timeline-item">
-                            <div className="timeline-badge primary"></div>
-                            <div className="timeline-content">
-                                <h3 className="timeline-title">{step.label}</h3>
-                                <p>Atualizado por: {stageData[1]}</p>
-                                {sectorName && (
-                                    <p>Grupo responsável: {sectorName}</p>
-                                )}
-                                <time>{formatDate(stageData[0])}</time>
-                            </div>
+                            <div className="timeline-badge success"><Icon icon={check} /></div>
+                            <p className="timeline-title"><strong>{step.label}</strong> <time>{formatDate(stageData[0])}</time></p>
+                            <dl className="timeline-content">
+                                <dt>Responsável:</dt>
+                                <dd>{stageData[1]}{sectorName && ` (${sectorName})`}</dd>
+                            </dl>
                         </li>
                     );
                 })}

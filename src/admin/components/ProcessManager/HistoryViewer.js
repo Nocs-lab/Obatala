@@ -1,5 +1,5 @@
 import React from 'react';
-import { Panel, PanelHeader } from '@wordpress/components';
+import { Panel, PanelHeader, PanelRow } from '@wordpress/components';
 import ProcessHeader from './ProcessHeader';
 import ProcessUserLog from './ProcessUserLog';
 
@@ -21,20 +21,18 @@ const HistoryViewer = ({
                 calculatePercentagem={calculatePercentagem}
             />
             
-            <div className="history-container">
-                <Panel>
-                    <div className="timeline-full-view">
-                    <PanelHeader>History</PanelHeader>
-                        <ProcessUserLog
-                            stages={options}
-                            process={process}
-                            currentStageData={currentStageData}
-                            authorsById={authorsById}
-                            sectors={sectors}
-                        />
-                    </div>
-                </Panel>
-            </div>
+            <Panel>
+                <PanelHeader>History</PanelHeader>
+                <PanelRow>
+                    <ProcessUserLog
+                        stages={options}
+                        process={process}
+                        currentStageData={currentStageData}
+                        authorsById={authorsById}
+                        sectors={sectors}
+                    />
+                </PanelRow>
+            </Panel>
         </main>
     );
 };

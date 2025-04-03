@@ -1,6 +1,6 @@
 {
     "name": "nocs-obatala",
-    "version": "1.4.22",
+    "version": "1.5.1",
     "private": true,
     "description": "Curatorial process manager for Tainacan",
     "author": "Nocs Lab",
@@ -33,7 +33,7 @@
         "@dnd-kit/utilities": "^3.2.2",
         "@wordpress/core-data": "^7.11.0",
         "@wordpress/data": "^10.11.0",
-        "@wordpress/icons": "^10.0.0",
+        "@wordpress/icons": "^10.21.0",
         "@xyflow/react": "^12.2.1",
         "date-fns": "^3.6.0",
         "php-unserialize": "^0.0.1",
