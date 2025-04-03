@@ -536,7 +536,11 @@ const ProcessViewer = () => {
                             {options.map((step, index) => {
                                 const isCompleted = Object.keys(currentStageData).includes(options[index]?.value);
                                 const isUserAllowed = isUserInSector(options[index].sector_stage);
-                                const isDisabled = !isCompleted && !isUserAllowed;
+                                const isAccessRestricted = !(process.meta?.access_level?.[0] === 'Not restricted' || 
+                                    process.meta?.access_level?.[0] === 'not restricted');
+                                    const isDisabled = isAccessRestricted
+                                    ? !isUserAllowed
+                                    : (!isCompleted && !isUserAllowed);
                                 
                                 return (
                                     <div key={index} className={`accordion-item ${isDisabled ? 'disabled' : ''}`}>
@@ -579,7 +583,7 @@ const ProcessViewer = () => {
                                                             </div>
                                                         )}
     
-                                                        {!isUserAllowed && (
+                                                        {!isUserAllowed && !isPublic && !isCompleted && (
                                                             <div className="notice-container">
                                                                 <Notice status="warning" isDismissible={false}>
                                                                     You can only view this step.
