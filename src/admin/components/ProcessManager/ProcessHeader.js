@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
 import BrandHeader from '../BrandHeader';
 
-const ProcessHeader = ({ process, filteredProcessType, authorsById, calculatePercentagem }) => {
+const ProcessHeader = ({ process, filteredProcessType, authorsById, calculatePercentagem, isComplete }) => {
     const createAtProcess = () => {
         const formatDate = format(process?.date, "dd 'de' MMMM 'de' yyyy", {
             locale: ptBR
@@ -36,11 +36,9 @@ const ProcessHeader = ({ process, filteredProcessType, authorsById, calculatePer
                 >
                     {process.meta.access_level}
                 </span>
-                <span className="badge default">
-                    <Icon icon="yes" /> {calculatePercentagem()}% concluído
-                </span>
-                <span className="badge success">
-                    <Icon icon="yes" /> 100% concluído
+                <span className={`badge ${isComplete ? 'success' : 'default'}`}>
+                    <Icon icon={isComplete ? "yes" : "update"} /> 
+                    {calculatePercentagem()}% concluído
                 </span>
                 <span className="badge default">
                     <Icon icon="admin-users" /> Aberto por: {authorsById[process?.author]?.name} em {createAtProcess()}

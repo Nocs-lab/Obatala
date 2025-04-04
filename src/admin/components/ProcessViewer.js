@@ -124,8 +124,16 @@ const ProcessViewer = () => {
     }, [currentUser]);
 
     const calculatePercentagem = () => {
-        const result = (Object.keys(submittedSteps).length / flowNodes?.nodes?.length) * 100;
-        return result.toFixed(2);
+        // Filtra os nodes que não devem ser contados
+        const validNodes = flowNodes?.nodes?.filter(node => 
+            node.id !== "Start" && 
+            node.id !== "End" && 
+            !node.id.startsWith("Condicional")
+        ) || [];
+        
+        // Calcula a porcentagem baseada apenas nos nodes válidos
+        const result = (Object.keys(submittedSteps).length / validNodes.length) * 100;
+        return validNodes.length > 0 ? result.toFixed(2) : "0.00";
     }
 
     const loadSectors = () => {
@@ -246,7 +254,7 @@ const ProcessViewer = () => {
     const getOrderedSteps = useCallback(() => {
         if (flowNodes && flowNodes.nodes) {
             const { edges, nodes } = flowNodes;
-            const filteredNodes = nodes.filter(node => node.id !== "Start" && node.id !== "End");
+            const filteredNodes = nodes.filter(node => node.id !== "Start" && node.id !== "End" && !node.id.startsWith("Condicional"));
             const nodeMap = new Map(nodes.map(node => [node.id, node]));
             const sources = new Set(edges.map(edge => edge.source));
             const targets = new Set(edges.map(edge => edge.target));
@@ -457,15 +465,16 @@ const ProcessViewer = () => {
         sector_stage: step.sector_obatala,
     }));
 
-    const lastUpdateStage = () => {
-        const currentStepData = currentStageData[options[currentStep]?.value];
-        const user = currentStepData ? currentStepData[1] : 'Desconhecido'
-        const dateFormat = currentStepData && currentStepData[0] ? format(currentStepData[0], "dd 'de' MMMM 'de' yyyy", {
-            locale: ptBR
-        }) : 'Data não disponível'
-
-        return { user, dateFormat }
-    }
+    const lastUpdateStage = (stepIndex) => {
+        const stepValue = options[stepIndex]?.value; 
+        const currentStepData = currentStageData[stepValue];
+        const user = currentStepData ? currentStepData[1] : 'Desconhecido';
+        const dateFormat = currentStepData && currentStepData[0] 
+            ? format(currentStepData[0], "dd 'de' MMMM 'de' yyyy", { locale: ptBR }) 
+            : 'Data não disponível';
+    
+        return { user, dateFormat };
+    };
 
     const authorsById = allAuthors ? allAuthors.reduce((acc, user) => {
         acc[user.id] = user;
@@ -484,15 +493,15 @@ const ProcessViewer = () => {
             {isLoading ? (
                 <Spinner />
             ) : viewMode === "history" ? (
-                    <HistoryViewer
-                        process={process}
-                        filteredProcessType={filteredProcessType}
-                        authorsById={authorsById}
-                        calculatePercentagem={calculatePercentagem}
-                        options={options}
-                        currentStageData={currentStageData}
-                        sectors={sectors}
-                    />
+                <HistoryViewer
+                    process={process}
+                    filteredProcessType={filteredProcessType}
+                    authorsById={authorsById}
+                    calculatePercentagem={calculatePercentagem}
+                    options={options}
+                    currentStageData={currentStageData}
+                    sectors={sectors}
+                />
             ) : (
                 <>
                     <ProcessHeader
@@ -500,6 +509,7 @@ const ProcessViewer = () => {
                         filteredProcessType={filteredProcessType}
                         authorsById={authorsById}
                         calculatePercentagem={calculatePercentagem}
+                        isComplete={parseFloat(calculatePercentagem()) === 100} // Adicionado para controle do badge
                     />
                     {notice && (
                         <div className="notice-container">
@@ -523,102 +533,129 @@ const ProcessViewer = () => {
                     )}
                     <div className="panel-container">
                         <div className="accordion">
-                            {options.map((step, index) => (
-                                <div key={index} className="accordion-item">
-                                    <button className="accordion-header" onClick={() => toggleAccordion(index)} aria-expanded={activeIndex === index} aria-controls={`accordion-content-${index}`}>
-                                        <span className="status success">Concluído</span>
-                                        <h2 className="accordion-title me-auto">
-                                            {step.label}
-                                        </h2>
-                                        <div className="badge-container">
-                                            {Object.keys(currentStageData).includes(options[currentStep]?.value) ?
-                                                <span className="badge success">Concluído em {lastUpdateStage().dateFormat}</span>
-                                                : <span className="badge danger">Pendente</span>}
-                                            {options[currentStep].sector_stage && (
-                                                <span className="badge info" title={`Grupo responsável: ${getSectorName(options[currentStep].sector_stage)}`}>
-                                                    <Icon icon="groups" /> {getSectorName(options[currentStep].sector_stage)}
+                            {options.map((step, index) => {
+                                const isCompleted = Object.keys(currentStageData).includes(options[index]?.value);
+                                const isUserAllowed = isUserInSector(options[index].sector_stage);
+                                const isAccessRestricted = !(process.meta?.access_level?.[0] === 'Not restricted' || 
+                                    process.meta?.access_level?.[0] === 'not restricted');
+                                    const isDisabled = isAccessRestricted
+                                    ? !isUserAllowed
+                                    : (!isCompleted && !isUserAllowed);
+                                
+                                return (
+                                    <div key={index} className={`accordion-item ${isDisabled ? 'disabled' : ''}`}>
+                                        <button 
+                                            className="accordion-header" 
+                                            onClick={() => !isDisabled && toggleAccordion(index)} 
+                                            aria-expanded={activeIndex === index} 
+                                            aria-controls={`accordion-content-${index}`}
+                                            disabled={isDisabled}
+                                        >
+                                            <span className={`status ${isCompleted ? 'success' : isDisabled ? 'danger' : 'warning'}`}>
+                                                {isCompleted ? 'Completed' : 'Pending'}
+                                            </span>
+                                            <h2 className="accordion-title me-auto">{step.label}</h2>
+                                            <div className="badge-container">
+                                                <span className={`badge ${isCompleted ? 'success' : isDisabled ? 'danger' : 'warning'}`}>
+                                                    {isCompleted 
+                                                        ? `Completed on ${lastUpdateStage(index).dateFormat}` 
+                                                        : isDisabled 
+                                                            ? 'Pending' 
+                                                            : 'Pending input'}
                                                 </span>
-                                            )}
-                                        </div>
-                                    </button>
-                                    {activeIndex === index && (
-                                        <div className="accordion-content">
-                                            {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
-                                                <>
-                                                    <div className="badge-container mb-2">
-                                                        <span className="badge success">Concluído por José Silva</span>
-                                                    </div>
-                                                    {!isUserInSector(options[currentStep].sector_stage) && (
-                                                        <div className="notice-container">
-                                                            <Notice status="warning" isDismissible={false}>
-                                                                You can only view this step.
-                                                            </Notice>
-                                                        </div>
-                                                    )}
-                                                    {options[currentStep].fields.length > 0 ? (
-                                                        !submittedSteps[currentStep] ? (
-                                                            <form onSubmit={handleSubmit}>
-                                                                <div className="meta-field-wrapper">
+                                                {options[index].sector_stage && (
+                                                    <span className="badge info" title={`Grupo responsável: ${getSectorName(options[index].sector_stage)}`}>
+                                                        <Icon icon="groups" /> {getSectorName(options[index].sector_stage)}
+                                                    </span>
+                                                )}
+                                            </div>
+                                        </button>
+                                        {activeIndex === index && !isDisabled && (
+                                            <div className="accordion-content">
+                                                {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
+                                                    <>
+                                                        {/* Badge dinâmico de responsável */}
+                                                        {isCompleted && (
+                                                            <div className="badge-container mb-2">
+                                                                <span className="badge success">
+                                                                    Concluído por {lastUpdateStage(index).user}.
+                                                                </span>
+                                                            </div>
+                                                        )}
+    
+                                                        {!isUserAllowed && !isPublic && !isCompleted && (
+                                                            <div className="notice-container">
+                                                                <Notice status="warning" isDismissible={false}>
+                                                                    You can only view this step.
+                                                                </Notice>
+                                                            </div>
+                                                        )}
+                                                        {options[currentStep].fields.length > 0 ? (
+                                                            !submittedSteps[currentStep] ? (
+                                                                <form onSubmit={handleSubmit}>
+                                                                    <div className="meta-field-wrapper">
+                                                                        {Array.isArray(options[currentStep].fields) ? options[currentStep].fields.map((field, idx) => (
+                                                                            <MetaFieldInputs
+                                                                                key={`${orderedSteps[currentStep].id}-meta-${idx}`}
+                                                                                field={field}
+                                                                                fieldId={field.id}
+                                                                                initalValue={formValues[orderedSteps[currentStep].id]?.[field.id] || uploadedFiles[orderedSteps[currentStep].id]?.[field.id]?.[0]?.name}
+                                                                                isEditable={!submittedSteps[currentStep]}
+                                                                                noHasPermission={!isUserAllowed}
+                                                                                onFieldChange={handleFieldChange}
+                                                                                fileInfo={fileInfo}
+                                                                                handleDownload={handleDownload}
+                                                                                stepId={orderedSteps[currentStep].id}
+                                                                            />
+                                                                        )) : null}
+                                                                    </div>
+                                                                    {!submittedSteps[currentStep] && (
+                                                                        <div className="action-bar">
+                                                                            <Button 
+                                                                                variant="primary" 
+                                                                                type="submit"
+                                                                                disabled={!isSubmitEnabled || submittedSteps[currentStep] || !isUserAllowed}
+                                                                            >
+                                                                                Submit
+                                                                            </Button>
+                                                                        </div>
+                                                                    )}
+                                                                </form>
+                                                            ) : (
+                                                                <dl className="description-list">
                                                                     {Array.isArray(options[currentStep].fields) ? options[currentStep].fields.map((field, idx) => (
-                                                                        <MetaFieldInputs
+                                                                        <MetaFieldDisplay
                                                                             key={`${orderedSteps[currentStep].id}-meta-${idx}`}
                                                                             field={field}
-                                                                            fieldId={field.id}
-                                                                            initalValue={formValues[orderedSteps[currentStep].id]?.[field.id] || uploadedFiles[orderedSteps[currentStep].id]?.[field.id]?.[0]?.name}
-                                                                            isEditable={!submittedSteps[currentStep]}
-                                                                            noHasPermission={!isUserInSector(options[currentStep].sector_stage)}
-                                                                            onFieldChange={handleFieldChange}
-                                                                            fileInfo={fileInfo}
+                                                                            value={
+                                                                                formValues[orderedSteps[currentStep].id]?.[field.id] || uploadedFiles[orderedSteps[currentStep].id]?.[field.id]?.[0]?.name
+                                                                            }
                                                                             handleDownload={handleDownload}
-                                                                            stepId={orderedSteps[currentStep].id}
+                                                                            fieldId={field.id}
                                                                         />
                                                                     )) : null}
-                                                                </div>
-                                                                {!submittedSteps[currentStep] && (
-                                                                    <div className="action-bar">
-                                                                        <Button variant="primary" type="submit"
-                                                                            disabled={!isSubmitEnabled || submittedSteps[currentStep] || !isUserInSector(options[currentStep].sector_stage)}
-                                                                        >
-                                                                            Submit
-                                                                        </Button>
-                                                                    </div>
-                                                                )}
-                                                            </form>
+                                                                </dl>
+                                                            )
                                                         ) : (
-                                                            <dl className="description-list">
-                                                                {Array.isArray(options[currentStep].fields) ? options[currentStep].fields.map((field, idx) => (
-                                                                    <MetaFieldDisplay
-                                                                        key={`${orderedSteps[currentStep].id}-meta-${idx}`}
-                                                                        field={field}
-                                                                        value={
-                                                                            formValues[orderedSteps[currentStep].id]?.[field.id] || uploadedFiles[orderedSteps[currentStep].id]?.[field.id]?.[0]?.name
-                                                                        }
-                                                                        handleDownload={handleDownload}
-                                                                        fieldId={field.id}
-                                                                    />
-                                                                )) : null}
-                                                            </dl>
-                                                        )
-                                                    ) : (
-                                                        <div className="notice-container">
-                                                            <Notice status="warning" isDismissible={false}
-                                                            >
-                                                                No fields found for this Step.
-                                                            </Notice>
-                                                        </div>
-                                                    )}
-                                                </>
-                                            ) : (
-                                                <div className="notice-container">
-                                                    <Notice status="warning" isDismissible={false}>
-                                                        No steps found for this process.
-                                                    </Notice>
-                                                </div>
-                                            )}
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
+                                                            <div className="notice-container">
+                                                                <Notice status="warning" isDismissible={false}>
+                                                                    No fields found for this Step.
+                                                                </Notice>
+                                                            </div>
+                                                        )}
+                                                    </>
+                                                ) : (
+                                                    <div className="notice-container">
+                                                        <Notice status="warning" isDismissible={false}>
+                                                            No steps found for this process.
+                                                        </Notice>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        )}
+                                    </div>
+                                );
+                            })}
                         </div>
                         <aside>
                             <Panel>
