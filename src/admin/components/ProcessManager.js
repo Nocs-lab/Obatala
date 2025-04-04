@@ -4,6 +4,10 @@ import apiFetch from '@wordpress/api-fetch';
 import ProcessCreator from './ProcessManager/ProcessCreator';
 import { plus } from '@wordpress/icons';
 import ProcessList from './ProcessManager/ProcessList';
+import { fetchUserProcesses } from '../api/apiRequests';
+import { useSelect } from '@wordpress/data';
+import { store as coreStore } from '@wordpress/core-data';
+import BrandHeader from './BrandHeader';
 
 const ProcessManager = ({ onSelectProcess }) => {
     const [processTypes, setProcessTypes] = useState([]);
@@ -166,7 +170,7 @@ const ProcessManager = ({ onSelectProcess }) => {
     
     return (
         <>
-           <BrandHeader />
+            <BrandHeader />
             <main>
                 <div className="title-container">
                     <h2>Processes</h2>
@@ -182,59 +186,85 @@ const ProcessManager = ({ onSelectProcess }) => {
                     </ButtonGroup>
                 </div>
 
-            {notice && (
-                <div className="notice-container">
-                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                        {notice.message}
-                    </Notice>
+                {notice && (
+                    <div className="notice-container">
+                        <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                            {notice.message}
+                        </Notice>
+                    </div>
+                )}
+                <div className="panel-container">
+                    <TabPanel
+                        className="process-tabs"
+                        activeClass="active-tab"
+                        onSelect={(tabName) => setActiveTab(tabName)}
+                        initialTabName="all"
+                        tabs={[
+                            {
+                                name: 'all',
+                                title: 'All processes',
+                                className: activeTab === 'all' ? 'is-active' : ''
+                            },
+                            {
+                                name: 'my',
+                                title: 'My processes',
+                                className: activeTab === 'my' ? 'is-active' : ''
+                            },
+                        ]}
+                    >
+                        {({ tab }) => (
+                            <div>
+                                <ProcessList
+                                    processes={filteredProcess}
+                                    onEdit={handleEditProcess}
+                                    onViewProcess={handleSelectProcess}
+                                    processTypeMappings={processTypeMappings}
+                                    processTypes={processTypes}
+                                    accessLevel={accessLevel}
+                                    setAccessLevel={setAccessLevel}
+                                    modelFilter={modelFilter}
+                                    setModelFilter={setModelFilter}
+                                />
+                            </div>
+                        )}
+                    </TabPanel>
                 </div>
-            )}
+                {editingProcess && (
+                    <Modal
+                        title="Edit Process"
+                        onRequestClose={handleCancel}
+                        isDismissible={true}
+                    >
+                        <ProcessCreator
+                            processTypes={processTypes}
+                            onProcessSaved={handleProcessSaved}
+                            editingProcess={editingProcess}
+                            onCancel={handleCancel}
+                        />
+                    </Modal>
+                )}
+                {addingProcess && (
+                    <Modal
+                        title="Add new process"
+                        onRequestClose={handleCancel}
+                        isDismissible={true}
+                    >
+                        <ProcessCreator
+                            processTypes={processTypes}
+                            onProcessSaved={handleProcessSaved}
+                            onCancel={handleCancel}
+                        />
+                    </Modal>
+                )}
+                {selectedProcessId && (
+                    <div>
+                        {/* Render your ProcessViewer component or call onSelectProcess with selectedProcessId */}
+                        {onSelectProcess(selectedProcessId)}
+                    </div>
+                )}
 
-            <ProcessList
-                processes={filteredProcess}
-                onEdit={handleEditProcess}
-                onViewProcess={handleSelectProcess}
-                processTypeMappings={processTypeMappings}
-                processTypes={processTypes}
-                accessLevel={accessLevel}
-                setAccessLevel={setAccessLevel}
-                modelFilter={modelFilter}
-                setModelFilter={setModelFilter}
-            />
-            {editingProcess && (
-                <Modal
-                    title="Edit Process"
-                    onRequestClose={handleCancel}
-                    isDismissible={true}
-                >
-                    <ProcessCreator 
-                        processTypes={processTypes} 
-                        onProcessSaved={handleProcessSaved} 
-                        editingProcess={editingProcess}
-                        onCancel={handleCancel} 
-                    />
-                </Modal>
-            )}
-            {addingProcess && (
-                <Modal
-                    title="Add new process"
-                    onRequestClose={handleCancel}
-                    isDismissible={true}
-                >
-                    <ProcessCreator 
-                        processTypes={processTypes} 
-                        onProcessSaved={handleProcessSaved}
-                        onCancel={handleCancel}
-                    />
-                </Modal>
-            )}
-            {selectedProcessId && (
-                <div>
-                    {/* Render your ProcessViewer component or call onSelectProcess with selectedProcessId */}
-                    {onSelectProcess(selectedProcessId)}
-                </div>
-            )}
-        </main>
+            </main>
+        </>
     );
 };
 
