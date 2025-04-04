@@ -15,6 +15,7 @@ import SectorList from './SectorManager/SectorList';
 import Reducer, { initialState } from '../redux/reducer';
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
+import BrandHeader from './BrandHeader';
 
 const SectorManager = () => {
     const [sectors, setSectors] = useState([])
@@ -152,76 +153,78 @@ const SectorManager = () => {
     }
 
   return (
-      <main>
-          <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
-          <div className="title-container">
-              <h2>Groups</h2>
-              <span className="badge">{filteredSectors.length}</span>
-              <ButtonGroup>
-                  <Button variant="primary" 
-                        icon={<Icon icon={plus}/>}
-                        onClick={handleAdd}
-                        >Add new</Button>
-              </ButtonGroup>
-          </div>
-          {notice && (
-              <div className="notice-container">
-                  <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                      {notice.message}
-                  </Notice>
+      <>
+          <BrandHeader />
+          <main>
+              <div className="title-container">
+                  <h2>Groups</h2>
+                  <span className="badge">{filteredSectors.length}</span>
+                  <ButtonGroup>
+                      <Button variant="primary"
+                          icon={<Icon icon={plus} />}
+                          onClick={handleAdd}
+                      >Add new</Button>
+                  </ButtonGroup>
               </div>
-          )}
+              {notice && (
+                  <div className="notice-container">
+                      <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                          {notice.message}
+                      </Notice>
+                  </div>
+              )}
 
-          <ConfirmDialog
-              isOpen={state.isOpen}
-              onConfirm={() => {
-                  handleDelete(state.sector);
-                  dispatch({type: 'CLOSE_MODAL'})
-              }}
-              onCancel={ handleCancel }
-          >
-              Are you sure you want to delete group {state.sector?.name}?
-          </ConfirmDialog>
-
-          <SectorList sectors={filteredSectors}
-                onEdit={handleEdit}
-                onDelete={handleConfirmDelete}
-                status={status}
-                setStatus={setStatus}
-                group={group}
-                setGroup={setGroup}
-                loadSectorsUsers={loadSectorsUsers}
-          />
-
-          {/* Open modal to editing Sector */}
-          {editingSector && (
-              <Modal
-                  title="Edit Group"
-                  onRequestClose={handleCancel}
-                  isDismissible={true}
+              <ConfirmDialog
+                  isOpen={state.isOpen}
+                  onConfirm={() => {
+                      handleDelete(state.sector);
+                      dispatch({ type: 'CLOSE_MODAL' })
+                  }}
+                  onCancel={handleCancel}
               >
-                  <SectorCreator
-                      onSave={handleSectorSaved} 
-                      editingSector={editingSector}
-                      onCancel={handleCancel}
-                  />
-              </Modal>
-          )}
+                  Are you sure you want to delete group {state.sector?.name}?
+              </ConfirmDialog>
 
-          {/* Open modal to adding Sector */}
-          {addingSector && (
-              <Modal
-                  title="Add Group"
-                  onRequestClose={handleCancel}
-                  isDismissible={true}
-              >
-                  <SectorCreator
-                      onSave={handleSectorSaved} 
-                      onCancel={handleCancel}
-                  />
-              </Modal>
-          )}
-      </main>
+              <SectorList sectors={filteredSectors}
+                  onEdit={handleEdit}
+                  onDelete={handleConfirmDelete}
+                  status={status}
+                  setStatus={setStatus}
+                  group={group}
+                  setGroup={setGroup}
+                  loadSectorsUsers={loadSectorsUsers}
+              />
+
+              {/* Open modal to editing Sector */}
+              {editingSector && (
+                  <Modal
+                      title="Edit Group"
+                      onRequestClose={handleCancel}
+                      isDismissible={true}
+                  >
+                      <SectorCreator
+                          onSave={handleSectorSaved}
+                          editingSector={editingSector}
+                          onCancel={handleCancel}
+                      />
+                  </Modal>
+              )}
+
+              {/* Open modal to adding Sector */}
+              {addingSector && (
+                  <Modal
+                      title="Add Group"
+                      onRequestClose={handleCancel}
+                      isDismissible={true}
+                  >
+                      <SectorCreator
+                          onSave={handleSectorSaved}
+                          onCancel={handleCancel}
+                      />
+                  </Modal>
+              )}
+          </main>
+      </>
   );
 };
 

@@ -2,6 +2,7 @@ import React from 'react';
 import { Icon } from '@wordpress/components';
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
+import BrandHeader from '../BrandHeader';
 
 const ProcessHeader = ({ process, filteredProcessType, authorsById, calculatePercentagem }) => {
     const createAtProcess = () => {
@@ -13,9 +14,7 @@ const ProcessHeader = ({ process, filteredProcessType, authorsById, calculatePer
 
     return (
         <>
-            <span className="brand">
-                <strong>Obatala</strong> Curatorial Process Viewer
-            </span>
+            <BrandHeader />
             <div className="title-container">
                 <h2>
                     <small>
