@@ -12,6 +12,7 @@ import { DrawerProvider } from "./FlowEditor/context/DrawerContext";
 import { useSelect } from "@wordpress/data";
 import { store as coreStore } from '@wordpress/core-data';
 import { update } from "@wordpress/icons";
+import BrandHeader from "./BrandHeader";
 
 const processDataEditor = () => {
     const params = new URLSearchParams(window.location.search);
@@ -202,38 +203,37 @@ const processDataEditor = () => {
     }
   
     return (
-        <main>
-            <span className="brand">
-                <strong>Obatala</strong> Curatorial Process Management
-            </span>
-            
-            {notice && (
-                <div className="notice-container">
-                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                        {notice.message}
-                    </Notice>
-                </div>
-            )}
-            
-            <FlowProvider>
-                <div className="title-container">
-                    <h2><small>Manage steps</small>{processData.title.rendered}</h2>
-                    <ProcessControls
+        <>
+            <BrandHeader />
+            <main>
+                {notice && (
+                    <div className="notice-container">
+                        <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                            {notice.message}
+                        </Notice>
+                    </div>
+                )}
+
+                <FlowProvider>
+                    <div className="title-container">
+                        <h2><small>Manage steps</small>{processData.title.rendered}</h2>
+                        <ProcessControls
+                            onSave={handleSave}
+                            onCancel={handleCancelEditProcessType}
+                            toggleFullScreen={toggleFullScreen}
+                        />
+                    </div>
+
+                    <ProcessFlow
+                        ref={flowRef}
+                        initialData={flowData}
                         onSave={handleSave}
                         onCancel={handleCancelEditProcessType}
                         toggleFullScreen={toggleFullScreen}
                     />
-                </div>
-            
-                <ProcessFlow 
-                    ref={flowRef} 
-                    initialData={flowData}
-                    onSave={handleSave}
-                    onCancel={handleCancelEditProcessType}
-                    toggleFullScreen={toggleFullScreen}
-                />
-            </FlowProvider>
-        </main>
+                </FlowProvider>
+            </main>
+        </>
     );
 };
 
