@@ -108,6 +108,17 @@ const processDataEditor = () => {
         return; // Interrompe a execução caso existam nós isolados
       }
 
+       // verifica se todos os nós possuem tempSector definido
+       const nodesWithoutSector = flowData.nodes.filter(node => (!node.tempSector && !node.sector_obatala)   && node.type !== 'endNode' && node.type !== 'startNode');
+
+       if (nodesWithoutSector.length > 0) {
+           setNotice({
+               status: "error",
+               message: "All nodes must have a group assigned before saving.",
+           });
+           return; // Interrompe a execução caso existam nós sem setor
+       }
+
       const updatedData = {
         ...processData,
         meta: {
@@ -134,6 +145,7 @@ const processDataEditor = () => {
                 if (node.tempSector) {
                     try {
                         await updateNodeSector(node.id, node.tempSector);
+                     
                         //node.tempSector = null;
                     } catch (error) {
                         console.error(`Erro ao associar setor ao nó ${node.id}:`, error);

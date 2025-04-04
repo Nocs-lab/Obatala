@@ -1,28 +1,35 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Spinner, Button, Notice, Panel, PanelHeader, PanelRow, Icon, ButtonGroup, Tooltip, Modal} from '@wordpress/components';
+import { Spinner, Button, Notice, Icon, ButtonGroup, Modal, TabPanel} from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import ProcessCreator from './ProcessManager/ProcessCreator';
-import { edit, seen, plus } from '@wordpress/icons';
+import { plus } from '@wordpress/icons';
 import ProcessList from './ProcessManager/ProcessList';
-import BrandHeader from './BrandHeader';
 
 const ProcessManager = ({ onSelectProcess }) => {
     const [processTypes, setProcessTypes] = useState([]);
     const [processes, setProcesses] = useState([]);
     const [processTypeMappings, setProcessTypeMappings] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
-    const [processSteps, setProcessSteps] = useState([]);
+    const [processUser, setProcessUser] = useState([]);
     const [selectedProcessId, setSelectedProcessId] = useState(null);
     const [addingProcess, setAddingProcess] = useState(null);
     const [editingProcess, setEditingProcess] = useState(null);
     const [accessLevel, setAccessLevel] = useState(null);
     const [modelFilter, setModelFilter] = useState(null);
     const [notice, setNotice] = useState(null);
+    const [activeTab, setActiveTab] = useState('all'); 
+
+    const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
 
     useEffect(() => {
         fetchProcessModels();
-        fetchProcesses();
+        fetchProcesses();        
     }, []);
+    
+    useEffect(() => {
+        fetchProcessesUser();
+    }, [currentUser])
+    
 
     const fetchProcessModels = () => {
         apiFetch({ path: `/obatala/v1/process_type?per_page=100&_embed` })
@@ -35,6 +42,19 @@ const ProcessManager = ({ onSelectProcess }) => {
         .catch((error) => {
             console.error("Error fetching process types:", error);
         });
+    };
+
+    const fetchProcessesUser = () => {
+        setIsLoading(true);        
+        fetchUserProcesses(currentUser.id)
+            .then(data => {
+                setProcessUser(data);
+                setIsLoading(false);
+            })
+            .catch(error => {
+                console.error('Error fetching sectors:', error);
+                setIsLoading(false);
+            });
     };
 
     const fetchProcesses = async () => {
@@ -120,22 +140,30 @@ const ProcessManager = ({ onSelectProcess }) => {
         setAddingProcess(null);
     };
 
+    const filteredUserProcesses =useMemo(() => { 
+        return Array.isArray(processUser)
+        ?   processes.filter(process => processUser?.includes(process.id))
+        : []
+    }, [processUser,processes]);
+      
     const filteredProcess = useMemo(() => {
-        return processes.filter(process => {
-            const matchesAccessLevel = accessLevel
-                ? process?.meta?.access_level?.[0].includes(accessLevel)
-                : true; 
-            const matchesProcessType = modelFilter
-                ? process?.meta?.process_type?.[0].includes(modelFilter.toString())
-                : true;
+        const processList = activeTab === 'all' ? processes : filteredUserProcesses;  
+
+        return processList.filter(process => {
+            const matchesAccessLevel = !accessLevel || 
+                process?.meta?.access_level?.[0]?.includes(accessLevel);
+            
+            const matchesProcessType = !modelFilter || 
+                process?.meta?.process_type?.[0]?.includes(modelFilter.toString());
+            
             return matchesAccessLevel && matchesProcessType;
         });
-    }, [accessLevel, modelFilter, processes]);
+    }, [accessLevel, modelFilter, processes, filteredUserProcesses, activeTab]); 
     
     if (isLoading) {
         return <Spinner />;
     }
-
+    
     return (
         <>
            <BrandHeader />
@@ -154,60 +182,59 @@ const ProcessManager = ({ onSelectProcess }) => {
                     </ButtonGroup>
                 </div>
 
-                {notice && (
-                    <div className="notice-container">
-                        <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                            {notice.message}
-                        </Notice>
-                    </div>
-                )}
+            {notice && (
+                <div className="notice-container">
+                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                        {notice.message}
+                    </Notice>
+                </div>
+            )}
 
-                <ProcessList
-                    processes={filteredProcess}
-                    onEdit={handleEditProcess}
-                    onViewProcess={handleSelectProcess}
-                    processTypeMappings={processTypeMappings}
-                    processTypes={processTypes}
-                    accessLevel={accessLevel}
-                    setAccessLevel={setAccessLevel}
-                    modelFilter={modelFilter}
-                    setModelFilter={setModelFilter}
-                />
-                {editingProcess && (
-                    <Modal
-                        title="Edit Process"
-                        onRequestClose={handleCancel}
-                        isDismissible={true}
-                    >
-                        <ProcessCreator
-                            processTypes={processTypes}
-                            onProcessSaved={handleProcessSaved}
-                            editingProcess={editingProcess}
-                            onCancel={handleCancel}
-                        />
-                    </Modal>
-                )}
-                {addingProcess && (
-                    <Modal
-                        title="Add new process"
-                        onRequestClose={handleCancel}
-                        isDismissible={true}
-                    >
-                        <ProcessCreator
-                            processTypes={processTypes}
-                            onProcessSaved={handleProcessSaved}
-                            onCancel={handleCancel}
-                        />
-                    </Modal>
-                )}
-                {selectedProcessId && (
-                    <div>
-                        {/* Render your ProcessViewer component or call onSelectProcess with selectedProcessId */}
-                        {onSelectProcess(selectedProcessId)}
-                    </div>
-                )}
-            </main>
-        </>
+            <ProcessList
+                processes={filteredProcess}
+                onEdit={handleEditProcess}
+                onViewProcess={handleSelectProcess}
+                processTypeMappings={processTypeMappings}
+                processTypes={processTypes}
+                accessLevel={accessLevel}
+                setAccessLevel={setAccessLevel}
+                modelFilter={modelFilter}
+                setModelFilter={setModelFilter}
+            />
+            {editingProcess && (
+                <Modal
+                    title="Edit Process"
+                    onRequestClose={handleCancel}
+                    isDismissible={true}
+                >
+                    <ProcessCreator 
+                        processTypes={processTypes} 
+                        onProcessSaved={handleProcessSaved} 
+                        editingProcess={editingProcess}
+                        onCancel={handleCancel} 
+                    />
+                </Modal>
+            )}
+            {addingProcess && (
+                <Modal
+                    title="Add new process"
+                    onRequestClose={handleCancel}
+                    isDismissible={true}
+                >
+                    <ProcessCreator 
+                        processTypes={processTypes} 
+                        onProcessSaved={handleProcessSaved}
+                        onCancel={handleCancel}
+                    />
+                </Modal>
+            )}
+            {selectedProcessId && (
+                <div>
+                    {/* Render your ProcessViewer component or call onSelectProcess with selectedProcessId */}
+                    {onSelectProcess(selectedProcessId)}
+                </div>
+            )}
+        </main>
     );
 };
 
