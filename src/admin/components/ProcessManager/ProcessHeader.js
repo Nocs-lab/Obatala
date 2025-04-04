@@ -14,7 +14,7 @@ const ProcessHeader = ({ process, filteredProcessType, authorsById, calculatePer
 
     return (
         <>
-            <BrandHeader title="Process Header" />
+            <BrandHeader />
             <div className="title-container">
                 <h2>
                     <small>

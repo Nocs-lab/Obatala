@@ -186,7 +186,7 @@ const processDataEditor = () => {
   
     return (
         <>
-            <header><BrandHeader title="Process Model Editor" /></header>
+            <BrandHeader />
             <main>
                 {notice && (
                     <div className="notice-container">

@@ -128,7 +128,7 @@ const ProcessTypeManager = () => {
 
     return (
         <>
-            <header><BrandHeader title="Process Type Manager" /></header>
+            <BrandHeader />
             <main>
                 <div className="title-container">
                     <h2>Models</h2>

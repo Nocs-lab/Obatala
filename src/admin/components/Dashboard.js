@@ -156,7 +156,7 @@ const DashboardPage = () => {
 
     return (
         <>
-            <header><BrandHeader title="Dashboard" /></header>
+           <BrandHeader />
             <main>
                 <div className="title-container">
                     <h2>Dashboard</h2>

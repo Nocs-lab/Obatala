@@ -154,7 +154,7 @@ const SectorManager = () => {
 
   return (
       <>
-          <header><BrandHeader title="Sector Manager" /></header>
+          <BrandHeader />
           <main>
               <div className="title-container">
                   <h2>Groups</h2>
