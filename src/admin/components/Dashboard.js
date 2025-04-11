@@ -157,9 +157,46 @@ const DashboardPage = () => {
         return model ? model.title.rendered : 'Desconhecido';
     }; 
 
+    // Função para contar processos concluídos
+    const countCompletedProcesses = useMemo(() => {
+        return processes.filter(process => {
+            if (!process.meta?.submittedStages || !process.meta?.flowData?.nodes) {
+                return false;
+            }
+
+            // Parse das etapas submetidas (serializado PHP)
+            const submittedStagesStr = process.meta.submittedStages[0];
+            let submittedStages = {};
+            
+            try {
+                if (submittedStagesStr) {
+                    // Transforma o serializado PHP em objeto JS
+                    const regex = /s:\d+:"([^"]+)";b:(\d);/g;
+                    let match;
+                    while ((match = regex.exec(submittedStagesStr)) !== null) {
+                        submittedStages[match[1]] = match[2] === '1';
+                    }
+                }
+            } catch (e) {
+                console.error('Error parsing submittedStages:', e);
+                return false;
+            }
+
+            // Filtra nodes válidos (ignora Start, End e Condicionais)
+            const validNodes = process.meta.flowData.nodes.filter(node => 
+                !['Start', 'End'].includes(node.id) && 
+                !node.id.startsWith('Condicional')
+            );
+
+            // Verifica se todas etapas válidas foram concluídas
+            return validNodes.every(node => submittedStages[node.id] === true);
+        }).length;
+    }, [processes]);
+
     if (isLoading) {
         return <Spinner />;
     }
+
     return (
         <>
             <BrandHeader />
@@ -185,7 +222,12 @@ const DashboardPage = () => {
                         <span className="indicator">{sectors.length}</span>
                         <span className="description">Groups</span>
                     </a>
+                    <div className="card-item">
+                        <span className="indicator">{countCompletedProcesses}</span>
+                        <span className="description">Completed Processes</span>
+                    </div>
                 </div>
+
                 <div className="panel-container mt-2">
                     <Panel>
                         <PanelHeader>My groups</PanelHeader>
