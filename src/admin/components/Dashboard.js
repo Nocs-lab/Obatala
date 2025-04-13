@@ -223,7 +223,7 @@ const DashboardPage = () => {
                         <span className="description">Groups</span>
                     </a>
                     <div className="card-item">
-                        <span className="indicator">{countCompletedProcesses}</span>
+                        <span className="indicator">{countCompletedProcesses}/{processes.length}</span>
                         <span className="description">Completed Processes</span>
                     </div>
                 </div>
