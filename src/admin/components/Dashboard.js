@@ -160,36 +160,14 @@ const DashboardPage = () => {
     // Função para contar processos concluídos
     const countCompletedProcesses = useMemo(() => {
         return processes.filter(process => {
-            if (!process.meta?.submittedStages || !process.meta?.flowData?.nodes) {
-                return false;
-            }
-
-            // Parse das etapas submetidas (serializado PHP)
-            const submittedStagesStr = process.meta.submittedStages[0];
-            let submittedStages = {};
+            const nodes = process.meta?.flowData?.nodes.filter(node => node.id !== "End") || [];
+            const [currentStage] = process.meta?.current_stage;
             
-            try {
-                if (submittedStagesStr) {
-                    // Transforma o serializado PHP em objeto JS
-                    const regex = /s:\d+:"([^"]+)";b:(\d);/g;
-                    let match;
-                    while ((match = regex.exec(submittedStagesStr)) !== null) {
-                        submittedStages[match[1]] = match[2] === '1';
-                    }
-                }
-            } catch (e) {
-                console.error('Error parsing submittedStages:', e);
-                return false;
-            }
+            // Pega o último nó (antes do End)
+            const lastNode = nodes[nodes.length - 1].data.stageName;
 
-            // Filtra nodes válidos (ignora Start, End e Condicionais)
-            const validNodes = process.meta.flowData.nodes.filter(node => 
-                !['Start', 'End'].includes(node.id) && 
-                !node.id.startsWith('Condicional')
-            );
-
-            // Verifica se todas etapas válidas foram concluídas
-            return validNodes.every(node => submittedStages[node.id] === true);
+            // Verifica se o último nó é o mesmo que a etapa atual e se está concluído
+            return lastNode && lastNode === currentStage;
         }).length;
     }, [processes]);
 
