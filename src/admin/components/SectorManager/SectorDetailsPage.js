@@ -1,7 +1,7 @@
 // SectorDetailsPage.js
 import React, { useEffect, useState } from 'react';
 import apiFetch from "@wordpress/api-fetch";
-import { Notice, Spinner } from '@wordpress/components';
+import { Notice, Panel, PanelHeader, PanelRow, Spinner } from '@wordpress/components';
 
 const SectorDetailsPage = () => {
     const [sector, setSector] = useState(null);
@@ -63,59 +63,31 @@ const SectorDetailsPage = () => {
     if (!sector) return <Notice status="warning" isDismissible={false}>Sector not found</Notice>;
 
     return (
-        <div className="title-container">
-            <div>
-                <h2 style={{ marginTop: 0, marginBottom: 20 }}>Group Details</h2>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '15px' }}>
-                    <div>
-                        <strong>Name:</strong>
-                        <p>{sector.nome}</p>
-                    </div>
-                    <div>
-                        <strong>Description:</strong>
-                        <p>{sector.descricao || 'N/A'}</p>
-                    </div>
-                    <div>
-                        <strong>Status:</strong>
-                        <p>
-                            <span style={{
-                                display: 'inline-block',
-                                padding: '3px 10px',
-                                borderRadius: '3px',
-                                backgroundColor: sector.status === 'Active' ? '#d1f3e0' : '#f8d7da',
-                                color: sector.status === 'Active' ? '#1e9246' : '#dc3545',
-                                fontWeight: '500'
-                            }}>
-                                {sector.status}
-                            </span>
-                        </p>
-                    </div>
-                </div>
+        <main>
+            <div className="title-container">
+                <h2>
+                    <small>Group</small>
+                    {sector.nome}
+                </h2>
             </div>
+            <div className="badge-container">
+                <span className={`badge ${sector.status === 'Active' ? 'success' : 'danger'}`}>
+                    {sector.status}
+                </span>
+            </div>
+            <Panel>
+                <PanelHeader>Description</PanelHeader>
+                <PanelRow>
+                    <p>{sector.descricao || 'N/A'}</p>
+                </PanelRow>
+            </Panel>
             
-            <div className='title-container-table' style={{ 
-                backgroundColor: '#fff', 
-                padding: '20px', 
-                borderRadius: '4px', 
-                boxShadow: '0 1px 3px rgba(0,0,0,0.1)'
-            }}>
-                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '15px' }}>
-                    <h3 style={{ margin: 0 }}>Associated Users</h3>
-                    <span style={{
-                        marginLeft: '10px',
-                        backgroundColor: '#e9ecef',
-                        padding: '2px 10px',
-                        borderRadius: '10px',
-                        fontSize: '14px'
-                    }}>
-                        {sector.users?.length || 0}
-                    </span>
-                </div>
-                
-                {sector.users ? (
-                    sector.users.length > 0 ? (
-                        <div style={{ overflowX: 'auto' }}>
-                            <table className="wp-list-table widefat fixed striped" style={{ width: '100%' }}>
+            <Panel>
+                <PanelHeader>Associated users <span className="badge">{sector.users?.length || 0}</span></PanelHeader>
+                <PanelRow>
+                    {sector.users ? (
+                        sector.users.length > 0 ? (
+                            <table className="wp-list-table widefat fixed striped">
                                 <thead>
                                     <tr>
                                         <th>Name</th>
@@ -133,17 +105,17 @@ const SectorDetailsPage = () => {
                                     ))}
                                 </tbody>
                             </table>
-                        </div>
+                        ) : (
+                            <Notice isDismissible={false} status="warning">
+                                No users in this group.
+                            </Notice>
+                        )
                     ) : (
-                        <Notice isDismissible={false} status="warning">
-                            No users in this group.
-                        </Notice>
-                    )
-                ) : (
-                    <Spinner />
-                )}
-            </div>
-        </div>
+                        <Spinner />
+                    )}
+                </PanelRow>
+            </Panel>
+        </main>
     );
 };
 

@@ -63,36 +63,36 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
         },
         },
         {
-        Header: 'Actions',
-        accessor: 'id',
-        Cell: ({ row }) => (
-            <ButtonGroup>
-                <Tooltip text="Manage users">
-                    <Button
-                        icon={people}
-                        onClick={() => handleManagerUsers(row.original)}
-                    >Manage users</Button>
-                </Tooltip>
-                <Tooltip text="View details">
+            Header: 'Actions',
+            accessor: 'id',
+            Cell: ({ row }) => (
+                <ButtonGroup>
+                    <Tooltip text="View details">
+                            <Button
+                                icon={info}
+                                onClick={() => handleViewSector(row.original)}
+                            />
+                        </Tooltip>
+                    <Tooltip text="Edit">
                         <Button
-                            icon={info}
-                            onClick={() => handleViewSector(row.original)}
+                            icon={edit}
+                            onClick={() => onEdit(row.original)}
                         />
                     </Tooltip>
-                <Tooltip text="Edit">
-                    <Button
-                        icon={edit}
-                        onClick={() => onEdit(row.original)}
-                    />
-                </Tooltip>
-                <Tooltip text="Delete">
-                    <Button
-                        icon={trash}
-                        onClick={() => onDelete(row.original)}
-                    />
-                </Tooltip>
-            </ButtonGroup>
-        ),
+                    <Tooltip text="Manage users">
+                        <Button
+                            icon={people}
+                            onClick={() => handleManagerUsers(row.original)}
+                        >Manage users</Button>
+                    </Tooltip>
+                    <Tooltip text="Delete">
+                        <Button
+                            icon={trash}
+                            onClick={() => onDelete(row.original)}
+                        />
+                    </Tooltip>
+                </ButtonGroup>
+            ),
         },
     ], [addingUsers]);
 
