@@ -49,6 +49,7 @@ def pathPlugin():
 def newPlugin(page):
     try:
         page.goto(page_upload)
+        page.wait_for_load_state(networkidle)
         page.click('xpath=//*[@id="wpbody-content"]/div[3]/a/span[1]')
         with page.expect_file_chooser() as fc:
             page.click('xpath=//*[@id="pluginzip"]', timeout=5000)
