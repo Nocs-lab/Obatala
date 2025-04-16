@@ -160,14 +160,12 @@ const DashboardPage = () => {
     // Função para contar processos concluídos
     const countCompletedProcesses = useMemo(() => {
         return processes.filter(process => {
-            const nodes = process.meta?.flowData?.nodes.filter(node => node.id !== "End") || [];
-            const [currentStage] = process.meta?.current_stage;
+            const nodes = process.meta?.flowData?.nodes?.filter(node => node.id !== "End") ?? [];
+            const [currentStage] = process.meta?.current_stage || [];
+            if (nodes.length === 0 || !currentStage) return false;
             
-            // Pega o último nó (antes do End)
-            const lastNode = nodes[nodes.length - 1].data.stageName;
-
-            // Verifica se o último nó é o mesmo que a etapa atual e se está concluído
-            return lastNode && lastNode === currentStage;
+            const lastNode = nodes[nodes.length - 1];
+            return lastNode?.data?.stageName === currentStage;
         }).length;
     }, [processes]);
 
