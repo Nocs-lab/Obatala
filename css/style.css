@@ -539,8 +539,10 @@ form .action-bar {
   display: flex;
   align-items: center;
   flex-grow: 1;
-  gap: var(--gap);
-  padding: 1rem var(--gap);
+  flex-wrap: wrap;
+  gap: .5rem var(--gap);
+  justify-content: space-between;
+  padding: 1.25rem var(--gap);
 }
 .card-container a.card-item {
   background-color: var(--primary-400);
@@ -556,9 +558,18 @@ form .action-bar {
 .card-container .indicator {
   font-size: 3rem;
   font-weight: 600;
+  line-height: 1em;
+}
+.card-container .indicator small {
+  color: var(--gray-500);
+  font-size: 1rem;
+  font-weight: 300;
 }
 .card-container .user-photo {
   border-radius: 50%;
+}
+.card-container progress {
+  flex-basis: 100%;
 }
 .description-list {
   display: flex;
@@ -610,7 +621,7 @@ ol.list-group .list-group-item::before {
 .panel-container {
   display: flex;
   flex-wrap: wrap;
-  gap: var(--gap-external);
+  gap: var(--gap);
   margin-left: var(--gap-external);
   margin-right: var(--gap-external);
 }
@@ -639,7 +650,6 @@ ol.list-group .list-group-item::before {
   font-family: 'Dashicons';
   font-size: 1.2rem;
 }
-
 .components-notice {
   margin-bottom: 2rem;
   padding-top: 0;
@@ -758,6 +768,24 @@ main > .components-notice {
 }
 .status.warning {
   background-color: var(--warning);
+}
+progress {
+  height: 10px;
+  appearance: none;
+  -webkit-appearance: none;
+}
+progress::-webkit-progress-bar {
+  background-color: var(--gray-100);
+  border-radius: var(--border-radius);
+}
+progress::-webkit-progress-value {
+  background-color: var(--success);
+  border-radius: var(--border-radius);
+  transition: width 0.3s ease;
+}
+progress::-moz-progress-bar {
+  background-color: var(--success);
+  border-radius: var(--border-radius);
 }
 
 /* Extra */
