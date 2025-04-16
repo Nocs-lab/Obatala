@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import apiFetch from "@wordpress/api-fetch";
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
 import { Button, ButtonGroup, Tooltip, Panel, PanelHeader, PanelRow, Notice, Modal, TextControl } from '@wordpress/components';
-import { edit, trash, people } from '@wordpress/icons';
+import { edit, trash, people, info } from '@wordpress/icons';
 import UsersManager from './UserManager/UserManager';
 import SectorFilter from './SectorFilters';
 
@@ -14,6 +14,10 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
         setAddingUsers(sector);
     };
 
+    const handleViewSector = (sector) => {
+        window.location.href = `?page=sector-details&sector_id=${sector.id}`;
+        console.log(sector);
+    };
     const handleCancel = () => {
         setAddingUsers(null);
     };
@@ -69,6 +73,12 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
                         onClick={() => handleManagerUsers(row.original)}
                     >Manage users</Button>
                 </Tooltip>
+                <Tooltip text="View details">
+                        <Button
+                            icon={info}
+                            onClick={() => handleViewSector(row.original)}
+                        />
+                    </Tooltip>
                 <Tooltip text="Edit">
                     <Button
                         icon={edit}

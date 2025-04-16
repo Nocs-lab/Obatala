@@ -67,6 +67,15 @@ class AdminMenu {
                 'slug' => 'process-viewer',
                 'callback' => 'render_page',
                 'show_in_menu' => true
+            ],
+            [
+                'parent_slug' => 'obatala-main',
+                'title' => 'Group Details',
+                'menu_title' => 'Group Details',
+                'capability' => 'manage_options',
+                'slug' => 'sector-details',
+                'callback' => 'render_page',
+                'show_in_menu' => true
             ] 
         ]
     ];
@@ -164,6 +173,11 @@ document.addEventListener('DOMContentLoaded', function() {
         '#toplevel_page_obatala-main .wp-submenu li a[href*="process-viewer"]');
     const processTypeEditorItem = document.querySelector(
         '#toplevel_page_obatala-main .wp-submenu li a[href*="process-type-editor"]');
+    const processSector_details = document.querySelector(
+        '#toplevel_page_obatala-main .wp-submenu li a[href*="sector-details"]');
+    if (processSector_details) {
+        processSector_details.parentElement.style.display = 'none'; // Esconde o item "Group Details"
+    }
 
     if (processViewerItem) {
         processViewerItem.parentElement.style.display = 'none'; // Esconde o item "Process Viewer"
@@ -185,6 +199,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 processTypeEditorItem.parentElement.style.display =
                     'block'; // Exibe o item "Process Type Editor"
             }
+            if (processSector_details) {
+                processSector_details.parentElement.style.display =
+                    'block'; // Exibe o item "Group Details"
+            }
         });
     }
 });
@@ -192,7 +210,8 @@ document.addEventListener('DOMContentLoaded', function() {
 <style>
 /* Esconde os itens "Process Viewer" e "Process Type Editor" por padrão */
 #toplevel_page_obatala-main .wp-submenu li a[href*="process-viewer"],
-#toplevel_page_obatala-main .wp-submenu li a[href*="process-type-editor"] {
+#toplevel_page_obatala-main .wp-submenu li a[href*="process-type-editor"],
+#toplevel_page_obatala-main .wp-submenu li a[href*="sector-details"] {
     display: none;
 }
 </style>
