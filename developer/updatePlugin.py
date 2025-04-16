@@ -49,20 +49,22 @@ def pathPlugin():
 def newPlugin(page):
     try:
         page.goto(page_upload)
-        page.click('xpath=//*[@id="wpbody-content"]/div[3]/a/span[1]')
+        page.wait_for_load_state("networkidle")
+        page.click('xpath=//*[@id="wpbody-content"]/div[3]/a/span[1]') # Clica no botão de upload Plugin
         with page.expect_file_chooser() as fc:
-            page.click('xpath=//*[@id="pluginzip"]', timeout=5000)
+            page.click('xpath=//*[@id="pluginzip"]', timeout=5000) # Clica no botão de Escolher Arquivo
             file_chooser = fc.value
             file_chooser.set_files("./developer/obatala.zip") # Path do plugin utilizado
         page.click('xpath=//*[@id="install-plugin-submit"]')
         page.wait_for_load_state("networkidle")
         if page.is_visible('text=This plugin is already installed.'):
             print("Tela de plugin existente detectada")
-            page.click('xpath=//*[@id="wpbody-content"]/div[2]/p[6]/a[1]')
+            page.click('text=Replace current with uploaded')
+            page.click('text=Activate Plugin')
         else:
-            page.click('xpath=/html/body/div[1]/div[2]/div[2]/div[1]/div[2]/p[4]/a[1]')
+            page.click('text=Activate Plugin')
         page.wait_for_load_state("networkidle")
-        if page.is_visible('text=Plugin activated.') or page.is_visible('text=Plugin updated successfully.'):
+        if page.is_visible('text=Plugin activated.'):
             print("Adição do novo plugin: Sucesso")
     except Exception as e:
         print(f"Erro ao adicionar/ativar novo plugin: {e}")
@@ -77,8 +79,3 @@ with sync_playwright() as p:
     deactivePlugin(page)
     if not new_plugin_executado:
         newPlugin(page)  # Só será chamado se não tiver sido executada.
-
-    
-
-
-  
