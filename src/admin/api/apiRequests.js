@@ -53,6 +53,10 @@ export const fetchProcessById = (id) => {
     return apiFetch({path: `/obatala/v1/process_obatala/${id}`})
 }
 
+export const fetchUserProcesses = (currentUserId) => {
+    return apiFetch({ path: `/obatala/v1/process_obatala/users?user_id=${currentUserId}` })
+}
+
 export const fetchSectors = () => {
     return apiFetch({ path: `/obatala/v1/all_sector_obatala` });   
 }; 

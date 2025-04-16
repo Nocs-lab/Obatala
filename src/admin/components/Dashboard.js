@@ -4,14 +4,15 @@ import {
     Notice,
     Panel,
     PanelRow,
-    PanelHeader
+    PanelHeader,
+    Spinner
 } from '@wordpress/components';
 import { people,  starFilled } from "@wordpress/icons";
 import { fetchProcessModels, fetchSectors, fetchSectorsUsers, } from '../api/apiRequests';
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 import apiFetch from '@wordpress/api-fetch';
-
+import BrandHeader from './BrandHeader';
 
 const DashboardPage = () => {
     const [processTypes, setProcessTypes] = useState([]);
@@ -20,6 +21,7 @@ const DashboardPage = () => {
     const [sectorsUsers, setSectorsUsers] = useState([])
     const [topModels, setTopModels] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+
     
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
     
@@ -102,7 +104,8 @@ const DashboardPage = () => {
     const sectorsUserLogged = useMemo(() => {
         return sectorsUsers.filter(sector => {
             const matchesUser = currentUser?.id
-                ? sector?.users?.some(user => user.ID === currentUser?.id)
+                ? sector?.users?.some(user => user.ID === currentUser?.id) &&
+                    sector?.sector_status === 'Active'
                 : true;
             return matchesUser;
         });
@@ -154,85 +157,113 @@ const DashboardPage = () => {
         return model ? model.title.rendered : 'Desconhecido';
     }; 
 
-    return (
-        <main>
-            <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
-            <div className="title-container">
-                <h2>Dashboard</h2>
-            </div>
+    // Função para contar processos concluídos
+    const countCompletedProcesses = useMemo(() => {
+        return processes.filter(process => {
+            const nodes = process.meta?.flowData?.nodes?.filter(node => node.id !== "End") ?? [];
+            const [currentStage] = process.meta?.current_stage || [];
+            if (nodes.length === 0 || !currentStage) return false;
+            
+            const lastNode = nodes[nodes.length - 1];
+            return lastNode?.data?.stageName === currentStage;
+        }).length;
+    }, [processes]);
 
-            <div className="card-container">
-                <div className="card-item">
-                    <img src="https://placehold.co/40" className="user-photo" alt="Foto de NOME" />
-                    <span className="description">Olá, <strong>NOME</strong>!</span>
+    // Porcentagem de processos concluídos
+    const completedProcessesPercentage = useMemo(() => {
+        return processes.length ? Math.round((countCompletedProcesses / processes.length) * 100) : 0;
+    }, [countCompletedProcesses, processes.length]);
+
+    if (isLoading) {
+        return <Spinner />;
+    }
+
+    return (
+        <>
+            <BrandHeader />
+            <main>
+                <div className="title-container">
+                    <h2>Dashboard</h2>
                 </div>
-                <a href="/wp-admin/admin.php?page=process-manager" className="card-item">
-                    <span className="indicator">{processes.length}</span>
-                    <span className="description">Processes</span>
-                </a>
-                <a href="/wp-admin/admin.php?page=process-type-manager" className="card-item">
-                    <span className="indicator">{processTypes.length}</span>
-                    <span className="description">Models</span>
-                </a>
-                <a href="/wp-admin/admin.php?page=sector_manager" className="card-item">
-                    <span className="indicator">{sectors.length}</span>
-                    <span className="description">Groups</span>
-                </a>
-            </div>
-            <div className="panel-container mt-2">
-                <Panel>
-                    <PanelHeader>My groups</PanelHeader>
-                    <PanelRow>
-                        {matchesSectors.length > 0 ? (
-                            <table className="wp-list-table widefat fixed striped table-view-list">
-                                <thead>
-                                    <tr>
-                                        <th>Group</th>
-                                        <th>Description</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {matchesSectors.map((sector) => (
-                                        <tr key={sector.id}>
-                                            <td>{sector.name}</td>
-                                            <td>{sector.description}</td>
+
+                <div className="card-container">
+                    <div className="card-item">
+                        <img src={currentUser.avatar_urls?.[96]} className="user-photo" alt={`Foto de ${currentUser?.name}`} />
+                        <span className="description">Olá, <strong>{currentUser.name}</strong>!</span>
+                    </div>
+                    <a href="/wp-admin/admin.php?page=process-manager" className="card-item">
+                        <span className="indicator">{processes.length}</span>
+                        <span className="description">Processes</span>
+                    </a>
+                    <a href="/wp-admin/admin.php?page=process-type-manager" className="card-item">
+                        <span className="indicator">{processTypes.length}</span>
+                        <span className="description">Models</span>
+                    </a>
+                    <a href="/wp-admin/admin.php?page=sector_manager" className="card-item">
+                        <span className="indicator">{sectors.length}</span>
+                        <span className="description">Groups</span>
+                    </a>
+                    <div className="card-item">
+                        <span className="indicator">{countCompletedProcesses}/{processes.length} <small>({completedProcessesPercentage}%)</small></span>
+                        <span className="description">Completed processes</span>
+                        <progress value={completedProcessesPercentage} max="100">{completedProcessesPercentage}%</progress>
+                    </div>
+                </div>
+
+                <div className="panel-container mt-2">
+                    <Panel>
+                        <PanelHeader>My groups</PanelHeader>
+                        <PanelRow>
+                            {matchesSectors.length > 0 ? (
+                                <table className="wp-list-table widefat fixed striped table-view-list">
+                                    <thead>
+                                        <tr>
+                                            <th>Group</th>
+                                            <th>Description</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {matchesSectors.map((sector) => (
+                                            <tr key={sector.id}>
+                                                <td>{sector.name}</td>
+                                                <td>{sector.description}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
                             ) : (
                                 <Notice isDismissible={false} status="warning">Sem resultados.</Notice>
-                            )
-                        }
-                    </PanelRow>
-                </Panel>
-                <Panel>
-                    <PanelHeader>Top 5 most used models</PanelHeader>
-                    <PanelRow>
-                    {topModels.length > 0 ? (
-                        <table className="wp-list-table widefat fixed striped table-view-list" >
-                            <thead>
-                                <tr>
-                                <th>Nome</th>
-                                <th>Quantidade</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {topModels.map((sector) => (
-                                    <tr key={sector.modelId}>
-                                        <td>{sector.modelName}</td>
-                                        <td>{sector.count}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                        ) : (
-                            <Notice isDismissible={false} status="warning">Sem resultados.</Notice>
-                        )}
-                    </PanelRow>
-                </Panel>
-            </div>
-        </main>
+                            )}
+                        </PanelRow>
+                    </Panel>
+                    <Panel>
+                        <PanelHeader>Top 5 most used models</PanelHeader>
+                        <PanelRow>
+                            {topModels.length > 0 ? (
+                                <table className="wp-list-table widefat fixed striped table-view-list" >
+                                    <thead>
+                                        <tr>
+                                            <th>Nome</th>
+                                            <th>Quantidade</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {topModels.map((sector) => (
+                                            <tr key={sector.modelId}>
+                                                <td>{sector.modelName}</td>
+                                                <td>{sector.count}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            ) : (
+                                <Notice isDismissible={false} status="warning">Sem resultados.</Notice>
+                            )}
+                        </PanelRow>
+                    </Panel>
+                </div>
+            </main>
+        </>
     );
 };
 

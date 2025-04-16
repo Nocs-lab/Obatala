@@ -69,6 +69,12 @@ class ProcessApi extends ObatalaAPI {
         ]);
 
         // Rota para obter todos os comentários associados a um processo
+        $this->add_route('process_obatala/users', [
+            'methods' => 'GET',
+            'callback' => [$this, 'get_user_processes'],
+            'permission_callback' => '__return_true',
+        ]);
+
         $this->add_route('process_obatala/(?P<id>\d+)/comments', [
             'methods' => 'GET',
             'callback' => [$this, 'get_comments'],
@@ -141,7 +147,33 @@ class ProcessApi extends ObatalaAPI {
         return true;
     }
     
+    public function get_user_processes($request) {
+        $user_id = (int) $request->get_param('user_id'); 
+        $processes = get_posts([
+            'post_type'   => 'process_obatala', 
+            'numberposts' => -1,
+        ]);
+    
+        $user_processes = [];
+    
+        foreach ($processes as $process) {
+            $process_id = (int) $process->ID;
+    
 
+            $permission = Sector::check_permission($user_id, $process_id);
+    
+            if ($permission['status']) {
+                $user_processes[] = $process_id;
+            }
+        }
+    
+        if (empty($user_processes)) {
+            return new WP_REST_Response(['message' => 'No processes found.'], 200);
+        }
+    
+        return new WP_REST_Response($user_processes, 200);
+    }
+    
     public function add_comment($request) {
         $post_id = (int) $request['id'];
         $user_id = (int) $request->get_param('user_id'); // ID do usuário autenticado

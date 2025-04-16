@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
+import { ptBR } from "date-fns/locale/pt-BR";
+import { formatDistanceToNow } from "date-fns";
 import { addComment, deleteComment, fetchProcessComments, updateComment } from "../../api/apiRequests";
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
-import { TextControl, Button, Notice, PanelBody, PanelRow, DropdownMenu } from "@wordpress/components";
+import { TextControl, Button, Icon, Notice, PanelBody, PanelRow, DropdownMenu } from "@wordpress/components";
 import {
-    menu,
+    moreHorizontalMobile,
     edit,
     trash,
+    commentContent,
 } from '@wordpress/icons';
 
 const CommentForm = ({ processId }) => {
@@ -29,7 +32,6 @@ const CommentForm = ({ processId }) => {
 
         fetchProcessComments(processId,currentUser.id)
         .then(data => {
-            console.log(data);
             setComments(data);
         })
         .catch((error) => {
@@ -115,53 +117,56 @@ const CommentForm = ({ processId }) => {
     return (
         <>
             {comments.length > 0 && (
-                <PanelBody title="Comments">
                     <PanelRow>
-                        <div className="chat-messages">
-                            {comments.map((comment) => (
-                                <div key={comment.comment_ID} className={`chat-message ${comment.comment_author ? 'received' : 'sent'}`}>
-                                    {editingComment === comment.comment_ID ? (
-                                        <>
-                                            <TextControl value={editContent} onChange={(value) => setEditContent(value)} />
-                                            <div className="chat-content-buttons">
-                                                <Button variant="secondary" onClick={() => setEditingComment(null)}>Cancel</Button>
-                                                <Button variant="primary" onClick={() => handleEditComment(comment.comment_ID)}>Save</Button>
-                                            </div>
-                                        </>
-                                    ) : (
-                                        <div className="message">
-                                            <span className="message-author">{comment.comment_author || 'Anonymous'}:</span>
-                                            <span className="message-date">{new Date(comment.comment_date).toLocaleString()}</span>
-                                            <DropdownMenu
-                                                icon={ menu }
-                                                className="message-action"
-                                                label="Select an action"
-                                                controls={[
-                                                    {
-                                                        title: 'Delete',
-                                                        icon: trash,
-                                                        onClick: () => handleDeleteComment(comment.comment_ID),
-                                                        isDisabled:currentUser.id !== comment.user_id
-                                                    },
-                                                    {
-                                                        title: 'Edit',
-                                                        icon: edit,
-                                                        onClick: () => {
-                                                            setEditingComment(comment.comment_ID);
-                                                            setEditContent(comment.comment_content);
-                                                        },
-                                                        isDisabled:currentUser.id !== comment.user_id
-                                                    },
-                                                ]}
-                                            />
-                                            <p class="message-text">{comment.comment_content}</p>
-                                        </div>
-                                    )}
-                                </div>
-                            ))}
+                        <div class="timeline-container">
+                            <ul className="timeline">
+                                {comments.map((comment) => (
+                                    <li key={comment.comment_ID} className="timeline-item">
+                                        <div className={`timeline-badge ${comment.comment_author ? '' : 'primary'}`}><Icon icon={commentContent} /></div>
+                                        {editingComment === comment.comment_ID ? (
+                                            <>
+                                                <TextControl value={editContent} onChange={(value) => setEditContent(value)} />
+                                                <div className="timeline-content-buttons">
+                                                    <Button variant="secondary" onClick={() => setEditingComment(null)}>Cancel</Button>
+                                                    <Button variant="primary" onClick={() => handleEditComment(comment.comment_ID)}>Save</Button>
+                                                </div>
+                                            </>
+                                        ) : (
+                                            <>
+                                                <p className="timeline-title"><strong>{comment.comment_author || 'Anonymous'}</strong> commented <time>{formatDistanceToNow(new Date(comment.comment_date), { addSuffix: true, locale: ptBR })}</time></p>
+                                                <div className="timeline-content">
+                                                    <p class="timeline-text">{comment.comment_content}</p>
+                                                    {currentUser.id === comment.user_id && (
+                                                        <DropdownMenu
+                                                            icon={moreHorizontalMobile}
+                                                            className="timeline-actions"
+                                                            label="Select an action"
+                                                            size="small"
+                                                            controls={[
+                                                                {
+                                                                    title: 'Edit',
+                                                                    icon: edit,
+                                                                    onClick: () => {
+                                                                        setEditingComment(comment.comment_ID);
+                                                                        setEditContent(comment.comment_content);
+                                                                    },
+                                                                },
+                                                                {
+                                                                    title: 'Delete',
+                                                                    icon: trash,
+                                                                    onClick: () => handleDeleteComment(comment.comment_ID),
+                                                                },
+                                                            ]}
+                                                        />
+                                                    )}
+                                                </div>
+                                            </>
+                                        )}
+                                    </li>
+                                ))}
+                            </ul>
                         </div>
                     </PanelRow>
-                </PanelBody>
             )}
             <PanelBody title="Submit comment">
                 <PanelRow>

@@ -25,8 +25,8 @@ class AdminMenu {
             ],
             [
                 'parent_slug' => 'obatala-main',
-                'title' => 'Processs',
-                'menu_title' => 'Processs',
+                'title' => 'Processes',
+                'menu_title' => 'Processes',
                 'capability' => 'manage_options',
                 'slug' => 'process-manager',
                 'callback' => 'render_page',
