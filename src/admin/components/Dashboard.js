@@ -157,9 +157,27 @@ const DashboardPage = () => {
         return model ? model.title.rendered : 'Desconhecido';
     }; 
 
+    // Função para contar processos concluídos
+    const countCompletedProcesses = useMemo(() => {
+        return processes.filter(process => {
+            const nodes = process.meta?.flowData?.nodes?.filter(node => node.id !== "End") ?? [];
+            const [currentStage] = process.meta?.current_stage || [];
+            if (nodes.length === 0 || !currentStage) return false;
+            
+            const lastNode = nodes[nodes.length - 1];
+            return lastNode?.data?.stageName === currentStage;
+        }).length;
+    }, [processes]);
+
+    // Porcentagem de processos concluídos
+    const completedProcessesPercentage = useMemo(() => {
+        return processes.length ? Math.round((countCompletedProcesses / processes.length) * 100) : 0;
+    }, [countCompletedProcesses, processes.length]);
+
     if (isLoading) {
         return <Spinner />;
     }
+
     return (
         <>
             <BrandHeader />
@@ -170,7 +188,7 @@ const DashboardPage = () => {
 
                 <div className="card-container">
                     <div className="card-item">
-                        <img src={currentUser.avatar_urls?.[48]} className="user-photo" alt={`Foto de ${currentUser?.name}`} />
+                        <img src={currentUser.avatar_urls?.[96]} className="user-photo" alt={`Foto de ${currentUser?.name}`} />
                         <span className="description">Olá, <strong>{currentUser.name}</strong>!</span>
                     </div>
                     <a href="/wp-admin/admin.php?page=process-manager" className="card-item">
@@ -185,7 +203,13 @@ const DashboardPage = () => {
                         <span className="indicator">{sectors.length}</span>
                         <span className="description">Groups</span>
                     </a>
+                    <div className="card-item">
+                        <span className="indicator">{countCompletedProcesses}/{processes.length} <small>({completedProcessesPercentage}%)</small></span>
+                        <span className="description">Completed processes</span>
+                        <progress value={completedProcessesPercentage} max="100">{completedProcessesPercentage}%</progress>
+                    </div>
                 </div>
+
                 <div className="panel-container mt-2">
                     <Panel>
                         <PanelHeader>My groups</PanelHeader>

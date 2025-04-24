@@ -112,6 +112,11 @@ class ProcessType {
                                         'type' => 'string',
                                         'description' => 'Node ID',
                                     ],
+                                    'node_status' => [
+                                        'type' => 'string',
+                                        'description' => 'Status of the node',
+                                        'default' => 'Stopped'
+                                    ],
                                     'position' => [
                                         'type' => 'object',
                                         'description' => 'Position of the node',
@@ -173,7 +178,7 @@ class ProcessType {
                                         'name' => [
                                             'type' => 'string'
                                         ]
-                                    ]
+                                    ],
                                 ],
                             ],
                         ],
