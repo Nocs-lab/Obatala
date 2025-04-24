@@ -35,8 +35,19 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
 
     const columns = useMemo(() => [
         {
-        Header: 'Title',
-        accessor: 'name'
+            Header: 'Title',
+            accessor: 'name',
+            Cell: ({ value, row }) => (
+                <a 
+                    href={`?page=sector-details&sector_id=${row.original.id}`}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        handleViewSector(row.original);
+                    }}
+                >
+                    {value}
+                </a>
+            ),
         },
         {
         Header: 'Description',

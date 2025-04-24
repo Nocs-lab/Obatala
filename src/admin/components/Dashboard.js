@@ -201,8 +201,14 @@ const DashboardPage = () => {
                                     <tbody>
                                         {matchesSectors.map((sector) => (
                                             <tr key={sector.id}>
-                                                <td>{sector.name}</td>
-                                                <td>{sector.description}</td>
+                                            <td>
+                                                <a 
+                                                    href={`/wp-admin/admin.php?page=sector-details&sector_id=${sector.id}`}
+                                                >
+                                                    {sector.name}
+                                                </a>
+                                            </td>
+                                            <td>{sector.description}</td>
                                             </tr>
                                         ))}
                                     </tbody>
