@@ -43,8 +43,8 @@ class AdminMenu {
             ],
             [
                 'parent_slug' => 'obatala-main',
-                'title' => 'Process Type Editor',
-                'menu_title' => 'Process Type Editor',
+                'title' => 'Process type editor',
+                'menu_title' => 'Process type editor',
                 'capability' => 'manage_options',
                 'slug' => 'process-type-editor',
                 'callback' => 'render_page',
@@ -61,8 +61,8 @@ class AdminMenu {
             ],
             [
                 'parent_slug' => 'obatala-main',
-                'title' => 'Process Viewer',
-                'menu_title' => 'Process Viewer',
+                'title' => 'Process viewer',
+                'menu_title' => 'Process viewer',
                 'capability' => 'read',
                 'slug' => 'process-viewer',
                 'callback' => 'render_page',
@@ -70,8 +70,8 @@ class AdminMenu {
             ],
             [
                 'parent_slug' => 'obatala-main',
-                'title' => 'Group Details',
-                'menu_title' => 'Group Details',
+                'title' => 'Group details',
+                'menu_title' => 'Group details',
                 'capability' => 'manage_options',
                 'slug' => 'sector-details',
                 'callback' => 'render_page',
