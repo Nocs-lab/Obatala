@@ -5,6 +5,7 @@ import ProcessViewer from './components/ProcessViewer';
 import ProcessModelEditor from './components/ProcessModelEditor';
 import SectorManager from "./components/SectorManager";
 import DashboardPage from "./components/Dashboard";
+import SectorDetailsPage from "./components/SectorManager/SectorDetailsPage";
 
 // Função para navegar para o ProcessViewer ao selecionar um processo
 const navigateToProcessViewer = (processId) => {
@@ -20,7 +21,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const ProcessModelEditorElement = document.getElementById("process-type-editor");
     const sectorManagerElement = document.getElementById("sector-manager");
     const dashboardElement = document.getElementById("dashboard");
+    const sectorDetailsElement = document.getElementById("sector-details");
 
+    // Verifica se o elemento com o ID 'sector-details' existe
+    // Se existir, renderiza o componente SectorDetailsPage dentro deste elemento
+    if (sectorDetailsElement) {
+        createRoot(sectorDetailsElement).render(<SectorDetailsPage />);
+    }
     // Verifica se o elemento com o ID 'process-manager' existe
     // Se existir, renderiza o componente ProcessManager dentro deste elemento
     if (processElement) {

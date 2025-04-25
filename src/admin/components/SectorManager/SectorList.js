@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import apiFetch from "@wordpress/api-fetch";
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
 import { Button, ButtonGroup, Tooltip, Panel, PanelHeader, PanelRow, Notice, Modal, TextControl } from '@wordpress/components';
-import { edit, trash, people } from '@wordpress/icons';
+import { edit, trash, people, info } from '@wordpress/icons';
 import UsersManager from './UserManager/UserManager';
 import SectorFilter from './SectorFilters';
 
@@ -14,6 +14,10 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
         setAddingUsers(sector);
     };
 
+    const handleViewSector = (sector) => {
+        window.location.href = `?page=sector-details&sector_id=${sector.id}`;
+        console.log(sector);
+    };
     const handleCancel = () => {
         setAddingUsers(null);
     };
@@ -31,8 +35,19 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
 
     const columns = useMemo(() => [
         {
-        Header: 'Title',
-        accessor: 'name'
+            Header: 'Title',
+            accessor: 'name',
+            Cell: ({ value, row }) => (
+                <a 
+                    href={`?page=sector-details&sector_id=${row.original.id}`}
+                    onClick={(e) => {
+                        e.preventDefault();
+                        handleViewSector(row.original);
+                    }}
+                >
+                    {value}
+                </a>
+            ),
         },
         {
         Header: 'Description',
@@ -59,30 +74,36 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
         },
         },
         {
-        Header: 'Actions',
-        accessor: 'id',
-        Cell: ({ row }) => (
-            <ButtonGroup>
-                <Tooltip text="Manage users">
-                    <Button
-                        icon={people}
-                        onClick={() => handleManagerUsers(row.original)}
-                    >Manage users</Button>
-                </Tooltip>
-                <Tooltip text="Edit">
-                    <Button
-                        icon={edit}
-                        onClick={() => onEdit(row.original)}
-                    />
-                </Tooltip>
-                <Tooltip text="Delete">
-                    <Button
-                        icon={trash}
-                        onClick={() => onDelete(row.original)}
-                    />
-                </Tooltip>
-            </ButtonGroup>
-        ),
+            Header: 'Actions',
+            accessor: 'id',
+            Cell: ({ row }) => (
+                <ButtonGroup>
+                    <Tooltip text="View details">
+                            <Button
+                                icon={info}
+                                onClick={() => handleViewSector(row.original)}
+                            />
+                        </Tooltip>
+                    <Tooltip text="Edit">
+                        <Button
+                            icon={edit}
+                            onClick={() => onEdit(row.original)}
+                        />
+                    </Tooltip>
+                    <Tooltip text="Manage users">
+                        <Button
+                            icon={people}
+                            onClick={() => handleManagerUsers(row.original)}
+                        >Manage users</Button>
+                    </Tooltip>
+                    <Tooltip text="Delete">
+                        <Button
+                            icon={trash}
+                            onClick={() => onDelete(row.original)}
+                        />
+                    </Tooltip>
+                </ButtonGroup>
+            ),
         },
     ], [addingUsers]);
 
