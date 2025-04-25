@@ -14,6 +14,26 @@ export const fetchProcessModels = () => {
     });
 };
 
+export const fetchPendingProcesses = (userId) => {
+    if (!userId) {
+        return Promise.resolve([]); // Retorna array vazio se não houver userId
+    }
+    return apiFetch({ 
+        path: `/obatala/v1/user_processes/${userId}/pending?per_page=10`,
+    }).then(data => {
+        return Array.isArray(data) ? data.map(process => ({
+            id: process.ID,
+            title: process.post_title || 'No title',
+            description: process.post_content || '',
+            last_interaction: process.meta?.last_interaction || '',
+            sector_id: process.meta?.sector_id || ''
+        })) : [];
+    }).catch(error => {
+        console.error('Error fetching pending processes:', error);
+        return []; // Retorna array vazio em caso de erro
+    });
+};
+
 // Função para desserializar
 const maybeUnserialize = (data) => {
     try {

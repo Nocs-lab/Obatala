@@ -8,7 +8,7 @@ import {
     Spinner
 } from '@wordpress/components';
 import { people,  starFilled } from "@wordpress/icons";
-import { fetchProcessModels, fetchSectors, fetchSectorsUsers, } from '../api/apiRequests';
+import { fetchProcessModels, fetchSectors, fetchSectorsUsers, fetchPendingProcesses } from '../api/apiRequests';
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 import apiFetch from '@wordpress/api-fetch';
@@ -21,6 +21,7 @@ const DashboardPage = () => {
     const [sectorsUsers, setSectorsUsers] = useState([])
     const [topModels, setTopModels] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [pendingProcesses, setPendingProcesses] = useState([]);
 
     
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
@@ -30,12 +31,25 @@ const DashboardPage = () => {
         loadProcesses();
         loadSectors();
         loadSectorsUsers();
+        loadPendingProcesses();
     }, []);
 
     useEffect(() => {
         topFiveModels();
     }, [processes])
     
+    const loadPendingProcesses = async () => {
+        setIsLoading(true);
+        try {
+            const data = await fetchPendingProcesses(currentUser?.id);
+            setPendingProcesses(data);
+        } catch (error) {
+            console.error("Error fetching pending processes:", error);
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const loadProcessTypes = () => {
         setIsLoading(true);
         fetchProcessModels()
@@ -258,6 +272,46 @@ const DashboardPage = () => {
                                 </table>
                             ) : (
                                 <Notice isDismissible={false} status="warning">Sem resultados.</Notice>
+                            )}
+                        </PanelRow>
+                    </Panel>
+                    <Panel className="mt-2">
+                        <PanelHeader>Pending processes</PanelHeader>
+                        <PanelRow>
+                            {pendingProcesses.length > 0 ? (
+                                <table className="wp-list-table widefat fixed striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Process</th>
+                                            <th>Description</th>
+                                            <th>Last Interaction</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {pendingProcesses.map(process => (
+                                            <tr key={process.id}>
+                                                <td>
+                                                    <a
+                                                        href={`/wp-admin/admin.php?page=process-details&process_id=${process.id}`}
+                                                        style={{
+                                                            textDecoration: 'none',
+                                                            color: 'inherit',
+                                                            fontWeight: '500'
+                                                        }}
+                                                    >
+                                                        {process.title}
+                                                    </a>
+                                                </td>
+                                                <td>{process.description || 'N/A'}</td>
+                                                <td>{process.last_interaction || 'N/A'}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            ) : (
+                                <Notice isDismissible={false} status="warning">
+                                    No pending processes found.
+                                </Notice>
                             )}
                         </PanelRow>
                     </Panel>
