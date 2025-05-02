@@ -367,41 +367,44 @@ const DashboardPage = () => {
                         <PanelHeader>Pending processes</PanelHeader>
                         <PanelRow>
                             {pendingProcesses.length > 0 ? (
-                                <table className="wp-list-table widefat fixed striped">
-                                    <thead>
-                                        <tr>
-                                            <th>Process</th>
-                                            <th>Current stage</th>
-                                            <th>Last update</th>
-                                            <th>Progress</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {pendingProcesses.map(process => (
-                                            <tr key={process.id}>
-                                                <td>
-                                                    <a href={process.link} style={{ textDecoration: 'none' }}>
-                                                        {process.title}
-                                                    </a>
-                                                </td>
-                                                <td>{process.current_stage}</td>
-                                                <td>{process.last_update}</td>
-                                                <td>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                        <progress
-                                                            value={process.percentage}
-                                                            max="100"
-                                                            style={{ width: '100px' }}
-                                                        >
-                                                            {process.percentage}%
-                                                        </progress>
-                                                        <span>{process.percentage}%</span>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                <div>
+                                    {pendingProcesses.map(process => (
+                                        <a href={process.link} class="featured-box" aria-label={`Acessar o processo ${process.title}`} key={process.id}>
+                                            <dl>
+                                                <div class="list-item">
+                                                    <dt class="visually-hidden">Process:</dt>
+                                                    <dd><h4>{process.title}</h4></dd>
+                                                </div>
+
+                                                <div class="list-item">
+                                                    <dt>At:</dt>
+                                                    <dd>{process.current_stage}</dd>
+                                                </div>
+
+                                                <div class="list-item ms-auto">
+                                                    <dt>Last update:</dt>
+                                                    <dd>{process.last_update}</dd>
+                                                </div>
+
+                                                <div class="list-item">
+                                                    <dt class="visually-hidden">Progress</dt>
+                                                    <dd>
+                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                            <progress
+                                                                value={process.percentage}
+                                                                max="100"
+                                                                style={{ width: '100px' }}
+                                                            >
+                                                                {process.percentage}%
+                                                            </progress>
+                                                            <span>{process.percentage}%</span>
+                                                        </div>
+                                                    </dd>
+                                                </div>
+                                            </dl>
+                                        </a>
+                                    ))}
+                                </div>
                             ) : (
                                 <Notice status="info" isDismissible={false}>
                                     No pending processes found.

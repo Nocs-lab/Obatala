@@ -593,6 +593,45 @@ form .action-bar {
   font-size: .9rem;
   margin: 0;
 }
+.featured-box {
+  border: 1px solid var(--primary-600);
+  border-radius: var(--border-radius);
+  display: inline-block;
+  padding: .75rem 1rem;
+  text-decoration: none;
+  width: 100%;
+}
+.featured-box:hover {
+  background-color: var(--primary-50);
+}
+.featured-box dl {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem 4rem;
+  margin: 0;
+}
+.featured-box dt {
+  color: var(--gray-800);
+  font-weight: 300;
+  display: inline-block;
+  margin-right: .25rem;
+}
+.featured-box dd {
+  color: var(--black);
+  display: inline-block;
+  margin-left: 0;
+  margin-bottom: 0;
+}
+.featured-box h4 {
+  color: var(--primary);
+  font-size: .9rem;
+  margin: 0;
+}
+.featured-box + .featured-box {
+  margin-top: 1rem;
+}
 .list-group-item { /* not used */
   border: 1px solid var(--primary-300);
   border-radius: var(--border-radius);
