@@ -367,9 +367,9 @@ const DashboardPage = () => {
                         <PanelHeader>Pending processes</PanelHeader>
                         <PanelRow>
                             {pendingProcesses.length > 0 ? (
-                                <div>
+                                <div className="list-group">
                                     {pendingProcesses.map(process => (
-                                        <a href={process.link} class="featured-box" aria-label={`Acessar o processo ${process.title}`} key={process.id}>
+                                        <a href={process.link} className="list-group-item" aria-label={`Acessar o processo ${process.title}`} key={process.id}>
                                             <dl>
                                                 <div class="list-item">
                                                     <dt class="visually-hidden">Process:</dt>

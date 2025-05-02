@@ -593,61 +593,28 @@ form .action-bar {
   font-size: .9rem;
   margin: 0;
 }
-.featured-box {
-  border: 1px solid var(--primary-600);
-  border-radius: var(--border-radius);
-  display: inline-block;
-  padding: .75rem 1rem;
-  text-decoration: none;
+.list-group {
+  counter-reset: list-counter;
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
   width: 100%;
 }
-.featured-box:hover {
-  background-color: var(--primary-50);
-}
-.featured-box dl {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 1rem 4rem;
-  margin: 0;
-}
-.featured-box dt {
-  color: var(--gray-800);
-  font-weight: 300;
-  display: inline-block;
-  margin-right: .25rem;
-}
-.featured-box dd {
-  color: var(--black);
-  display: inline-block;
-  margin-left: 0;
-  margin-bottom: 0;
-}
-.featured-box h4 {
-  color: var(--primary);
-  font-size: .9rem;
-  margin: 0;
-}
-.featured-box + .featured-box {
-  margin-top: 1rem;
-}
-.list-group-item { /* not used */
-  border: 1px solid var(--primary-300);
+.list-group .list-group-item {
+  border: 1px solid var(--primary-400);
   border-radius: var(--border-radius);
   display: flex;
   align-items: center;
+  flex-basis: 100%;
+  flex-grow: 1;
   gap: 1rem;
   justify-content: space-between;
-  padding: 0.15rem 0.75rem;
-}
-ol.list-group {
-  counter-reset: list-counter;
-}
-ol.list-group .list-group-item {
+  margin-left: 1.5rem;
+  padding: .5rem .75rem;
   position: relative;
+  text-decoration: none;
 }
-ol.list-group .list-group-item::before {
+.list-group .list-group-item::before {
   color: var(--primary-500);
   content: counter(list-counter, decimal-leading-zero);
   counter-increment: list-counter;
@@ -656,6 +623,35 @@ ol.list-group .list-group-item::before {
   position: absolute;
   left: -1.5rem;
   width: 30px;
+}
+.list-group .list-group-item:hover {
+  background-color: var(--primary-50);
+}
+.list-group .list-group-item dl {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1rem 4rem;
+  margin: 0;
+  width: 100%;
+}
+.list-group .list-group-item dt {
+  color: var(--gray-800);
+  font-weight: 300;
+  display: inline-block;
+  margin-right: .25rem;
+}
+.list-group .list-group-item dd {
+  color: var(--black);
+  display: inline-block;
+  margin-left: 0;
+  margin-bottom: 0;
+}
+.list-group .list-group-item h4 {
+  color: var(--primary);
+  font-size: .9rem;
+  margin: 0;
 }
 .panel-container {
   display: flex;
