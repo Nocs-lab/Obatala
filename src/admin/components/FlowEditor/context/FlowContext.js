@@ -289,7 +289,7 @@ export const FlowProvider = ({ children }) => {
                         },
                         sector_obatala: sector_obatala || "",
                         sector_history: sector_history || [],
-                        tempSector: sector_obatala ? null : tempSector,
+                        tempSector: sector_obatala ? sector_obatala : tempSector,
                         measured: measured || { width: 0, height: 0 }, // Inclui a medida
                         selected: selected || false, // Inclui o estado de seleção
                     })
