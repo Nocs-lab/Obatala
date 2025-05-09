@@ -90,12 +90,16 @@ const processDataEditor = () => {
             const hasInput = nodeInputs.get(node.id).length > 0;
             const hasOutput = nodeOutputs.get(node.id).length > 0;
 
-            if (!isStart && !hasInput) {
-                disconnectedNodes.push(`Etapa "${node.data?.stageName}" não possui entrada.`);
-            }
+            if (!isStart && !isEnd && !hasInput && !hasOutput) {
+                disconnectedNodes.push(`Etapa "${node.data?.stageName}" não possui entrada nem saída.`);
+            } else {
+                if (!isStart && !hasInput) {
+                    disconnectedNodes.push(`Etapa "${node.data?.stageName}" não possui entrada.`);
+                }
 
-            if (!isEnd && !hasOutput) {
-                disconnectedNodes.push(`Etapa "${node.data?.stageName}" não possui saída.`);
+                if (!isEnd && !hasOutput) {
+                    disconnectedNodes.push(`Etapa "${node.data?.stageName}" não possui saída.`);
+                }
             }
         });
 
@@ -103,6 +107,22 @@ const processDataEditor = () => {
             valid: disconnectedNodes.length === 0,
             messages: disconnectedNodes,
         };
+    };
+
+    const getInvalidConditionalNodes = (flowData) => {
+        return flowData.nodes.filter(node => {
+            if (node.type !== "customNodeConditional") return false;
+
+            const condition = node.data?.condition;
+            const inputNode = node.data?.condition?.inputNode;
+            const outputNodes = node.data?.condition?.outputNodes;
+
+            const hasValidInput = !!inputNode;
+            const hasTwoOutputs = Array.isArray(outputNodes) && outputNodes.length === 2;
+            const outputsAreValid = hasTwoOutputs && outputNodes.every(out => out.conditionValue && out.nodeId);
+
+            return !(condition && hasValidInput && outputsAreValid);
+        });
     };
 
     const handleSave = async () => {
@@ -152,6 +172,27 @@ const processDataEditor = () => {
                     message: `A(s) etapa(s): ${nodesWithoutFields.map(node => node.data?.stageName).join(', ')} não tem campos definidos.`,
                 });
                 return; // Interrompe a execução caso existam nós sem campos
+            }
+
+            // verifica se todos os nós condicionais possuem campos definidos
+            const nodesConditionalWhitoutFields = getInvalidConditionalNodes(flowData);
+            if (nodesConditionalWhitoutFields.length > 0) {
+                const conditionalErrors = nodesConditionalWhitoutFields.map(condNode => {
+                    const incomingEdge = flowData.edges.find(edge => edge.target === condNode.id);
+
+                    const sourceNode = flowData.nodes.find(node => node.id === incomingEdge?.source);
+
+                    const sourceName = sourceNode?.data?.stageName || sourceNode?.id || "Etapa desconhecida";
+
+                    return `A condicional após a etapa "${sourceName}" está incompleta.`;
+                });
+
+                setNotice({
+                    status: 'error',
+                    message: conditionalErrors.join(' '),
+                });
+
+                return; // Interrompe a execução caso existam nós condicionais sem campos definidos
             }
 
             const updatedData = {
