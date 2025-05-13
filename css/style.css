@@ -11,6 +11,8 @@
   --primary-900: #00132a;
   --primary: var(--primary-800);
 
+  --secondary: #F2F3AE;
+
   --white:    #fff;
   --gray-100: #eee;
   --gray-200: #ddd;
@@ -797,16 +799,22 @@ progress::-moz-progress-bar {
   background-color: var(--primary-600);
   color: var(--white);
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
-  gap: 2.5rem;
+  gap: 2rem;
   justify-content: space-between;
   font-size: .75rem;
   padding: .5rem var(--gap-external);
   width: 100%;
 }
 .brand strong {
+  color: var(--secondary);
   font-weight: 900;
   text-transform: uppercase;
+}
+.brand small {
+  font-weight: 600;
+  margin-right: auto;
 }
 .check {
   color: var(--gray-600);
@@ -974,12 +982,6 @@ button .components-spinner {
 .step-item .description-list dt {
   float: left;
   margin-right: .5rem;
-}
-.step-header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
 }
 .step-number {
   border-radius: 50%;

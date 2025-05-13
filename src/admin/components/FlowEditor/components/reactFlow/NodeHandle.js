@@ -6,8 +6,12 @@ import { Tooltip } from "@wordpress/components";
 const NodeHandle = (id) => {
     const {removeNode} = useFlowContext();
     return (
-        <div className="step-header custom-drag-handle">
-            <span role="img" aria-label="drag">⠿</span>
+        <div className="step-header">
+            <Tooltip text="Move step">
+                <div className="custom-drag-handle">
+                    <span role="img" aria-label="drag">⠿</span>
+                </div>
+            </Tooltip>
             <Tooltip text="Remove step">
                 <div className="btn close-btn" onClick={() => removeNode(id.nodeId)}></div>
             </Tooltip>
