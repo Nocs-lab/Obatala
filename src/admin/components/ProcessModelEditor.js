@@ -94,11 +94,11 @@ const processDataEditor = () => {
                 disconnectedNodes.push(`Etapa "${node.data?.stageName}" não possui entrada nem saída.`);
             } else {
                 if (!isStart && !hasInput) {
-                    disconnectedNodes.push(`Etapa "${node.data?.stageName}" não possui entrada.`);
+                    disconnectedNodes.push((isEnd ? 'Nó ' : 'Etapa') + `"${node.data?.stageName}" não possui entrada.`);
                 }
 
                 if (!isEnd && !hasOutput) {
-                    disconnectedNodes.push(`Etapa "${node.data?.stageName}" não possui saída.`);
+                    disconnectedNodes.push((isStart ? 'Nó ' : 'Etapa') + `"${node.data?.stageName}" não possui saída.`);
                 }
             }
         });
@@ -128,15 +128,14 @@ const processDataEditor = () => {
     const handleSave = async () => {
         try {
             const flowData = flowRef.current.getFlowData(); // Obtém os dados do flow
+            // Cria lista com mensagens de erro
+            const errorMessages = [];
 
             //verifica se todos os nos estão conectados 
             const veriftyConnectivity = areAllNodesConnected(flowData.nodes, flowData.edges);
             if (!veriftyConnectivity.valid) {
-                setNotice({
-                    status: "error",
-                    message: veriftyConnectivity.messages.join(" "),
-                });
-                return; // Interrompe a execução caso existam nós isolados
+                errorMessages.push(...veriftyConnectivity.messages);
+
             }
 
             // verifica se todos os nós possuem tempSector definido
@@ -149,11 +148,9 @@ const processDataEditor = () => {
             });
 
             if (nodesWithoutSector.length > 0) {
-                setNotice({
-                    status: "error",
-                    message: `A(s) etapa(s): ${nodesWithoutSector.map(node => node.data?.stageName).join(', ')} não tem setor definido.`,
-                });
-                return; // Interrompe a execução caso existam nós sem setor
+                errorMessages.push(
+                    (nodesWithoutSector.length > 1 ? 'As etapas:' : 'A etapa: ') + `${nodesWithoutSector.map(node => node.data?.stageName).join(', ')} não têm grupo definido.`
+                );
             }
 
             // verifica se todos os nós possuem campos definidos
@@ -167,11 +164,10 @@ const processDataEditor = () => {
             });
 
             if (nodesWithoutFields.length > 0) {
-                setNotice({
-                    status: "error",
-                    message: `A(s) etapa(s): ${nodesWithoutFields.map(node => node.data?.stageName).join(', ')} não tem campos definidos.`,
-                });
-                return; // Interrompe a execução caso existam nós sem campos
+                errorMessages.push(
+                    (nodesWithoutFields.length > 1 ? 'As etapas:' : 'A etapa: ') +
+                    `${nodesWithoutFields.map(node => node.data?.stageName).join(', ')} não têm campos definidos.`
+                );
             }
 
             // verifica se todos os nós condicionais possuem campos definidos
@@ -187,12 +183,17 @@ const processDataEditor = () => {
                     return `A condicional após a etapa "${sourceName}" está incompleta.`;
                 });
 
-                setNotice({
-                    status: 'error',
-                    message: conditionalErrors.join(' '),
-                });
+                errorMessages.push(...conditionalErrors);
 
-                return; // Interrompe a execução caso existam nós condicionais sem campos definidos
+            }
+
+            // Se tiver qualquer erro, exibe tudo numerado
+            if (errorMessages.length > 0) {
+                setNotice({
+                    status: "error",
+                    message: errorMessages.map((msg, i) => `${i + 1}. ${msg}`).join('\n'),
+                });
+                return;
             }
 
             const updatedData = {

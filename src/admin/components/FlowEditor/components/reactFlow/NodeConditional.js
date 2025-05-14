@@ -21,6 +21,12 @@ const NodeConditional = ({ id, data }) => {
     const [selectedFields, setSelectedFields] = useState([]);
     const modalRef = useRef(null);
     const containerRef = useRef(null);
+    const [hasError, setHasError] = useState(false);
+
+    useEffect(() => {
+        const isValid = selectedField && selectedFields.every(f => f.value);
+        setHasError(!isValid);
+    }, [selectedField, selectedFields]);
 
     // Função para alternar a visibilidade da barra de ferramentas
     const handleClick = (event) => {
@@ -151,7 +157,7 @@ const NodeConditional = ({ id, data }) => {
     return (
         <div
             ref={containerRef}
-            className="bpmn-conditional-operator custom-drag-handle"
+            className={`bpmn-conditional-operator custom-drag-handle ${hasError ? 'error' : ''}`}
             onClick={handleClick}
         >
             <Handle type="target" position={Position.Left} style={{ top: "42px", left: "-8px" }} />
