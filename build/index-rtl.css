@@ -11,7 +11,6 @@
   height: 70vh;
   margin-right: var(--gap-external);
   margin-left: var(--gap-external);
-  padding: var(--gap);
   width: calc(100% - (2 * var(--gap-external)));
 }
 .flow-container > .components-button-group {
@@ -294,16 +293,28 @@ svg.react-flow__connectionline {
 .react-flow__handle.connectingfrom {
   pointer-events: all;
 }
-.react-flow__handle.connectionindicator {
+.react-flow__handle.connectable {
   background-color: var(--primary-400);
   cursor: crosshair;
-  height: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: .6rem;
+  padding-left: .6rem;
+  height: 60px;
   pointer-events: all;
   width: 48px;
   z-index: -1;
 }
-.react-flow__handle.connectionindicator:hover {
+.react-flow__handle.connectable:hover {
   background-color: var(--primary-600);
+}
+.react-flow__handle.connectable::before {
+  content: "\f344";
+  color: var(--white);
+  font-family: "Dashicons";
+  font-size: 1.25rem;
+  font-weight: 500;
 }
 .react-flow__handle-bottom {
   top: auto;
@@ -318,6 +329,7 @@ svg.react-flow__connectionline {
 }
 .react-flow__handle-left {
   border-radius: 0 50% 50% 0;
+  justify-content: flex-start !important;
   top: 50%;
   right: -8px;
   transform: translate(50%, -50%);
@@ -699,20 +711,25 @@ svg.react-flow__connectionline {
 /* custom conditional */
 .bpmn-conditional-operator {
   background-color: var(--white);
-  border: 2px solid var(--primary);
-  height: 50px;
+  border: 5px solid var(--warning);
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 110px;
   min-height: 20px;
-  transform: rotate(-45deg);
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
-  width: 50px;
+  width: 110px;
 }
-.bpmn-conditional-operator .react-flow__handle {
-  transform: rotate(45deg) !important;
+.bpmn-conditional-operator span {
+  color: var(--warning);
+  font-size: 1.2rem;
+  font-weight: 900;
+}
+.bpmn-conditional-operator:hover span::before {
+  content: "⠿";
+  padding-left: .25rem;
 }
 .bpmn-conditional-operator .wp-drawer {
   height: auto;
@@ -720,6 +737,7 @@ svg.react-flow__connectionline {
 }
 
 .bpmn-start-end-node {
+  background-color: var(--white);
   border-radius: 50%;
   box-shadow: 0 4px 6px rgba(0,0,0,.1);
   color: var(--white);
@@ -728,19 +746,21 @@ svg.react-flow__connectionline {
   align-items: center;
   justify-content: center;
   font-size: 1.2rem;
-  font-weight: 600;
-  height: 160px;
+  font-weight: 900;
+  height: 110px;
   position: relative;
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
-  width: 160px;
+  width: 110px;
 }
 .bpmn-start-node {
-  background-color: var(--success);
+  border: 5px solid var(--success);
+  color: var(--success);
 }
 .bpmn-end-node {
-  background-color: var(--danger);
+  border: 5px solid var(--danger);
+  color: var(--danger);
 }
 .bpmn-start-end-node:hover span::before {
   content: "⠿";
@@ -772,7 +792,7 @@ svg.react-flow__connectionline {
 
 /* Close btn */
 .close-btn {
-  background: var(--warning);
+  background: var(--danger);
   height: 28px;
   width: 28px;
 }
@@ -825,9 +845,9 @@ svg.react-flow__connectionline {
 .flow-fields .components-button-group .components-button.is-small.has-icon:not(.has-text) {
   box-shadow: 0 0 0;
   color: var(--primary-600);
-  height: 18px;
+  height: 24px;
   min-width: 18px;
-  width: 18px;
+  width: 24px;
 }
 .flow-fields .step-icon {
   display: flex;

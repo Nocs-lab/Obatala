@@ -6,7 +6,7 @@ const EndNode = ({ id, data }) => {
     return (
         <div className="bpmn-start-end-node bpmn-end-node custom-drag-handle">
             <span>{id}</span>
-            <Handle type="target" position="left" style={{ left: '-1px' }} />
+            <Handle type="target" position="left" />
         </div>
     );
 };
