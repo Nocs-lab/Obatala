@@ -22,7 +22,7 @@
 .react-flow {
   direction: rtl;
 
-  --xy-edge-stroke-default: var(--primary-300);
+  --xy-edge-stroke-default: var(--gray-500);
   --xy-edge-stroke-width-default: 2;
   --xy-edge-stroke-selected-default: #555;
 
