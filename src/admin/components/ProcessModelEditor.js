@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
-  Spinner,
-  Notice,
+    Spinner,
+    Notice,
 } from "@wordpress/components";
 import apiFetch from "@wordpress/api-fetch";
 import ProcessFlow from "./FlowEditor/ProcessFlow";
@@ -33,18 +33,18 @@ const processDataEditor = () => {
         setIsLoading(true);
 
         apiFetch({ path: `/obatala/v1/process_type/${id}` })
-        .then((typeData) => {
-            setProcessData(typeData);
-            // Extraindo flowData do processo carregado
-            const flowData = typeData.meta.flowData || { nodes: [], edges: [] };
-            setFlowData(flowData);
-            setIsLoading(false);
-        })
-        .catch((error) => {
-            console.error("Error fetching data:", error);
-            setNotice({ status: "error", message: "Error fetching process type." });
-            setIsLoading(false);
-        });
+            .then((typeData) => {
+                setProcessData(typeData);
+                // Extraindo flowData do processo carregado
+                const flowData = typeData.meta.flowData || { nodes: [], edges: [] };
+                setFlowData(flowData);
+                setIsLoading(false);
+            })
+            .catch((error) => {
+                console.error("Error fetching data:", error);
+                setNotice({ status: "error", message: "Error fetching process type." });
+                setIsLoading(false);
+            });
     }, [id]);
 
     const updateNodeSector = async (nodeId, sectorId) => {
@@ -63,102 +63,174 @@ const processDataEditor = () => {
         }
     };
 
-  // funçao para verificar se todos os nos estao conectados
-  const areAllNodesConnected = (nodes, edges) => {
-    if (nodes.length === 0) return true; // Nenhum nó para verificar
+    // funçao para verificar se todos os nos estao conectados
+    const areAllNodesConnected = (nodes, edges) => {
+        if (nodes.length === 0) return true; // Nenhum nó para verificar
 
-    // Criar um mapa de adjacência
-    const adjacencyList = new Map();
-    nodes.forEach(node => adjacencyList.set(node.id, []));
+        // Mapeia entradas e saídas de cada nó
+        const nodeInputs = new Map();
+        const nodeOutputs = new Map();
 
-    edges.forEach(({ source, target }) => {
-      adjacencyList.get(source).push(target);
-      adjacencyList.get(target).push(source); // Grafo não-direcionado
-    });
-
-    // Fazer BFS/DFS para verificar conectividade
-    const visited = new Set();
-    const stack = [nodes[0].id]; // Começamos pelo primeiro nó
-
-    while (stack.length > 0) {
-      const node = stack.pop();
-      if (!visited.has(node)) {
-        visited.add(node);
-        adjacencyList.get(node).forEach(neighbor => {
-          if (!visited.has(neighbor)) {
-            stack.push(neighbor);
-          }
-        });
-      }
-    }
-
-    return visited.size === nodes.length;
-  }; 
-
-  const handleSave = async () => {
-    try {
-      const flowData = flowRef.current.getFlowData(); // Obtém os dados do flow
-      
-      //verifica se todos os nos estão conectados 
-      if (!areAllNodesConnected(flowData.nodes, flowData.edges)) {
-        setNotice({
-          status: "error",
-          message: "There are disconnected nodes. Please connect all nodes before saving.",
-        });
-        return; // Interrompe a execução caso existam nós isolados
-      }
-
-      // verifica se todos os nós possuem tempSector definido
-      const nodesWithoutSector = flowData.nodes.filter(node => {
-        const isIgnored = 
-          node.id === "Start" || 
-          node.id === "End" || 
-          node.id.startsWith("Condicional");
-      return !isIgnored && (!node.tempSector && !node.sector_obatala);
-      });
-
-       if (nodesWithoutSector.length > 0) {
-        setNotice({
-          status: "error",
-          message: "All nodes must have a group assigned before saving.",
-        });
-        return; // Interrompe a execução caso existam nós sem setor
-       }
-
-      const updatedData = {
-        ...processData,
-        meta: {
-          flowData, // Armazena os dados de fluxo como meta
-          updateAt: new Date(),
-          user: currentUser?.name
-        },
-      };
-
-        // Evita recarregar a página
-        await apiFetch({
-            path: `/obatala/v1/process_type/${id}`,
-            method: "PUT",
-            data: updatedData,
+        nodes.forEach(node => {
+            nodeInputs.set(node.id, []);
+            nodeOutputs.set(node.id, []);
         });
 
-        await apiFetch({
-            path: `/obatala/v1/process_type/${id}/meta`,
-            method: "PUT",
-            data: updatedData.meta,
+        edges.forEach(({ source, target }) => {
+            if (nodeOutputs.has(source)) nodeOutputs.get(source).push(target);
+            if (nodeInputs.has(target)) nodeInputs.get(target).push(source);
         });
 
-          for (const node of flowData.nodes) {
+        const disconnectedNodes = [];
+
+        nodes.forEach(node => {
+            const isStart = node.type === 'startNode';
+            const isEnd = node.type === 'endNode';
+            const isConditional = node.type === 'customNodeConditional';
+
+            const hasInput = nodeInputs.get(node.id).length > 0;
+            const hasOutput = nodeOutputs.get(node.id).length > 0;
+
+            if (!isStart && !isEnd && !hasInput && !hasOutput) {
+                disconnectedNodes.push(`Etapa "${node.data?.stageName}" não possui entrada nem saída.`);
+            } else {
+                if (!isStart && !hasInput) {
+                    disconnectedNodes.push((isEnd || isConditional ? 'Nó ' : 'Etapa ') + `"${node.data?.stageName}" não possui entrada.`);
+                }
+
+                if (!isEnd && !hasOutput) {
+                    disconnectedNodes.push((isStart || isConditional ? 'Nó ' : 'Etapa ') + `"${node.data?.stageName}" não possui saída.`);
+                }
+            }
+        });
+
+        return {
+            valid: disconnectedNodes.length === 0,
+            messages: disconnectedNodes,
+        };
+    };
+
+    const getInvalidConditionalNodes = (flowData) => {
+        return flowData.nodes.filter(node => {
+            if (node.type !== "customNodeConditional") return false;
+
+            const condition = node.data?.condition;
+            const inputNode = node.data?.condition?.inputNode;
+            const outputNodes = node.data?.condition?.outputNodes;
+
+            const hasValidInput = !!inputNode;
+            const hasTwoOutputs = Array.isArray(outputNodes) && outputNodes.length === 2;
+            const outputsAreValid = hasTwoOutputs && outputNodes.every(out => out.conditionValue && out.nodeId);
+
+            return !(condition && hasValidInput && outputsAreValid);
+        });
+    };
+
+    const handleSave = async () => {
+        try {
+            const flowData = flowRef.current.getFlowData(); // Obtém os dados do flow
+            // Cria lista com mensagens de erro
+            const errorMessages = [];
+
+            //verifica se todos os nos estão conectados 
+            const veriftyConnectivity = areAllNodesConnected(flowData.nodes, flowData.edges);
+            if (!veriftyConnectivity.valid) {
+                errorMessages.push(...veriftyConnectivity.messages);
+
+            }
+
+            // verifica se todos os nós possuem tempSector definido
+            const nodesWithoutSector = flowData.nodes.filter(node => {
+                const isIgnored =
+                    node.id === "Start" ||
+                    node.id === "End" ||
+                    node.id.startsWith("Condicional");
+                return !isIgnored && !node.tempSector;
+            });
+
+            if (nodesWithoutSector.length > 0) {
+                errorMessages.push(
+                    (nodesWithoutSector.length > 1 ? 'As etapas:' : 'A etapa: ') + `${nodesWithoutSector.map(node => node.data?.stageName).join(', ')} não têm grupo definido.`
+                );
+            }
+
+            // verifica se todos os nós possuem campos definidos
+            const nodesWithoutFields = flowData.nodes.filter(node => {
+                const isIgnored =
+                    node.id === "Start" ||
+                    node.id === "End" ||
+                    node.id.startsWith("Condicional");
+                const fields = node?.data?.fields;
+                return !isIgnored && (!Array.isArray(fields) || fields.length === 0);
+            });
+
+            if (nodesWithoutFields.length > 0) {
+                errorMessages.push(
+                    (nodesWithoutFields.length > 1 ? 'As etapas:' : 'A etapa: ') +
+                    `${nodesWithoutFields.map(node => node.data?.stageName).join(', ')} não têm campos definidos.`
+                );
+            }
+
+            // verifica se todos os nós condicionais possuem campos definidos
+            const nodesConditionalWhitoutFields = getInvalidConditionalNodes(flowData);
+            if (nodesConditionalWhitoutFields.length > 0) {
+                const conditionalErrors = nodesConditionalWhitoutFields.map(condNode => {
+                    const incomingEdge = flowData.edges.find(edge => edge.target === condNode.id);
+
+                    const sourceNode = flowData.nodes.find(node => node.id === incomingEdge?.source);
+
+                    const sourceName = sourceNode?.data?.stageName || sourceNode?.id || "Etapa desconhecida";
+
+                    return `A condicional após a etapa "${sourceName}" está incompleta.`;
+                });
+
+                errorMessages.push(...conditionalErrors);
+
+            }
+
+            // Se tiver qualquer erro, exibe tudo numerado
+            if (errorMessages.length > 0) {
+                setNotice({
+                    status: "error",
+                    message: errorMessages.map((msg, i) => `${i + 1}. ${msg}`).join('\n'),
+                });
+                return;
+            }
+
+            const updatedData = {
+                ...processData,
+                meta: {
+                    flowData, // Armazena os dados de fluxo como meta
+                    updateAt: new Date(),
+                    user: currentUser?.name
+                },
+            };
+
+            // Evita recarregar a página
+            await apiFetch({
+                path: `/obatala/v1/process_type/${id}`,
+                method: "PUT",
+                data: updatedData,
+            });
+
+            await apiFetch({
+                path: `/obatala/v1/process_type/${id}/meta`,
+                method: "PUT",
+                data: updatedData.meta,
+            });
+
+            for (const node of flowData.nodes) {
                 if (node.tempSector) {
                     try {
                         await updateNodeSector(node.id, node.tempSector);
-                     
+
                         //node.tempSector = null;
                     } catch (error) {
                         console.error(`Erro ao associar setor ao nó ${node.id}:`, error);
                     }
                 }
             }
-                
+
             setProcessData({
                 ...processData,
                 meta: updatedData.meta,
@@ -178,18 +250,18 @@ const processDataEditor = () => {
             setIsLoading(false);
         }
     };
-  
+
     // Função para alternar para tela cheia
     const toggleFullScreen = () => {
-        const element = document.getElementById('flow-container'); 
-        
+        const element = document.getElementById('flow-container');
+
         if (document.fullscreenElement) {
             document.exitFullscreen();
         } else {
             element.requestFullscreen();
         }
     };
-  
+
     const handleCancelEditProcessType = () => {
         window.location.href = '?page=process-type-manager';
     };
@@ -201,7 +273,7 @@ const processDataEditor = () => {
     if (!processData) {
         return <div>Loading...</div>;
     }
-  
+
     return (
         <>
             <BrandHeader />

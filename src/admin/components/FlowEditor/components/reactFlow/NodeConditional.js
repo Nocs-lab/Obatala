@@ -4,11 +4,11 @@ import { useFlowContext } from "../../context/FlowContext";
 import { Button, Icon } from "@wordpress/components";
 import { close } from "@wordpress/icons";
 
-const NodeConditional = (node) => {
+const NodeConditional = ({ id, data }) => {
     const { edges, nodes, removeNode, setNodes, updateNodeCondition } = useFlowContext();
 
-    const matchedEdgeInput = edges.find(edge => edge?.target === node.id);
-    const matchedEdgeOutput = edges.filter(edge => edge?.source === node.id);
+    const matchedEdgeInput = edges.find(edge => edge?.target === id);
+    const matchedEdgeOutput = edges.filter(edge => edge?.source === id);
     const nodeInput = nodes.find(node => node.id === matchedEdgeInput?.source);
 
     let radioFields = [];
@@ -21,6 +21,16 @@ const NodeConditional = (node) => {
     const [selectedFields, setSelectedFields] = useState([]);
     const modalRef = useRef(null);
     const containerRef = useRef(null);
+    const [hasError, setHasError] = useState(false);
+
+    useEffect(() => {
+        const isConnectedInput = edges.some(edge => edge.target === id);
+        const isConnectedOutput = edges.some(edge => edge.source === id);
+        const isValidSelection = selectedField && selectedFields.every(f => f.value);
+
+        const isValid = isValidSelection && isConnectedInput && isConnectedOutput;
+        setHasError(!isValid);
+    }, [selectedField, selectedFields, edges, id]);
 
     // Função para alternar a visibilidade da barra de ferramentas
     const handleClick = (event) => {
@@ -44,16 +54,19 @@ const NodeConditional = (node) => {
     }, []);
 
     useEffect(() => {
-        if (node.data.condition) {
-            setSelectedField((prev) => prev || node.data.condition.condition || '');
+        if (data.condition) {
+            setSelectedField((prev) => prev || data.condition.condition || "");
             setSelectedFields((prev) =>
-                prev.length ? prev : node.data.condition.outputNodes?.map(output => ({
-                    id: output.nodeId,
-                    value: output.conditionValue
-                })) || []
+                prev.length
+                    ? prev
+                    : matchedEdgeOutput.map((edge) => ({
+                        id: edge.target,
+                        value:
+                            data.condition.outputNodes?.find((o) => o.nodeId === edge.target)?.conditionValue || "",
+                    }))
             );
         }
-    }, [node.data.condition]);
+    }, [data.condition, matchedEdgeOutput]);
 
     // Função para verificar se o valor já foi selecionado
     const isValueSelected = (value) => {
@@ -74,7 +87,7 @@ const NodeConditional = (node) => {
             updatedFields[fieldIndex] = { ...updatedFields[fieldIndex], value };
 
             // Atualiza a configuração do campo no node específico
-            updateFieldConfig(node.id, updatedFields[fieldIndex].id, { value });
+            updateFieldConfig(id, updatedFields[fieldIndex].id, { value });
 
             return updatedFields;
         });
@@ -117,24 +130,24 @@ const NodeConditional = (node) => {
         }
 
         const updatedCondition = {
-            inputNode: node.data.condition?.inputNode || '',
+            inputNode: data.condition?.inputNode || matchedEdgeInput?.source,
             condition: selectedField,
             outputNodes: selectedFields.map((field) => ({
                 conditionValue: field.value,
-                nodeId: field.id
-            }))
+                nodeId: field.id,
+            })),
         };
 
         // Atualiza o estado do nó localmente
         setNodes((prevNodes) =>
             prevNodes.map((n) =>
-                n.id === node.id && JSON.stringify(n.data.condition) !== JSON.stringify(updatedCondition)
+                n.id === id && JSON.stringify(n.data.condition) !== JSON.stringify(updatedCondition)
                     ? { ...n, data: { ...n.data, condition: updatedCondition } }
                     : n
             )
         );
 
-        updateNodeCondition(node.id, updatedCondition);
+        updateNodeCondition(id, updatedCondition);
 
         alert("Changes applied successfully.");
         setIsVisibleToolbar(false);
@@ -148,7 +161,7 @@ const NodeConditional = (node) => {
     return (
         <div
             ref={containerRef}
-            className="bpmn-conditional-operator custom-drag-handle"
+            className={`bpmn-conditional-operator custom-drag-handle ${hasError ? 'error' : ''}`}
             onClick={handleClick}
         >
             <span>If</span>
@@ -230,7 +243,7 @@ const NodeConditional = (node) => {
                     <hr />
                     <div className="components-button-container">
                         <Button variant="tertiary-outline" size="small"
-                            onClick={() => removeNode(node.id)}
+                            onClick={() => removeNode(id)}
                         >
                             Remove
                         </Button>
