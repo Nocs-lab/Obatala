@@ -86,6 +86,7 @@ const processDataEditor = () => {
         nodes.forEach(node => {
             const isStart = node.type === 'startNode';
             const isEnd = node.type === 'endNode';
+            const isConditional = node.type === 'customNodeConditional';
 
             const hasInput = nodeInputs.get(node.id).length > 0;
             const hasOutput = nodeOutputs.get(node.id).length > 0;
@@ -94,11 +95,11 @@ const processDataEditor = () => {
                 disconnectedNodes.push(`Etapa "${node.data?.stageName}" não possui entrada nem saída.`);
             } else {
                 if (!isStart && !hasInput) {
-                    disconnectedNodes.push((isEnd ? 'Nó ' : 'Etapa') + `"${node.data?.stageName}" não possui entrada.`);
+                    disconnectedNodes.push((isEnd || isConditional ? 'Nó ' : 'Etapa ') + `"${node.data?.stageName}" não possui entrada.`);
                 }
 
                 if (!isEnd && !hasOutput) {
-                    disconnectedNodes.push((isStart ? 'Nó ' : 'Etapa') + `"${node.data?.stageName}" não possui saída.`);
+                    disconnectedNodes.push((isStart || isConditional ? 'Nó ' : 'Etapa ') + `"${node.data?.stageName}" não possui saída.`);
                 }
             }
         });

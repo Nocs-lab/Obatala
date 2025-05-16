@@ -24,9 +24,13 @@ const NodeConditional = ({ id, data }) => {
     const [hasError, setHasError] = useState(false);
 
     useEffect(() => {
-        const isValid = selectedField && selectedFields.every(f => f.value);
+        const isConnectedInput = edges.some(edge => edge.target === id);
+        const isConnectedOutput = edges.some(edge => edge.source === id);
+        const isValidSelection = selectedField && selectedFields.every(f => f.value);
+
+        const isValid = isValidSelection && isConnectedInput && isConnectedOutput;
         setHasError(!isValid);
-    }, [selectedField, selectedFields]);
+    }, [selectedField, selectedFields, edges, id]);
 
     // Função para alternar a visibilidade da barra de ferramentas
     const handleClick = (event) => {
