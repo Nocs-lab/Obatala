@@ -16,11 +16,9 @@ const BrandHeader = () => {
     return (
         <header>
             <span className="brand">
-                <strong>
-                    Obatala
-                    {wpSiteName && ` | ${wpSiteName}`}
-                </strong>
-                Curatorial Process Management
+                <strong>Obatala</strong>
+                <small>{wpSiteName && ` | ${wpSiteName}`}</small>
+                <span>Curatorial Process Management</span>
             </span>
         </header>
     );

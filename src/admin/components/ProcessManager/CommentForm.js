@@ -171,7 +171,7 @@ const CommentForm = ({ processId }) => {
                     </div>
                 </PanelRow>
             )}
-            <PanelBody title="Submit comment">
+            <PanelBody title="Submit comment" className="no-print">
                 <PanelRow>
                     {notice && (
                         <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>

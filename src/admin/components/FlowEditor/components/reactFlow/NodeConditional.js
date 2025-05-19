@@ -164,8 +164,9 @@ const NodeConditional = ({ id, data }) => {
             className={`bpmn-conditional-operator custom-drag-handle ${hasError ? 'error' : ''}`}
             onClick={handleClick}
         >
-            <Handle type="target" position={Position.Left} style={{ top: "42px", left: "-8px" }} />
-            <Handle type="source" position={Position.Right} style={{ top: "-10px", right: "-3px" }} />
+            <span>If</span>
+            <Handle type="target" position={Position.Left} />
+            <Handle type="source" position={Position.Right} />
             {isVisibleToolbar && (
                 <div
                     ref={modalRef}
@@ -177,7 +178,6 @@ const NodeConditional = ({ id, data }) => {
                         zIndex: 10,
                         borderRadius: "8px",
                         maxHeight: "500px",
-                        transform: "rotate(-45deg)",
                         transition: "transform 0.3s ease"
                     }}
                 >
@@ -214,7 +214,7 @@ const NodeConditional = ({ id, data }) => {
                                 </select>
                                 {matchedEdgeOutput.map((edge, index) => (
                                     <li key={index}>
-                                        receives
+                                        If receives
                                         <select
                                             value={selectedFields[index]?.value || ""}
                                             onChange={(e) => handleValueChange(index, e.target.value)}
@@ -231,7 +231,7 @@ const NodeConditional = ({ id, data }) => {
                                                             {option.trim()}
                                                         </option>
                                                     ))}
-                                        </select> then go to {edge.target}.
+                                        </select> then go to <strong>{edge.target}</strong>.
                                     </li>
                                 ))}
                             </dd>
