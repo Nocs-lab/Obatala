@@ -102,11 +102,9 @@ const UserManager = ({sector,loadSectorsUsers}) => {
     return (
         <>
             {notice && (
-                <div className="notice-container">
-                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                        {notice.message}
-                    </Notice>
-                </div>
+                <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                    {notice.message}
+                </Notice>
             )}
 
             <UserSelect

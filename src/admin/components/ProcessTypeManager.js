@@ -144,35 +144,30 @@ const ProcessTypeManager = () => {
                     </ButtonGroup>
                 </div>
                 {notice && (
-                    <div className="notice-container">
-                        <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                            {notice.message}
-                        </Notice>
-                    </div>
+                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                        {notice.message}
+                    </Notice>
                 )}
+                <ConfirmDialog
+                    isOpen={state.isOpen}
+                    onConfirm={() => {
+                        handleDeleteProcessType(state.processModel);
+                        dispatch({ type: 'CLOSE_MODAL' })
+                    }}
+                    onCancel={handleCancel}
+                >
+                    Are you sure you want to delete process model {state.processModel?.title.rendered}?
+                </ConfirmDialog>
                 <div className="panel-container">
-                    <main>
-                        <ConfirmDialog
-                            isOpen={state.isOpen}
-                            onConfirm={() => {
-                                handleDeleteProcessType(state.processModel);
-                                dispatch({ type: 'CLOSE_MODAL' })
-                            }}
-                            onCancel={handleCancel}
-                        >
-                            Are you sure you want to delete process model {state.processModel?.title.rendered}?
-                        </ConfirmDialog>
-
-                        <ProcessTypeList
-                            processTypes={filteredModels}
-                            onEdit={handleEditModel}
-                            onManager={handleManageProcessModel}
-                            onDelete={handleConfirmDelete}
-                            status={status}
-                            setStatus={setStatus}
-                            authorsById={authorsById}
-                        />
-                    </main>
+                    <ProcessTypeList
+                        processTypes={filteredModels}
+                        onEdit={handleEditModel}
+                        onManager={handleManageProcessModel}
+                        onDelete={handleConfirmDelete}
+                        status={status}
+                        setStatus={setStatus}
+                        authorsById={authorsById}
+                    />
                     {addingProcessType || editingProcessType ? (
                         <Modal
                             title={editingProcessType ? "Edit process model" : "Add process model"}

@@ -366,17 +366,6 @@ th[role="columnheader"][title="Toggle SortBy"] {
 }
 /* #endregion */
 
-/* #region Notice */
-.notice-container {
-  margin-top: 1rem;
-  margin-bottom: 2rem;
-}
-main > .notice-container {
-  margin-left: var(--gap-external);
-  margin-right: var(--gap-external);
-}
-/* #endregion */
-
 /* #region Functional classes */
 .mb-1 {
   margin-bottom: 1rem;
@@ -537,8 +526,6 @@ form .action-bar {
   display: flex;
   flex-wrap: wrap;
   gap: var(--gap);
-  margin-left: var(--gap-external);
-  margin-right: var(--gap-external);
 }
 .card-container .card-item {
   background-color: var(--white);
@@ -658,25 +645,31 @@ ol.list-group .list-group-item::before {
   font-size: 1.2rem;
 }
 .components-notice {
-  margin-bottom: 2rem;
-  padding-top: 0;
-  padding-bottom: 0;
-}
-.components-notice.is-error {
-  border-left-color: var(--danger);
-}
-.components-notice.is-success {
-  border-left-color: var(--success);
+  border-radius: var(--border-radius);
+  gap: 1rem;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+  width: 100%;
+  & ol {
+    margin-top: 0;
+    margin-bottom: 0;
+    & li {
+      margin-bottom: 0;
+    }
+  }
+  &.is-error {
+    border: 1px solid var(--danger);
+  }
+  &.is-success {
+    border: 1px solid var(--success);
+  }
 }
 .components-panel {
   background: var(--white);
   border: 0 none;
   border-radius: var(--border-radius);
-}
-main > .title-container ~ .components-panel,
-main > .components-notice {
-  margin-left: var(--gap-external);
-  margin-right: var(--gap-external);
 }
 .components-panel__header {
   gap: 1rem;
