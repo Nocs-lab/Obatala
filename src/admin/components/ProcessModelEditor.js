@@ -192,11 +192,16 @@ const processDataEditor = () => {
             if (errorMessages.length > 0) {
                 setNotice({
                     status: "error",
-                    message: errorMessages.map((msg, i) => `${i + 1}. ${msg}`).join('\n'),
+                    message: (
+                        <ol>
+                            {errorMessages.map((msg, i) => (
+                                <li key={i}>{msg}</li>
+                            ))}
+                        </ol>
+                    ),
                 });
                 return;
             }
-
             const updatedData = {
                 ...processData,
                 meta: {
@@ -279,13 +284,10 @@ const processDataEditor = () => {
             <BrandHeader />
             <main>
                 {notice && (
-                    <div className="notice-container">
-                        <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                            {notice.message}
-                        </Notice>
-                    </div>
+                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                        {notice.message}
+                    </Notice>
                 )}
-
                 <FlowProvider>
                     <div className="title-container">
                         <h2><small>Manage steps</small>{processData.title.rendered}</h2>
@@ -295,7 +297,6 @@ const processDataEditor = () => {
                             toggleFullScreen={toggleFullScreen}
                         />
                     </div>
-
                     <ProcessFlow
                         ref={flowRef}
                         initialData={flowData}

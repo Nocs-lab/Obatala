@@ -187,11 +187,9 @@ const ProcessManager = ({ onSelectProcess }) => {
                 </div>
 
                 {notice && (
-                    <div className="notice-container">
-                        <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                            {notice.message}
-                        </Notice>
-                    </div>
+                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                        {notice.message}
+                    </Notice>
                 )}
                 <div className="panel-container">
                     <TabPanel

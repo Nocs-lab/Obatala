@@ -9,9 +9,6 @@
   background-color: var(--primary-50);
   border-radius: var(--border-radius);
   height: 70vh;
-  margin-right: var(--gap-external);
-  margin-left: var(--gap-external);
-  width: calc(100% - (2 * var(--gap-external)));
 }
 
 .flow-container>.components-button-group {

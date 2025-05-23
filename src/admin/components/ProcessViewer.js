@@ -515,24 +515,18 @@ const ProcessViewer = () => {
                             isComplete={parseFloat(calculatePercentagem()) === 100} // Adicionado para controle do badge
                         />
                         {notice && (
-                            <div className="notice-container">
-                                <Notice
-                                    status={notice.status}
-                                    isDismissible
-                                    onRemove={() => setNotice(null)}
-                                >
-                                    {notice.message}
-                                </Notice>
-                            </div>
+                            <Notice
+                                status={notice.status}
+                                isDismissible
+                                onRemove={() => setNotice(null)}
+                            >
+                                {notice.message}
+                            </Notice>
                         )}
                         {!isPublic && hasPermission === false && (
-                            <div style={{ margin: "50px" }}>
-                                <div className="notice-container">
-                                    <Notice status="error" isDismissible={false}>
-                                        You do not have permission to access this process.
-                                    </Notice>
-                                </div>
-                            </div>
+                            <Notice status="error" isDismissible={false}>
+                                You do not have permission to access this process.
+                            </Notice>
                         )}
                         <div className="panel-container">
                             <div className="accordion">
@@ -580,11 +574,9 @@ const ProcessViewer = () => {
                                                     {orderedSteps.length > 0 && orderedSteps[currentStep] ? (
                                                         <>
                                                             {!isUserAllowed && !isPublic && !isCompleted && (
-                                                                <div className="notice-container">
-                                                                    <Notice status="warning" isDismissible={false}>
-                                                                        You can only view this step.
-                                                                    </Notice>
-                                                                </div>
+                                                                <Notice status="warning" isDismissible={false}>
+                                                                    You can only view this step.
+                                                                </Notice>
                                                             )}
                                                             {options[currentStep].fields.length > 0 ? (
                                                                 !submittedSteps[currentStep] ? (
@@ -633,19 +625,15 @@ const ProcessViewer = () => {
                                                                     </dl>
                                                                 )
                                                             ) : (
-                                                                <div className="notice-container">
-                                                                    <Notice status="warning" isDismissible={false}>
-                                                                        No fields found for this Step.
-                                                                    </Notice>
-                                                                </div>
+                                                                <Notice status="warning" isDismissible={false}>
+                                                                    No fields found for this Step.
+                                                                </Notice>
                                                             )}
                                                         </>
                                                     ) : (
-                                                        <div className="notice-container">
-                                                            <Notice status="warning" isDismissible={false}>
-                                                                No steps found for this process.
-                                                            </Notice>
-                                                        </div>
+                                                        <Notice status="warning" isDismissible={false}>
+                                                            No steps found for this process.
+                                                        </Notice>
                                                     )}
                                                 </div>
                                             )}
