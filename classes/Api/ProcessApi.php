@@ -102,6 +102,13 @@ class ProcessApi extends ObatalaAPI {
             'callback' => [$this, 'delete_comment'],
             'permission_callback' => '__return_true',
         ]);
+
+        //Rota para editar uma etapa de um processo(mudar node_status e parametros gerais)
+        $this->add_route('/process_obatala/(?P<id>\d+)/node', [
+            'methods' => 'PUT',
+            'callback' => [$this, 'update_node'],
+            'permission_callback' => '__return_true',
+        ]);
     }
     
     public function get_current_stage($request) {
@@ -359,4 +366,178 @@ class ProcessApi extends ObatalaAPI {
         ], 200);
     }
 
+    public function update_node($request) {
+        $post_id = (int) $request['id'];
+        $node_id = $request['node_id'] ?? null;
+
+        $flowData = get_post_meta($post_id, 'flowData', true);
+        $flowData = maybe_unserialize($flowData);
+        $nodes = $flowData['nodes'];
+        $edges = $flowData['edges'];
+        
+        // Se node_id é nulo, inicializa o primeiro nó
+        if ($node_id === null) {
+            return $this->init_node($flowData, $post_id);
+        }
+
+        // Filtra nós que NÃO são Start, End ou Condicional
+        $filtered_nodes = array_filter($nodes, function($node) {
+            return $node['id'] !== 'Start' && 
+                $node['id'] !== 'End' && 
+                strpos($node['id'], 'Condicional') !== 0;
+        });
+
+        // Encontra o nó a ser atualizado
+        $node_to_update = null;
+        foreach ($filtered_nodes as $node) {
+            if ($node['id'] === $node_id) {
+                $node_to_update = $node;
+                break;
+            }
+        }
+
+        if (!$node_to_update) {
+            return new WP_REST_Response(['message' => 'Node not found.'], 404);
+        }
+
+        // Atualiza apenas o status do nó (sem usar params)
+        $updated_node = $node_to_update;
+        $updated_node['node_status'] = 'Finished';
+
+        // Encontra a próxima conexão
+        $next_edge = null;
+        foreach ($edges as $edge) {
+            if ($edge['source'] === $node_id) {
+                $next_edge = $edge;
+                break;
+            }
+        }
+
+        if ($next_edge) {
+            $next_node_id = $next_edge['target'];
+            
+            // Verifica se o próximo nó é uma condicional
+            if (strpos($next_node_id, 'Condicional') === 0) {
+                $conditional_node = null;
+                foreach ($nodes as $node) {
+                    if ($node['id'] === $next_node_id) {
+                        $conditional_node = $node;
+                        break;
+                    }
+                }
+
+                if ($conditional_node) {
+                    $input_node_id = $conditional_node['data']['condition']['inputNode']; // Ex: "Etapa 1"
+                    $radio_name = $conditional_node['data']['condition']['condition']; // Ex: "radio"
+                    //pegar o node onde o id dele é igual ao input_node_id
+                    $input_node = null;
+                    foreach ($nodes as $node) {
+                        if ($node['id'] === $input_node_id) {
+                            $input_node = $node;
+                            break;
+                        }
+                    }
+                    // pegar o valor que esta no data fields e procurar no array de fields o id do radio e ver la dentro de config onde o valor do label for igual ao valor de $radio_name
+                    $radio_id = null;
+                    foreach ($input_node['data']['fields'] as $field) {
+                        if ($field['config']['label'] === $radio_name) {
+                            $radio_id = $field['id'];
+                            break;
+                        }
+                    }
+                    // Obtém os dados dos estágios submetidos
+                    $stageData = get_post_meta($post_id, 'stageData', true);
+                    
+                    // Verifica se existe dados para o nó de input
+                    if (isset($stageData[$input_node_id])) {
+                        $input_node_data = $stageData[$input_node_id];
+                        
+                        // Procura o campo radio correspondente
+                        foreach ($input_node_data['fields'] as $field) {
+                            if ($field['fieldId'] === $radio_id && isset($field['value'][0])) {
+                                $selected_value = trim($field['value'][0]); // Ex: "B"
+                                
+                                // Encontra o próximo nó baseado no valor selecionado
+                                foreach ($conditional_node['data']['condition']['outputNodes'] as $output) {
+                                    if (trim($output['conditionValue']) === $selected_value) {
+                                        $next_node_id = $output['nodeId'];
+                                        break 2; // Sai dos dois loops
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Atualiza o próximo nó
+            foreach ($nodes as &$node) {
+                if ($node['id'] === $next_node_id && $node['node_status'] === 'Stopped') {
+                    $node['node_status'] = 'Started';
+                    break;
+                }
+            }
+        }
+
+        // Atualiza o nó atual
+        foreach ($nodes as &$node) {
+            if ($node['id'] === $node_id) {
+                $node = $updated_node;
+                break;
+            }
+        }
+
+        // Salva as alterações
+        $newFlowData = $flowData;
+        $newFlowData['nodes'] = $nodes;
+        
+        update_post_meta($post_id, 'flowData', $newFlowData);
+        
+        return new WP_REST_Response([
+            'message' => 'Node updated successfully.',
+            'node_id' => $node_id,
+            'next_node_id' => $next_node_id ?? null,
+            'status' => 'Finished'
+        ], 200);
+    }
+
+    public function init_node($flowData, $post_id) {
+        $nodes = $flowData['nodes'];
+        $edges = $flowData['edges'];
+        
+        // Encontra a primeira conexão após o Start
+        $first_edge = null;
+        foreach ($edges as $edge) {
+            if ($edge['source'] === 'Start') {
+                $first_edge = $edge;
+                break;
+            }
+        }
+
+        if ($first_edge) {
+            $first_node_id = $first_edge['target'];
+            
+            // Atualiza o status do primeiro nó
+            foreach ($nodes as &$node) {
+                if ($node['id'] === $first_node_id && $node['node_status'] === 'Stopped') {
+                    $node['node_status'] = 'started';
+                    
+                    // Salva as alterações
+                    $newFlowData = $flowData;
+                    $newFlowData['nodes'] = $nodes;
+                    update_post_meta($post_id, 'flowData', $newFlowData);
+                    
+                    return new WP_REST_Response([
+                        'message' => 'First node initialized successfully.',
+                        'node_id' => $first_node_id,
+                        'status' => $newFlowData['nodes']
+                    ], 200);
+                }
+            }
+        }
+
+        return new WP_REST_Response([
+            'message' => 'Could not initialize first node.'
+        ], 400);
+    }
 }

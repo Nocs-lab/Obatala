@@ -76,6 +76,13 @@ class Process {
             'single' => true,
             'show_in_rest' => true
         ]);
+
+        register_meta('post', 'status', [
+            'type' => 'string',
+            'description' => __('Status do Processo', 'obatala'),
+            'single' => true,
+            'show_in_rest' => true,
+        ]);
     }
 
     public static function init() {

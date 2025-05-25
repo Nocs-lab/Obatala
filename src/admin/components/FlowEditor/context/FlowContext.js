@@ -203,6 +203,7 @@ export const FlowProvider = ({ children }) => {
 
         const newNode = {
             id: newNodeId,
+            node_status: "Stopped",
             type: "customNode",
             dragHandle: ".custom-drag-handle",
             position: newNodePosition,
@@ -266,6 +267,7 @@ export const FlowProvider = ({ children }) => {
                 data.nodes.map(
                     ({
                         id,
+                        node_status,
                         position,
                         type,
                         data: nodeData,
@@ -276,6 +278,7 @@ export const FlowProvider = ({ children }) => {
                         tempSector,
                     }) => ({
                         id,
+                        node_status: node_status || "Stopped",
                         type: type,
                         dragHandle: ".custom-drag-handle",
                         position,
