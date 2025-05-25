@@ -82,6 +82,7 @@ class Process {
             'description' => __('Status do Processo', 'obatala'),
             'single' => true,
             'show_in_rest' => true,
+            'default' => 'Stopped'
         ]);
     }
 

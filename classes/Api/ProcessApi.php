@@ -109,6 +109,13 @@ class ProcessApi extends ObatalaAPI {
             'callback' => [$this, 'update_node'],
             'permission_callback' => '__return_true',
         ]);
+
+        // Rota para retornar nodes validos(Started e Finished)
+        $this->add_route('/process_obatala/(?P<id>\d+)/node', [
+            'methods' => 'GET',
+            'callback' => [$this, 'valid_nodes'],
+            'permission_callback' => '__return_true',
+        ]);
     }
     
     public function get_current_stage($request) {
@@ -400,7 +407,7 @@ class ProcessApi extends ObatalaAPI {
             return new WP_REST_Response(['message' => 'Node not found.'], 404);
         }
 
-        // Atualiza apenas o status do nó (sem usar params)
+        // Atualiza apenas o status do nó
         $updated_node = $node_to_update;
         $updated_node['node_status'] = 'Finished';
 
@@ -427,9 +434,9 @@ class ProcessApi extends ObatalaAPI {
                 }
 
                 if ($conditional_node) {
-                    $input_node_id = $conditional_node['data']['condition']['inputNode']; // Ex: "Etapa 1"
-                    $radio_name = $conditional_node['data']['condition']['condition']; // Ex: "radio"
-                    //pegar o node onde o id dele é igual ao input_node_id
+                    $input_node_id = $conditional_node['data']['condition']['inputNode'];
+                    $radio_name = $conditional_node['data']['condition']['condition'];
+                    
                     $input_node = null;
                     foreach ($nodes as $node) {
                         if ($node['id'] === $input_node_id) {
@@ -437,7 +444,7 @@ class ProcessApi extends ObatalaAPI {
                             break;
                         }
                     }
-                    // pegar o valor que esta no data fields e procurar no array de fields o id do radio e ver la dentro de config onde o valor do label for igual ao valor de $radio_name
+                    
                     $radio_id = null;
                     foreach ($input_node['data']['fields'] as $field) {
                         if ($field['config']['label'] === $radio_name) {
@@ -445,23 +452,20 @@ class ProcessApi extends ObatalaAPI {
                             break;
                         }
                     }
-                    // Obtém os dados dos estágios submetidos
+                    
                     $stageData = get_post_meta($post_id, 'stageData', true);
                     
-                    // Verifica se existe dados para o nó de input
                     if (isset($stageData[$input_node_id])) {
                         $input_node_data = $stageData[$input_node_id];
                         
-                        // Procura o campo radio correspondente
                         foreach ($input_node_data['fields'] as $field) {
                             if ($field['fieldId'] === $radio_id && isset($field['value'][0])) {
-                                $selected_value = trim($field['value'][0]); // Ex: "B"
+                                $selected_value = trim($field['value'][0]);
                                 
-                                // Encontra o próximo nó baseado no valor selecionado
                                 foreach ($conditional_node['data']['condition']['outputNodes'] as $output) {
                                     if (trim($output['conditionValue']) === $selected_value) {
                                         $next_node_id = $output['nodeId'];
-                                        break 2; // Sai dos dois loops
+                                        break 2;
                                     }
                                 }
                             }
@@ -470,11 +474,17 @@ class ProcessApi extends ObatalaAPI {
                 }
             }
 
-            // Atualiza o próximo nó
-            foreach ($nodes as &$node) {
-                if ($node['id'] === $next_node_id && $node['node_status'] === 'Stopped') {
-                    $node['node_status'] = 'Started';
-                    break;
+            // Se o próximo nó for End, atualiza o status do post
+            if ($next_node_id === 'End') {
+                update_post_meta($post_id, 'status', 'Finished');
+            } 
+            // Caso contrário, atualiza o status do próximo nó
+            else {
+                foreach ($nodes as &$node) {
+                    if ($node['id'] === $next_node_id && $node['node_status'] === 'Stopped') {
+                        $node['node_status'] = 'Started';
+                        break;
+                    }
                 }
             }
         }
@@ -520,7 +530,10 @@ class ProcessApi extends ObatalaAPI {
             // Atualiza o status do primeiro nó
             foreach ($nodes as &$node) {
                 if ($node['id'] === $first_node_id && $node['node_status'] === 'Stopped') {
-                    $node['node_status'] = 'started';
+                    $node['node_status'] = 'Started';
+                    
+                    // Atualiza também o status do post para started
+                    update_post_meta($post_id, 'status', 'Started');
                     
                     // Salva as alterações
                     $newFlowData = $flowData;
@@ -530,7 +543,7 @@ class ProcessApi extends ObatalaAPI {
                     return new WP_REST_Response([
                         'message' => 'First node initialized successfully.',
                         'node_id' => $first_node_id,
-                        'status' => $newFlowData['nodes']
+                        'status' => 'started'
                     ], 200);
                 }
             }
@@ -539,5 +552,21 @@ class ProcessApi extends ObatalaAPI {
         return new WP_REST_Response([
             'message' => 'Could not initialize first node.'
         ], 400);
+    }
+
+    public function valid_nodes($request) {
+        $post_id = (int) $request['id'];
+        $flowData = get_post_meta($post_id, 'flowData', true);
+        $flowData = maybe_unserialize($flowData);
+        $nodes = $flowData['nodes'];
+
+        $filtered_nodes = array_filter($nodes, function($node) {
+            return $node['id'] !== 'Start' && 
+                $node['id'] !== 'End' && 
+                strpos($node['id'], 'Condicional') !== 0 && 
+                $node['node_status'] !== 'Stopped';
+        });
+
+        return new WP_REST_Response(array_values($filtered_nodes), 200);
     }
 }
