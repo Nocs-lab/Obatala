@@ -143,12 +143,14 @@ const ProcessViewer = () => {
 
     const fetchUpdatedProcessNodes = async () => {
         try {
-            const nodes = await apiFetch({
+            const response = await apiFetch({
                 path: `/obatala/v1/process_obatala/${processId}/node`,
                 method: 'GET',
             });
 
-            setOrderedSteps(nodes);
+            setOrderedSteps(response.ordered_nodes); // <- pega apenas os nós ordenados
+            console.log('Progresso do processo:', response.progress); // <- opcional: usar o progresso
+
         } catch (error) {
             console.error('Erro ao buscar etapas atualizadas:', error);
         }

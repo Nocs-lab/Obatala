@@ -619,25 +619,6 @@ class ProcessApi extends ObatalaAPI {
         // Função recursiva para buscar próximo nó válido
         $visited = [];
 
-        function findNextValid($currentId, $graph, $nodeMap, $validNodeMap, &$visited) {
-            if (isset($visited[$currentId])) return null; // evita loops
-            $visited[$currentId] = true;
-
-            if (!isset($graph[$currentId])) return null;
-
-            foreach ($graph[$currentId] as $targetId) {
-                if (isset($validNodeMap[$targetId])) {
-                    return $targetId;
-                } elseif (isset($nodeMap[$targetId]) && strpos($targetId, 'Condicional') === 0) {
-                    // recursivamente tenta achar próximo válido via condicional
-                    $next = findNextValid($targetId, $graph, $nodeMap, $validNodeMap, $visited);
-                    if ($next) return $next;
-                }
-            }
-
-            return null;
-        }
-
         // Caminho ordenado final
         $orderedNodes = [];
         $current = $graph['Start'][0] ?? null;
@@ -648,9 +629,97 @@ class ProcessApi extends ObatalaAPI {
             }
 
             $visited = []; // reset para próxima chamada
-            $current = findNextValid($current, $graph, $nodeMap, $validNodeMap, $visited);
+            $current = $this->findNextValid($current, $graph, $nodeMap, $validNodeMap, $visited);
         }
 
-        return new WP_REST_Response($orderedNodes, 200);        
+        $progress = $this->calculate_progress_percentage($nodes, $edges);
+
+        return new WP_REST_Response([
+            'ordered_nodes' => $orderedNodes,
+            'progress'      => $progress
+        ], 200);       
     }
+
+    public function calculate_progress_percentage($nodes, $edges) {
+        if (!$nodes || !$edges) {
+            return 0;
+        }
+
+        // Mapa de id => node
+        $nodeMap = [];
+        foreach ($nodes as $node) {
+            $nodeMap[$node['id']] = $node;
+        }
+
+        // Identifica nós válidos
+        $validNodes = array_filter($nodes, function($node) {
+            return $node['id'] !== 'Start' &&
+                $node['id'] !== 'End' &&
+                strpos($node['id'], 'Condicional') !== 0 &&
+                $node['node_status'] !== 'Stopped';
+        });
+
+        $validNodeMap = [];
+        foreach ($validNodes as $node) {
+            $validNodeMap[$node['id']] = $node;
+        }
+
+        // Grafo: source => [target1, target2, ...]
+        $graph = [];
+        foreach ($edges as $edge) {
+            $source = $edge['source'];
+            $target = $edge['target'];
+            $graph[$source][] = $target;
+        }
+
+        // Função recursiva para buscar próximo nó válido
+        $visited = [];
+
+        // Caminho ordenado final
+        $orderedNodes = [];
+        $current = $graph['Start'][0] ?? null;
+
+        while ($current && $current !== 'End') {
+            if (isset($validNodeMap[$current])) {
+                $orderedNodes[] = $validNodeMap[$current];
+            }
+
+            $visited = [];
+            $current = $this->findNextValid($current, $graph, $nodeMap, $validNodeMap, $visited);
+        }
+
+        // Calcula percentual
+        $totalValid = count($orderedNodes);
+        if ($totalValid === 0) return 0;
+
+        $finishedCount = 0;
+        foreach ($orderedNodes as $node) {
+            if ($node['node_status'] === 'Finished') {
+                $finishedCount++;
+            }
+        }
+
+        $percentage = ($finishedCount / $totalValid) * 100;
+        return round($percentage, 2);
+    }
+
+    function findNextValid($currentId, $graph, $nodeMap, $validNodeMap, &$visited) {
+        if (isset($visited[$currentId])) return null; // evita loops
+        $visited[$currentId] = true;
+
+        if (!isset($graph[$currentId])) return null;
+
+        foreach ($graph[$currentId] as $targetId) {
+            if (isset($validNodeMap[$targetId])) {
+                return $targetId;
+            } elseif (isset($nodeMap[$targetId]) && strpos($targetId, 'Condicional') === 0) {
+                // recursivamente tenta achar próximo válido via condicional
+                $next = $this->findNextValid($targetId, $graph, $nodeMap, $validNodeMap, $visited);
+                if ($next) return $next;
+            }
+        }
+
+        return null;
+    }
+    
 }
