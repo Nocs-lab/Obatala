@@ -382,9 +382,32 @@ class ProcessApi extends ObatalaAPI {
         $nodes = $flowData['nodes'];
         $edges = $flowData['edges'];
         
-        // Se node_id é nulo, inicializa o primeiro nó
-        if ($node_id === null) {
+        $first_edge = null;
+        foreach ($edges as $edge) {
+            if ($edge['source'] === 'Start') {
+                $first_edge = $edge;
+                break;
+            }
+        }
+
+        if ($first_edge) {
+            $first_node_id = $first_edge['target'];
+        }
+        
+        $first_node = null;
+        foreach ($nodes as $node) {
+            if ($node['id'] === $first_node_id) {
+                $first_node = $node;
+                break;
+            }
+        }
+
+        if ($node_id === null && $first_node['node_status'] === 'Stopped') {
             return $this->init_node($flowData, $post_id);
+        }else if ($node_id === null) {
+            return new WP_REST_Response([
+                'message' => 'Node ID iniciado.',
+            ], 200);
         }
 
         // Filtra nós que NÃO são Start, End ou Condicional
@@ -558,15 +581,76 @@ class ProcessApi extends ObatalaAPI {
         $post_id = (int) $request['id'];
         $flowData = get_post_meta($post_id, 'flowData', true);
         $flowData = maybe_unserialize($flowData);
-        $nodes = $flowData['nodes'];
 
-        $filtered_nodes = array_filter($nodes, function($node) {
-            return $node['id'] !== 'Start' && 
-                $node['id'] !== 'End' && 
-                strpos($node['id'], 'Condicional') !== 0 && 
+        if (!$flowData || !isset($flowData['nodes']) || !isset($flowData['edges'])) {
+            return new WP_REST_Response([], 200);
+        }
+
+        $nodes = $flowData['nodes'];
+        $edges = $flowData['edges'];
+
+        // Cria mapa de id => node
+        $nodeMap = [];
+        foreach ($nodes as $node) {
+            $nodeMap[$node['id']] = $node;
+        }
+
+        // Identifica nodes válidos
+        $validNodes = array_filter($nodes, function($node) {
+            return $node['id'] !== 'Start' &&
+                $node['id'] !== 'End' &&
+                strpos($node['id'], 'Condicional') !== 0 &&
                 $node['node_status'] !== 'Stopped';
         });
 
-        return new WP_REST_Response(array_values($filtered_nodes), 200);
+        $validNodeMap = [];
+        foreach ($validNodes as $node) {
+            $validNodeMap[$node['id']] = $node;
+        }
+
+        // Grafo: source => [target1, target2, ...]
+        $graph = [];
+        foreach ($edges as $edge) {
+            $source = $edge['source'];
+            $target = $edge['target'];
+            $graph[$source][] = $target;
+        }
+
+        // Função recursiva para buscar próximo nó válido
+        $visited = [];
+
+        function findNextValid($currentId, $graph, $nodeMap, $validNodeMap, &$visited) {
+            if (isset($visited[$currentId])) return null; // evita loops
+            $visited[$currentId] = true;
+
+            if (!isset($graph[$currentId])) return null;
+
+            foreach ($graph[$currentId] as $targetId) {
+                if (isset($validNodeMap[$targetId])) {
+                    return $targetId;
+                } elseif (isset($nodeMap[$targetId]) && strpos($targetId, 'Condicional') === 0) {
+                    // recursivamente tenta achar próximo válido via condicional
+                    $next = findNextValid($targetId, $graph, $nodeMap, $validNodeMap, $visited);
+                    if ($next) return $next;
+                }
+            }
+
+            return null;
+        }
+
+        // Caminho ordenado final
+        $orderedNodes = [];
+        $current = $graph['Start'][0] ?? null;
+
+        while ($current && $current !== 'End') {
+            if (isset($validNodeMap[$current])) {
+                $orderedNodes[] = $validNodeMap[$current];
+            }
+
+            $visited = []; // reset para próxima chamada
+            $current = findNextValid($current, $graph, $nodeMap, $validNodeMap, $visited);
+        }
+
+        return new WP_REST_Response($orderedNodes, 200);        
     }
 }
