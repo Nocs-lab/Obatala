@@ -159,14 +159,11 @@ const DashboardPage = () => {
 
     // Função para contar processos concluídos
     const countCompletedProcesses = useMemo(() => {
-        return processes.filter(process => {
-            const nodes = process.meta?.flowData?.nodes?.filter(node => node.id !== "End") ?? [];
-            const [currentStage] = process.meta?.current_stage || [];
-            if (nodes.length === 0 || !currentStage) return false;
-            
-            const lastNode = nodes[nodes.length - 1];
-            return lastNode?.data?.stageName === currentStage;
-        }).length;
+        const finishedProcesses = processes.filter(process => {
+            const status = process?.meta?.status?.[0];
+            return status === "Finished";
+        });
+        return finishedProcesses.length;
     }, [processes]);
 
     // Porcentagem de processos concluídos
