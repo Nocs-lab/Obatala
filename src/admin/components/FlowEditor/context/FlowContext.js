@@ -353,12 +353,9 @@ export const FlowProvider = ({ children }) => {
 
     // Função para importar dados e sobrescrever o estado
     const onImport = useCallback((importedData) => {
-        console.log('Dados brutos recebidos:', importedData);
 
         try {
             const flowData = importedData.meta?.flowData || importedData;
-
-            console.log('Dados do fluxo extraídos:', flowData);
 
             const validationErrors = [];
 
@@ -396,12 +393,9 @@ export const FlowProvider = ({ children }) => {
                 selected: false
             }));
 
-            console.log('Nós processados:', processedNodes);
-
             setNodes(processedNodes);
             setEdges(flowData.edges || []);
 
-            console.log('Importação concluída com sucesso');
             setErrors([]);
             return true;
 
