@@ -16,14 +16,31 @@ const { addNewNode, addNewNodeConditional, onExport, onImport } = useFlowContext
         const file = event.target.files[0];
         if (file) {
         const reader = new FileReader();
-        reader.onload = (e) => {
-            const importedData = JSON.parse(e.target.result);
-            onImport(importedData); // Chama a função para importar os dados
-        };
+            reader.onload = (e) => {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    
+                    if (importedData && importedData.nodes && importedData.edges) {
+                        onImport(importedData);
+                    } else {
+                        console.error('Formato de arquivo inválido. O JSON deve conter nodes e edges.');
+                        alert('Formato de arquivo inválido. O JSON deve conter nodes e edges.');
+                    }
+                } catch (error) {
+                    console.error('Erro ao analisar o arquivo JSON:', error);
+                    alert('Erro ao ler o arquivo. Certifique-se de que é um JSON válido.');
+                }
+            };
         reader.readAsText(file);
         }
     };
-  
+
+    const handleExport = () => {
+        if (typeof onExport === 'function') {
+            onExport();
+        }
+    };
+
     return (
         <>
             <ButtonGroup>
@@ -52,11 +69,11 @@ const { addNewNode, addNewNodeConditional, onExport, onImport } = useFlowContext
                     controls={ [
                         {
                             title: 'Exportar JSON',
-                            onClick: () => onExport,
+                            onClick: handleExport,
                         },
                         {
                             title: 'Importar JSON',
-                            onClick: () => handleImportClick,
+                            onClick: handleImportClick,
                         },
                     ] }
                 />              

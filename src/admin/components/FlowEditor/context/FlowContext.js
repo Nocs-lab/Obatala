@@ -258,10 +258,17 @@ export const FlowProvider = ({ children }) => {
     };
 
     // Função para validar e inicializar dados
-    const initializeData = (data) => {
+    const initializeData = useCallback((data) => {
         const validationResult = validateInitialData(data);
 
         if (validationResult.isValid || 1 === 1) {
+            if (!data || !data.nodes) {
+                addStartNode();
+                addEndNode();
+                addNewNode();
+                return;
+            }
+
             setNodes(
                 data.nodes.map(
                     ({
@@ -276,66 +283,140 @@ export const FlowProvider = ({ children }) => {
                         tempSector,
                     }) => ({
                         id,
-                        type: type,
+                        type: type || 'customNode',
                         dragHandle: ".custom-drag-handle",
-                        position,
+                        position: position || { x: 0, y: 0 },
                         data: {
-                            fields: nodeData.fields || [],
-                            stageName: nodeData.stageName || "",
-                            condition: nodeData.condition || {}, // Garante que condition é preservado
+                            fields: Array.isArray(nodeData?.fields) ? nodeData.fields : [],
+                            stageName: nodeData?.stageName || id,
+                            condition: nodeData?.condition || {},
                             updateFields: (newFields) => updateFieldsForNode(id, newFields),
                             updateNodeName: (newName) => updateNodeName(id, newName),
                             updatePosition: (newPosition) => updateNodePosition(id, newPosition),
                         },
-                        sector_obatala: sector_obatala || "",
+                        sector_obatala: sector_obatala || null,
                         sector_history: sector_history || [],
-                        tempSector: sector_obatala ? sector_obatala : tempSector,
-                        measured: measured || { width: 0, height: 0 }, // Inclui a medida
-                        selected: selected || false, // Inclui o estado de seleção
+                        tempSector: sector_obatala ? sector_obatala : tempSector || null,
+                        measured: measured || { width: 244, height: 320 },
+                        selected: selected || false,
                     })
                 )
             );
-            setEdges(
-                data.edges.map(({ id, source, target }) => ({
-                    id,
-                    source,
-                    target,
-                    type: "buttonedge",
-                }))
-            );
+            setEdges(data.edges || []);
+
+            // Carrega o grupo selecionado se existir nos metadados
+            if (data.metadata?.selectedGroup) {
+                setSelectedGroup(data.metadata.selectedGroup);
+            }
         } else {
             setErrors(validationResult.errors);
         }
-    };
+    }, [addStartNode, addEndNode, addNewNode, updateFieldsForNode, updateNodeName, updateNodePosition]);
 
     // Função para exportar os dados do fluxo
-    const onExport = () => {
-        const data = {
-            nodes,
-            edges,
-        };
+    const onExport = useCallback(() => {
+        try {
+            const exportData = {
+                nodes: nodes.map(node => ({
+                    ...node,
+                    data: {
+                        ...node.data,
+                        // Remove funções que não podem ser serializadas
+                        updateFields: undefined,
+                        updateNodeName: undefined,
+                        updatePosition: undefined
+                    }
+                })),
+                edges: edges.map(edge => ({ ...edge })),
+            };
 
-        const dataStr = `data:text/json;charset=utf-8,${encodeURIComponent(
-            JSON.stringify(data, null, 2)
-        )}`;
-        const downloadAnchorNode = document.createElement("a");
-        downloadAnchorNode.setAttribute("href", dataStr);
-        downloadAnchorNode.setAttribute("download", "flowData.json");
-        document.body.appendChild(downloadAnchorNode);
-        downloadAnchorNode.click();
-        downloadAnchorNode.remove();
-    };
+            const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+
+            // Cria um link temporário para download
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `process-flow-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+
+            // Limpeza
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 100);
+        } catch (error) {
+            console.error('Erro ao exportar dados:', error);
+            setErrors([{ message: 'Erro ao exportar dados do fluxo' }]);
+        }
+    }, [nodes, edges]);
 
     // Função para importar dados e sobrescrever o estado
-    const onImport = (importedData) => {
-        const validationResult = validateInitialData(importedData);
+    const onImport = useCallback((importedData) => {
+        console.log('Dados brutos recebidos:', importedData);
 
-        if (validationResult.isValid) {
-            initializeData(importedData);
-        } else {
-            setErrors(validationResult.errors);
+        try {
+            const flowData = importedData.meta?.flowData || importedData;
+
+            console.log('Dados do fluxo extraídos:', flowData);
+
+            const validationErrors = [];
+
+            if (!flowData.nodes || !Array.isArray(flowData.nodes)) {
+                validationErrors.push("Estrutura inválida: nodes deve existir e ser um array");
+            } else {
+                flowData.nodes.forEach((node, index) => {
+                    if (!Array.isArray(node.data?.fields)) {
+                        validationErrors.push(`Node ${node.id} tem fields inválido (deveria ser array)`);
+                    }
+                });
+            }
+
+            if (validationErrors.length > 0) {
+                console.error('Erros de validação:', validationErrors);
+                setErrors(validationErrors);
+                return false;
+            }
+
+            const processedNodes = flowData.nodes.map(node => ({
+                ...node,
+                type: node.type || 'customNode',
+                dragHandle: ".custom-drag-handle",
+                position: node.position || { x: 0, y: 0 },
+                data: {
+                    ...node.data,
+                    fields: node.data?.fields || [],
+                    stageName: node.data?.stageName || node.id || "Sem nome",
+                    condition: node.data?.condition || {},
+                    updateFields: (newFields) => updateFieldsForNode(node.id, newFields),
+                    updateNodeName: (newName) => updateNodeName(node.id, newName),
+                    updatePosition: (newPosition) => updateNodePosition(node.id, newPosition),
+                },
+                measured: node.measured || { width: 244, height: 320 },
+                selected: false
+            }));
+
+            console.log('Nós processados:', processedNodes);
+
+            setNodes(processedNodes);
+            setEdges(flowData.edges || []);
+
+            console.log('Importação concluída com sucesso');
+            setErrors([]);
+            return true;
+
+        } catch (error) {
+            console.error('Erro na importação:', error);
+            setErrors([`Erro ao importar: ${error.message}`]);
+
+            if (nodes.length === 0) {
+                addStartNode();
+                addEndNode();
+                addNewNode();
+            }
+            return false;
         }
-    };
+    }, [addStartNode, addEndNode, addNewNode, nodes.length, updateFieldsForNode, updateNodeName, updateNodePosition]);
 
     const value = {
         nodes,
@@ -361,6 +442,5 @@ export const FlowProvider = ({ children }) => {
         addStartNode,
         addEndNode,
     };
-
-    return <FlowContext.Provider value={value}>{children}</FlowContext.Provider>;
-};
+return <FlowContext.Provider value={value}>{children}</FlowContext.Provider>;
+}
