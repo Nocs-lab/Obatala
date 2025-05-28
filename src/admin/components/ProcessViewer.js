@@ -42,6 +42,7 @@ const ProcessViewer = () => {
     const [uploadedFiles, setUploadedFiles] = useState({});
     const [fileInfo, setFileInfo] = useState({});
     const [notice, setNotice] = useState(null);
+    const [progress, setProgress] = useState(0);
     // Função para controlar o estado de expansão do accordion
     const [activeIndex, setActiveIndex] = useState(null);
 
@@ -87,6 +88,7 @@ const ProcessViewer = () => {
         };
 
         initializeNodeData();
+
     }, [processId]);
 
     useEffect(() => {
@@ -149,25 +151,12 @@ const ProcessViewer = () => {
             });
 
             setOrderedSteps(response.ordered_nodes); // <- pega apenas os nós ordenados
-            console.log('Progresso do processo:', response.progress); // <- opcional: usar o progresso
+            setProgress(response.progress)
 
         } catch (error) {
             console.error('Erro ao buscar etapas atualizadas:', error);
         }
     };
-
-    const calculatePercentagem = () => {
-        // Filtra os nodes que não devem ser contados
-        const validNodes = flowNodes?.nodes?.filter(node =>
-            node.id !== "Start" &&
-            node.id !== "End" &&
-            !node.id.startsWith("Condicional")
-        ) || [];
-
-        // Calcula a porcentagem baseada apenas nos nodes válidos
-        const result = (Object.keys(submittedSteps).length / validNodes.length) * 100;
-        return validNodes.length > 0 ? result.toFixed(2) : "0.00";
-    }
 
     const loadSectors = () => {
         fetchSectors()
@@ -543,7 +532,8 @@ const ProcessViewer = () => {
                         process={process}
                         filteredProcessType={filteredProcessType}
                         authorsById={authorsById}
-                        calculatePercentagem={calculatePercentagem}
+                        progress={progress}
+                        isComplete={progress && progress === 100}
                         options={options}
                         currentStageData={currentStageData}
                         sectors={sectors}
@@ -554,8 +544,8 @@ const ProcessViewer = () => {
                             process={process}
                             filteredProcessType={filteredProcessType}
                             authorsById={authorsById}
-                            calculatePercentagem={calculatePercentagem}
-                            isComplete={parseFloat(calculatePercentagem()) === 100} // Adicionado para controle do badge
+                            isComplete={progress && progress === 100} // Adicionado para controle do badge
+                            progress={progress}
                         />
                         {notice && (
                             <Notice
