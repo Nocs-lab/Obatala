@@ -435,6 +435,9 @@ table.wp-list-table {
   border: 0 none;
   border-collapse: collapse;
   width: 100%;
+  &.transparent {
+    background-color: transparent;
+  }
 }
 table.wp-list-table td {
   vertical-align: middle;
@@ -570,6 +573,12 @@ th[role="columnheader"][title="Toggle SortBy"] {
 /* #endregion */
 
 /* #region Functional classes */
+.flex-basis-100 {
+  flex-basis: 100%;
+}
+.mb-0 {
+  margin-bottom: 0;
+}
 .mb-1 {
   margin-bottom: 1rem;
 }
@@ -598,6 +607,7 @@ th[role="columnheader"][title="Toggle SortBy"] {
 .table-responsive {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  width: 100%;
 }
 .text-center {
   text-align: center;
@@ -733,35 +743,48 @@ form .action-bar {
   display: flex;
   flex-wrap: wrap;
   gap: var(--gap);
-}
-.card-container .card-item {
-  background-color: var(--white);
-  border: 0 none;
-  border-radius: var(--border-radius);
-  color: var(--primary);
-  display: flex;
-  align-items: center;
-  flex-grow: 1;
-  flex-wrap: wrap;
-  gap: .5rem var(--gap);
-  justify-content: space-between;
-  padding: 1.25rem var(--gap);
+  & .card-item {
+    background-color: var(--white);
+    border: 0 none;
+    border-radius: var(--border-radius);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+    flex-wrap: wrap;
+    gap: .5rem var(--gap);
+    justify-content: space-between;
+    padding: 1.25rem var(--gap);
+    & .title {
+      flex-basis: 100%;
+    }
+    & .indicator {
+      font-size: 2.25rem;
+      font-weight: 600;
+      line-height: 1em;
+    }
+    &.primary-100 {
+      background-color: var(--primary-100);
+    }
+  }
+  & .components-panel {
+    flex-grow: 1;
+  }
 }
 .card-container a.card-item {
-  background-color: var(--primary-400);
+  background-color: var(--primary-600);
   color: var(--white);
   text-decoration: none;
 }
 .card-container a.card-item:hover {
-  background-color: var(--primary-600);
+  background-color: var(--primary-400);
 }
 .card-container .description {
   font-size: 1.25rem;
-}
-.card-container .indicator {
-  font-size: 3rem;
-  font-weight: 600;
-  line-height: 1em;
+  & .dashicons {
+    margin-right: .5rem;
+    opacity: .5;
+  }
 }
 .card-container .indicator small {
   color: var(--gray-500);
@@ -880,6 +903,10 @@ ol.list-group .list-group-item::before {
   background: var(--white);
   border: 0 none;
   border-radius: var(--border-radius);
+  &.warning {
+    background-color: var(--warning);
+    color: var(--white);
+  }
 }
 .components-panel__header {
   gap: 1rem;
@@ -1000,12 +1027,13 @@ ol.list-group .list-group-item::before {
   background-color: var(--warning);
 }
 progress {
-  height: 10px;
+  height: 16px;
   appearance: none;
   -webkit-appearance: none;
+  min-width: 300px;
 }
 progress::-webkit-progress-bar {
-  background-color: var(--gray-100);
+  background-color: rgba(255,255,255,.1);
   border-radius: var(--border-radius);
 }
 progress::-webkit-progress-value {
@@ -1039,6 +1067,19 @@ progress::-moz-progress-bar {
   color: var(--danger);
   content: "\f158";
 }
+.dashboard-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+  & .dashboard-item-personal {
+    flex-basis: 25%;
+    flex-grow: 0;
+  }
+  & .dashboard-item-stats {
+    flex-basis: 300px;
+    flex-grow: 1;
+  }
+}
 button .components-spinner {
   width: 15px;
   height: 15px;
@@ -1061,6 +1102,45 @@ button .components-spinner {
 }
 .form-buttons .components-spinner {
   margin-top: 0;
+}
+.list-actions {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  margin: 0;
+  width: 100%;
+  & li {
+    border-bottom: 1px solid rgba(0,0,0,.15);
+    margin-bottom: 0;
+    & a {
+      background-color: rgba(0, 0, 0, .15);
+      border-radius: 25px;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      justify-content: space-between;
+      padding: .5rem;
+      text-decoration: none;
+      & .dashicons {
+        color: var(--warning);
+      }
+      & .text {
+        font-size: .9rem;
+        line-height: 1.1em;
+        margin-right: auto;
+      }
+      &:hover {
+        background-color: rgba(0, 0, 0, .25);
+        & .dashicons {
+          color: var(--white);
+        }
+      }
+    }
+    &:last-child {
+      border-bottom: 0 none;
+    }
+  }
 }
 #obatala-manage-processes {
   max-width: 500px;
@@ -1247,6 +1327,16 @@ button .components-spinner {
   & .components-dropdown-menu__toggle {
     border: 1px solid var(--gray-400);
     color: var(--gray-400);
+  }
+  & .stat {
+    margin-left: auto;
+    text-align: right;
+    & .description {
+      color: var(--gray-300);
+      font-size: .85rem;
+      max-width: 100%;
+      padding-bottom: .25rem;
+    }
   }
 
   @media screen and (max-width: 1200px) {

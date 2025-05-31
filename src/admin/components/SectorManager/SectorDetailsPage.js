@@ -141,7 +141,7 @@ const SectorDetailsPage = () => {
                     <PanelRow>
                         {sector.users ? (
                             sector.users.length > 0 ? (
-                                <table className="wp-list-table widefat fixed striped">
+                                <table className="wp-list-table widefat striped">
                                     <thead>
                                         <tr>
                                             <th>Name</th>

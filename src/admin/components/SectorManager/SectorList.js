@@ -153,7 +153,7 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
                 {sectors.length > 0 ? (
                     <>
                         <div className="table-responsive">
-                            <table {...getTableProps()} className="wp-list-table widefat fixed striped table-view-list">
+                            <table {...getTableProps()} className="wp-list-table widefat striped table-view-list">
                                 <thead>
                                     {headerGroups.map(headerGroup => (
                                         <tr {...headerGroup.getHeaderGroupProps()}>
