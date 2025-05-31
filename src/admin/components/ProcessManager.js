@@ -8,6 +8,7 @@ import { fetchUserProcesses } from '../api/apiRequests';
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 import BrandHeader from './BrandHeader';
+import BrandFooter from './BrandFooter';
 
 const ProcessManager = ({ onSelectProcess }) => {
     const [processTypes, setProcessTypes] = useState([]);
@@ -262,6 +263,7 @@ const ProcessManager = ({ onSelectProcess }) => {
                 )}
 
             </main>
+            <BrandFooter />
         </>
     );
 };

@@ -13,6 +13,7 @@ import { useSelect } from "@wordpress/data";
 import { store as coreStore } from '@wordpress/core-data';
 import { update } from "@wordpress/icons";
 import BrandHeader from "./BrandHeader";
+import BrandFooter from "./BrandFooter";
 
 const processDataEditor = () => {
     const params = new URLSearchParams(window.location.search);
@@ -306,6 +307,7 @@ const processDataEditor = () => {
                     />
                 </FlowProvider>
             </main>
+            <BrandFooter />
         </>
     );
 };

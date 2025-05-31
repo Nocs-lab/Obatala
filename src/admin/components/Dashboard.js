@@ -1,18 +1,17 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import {
-    Icon,
     Notice,
     Panel,
     PanelRow,
     PanelHeader,
     Spinner
 } from '@wordpress/components';
-import { people,  starFilled } from "@wordpress/icons";
 import { fetchProcessModels, fetchSectors, fetchSectorsUsers, } from '../api/apiRequests';
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 import apiFetch from '@wordpress/api-fetch';
 import BrandHeader from './BrandHeader';
+import BrandFooter from './BrandFooter';
 
 const DashboardPage = () => {
     const [processTypes, setProcessTypes] = useState([]);
@@ -266,6 +265,7 @@ const DashboardPage = () => {
                     </Panel>
                 </div>
             </main>
+            <BrandFooter />
         </>
     );
 };

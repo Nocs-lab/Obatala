@@ -152,40 +152,42 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
                 </div>
                 {sectors.length > 0 ? (
                     <>
-                        <table {...getTableProps()} className="wp-list-table widefat fixed striped table-view-list">
-                            <thead>
-                                {headerGroups.map(headerGroup => (
-                                    <tr {...headerGroup.getHeaderGroupProps()}>
-                                        {headerGroup.headers.map(column => (
-                                            <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                                {column.render('Header')}
-                                                <span>
-                                                    {column.isSorted
-                                                        ? column.isSortedDesc
-                                                            ? ' 🔽'
-                                                            : ' 🔼'
-                                                        : ''}
-                                                </span>
-                                            </th>
-                                        ))}
-                                    </tr>
-                                ))}
-                            </thead>
-                            <tbody {...getTableBodyProps()}>
-                                {page.map(row => {
-                                    prepareRow(row);
-                                    return (
-                                        <tr {...row.getRowProps()}>
-                                            {row.cells.map(cell => (
-                                                <td {...cell.getCellProps()}>
-                                                    {cell.render('Cell')}
-                                                </td>
+                        <div className="table-responsive">
+                            <table {...getTableProps()} className="wp-list-table widefat fixed striped table-view-list">
+                                <thead>
+                                    {headerGroups.map(headerGroup => (
+                                        <tr {...headerGroup.getHeaderGroupProps()}>
+                                            {headerGroup.headers.map(column => (
+                                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                                    {column.render('Header')}
+                                                    <span>
+                                                        {column.isSorted
+                                                            ? column.isSortedDesc
+                                                                ? ' 🔽'
+                                                                : ' 🔼'
+                                                            : ''}
+                                                    </span>
+                                                </th>
                                             ))}
                                         </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
+                                    ))}
+                                </thead>
+                                <tbody {...getTableBodyProps()}>
+                                    {page.map(row => {
+                                        prepareRow(row);
+                                        return (
+                                            <tr {...row.getRowProps()}>
+                                                {row.cells.map(cell => (
+                                                    <td {...cell.getCellProps()}>
+                                                        {cell.render('Cell')}
+                                                    </td>
+                                                ))}
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
                         <div className="pagination">
                             <Button onClick={() => previousPage()} disabled={!canPreviousPage}>
                                 Previous
