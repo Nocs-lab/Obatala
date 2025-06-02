@@ -22,7 +22,7 @@ const CommentForm = ({ processId }) => {
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
 
     useEffect(() => {
-        if ((currentUser && currentUser !== undefined) || !processId) return;
+        if ((currentUser && currentUser === undefined) || !processId) return;
 
         fetchComments();
 
