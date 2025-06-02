@@ -22,6 +22,7 @@ import MetaFieldDisplay from "./ProcessManager/MetaFieldDisplay";
 import ProcessHeader from './ProcessManager/ProcessHeader';
 import HistoryViewer from './ProcessManager/HistoryViewer';
 import BrandHeader from './BrandHeader';
+import BrandFooter from './BrandFooter';
 
 const ProcessViewer = () => {
     const [process, setProcess] = useState(null);
@@ -696,6 +697,7 @@ const ProcessViewer = () => {
                     </>
                 )}
             </main>
+            <BrandFooter />
         </>
     );
 }

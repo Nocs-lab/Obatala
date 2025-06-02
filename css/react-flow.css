@@ -5,6 +5,7 @@
 .flow-container {
   background-color: var(--primary-50);
   border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
   height: 70vh;
 }
 

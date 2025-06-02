@@ -136,50 +136,52 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
                 </div>
                 {processes.length > 0 ? (
                     <>
-                        <table {...getTableProps()} className="wp-list-table widefat striped table-view-list">
-                            <thead>
-                                {headerGroups.map(headerGroup => {
-                                    const { key: headerGroupKey, ...headerGroupProps } = headerGroup.getHeaderGroupProps();
-                                    return (
-                                        <tr key={headerGroupKey} {...headerGroupProps}>
-                                            {headerGroup.headers.map(column => {
-                                                const { key: columnKey, ...columnProps } = column.getHeaderProps(column.getSortByToggleProps());
-                                                return (
-                                                    <th key={columnKey} {...columnProps}>
-                                                        {column.render('Header')}
-                                                        <span>
-                                                            {column.isSorted
-                                                                ? column.isSortedDesc
-                                                                    ? ' 🔽'
-                                                                    : ' 🔼'
-                                                                : ''}
-                                                        </span>
-                                                    </th>
-                                                );
-                                            })}
-                                        </tr>
-                                    );
-                                })}
-                            </thead>
-                            <tbody {...getTableBodyProps()}>
-                                {page.map(row => {
-                                    prepareRow(row);
-                                    const { key: rowKey, ...rowProps } = row.getRowProps();
-                                    return (
-                                        <tr key={rowKey} {...rowProps}>
-                                            {row.cells.map(cell => {
-                                                const { key: cellKey, ...cellProps } = cell.getCellProps();
-                                                return (
-                                                    <td key={cellKey} {...cellProps}>
-                                                        {cell.render('Cell')}
-                                                    </td>
-                                                );
-                                            })}
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
+                        <div className="table-responsive">
+                            <table {...getTableProps()} className="wp-list-table widefat striped table-view-list">
+                                <thead>
+                                    {headerGroups.map(headerGroup => {
+                                        const { key: headerGroupKey, ...headerGroupProps } = headerGroup.getHeaderGroupProps();
+                                        return (
+                                            <tr key={headerGroupKey} {...headerGroupProps}>
+                                                {headerGroup.headers.map(column => {
+                                                    const { key: columnKey, ...columnProps } = column.getHeaderProps(column.getSortByToggleProps());
+                                                    return (
+                                                        <th key={columnKey} {...columnProps}>
+                                                            {column.render('Header')}
+                                                            <span>
+                                                                {column.isSorted
+                                                                    ? column.isSortedDesc
+                                                                        ? ' 🔽'
+                                                                        : ' 🔼'
+                                                                    : ''}
+                                                            </span>
+                                                        </th>
+                                                    );
+                                                })}
+                                            </tr>
+                                        );
+                                    })}
+                                </thead>
+                                <tbody {...getTableBodyProps()}>
+                                    {page.map(row => {
+                                        prepareRow(row);
+                                        const { key: rowKey, ...rowProps } = row.getRowProps();
+                                        return (
+                                            <tr key={rowKey} {...rowProps}>
+                                                {row.cells.map(cell => {
+                                                    const { key: cellKey, ...cellProps } = cell.getCellProps();
+                                                    return (
+                                                        <td key={cellKey} {...cellProps}>
+                                                            {cell.render('Cell')}
+                                                        </td>
+                                                    );
+                                                })}
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
                         <div className="pagination">
                             <Button onClick={() => previousPage()} disabled={!canPreviousPage}>
                                 Previous

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import apiFetch from "@wordpress/api-fetch";
 import { Notice, Panel, PanelHeader, PanelRow, Spinner, Button  } from '@wordpress/components';
 import BrandHeader from '../BrandHeader';
+import BrandFooter from '../BrandFooter';
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 import { __experimentalConfirmDialog as ConfirmDialog } from '@wordpress/components';
@@ -140,7 +141,7 @@ const SectorDetailsPage = () => {
                     <PanelRow>
                         {sector.users ? (
                             sector.users.length > 0 ? (
-                                <table className="wp-list-table widefat fixed striped">
+                                <table className="wp-list-table widefat striped">
                                     <thead>
                                         <tr>
                                             <th>Name</th>
@@ -189,6 +190,7 @@ const SectorDetailsPage = () => {
                     Are you sure you want to leave the group "{sector.nome}"?
                 </ConfirmDialog>
             </main>
+            <BrandFooter />
         </>
     );
 };
