@@ -16,6 +16,7 @@ import Reducer, { initialState } from '../redux/reducer';
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 import BrandHeader from './BrandHeader';
+import BrandFooter from './BrandFooter';
 
 const ProcessTypeManager = () => {
     const [processTypes, setProcessTypes] = useState([]);
@@ -184,6 +185,7 @@ const ProcessTypeManager = () => {
                     ) : null}
                 </div>
             </main>
+            <BrandFooter />
         </>
     );
 };

@@ -16,6 +16,7 @@ import Reducer, { initialState } from '../redux/reducer';
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 import BrandHeader from './BrandHeader';
+import BrandFooter from './BrandFooter';
 
 const SectorManager = () => {
     const [sectors, setSectors] = useState([])
@@ -221,6 +222,7 @@ const SectorManager = () => {
                   </Modal>
               )}
           </main>
+          <BrandFooter />
       </>
   );
 };

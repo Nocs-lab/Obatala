@@ -102,6 +102,20 @@ class ProcessApi extends ObatalaAPI {
             'callback' => [$this, 'delete_comment'],
             'permission_callback' => '__return_true',
         ]);
+
+        //Rota para editar uma etapa de um processo(mudar node_status e parametros gerais)
+        $this->add_route('/process_obatala/(?P<id>\d+)/node', [
+            'methods' => 'PUT',
+            'callback' => [$this, 'update_node'],
+            'permission_callback' => '__return_true',
+        ]);
+
+        // Rota para retornar nodes validos(Started e Finished)
+        $this->add_route('/process_obatala/(?P<id>\d+)/node', [
+            'methods' => 'GET',
+            'callback' => [$this, 'valid_nodes'],
+            'permission_callback' => '__return_true',
+        ]);
     }
     
     public function get_current_stage($request) {
@@ -359,4 +373,353 @@ class ProcessApi extends ObatalaAPI {
         ], 200);
     }
 
+    public function update_node($request) {
+        $post_id = (int) $request['id'];
+        $node_id = $request['node_id'] ?? null;
+
+        $flowData = get_post_meta($post_id, 'flowData', true);
+        $flowData = maybe_unserialize($flowData);
+        $nodes = $flowData['nodes'];
+        $edges = $flowData['edges'];
+        
+        $first_edge = null;
+        foreach ($edges as $edge) {
+            if ($edge['source'] === 'Start') {
+                $first_edge = $edge;
+                break;
+            }
+        }
+
+        if ($first_edge) {
+            $first_node_id = $first_edge['target'];
+        }
+        
+        $first_node = null;
+        foreach ($nodes as $node) {
+            if ($node['id'] === $first_node_id) {
+                $first_node = $node;
+                break;
+            }
+        }
+
+        if ($node_id === null && $first_node['node_status'] === 'Stopped') {
+            return $this->init_node($flowData, $post_id);
+        }else if ($node_id === null) {
+            return new WP_REST_Response([
+                'message' => 'Node ID iniciado.',
+            ], 200);
+        }
+
+        // Filtra nós que NÃO são Start, End ou Condicional
+        $filtered_nodes = array_filter($nodes, function($node) {
+            return $node['id'] !== 'Start' && 
+                $node['id'] !== 'End' && 
+                strpos($node['id'], 'Condicional') !== 0;
+        });
+
+        // Encontra o nó a ser atualizado
+        $node_to_update = null;
+        foreach ($filtered_nodes as $node) {
+            if ($node['id'] === $node_id) {
+                $node_to_update = $node;
+                break;
+            }
+        }
+
+        if (!$node_to_update) {
+            return new WP_REST_Response(['message' => 'Node not found.'], 404);
+        }
+
+        // Atualiza apenas o status do nó
+        $updated_node = $node_to_update;
+        $updated_node['node_status'] = 'Finished';
+
+        // Encontra a próxima conexão
+        $next_edge = null;
+        foreach ($edges as $edge) {
+            if ($edge['source'] === $node_id) {
+                $next_edge = $edge;
+                break;
+            }
+        }
+
+        if ($next_edge) {
+            $next_node_id = $next_edge['target'];
+            
+            // Verifica se o próximo nó é uma condicional
+            if (strpos($next_node_id, 'Condicional') === 0) {
+                $conditional_node = null;
+                foreach ($nodes as $node) {
+                    if ($node['id'] === $next_node_id) {
+                        $conditional_node = $node;
+                        break;
+                    }
+                }
+
+                if ($conditional_node) {
+                    $input_node_id = $conditional_node['data']['condition']['inputNode'];
+                    $radio_name = $conditional_node['data']['condition']['condition'];
+                    
+                    $input_node = null;
+                    foreach ($nodes as $node) {
+                        if ($node['id'] === $input_node_id) {
+                            $input_node = $node;
+                            break;
+                        }
+                    }
+                    
+                    $radio_id = null;
+                    foreach ($input_node['data']['fields'] as $field) {
+                        if ($field['config']['label'] === $radio_name) {
+                            $radio_id = $field['id'];
+                            break;
+                        }
+                    }
+                    
+                    $stageData = get_post_meta($post_id, 'stageData', true);
+                    
+                    if (isset($stageData[$input_node_id])) {
+                        $input_node_data = $stageData[$input_node_id];
+                        
+                        foreach ($input_node_data['fields'] as $field) {
+                            if ($field['fieldId'] === $radio_id && isset($field['value'][0])) {
+                                $selected_value = trim($field['value'][0]);
+                                
+                                foreach ($conditional_node['data']['condition']['outputNodes'] as $output) {
+                                    if (trim($output['conditionValue']) === $selected_value) {
+                                        $next_node_id = $output['nodeId'];
+                                        break 2;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Se o próximo nó for End, atualiza o status do post
+            if ($next_node_id === 'End') {
+                update_post_meta($post_id, 'status', 'Finished');
+            } 
+            // Caso contrário, atualiza o status do próximo nó
+            else {
+                foreach ($nodes as &$node) {
+                    if ($node['id'] === $next_node_id && $node['node_status'] === 'Stopped') {
+                        $node['node_status'] = 'Started';
+                        break;
+                    }
+                }
+            }
+        }
+
+        // Atualiza o nó atual
+        foreach ($nodes as &$node) {
+            if ($node['id'] === $node_id) {
+                $node = $updated_node;
+                break;
+            }
+        }
+
+        // Salva as alterações
+        $newFlowData = $flowData;
+        $newFlowData['nodes'] = $nodes;
+        
+        update_post_meta($post_id, 'flowData', $newFlowData);
+        
+        return new WP_REST_Response([
+            'message' => 'Node updated successfully.',
+            'node_id' => $node_id,
+            'next_node_id' => $next_node_id ?? null,
+            'status' => 'Finished'
+        ], 200);
+    }
+
+    public function init_node($flowData, $post_id) {
+        $nodes = $flowData['nodes'];
+        $edges = $flowData['edges'];
+        
+        // Encontra a primeira conexão após o Start
+        $first_edge = null;
+        foreach ($edges as $edge) {
+            if ($edge['source'] === 'Start') {
+                $first_edge = $edge;
+                break;
+            }
+        }
+
+        if ($first_edge) {
+            $first_node_id = $first_edge['target'];
+            
+            // Atualiza o status do primeiro nó
+            foreach ($nodes as &$node) {
+                if ($node['id'] === $first_node_id && $node['node_status'] === 'Stopped') {
+                    $node['node_status'] = 'Started';
+                    
+                    // Atualiza também o status do post para started
+                    update_post_meta($post_id, 'status', 'Started');
+                    
+                    // Salva as alterações
+                    $newFlowData = $flowData;
+                    $newFlowData['nodes'] = $nodes;
+                    update_post_meta($post_id, 'flowData', $newFlowData);
+                    
+                    return new WP_REST_Response([
+                        'message' => 'First node initialized successfully.',
+                        'node_id' => $first_node_id,
+                        'status' => 'started'
+                    ], 200);
+                }
+            }
+        }
+
+        return new WP_REST_Response([
+            'message' => 'Could not initialize first node.'
+        ], 400);
+    }
+
+    public function valid_nodes($request) {
+        $post_id = (int) $request['id'];
+        $flowData = get_post_meta($post_id, 'flowData', true);
+        $flowData = maybe_unserialize($flowData);
+
+        if (!$flowData || !isset($flowData['nodes']) || !isset($flowData['edges'])) {
+            return new WP_REST_Response([], 200);
+        }
+
+        $nodes = $flowData['nodes'];
+        $edges = $flowData['edges'];
+
+        // Cria mapa de id => node
+        $nodeMap = [];
+        foreach ($nodes as $node) {
+            $nodeMap[$node['id']] = $node;
+        }
+
+        // Identifica nodes válidos
+        $validNodes = array_filter($nodes, function($node) {
+            return $node['id'] !== 'Start' &&
+                $node['id'] !== 'End' &&
+                strpos($node['id'], 'Condicional') !== 0 &&
+                $node['node_status'] !== 'Stopped';
+        });
+
+        $validNodeMap = [];
+        foreach ($validNodes as $node) {
+            $validNodeMap[$node['id']] = $node;
+        }
+
+        // Grafo: source => [target1, target2, ...]
+        $graph = [];
+        foreach ($edges as $edge) {
+            $source = $edge['source'];
+            $target = $edge['target'];
+            $graph[$source][] = $target;
+        }
+
+        // Função recursiva para buscar próximo nó válido
+        $visited = [];
+
+        // Caminho ordenado final
+        $orderedNodes = [];
+        $current = $graph['Start'][0] ?? null;
+
+        while ($current && $current !== 'End') {
+            if (isset($validNodeMap[$current])) {
+                $orderedNodes[] = $validNodeMap[$current];
+            }
+
+            $visited = []; // reset para próxima chamada
+            $current = $this->findNextValid($current, $graph, $nodeMap, $validNodeMap, $visited);
+        }
+
+        $progress = $this->calculate_progress_percentage($nodes, $edges);
+
+        return new WP_REST_Response([
+            'ordered_nodes' => $orderedNodes,
+            'progress'      => $progress
+        ], 200);       
+    }
+
+    public function calculate_progress_percentage($nodes, $edges) {
+        if (!$nodes || !$edges) {
+            return 0;
+        }
+
+        // Mapa de id => node
+        $nodeMap = [];
+        foreach ($nodes as $node) {
+            $nodeMap[$node['id']] = $node;
+        }
+
+        // Identifica nós válidos
+        $validNodes = array_filter($nodes, function($node) {
+            return $node['id'] !== 'Start' &&
+                $node['id'] !== 'End' &&
+                strpos($node['id'], 'Condicional') !== 0 &&
+                $node['node_status'] !== 'Stopped';
+        });
+
+        $validNodeMap = [];
+        foreach ($validNodes as $node) {
+            $validNodeMap[$node['id']] = $node;
+        }
+
+        // Grafo: source => [target1, target2, ...]
+        $graph = [];
+        foreach ($edges as $edge) {
+            $source = $edge['source'];
+            $target = $edge['target'];
+            $graph[$source][] = $target;
+        }
+
+        // Função recursiva para buscar próximo nó válido
+        $visited = [];
+
+        // Caminho ordenado final
+        $orderedNodes = [];
+        $current = $graph['Start'][0] ?? null;
+
+        while ($current && $current !== 'End') {
+            if (isset($validNodeMap[$current])) {
+                $orderedNodes[] = $validNodeMap[$current];
+            }
+
+            $visited = [];
+            $current = $this->findNextValid($current, $graph, $nodeMap, $validNodeMap, $visited);
+        }
+
+        // Calcula percentual
+        $totalValid = count($orderedNodes);
+        if ($totalValid === 0) return 0;
+
+        $finishedCount = 0;
+        foreach ($orderedNodes as $node) {
+            if ($node['node_status'] === 'Finished') {
+                $finishedCount++;
+            }
+        }
+
+        $percentage = ($finishedCount / $totalValid) * 100;
+        return round($percentage, 2);
+    }
+
+    function findNextValid($currentId, $graph, $nodeMap, $validNodeMap, &$visited) {
+        if (isset($visited[$currentId])) return null; // evita loops
+        $visited[$currentId] = true;
+
+        if (!isset($graph[$currentId])) return null;
+
+        foreach ($graph[$currentId] as $targetId) {
+            if (isset($validNodeMap[$targetId])) {
+                return $targetId;
+            } elseif (isset($nodeMap[$targetId]) && strpos($targetId, 'Condicional') === 0) {
+                // recursivamente tenta achar próximo válido via condicional
+                $next = $this->findNextValid($targetId, $graph, $nodeMap, $validNodeMap, $visited);
+                if ($next) return $next;
+            }
+        }
+
+        return null;
+    }
+    
 }
