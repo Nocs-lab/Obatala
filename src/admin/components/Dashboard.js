@@ -364,54 +364,54 @@ const DashboardPage = () => {
                     </div>
                 </div>
                 <Panel className="mt-2">
-                        <PanelHeader>Pending processes</PanelHeader>
-                        <PanelRow>
-                            {pendingProcesses.length > 0 ? (
-                                <div>
-                                    {pendingProcesses.map(process => (
-                                        <a href={process.link} class="featured-box" aria-label={`Acessar o processo ${process.title}`} key={process.id}>
-                                            <dl>
-                                                <div class="list-item">
-                                                    <dt class="visually-hidden">Process:</dt>
-                                                    <dd><h4>{process.title}</h4></dd>
-                                                </div>
+                    <PanelHeader>Pending processes</PanelHeader>
+                    <PanelRow>
+                        {pendingProcesses.length > 0 ? (
+                            <div className="list-group">
+                                {pendingProcesses.map(process => (
+                                    <a href={process.link} className="list-group-item" aria-label={`Acessar o processo ${process.title}`} key={process.id}>
+                                        <dl>
+                                            <div class="list-item">
+                                                <dt class="visually-hidden">Process:</dt>
+                                                <dd><h4>{process.title}</h4></dd>
+                                            </div>
 
-                                                <div class="list-item">
-                                                    <dt>At:</dt>
-                                                    <dd>{process.current_stage}</dd>
-                                                </div>
+                                            <div class="list-item">
+                                                <dt>At:</dt>
+                                                <dd>{process.current_stage}</dd>
+                                            </div>
 
-                                                <div class="list-item ms-auto">
-                                                    <dt>Last update:</dt>
-                                                    <dd>{process.last_update}</dd>
-                                                </div>
+                                            <div class="list-item ms-auto">
+                                                <dt>Last update:</dt>
+                                                <dd>{process.last_update}</dd>
+                                            </div>
 
-                                                <div class="list-item">
-                                                    <dt class="visually-hidden">Progress</dt>
-                                                    <dd>
-                                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                            <progress
-                                                                value={process.percentage}
-                                                                max="100"
-                                                                style={{ width: '100px' }}
-                                                            >
-                                                                {process.percentage}%
-                                                            </progress>
-                                                            <span>{process.percentage}%</span>
-                                                        </div>
-                                                    </dd>
-                                                </div>
-                                            </dl>
-                                        </a>
-                                    ))}
-                                </div>
-                            ) : (
-                                <Notice status="info" isDismissible={false}>
-                                    No pending processes found.
-                                </Notice>
-                            )}
-                        </PanelRow>
-                    </Panel>
+                                            <div class="list-item">
+                                                <dt class="visually-hidden">Progress</dt>
+                                                <dd>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                        <progress
+                                                            value={process.percentage}
+                                                            max="100"
+                                                            style={{ width: '100px' }}
+                                                        >
+                                                            {process.percentage}%
+                                                        </progress>
+                                                        <span>{process.percentage}%</span>
+                                                    </div>
+                                                </dd>
+                                            </div>
+                                        </dl>
+                                    </a>
+                                ))}
+                            </div>
+                        ) : (
+                            <Notice status="info" isDismissible={false}>
+                                No pending processes found.
+                            </Notice>
+                        )}
+                    </PanelRow>
+                </Panel>
                 <div className="panel-container mt-2">
                     <Panel>
                         <PanelHeader>My groups</PanelHeader>
