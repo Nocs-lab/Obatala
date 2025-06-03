@@ -7,13 +7,13 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
     const [newProcessType, setNewProcessType] = useState('');
     const [accessLevel, setAccessLevel] = useState('Not restricted');
     const [notice, setNotice] = useState(null);
-    
+
     useEffect(() => {
         if (editingProcess) {
             setAccessLevel(
                 Array.isArray(editingProcess.meta.access_level)
-                ? editingProcess.meta.access_level[0]
-                : editingProcess.meta.access_level
+                    ? editingProcess.meta.access_level[0]
+                    : editingProcess.meta.access_level
             );
             setNewProcessTitle(editingProcess.title.rendered);
             setNewProcessType(editingProcess.meta.process_type);
@@ -38,7 +38,7 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
             status: 'publish',
             type: 'process_obatala',
         };
-    
+
         try {
             let savedProcess;
             if (editingProcess) {
@@ -56,35 +56,36 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
                     data: newProcess
                 });
             }
-            
+
             // get our process type meta fields
             const metaFields = await apiFetch({ path: `/obatala/v1/process_type/${selectedProcessModel.id}/meta` })
-    
-            // Atualiza o meta para o processocom os dados do fluxo
-            if(metaFields.status === 'Inactive'){
-                setNotice({ status: 'error', message:'The process cannot be created because the selected process model is inactive' });
 
-            }else {
+            // Atualiza o meta para o processocom os dados do fluxo
+            if (metaFields.status === 'Inactive') {
+                setNotice({ status: 'error', message: 'The process cannot be created because the selected process model is inactive' });
+
+            } else {
                 const metaUpdateData = {
                     process_type: selectedProcessModel.id,
                     access_level: accessLevel,
-                    flowData: metaFields.flowData
+                    flowData: metaFields.flowData,
+                    status: 'Stopped'
                 };
-        
+
                 // Atualiza o meta para o processo 
                 await apiFetch({
                     path: `/obatala/v1/process_obatala/${savedProcess.id}/meta`,
                     method: 'POST',
                     data: metaUpdateData
                 });
-    
+
                 await apiFetch({
                     path: `/obatala/v1/process_obatala/${savedProcess.id}/process_type`,
                     method: 'POST',
-                    data: {process_type: selectedProcessModel.id}
+                    data: { process_type: selectedProcessModel.id }
                 });
-    
-        
+
+
                 // Atualiza o objeto savedProcess com os metas
                 savedProcess.meta = metaUpdateData;
                 onProcessSaved(savedProcess);
@@ -92,15 +93,15 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
                 setNewProcessType('');
                 setAccessLevel('public');
                 setNotice({ status: 'success', message: editingProcess ? 'Process updated successfully.' : 'Process created successfully.' });
-            
-            }          
-    
-           } catch (error) {
+
+            }
+
+        } catch (error) {
             console.error('Error creating process:', error);
             setNotice({ status: 'error', message: 'Error creating process.' });
         }
     };
-    
+
 
     const handleCancel = () => {
         onCancel();
@@ -113,12 +114,12 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
 
     return (
         <form onSubmit={handleSaveProcess}>
-             {notice && (
+            {notice && (
                 <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
                     {notice.message}
                 </Notice>
             )}
-            
+
             <TextControl
                 label="Process Title"
                 value={newProcessTitle}
@@ -127,19 +128,20 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
             />
 
             <SelectControl
-                 label="Process Model"
-                 value={newProcessType}
-                 options={[
-                     { label: 'Select a process model...', 
-                       value: '', 
+                label="Process Model"
+                value={newProcessType}
+                options={[
+                    {
+                        label: 'Select a process model...',
+                        value: '',
                     },
-                     ...modelsActives.map(type => ({ label: type.title.rendered, value: type.id }))
-                     
-                 ]}
-                 
-                 onChange={(value) => setNewProcessType(value)}
-                 disabled={!!editingProcess}
-            />       
+                    ...modelsActives.map(type => ({ label: type.title.rendered, value: type.id }))
+
+                ]}
+
+                onChange={(value) => setNewProcessType(value)}
+                disabled={!!editingProcess}
+            />
 
             <SelectControl
                 label="Access level"
@@ -150,13 +152,13 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
                 ]}
                 onChange={(value) => setAccessLevel(value)}
             />
-            <div style={{display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px'}}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
                 <Button isSecondary onClick={handleCancel}>Cancel</Button>
                 <Button isPrimary type="submit">Save</Button>
             </div>
-            
+
         </form>
-     
+
     );
 };
 

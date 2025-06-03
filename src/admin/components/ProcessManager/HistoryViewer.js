@@ -3,24 +3,26 @@ import { Panel, PanelHeader, PanelRow } from '@wordpress/components';
 import ProcessHeader from './ProcessHeader';
 import ProcessUserLog from './ProcessUserLog';
 
-const HistoryViewer = ({ 
-    process, 
-    filteredProcessType, 
-    authorsById, 
-    calculatePercentagem,
+const HistoryViewer = ({
+    process,
+    filteredProcessType,
+    authorsById,
+    progress,
+    isComplete,
     options,
     currentStageData,
     sectors
 }) => {
     return (
         <main>
-            <ProcessHeader 
+            <ProcessHeader
                 process={process}
                 filteredProcessType={filteredProcessType}
                 authorsById={authorsById}
-                calculatePercentagem={calculatePercentagem}
+                progress={progress}
+                isComplete={isComplete}
             />
-            
+
             <Panel>
                 <PanelHeader>History</PanelHeader>
                 <PanelRow>

@@ -8,6 +8,7 @@ import { fetchUserProcesses } from '../api/apiRequests';
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 import BrandHeader from './BrandHeader';
+import BrandFooter from './BrandFooter';
 
 const ProcessManager = ({ onSelectProcess }) => {
     const [processTypes, setProcessTypes] = useState([]);
@@ -187,11 +188,9 @@ const ProcessManager = ({ onSelectProcess }) => {
                 </div>
 
                 {notice && (
-                    <div className="notice-container">
-                        <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                            {notice.message}
-                        </Notice>
-                    </div>
+                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                        {notice.message}
+                    </Notice>
                 )}
                 <div className="panel-container">
                     <TabPanel
@@ -264,6 +263,7 @@ const ProcessManager = ({ onSelectProcess }) => {
                 )}
 
             </main>
+            <BrandFooter />
         </>
     );
 };

@@ -7,12 +7,12 @@ import {
     PanelHeader,
     Spinner
 } from '@wordpress/components';
-import { people, starFilled } from "@wordpress/icons";
-import { fetchProcessModels, fetchSectors, fetchSectorsUsers } from '../api/apiRequests';
+import { fetchProcessModels, fetchSectors, fetchSectorsUsers, } from '../api/apiRequests';
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 import apiFetch from '@wordpress/api-fetch';
 import BrandHeader from './BrandHeader';
+import BrandFooter from './BrandFooter';
 
 const DashboardPage = () => {
     const [processTypes, setProcessTypes] = useState([]);
@@ -57,39 +57,118 @@ const DashboardPage = () => {
         return {};
     };
 
-    const calculateProcessPercentage = (process) => {
+    const getProcessDetails = (process) => {
         try {
-            if (!process.meta) return 0;
+            if (!process.meta) {
+                return {
+                    percentage: 0,
+                    lastUpdate: null,
+                    currentStage: null
+                };
+            }
 
-            // Desserializa os estágios submetidos
+            const { nodes, edges } = process.meta.flowData || {};
             const submittedStages = process.meta.submittedStages?.[0]
                 ? unserializePHP(process.meta.submittedStages[0])
                 : {};
+            const stageData = process.meta.stageData?.[0]
+                ? unserializePHP(process.meta.stageData[0])
+                : {};
 
-            const flowNodes = process.meta.flowData?.nodes || [];
-            const validNodes = flowNodes.filter(node =>
+            // Determinar o caminho ativo (considerando condicionais)
+            let activePathNodes = [];
+            let currentNodeId = 'Start';
+
+            while (currentNodeId && currentNodeId !== 'End') {
+                const currentNode = nodes?.find(n => n.id === currentNodeId);
+                if (!currentNode) break;
+
+                // Para nós condicionais, determinar o caminho baseado no valor submetido
+                if (currentNode.type === 'customNodeConditional') {
+                    const inputNodeId = currentNode.data?.condition?.inputNode;
+                    if (inputNodeId) {
+                        const inputStageName = nodes.find(n => n.id === inputNodeId)?.data?.stageName || inputNodeId;
+                        const submittedValue = submittedStages[inputStageName];
+
+                        const matchingOutput = currentNode.data?.condition?.outputNodes?.find(
+                            output => output.conditionValue === submittedValue
+                        );
+
+                        if (matchingOutput) {
+                            currentNodeId = matchingOutput.nodeId;
+                            continue;
+                        }
+                    }
+                }
+
+                // nós normais
+                const nextEdge = edges?.find(edge => edge.source === currentNodeId);
+                if (!nextEdge) break;
+
+                currentNodeId = nextEdge.target;
+
+                if (nodes?.some(n => n.id === currentNodeId &&
+                    n.type === 'customNode' &&
+                    !['Start', 'End'].includes(n.id) &&
+                    !n.id.startsWith('Condicional'))) {
+                    activePathNodes.push(currentNodeId);
+                }
+            }
+
+            // Calcular porcentagem
+            const validNodes = nodes?.filter(node =>
                 node.type === 'customNode' &&
                 !['Start', 'End'].includes(node.id) &&
                 !node.id.startsWith('Condicional')
-            );
+            ) || [];
 
-            const submittedCount = validNodes.reduce((count, node) => {
+            const completedCount = validNodes.reduce((count, node) => {
                 const stageName = node.data?.stageName || node.id;
-                return count + (
-                    submittedStages[stageName] === true ||
-                        submittedStages[stageName] === "1" ||
-                        submittedStages[stageName] === 1 ? 1 : 0
-                );
+                const isSubmitted = submittedStages[stageName] === true ||
+                    submittedStages[stageName] === "1" ||
+                    submittedStages[stageName] === 1;
+                const isFinished = node.node_status === "Finished";
+                const isInActivePath = activePathNodes.includes(node.id);
+
+                return count + (isInActivePath && (isSubmitted || isFinished) ? 1 : 0);
             }, 0);
 
-            const percentage = validNodes.length > 0
-                ? Math.round((submittedCount / validNodes.length) * 100)
+            const totalActiveNodes = validNodes.filter(node =>
+                activePathNodes.includes(node.id)
+            ).length;
+
+            const percentage = totalActiveNodes > 0
+                ? Math.round((completedCount / totalActiveNodes) * 100)
                 : 0;
 
-            return percentage;
+            const currentStageId = process.meta?.current_stage?.[0];
+            let currentStage = null;
+            let lastUpdate = process.modified;
+
+            if (currentStageId) {
+                currentStage = nodes?.find(n => n.id === currentStageId)?.data?.stageName || currentStageId;
+
+                const stageUpdate = stageData[currentStageId]?.updateAt ||
+                    stageData[currentStage]?.updateAt;
+                if (stageUpdate) {
+                    lastUpdate = stageUpdate;
+                }
+            }
+
+            return {
+                percentage,
+                lastUpdate: formatDate(lastUpdate),
+                currentStage,
+                currentStageId
+            };
         } catch (error) {
-            console.error('Error calculating percentage:', error);
-            return 0;
+            console.error('Error getting process details:', error);
+            return {
+                percentage: 0,
+                lastUpdate: null,
+                currentStage: null,
+                currentStageId: null
+            };
         }
     };
 
@@ -137,27 +216,32 @@ const DashboardPage = () => {
             });
     };
 
-    // Função para verificar se um processo está pendente (não completo)
+    // Função para verificar se um processo está pendente
     const isProcessPending = (process) => {
         if (process.status !== 'publish') return false;
-    
+
+        const processStatus = process.meta?.status?.[0];
+        const currentStageId = process.meta?.current_stage?.[0];
+
+        if (processStatus === "Finished") return false;
+
         if (!process.meta?.flowData?.nodes) return false;
-    
-        const isNewProcess = !process.meta.submittedStages?.[0];
-    
-        // Se for novo, automaticamente está pendente
-        if (isNewProcess) return true;
-    
-        const percentage = calculateProcessPercentage(process);
-        const isNotComplete = percentage < 100;
-    
-        const currentStage = process.meta?.current_stage?.[0];
-        const isNotAtEndNode = currentStage && 
-            !process.meta.flowData.nodes.some(
-                node => node.type === 'endNode' && node.id === currentStage
+
+        if (!currentStageId) return true;
+
+        const currentNode = process.meta.flowData.nodes.find(node => node.id === currentStageId);
+
+        if (!currentNode || currentNode.type === 'endNode') return false;
+
+        if (currentNode.sector_obatala) {
+            const userInSector = sectorsUsers.some(sector =>
+                sector.sector_id === currentNode.sector_obatala &&
+                sector.users.some(user => user.ID === currentUser?.id)
             );
-    
-        return isNotComplete && isNotAtEndNode;
+            return userInSector;
+        }
+
+        return true;
     };
 
     useEffect(() => {
@@ -174,20 +258,15 @@ const DashboardPage = () => {
                     .filter(isProcessPending)
                     .slice(0, 10)
                     .map(process => {
-                        const percentage = calculateProcessPercentage(process);
-                        const stageData = process.meta?.stageData?.[0]
-                            ? unserializePHP(process.meta.stageData[0])
-                            : {};
-
-                        const currentStage = process.meta?.current_stage?.[0];
-                        const stageInfo = stageData[currentStage] || {};
+                        const details = getProcessDetails(process);
 
                         return {
                             id: process.id,
                             title: process.title?.rendered || 'Sem título',
-                            current_stage: currentStage,
-                            percentage: percentage,
-                            last_update: formatDate(stageInfo.updateAt || process.modified),
+                            percentage: details.percentage,
+                            lastUpdate: details.lastUpdate,
+                            currentStage: details.currentStage,
+                            currentStageId: details.currentStageId,
                             link: `/wp-admin/admin.php?page=process-viewer&process_id=${process.id}`,
                         };
                     });
@@ -201,7 +280,7 @@ const DashboardPage = () => {
         };
 
         loadPendingProcesses();
-    }, [currentUser?.id]);
+    }, [currentUser?.id, sectorsUsers]);
 
     const loadProcesses = async () => {
         setIsLoading(true);
@@ -313,14 +392,11 @@ const DashboardPage = () => {
 
     // Função para contar processos concluídos
     const countCompletedProcesses = useMemo(() => {
-        return processes.filter(process => {
-            const nodes = process.meta?.flowData?.nodes?.filter(node => node.id !== "End") ?? [];
-            const [currentStage] = process.meta?.current_stage || [];
-            if (nodes.length === 0 || !currentStage) return false;
-
-            const lastNode = nodes[nodes.length - 1];
-            return lastNode?.data?.stageName === currentStage;
-        }).length;
+        const finishedProcesses = processes.filter(process => {
+            const status = process?.meta?.status?.[0];
+            return status === "Finished";
+        });
+        return finishedProcesses.length;
     }, [processes]);
 
     // Porcentagem de processos concluídos
@@ -338,139 +414,140 @@ const DashboardPage = () => {
             <main>
                 <div className="title-container">
                     <h2>Dashboard</h2>
-                </div>
-
-                <div className="card-container">
-                    <div className="card-item">
-                        <img src={currentUser.avatar_urls?.[96]} className="user-photo" alt={`Foto de ${currentUser?.name}`} />
-                        <span className="description">Olá, <strong>{currentUser.name}</strong>!</span>
-                    </div>
-                    <a href="/wp-admin/admin.php?page=process-manager" className="card-item">
-                        <span className="indicator">{processes.length}</span>
-                        <span className="description">Processes</span>
-                    </a>
-                    <a href="/wp-admin/admin.php?page=process-type-manager" className="card-item">
-                        <span className="indicator">{processTypes.length}</span>
-                        <span className="description">Models</span>
-                    </a>
-                    <a href="/wp-admin/admin.php?page=sector_manager" className="card-item">
-                        <span className="indicator">{sectors.length}</span>
-                        <span className="description">Groups</span>
-                    </a>
-                    <div className="card-item">
-                        <span className="indicator">{countCompletedProcesses}/{processes.length} <small>({completedProcessesPercentage}%)</small></span>
-                        <span className="description">Completed processes</span>
+                    <div className="stat" title={`${completedProcessesPercentage}%`}>
+                        <p className="description">{countCompletedProcesses}/{processes.length} completed processes</p>
                         <progress value={completedProcessesPercentage} max="100">{completedProcessesPercentage}%</progress>
                     </div>
                 </div>
-                <Panel className="mt-2">
-                    <PanelHeader>Pending processes</PanelHeader>
-                    <PanelRow>
-                        {pendingProcesses.length > 0 ? (
-                            <div className="list-group">
-                                {pendingProcesses.map(process => (
-                                    <a href={process.link} className="list-group-item" aria-label={`Acessar o processo ${process.title}`} key={process.id}>
-                                        <dl>
-                                            <div class="list-item">
-                                                <dt class="visually-hidden">Process:</dt>
-                                                <dd><h4>{process.title}</h4></dd>
-                                            </div>
 
-                                            <div class="list-item">
-                                                <dt>At:</dt>
-                                                <dd>{process.current_stage}</dd>
-                                            </div>
+                <div className="dashboard-container">
+                    <div class="dashboard-item-personal">
+                        <div className="card-container">
+                            <div className="card-item primary-100">
+                                <img src={currentUser.avatar_urls?.[96]} className="user-photo" alt={`Foto de ${currentUser?.name}`} />
+                                <span className="description">Olá, <strong>{currentUser.name}</strong>!</span>
 
-                                            <div class="list-item ms-auto">
-                                                <dt>Last update:</dt>
-                                                <dd>{process.last_update}</dd>
-                                            </div>
-
-                                            <div class="list-item">
-                                                <dt class="visually-hidden">Progress</dt>
-                                                <dd>
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                                        <progress
-                                                            value={process.percentage}
-                                                            max="100"
-                                                            style={{ width: '100px' }}
-                                                        >
-                                                            {process.percentage}%
-                                                        </progress>
-                                                        <span>{process.percentage}%</span>
-                                                    </div>
-                                                </dd>
-                                            </div>
-                                        </dl>
-                                    </a>
-                                ))}
+                                {matchesSectors.length > 0 && (
+                                    <>
+                                        <div className="table-responsive mt-2">
+                                            <table className="wp-list-table widefat transparent">
+                                                <thead>
+                                                    <tr>
+                                                        <th>My group</th>
+                                                        <th>Description</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {matchesSectors.map((sector) => (
+                                                        <tr key={sector.id}>
+                                                            <td>
+                                                                <a
+                                                                    href={`/wp-admin/admin.php?page=sector-details&sector_id=${sector.id}`}
+                                                                >
+                                                                    {sector.name}
+                                                                </a>
+                                                            </td>
+                                                            <td>{sector.description}</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </>
+                                )}
                             </div>
-                        ) : (
-                            <Notice status="info" isDismissible={false}>
-                                No pending processes found.
-                            </Notice>
-                        )}
-                    </PanelRow>
-                </Panel>
-                <div className="panel-container mt-2">
-                    <Panel>
-                        <PanelHeader>My groups</PanelHeader>
-                        <PanelRow>
-                            {matchesSectors.length > 0 ? (
-                                <table className="wp-list-table widefat fixed striped table-view-list">
-                                    <thead>
-                                        <tr>
-                                            <th>Group</th>
-                                            <th>Description</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {matchesSectors.map((sector) => (
-                                            <tr key={sector.id}>
-                                                <td>
-                                                    <a
-                                                        href={`/wp-admin/admin.php?page=sector-details&sector_id=${sector.id}`}
-                                                    >
-                                                        {sector.name}
-                                                    </a>
-                                                </td>
-                                                <td>{sector.description}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            ) : (
-                                <Notice isDismissible={false} status="warning">Sem resultados.</Notice>
-                            )}
-                        </PanelRow>
-                    </Panel>
-                    <Panel>
-                        <PanelHeader>Top 5 most used models</PanelHeader>
-                        <PanelRow>
-                            {topModels.length > 0 ? (
-                                <table className="wp-list-table widefat fixed striped table-view-list" >
-                                    <thead>
-                                        <tr>
-                                            <th>Nome</th>
-                                            <th>Quantidade</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {topModels.map((sector) => (
-                                            <tr key={sector.modelId}>
-                                                <td>{sector.modelName}</td>
-                                                <td>{sector.count}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            ) : (
-                                <Notice isDismissible={false} status="warning">Sem resultados.</Notice>
-                            )}
-                        </PanelRow>
-                    </Panel>
+
+                            <Panel className="warning">
+                                <PanelHeader>Pending input processes {pendingProcesses.length > 0 && <span className="badge">{pendingProcesses.length}</span>}</PanelHeader>
+                                <PanelRow>
+                                    {pendingProcesses.length > 0 ? (
+                                        <ul className="list-actions mb-0">
+                                            {pendingProcesses.map(process => {
+                                                const statusConfig = {
+                                                    'Started': { icon: 'controls-play', text: 'Em andamento' },
+                                                    'Stopped': { icon: 'controls-pause', text: 'Pausado' },
+                                                }[process.meta?.status?.[0]] || { icon: 'warning', text: 'Não iniciado' };
+
+                                                return (
+                                                    <li key={process.id}>
+                                                        <a href={process.link}>
+                                                            <Icon icon={statusConfig.icon} />
+                                                            <span className="text">
+                                                                {process.title}
+                                                                <small className="d-block">
+                                                                    Etapa: {process.currentStage || 'N/A'}
+                                                                </small>
+                                                                <small className="d-block">
+                                                                    Última atualização: {process.lastUpdate || 'N/A'}
+                                                                </small>
+                                                                <small className="d-block">
+                                                                    Progresso: {process.percentage}%
+                                                                </small>
+                                                            </span>
+                                                            <Icon icon="arrow-right-alt2" />
+                                                        </a>
+                                                    </li>
+                                                );
+                                            })}
+                                        </ul>
+                                    ) : (
+                                        <Notice status="info" isDismissible={false}>
+                                            No pending processes found.
+                                        </Notice>
+                                    )}
+                                </PanelRow>
+                            </Panel>
+                        </div>
+                    </div>
+                    <div class="dashboard-item-stats">
+                        <div className="card-container">
+                            <a href="/wp-admin/admin.php?page=process-manager" className="card-item">
+                                <span className="indicator">{processes.length}</span>
+                                <span className="description"><Icon icon="admin-page" /> Processes</span>
+                            </a>
+                            <a href="/wp-admin/admin.php?page=process-type-manager" className="card-item">
+                                <span className="indicator">{processTypes.length}</span>
+                                <span className="description"><Icon icon="welcome-widgets-menus" /> Models</span>
+                            </a>
+                            <a href="/wp-admin/admin.php?page=sector_manager" className="card-item">
+                                <span className="indicator">{sectors.length}</span>
+                                <span className="description"><Icon icon="groups" /> Groups</span>
+                            </a>
+                        </div>
+
+                        <div className="panel-container mt-2">
+                            <Panel>
+                                <PanelHeader>Top 5 most used models</PanelHeader>
+                                <PanelRow>
+                                    {topModels.length > 0 ? (
+                                        <div className="table-responsive">
+                                            <table className="wp-list-table widefat striped table-view-list">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Nome</th>
+                                                        <th>Quantidade</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {topModels.map((sector) => (
+                                                        <tr key={sector.modelId}>
+                                                            <td>{sector.modelName}</td>
+                                                            <td>{sector.count}</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    ) : (
+                                        <Notice isDismissible={false} status="warning">Sem resultados.</Notice>
+                                    )}
+                                </PanelRow>
+                            </Panel>
+                        </div>
+                    </div>
                 </div>
             </main>
+            <BrandFooter />
         </>
     );
 };

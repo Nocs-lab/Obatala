@@ -16,6 +16,7 @@ import Reducer, { initialState } from '../redux/reducer';
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 import BrandHeader from './BrandHeader';
+import BrandFooter from './BrandFooter';
 
 const SectorManager = () => {
     const [sectors, setSectors] = useState([])
@@ -167,13 +168,10 @@ const SectorManager = () => {
                   </ButtonGroup>
               </div>
               {notice && (
-                  <div className="notice-container">
-                      <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                          {notice.message}
-                      </Notice>
-                  </div>
+                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                        {notice.message}
+                    </Notice>
               )}
-
               <ConfirmDialog
                   isOpen={state.isOpen}
                   onConfirm={() => {
@@ -224,6 +222,7 @@ const SectorManager = () => {
                   </Modal>
               )}
           </main>
+          <BrandFooter />
       </>
   );
 };
