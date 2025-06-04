@@ -573,6 +573,9 @@ th[role="columnheader"][title="Toggle SortBy"] {
 /* #endregion */
 
 /* #region Functional classes */
+.d-block {
+  display: block;
+}
 .flex-basis-100 {
   flex-basis: 100%;
 }
@@ -1153,12 +1156,14 @@ button .components-spinner {
       color: var(--white);
       display: flex;
       align-items: center;
-      gap: .5rem;
+      gap: .75rem;
       justify-content: space-between;
-      padding: .5rem;
+      padding: .5rem .5rem .5rem 1rem;
       text-decoration: none;
-      & .dashicons {
-        color: var(--warning);
+      & .percent {
+        flex-basis: 50px;
+        font-size: 1.5rem;
+        text-align: right;
       }
       & .text {
         font-size: .9rem;
@@ -1167,7 +1172,7 @@ button .components-spinner {
       }
       &:hover {
         background-color: rgba(0, 0, 0, .25);
-        & .dashicons {
+        & .percent {
           color: var(--white);
         }
       }

@@ -458,30 +458,19 @@ const DashboardPage = () => {
                             </div>
                             {pendingProcesses.length > 0 && (
                                 <Panel className="warning">
-                                    <PanelHeader>Pending input processes {pendingProcesses.length > 0 && <span className="badge">{pendingProcesses.length}</span>}</PanelHeader>
+                                    <PanelHeader>Pending processes</PanelHeader>
                                     <PanelRow>
                                         {pendingProcesses.length > 0 ? (
                                             <ul className="list-actions mb-0">
                                                 {pendingProcesses.map(process => {
-                                                    const statusConfig = {
-                                                        'Started': { icon: 'controls-play', text: 'Em andamento' },
-                                                        'Stopped': { icon: 'controls-pause', text: 'Pausado' },
-                                                    }[process.meta?.status?.[0]] || { icon: 'warning', text: 'Não iniciado' };
-
                                                     return (
                                                         <li key={process.id}>
                                                             <a href={process.link}>
-                                                                <Icon icon={statusConfig.icon} />
+                                                                <span className="percent">{process.percentage}%</span>
                                                                 <span className="text">
                                                                     {process.title}
                                                                     <small className="d-block">
-                                                                        Etapa: {process.currentStage || 'N/A'}
-                                                                    </small>
-                                                                    <small className="d-block">
-                                                                        Última atualização: {process.lastUpdate || 'N/A'}
-                                                                    </small>
-                                                                    <small className="d-block">
-                                                                        Progresso: {process.percentage}%
+                                                                        Etapa atual: {process.currentStage || 'N/A'}
                                                                     </small>
                                                                 </span>
                                                                 <Icon icon="arrow-right-alt2" />
