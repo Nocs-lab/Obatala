@@ -456,47 +456,48 @@ const DashboardPage = () => {
                                     </>
                                 )}
                             </div>
+                            {pendingProcesses.length > 0 && (
+                                <Panel className="warning">
+                                    <PanelHeader>Pending input processes {pendingProcesses.length > 0 && <span className="badge">{pendingProcesses.length}</span>}</PanelHeader>
+                                    <PanelRow>
+                                        {pendingProcesses.length > 0 ? (
+                                            <ul className="list-actions mb-0">
+                                                {pendingProcesses.map(process => {
+                                                    const statusConfig = {
+                                                        'Started': { icon: 'controls-play', text: 'Em andamento' },
+                                                        'Stopped': { icon: 'controls-pause', text: 'Pausado' },
+                                                    }[process.meta?.status?.[0]] || { icon: 'warning', text: 'Não iniciado' };
 
-                            <Panel className="warning">
-                                <PanelHeader>Pending input processes {pendingProcesses.length > 0 && <span className="badge">{pendingProcesses.length}</span>}</PanelHeader>
-                                <PanelRow>
-                                    {pendingProcesses.length > 0 ? (
-                                        <ul className="list-actions mb-0">
-                                            {pendingProcesses.map(process => {
-                                                const statusConfig = {
-                                                    'Started': { icon: 'controls-play', text: 'Em andamento' },
-                                                    'Stopped': { icon: 'controls-pause', text: 'Pausado' },
-                                                }[process.meta?.status?.[0]] || { icon: 'warning', text: 'Não iniciado' };
-
-                                                return (
-                                                    <li key={process.id}>
-                                                        <a href={process.link}>
-                                                            <Icon icon={statusConfig.icon} />
-                                                            <span className="text">
-                                                                {process.title}
-                                                                <small className="d-block">
-                                                                    Etapa: {process.currentStage || 'N/A'}
-                                                                </small>
-                                                                <small className="d-block">
-                                                                    Última atualização: {process.lastUpdate || 'N/A'}
-                                                                </small>
-                                                                <small className="d-block">
-                                                                    Progresso: {process.percentage}%
-                                                                </small>
-                                                            </span>
-                                                            <Icon icon="arrow-right-alt2" />
-                                                        </a>
-                                                    </li>
-                                                );
-                                            })}
-                                        </ul>
-                                    ) : (
-                                        <Notice status="info" isDismissible={false}>
-                                            No pending processes found.
-                                        </Notice>
-                                    )}
-                                </PanelRow>
-                            </Panel>
+                                                    return (
+                                                        <li key={process.id}>
+                                                            <a href={process.link}>
+                                                                <Icon icon={statusConfig.icon} />
+                                                                <span className="text">
+                                                                    {process.title}
+                                                                    <small className="d-block">
+                                                                        Etapa: {process.currentStage || 'N/A'}
+                                                                    </small>
+                                                                    <small className="d-block">
+                                                                        Última atualização: {process.lastUpdate || 'N/A'}
+                                                                    </small>
+                                                                    <small className="d-block">
+                                                                        Progresso: {process.percentage}%
+                                                                    </small>
+                                                                </span>
+                                                                <Icon icon="arrow-right-alt2" />
+                                                            </a>
+                                                        </li>
+                                                    );
+                                                })}
+                                            </ul>
+                                        ) : (
+                                            <Notice status="info" isDismissible={false}>
+                                                No pending processes found.
+                                            </Notice>
+                                        )}
+                                    </PanelRow>
+                                </Panel>
+                            )}
                         </div>
                     </div>
                     <div class="dashboard-item-stats">
