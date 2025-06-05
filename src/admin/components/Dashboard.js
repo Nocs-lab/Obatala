@@ -23,13 +23,11 @@ const DashboardPage = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [pendingProcesses, setPendingProcesses] = useState([]);
 
-
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
 
     const unserializePHP = (serializedData) => {
         if (!serializedData) return {};
-
-        try {
+        try {            
             if (typeof serializedData === 'object') {
                 return serializedData;
             }
@@ -66,7 +64,6 @@ const DashboardPage = () => {
                     currentStage: null
                 };
             }
-
             const { nodes, edges } = process.meta.flowData || {};
             const submittedStages = process.meta.submittedStages?.[0]
                 ? unserializePHP(process.meta.submittedStages[0])
@@ -74,7 +71,6 @@ const DashboardPage = () => {
             const stageData = process.meta.stageData?.[0]
                 ? unserializePHP(process.meta.stageData[0])
                 : {};
-
             // Determinar o caminho ativo (considerando condicionais)
             let activePathNodes = [];
             let currentNodeId = 'Start';
@@ -83,13 +79,11 @@ const DashboardPage = () => {
                 const currentNode = nodes?.find(n => n.id === currentNodeId);
                 if (!currentNode) break;
 
-                // Para nós condicionais, determinar o caminho baseado no valor submetido
                 if (currentNode.type === 'customNodeConditional') {
                     const inputNodeId = currentNode.data?.condition?.inputNode;
                     if (inputNodeId) {
                         const inputStageName = nodes.find(n => n.id === inputNodeId)?.data?.stageName || inputNodeId;
                         const submittedValue = submittedStages[inputStageName];
-
                         const matchingOutput = currentNode.data?.condition?.outputNodes?.find(
                             output => output.conditionValue === submittedValue
                         );
@@ -106,7 +100,6 @@ const DashboardPage = () => {
                 if (!nextEdge) break;
 
                 currentNodeId = nextEdge.target;
-
                 if (nodes?.some(n => n.id === currentNodeId &&
                     n.type === 'customNode' &&
                     !['Start', 'End'].includes(n.id) &&
@@ -200,8 +193,6 @@ const DashboardPage = () => {
     useEffect(() => {
         topFiveModels();
     }, [processes])
-
-
 
     const loadProcessTypes = () => {
         setIsLoading(true);
@@ -419,7 +410,6 @@ const DashboardPage = () => {
                         <progress value={completedProcessesPercentage} max="100">{completedProcessesPercentage}%</progress>
                     </div>
                 </div>
-
                 <div className="dashboard-container">
                     <div class="dashboard-item-personal">
                         <div className="card-container">
@@ -504,7 +494,6 @@ const DashboardPage = () => {
                                 <span className="description"><Icon icon="groups" /> Groups</span>
                             </a>
                         </div>
-
                         <div className="panel-container mt-2">
                             <Panel>
                                 <PanelHeader>Top 5 most used models</PanelHeader>
