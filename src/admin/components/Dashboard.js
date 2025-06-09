@@ -49,8 +49,8 @@ const DashboardPage = () => {
                 }
                 return result;
             }
-        } catch (e) {
-            console.error('Error parsing PHP data:', e);
+        } catch {
+            console.error('Error parsing PHP data:');
         }
         return {};
     };
@@ -154,8 +154,8 @@ const DashboardPage = () => {
                 currentStage,
                 currentStageId
             };
-        } catch (error) {
-            console.error('Error getting process details:', error);
+        } catch {
+            console.error('Error getting process details:');
             return {
                 percentage: 0,
                 lastUpdate: null,
@@ -177,8 +177,8 @@ const DashboardPage = () => {
                 hour: '2-digit',
                 minute: '2-digit'
             });
-        } catch (e) {
-            console.error('Error formatting date:', e);
+        } catch {
+            console.error('Error formatting date:');
             return dateString;
         }
     };
@@ -201,8 +201,8 @@ const DashboardPage = () => {
                 setProcessTypes(data);
                 setIsLoading(false);
             })
-            .catch(error => {
-                console.error('Error fetching process types:', error);
+            .catch(() => {
+                console.error('Error fetching process types:');
                 setIsLoading(false);
             });
     };
@@ -263,8 +263,8 @@ const DashboardPage = () => {
                     });
 
                 setPendingProcesses(pending);
-            } catch (error) {
-                console.error('Error loading pending processes:', error);
+            } catch {
+                console.error('Error loading pending processes:');
             } finally {
                 setIsLoading(false);
             }
@@ -285,8 +285,8 @@ const DashboardPage = () => {
                 console.error("No processes data returned.");
                 setProcesses([]);
             }
-        } catch (error) {
-            console.error("Error fetching processes:", error);
+        } catch {
+            console.error("Error fetching processes:");
         } finally {
             setIsLoading(false);
         }
@@ -306,8 +306,8 @@ const DashboardPage = () => {
                 setSectors(sectors);
                 setIsLoading(false);
             })
-            .catch(error => {
-                console.error('Error fetching sectors:', error);
+            .catch(() => {
+                console.error('Error fetching sectors:');
                 setIsLoading(false);
             });
     };
@@ -319,8 +319,8 @@ const DashboardPage = () => {
                 setSectorsUsers(data);
                 setIsLoading(false);
             })
-            .catch(error => {
-                console.error('Error fetching sectors:', error);
+            .catch(() => {
+                console.error('Error fetching sectors:');
                 setIsLoading(false);
             });
     };
@@ -369,8 +369,8 @@ const DashboardPage = () => {
                 }));
 
             setTopModels(sortedModels);
-        } catch (error) {
-            console.error('Erro ao buscar dados dos processos:', error);
+        } catch {
+            console.error('Erro ao buscar dados dos processos:');
         } finally {
             setIsLoading(false);
         }
