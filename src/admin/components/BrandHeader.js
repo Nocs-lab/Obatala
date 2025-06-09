@@ -22,7 +22,7 @@ const BrandHeader = () => {
                 <a href="/wp-admin/admin.php?page=obatala-main" className="menu-brand">
                     <h1>
                         <strong>Obatala</strong>
-                        <small>{wpSiteName && ` | ${wpSiteName}`}</small>
+                        <small>{wpSiteName && `${wpSiteName}`}</small>
                     </h1>
                 </a>
                 <a href="/wp-admin/admin.php?page=obatala-main" className="menu-link"><Icon icon="admin-home" /> Dashboard</a>
