@@ -63,11 +63,9 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
 
                     return (
                         <div className="progress" title={`${progress}%`}>
-                            <progress value={progress} max="100" />
                             <p className="description">{progress}%</p>
-
+                            <progress value={progress} max="100" />
                         </div>
-
                     )
                 },
             },
