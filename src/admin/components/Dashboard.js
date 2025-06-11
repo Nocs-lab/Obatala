@@ -21,10 +21,168 @@ const DashboardPage = () => {
     const [sectorsUsers, setSectorsUsers] = useState([])
     const [topModels, setTopModels] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [pendingProcesses, setPendingProcesses] = useState([]);
 
-    
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
-    
+
+    const unserializePHP = (serializedData) => {
+        if (!serializedData) return {};
+        try {            
+            if (typeof serializedData === 'object') {
+                return serializedData;
+            }
+            if (typeof serializedData === 'string') {
+                const matches = serializedData.matchAll(/s:\d+:"([^"]+)";(b|i|s):([^;]+);/g);
+                const result = {};
+
+                for (const match of matches) {
+                    const key = match[1];
+                    const type = match[2];
+                    let value = match[3];
+
+                    if (type === 'b') {
+                        value = value === '1';
+                    } else if (type === 'i') {
+                        value = parseInt(value);
+                    }
+                    result[key] = value;
+                }
+                return result;
+            }
+        } catch {
+            console.error('Error parsing PHP data:');
+        }
+        return {};
+    };
+
+    const getProcessDetails = (process) => {
+        try {
+            if (!process.meta) {
+                return {
+                    percentage: 0,
+                    lastUpdate: null,
+                    currentStage: null
+                };
+            }
+            const { nodes, edges } = process.meta.flowData || {};
+            const submittedStages = process.meta.submittedStages?.[0]
+                ? unserializePHP(process.meta.submittedStages[0])
+                : {};
+            const stageData = process.meta.stageData?.[0]
+                ? unserializePHP(process.meta.stageData[0])
+                : {};
+            // Determinar o caminho ativo (considerando condicionais)
+            let activePathNodes = [];
+            let currentNodeId = 'Start';
+
+            while (currentNodeId && currentNodeId !== 'End') {
+                const currentNode = nodes?.find(n => n.id === currentNodeId);
+                if (!currentNode) break;
+
+                if (currentNode.type === 'customNodeConditional') {
+                    const inputNodeId = currentNode.data?.condition?.inputNode;
+                    if (inputNodeId) {
+                        const inputStageName = nodes.find(n => n.id === inputNodeId)?.data?.stageName || inputNodeId;
+                        const submittedValue = submittedStages[inputStageName];
+                        const matchingOutput = currentNode.data?.condition?.outputNodes?.find(
+                            output => output.conditionValue === submittedValue
+                        );
+
+                        if (matchingOutput) {
+                            currentNodeId = matchingOutput.nodeId;
+                            continue;
+                        }
+                    }
+                }
+
+                // nós normais
+                const nextEdge = edges?.find(edge => edge.source === currentNodeId);
+                if (!nextEdge) break;
+
+                currentNodeId = nextEdge.target;
+                if (nodes?.some(n => n.id === currentNodeId &&
+                    n.type === 'customNode' &&
+                    !['Start', 'End'].includes(n.id) &&
+                    !n.id.startsWith('Condicional'))) {
+                    activePathNodes.push(currentNodeId);
+                }
+            }
+
+            // Calcular porcentagem
+            const validNodes = nodes?.filter(node =>
+                node.type === 'customNode' &&
+                !['Start', 'End'].includes(node.id) &&
+                !node.id.startsWith('Condicional')
+            ) || [];
+
+            const completedCount = validNodes.reduce((count, node) => {
+                const stageName = node.data?.stageName || node.id;
+                const isSubmitted = submittedStages[stageName] === true ||
+                    submittedStages[stageName] === "1" ||
+                    submittedStages[stageName] === 1;
+                const isFinished = node.node_status === "Finished";
+                const isInActivePath = activePathNodes.includes(node.id);
+
+                return count + (isInActivePath && (isSubmitted || isFinished) ? 1 : 0);
+            }, 0);
+
+            const totalActiveNodes = validNodes.filter(node =>
+                activePathNodes.includes(node.id)
+            ).length;
+
+            const percentage = totalActiveNodes > 0
+                ? Math.round((completedCount / totalActiveNodes) * 100)
+                : 0;
+
+            const currentStageId = process.meta?.current_stage?.[0];
+            let currentStage = null;
+            let lastUpdate = process.modified;
+
+            if (currentStageId) {
+                currentStage = nodes?.find(n => n.id === currentStageId)?.data?.stageName || currentStageId;
+
+                const stageUpdate = stageData[currentStageId]?.updateAt ||
+                    stageData[currentStage]?.updateAt;
+                if (stageUpdate) {
+                    lastUpdate = stageUpdate;
+                }
+            }
+
+            return {
+                percentage,
+                lastUpdate: formatDate(lastUpdate),
+                currentStage,
+                currentStageId
+            };
+        } catch {
+            console.error('Error getting process details:');
+            return {
+                percentage: 0,
+                lastUpdate: null,
+                currentStage: null,
+                currentStageId: null
+            };
+        }
+    };
+
+    const formatDate = (dateString) => {
+        if (!dateString) return 'N/A';
+
+        try {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        } catch {
+            console.error('Error formatting date:');
+            return dateString;
+        }
+    };
+
     useEffect(() => {
         loadProcessTypes();
         loadProcesses();
@@ -35,19 +193,85 @@ const DashboardPage = () => {
     useEffect(() => {
         topFiveModels();
     }, [processes])
-    
+
     const loadProcessTypes = () => {
         setIsLoading(true);
         fetchProcessModels()
-        .then(data => {
-            setProcessTypes(data);
-            setIsLoading(false);
-        })
-        .catch(error => {
-            console.error('Error fetching process types:', error);
-            setIsLoading(false);
-        });
+            .then(data => {
+                setProcessTypes(data);
+                setIsLoading(false);
+            })
+            .catch(() => {
+                console.error('Error fetching process types:');
+                setIsLoading(false);
+            });
     };
+
+    // Função para verificar se um processo está pendente
+    const isProcessPending = (process) => {
+        if (process.status !== 'publish') return false;
+
+        const processStatus = process.meta?.status?.[0];
+        const currentStageId = process.meta?.current_stage?.[0];
+
+        if (processStatus === "Finished") return false;
+
+        if (!process.meta?.flowData?.nodes) return false;
+
+        if (!currentStageId) return true;
+
+        const currentNode = process.meta.flowData.nodes.find(node => node.id === currentStageId);
+
+        if (!currentNode || currentNode.type === 'endNode') return false;
+
+        if (currentNode.sector_obatala) {
+            const userInSector = sectorsUsers.some(sector =>
+                sector.sector_id === currentNode.sector_obatala &&
+                sector.users.some(user => user.ID === currentUser?.id)
+            );
+            return userInSector;
+        }
+
+        return true;
+    };
+
+    useEffect(() => {
+        if (!currentUser?.id) return;
+
+        const loadPendingProcesses = async () => {
+            setIsLoading(true);
+            try {
+                const processes = await apiFetch({
+                    path: '/obatala/v1/process_obatala?per_page=100&_embed'
+                });
+
+                const pending = processes
+                    .filter(isProcessPending)
+                    .slice(0, 10)
+                    .map(process => {
+                        const details = getProcessDetails(process);
+
+                        return {
+                            id: process.id,
+                            title: process.title?.rendered || 'Sem título',
+                            percentage: details.percentage,
+                            lastUpdate: details.lastUpdate,
+                            currentStage: details.currentStage,
+                            currentStageId: details.currentStageId,
+                            link: `/wp-admin/admin.php?page=process-viewer&process_id=${process.id}`,
+                        };
+                    });
+
+                setPendingProcesses(pending);
+            } catch {
+                console.error('Error loading pending processes:');
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        loadPendingProcesses();
+    }, [currentUser?.id, sectorsUsers]);
 
     const loadProcesses = async () => {
         setIsLoading(true);
@@ -61,8 +285,8 @@ const DashboardPage = () => {
                 console.error("No processes data returned.");
                 setProcesses([]);
             }
-        } catch (error) {
-            console.error("Error fetching processes:", error);
+        } catch {
+            console.error("Error fetching processes:");
         } finally {
             setIsLoading(false);
         }
@@ -71,59 +295,59 @@ const DashboardPage = () => {
     const loadSectors = () => {
         setIsLoading(true);
         fetchSectors()
-        .then(data => {
-            const sectors = Object.entries(data).map(([key, value]) => ({
-                id: key,
-                name: value.nome,
-                description: value.descricao,
-                status: value.status,
-            }));
-    
-            setSectors(sectors);
-            setIsLoading(false);
-        })
-        .catch(error => {
-            console.error('Error fetching sectors:', error);
-            setIsLoading(false);
-        });
+            .then(data => {
+                const sectors = Object.entries(data).map(([key, value]) => ({
+                    id: key,
+                    name: value.nome,
+                    description: value.descricao,
+                    status: value.status,
+                }));
+
+                setSectors(sectors);
+                setIsLoading(false);
+            })
+            .catch(() => {
+                console.error('Error fetching sectors:');
+                setIsLoading(false);
+            });
     };
 
     const loadSectorsUsers = () => {
         setIsLoading(true);
         fetchSectorsUsers()
-        .then(data => {
-            setSectorsUsers(data);
-            setIsLoading(false);
-        })
-        .catch(error => {
-            console.error('Error fetching sectors:', error);
-            setIsLoading(false);
-        });
+            .then(data => {
+                setSectorsUsers(data);
+                setIsLoading(false);
+            })
+            .catch(() => {
+                console.error('Error fetching sectors:');
+                setIsLoading(false);
+            });
     };
 
     const sectorsUserLogged = useMemo(() => {
         return sectorsUsers.filter(sector => {
             const matchesUser = currentUser?.id
                 ? sector?.users?.some(user => user.ID === currentUser?.id) &&
-                    sector?.sector_status === 'Active'
+                sector?.sector_status === 'Active'
                 : true;
             return matchesUser;
         });
     }, [sectorsUsers, currentUser]);
-    
+
     const matchesSectors = useMemo(() => {
         return sectors.filter(sector => {
             const matchesSector = sectorsUserLogged?.some(sectorLogged => sectorLogged?.sector_id === sector?.id);
             return matchesSector;
         });
     }, [sectorsUserLogged, sectors]);
-    
+
     const topFiveModels = () => {
         try {
             setIsLoading(true);
-        
+
             const modelCount = {};
-    
+
             processes.map(process => {
                 const modelId = process?.meta?.process_type[0];
                 if (modelId) {
@@ -133,29 +357,29 @@ const DashboardPage = () => {
                         }
                         modelCount[modelId] += 1;
                     }
-                } 
+                }
             });
             const sortedModels = Object.entries(modelCount)
-                .sort((a, b) => b[1] - a[1]) 
+                .sort((a, b) => b[1] - a[1])
                 .slice(0, 5)
                 .map(([modelId, count]) => ({
                     modelId,
                     count,
                     modelName: getModelNameById(modelId),
-                })); 
-    
+                }));
+
             setTopModels(sortedModels);
-        } catch (error) {
-            console.error('Erro ao buscar dados dos processos:', error);
+        } catch {
+            console.error('Erro ao buscar dados dos processos:');
         } finally {
             setIsLoading(false);
         }
     };
-    
-    const getModelNameById = (modelId) => {        
+
+    const getModelNameById = (modelId) => {
         const model = processTypes.find(m => m.id.toString() === modelId);
         return model ? model.title.rendered : 'Desconhecido';
-    }; 
+    };
 
     // Função para contar processos concluídos
     const countCompletedProcesses = useMemo(() => {
@@ -186,7 +410,6 @@ const DashboardPage = () => {
                         <progress value={completedProcessesPercentage} max="100">{completedProcessesPercentage}%</progress>
                     </div>
                 </div>
-
                 <div className="dashboard-container">
                     <div class="dashboard-item-personal">
                         <div className="card-container">
@@ -207,14 +430,14 @@ const DashboardPage = () => {
                                                 <tbody>
                                                     {matchesSectors.map((sector) => (
                                                         <tr key={sector.id}>
-                                                        <td>
-                                                            <a 
-                                                                href={`/wp-admin/admin.php?page=sector-details&sector_id=${sector.id}`}
-                                                            >
-                                                                {sector.name}
-                                                            </a>
-                                                        </td>
-                                                        <td>{sector.description}</td>
+                                                            <td>
+                                                                <a
+                                                                    href={`/wp-admin/admin.php?page=sector-details&sector_id=${sector.id}`}
+                                                                >
+                                                                    {sector.name}
+                                                                </a>
+                                                            </td>
+                                                            <td>{sector.description}</td>
                                                         </tr>
                                                     ))}
                                                 </tbody>
@@ -223,17 +446,37 @@ const DashboardPage = () => {
                                     </>
                                 )}
                             </div>
-
-                            <Panel className="warning">
-                                <PanelHeader>Pending input processes <span className="badge">3</span></PanelHeader>
-                                <PanelRow>
-                                    <ul className="list-actions mb-0">
-                                        <li><a href="#"><Icon icon="warning" /><span className="text">Nome de processo 1</span><Icon icon="arrow-right-alt2" /></a></li>
-                                        <li><a href="#"><Icon icon="warning" /><span className="text">Nome de processo Responsável pela doação...</span><Icon icon="arrow-right-alt2" /></a></li>
-                                        <li><a href="#"><Icon icon="warning" /><span className="text">Nome de processo 3</span><Icon icon="arrow-right-alt2" /></a></li>
-                                    </ul>
-                                </PanelRow>
-                            </Panel>
+                            {pendingProcesses.length > 0 && (
+                                <Panel className="warning">
+                                    <PanelHeader>Pending processes</PanelHeader>
+                                    <PanelRow>
+                                        {pendingProcesses.length > 0 ? (
+                                            <ul className="list-actions mb-0">
+                                                {pendingProcesses.map(process => {
+                                                    return (
+                                                        <li key={process.id}>
+                                                            <a href={process.link}>
+                                                                <span className="percent">{process.percentage}%</span>
+                                                                <span className="text">
+                                                                    {process.title}
+                                                                    <small className="d-block">
+                                                                        Etapa atual: {process.currentStage || 'N/A'}
+                                                                    </small>
+                                                                </span>
+                                                                <Icon icon="arrow-right-alt2" />
+                                                            </a>
+                                                        </li>
+                                                    );
+                                                })}
+                                            </ul>
+                                        ) : (
+                                            <Notice status="info" isDismissible={false}>
+                                                No pending processes found.
+                                            </Notice>
+                                        )}
+                                    </PanelRow>
+                                </Panel>
+                            )}
                         </div>
                     </div>
                     <div class="dashboard-item-stats">
@@ -251,7 +494,6 @@ const DashboardPage = () => {
                                 <span className="description"><Icon icon="groups" /> Groups</span>
                             </a>
                         </div>
-
                         <div className="panel-container mt-2">
                             <Panel>
                                 <PanelHeader>Top 5 most used models</PanelHeader>
