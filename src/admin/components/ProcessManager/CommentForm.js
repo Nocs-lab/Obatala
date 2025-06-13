@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ptBR } from "date-fns/locale/pt-BR";
 import { formatDistanceToNow } from "date-fns";
-import { addComment, deleteComment, fetchProcessComments, updateComment } from "../../api/apiRequests";
+import { addComment, deleteComment, fetchProcess, fetchProcessComments, updateComment } from "../../api/apiRequests";
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 import { TextControl, Button, Icon, Notice, PanelBody, PanelRow, DropdownMenu } from "@wordpress/components";
@@ -12,12 +12,13 @@ import {
     commentContent,
 } from '@wordpress/icons';
 
-const CommentForm = ({ processId }) => {
+const CommentForm = ({ processId, setHasComments }) => {
     const [comment, setComment] = useState('');
     const [editingComment, setEditingComment] = useState(null);
     const [editContent, setEditContent] = useState('');
     const [comments, setComments] = useState([]);
     const [notice, setNotice] = useState(null);
+    const [processIsFinished, setProcessIsFinished] = useState(null);
 
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
 
@@ -25,6 +26,7 @@ const CommentForm = ({ processId }) => {
         if ((currentUser && currentUser === undefined) || !processId) return;
 
         fetchComments();
+        loadProcess();
 
     }, [currentUser, processId]);
 
@@ -34,20 +36,33 @@ const CommentForm = ({ processId }) => {
         fetchProcessComments(processId, currentUser.id)
             .then(data => {
                 setComments(data);
+                if (data.length > 0) {
+                    setHasComments(true);
+                }
             })
             .catch((error) => {
                 console.error('Error fetching comments:', error);
                 if (error?.status === 'Usuário não possui permissão.') {
                     setNotice({ status: 'warning', message: 'You do not have permission to view the comments for this process.' });
                 } else {
-                    console.log(currentUser);
 
-                    setNotice({ status: 'error', message: 'Error fetching coxxxmments.' });
+                    setNotice({ status: 'error', message: 'Error fetching comments.' });
                 }
 
             });
     };
+    const loadProcess = () => {
+        if (!processId) return;
 
+        fetchProcess(processId)
+            .then(data => {
+                setProcessIsFinished(data.meta.status?.[0] === 'Finished');
+            })
+            .catch((error) => {
+                console.error('Error fetching process:', error);
+                setNotice({ status: 'error', message: 'Error fetching process.' });
+            });
+    };
     const handleCommentSubmit = () => {
         if (!comment) {
             setNotice({ status: 'error', message: 'Please enter a comment.' });
@@ -152,14 +167,16 @@ const CommentForm = ({ processId }) => {
                                                             {
                                                                 title: 'Edit',
                                                                 icon: edit,
+                                                                isDisabled: processIsFinished,
                                                                 onClick: () => {
                                                                     setEditingComment(comment.comment_ID);
                                                                     setEditContent(comment.comment_content);
-                                                                },
+                                                                }
                                                             },
                                                             {
                                                                 title: 'Delete',
                                                                 icon: trash,
+                                                                isDisabled: processIsFinished,
                                                                 onClick: () => handleDeleteComment(comment.comment_ID),
                                                             },
                                                         ]}
@@ -174,21 +191,25 @@ const CommentForm = ({ processId }) => {
                     </div>
                 </PanelRow>
             )}
-            <PanelBody title="Submit comment" className="no-print">
-                <PanelRow>
-                    {notice && (
-                        <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                            {notice.message}
-                        </Notice>
-                    )}
-                    <TextControl
-                        label="Add a comment"
-                        value={comment}
-                        onChange={(value) => setComment(value)}
-                    />
-                    <Button variant="primary" onClick={handleCommentSubmit}>Submit</Button>
-                </PanelRow>
-            </PanelBody>
+            {!processIsFinished && (
+                <PanelBody title="Submit comment" className="no-print">
+                    <PanelRow>
+                        {notice && (
+                            <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                                {notice.message}
+                            </Notice>
+                        )}
+                        <TextControl
+                            label="Add a comment"
+                            value={comment}
+                            onChange={(value) => setComment(value)}
+                            disabled={processIsFinished}
+                        />
+                        <Button variant="primary" onClick={handleCommentSubmit} disabled={processIsFinished}
+                        >Submit</Button>
+                    </PanelRow>
+                </PanelBody>
+            )}
         </>
     );
 };
