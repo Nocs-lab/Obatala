@@ -12,7 +12,7 @@ import {
     commentContent,
 } from '@wordpress/icons';
 
-const CommentForm = ({ processId }) => {
+const CommentForm = ({ processId, setHasComments }) => {
     const [comment, setComment] = useState('');
     const [editingComment, setEditingComment] = useState(null);
     const [editContent, setEditContent] = useState('');
@@ -36,6 +36,9 @@ const CommentForm = ({ processId }) => {
         fetchProcessComments(processId, currentUser.id)
             .then(data => {
                 setComments(data);
+                if (data.length > 0) {
+                    setHasComments(true);
+                }
             })
             .catch((error) => {
                 console.error('Error fetching comments:', error);
@@ -188,23 +191,25 @@ const CommentForm = ({ processId }) => {
                     </div>
                 </PanelRow>
             )}
-            <PanelBody title="Submit comment" className="no-print">
-                <PanelRow>
-                    {notice && (
-                        <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                            {notice.message}
-                        </Notice>
-                    )}
-                    <TextControl
-                        label="Add a comment"
-                        value={comment}
-                        onChange={(value) => setComment(value)}
-                        disabled={processIsFinished}
-                    />
-                    <Button variant="primary" onClick={handleCommentSubmit} disabled={processIsFinished}
-                    >Submit</Button>
-                </PanelRow>
-            </PanelBody>
+            {!processIsFinished && (
+                <PanelBody title="Submit comment" className="no-print">
+                    <PanelRow>
+                        {notice && (
+                            <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                                {notice.message}
+                            </Notice>
+                        )}
+                        <TextControl
+                            label="Add a comment"
+                            value={comment}
+                            onChange={(value) => setComment(value)}
+                            disabled={processIsFinished}
+                        />
+                        <Button variant="primary" onClick={handleCommentSubmit} disabled={processIsFinished}
+                        >Submit</Button>
+                    </PanelRow>
+                </PanelBody>
+            )}
         </>
     );
 };
