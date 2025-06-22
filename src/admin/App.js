@@ -6,6 +6,7 @@ import ProcessModelEditor from './components/ProcessModelEditor';
 import SectorManager from "./components/SectorManager";
 import DashboardPage from "./components/Dashboard";
 import SectorDetailsPage from "./components/SectorManager/SectorDetailsPage";
+import MappersManager from "./components/MappersManager";
 
 // Função para navegar para o ProcessViewer ao selecionar um processo
 const navigateToProcessViewer = (processId) => {
@@ -22,7 +23,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const sectorManagerElement = document.getElementById("sector-manager");
     const dashboardElement = document.getElementById("dashboard");
     const sectorDetailsElement = document.getElementById("sector-details");
-
+    const mappersManagerElement = document.getElementById("mappers");
+    
     // Verifica se o elemento com o ID 'sector-details' existe
     // Se existir, renderiza o componente SectorDetailsPage dentro deste elemento
     if (sectorDetailsElement) {
@@ -61,6 +63,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (dashboardElement) {
         createRoot(dashboardElement).render(<DashboardPage />);
     }
+
+    if (mappersManagerElement) {
+        createRoot(mappersManagerElement).render(<MappersManager />);
+    }
+
 
     // Accordion
     document.querySelectorAll(".accordion-button").forEach(button => {
