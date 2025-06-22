@@ -144,6 +144,11 @@ class AdminMenu {
         echo '<div id="dashboard"></div>';
     }
 
+    public static function render_mappers_page() {
+        echo '<div id="mappers"></div>';
+        echo '<script>console.log("div mappers encontrada:", document.getElementById("mappers"));</script>';
+    }
+
     /**
      * Renderiza a página de administração correta com base no slug da página atual.
      */

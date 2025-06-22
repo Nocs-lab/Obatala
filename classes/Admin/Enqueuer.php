@@ -16,6 +16,7 @@ class Enqueuer {
         'obatala_page_sector_manager' => 'sector_manager',
         'toplevel_page_obatala-main' => 'dashboard',
         'obatala_page_sector-details' => 'sector-details',
+        'obatala_page_mappers' => 'mappers',
     ];
 
     public static function init() {
