@@ -76,7 +76,16 @@ class AdminMenu {
                 'slug' => 'sector-details',
                 'callback' => 'render_page',
                 'show_in_menu' => true
-            ] 
+            ], 
+            [
+                'parent_slug' => 'obatala-main',
+                'title' => 'Mappers',
+                'menu_title' => 'Mappers',
+                'capability' => 'read',
+                'slug' => 'mappers',
+                'callback' => 'render_mappers_page',
+                'show_in_menu' => true
+            ]  
         ]
     ];
 
