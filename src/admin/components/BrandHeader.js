@@ -44,7 +44,7 @@ const BrandHeader = () => {
                         },
                     ] }
                 />   
-                <a href="/wp-admin/" className="menu-link menu-icon" title="Wordpress"><Icon icon="wordpress-alt" /><span className="text">Wordpress</span></a>
+                <a href={obatalaApp.admin_url}  className="menu-link menu-icon" title="Wordpress"><Icon icon="wordpress-alt" /><span className="text">Wordpress</span></a>
             </nav>
         </header>
     );

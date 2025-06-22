@@ -53,6 +53,13 @@ class Enqueuer {
                 $asset_file['version']
             );
             wp_enqueue_style('react-flow-styles');
+
+            wp_localize_script('obatala-admin-scripts', 'obatalaApp', [
+                'admin_url' => admin_url(),
+                'site_url'  => site_url(), 
+                'plugin_url' => OBATALA_PLUGIN_URL, 
+            ]);
+
         }
     }
 }
