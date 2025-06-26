@@ -44,6 +44,7 @@ const ProcessViewer = () => {
     const [fileInfo, setFileInfo] = useState({});
     const [notice, setNotice] = useState(null);
     const [progress, setProgress] = useState(0);
+    const [hasComments, setHasComments] = useState(false);
     // Função para controlar o estado de expansão do accordion
     const [activeIndex, setActiveIndex] = useState(null);
 
@@ -676,10 +677,12 @@ const ProcessViewer = () => {
                                 })}
                             </div>
                             <aside>
-                                <Panel>
-                                    <PanelHeader>Comments</PanelHeader>
-                                    <CommentForm processId={processId || null} />
-                                </Panel>
+                                {progress === 100 && !hasComments ? (null) : (
+                                    <Panel>
+                                        <PanelHeader>Comments</PanelHeader>
+                                        <CommentForm processId={processId || null} setHasComments={setHasComments} />
+                                    </Panel>
+                                )}
                                 <Panel>
                                     <PanelHeader>History</PanelHeader>
                                     <PanelRow>

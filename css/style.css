@@ -1071,7 +1071,7 @@ progress {
   min-width: 300px;
 }
 progress::-webkit-progress-bar {
-  background-color: rgba(255,255,255,.1);
+  background-color: rgba(0,0,0,.1);
   border-radius: var(--border-radius);
 }
 progress::-webkit-progress-value {
@@ -1082,6 +1082,14 @@ progress::-webkit-progress-value {
 progress::-moz-progress-bar {
   background-color: var(--success);
   border-radius: var(--border-radius);
+}
+.progress {
+  display: inline-block;
+  min-width: 300px;
+  & .description {
+    margin: 0;
+    text-align: right;
+  }
 }
 
 /* Extra */
@@ -1360,6 +1368,9 @@ button .components-spinner {
   justify-content: flex-start;
   gap: 1.5rem;
   margin: 1.5rem 0;
+  & progress::-webkit-progress-bar {
+    background-color: rgba(255,255,255,.1);
+  }
   & .badge {
     background-color: rgba(255, 255, 255, .2);
     color: var(--white);
