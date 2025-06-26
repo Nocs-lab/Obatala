@@ -25,6 +25,12 @@ class ProcessTypeApi extends ObatalaAPI {
             'args' => $this->get_meta_args(),
         ]);
 
+        $this->add_route('process_type/(?P<id>\d+)/fields', [
+            'methods' => 'GET',
+            'callback' => [$this, 'get_fields'],
+            'permission_callback' => '__return_true',
+        ]);
+
         // Rota para associar e gerenciar histórico de setores das etapas
         $this->add_route('process_type/(?P<id>\d+)/assosiate_sector', [
             'methods' => 'POST',
@@ -137,6 +143,57 @@ class ProcessTypeApi extends ObatalaAPI {
         ];
         return rest_ensure_response($meta);
     }
+
+    public function get_fields($request) {
+        $post_id = (int) $request['id'];
+
+        $flowData = get_post_meta($post_id, 'flowData', true);
+
+        // Decodificar JSON se for uma string
+        if (is_string($flowData)) {
+            $flowData = json_decode($flowData, true);
+        }
+
+        // Verifica se existe o índice 'nodes' e se é um array
+        if (is_array($flowData) && isset($flowData['nodes']) && is_array($flowData['nodes'])) {
+            // Filtra os nodes que não possuem 'Start', 'End' ou 'Condicional' no id
+            $filteredNodes = array_filter($flowData['nodes'], function ($node) {
+                if (!isset($node['id']) || !is_string($node['id'])) {
+                    return true;
+                }
+
+                return !(
+                    str_contains($node['id'], 'Start') ||
+                    str_contains($node['id'], 'End') ||
+                    str_contains($node['id'], 'Condicional')
+                );
+            });
+
+            // Array final para armazenar todos os fields
+            $allFields = [];
+
+            // Percorre os nodes filtrados e extrai os fields
+            foreach ($filteredNodes as $node) {
+                if (
+                    isset($node['data']) &&
+                    is_array($node['data']) &&
+                    isset($node['data']['fields']) &&
+                    is_array($node['data']['fields'])
+                ) {
+                     foreach ($node['data']['fields'] as $field) {
+                        // Adiciona o campo 'stage' com o id do node
+                        $field['stage'] = $node['id'];
+                        $allFields[] = $field;
+                    }
+                }
+            }
+
+            return rest_ensure_response($allFields);
+        }
+
+        // Retorna vazio se não houver nodes válidos
+        return rest_ensure_response([]);
+}
 
     public function update_meta($request) {
         $post_id = (int) $request['id'];

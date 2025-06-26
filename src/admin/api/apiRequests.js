@@ -14,6 +14,15 @@ export const fetchProcessModels = () => {
     });
 };
 
+export const fetchFieldsProcessModels = (id) => {
+    return apiFetch({
+        path: `/obatala/v1/process_type/${id}/fields`,
+    }).then((data) => {
+        return data;
+    });
+};
+
+
 // Função para desserializar
 const maybeUnserialize = (data) => {
     try {
