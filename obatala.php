@@ -100,6 +100,9 @@ class Nocs_ObatalaPlugin
 
 		$sector_api = new \Obatala\Api\SectorApi();
 		$sector_api->register();
+
+        $exporter_api = new \Obatala\Api\ExporterApi();
+		$exporter_api->register();
 	}
 
 
