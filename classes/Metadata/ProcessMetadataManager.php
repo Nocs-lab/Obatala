@@ -173,8 +173,8 @@ class ProcessMetadataManager {
         $value = isset($args['value']) ? esc_attr($args['value']) : '';
         $placeholder = isset($args['placeholder']) ? esc_attr($args['placeholder']) : '';
 
-        echo '<label for="' . $name . '">' . $label . '</label><br />';
-        echo '<input type="' . $type . '" id="' . $name . '" name="' . $name . '" value="' . $value . '" placeholder="' . $placeholder . '" />';
+        echo '<label for="' . esc_attr($name) . '">' . esc_html($label) . '</label><br />';
+        echo '<input type="' . esc_attr($type) . '" id="' . esc_attr($name) . '" name="' . esc_attr($name) . '" value="' . esc_attr($value) . '" placeholder="' . esc_attr($placeholder) . '" />';
         echo '<br />';
     }
 
@@ -185,12 +185,12 @@ class ProcessMetadataManager {
      * @return void
      */
     private static function render_textarea($args) {
-        $name  = isset($args['name']) ? esc_attr($args['name']) : '';
-        $label = isset($args['label']) ? esc_html($args['label']) : '';
-        $value = isset($args['value']) ? esc_textarea($args['value']) : '';
+        $name  = isset($args['name']) ? $args['name'] : '';
+        $label = isset($args['label']) ? $args['label'] : '';
+        $value = isset($args['value']) ? $args['value'] : '';
 
-        echo '<label for="' . $name . '">' . $label . '</label><br />';
-        echo '<textarea id="' . $name . '" name="' . $name . '">' . $value . '</textarea>';
+        echo '<label for="' . esc_attr($name) . '">' . esc_html($label) . '</label><br />';
+        echo '<textarea id="' . esc_attr($name) . '" name="' . esc_attr($name) . '">' . esc_textarea($value) . '</textarea>';
         echo '<br />';
     }
 
@@ -202,14 +202,14 @@ class ProcessMetadataManager {
      * @return void
      */
     private static function render_select($args) {
-        $name    = isset($args['name']) ? esc_attr($args['name']) : '';
-        $label   = isset($args['label']) ? esc_html($args['label']) : '';
+        $name    = isset($args['name']) ? $args['name'] : '';
+        $label   = isset($args['label']) ? $args['label'] : '';
         $options = isset($args['options']) && is_array($args['options']) ? $args['options'] : array();
 
-        echo '<label for="' . $name . '">' . $label . '</label><br />';
-        echo '<select id="' . $name . '" name="' . $name . '">';
-        foreach ($options as $value => $label) {
-            echo '<option value="' . esc_attr($value) . '">' . esc_html($label) . '</option>';
+        echo '<label for="' . esc_attr($name) . '">' . esc_html($label) . '</label><br />';
+        echo '<select id="' . esc_attr($name) . '" name="' . esc_attr($name) . '">';
+        foreach ($options as $value => $option_label) {
+            echo '<option value="' . esc_attr($value) . '">' . esc_html($option_label) . '</option>';
         }
         echo '</select>';
         echo '<br />';
@@ -223,14 +223,14 @@ class ProcessMetadataManager {
      * @return void
      */
     private static function render_radio($args) {
-        $name    = isset($args['name']) ? esc_attr($args['name']) : '';
-        $label   = isset($args['label']) ? esc_html($args['label']) : '';
+        $name    = isset($args['name']) ? $args['name'] : '';
+        $label   = isset($args['label']) ? $args['label'] : '';
         $options = isset($args['options']) && is_array($args['options']) ? $args['options'] : array();
 
-        echo '<label>' . $label . '</label><br />';
-        foreach ($options as $value => $label) {
-            echo '<input type="radio" id="' . esc_attr($value) . '" name="' . $name . '" value="' . esc_attr($value) . '">';
-            echo '<label for="' . esc_attr($value) . '">' . esc_html($label) . '</label><br />';
+        echo '<label>' . esc_html($label) . '</label><br />';
+        foreach ($options as $value => $option_label) {
+            echo '<input type="radio" id="' . esc_attr($value) . '" name="' . esc_attr($name) . '" value="' . esc_attr($value) . '">';
+            echo '<label for="' . esc_attr($value) . '">' . esc_html($option_label) . '</label><br />';
         }
         echo '<br />';
     }

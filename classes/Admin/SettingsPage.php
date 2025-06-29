@@ -6,14 +6,14 @@ defined('ABSPATH') || exit;
 class SettingsPage {
     public static function register_settings() {
         // Register settings group
-        register_setting('obatala_settings_group', 'some_setting');
-        register_setting('obatala_settings_group', 'enable_feature');
-        register_setting('obatala_settings_group', 'api_key');
+        register_setting('obatala_settings_group', 'some_setting', 'sanitize_text_field');
+        register_setting('obatala_settings_group', 'enable_feature', 'sanitize_text_field');
+        register_setting('obatala_settings_group', 'api_key', 'sanitize_text_field');
 
         // Add a settings section for general settings
         add_settings_section(
             'obatala_general_settings',
-            __('General Settings', 'obatala'),
+            __('General Settings', 'Obatala'),
             null,
             'obatala_settings_page'
         );
@@ -21,7 +21,7 @@ class SettingsPage {
         // Add individual settings fields
         add_settings_field(
             'some_setting_field',
-            __('Some Setting', 'obatala'),
+            __('Some Setting', 'Obatala'),
             [self::class, 'some_setting_field_render'],
             'obatala_settings_page',
             'obatala_general_settings'
@@ -29,7 +29,7 @@ class SettingsPage {
 
         add_settings_field(
             'enable_feature_field',
-            __('Enable Feature', 'obatala'),
+            __('Enable Feature', 'Obatala'),
             [self::class, 'enable_feature_field_render'],
             'obatala_settings_page',
             'obatala_general_settings'
@@ -37,7 +37,7 @@ class SettingsPage {
 
         add_settings_field(
             'api_key_field',
-            __('API Key', 'obatala'),
+            __('API Key', 'Obatala'),
             [self::class, 'api_key_field_render'],
             'obatala_settings_page',
             'obatala_general_settings'
@@ -47,19 +47,19 @@ class SettingsPage {
     public static function some_setting_field_render() {
         $value = get_option('some_setting');
         echo '<input type="text" name="some_setting" value="' . esc_attr($value) . '"/>';
-        echo '<p class="description">' . __('Enter the value for some setting.', 'obatala') . '</p>';
+        echo '<p class="description">' . esc_html__('Enter the value for some setting.', 'Obatala') . '</p>';
     }
 
     public static function enable_feature_field_render() {
         $checked = get_option('enable_feature') ? 'checked' : '';
-        echo '<input type="checkbox" name="enable_feature" ' . $checked . '/>';
-        echo '<p class="description">' . __('Enable or disable a specific feature.', 'obatala') . '</p>';
+        echo '<input type="checkbox" name="enable_feature" ' . esc_attr($checked) . '/>';
+        echo '<p class="description">' . esc_html__('Enable or disable a specific feature.', 'Obatala') . '</p>';
     }
 
     public static function api_key_field_render() {
         $value = get_option('api_key');
         echo '<input type="text" name="api_key" value="' . esc_attr($value) . '"/>';
-        echo '<p class="description">' . __('Enter your API key here.', 'obatala') . '</p>';
+        echo '<p class="description">' . esc_html__('Enter your API key here.', 'Obatala') . '</p>';
     }
 
     public static function create_settings_page() {
@@ -70,7 +70,7 @@ class SettingsPage {
                 <?php
                 settings_fields('obatala_settings_group');  // Match the settings group
                 do_settings_sections('obatala_settings_page');  // Match the page slug
-                submit_button(__('Save Settings', 'obatala'));
+                submit_button(__('Save Settings', 'Obatala'));
                 ?>
             </form>
         </div>
