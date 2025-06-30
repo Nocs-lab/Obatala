@@ -160,11 +160,10 @@ const SectorDetailsPage = () => {
                                                     {currentUser?.id === user.ID && (
                                                         <Button 
                                                             isDestructive
-                                                            variant="secondary"
                                                             onClick={() => confirmRemoveUser(user)}
                                                             disabled={loading}
                                                         >
-                                                            Leave Group
+                                                            Leave group
                                                         </Button>
                                                     )}
                                                 </td>

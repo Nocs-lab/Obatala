@@ -10,246 +10,341 @@ Este documento descreve a estrutura de arquivos do plugin "Obatala", que é util
 └── 📁Obatala
     └── 📁.github
         └── 📁workflows
-            └── release.yml
-            └── version.yml
+            ├── notify.yml
+            ├── release&update.yml
+            ├── version.yml
     └── 📁build
-        └── index.asset.php
-        └── index.js
-        └── index.js.map
-        └── style-index-rtl.css
-        └── style-index.css
-        └── style-index.css.map
+        ├── index-rtl.css
+        ├── index.asset.php
+        ├── index.css
+        ├── index.css.map
+        ├── index.js
+        ├── index.js.map
+        ├── style-index-rtl.css
+        ├── style-index.css
+        ├── style-index.css.map
     └── 📁classes
         └── 📁Admin
-            └── AdminMenu.php
-            └── Enqueuer.php
-            └── SettingsPage.php
+            ├── AdminMenu.php
+            ├── Enqueuer.php
+            ├── SettingsPage.php
         └── 📁Api
-            └── CustomPostTypeApi.php
-            └── ObatalaAPI.php
-            └── ProcessApi.php
-            └── ProcessTypeApi.php
-            └── SectorApi.php
+            ├── CustomPostTypeApi.php
+            ├── ObatalaAPI.php
+            ├── ProcessApi.php
+            ├── ProcessTypeApi.php
+            ├── SectorApi.php
         └── 📁Entities
-            └── Process.php
-            └── ProcessType.php
-            └── Sector.php
+            ├── Process.php
+            ├── ProcessType.php
+            ├── Sector.php
         └── 📁Metadata
-            └── ProcessMetadataManager.php
+            ├── ProcessMetadataManager.php
     └── 📁css
-        └── react-flow.css
-        └── style.css
+        ├── react-flow.css
+        ├── style.css
     └── 📁developer
-        └── create-zip.js
-        └── update-plugin-version.js
+        ├── create-zip.js
+        ├── update-plugin-version.js
+        ├── updatePlugin.py
+    └── 📁images
+        ├── obatala.svg
+        ├── tainacan.svg
     └── 📁languages
-        └── obatala-pt_BR.mo
-        └── obatala-pt_BR.po
-        └── obatala.pot
+        ├── obatala-pt_BR.mo
+        ├── obatala-pt_BR.po
+        ├── obatala.pot
     └── 📁mk-docs
         └── 📁docs
             └── 📁metadados
-                └── implementacao.md
-                └── metadados.md
+                ├── implementacao.md
+                ├── metadados.md
             └── 📁modelagem
                 └── 📁classes
-                    └── etapa.md
-                    └── notificacao.md
-                    └── pessoa.md
-                    └── processo.md
-                    └── setor.md
-                └── index.md
-                └── processos.md
-            └── 📁roadmap
-                └── sprint-1.md
-                └── sprint-2.md
-                └── sprint-3.md
-                └── sprint-4.md
-                └── sprint-5.md
-                └── sprint-6.md
-                └── stories.md
+                    ├── etapa.md
+                    ├── notificacao.md
+                    ├── pessoa.md
+                    ├── processo.md
+                    ├── setor.md
+                ├── index.md
+                ├── processos.md
             └── 📁stylesheets
-                └── extra.css
+                ├── extra.css
             └── 📁tutoriais
-                └── guia-dev.md
-            └── gutenberg.md
-            └── index.md
-            └── organizacao.md
-            └── posts-customizados.md
-        └── mkdocs.yml
-        └── requirements.txt
+                ├── guia-dev.md
+            ├── gutenberg.md
+            ├── index.md
+            ├── organizacao.md
+            ├── posts-customizados.md
+        ├── mkdocs.yml
+        ├── requirements.txt
     └── 📁src
         └── 📁admin
             └── 📁api
-                └── apiRequests.js
+                ├── apiRequests.js
             └── 📁components
                 └── 📁FlowEditor
                     └── 📁components
                         └── 📁dragables
-                            └── DragAndDropList.js
-                            └── SortableField.js
+                            ├── DragAndDropList.js
+                            ├── SortableField.js
                         └── 📁inputControls
-                            └── DatePickerControls.js
-                            └── FileUploadControls.js
-                            └── LabelWithIcon.js
-                            └── NumberFieldControls.js
-                            └── SelectRadioControls.js
-                            └── TainacanSearch.js
-                            └── TextFieldControls.js
+                            ├── DatePickerControls.js
+                            ├── FileUploadControls.js
+                            ├── LabelWithIcon.js
+                            ├── NumberFieldControls.js
+                            ├── SelectRadioControls.js
+                            ├── TainacanSearch.js
+                            ├── TextFieldControls.js
                         └── 📁reactFlow
-                            └── CustomEdge.js
-                            └── FlowButtons.js
-                            └── NodeContent.js
-                            └── NodeHandle.js
-                        └── FieldComponents.js
-                        └── SlidingDrawer.js
+                            ├── CustomEdge.js
+                            ├── EndNode.js
+                            ├── FlowButtons.js
+                            ├── NodeConditional.js
+                            ├── NodeContent.js
+                            ├── NodeHandle.js
+                            ├── StartNode.js
+                        ├── FieldComponents.js
+                        ├── SlidingDrawer.js
                     └── 📁context
-                        └── DrawerContext.js
-                        └── FlowContext.js
+                        ├── DrawerContext.js
+                        ├── FlowContext.js
                     └── 📁helpers
-                        └── dataValidator.js
-                    └── mockdata.js
-                    └── ProcessFlow.js
+                        ├── dataValidator.js
+                    ├── mockdata.js
+                    ├── ProcessFlow.js
                 └── 📁ProcessManager
-                    └── CommentForm.js
-                    └── MetaFieldInputs.js
-                    └── MetroNavigation.js
-                    └── ProcessCreator.js
-                    └── ProcessStage.js
+                    ├── CommentForm.js
+                    ├── HistoryViewer.js
+                    ├── MetaFieldDisplay.js
+                    ├── MetaFieldInputs.js
+                    ├── MetroNavigation.js
+                    ├── ProcessCreator.js
+                    ├── ProcessFilters.js
+                    ├── ProcessHeader.js
+                    ├── ProcessList.js
+                    ├── ProcessStage.js
+                    ├── ProcessUserLog.js
                 └── 📁ProcessTypeManager
-                    └── ProcessTypeForm.js
-                    └── ProcessTypeList.js
+                    ├── ProcessTypeFilters.js
+                    ├── ProcessTypeForm.js
+                    ├── ProcessTypeList.js
                 └── 📁SectorManager
-                    └── SectorCreator.js
-                    └── SectorList.js
+                    └── 📁UserManager
+                        ├── UserManager.js
+                        ├── UserSelect.js
+                    ├── SectorCreator.js
+                    ├── SectorDetailsPage.js
+                    ├── SectorFilters.js
+                    ├── SectorList.js
                 └── 📁Tainacan
                     └── 📁TainacanSearch
-                        └── CollectionCard.js
-                        └── ItemCard.js
-                    └── TainacanSearch.js
-                └── ProcessManager.js
-                └── ProcessModelEditor.js
-                └── ProcessTypeManager.js
-                └── ProcessViewer.js
-                └── SectorManager.js
+                        ├── CollectionCard.js
+                        ├── ItemCard.js
+                    ├── TainacanSearch.js
+                ├── BrandFooter.js
+                ├── BrandHeader.js
+                ├── Dashboard.js
+                ├── ProcessManager.js
+                ├── ProcessModelEditor.js
+                ├── ProcessTypeManager.js
+                ├── ProcessViewer.js
+                ├── SectorManager.js
             └── 📁redux
-                └── reducer.js
-            └── App.js
-        └── index.js
+                ├── reducer.js
+            ├── App.js
+        ├── index.js
     └── 📁vendor
         └── 📁composer
-            └── autoload_classmap.php
-            └── autoload_namespaces.php
-            └── autoload_psr4.php
-            └── autoload_real.php
-            └── autoload_static.php
-            └── ClassLoader.php
-            └── installed.json
-            └── installed.php
-            └── InstalledVersions.php
-            └── LICENSE
-        └── autoload.php
+            ├── autoload_classmap.php
+            ├── autoload_namespaces.php
+            ├── autoload_psr4.php
+            ├── autoload_real.php
+            ├── autoload_static.php
+            ├── ClassLoader.php
+            ├── installed.json
+            ├── installed.php
+            ├── InstalledVersions.php
+            ├── LICENSE
+        ├── autoload.php
     └── 📁view
-        └── archive-obatala_steps.php
-        └── archive-process_obatala.php
-        └── single-obatala_steps.php
-        └── single-process_obatala.php
-    └── .gitignore
-    └── composer.json
-    └── obatala.php
-    └── package-lock.json
-    └── package.json
+        ├── archive-obatala_steps.php
+        ├── archive-process_obatala.php
+        ├── single-obatala_steps.php
+        ├── single-process_obatala.php
+    ├── .gitignore
+    ├── composer.json
+    ├── obatala.php
+    ├── package-lock.json
+    ├── package.json
     └── README.md
 ```
 
 ---
 
-#### Descrição dos Arquivos e Diretórios
+## 📂 Descrição dos Arquivos e Diretórios
 
-### 📁 .github/workflows
-Contém os workflows do GitHub Actions para automação de tarefas no projeto.
+### 📁 `.github/workflows/`
+Diretório que contém os **workflows automatizados** do GitHub Actions utilizados para CI/CD (Integração Contínua e Entrega Contínua):
 
-- **release.yml**: Configura a automação para criar uma nova versão.
-- **version.yml**: Gerencia o versionamento do projeto.
+- `release&update.yml`: Automatiza a criação de releases e atualizações do plugin.
+- `version.yml`: Gerencia o versionamento semântico do projeto.
+- `notify.yml`: Envia notificações após eventos como push ou release.
 
-### 📁 classes
+---
 
-#### 📁 Admin
-Classes para gerenciamento administrativo do plugin.
+### 📁 `classes/`
+Código PHP backend estruturado em namespaces, seguindo o padrão PSR-4.
 
-- **AdminMenu.php**: Gerencia o menu administrativo do WordPress.
-- **Enqueuer.php**: Controla a adição de scripts e estilos no painel.
-- **SettingsPage.php**: Define a página de configurações do plugin.
+#### 📁 `Admin/`
+Responsável pelas interfaces administrativas do WordPress:
 
-#### 📁 Api
-Classes de API para interagir com diferentes endpoints.
+- `AdminMenu.php`: Cria e organiza os menus no painel.
+- `Enqueuer.php`: Carrega scripts e estilos na interface administrativa.
+- `SettingsPage.php`: Gera a página de configurações do plugin.
 
-- **CustomPostTypeApi.php**: API para o registro de tipos de post personalizados.
-- **ObatalaAPI.php**: Gerencia as integrações de API principais.
-- **ProcessApi.php**, **ProcessTypeApi.php**, **SectorApi.php**: APIs para operações específicas de processos, tipos de processo e setores.
+#### 📁 `Api/`
+Controladores REST para comunicação entre o frontend e o backend:
 
-#### 📁 Entities
-Define entidades principais.
+- `ObatalaAPI.php`: Controlador central que agrupa as rotas públicas da API.
+- `CustomPostTypeApi.php`: Registro e definição de custom post types.
+- `ProcessApi.php`, `ProcessTypeApi.php`, `SectorApi.php`: Rotas específicas para cada domínio funcional.
 
-- **Process.php**: Define a entidade `Processo`.
-- **ProcessType.php**: Define a entidade `Tipo de Processo`.
-- **Sector.php**: Define a entidade `Setor`.
+#### 📁 `Entities/`
+Representação orientada a objetos das entidades de domínio:
 
-#### 📁 Metadata
+- `Process.php`: Entidade `Processo`, incluindo suas regras e estrutura.
+- `ProcessType.php`: Representa o `Tipo de Processo`.
+- `Sector.php`: Representa o `Setor` relacionado ao processo.
 
-- **ProcessMetadataManager.php**: Gerencia metadados de processos.
+#### 📁 `Metadata/`
+Gerenciadores de metadados dinâmicos:
 
-- **create-zip.js**: Cria um arquivo ZIP do plugin para distribuição.
-- **update-plugin-version.js**: Atualiza a versão do plugin.
+- `ProcessMetadataManager.php`: Criação, leitura e atualização de metadados dos processos.
 
-### 📁 src
+---
 
-#### 📁 admin
+### 📁 `src/`
+Código-fonte do frontend, construído em **React.js** com uso de Redux.
 
-##### 📁 api
-- **apiRequests.js**: Funções para chamadas de API.
+#### 📁 `admin/`
 
-##### 📁 components
+##### 📁 `api/`
+- `apiRequests.js`: Funções para realizar requisições assíncronas à API PHP.
 
-###### 📁 FlowEditor
-Editor de fluxo para o projeto.
+##### 📁 `components/`
 
-- **dragables**: Componentes para arrastar e soltar, como `DragAndDropList.js`.
-- **inputControls**: Controles personalizados de input, como `DatePickerControls.js`.
-- **reactFlow**: Componentes de fluxo, incluindo `CustomEdge.js`, `NodeContent.js`.
+###### 📁 `FlowEditor/`
+Editor visual de fluxos curatoriais:
 
-###### 📁 ProcessManager
-Gerenciamento de processos.
+- `components/dragables/`: Lista de componentes com suporte a drag-and-drop.
+  - Ex: `DragAndDropList.js`, `SortableField.js`.
+- `components/inputControls/`: Inputs customizados como seletores, datas e campos de texto.
+  - Ex: `DatePickerControls.js`, `FileUploadControls.js`, `TainacanSearch.js`.
+- `components/reactFlow/`: Nós e conexões para renderização do fluxo.
+  - Ex: `CustomEdge.js`, `StartNode.js`, `NodeContent.js`.
 
-- Inclui `CommentForm.js`, `ProcessCreator.js`, entre outros.
+###### 📁 `ProcessManager/`
+Interface de gerenciamento dos processos:
 
-###### 📁 ProcessTypeManager
-Gerenciamento de tipos de processo.
+- Componentes como `ProcessCreator.js`, `ProcessList.js`, `ProcessStage.js`, `CommentForm.js`.
 
-- **ProcessTypeForm.js**, **ProcessTypeList.js**: Formulários e listas.
+###### 📁 `ProcessTypeManager/`
+Gerencia os tipos de processos disponíveis:
 
-###### 📁 SectorManager
-Gerenciamento de setores.
+- Ex: `ProcessTypeForm.js`, `ProcessTypeList.js`, `ProcessTypeFilters.js`.
 
-- **SectorCreator.js**, **SectorList.js**.
+###### 📁 `SectorManager/`
+Administração de setores organizacionais:
 
-###### 📁 Tainacan
-Componentes de integração com o Tainacan.
+- Componentes como `SectorCreator.js`, `SectorFilters.js`, `SectorList.js`.
 
-- **TainacanSearch**: Componente de busca Tainacan.
-- **CollectionCard.js** e **ItemCard.js**: Cards para coleções e itens.
+- `UserManager/`: Subdiretório para gerenciar usuários por setor.
+  - Ex: `UserManager.js`, `UserSelect.js`.
 
-#### 📁 redux
-- **reducer.js**: Gerenciamento do estado do Redux.
+###### 📁 `Tainacan/`
+Integração com o sistema de repositório digital **Tainacan**:
 
-- **App.js**: Ponto de entrada do aplicativo.
+- `TainacanSearch.js`: Componente de busca.
+- `TainacanSearch/`: Componentes de visualização como `CollectionCard.js`, `ItemCard.js`.
 
-### Arquivos Raiz
-- **.gitignore**: Define arquivos ignorados pelo Git.
-- **composer.json**: Configuração do Composer.
-- **obatala.php**: Arquivo principal do plugin.
-- **package-lock.json** e **package.json**: Configuração de dependências NPM.
-- **README.md**: Documentação inicial do projeto.
+##### 📁 `context/`
+Contextos globais para gerenciamento de estado com React Context API:
+
+- `DrawerContext.js`: Estado do painel lateral (drawer).
+- `FlowContext.js`: Estado do fluxo em edição.
+
+##### 📁 `helpers/`
+Funções auxiliares para validação e manipulação de dados:
+
+- `dataValidator.js`
+
+##### 📁 `redux/`
+Gerenciamento centralizado de estado:
+
+- `reducer.js`: Redutor principal do Redux.
+
+##### Outros Arquivos
+- `App.js`: Arquivo principal da aplicação React.
+- `index.js`: Ponto de entrada da aplicação.
+
+---
+
+### 📁 `view/`
+Templates PHP utilizados pelo WordPress para exibir os conteúdos dos custom post types:
+
+- `archive-*.php`: Templates de listagem.
+- `single-*.php`: Templates de exibição individual.
+
+---
+
+### 📁 `developer/`
+Scripts utilitários usados em automações de desenvolvimento:
+
+- `create-zip.js`: Gera o arquivo `.zip` do plugin para distribuição.
+- `update-plugin-version.js`: Atualiza a versão automaticamente.
+- `updatePlugin.py`: Script auxiliar para automações diversas em Python.
+
+---
+
+### 📁 `languages/`
+Arquivos de tradução do plugin (internacionalização):
+
+- `*.pot`: Arquivo base.
+- `*.po`: Arquivo editável.
+- `*.mo`: Arquivo compilado.
+
+---
+
+### 📁 `css/`
+Estilos adicionais:
+
+- `react-flow.css`: Estilo do editor de fluxo.
+- `style.css`: Estilo global do plugin.
+
+---
+
+### 📁 `mk-docs/`
+Estrutura para a documentação técnica do projeto usando MkDocs:
+
+- `docs/`: Documentação dividida por temas como modelagem, metadados e tutoriais.
+- `mkdocs.yml`: Configuração do MkDocs.
+- `requirements.txt`: Dependências Python necessárias para gerar a doc.
+
+---
+
+### 📁 `vendor/`
+Dependências instaladas via Composer (autoloader PSR-4 e bibliotecas externas).
+
+---
+
+### 📁 Arquivos na Raiz
+
+- `.gitignore`: Arquivos/pastas ignorados pelo Git.
+- `obatala.php`: Arquivo principal do plugin, onde o WordPress faz o bootstrap.
+- `composer.json`: Configuração do autoload e dependências PHP.
+- `package.json` & `package-lock.json`: Dependências e scripts de build JS.
+- `README.md`: Documentação inicial do repositório.
 
 ---
 

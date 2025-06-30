@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import apiFetch from "@wordpress/api-fetch";
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
-import { Button, ButtonGroup, Tooltip, Panel, PanelHeader, PanelRow, Notice, Modal, TextControl } from '@wordpress/components';
+import { Button, ButtonGroup, Tooltip, Panel, PanelRow, Notice, Modal, TextControl } from '@wordpress/components';
 import { edit, trash, people, info } from '@wordpress/icons';
 import UsersManager from './UserManager/UserManager';
 import SectorFilter from './SectorFilters';
@@ -78,26 +78,30 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
             accessor: 'id',
             Cell: ({ row }) => (
                 <ButtonGroup>
-                    <Tooltip text="View details">
-                            <Button
-                                icon={info}
-                                onClick={() => handleViewSector(row.original)}
-                            />
-                        </Tooltip>
-                    <Tooltip text="Edit">
-                        <Button
-                            icon={edit}
-                            onClick={() => onEdit(row.original)}
-                        />
-                    </Tooltip>
+                    <Button
+                        variant="primary"
+                        icon={info}
+                        onClick={() => handleViewSector(row.original)}
+                    >
+                        View group
+                    </Button>
                     <Tooltip text="Manage users">
                         <Button
+                            variant="secondary"
                             icon={people}
                             onClick={() => handleManagerUsers(row.original)}
                         >Manage users</Button>
                     </Tooltip>
+                    <Tooltip text="Edit">
+                        <Button
+                            variant="secondary"
+                            icon={edit}
+                            onClick={() => onEdit(row.original)}
+                        />
+                    </Tooltip>
                     <Tooltip text="Delete">
                         <Button
+                            variant="secondary"
                             icon={trash}
                             onClick={() => onDelete(row.original)}
                         />

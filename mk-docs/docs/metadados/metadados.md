@@ -20,59 +20,118 @@ O `flowData` é uma estrutura que organiza as etapas de um processo e seus campo
 ```php
 <?php
     flowData = [
-        [
-            'nodes' => [
-                [
-                    'id' => 'Etapa 1',
-                    'type' => 'customNode',
-                    'dragHandle' => '.custom-drag-handle',
-                    'position' => ['x' => 50, 'y' => 50],
-                    'data' => [
-                        'fields' => [
-                            [
-                                'id' => 'text-1',
-                                'type' => 'text',
-                                'title' => 'Campo sem título',
-                                'config' => [
-                                    'label' => 'Campo sem título',
-                                    'placeholder' => 'adds shine',
-                                    'required' => false,
-                                    'minLength' => '10',
-                                    'maxLength' => 100,
-                                    'pattern' => '',
-                                    'helpText' => 'adds shine adds shine adds shine adds shine',
-                                ],
-                            ],
-                        ],
-                        'stageName' => 'Etapa 1',
-                    ],
-                    'measured' => ['width' => 200, 'height' => 133],
-                    'selected' => true,
+        "nodes": [
+            {
+            "id": "Etapa 1",
+            "type": "customNode",
+            "node_status": "Finished",
+            "dragHandle": ".custom-drag-handle",
+            "position": { "x": 50, "y": 50 },
+            "data": {
+                "stageName": "Etapa 1",
+                "fields": [
+                {
+                    "id": "text-1",
+                    "type": "text",
+                    "title": "Campo sem título",
+                    "config": {
+                    "label": "Texto",
+                    "placeholder": "texto",
+                    "required": true,
+                    "minLength": 0,
+                    "maxLength": 100,
+                    "pattern": "",
+                    "helpText": ""
+                    }
+                }
                 ],
-            ],
-            'edges' => [],
+                "condition": []
+            },
+            "sector_obatala": "681b5e85378a94.20171523",
+            "sector_history": ["..."],
+            "tempSector": "...",
+            "measured": { "width": 259, "height": 341 },
+            "selected": false
+            }
         ],
+        "edges": [
+            {
+            "id": "xy-edge__Start-Etapa 1",
+            "source": "Start",
+            "target": "Etapa 1",
+            "type": "buttonedge"
+            }
+        ]
     ];
 ?>
 ```
 
-## Componentes do flowData
+### 🔹 nodes: Etapas do processo
+Cada etapa do processo contém os seguintes componentes:
 
-- **nodes**: Contém as etapas do processo, onde cada etapa inclui informações específicas:
-  - **id**: Identificador único da etapa, como Etapa 1.
-  - **type**: Tipo do nó, definido como `customNode`.
-  - **dragHandle**: Classe CSS usada para arrastar o nó.
-  - **position**: Coordenadas de posição (x, y) da etapa na interface.
-  - **data**: Dados da etapa, incluindo:
-    - **fields**: Campos personalizados da etapa, cada um com:
-      - **id**: Identificador único do campo, ex.: text-1.
-      - **type**: Tipo do campo, como text.
-      - **title**: Título do campo.
-      - **config**: Configurações do campo, com propriedades como `label`, `placeholder`, `required`, `minLength`, `maxLength`, `pattern`, e `helpText`.
-    - **stageName**: Nome da etapa, como Etapa 1.
-  - **measured**: Dimensões da etapa (largura e altura) para a renderização.
-  - **selected**: Indica se a etapa está selecionada (booleano).
-- **edges**: Define conexões entre etapas, permitindo representar visualmente o fluxo entre elas. Neste exemplo, está vazio.
+- id: Identificador único da etapa (ex: "Etapa 1").
+
+- type: Tipo do nó, como "customNode", "startNode" ou "endNode".
+
+- node_status: Estado atual do nó (ex: "Stopped", "Finished").
+
+- dragHandle: Classe CSS utilizada para permitir o arrasto do nó na interface.
+
+- position: Objeto com as coordenadas x e y para a posição do nó na tela.
+
+- data:
+
+    - stageName: Nome da etapa (ex: "Etapa 1").
+
+    - fields: Lista de campos personalizados da etapa, cada um com:
+
+        - id: Identificador do campo (ex: "text-1").
+
+        - type: Tipo do campo (ex: "text", "email", "number", "phone", "address").
+
+        - title: Título do campo (visível na interface).
+
+        - config: Configurações específicas do campo:
+
+            - label, placeholder, required, minLength, maxLength, pattern, helpText, min, max, step (dependendo do tipo).
+
+    - condition: (opcional) Lógica de decisão condicional entre etapas (array vazio por padrão).
+
+- measured: Dimensões do nó para renderização, com width e height.
+
+- selected: Define se o nó está atualmente selecionado (true ou false).
+
+- sector_obatala: ID do setor atual vinculado à etapa.
+
+- sector_history: Lista com o histórico de setores pelos quais o nó passou.
+
+- tempSector: Setor temporário associado à etapa.
+
+### 🔹 edges: Conexões entre etapas
+As conexões definem o caminho entre os nós e a sequência do fluxo.
+
+Cada item contém:
+
+- id: Identificador único da ligação (ex: "xy-edge__Etapa 1-Etapa 2").
+
+- source: ID da etapa de origem.
+
+- target: ID da etapa de destino.
+
+- type: Tipo da conexão (ex: "buttonedge").
+
+### 🔹 Campos adicionais no meta
+Além do nodes e edges, a estrutura atual também inclui os seguintes campos complementares:
+
+- status: Estado geral do processo (ex: ["Finished"]).
+
+- stageData: Dados submetidos nas etapas, com os campos preenchidos, data/hora (updateAt) e usuário responsável (user).
+
+- submittedStages: Mapeamento de quais etapas foram submetidas.
+
+- current_stage: Etapa atual do processo (ex: "Etapa 5").
+
+- groupResponsible: Grupo responsável pela execução (ex: "grupo1").
 
 ## Implementação de Metadados Dinâmicos
 
