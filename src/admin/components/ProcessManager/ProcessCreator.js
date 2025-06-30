@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, SelectControl, TextControl, Notice } from '@wordpress/components';
+import { Button, ButtonGroup, SelectControl, TextControl, Notice } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 
 const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel }) => {
@@ -152,10 +152,10 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
                 ]}
                 onChange={(value) => setAccessLevel(value)}
             />
-            <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
-                <Button isSecondary onClick={handleCancel}>Cancel</Button>
-                <Button isPrimary type="submit">Save</Button>
-            </div>
+            <ButtonGroup>
+                <Button variant="secondary" onClick={handleCancel}>Cancel</Button>
+                <Button variant="primary" type="submit">Save</Button>
+            </ButtonGroup>
 
         </form>
 
