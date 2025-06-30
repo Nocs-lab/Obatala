@@ -1,74 +1,95 @@
-# Utilização dos Custom Post Types no Plugin Obatala
+# 📌 Utilização dos Custom Post Types no Plugin Obatala
 
-No plugin Obatala, utilizamos três tipos de post personalizados (Custom Post Types) para gerenciar processos curatoriais e suas etapas: **ProcessManager**, **ProcessTypeManager** e **ProcessModel**. Cada tipo de post tem um papel específico na configuração e operação do sistema de gestão de processos.
+## 🔍 Visão Geral
+O plugin Obatala utiliza três Custom Post Types principais para gestão de processos curatoriais:
 
-## Descrição dos Custom Post Types
+| CPT               | Função Principal                          |
+|-------------------|------------------------------------------|
+| `ProcessModel`    | Modelos de etapas do processo            |
+| `ProcessTypeManager` | Tipos/modelos de processos              |
+| `ProcessManager`  | Instâncias reais de processos            |
+
+## 🏗️ Descrição dos CPTs
 
 ### 1. ProcessModel
+**Função**: Modelo base para etapas de processos
 
-- **Função**: Serve como modelo para as etapas de um processo.
-- **Utilização**: Armazena os metadados usados para criar campos personalizados em cada etapa. Esses campos são exibidos na interface do processo para interação dos usuários.
-- **Estrutura**: Inclui campos para o título e a descrição de cada etapa, além dos dados de fluxo (`flowData`), que especificam a sequência e conexão entre as etapas.
-
+**Características**:
+- Armazena metadados para campos personalizados
+- Define a estrutura de cada etapa
+- Contém:
+  ```php
+  'title' => 'Nome da Etapa',
+  'description' => 'Descrição detalhada',
+  'flowData' => 'Dados de conexão entre etapas'
+  ```
 ### 2. ProcessTypeManager
+**Função**: Template completo de processos
 
-- **Função**: Define o modelo ou tipo de processo.
-- **Utilização**: Armazena o título do tipo de processo, a descrição e uma lista ordenada de etapas (steps) que compõem o processo. Esse tipo permite gerenciar diferentes modelos de processos, cada um com suas etapas específicas.
-- **Estrutura**: Contém campos para o título e a descrição do processo, além de uma referência às etapas (`ProcessModel`) que definem a sequência do processo.
+Estrutura:
+
+```php
+[
+    'title' => 'Tipo de Processo',
+    'description' => 'Descrição do fluxo',
+    'steps' => ['array_de_etapas']
+]
+```
 
 ### 3. ProcessManager
+**Função**: Instância executável de processos
 
-- **Função**: Representa a instância real de um processo no sistema.
-- **Utilização**: Quando um novo processo é criado, ele é baseado em um tipo (`ProcessTypeManager`). Durante a criação, ele consulta o `ProcessTypeManager` e o `ProcessModel` associado para gravar os metadados necessários. Esses metadados são usados para criar e interagir com o processo.
-- **Estrutura**: Inclui campos para o título e descrição do processo, o tipo de processo, as etapas e os metadados necessários para a interação.
+**Componentes**:
 
-## Fluxo de Trabalho dos Custom Post Types
+- Herda estrutura do ProcessTypeManager
 
-1. **Definição dos Modelos**:          
+- Armazena dados reais de execução
 
-    - Cria-se um `ProcessModel` para cada etapa que pode fazer parte de um processo.
-    - Define-se os metadados que descrevem os campos personalizados a serem exibidos na interface do processo.
+- Inclui metadados dinâmicos
 
-1. **Criação do Tipo de Processo**:     
+### 🔄 Fluxo de Trabalho
 
-    - Cria-se um `ProcessTypeManager` para definir um modelo de processo.
-    - Inclui-se uma lista ordenada de `ProcessModel`, especificando a sequência de etapas que o processo seguirá.
+```mermaid
+flowchart TD
+    A[Criar ProcessModel] --> B[Definir campos/metadados]
+    B --> C[Criar ProcessTypeManager]
+    C --> D[Associar ProcessModels]
+    D --> E[Instanciar ProcessManager]
+    E --> F[Preencher dados reais]
+```
 
-1. **Instanciação de um Processo**:       
-    - Cria-se um `ProcessManager` baseado em um `ProcessTypeManager`.
-    - O `ProcessManager` consulta o `ProcessTypeManager` e as etapas no `ProcessModel` associado para configurar os metadados e campos personalizados.
-    - Esses metadados são gravados no `ProcessManager` para criar uma interface interativa onde os usuários podem gerenciar e interagir com cada etapa.
-
-## Diagrama do Processo
+### 🧩 Diagrama de Relacionamentos
 
 ```mermaid
 classDiagram
     class ProcessModel {
-        +String nome
-        +String descricao
-        +List~Metadados~ metadados
+        +String title
+        +String description
+        +Array metadata
+        +Array flowData
     }
-
+    
     class ProcessTypeManager {
-        +String nome
-        +String descricao
-        +List~ProcessModel~ etapas
+        +String title
+        +String description
+        +Array steps
     }
-
+    
     class ProcessManager {
-        +String nome
-        +String descricao
-        +ProcessTypeManager tipo
-        +List~ProcessModel~ etapas
-        +List~Metadados~ metadados
+        +String title
+        +String description
+        +Array steps
+        +Array metadata
     }
-
-    ProcessTypeManager "1" -- "*" ProcessModel : inclui
-    ProcessManager "1" -- "*" ProcessModel : consulta e inclui
-    ProcessManager "1" -- "1" ProcessTypeManager : é baseado em
-    ProcessModel "1" -- "*" Metadados : define
-    ProcessManager "1" -- "*" Metadados : utiliza
+    
+    ProcessTypeManager "1" *-- "*" ProcessModel : Contém
+    ProcessManager "1" -- "1" ProcessTypeManager : Baseado em
+    ProcessManager "1" *-- "*" ProcessModel : Implementa
 ```
+### 💡 Conclusão
+Esta arquitetura proporciona:
 
-## Conclusão
-O plugin Obatala utiliza uma estrutura organizada de Custom Post Types para gerenciar processos curatoriais, etapas e tipos de processos. Essa abordagem permite uma configuração flexível e a integração de metadados personalizados, facilitando a criação de interfaces interativas para a gestão de processos dentro do WordPress.
+- ✅ Flexibilidade: Modelos reutilizáveis
+- ✅ Consistência: Estrutura padronizada
+- ✅ Extensibilidade: Fácil adição de novos tipos
+- ✅ Performance: Consultas otimizadas via metadados
