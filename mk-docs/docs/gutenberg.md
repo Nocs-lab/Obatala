@@ -1,111 +1,131 @@
-# Criando uma Página no Painel de Administração com Blocos Gutenberg
+# 🧱 Criando uma Página no Painel de Administração com Blocos Gutenberg
 
-Este guia fornece uma visão clara e concisa sobre como criar uma página no painel de administração do WordPress utilizando blocos Gutenberg, permitindo a criação de interfaces interativas e dinâmicas com React no WordPress.
+Este guia mostra como criar páginas personalizadas no painel de administração do WordPress usando **blocos Gutenberg com React**, facilitando a construção de interfaces modernas e interativas.
 
-!!! Nota 
-    Para mais detalhes sobre o uso de Gutenberg e uma lista completa de blocos reutilizáveis, visite: [The WordPress Gutenberg](https://wordpress.github.io/gutenberg/?path=/docs/docs-introduction--page).
+> 💡 **Dica**  
+> Para uma introdução mais ampla ao Gutenberg e aos blocos reutilizáveis, consulte a [documentação oficial do Gutenberg](https://wordpress.github.io/gutenberg/?path=/docs/docs-introduction--page).
 
 ---
 
-### Passo 1: Enfileiramento de Scripts
+## ✅ Etapas do Processo
 
-No arquivo principal `obatala.php`, enfileiramos os scripts necessários para carregar a interface React no painel de administração:
+### 1️⃣ Enfileiramento de Scripts
+
+No arquivo principal do plugin (`obatala.php`), chamamos o enfileiramento de scripts administrativos:
 
 ```php
-<?php
-    public function admin_enqueue_scripts( $hook ) {
-        \Obatala\Admin\Enqueuer::enqueue_admin_scripts( $hook );
-    }
-?>
+public function admin_enqueue_scripts( $hook ) {
+    \Obatala\Admin\Enqueuer::enqueue_admin_scripts( $hook );
+}
 ```
 
-### Passo 2: Registro das Páginas de Administração
-
-Na classe `AdminMenu`, registramos as páginas de administração. Cada página é associada a um callback que imprime uma `div` com um ID específico. Este ID é usado posteriormente para renderizar o corpo da página com React.
+### 2️⃣ Registro da Página de Administração
+Na classe AdminMenu, criamos uma nova página no painel. O callback associado imprime uma div com um ID, que será usada para renderizar o conteúdo via React:
 
 ```php
-<?php
-    namespace Obatala\Admin;
+namespace Obatala\Admin;
 
-    class AdminMenu {
-        public static function add_admin_pages() {
-            add_menu_page(
-                __('Exemplo', 'obatala'),
-                __('Exemplo', 'obatala'),
-                'manage_options',
-                'exemplo',
-                [self::class, 'funcao_exemplo'],
-                'dashicons-admin-generic',
-                8
+class AdminMenu {
+    public static function add_admin_pages() {
+        add_menu_page(
+            __('Exemplo', 'obatala'),
+            __('Exemplo', 'obatala'),
+            'manage_options',
+            'exemplo',
+            [self::class, 'funcao_exemplo'],
+            'dashicons-admin-generic',
+            8
+        );
+    }
+
+    public static function funcao_exemplo() {
+        echo '<div id="id-exemplo"></div>';
+    }
+}
+```
+
+### 3️⃣ Enfileiramento Condicional de Scripts
+Na classe Enqueuer, verificamos se o hook da página atual corresponde à nossa página personalizada. Se sim, os scripts e estilos são carregados:
+
+```php
+namespace Obatala\Admin;
+
+class Enqueuer {
+    private static $pages = [
+        'toplevel_page_exemplo' => 'exemplo',
+    ];
+
+    public static function enqueue_admin_scripts($hook) {
+        if (array_key_exists($hook, self::$pages)) {
+            $asset_file = include OBATALA_PLUGIN_DIR . 'build/index.asset.php';
+
+            wp_register_script(
+                'obatala-admin-scripts',
+                OBATALA_PLUGIN_URL . 'build/index.js',
+                $asset_file['dependencies'],
+                $asset_file['version'],
+                true
             );
-        }
-        public static function funcao_exemplo() {
-            echo '<div id="id-exemplo"></div>';
-        }
-    }
-?>
-```
+            wp_enqueue_script('obatala-admin-scripts');
 
-### Passo 3: Enfileiramento Condicional de Scripts
-
-A classe `Enqueuer` verifica se o hook da página atual corresponde a um dos hooks esperados. Se sim, os scripts JavaScript e estilos CSS são carregados na página.
-
-```php
-<?php
-    namespace Obatala\Admin;
-
-    class Enqueuer {
-        private static $pages = [
-            'toplevel_page_exemplo' => 'exemplo',
-        ];
-
-        public static function enqueue_admin_scripts($hook) {
-            if (array_key_exists($hook, self::$pages)) {
-                $asset_file = include OBATALA_PLUGIN_DIR . 'build/index.asset.php';
-
-                wp_register_script(
-                    'obatala-admin-scripts',
-                    OBATALA_PLUGIN_URL . 'build/index.js',
-                    $asset_file['dependencies'],
-                    $asset_file['version'],
-                    true
-                );
-                wp_enqueue_script('obatala-admin-scripts');
-
-                wp_register_style(
-                    'obatala-admin-styles',
-                    OBATALA_PLUGIN_URL . 'css/style.css',
-                    ['wp-components'],
-                    $asset_file['version']
-                );
-                wp_enqueue_style('obatala-admin-styles');
-            }
+            wp_register_style(
+                'obatala-admin-styles',
+                OBATALA_PLUGIN_URL . 'css/style.css',
+                ['wp-components'],
+                $asset_file['version']
+            );
+            wp_enqueue_style('obatala-admin-styles');
         }
     }
-?>
+}
 ```
 
-### Passo 4: Renderização com React
-
-No arquivo `src/admin/App.js`, utilizamos o React para renderizar componentes nas páginas de administração do WordPress. A função `render` do React é chamada para cada `div` com um ID correspondente.
+### 4️⃣ Renderização com React
+No arquivo src/admin/App.js, usamos React para renderizar nosso componente dentro da div criada no HTML da página de administração:
 
 ```javascript
-import { render } from '@wordpress/element';
-import Exemplo from './components/Exemplo';
+document.addEventListener("DOMContentLoaded", () => {
+  const processElement = document.getElementById("process-manager");
+  const processTypeElement = document.getElementById("process-type-manager");
+  const processViewerElement = document.getElementById("process-viewer");
+  const ProcessModelEditorElement = document.getElementById("process-type-editor");
+  const sectorManagerElement = document.getElementById("sector-manager");
+  const dashboardElement = document.getElementById("dashboard");
+  const sectorDetailsElement = document.getElementById("sector-details");
 
-document.addEventListener('DOMContentLoaded', () => {
+  if (sectorDetailsElement) {
+    createRoot(sectorDetailsElement).render(<SectorDetailsPage />);
+  }
 
-    const exemploElement = document.getElementById('id-exemplo');
+  if (processElement) {
+    createRoot(processElement).render(<ProcessManager onSelectProcess={navigateToProcessViewer} />);
+  }
 
-    if (exemploElement) {
-        render(<Exemplo />, exemploElement);
-    }
+  if (processTypeElement) {
+    createRoot(processTypeElement).render(<ProcessTypeManager />);
+  }
+
+  if (processViewerElement) {
+    createRoot(processViewerElement).render(<ProcessViewer />);
+  }
+
+  if (ProcessModelEditorElement) {
+    createRoot(ProcessModelEditorElement).render(<ProcessModelEditor />);
+  }
+
+  if (sectorManagerElement) {
+    createRoot(sectorManagerElement).render(<SectorManager />);
+  }
+
+  if (dashboardElement) {
+    createRoot(dashboardElement).render(<DashboardPage />);
+  }
 });
 ```
 
----
+### 📎 Recursos Complementares
+📘 Links úteis
 
-### Recursos Adicionais
-!!! Nota 
-    - Para uma visão detalhada sobre como utilizar Gutenberg no contexto do nosso plugin, acesse o [curso online](https://learn.wordpress.org/course/using-the-wordpress-data-layer/).
-    - Documentação completa e lista de blocos reutilizáveis estão disponíveis em: [The WordPress Gutenberg](https://wordpress.github.io/gutenberg/?path=/docs/docs-introduction--page).
+- Curso oficial:[Using the WordPress Data Layer](https://learn.wordpress.org/course/using-the-wordpress-data-layer/)
+
+- Documentação dos blocos Gutenberg:[Gutenberg Storybook](https://wordpress.github.io/gutenberg/?path=/docs/docs-introduction--page)
