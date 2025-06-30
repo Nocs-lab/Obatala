@@ -5,12 +5,12 @@ namespace Obatala;
 require_once __DIR__ . '/vendor/autoload.php';
 
 /*
-	Plugin Name: Obatala - Plugin de Gestão de Processos Curatoriais para WordPress
+	Plugin Name: Obatala - Gestão de Processos Curatoriais
 	Description: Adiciona funcionalidades de gestão de processos curatoriais para o plugin Tainacan
 	Version: 1.6.9
 	Author: NOCs
 	License: GPLv2 or later
-	Text Domain: obatala
+	Text Domain: Obatala
 */
 
 // Prevent direct access to the file
@@ -113,7 +113,7 @@ class Nocs_ObatalaPlugin
 		if (!in_array('tainacan/tainacan.php', apply_filters('active_plugins', get_option('active_plugins')))) {
 			deactivate_plugins(plugin_basename(__FILE__));
 			wp_die(
-				__('Obatala requires the Tainacan plugin to be installed and activated.', 'obatala')
+				esc_html( __('Obatala requires the Tainacan plugin to be installed and activated.', 'Obatala') )
 			);
 		}
 	}
