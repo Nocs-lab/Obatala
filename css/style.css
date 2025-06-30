@@ -1241,11 +1241,16 @@ button .components-spinner {
   :root {
     --gap-external: 1rem;
   }
+  header,
+  footer,
+  progress,
+  table.wp-list-table th span,
   #adminmenumain,
   .accordion .status,
   .accordion-header[aria-expanded]::after,
   .action-bar,
   .components-button-group,
+  .components-tab-panel__tabs-item[aria-selected="false"],
   .container_searchAndSelect,
   .metro-navigation,
   .no-print,
@@ -1260,11 +1265,22 @@ button .components-spinner {
   html.wp-toolbar {
     padding-top: 0;
   }
+  main {
+    padding: 0;
+  }
   .accordion-item {
     border-bottom: 1px solid var(--gray-300);
+    & .accordion-header {
+      padding: .5rem 0;
+    }
+    & .accordion-content {
+      padding: 1rem 0;
+    }
   }
-  .accordion-content {
-    padding: 0 0 1rem;
+  
+  .badge {
+    color: var(--black);
+    padding: 0;
   }
   .components-panel__header,
   .components-panel__header h3 {
@@ -1273,8 +1289,18 @@ button .components-spinner {
   .components-panel__row {
     padding: var(--gap) 0;
   }
+  .components-tab-panel__tabs {
+    padding: 0;
+  }
+  .components-tab-panel__tabs-item {
+    padding-left: 0;
+    padding-right: 0;
+  }
   .panel-container aside {
     flex-basis: 100%;
+  }
+  .progress {
+    min-width: auto;
   }
   .timeline-badge {
     fill: var(--black);
