@@ -17,7 +17,6 @@ class ProcessMetadataManager {
      */
     public static function save_metadata($step_id, $meta_value, $meta_key = '') {
         if (!is_numeric($step_id) || $step_id <= 0) {
-            error_log('ID da etapa inválido: ' . $step_id);
             return false;
         }
 
@@ -30,7 +29,6 @@ class ProcessMetadataManager {
 
         // Valida os dados do metadado
         if (!self::validate_metadata($sanitized_meta_value)) {
-            error_log('Metadados inválidos para etapa ' . $step_id);
             return false;
         }
 
@@ -43,7 +41,6 @@ class ProcessMetadataManager {
         if ($result) {
             return true;
         } else {
-            error_log('Erro ao salvar metadado para o passo ' . $step_id);
             return false;
         }
     }
@@ -97,12 +94,6 @@ class ProcessMetadataManager {
     public static function delete_metadata($step_id, $meta_key) {
         // Remove o metadado específico
         $result = delete_post_meta($step_id, $meta_key);
-
-        if ($result) {
-            error_log('Metadado removido com sucesso para a etapa ' . $step_id);
-        } else {
-            error_log('Erro ao remover metadado para a etapa ' . $step_id);
-        }
 
         return $result;
     }
@@ -281,7 +272,7 @@ class ProcessMetadataManager {
      */
     private static function validate_metadata($meta_data) {
         if (empty($meta_data['name'])) {
-            error_log('Campo "name" não fornecido para os metadados: ' . json_encode($meta_data));
+
             return false;
         }
         return true;

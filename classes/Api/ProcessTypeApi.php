@@ -265,7 +265,6 @@ class ProcessTypeApi extends ObatalaAPI {
             ], 400);
         }
 
-        $file = $_FILES['file'];
         $overrides = [
             'test_form' => false,
             'mimes' => [
@@ -307,7 +306,7 @@ class ProcessTypeApi extends ObatalaAPI {
         }
 
         // Fazer upload do arquivo
-        $uploaded_file = wp_handle_upload($file, $overrides);
+        $uploaded_file = wp_handle_upload($_FILES['file'], $overrides);
 
         if (isset($uploaded_file['error'])) {
             return new WP_REST_Response([
@@ -329,7 +328,13 @@ class ProcessTypeApi extends ObatalaAPI {
             ], 500);
         }
 
-        $filename       = sanitize_file_name( $file['name'] );
+        if ( ! isset( $_FILES['file']['name'] ) ) {
+            return new WP_REST_Response( [
+                'error' => 'Nome do arquivo não encontrado.',
+            ], 400 );
+        }
+
+        $filename       = sanitize_file_name( $_FILES['file']['name'] );
         $new_file_path  = trailingslashit( $custom_dir ) . $filename;
         $upload_path    = $uploaded_file['file'];
 
