@@ -1,13 +1,12 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { Button, 
         ButtonGroup, 
-        Icon, 
         Tooltip,
         Notice, 
         Spinner,
         __experimentalConfirmDialog as ConfirmDialog  
     } from '@wordpress/components';
-import {trash} from '@wordpress/icons';
+import { trash } from '@wordpress/icons';
 import { assignUserToSector, deleteSectorUser, fetchUsers, fetchUsersBySector } from '../../../api/apiRequests';
 import UserSelect from './UserSelect';
 import Reducer, { initialState } from '../../../redux/reducer';
@@ -153,7 +152,7 @@ const UserManager = ({sector,loadSectorsUsers}) => {
                                             <Tooltip text="Remove user from sector">
                                                 <Button
                                                     isDestructive
-                                                    icon={<Icon icon={trash} />}
+                                                    icon={trash}
                                                     onClick={() => handleConfirmDelete(user)}
                                                 />
                                             </Tooltip>

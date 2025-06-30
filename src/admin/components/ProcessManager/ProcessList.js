@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
-import { Button, ButtonGroup, Icon, Tooltip, Panel, PanelHeader, PanelRow, Notice, TextControl, ProgressBar } from '@wordpress/components';
-import { edit, seen, listView } from '@wordpress/icons';
+import { Button, ButtonGroup, Tooltip, Panel, PanelRow, Notice, TextControl } from '@wordpress/components';
+import { backup, edit, info } from '@wordpress/icons';
 import ProcessFilter from './ProcessFilters';
 import apiFetch from '@wordpress/api-fetch';
 
@@ -88,21 +88,24 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
                 accessor: "id",
                 Cell: ({ row }) => (
                     <ButtonGroup>
-                        <Tooltip text="View">
-                            <Button
-                                icon={<Icon icon={seen} />}
-                                onClick={() => onViewProcess(row.original.id)}
-                            />
-                        </Tooltip>
+                        <Button
+                            variant="primary"
+                            icon={info}
+                            onClick={() => onViewProcess(row.original.id)}
+                        >
+                            View process
+                        </Button>
                         <Tooltip text="Edit">
                             <Button
-                                icon={<Icon icon={edit} />}
+                                variant="secondary"
+                                icon={edit}
                                 onClick={() => onEdit(row.original)}
                             />
                         </Tooltip>
                         <Tooltip text="History">
                             <Button
-                                icon={<Icon icon="backup" />}
+                                variant="secondary"
+                                icon={backup}
                                 onClick={() => {
                                     const url = `?page=process-viewer&process_id=${row.original.id}&view=history`;
                                     window.location.href = url;

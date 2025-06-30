@@ -47,24 +47,20 @@ const { addNewNode, addNewNodeConditional, onExport, onImport } = useFlowContext
                 <Button icon={check} variant="primary" type="submit" onClick={onSave}>
                     Save
                 </Button>
-                <Button icon={closeSmall} variant="secondary" onClick={onCancel}>
+                <Button icon={closeSmall} onClick={onCancel}>
                     Cancel changes
                 </Button>
-                <Button icon={plus} variant="secondary" onClick={addNewNode}>
+                <Button icon={plus} onClick={addNewNode}>
                     Add step
                 </Button>
-                <Button icon={plus} variant="secondary" onClick={addNewNodeConditional}>
+                <Button icon={plus} onClick={addNewNodeConditional}>
                   Add conditional
                 </Button>
-                <Button
-                    variant="secondary"
-                    onClick={toggleFullScreen}
-                    icon={fullscreen}
-                >
+                <Button icon={fullscreen} onClick={toggleFullScreen}>
                     Fullscreen
                 </Button>
                 <DropdownMenu
-                    icon={ menu }
+                    icon={menu}
                     label="Select an option"
                     controls={ [
                         {

@@ -327,14 +327,14 @@ footer {
       border-color: var(--primary-500);
     }
   }
-  &.is-secondary {
-    --wp-admin-theme-color: var(--primary-400);
+  &.is-secondary,
+  &.is-tertiary {
+    --wp-admin-theme-color: var(--primary-600);
 
     border: 1px solid var(--wp-admin-theme-color);
     box-shadow: 0 0 0;
     &:hover:not(:disabled,[aria-disabled=true]) {
-      background-color: var(--primary-50);
-      box-shadow: 0 0 0;
+      background-color: var(--primary-100);
     }
   }
   &.is-destructive {
@@ -353,9 +353,9 @@ footer {
 .components-button-group {
   display: inline-flex;
   & .components-button {
-    box-shadow: inset 0 0 0 1px var(--primary);
+    box-shadow: inset 0 0 0 1px var(--white);
     border: 0 none;
-    color: var(--primary);
+    color: var(--white);
     &.is-primary {
       box-shadow: 0 0 0;
       color: var(--white);
@@ -370,7 +370,7 @@ footer {
       box-shadow: inset 0 0 0 1px var(--danger);
     }
     &:hover {
-      background-color: var(--primary-50);
+      background-color: var(--primary-100);
     }
   }
 }
