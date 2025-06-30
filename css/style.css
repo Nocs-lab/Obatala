@@ -27,8 +27,8 @@
   --black:    #000;
 
   --danger:  #c52233;
-  --success: #04A777;
-  --warning: #FF8600;
+  --success: #00795A;
+  --warning: #B35F00;
 
   --border-radius: 8px;
   --box-shadow:    0 0 15px 5px rgba(0, 0, 0, .05);
@@ -63,9 +63,9 @@ a {
 
 /* #region Layout */
 #wpwrap {
-  background: #ECE9E6;
-  background: -webkit-linear-gradient(to top, #FFFFFF, #ECE9E6);
-  background: linear-gradient(to bottom, #FFFFFF, #ECE9E6);
+  background: var(--grey-100);
+  background: -webkit-linear-gradient(to top, var(--white), var(--grey-100));
+  background: linear-gradient(to bottom, var(--white), var(--grey-100));
 }
 #wpcontent {
   height: 100%;
@@ -316,25 +316,31 @@ footer {
   border-radius: var(--border-radius);
   padding-left: 1.5rem;
   padding-right: 1.5rem;
-}
-.components-button.is-primary {
-  background-color: var(--primary-600);
-  border: 1px solid var(--primary-600);
-  border-radius: var(--border-radius);
-  outline: 0 none;
-  &:hover:not(:disabled) {
-    background-color: var(--primary-500);
-    border-color: var(--primary-500);
+  &.is-primary {
+    --wp-admin-theme-color: var(--primary-600);
+
+    border: 1px solid var(--wp-admin-theme-color);
+    border-radius: var(--border-radius);
+    outline: 0 none;
+    &:hover:not(:disabled) {
+      background-color: var(--primary-500);
+      border-color: var(--primary-500);
+    }
   }
-}
-.components-button.is-secondary {
-  border: 1px solid var(--gray-400);
-  box-shadow: 0 0 0;
-  color: var(--gray-400);
-  &:hover:not(:disabled,[aria-disabled=true]) {
-    border-color: var(--white);
+  &.is-secondary {
+    --wp-admin-theme-color: var(--primary-400);
+
+    border: 1px solid var(--wp-admin-theme-color);
     box-shadow: 0 0 0;
-    color: var(--white);
+    &:hover:not(:disabled,[aria-disabled=true]) {
+      background-color: var(--primary-50);
+      box-shadow: 0 0 0;
+    }
+  }
+  &.is-destructive {
+    --wp-components-color-accent: var(--danger);
+
+    border: 1px solid var(--wp-components-color-accent);
   }
 }
 .components-button-container {
@@ -346,9 +352,27 @@ footer {
 }
 .components-button-group {
   display: inline-flex;
-}
-.components-button-group .components-button.is-primary {
-  box-shadow: 0 0 0;
+  & .components-button {
+    box-shadow: inset 0 0 0 1px var(--primary);
+    border: 0 none;
+    color: var(--primary);
+    &.is-primary {
+      box-shadow: 0 0 0;
+      color: var(--white);
+    }
+    &.is-secondary {
+      --wp-admin-theme-color: var(--primary-600);
+
+      box-shadow: inset 0 0 0 1px var(--wp-admin-theme-color);
+      color: var(--wp-admin-theme-color);
+    }
+    &.is-destructive {
+      box-shadow: inset 0 0 0 1px var(--danger);
+    }
+    &:hover {
+      background-color: var(--primary-50);
+    }
+  }
 }
 .components-button-group .components-button:first-of-type {
   border-radius: var(--border-radius) 0 0 var(--border-radius);
@@ -528,13 +552,13 @@ th[role="columnheader"][title="Toggle SortBy"] {
   align-items: center;
   gap: .25rem;
   line-height: 1em;
-  padding: .25rem .5rem;
+  padding: .35rem .6rem;
   white-space: nowrap;
   &.danger {
     background-color: var(--danger);
   }
   &.info {
-    background-color: var(--primary-400);
+    background-color: var(--primary-600);
   }
   &.success {
     background-color: var(--success);
@@ -1032,7 +1056,7 @@ form .action-bar {
   padding: 0 .5rem;
 }
 .components-tab-panel__tabs-item {
-  color: var(--primary-400);
+  color: var(--primary-300);
   font-size: .9rem;
   &::after {
     background-color: var(--primary-400);

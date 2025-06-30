@@ -152,6 +152,7 @@ const UserManager = ({sector,loadSectorsUsers}) => {
                                         <ButtonGroup>
                                             <Tooltip text="Remove user from sector">
                                                 <Button
+                                                    isDestructive
                                                     icon={<Icon icon={trash} />}
                                                     onClick={() => handleConfirmDelete(user)}
                                                 />
