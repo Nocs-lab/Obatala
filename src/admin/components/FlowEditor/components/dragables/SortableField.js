@@ -133,7 +133,7 @@ const SortableField = ({ id, nodeId, title, type, config }) => {
         }}
         onCancel={handleCancel}
       >
-        Are you sure you want to delete field {id}?
+        Are you sure you want to delete field {label}?
       </ConfirmDialog>
       <li ref={setNodeRef} style={style} {...attributes}>
         <LabelWithIcon label={config ? config.label : label} type={type} />

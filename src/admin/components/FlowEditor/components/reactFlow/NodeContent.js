@@ -85,7 +85,7 @@ const NodeContent = ({ id, data = {} }) => {
   return (
     <div className="step-container">
       {/* Node Drag Handle */}
-      <NodeHandle nodeId={id} />
+      <NodeHandle nodeId={id} stageName={stageName} />
 
       {/* Connection Handles */}
       <Handle type="target" position={Position.Left} />

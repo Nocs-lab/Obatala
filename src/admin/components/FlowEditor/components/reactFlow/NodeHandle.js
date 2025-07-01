@@ -4,7 +4,7 @@ import { Tooltip, __experimentalConfirmDialog as ConfirmDialog } from "@wordpres
 import Reducer, { initialState } from "../../../../redux/reducer";
 
 // custom handle for our nodes
-const NodeHandle = (id) => {
+const NodeHandle = (props) => {
     const { removeNode } = useFlowContext();
     const [state, dispatch] = useReducer(Reducer, initialState);
 
@@ -26,7 +26,7 @@ const NodeHandle = (id) => {
                 }}
                 onCancel={handleCancel}
             >
-                Are you sure you want to delete node {id.nodeId}?
+                Are you sure you want to delete node {props?.stageName}?
             </ConfirmDialog>
             <div className="step-header">
                 <Tooltip text="Move step">
@@ -35,7 +35,7 @@ const NodeHandle = (id) => {
                     </div>
                 </Tooltip>
                 <Tooltip text="Remove step">
-                    <div className="btn close-btn" onClick={() => handleConfirmDelete(id.nodeId)}></div>
+                    <div className="btn close-btn" onClick={() => handleConfirmDelete(props?.nodeId)}></div>
                 </Tooltip>
             </div>
         </>
