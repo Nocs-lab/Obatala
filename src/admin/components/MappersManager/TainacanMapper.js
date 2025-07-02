@@ -59,7 +59,7 @@ const TainacanMapper = () => {
 
                 const stepOptions = data.map(field => ({
                     value: field.id,
-                    label: field.title + " - " + field.stage + " - " + field.type
+                    label: field?.config?.label + " - " + field.stage
                 }));
 
                 setStepsProcessModel(stepOptions);
@@ -160,7 +160,7 @@ const TainacanMapper = () => {
                         <option value="0">-- Selecione --</option>
                         {processModelObatala.map((item) => (
                             <option key={item.id} value={item.id}>
-                                {item.title.rendered}
+                                {item?.title?.rendered}
                             </option>
                         ))}
                     </select>
@@ -173,7 +173,7 @@ const TainacanMapper = () => {
                         disabled={!selectedProcessModel || selectedSteps.length === 0}
                         options={stepsProcessModel}
                         onChange={(selectedOptions) => {
-                            setSelectedSteps(selectedOptions.map(opt => opt.value));
+                            setSelectedSteps(selectedOptions.map(opt => opt));
                         }}
                         styles={{
                             multiSelectStyle,
@@ -198,7 +198,7 @@ const TainacanMapper = () => {
                         <h4>Campos Selecionados:</h4>
                         <ul>
                             {selectedSteps.map((step, index) => (
-                                <li key={index}>Campo: {step}</li>
+                                <li key={index}>{step.label}</li>
                             ))}
                         </ul>
                     </div>
@@ -235,7 +235,7 @@ const TainacanMapper = () => {
 
             {showMapper && (
                 <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-                    <h1>Mapeador Obatala / Tainacan</h1>
+                    <h1>Mapeie os Metadados</h1>
                     <div
                         style={{
                             display: 'flex',
