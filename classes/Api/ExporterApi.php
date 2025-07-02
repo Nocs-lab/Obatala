@@ -13,7 +13,7 @@ class ExporterApi extends ObatalaAPI {
     public function register_routes() {
 
         // Route to get all collections
-        $this->add_route('all_collections_tainacan', [
+        $this->add_route('exporter/all_collections_tainacan', [
             'methods' => 'GET',
             'callback' => [$this, 'get_all_collections'],
             'permission_callback' => '__return_true',

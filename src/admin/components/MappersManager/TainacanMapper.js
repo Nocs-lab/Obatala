@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import apiFetch from "@wordpress/api-fetch";
 import Select from 'react-select';
-import { fetchProcessModels, fetchFieldsProcessModels } from '../../api/apiRequests';
+import { fetchProcessModels, fetchFieldsProcessModels, fetchCollectionsTainacan } from '../../api/apiRequests';
 
 
 const TainacanMapper = () => {
@@ -9,20 +9,16 @@ const TainacanMapper = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [selectedProcessModel, setSelectedProcessModel] = useState(0);
     const [stepsProcessModel, setStepsProcessModel] = useState([]);
+    const [collectionsTainacan, setCollectionsTainacan] = useState([]);
     const [selectedSteps, setSelectedSteps] = useState([]);
     const [showMapper, setShowMapper] = useState(false);
     const [selectRows, setSelectRows] = useState([
         { tainacanMetadata: '', obatalaStepMetadata: '' },
     ]);
 
-    const etapas = [
-        { value: '1', label: 'Etapa 1' },
-        { value: '2', label: 'Etapa 2' },
-        { value: '3', label: 'Etapa 3' },
-    ];
-
     useEffect(() => {
         fetchProcessModelObatala();
+        fetchGetCollectionsTainacan();
     }, []);
 
     const fetchProcessModelObatala = async () => {
@@ -38,6 +34,20 @@ const TainacanMapper = () => {
                 setIsLoading(false);
             });
     };
+
+    const fetchGetCollectionsTainacan = async () => {
+        setIsLoading(true);
+        fetchCollectionsTainacan()
+            .then(data => {
+                setCollectionsTainacan(data);
+                console.log(data);
+                setIsLoading(false);
+            })
+            .catch(error => {
+                setIsLoading(false);
+            });
+    };
+
 
     const handleProcessModelChange = (e) => {
         const selectedId = e.target.value;
@@ -185,10 +195,10 @@ const TainacanMapper = () => {
                 {/* Exibir as etapas selecionadas */}
                 {selectedSteps.length > 0 && (
                     <div>
-                        <h4>Etapas Selecionadas:</h4>
+                        <h4>Campos Selecionados:</h4>
                         <ul>
                             {selectedSteps.map((step, index) => (
-                                <li key={index}>Etapa {step}</li>
+                                <li key={index}>Campo: {step}</li>
                             ))}
                         </ul>
                     </div>
@@ -200,18 +210,19 @@ const TainacanMapper = () => {
                         name="mapper_slug"
                         style={{
                             ...selectStyle,
-                            backgroundColor: selectedSteps.length === 0 ? '#f0f0f0' : 'white', // visual feedback opcional
+                            backgroundColor: selectedSteps.length === 0 ? '#f0f0f0' : 'white',
                             cursor: selectedSteps.length === 0 ? 'not-allowed' : 'pointer'
                         }}
                         disabled={selectedSteps.length === 0}
                     >
                         <option value="0">-- Selecione --</option>
-                        <option value="1">-- Coleção 1 --</option>
-                        <option value="2">-- Coleção 2 --</option>
-                        <option value="3">-- Coleção 3 --</option>
+                        {collectionsTainacan.map((collection) => (
+                            <option key={collection["WP_Post"].ID} value={collection["WP_Post"].ID}>
+                                {collection["WP_Post"].post_title}
+                            </option>
+                        ))}
                     </select>
                 </label>
-
                 <button
                     type="button"
                     style={buttonStyle}

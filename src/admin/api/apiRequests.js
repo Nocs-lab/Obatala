@@ -22,6 +22,14 @@ export const fetchFieldsProcessModels = (id) => {
     });
 };
 
+export const fetchCollectionsTainacan = () => {
+    return apiFetch({
+        path: `/obatala/v1/exporter/all_collections_tainacan`,
+    }).then((data) => {
+        return data;
+    });
+};
+
 
 // Função para desserializar
 const maybeUnserialize = (data) => {
