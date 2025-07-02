@@ -12,6 +12,8 @@ import Reducer, { initialState } from "../../../../redux/reducer";
 
 export default function CustomEdge({
     id,
+    source,
+    target,
     sourceX,
     sourceY,
     targetX,
@@ -23,7 +25,7 @@ export default function CustomEdge({
     },
     markerEnd,
 }) {
-    const { setEdges } = useReactFlow();
+    const { getNodes, setEdges } = useReactFlow();
     const [state, dispatch] = useReducer(Reducer, initialState);
 
     const [edgePath, labelX, labelY] = getSmoothStepPath({
@@ -34,6 +36,9 @@ export default function CustomEdge({
         targetY,
         targetPosition,
     });
+    const nodes = getNodes()
+    const sourceNode = nodes.find((node) => node.id === source)?.data?.stageName || `Etapa ${source}`;
+    const targetNode = nodes.find((node) => node.id === target)?.data?.stageName || `Etapa ${target}`;
 
     const onEdgeClick = () => {
         setEdges((edges) => edges.filter((edge) => edge.id !== id));
@@ -47,6 +52,8 @@ export default function CustomEdge({
         dispatch({ type: 'CLOSE_MODAL' });
     };
 
+
+
     return (
         <>
             <ConfirmDialog
@@ -57,7 +64,7 @@ export default function CustomEdge({
                 }}
                 onCancel={handleCancel}
             >
-                Are you sure you want to delete connection {id}?
+                Are you sure you want to delete connection between {sourceNode} and {targetNode}?
             </ConfirmDialog>
             <BaseEdge path={edgePath} markerEnd={markerEnd} style={style} />
             <EdgeLabelRenderer>
