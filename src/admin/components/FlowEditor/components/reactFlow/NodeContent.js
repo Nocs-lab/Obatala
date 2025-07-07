@@ -63,8 +63,9 @@ const NodeContent = ({ id, data = {} }) => {
   };
 
   const addFieldToNode = (fieldId) => {
+    const sameTypeFields = fields.filter(field => field.type === fieldId).length;   
     const newField = {
-      id: `${fieldId}-${fields.length + 1}`,
+      id: `${id}_${fieldId}-${sameTypeFields + 1}`,
       type: fieldId,
       title: "Campo sem título",
     };
