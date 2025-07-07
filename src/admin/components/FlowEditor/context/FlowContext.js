@@ -86,21 +86,20 @@ export const FlowProvider = ({ children }) => {
 
     // Função para remover um campo específico de um nó
     const removeFieldFromNode = (nodeId, fieldId) => {
-        if (confirm(`Tem certeza que deseja remover o campo ${fieldId} do ${nodeId}?`)) {
-            setNodes((prevNodes) =>
-                prevNodes.map((node) =>
-                    node.id === nodeId
-                        ? {
-                            ...node,
-                            data: {
-                                ...node.data,
-                                fields: node.data.fields.filter((field) => field.id !== fieldId),
-                            },
-                        }
-                        : node
-                )
-            );
-        }
+        setNodes((prevNodes) =>
+            prevNodes.map((node) =>
+                node.id === nodeId
+                    ? {
+                        ...node,
+                        data: {
+                            ...node.data,
+                            fields: node.data.fields.filter((field) => field.id !== fieldId),
+                        },
+                    }
+                    : node
+            )
+        );
+
     };
 
     // Função para gravar as configurações de um campo específico
@@ -250,12 +249,10 @@ export const FlowProvider = ({ children }) => {
 
     // Função para remover um nó e suas arestas associadas
     const removeNode = (nodeId) => {
-        if (confirm(`Tem certeza que deseja remover o nó ${nodeId}?`)) {
-            setNodes((prevNodes) => prevNodes.filter((node) => node.id !== nodeId));
-            setEdges((prevEdges) =>
-                prevEdges.filter((edge) => edge.source !== nodeId && edge.target !== nodeId)
-            );
-        }
+        setNodes((prevNodes) => prevNodes.filter((node) => node.id !== nodeId));
+        setEdges((prevEdges) =>
+            prevEdges.filter((edge) => edge.source !== nodeId && edge.target !== nodeId)
+        );
     };
 
     // Função para validar e inicializar dados
@@ -439,5 +436,5 @@ export const FlowProvider = ({ children }) => {
         addStartNode,
         addEndNode,
     };
-return <FlowContext.Provider value={value}>{children}</FlowContext.Provider>;
+    return <FlowContext.Provider value={value}>{children}</FlowContext.Provider>;
 }
