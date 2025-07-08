@@ -5,6 +5,7 @@
 ![Tainacan](https://img.shields.io/badge/Tainacan-Addon-blue.svg)
 ![Gestão de Processos](https://img.shields.io/badge/Gestão-de_Processos-blue.svg)
 
+
 # Obatala: Plugin de Gestão de Processos Curatoriais para WordPress
 
 "Obatala" é um plugin avançado para WordPress que estende as funcionalidades do Tainacan, uma plataforma renomada de gestão de coleções digitais. Especialmente projetado para museus e instituições culturais, Obatala oferece uma solução integrada para a gestão eficiente de processos curatoriais.
