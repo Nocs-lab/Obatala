@@ -20,7 +20,7 @@ class ExporterApi extends ObatalaAPI {
         ]);
 
         // Route to get metadata collection
-        $this->add_route('get_metadata_collection/(?P<collection_id>[a-zA-Z0-9_\-.]+)', [
+        $this->add_route('exporter/get_metadata_collection/(?P<collection_id>[a-zA-Z0-9_\-.]+)', [
             'methods' => 'GET',
             'callback' => [$this, 'get_metadata_collection'],
             'permission_callback' => '__return_true',
@@ -35,12 +35,12 @@ class ExporterApi extends ObatalaAPI {
     }
 
     public function get_all_collections() {
-        $collections = $this->tieta_get_all_collection_names();
+        $collections = $this->get_all_collection_names();
         
         return $collections;
     }
 
-    function tieta_get_all_collection_names() {
+    function get_all_collection_names() {
         $collections_names = [];
         $collections = \Tainacan\Repositories\Collections::get_instance()->fetch([], 'OBJECT');
         

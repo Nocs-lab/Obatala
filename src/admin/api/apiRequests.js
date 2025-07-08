@@ -30,6 +30,13 @@ export const fetchCollectionsTainacan = () => {
     });
 };
 
+export const fetchMetadataCollectionsTainacan = (id) => {
+    return apiFetch({
+        path: `/obatala/v1/exporter/get_metadata_collection/${id}`,
+    }).then((data) => {
+        return data;
+    });
+};
 
 // Função para desserializar
 const maybeUnserialize = (data) => {

@@ -11,6 +11,7 @@ require_once __DIR__ . '/vendor/autoload.php';
 	Author: NOCs
 	License: GPLv2 or later
 	Text Domain: obatala
+    Requires Plugins: tainacan
 */
 
 // Prevent direct access to the file

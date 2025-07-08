@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import apiFetch from "@wordpress/api-fetch";
 import Select from 'react-select';
-import { fetchProcessModels, fetchFieldsProcessModels, fetchCollectionsTainacan } from '../../api/apiRequests';
+import { fetchMetadataCollectionsTainacan, fetchProcessModels, fetchFieldsProcessModels, fetchCollectionsTainacan } from '../../api/apiRequests';
 
 
 const TainacanMapper = () => {
@@ -10,16 +10,28 @@ const TainacanMapper = () => {
     const [selectedProcessModel, setSelectedProcessModel] = useState(0);
     const [stepsProcessModel, setStepsProcessModel] = useState([]);
     const [collectionsTainacan, setCollectionsTainacan] = useState([]);
+    const [selectedCollection, setSelectedCollection] = useState(0);
+    const [metadataTainacan, setMetadaTainacan] = useState([]);
     const [selectedSteps, setSelectedSteps] = useState([]);
     const [showMapper, setShowMapper] = useState(false);
     const [selectRows, setSelectRows] = useState([
-        { tainacanMetadata: '', obatalaStepMetadata: '' },
+        { tainacanMetadata: '', obatalaFieldMetadata: '' },
     ]);
 
     useEffect(() => {
         fetchProcessModelObatala();
         fetchGetCollectionsTainacan();
     }, []);
+
+    useEffect(() => {
+        setSelectRows((prev) =>
+            selectedSteps.map((step, i) => ({
+                ...prev[i],
+                obatalaFieldMetadata: step.value,
+                tainacanMetadata: prev[i]?.tainacanMetadata || ''
+            }))
+        );
+    }, [selectedSteps]);
 
     const fetchProcessModelObatala = async () => {
         setIsLoading(true);
@@ -51,7 +63,7 @@ const TainacanMapper = () => {
 
     const handleProcessModelChange = (e) => {
         const selectedId = e.target.value;
-        setSelectedProcessModel(selectedId); 
+        setSelectedProcessModel(selectedId);
 
         fetchFieldsProcessModels(selectedId)
             .then((data) => {
@@ -69,15 +81,34 @@ const TainacanMapper = () => {
             });
     };
 
+    const handleTainacanColletionChange = (e) => {
+        const selectedId = e.target.value;
+        setSelectedCollection(selectedId);
 
-    const handleAddRow = () => {
-        setSelectRows([...selectRows, { tainacanMetadata: '', obatalaStepMetadata: '' }]);
+        fetchMetadataCollectionsTainacan(selectedId)
+            .then((data) => {
+                console.log("Metadados retornados:", data);
+
+                setMetadaTainacan(data);
+            })
+            .catch((error) => {
+                console.error("Erro ao buscar metadados:", error);
+            });
     };
 
     const handleSelectChange = (index, field, value) => {
         const newSelectRows = [...selectRows];
+
+        if (!newSelectRows[index]) {
+            newSelectRows[index] = { tainacanMetadata: '', obatalaFieldMetadata: '' };
+        }
+
         newSelectRows[index][field] = value;
         setSelectRows(newSelectRows);
+    };
+
+    const isMetadataSelected = (id, currentIndex) => {
+        return selectRows.some((row, i) => i !== currentIndex && row.tainacanMetadata === id);
     };
 
     const formStyle = {
@@ -126,22 +157,6 @@ const TainacanMapper = () => {
         backgroundColor: 'green', // Cor verde para os botões
     };
 
-    const handleStepChange = (e) => {
-        const selectedValues = Array.from(e.target.selectedOptions, option => option.value);
-
-        // Atualizar o estado com os valores selecionados, sem substituir os anteriores
-        setSelectedSteps(prevSelectedSteps => {
-            // Adiciona novos valores sem duplicar
-            const newSelectedSteps = [...prevSelectedSteps];
-            selectedValues.forEach(value => {
-                if (!newSelectedSteps.includes(value)) {
-                    newSelectedSteps.push(value);
-                }
-            });
-            return newSelectedSteps;
-        });
-    };
-
     return (
         <div style={{ backgroundColor: "white", paddingTop: "1px" }}>
             <h1 style={{ textAlign: 'center' }}>Mappers Tainacan</h1>
@@ -156,7 +171,7 @@ const TainacanMapper = () => {
                         onChange={handleProcessModelChange}
                         value={selectedProcessModel}
                     >
-                        
+
                         <option value="0">-- Selecione --</option>
                         {processModelObatala.map((item) => (
                             <option key={item.id} value={item.id}>
@@ -207,6 +222,7 @@ const TainacanMapper = () => {
                 <label style={labelStyle}>
                     Escolha a Coleção de Destino no Tainacan:
                     <select
+                        onChange={handleTainacanColletionChange}
                         name="mapper_slug"
                         style={{
                             ...selectStyle,
@@ -245,9 +261,30 @@ const TainacanMapper = () => {
                         }}
                     >
                         <div>
+                            <h3>Field Obatala</h3>
+                            {selectedSteps.map((step, index) => (
+                                <div key={index} style={{ marginBottom: '10px' }}>
+                                    <input
+                                        type="text"
+                                        value={step.label}
+                                        readOnly
+                                        style={{
+                                            height: '36px',
+                                            fontSize: '1rem',
+                                            width: '250px',
+                                            boxSizing: 'border-box',
+                                            backgroundColor: '#f5f5f5',
+                                            border: '1px solid #ccc',
+                                            padding: '0 8px'
+                                        }}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                        <div>
                             <h3>Tainacan Metadado</h3>
-                            {selectRows.map((_, index) => (
-                                <div key={index} style={{ marginBottom: '10px' }}> {/* Adicionando margem entre as linhas */}
+                            {selectedSteps.map((_, index) => (
+                                <div key={index} style={{ marginBottom: '10px' }}>
                                     <select
                                         style={{
                                             height: '36px',
@@ -255,53 +292,45 @@ const TainacanMapper = () => {
                                             width: '250px',
                                             boxSizing: 'border-box',
                                         }}
+                                        value={selectRows[index]?.tainacanMetadata || ''}
                                         onChange={(e) => handleSelectChange(index, 'tainacanMetadata', e.target.value)}
                                     >
-                                        <option value="0">-- Selecione --</option>
-                                        <option value="title">Título</option>
-                                        <option value="description">Descrição</option>
-                                        <option value="author">Autor</option>
+                                        <option value="">-- Selecione --</option>
+                                        {metadataTainacan.map((item) => {
+                                            const post = item["WP_Post"];
+                                            const id = String(post.ID);
+                                            const isUsed = isMetadataSelected(id, index);
+
+                                            return (
+                                                post?.post_title && (
+                                                    <option
+                                                        key={id}
+                                                        value={id}
+                                                        disabled={isUsed}
+                                                    >
+                                                        {post.post_title} {isUsed ? ' (já usado)' : ''}
+                                                    </option>
+                                                )
+                                            );
+                                        })}
                                     </select>
                                 </div>
                             ))}
+
                         </div>
 
-                        <div>
-                            <h3>Metadado Step Obatala</h3>
-                            {selectRows.map((_, index) => (
-                                <div key={index} style={{ marginBottom: '10px' }}> {/* Adicionando margem entre as linhas */}
-                                    <select
-                                        style={{
-                                            height: '36px',
-                                            fontSize: '1rem',
-                                            width: '250px',
-                                            boxSizing: 'border-box',
-                                        }}
-                                        onChange={(e) => handleSelectChange(index, 'obatalaStepMetadata', e.target.value)}
-                                    >
-                                        <option value="0">-- Selecione --</option>
-                                        <option value="campo1">Campo 1</option>
-                                        <option value="campo2">Campo 2</option>
-                                        <option value="campo3">Campo 3</option>
-                                    </select>
-                                </div>
-                            ))}
-                        </div>
                     </div>
 
                     <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem', gap: '20px' }}>
                         <button
                             type="button"
                             style={greenButtonStyle}
-                            onClick={handleAddRow}
+                            onClick={() => {
+                                // Aqui você pode processar os mapeamentos entre os campos
+                                console.log('Mapeamentos salvos:', selectRows);
+                            }}
                         >
-                            Adicionar Nova Linha
-                        </button>
-                        <button
-                            type="button"
-                            style={greenButtonStyle}
-                        >
-                            Exportar
+                            Salvar
                         </button>
                     </div>
                 </div>
