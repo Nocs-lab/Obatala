@@ -10,22 +10,22 @@ import { fetchSectors } from "../../../../api/apiRequests";
 import { close, file, mobile, mapMarker, paragraph, plus, search, calendar, keyboard, commentContent, listView } from '@wordpress/icons';
 
 const FIELD_OPTIONS = [
-  { id: "text", label: "Texto", icon: paragraph},
-  { id: "email", label: "Email", icon: commentContent},
+  { id: "text", label: "Texto", icon: paragraph },
+  { id: "email", label: "Email", icon: commentContent },
   { id: "phone", label: "Telefone", icon: mobile },
   { id: "address", label: "Endereço", icon: mapMarker },
-  { id: "number", label: "Número", icon: keyboard},
-  { id: "datepicker", label: "Date Picker", icon:calendar },
-  { id: "upload", label: "Upload de Arquivo", icon:file },
-  { id: "select", label: "Select (Múltiplas Opções)", icon:listView },
+  { id: "number", label: "Número", icon: keyboard },
+  { id: "datepicker", label: "Date Picker", icon: calendar },
+  { id: "upload", label: "Upload de Arquivo", icon: file },
+  { id: "select", label: "Select (Múltiplas Opções)", icon: listView },
   { id: "radio", label: "Radio (Opções de Seleção)", icon: listView },
   { id: "search", label: "Busca em Tainacan", icon: search },
 ];
 
-const NodeContent = ({ id, data  = {} }) => {
+const NodeContent = ({ id, data = {} }) => {
   const {
     fields = [],
-    updateFields = () => {},
+    updateFields = () => { },
   } = data;
 
   const [sectors, setSectors] = useState([]);
@@ -33,14 +33,14 @@ const NodeContent = ({ id, data  = {} }) => {
   const { selectedNodes } = useReactFlow();
   const [isAddingFields, setIsAddingFields] = useState(false);
   const { updateNodeName } = useFlowContext();
-  const {updateNodeTempSector} = useFlowContext();
+  const { updateNodeTempSector } = useFlowContext();
 
   const isSelected = selectedNodes?.some((node) => node.id === id);
   const [stageName, setStageName] = useState(data?.stageName || "");
-  const {nodes} = useFlowContext();
+  const { nodes } = useFlowContext();
   const filteredNode = nodes.find(node => node.id === id);
   const [sector, setSector] = useState(filteredNode?.sector_obatala || '');
-  
+
   useEffect(() => {
     loadSectors();
   }, []);
@@ -61,10 +61,11 @@ const NodeContent = ({ id, data  = {} }) => {
         console.error('Error fetching sectors:', error);
       });
   };
-  
+
   const addFieldToNode = (fieldId) => {
+    const sameTypeFields = fields.filter(field => field.type === fieldId).length;   
     const newField = {
-      id: `${fieldId}-${fields.length + 1}`,
+      id: `${id}_${fieldId}-${sameTypeFields + 1}`,
       type: fieldId,
       title: "Campo sem título",
     };
@@ -81,73 +82,73 @@ const NodeContent = ({ id, data  = {} }) => {
     setSector(value);
     updateNodeTempSector(id, [value]);
   };
- 
-    return (
-        <div className="step-container">
-            {/* Node Drag Handle */}
-            <NodeHandle nodeId={id} />
 
-            {/* Connection Handles */}
-            <Handle type="target" position={Position.Left} />
-            <Handle type="source" position={Position.Right} />
+  return (
+    <div className="step-container">
+      {/* Node Drag Handle */}
+      <NodeHandle nodeId={id} stageName={stageName} />
 
-            {/* Node Name */}
-            <TextControl
-                value={stageName}
-                label="Step name"
-                onChange={handleStageNameChange}
-                placeholder="Digite o nome da etapa"
-            />
+      {/* Connection Handles */}
+      <Handle type="target" position={Position.Left} />
+      <Handle type="source" position={Position.Right} />
 
-            <ComboboxControl
-                label="Group responsible"
-                value={sector}
-                options={sectors.map(sector => ({ 
-                label: sector.name, 
-                value: sector.id,
-                }))}
-                onChange={handleStageSectorChange}
-            />
+      {/* Node Name */}
+      <TextControl
+        value={stageName}
+        label="Step name"
+        onChange={handleStageNameChange}
+        placeholder="Digite o nome da etapa"
+      />
 
-            {/* List of Fields */}
-            <div className="components-base-control__field">
-                <label className="components-base-control__label">Fields</label>
-            </div>
-            {fields.length > 0 && (
-                <div className="flow-fields">
-                <DragAndDropList nodeId={id} fields={fields} updateFields={updateFields} />
-                </div>
-            )}
-            <Button variant="primary" size="small" icon={<Icon icon={plus}/>} onClick={() => setIsAddingFields(true)}>
-                Add field
-            </Button>
+      <ComboboxControl
+        label="Group responsible"
+        value={sector}
+        options={sectors.map(sector => ({
+          label: sector.name,
+          value: sector.id,
+        }))}
+        onChange={handleStageSectorChange}
+      />
 
-            {/* Toolbar with Add and Delete */}
-            {isAddingFields && (
-                <NodeToolbar isVisible={isSelected} position="right">
-                <div className="wp-drawer node-meta-container">
-                    <Button className="close-button"
-                        icon={<Icon icon={close} size={24} onClick={() => setIsAddingFields(false)} />}
-                    ></Button>
-                    <h3 className="title">Select a field to add:</h3>
-                    <ul className="node-meta-list-container">
-                    {FIELD_OPTIONS.map((option) => (
-                        <li className="node-meta-list">
-                        <Icon icon={option.icon}/>
-                        <span
-                            key={option.id}
-                            onClick={() => addFieldToNode(option.id)}
-                        >
-                            {option.label}
-                        </span>
-                        </li>
-                    ))}
-                    </ul>
-                </div>
-                </NodeToolbar>
-            )}
+      {/* List of Fields */}
+      <div className="components-base-control__field">
+        <label className="components-base-control__label">Fields</label>
+      </div>
+      {fields.length > 0 && (
+        <div className="flow-fields">
+          <DragAndDropList nodeId={id} fields={fields} updateFields={updateFields} />
         </div>
-    );
+      )}
+      <Button variant="primary" size="small" icon={<Icon icon={plus} />} onClick={() => setIsAddingFields(true)}>
+        Add field
+      </Button>
+
+      {/* Toolbar with Add and Delete */}
+      {isAddingFields && (
+        <NodeToolbar isVisible={isSelected} position="right">
+          <div className="wp-drawer node-meta-container">
+            <Button className="close-button"
+              icon={<Icon icon={close} size={24} onClick={() => setIsAddingFields(false)} />}
+            ></Button>
+            <h3 className="title">Select a field to add:</h3>
+            <ul className="node-meta-list-container">
+              {FIELD_OPTIONS.map((option) => (
+                <li className="node-meta-list">
+                  <Icon icon={option.icon} />
+                  <span
+                    key={option.id}
+                    onClick={() => addFieldToNode(option.id)}
+                  >
+                    {option.label}
+                  </span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </NodeToolbar>
+      )}
+    </div>
+  );
 };
 
 export default NodeContent;

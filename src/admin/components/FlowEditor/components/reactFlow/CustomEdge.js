@@ -1,16 +1,19 @@
-import React from "react";
 import {
-  BaseEdge,
-  EdgeLabelRenderer,
-  EdgeProps,
-  getBezierPath,
-  getSmoothStepPath,
-  useReactFlow,
+    BaseEdge,
+    EdgeLabelRenderer,
+    EdgeProps,
+    getBezierPath,
+    getSmoothStepPath,
+    useReactFlow,
 } from "@xyflow/react";
-import { Tooltip } from "@wordpress/components";
+import { Tooltip, __experimentalConfirmDialog as ConfirmDialog } from "@wordpress/components";
+import { useReducer } from "react";
+import Reducer, { initialState } from "../../../../redux/reducer";
 
 export default function CustomEdge({
     id,
+    source,
+    target,
     sourceX,
     sourceY,
     targetX,
@@ -22,7 +25,9 @@ export default function CustomEdge({
     },
     markerEnd,
 }) {
-    const { setEdges } = useReactFlow();
+    const { getNodes, setEdges } = useReactFlow();
+    const [state, dispatch] = useReducer(Reducer, initialState);
+
     const [edgePath, labelX, labelY] = getSmoothStepPath({
         sourceX,
         sourceY,
@@ -31,13 +36,36 @@ export default function CustomEdge({
         targetY,
         targetPosition,
     });
+    const nodes = getNodes()
+    const sourceNode = nodes.find((node) => node.id === source)?.data?.stageName || `Etapa ${source}`;
+    const targetNode = nodes.find((node) => node.id === target)?.data?.stageName || `Etapa ${target}`;
 
     const onEdgeClick = () => {
         setEdges((edges) => edges.filter((edge) => edge.id !== id));
     };
 
+    const handleConfirmDelete = (connection) => {
+        dispatch({ type: 'OPEN_MODAL_NODE_CONNECTION', payload: connection })
+    }
+
+    const handleCancel = () => {
+        dispatch({ type: 'CLOSE_MODAL' });
+    };
+
+
+
     return (
         <>
+            <ConfirmDialog
+                isOpen={state.isOpen}
+                onConfirm={() => {
+                    onEdgeClick();
+                    dispatch({ type: 'CLOSE_MODAL' })
+                }}
+                onCancel={handleCancel}
+            >
+                Are you sure you want to delete connection between {sourceNode} and {targetNode}?
+            </ConfirmDialog>
             <BaseEdge path={edgePath} markerEnd={markerEnd} style={style} />
             <EdgeLabelRenderer>
                 <div
@@ -50,7 +78,7 @@ export default function CustomEdge({
                     className="nodrag nopan"
                 >
                     <Tooltip text="Remove connection">
-                        <div className="btn close-btn" onClick={onEdgeClick}></div>
+                        <div className="btn close-btn" onClick={handleConfirmDelete}></div>
                     </Tooltip>
                 </div>
             </EdgeLabelRenderer>

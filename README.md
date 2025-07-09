@@ -1,9 +1,10 @@
 
-![Versão do Plugin](https://img.shields.io/badge/version-1.6.9-blue.svg)
+![Versão do Plugin](https://img.shields.io/badge/version-1.6.11-blue.svg)
 ![Compatibilidade com WordPress](https://img.shields.io/badge/WordPress-v5.7%2B-blue.svg)
 ![Licença](https://img.shields.io/badge/license-GPLv2-blue.svg)
 ![Tainacan](https://img.shields.io/badge/Tainacan-Addon-blue.svg)
 ![Gestão de Processos](https://img.shields.io/badge/Gestão-de_Processos-blue.svg)
+
 
 # Obatala: Plugin de Gestão de Processos Curatoriais para WordPress
 
