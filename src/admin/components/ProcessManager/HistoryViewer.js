@@ -14,7 +14,7 @@ const HistoryViewer = ({
     sectors
 }) => {
     return (
-        <main>
+        <>
             <ProcessHeader
                 process={process}
                 filteredProcessType={filteredProcessType}
@@ -35,7 +35,7 @@ const HistoryViewer = ({
                     />
                 </PanelRow>
             </Panel>
-        </main>
+        </>
     );
 };
 

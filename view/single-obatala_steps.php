@@ -27,7 +27,7 @@
             <?php endif; ?>
         </article>
     <?php endwhile; else : ?>
-        <p><?php _e('No process found.', 'obatala'); ?></p>
+        <p><?php esc_html_e('No process found.', 'Obatala'); ?></p>
     <?php endif; ?>
 </div>
 

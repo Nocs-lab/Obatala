@@ -307,6 +307,13 @@ class ProcessTypeApi extends ObatalaAPI {
     }
 
     public function upload($request) {
+        if ( ! isset( $_SERVER['HTTP_X_WP_NONCE'] ) 
+            || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_WP_NONCE'] ) ), 'wp_rest' ) ) {
+            return new WP_REST_Response( [
+                'error' => 'Nonce inválido ou ausente',
+            ], 403 );
+        }
+
         $process_id = $request['id'];
         $node_id = sanitize_text_field($request['node_id']);
         
@@ -322,7 +329,6 @@ class ProcessTypeApi extends ObatalaAPI {
             ], 400);
         }
 
-        $file = $_FILES['file'];
         $overrides = [
             'test_form' => false,
             'mimes' => [
@@ -349,15 +355,13 @@ class ProcessTypeApi extends ObatalaAPI {
         // Configurar o arquivo .htaccess para proteção
         $htaccess_path = $custom_dir . '/.htaccess';
         if (!file_exists($htaccess_path)) {
-            $htaccess_content = <<<EOT
-                    <IfModule mod_rewrite.c>
-                        RewriteEngine On
+            $htaccess_content  = "<IfModule mod_rewrite.c>\n";
+            $htaccess_content .= "    RewriteEngine On\n\n";
+            $htaccess_content .= "    # Bloquear acesso direto ao diretório e redirecionar ao WordPress\n";
+            $htaccess_content .= "    RewriteCond %{REQUEST_FILENAME} -f\n";
+            $htaccess_content .= "    RewriteRule ^ - [F]\n";
+            $htaccess_content .= "</IfModule>\n";
 
-                        # Bloquear acesso direto ao diretório e redirecionar ao WordPress
-                        RewriteCond %{REQUEST_FILENAME} -f
-                        RewriteRule ^ - [F]
-                    </IfModule>
-                EOT;
             if (file_put_contents($htaccess_path, $htaccess_content) === false) {
                 return new WP_REST_Response([
                     'error' => 'Erro ao criar o arquivo .htaccess no diretório de upload.',
@@ -366,7 +370,7 @@ class ProcessTypeApi extends ObatalaAPI {
         }
 
         // Fazer upload do arquivo
-        $uploaded_file = wp_handle_upload($file, $overrides);
+        $uploaded_file = wp_handle_upload($_FILES['file'], $overrides);
 
         if (isset($uploaded_file['error'])) {
             return new WP_REST_Response([
@@ -374,9 +378,39 @@ class ProcessTypeApi extends ObatalaAPI {
             ], 500);
         }
 
-        $filename = sanitize_file_name($file['name']);
-        $new_file_path = trailingslashit($custom_dir) . $filename;
-        if (!rename($uploaded_file['file'], $new_file_path)) {
+        // Inicializar o WP_Filesystem
+        if ( ! function_exists( 'request_filesystem_credentials' ) ) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+        }
+
+        WP_Filesystem();
+        global $wp_filesystem;
+
+        if ( ! $wp_filesystem ) {
+            return new WP_REST_Response([
+                'error' => 'Não foi possível inicializar o sistema de arquivos.',
+            ], 500);
+        }
+
+        if ( ! isset( $_FILES['file']['name'] ) ) {
+            return new WP_REST_Response( [
+                'error' => 'Nome do arquivo não encontrado.',
+            ], 400 );
+        }
+
+        $filename       = sanitize_file_name( $_FILES['file']['name'] );
+        $new_file_path  = trailingslashit( $custom_dir ) . $filename;
+        $upload_path    = $uploaded_file['file'];
+
+        // Verificar se o arquivo existe antes de mover
+        if ( ! $wp_filesystem->exists( $upload_path ) ) {
+            return new WP_REST_Response([
+                'error' => 'Arquivo de upload não encontrado.',
+            ], 500);
+        }
+
+        // Tentar mover o arquivo para o diretório personalizado
+        if ( ! $wp_filesystem->move( $upload_path, $new_file_path ) ) {
             return new WP_REST_Response([
                 'error' => 'Erro ao salvar o arquivo no diretório personalizado.',
             ], 500);
@@ -452,21 +486,48 @@ class ProcessTypeApi extends ObatalaAPI {
     }
     
     private function wp_send_file($file_path) {
-        // Força o download do arquivo
+        // Inicializa o sistema de arquivos do WordPress
+        global $wp_filesystem;
+        
+        if (!function_exists('WP_Filesystem')) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+        }
+        
+        $initialized = WP_Filesystem();
+        
+        if (!$initialized || !is_object($wp_filesystem)) {
+            wp_die(esc_html__('Falha ao inicializar o sistema de arquivos do WordPress', 'Obatala'));
+        }
+        
+        // Verifica se o arquivo existe
+        if (!$wp_filesystem->exists($file_path)) {
+            wp_die(esc_html__('Arquivo não encontrado', 'Obatala'));
+        }
+        
+        // Obtém o nome do arquivo seguro para saída
+        $filename = basename($file_path);
+        $filename = sanitize_file_name($filename);
+        $disposition = sprintf('attachment; filename="%s"', esc_attr($filename));
+        
+        // Força o download do arquivo com saída escapada
         header('Content-Description: File Transfer');
         header('Content-Type: application/octet-stream');
-        header('Content-Disposition: attachment; filename="' . basename($file_path) . '"');
+        header('Content-Disposition: ' . $disposition);
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
         header('Pragma: public');
-        header('Content-Length: ' . filesize($file_path));
+        header('Content-Length: ' . absint($wp_filesystem->size($file_path)));
         
         // Limpar buffers de saída antes de enviar o arquivo
         ob_clean();
         flush();
         
-        // Ler e enviar o arquivo
-        readfile($file_path);
+        // Ler e enviar o arquivo com verificação
+        $file_contents = $wp_filesystem->get_contents($file_path);
+        if ($file_contents !== false) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            echo $file_contents; // Binário não deve ser escapado
+        }
         exit;
     }
 }

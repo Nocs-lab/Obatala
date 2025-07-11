@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
-import { Button, ButtonGroup, Icon, Tooltip, Panel, PanelHeader, PanelRow, Notice, TextControl  } from '@wordpress/components';
-import { edit, trash, layout, close, more, filter } from '@wordpress/icons';
+import { Button, ButtonGroup, Tooltip, Panel, PanelRow, Notice, TextControl  } from '@wordpress/components';
+import { edit, trash, layout } from '@wordpress/icons';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import ProcessTypeFilter from './ProcessTypeFilters';
@@ -59,21 +59,24 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager, status, se
             accessor: 'id',
             Cell: ({ row }) => (
                 <ButtonGroup>
-                    <Tooltip text='Manage steps'>
-                        <Button
-                            icon={<Icon icon={layout}/>}
-                            onClick={() => onManager(row.original.id)}
-                        >Manage steps</Button>
-                    </Tooltip>
+                    <Button
+                        variant="primary"
+                        icon={layout}
+                        onClick={() => onManager(row.original.id)}
+                    >
+                        Manage steps
+                    </Button>
                     <Tooltip text="Edit general data">
                         <Button
-                            icon={<Icon icon={edit} />}
+                            variant="secondary"
+                            icon={edit}
                             onClick={() => onEdit(row.original)}
                         />
                     </Tooltip>
-                    <Tooltip text="Delete process model">
+                    <Tooltip text="Delete model">
                         <Button
-                            icon={<Icon icon={trash} />}
+                            variant="secondary"
+                            icon={trash}
                             onClick={() => onDelete(row.original)}
                         />
                     </Tooltip>

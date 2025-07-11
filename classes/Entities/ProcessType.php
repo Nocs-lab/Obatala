@@ -15,20 +15,20 @@ class ProcessType {
 
     public static function register_post_type() {
         $labels = array(
-            'name'                  => _x('Process Types', 'Post type general name', 'obatala'),
-            'singular_name'         => _x('Process Type', 'Post type singular name', 'obatala'),
-            'menu_name'             => _x('Process Types', 'Admin Menu text', 'obatala'),
-            'name_admin_bar'        => _x('Process Type', 'Add New on Toolbar', 'obatala'),
-            'add_new'               => __('Add New', 'obatala'),
-            'add_new_item'          => __('Add New Process Type', 'obatala'),
-            'new_item'              => __('New Process Type', 'obatala'),
-            'edit_item'             => __('Edit Process Type', 'obatala'),
-            'view_item'             => __('View Process Type', 'obatala'),
-            'all_items'             => __('All Process Types', 'obatala'),
-            'search_items'          => __('Search Process Types', 'obatala'),
-            'parent_item_colon'     => __('Parent Process Type:', 'obatala'),
-            'not_found'             => __('No process types found.', 'obatala'),
-            'not_found_in_trash'    => __('No process types found in Trash.', 'obatala')
+            'name'                  => _x('Process Types', 'Post type general name', 'Obatala'),
+            'singular_name'         => _x('Process Type', 'Post type singular name', 'Obatala'),
+            'menu_name'             => _x('Process Types', 'Admin Menu text', 'Obatala'),
+            'name_admin_bar'        => _x('Process Type', 'Add New on Toolbar', 'Obatala'),
+            'add_new'               => __('Add New', 'Obatala'),
+            'add_new_item'          => __('Add New Process Type', 'Obatala'),
+            'new_item'              => __('New Process Type', 'Obatala'),
+            'edit_item'             => __('Edit Process Type', 'Obatala'),
+            'view_item'             => __('View Process Type', 'Obatala'),
+            'all_items'             => __('All Process Types', 'Obatala'),
+            'search_items'          => __('Search Process Types', 'Obatala'),
+            'parent_item_colon'     => __('Parent Process Type:', 'Obatala'),
+            'not_found'             => __('No process types found.', 'Obatala'),
+            'not_found_in_trash'    => __('No process types found in Trash.', 'Obatala')
         );
 
         $args = array(

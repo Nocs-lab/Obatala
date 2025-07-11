@@ -89,23 +89,16 @@ class AdminMenu {
         ]
     ];
 
-    /**
-     * Inicializa o hook para adicionar as páginas de administração ao menu do WordPress.
-     */
     public static function init() {
         add_action('admin_menu', [self::class, 'add_admin_pages']);
         add_action('admin_enqueue_scripts', [self::class, 'enqueue_scripts']);
     }
 
-    /**
-     * Adiciona as páginas de administração ao menu do WordPress.
-     */
     public static function add_admin_pages() {
-        // Adiciona o menu principal "Obatala".
         $main = self::$pages['main'];
         add_menu_page(
-            __($main['title'], 'obatala'),
-            __($main['menu_title'], 'obatala'),
+            $main['title'],
+            $main['menu_title'],
             $main['capability'],
             $main['slug'],
             [self::class, $main['callback']],
@@ -113,22 +106,21 @@ class AdminMenu {
             $main['position']
         );
 
-        // Adiciona os submenus.
         foreach (self::$pages['submenus'] as $submenu) {
             if ($submenu['show_in_menu']) {
                 add_submenu_page(
                     $submenu['parent_slug'],
-                    __($submenu['title'], 'obatala'),
-                    __($submenu['menu_title'], 'obatala'),
+                    $submenu['title'],
+                    $submenu['menu_title'],
                     $submenu['capability'],
                     $submenu['slug'],
                     [self::class, $submenu['callback']]
                 );
             } else {
                 add_submenu_page(
-                    null, // Permitir acesso direto
-                    __($submenu['title'], 'obatala'),
-                    __($submenu['menu_title'], 'obatala'),
+                    null,
+                    $submenu['title'],
+                    $submenu['menu_title'],
                     $submenu['capability'],
                     $submenu['slug'],
                     [self::class, $submenu['callback']]
@@ -137,9 +129,7 @@ class AdminMenu {
         }
     }
 
-    /**
-     * Renderiza a página principal do menu.
-     */
+
     public static function render_main_page() {
         echo '<div id="dashboard"></div>';
     }
@@ -152,19 +142,17 @@ class AdminMenu {
     /**
      * Renderiza a página de administração correta com base no slug da página atual.
      */
+
     public static function render_page() {
-        // Verificar se estamos no contexto correto da tela
         $screen = get_current_screen();
     
         if (!$screen || empty($screen->id)) {
-            // Não pode continuar sem o contexto de tela, então mostramos uma mensagem.
             echo '<h1>Página não encontrada</h1>';
             return;
         }
     
         $page_id = $screen->id;
-    
-        // Agora podemos fazer a comparação sem os erros
+
         if (is_string($page_id) && strpos($page_id, 'obatala_page_') === 0) {
             $id_cleaned = str_replace('_', '-', substr($page_id, strlen('obatala_page_')));
             echo '<div id="' . esc_attr($id_cleaned) . '"></div>';
@@ -172,16 +160,11 @@ class AdminMenu {
             echo '<h1>Página não encontrada</h1>';
         }
     }
-    
 
-    /**
-     * Enfileira os scripts necessários para garantir o comportamento do menu.
-     */
     public static function enqueue_scripts() {
         add_action('admin_footer', function () {
             ?>
 <script type="text/javascript">
-// Quando a página do admin for carregada, esconda os itens "Process Viewer" e "Process Type Editor"
 document.addEventListener('DOMContentLoaded', function() {
     const processViewerItem = document.querySelector(
         '#toplevel_page_obatala-main .wp-submenu li a[href*="process-viewer"]');
@@ -189,40 +172,36 @@ document.addEventListener('DOMContentLoaded', function() {
         '#toplevel_page_obatala-main .wp-submenu li a[href*="process-type-editor"]');
     const processSector_details = document.querySelector(
         '#toplevel_page_obatala-main .wp-submenu li a[href*="sector-details"]');
+
     if (processSector_details) {
-        processSector_details.parentElement.style.display = 'none'; // Esconde o item "Group Details"
+        processSector_details.parentElement.style.display = 'none';
     }
 
     if (processViewerItem) {
-        processViewerItem.parentElement.style.display = 'none'; // Esconde o item "Process Viewer"
+        processViewerItem.parentElement.style.display = 'none';
     }
 
     if (processTypeEditorItem) {
-        processTypeEditorItem.parentElement.style.display = 'none'; // Esconde o item "Process Type Editor"
+        processTypeEditorItem.parentElement.style.display = 'none';
     }
 
-    // Exibe os itens "Process Viewer" e "Process Type Editor" quando o usuário clicar no item principal do menu
     const menuItem = document.querySelector('#toplevel_page_obatala-main');
     if (menuItem) {
         menuItem.addEventListener('click', function() {
             if (processViewerItem) {
-                processViewerItem.parentElement.style.display =
-                    'block'; // Exibe o item "Process Viewer"
+                processViewerItem.parentElement.style.display = 'block';
             }
             if (processTypeEditorItem) {
-                processTypeEditorItem.parentElement.style.display =
-                    'block'; // Exibe o item "Process Type Editor"
+                processTypeEditorItem.parentElement.style.display = 'block';
             }
             if (processSector_details) {
-                processSector_details.parentElement.style.display =
-                    'block'; // Exibe o item "Group Details"
+                processSector_details.parentElement.style.display = 'block';
             }
         });
     }
 });
 </script>
 <style>
-/* Esconde os itens "Process Viewer" e "Process Type Editor" por padrão */
 #toplevel_page_obatala-main .wp-submenu li a[href*="process-viewer"],
 #toplevel_page_obatala-main .wp-submenu li a[href*="process-type-editor"],
 #toplevel_page_obatala-main .wp-submenu li a[href*="sector-details"] {
