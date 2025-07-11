@@ -345,6 +345,9 @@ const ProcessViewer = () => {
                     const response = await apiFetch({
                         path: `/obatala/v1/process_type/upload`,
                         method: "POST",
+                        headers: {
+                            'X-WP-Nonce': ObatalaApi.nonce,
+                        },
                         body: formData,
                     });
                     setFormValues(prev => ({

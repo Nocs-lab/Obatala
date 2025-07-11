@@ -36,6 +36,15 @@ class Enqueuer {
             );
             wp_enqueue_script('obatala-admin-scripts');
 
+            // Localiza o nonce para o JS
+            wp_localize_script(
+                'obatala-admin-scripts',
+                'ObatalaApi',
+                [
+                    'nonce' => wp_create_nonce('wp_rest'),
+                ]
+            );
+
             // Enfileirando o estilo principal do plugin
             wp_register_style(
                 'obatala-admin-styles',

@@ -250,6 +250,13 @@ class ProcessTypeApi extends ObatalaAPI {
     }
 
     public function upload($request) {
+        if ( ! isset( $_SERVER['HTTP_X_WP_NONCE'] ) 
+            || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_WP_NONCE'] ) ), 'wp_rest' ) ) {
+            return new WP_REST_Response( [
+                'error' => 'Nonce inválido ou ausente',
+            ], 403 );
+        }
+
         $process_id = $request['id'];
         $node_id = sanitize_text_field($request['node_id']);
         
