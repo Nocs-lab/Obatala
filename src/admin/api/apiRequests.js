@@ -14,6 +14,30 @@ export const fetchProcessModels = () => {
     });
 };
 
+export const fetchFieldsProcessModels = (id) => {
+    return apiFetch({
+        path: `/obatala/v1/process_type/${id}/fields`,
+    }).then((data) => {
+        return data;
+    });
+};
+
+export const fetchCollectionsTainacan = () => {
+    return apiFetch({
+        path: `/obatala/v1/exporter/all_collections_tainacan`,
+    }).then((data) => {
+        return data;
+    });
+};
+
+export const fetchMetadataCollectionsTainacan = (id) => {
+    return apiFetch({
+        path: `/obatala/v1/exporter/get_metadata_collection/${id}`,
+    }).then((data) => {
+        return data;
+    });
+};
+
 // Função para desserializar
 const maybeUnserialize = (data) => {
     try {

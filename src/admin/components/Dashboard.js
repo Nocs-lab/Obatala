@@ -258,7 +258,7 @@ const DashboardPage = () => {
                             lastUpdate: details.lastUpdate,
                             currentStage: details.currentStage,
                             currentStageId: details.currentStageId,
-                            link: `/wp-admin/admin.php?page=process-viewer&process_id=${process.id}`,
+                            link: obatalaApp.admin_url + `admin.php?page=process-viewer&process_id=${process.id}`,
                         };
                     });
 
@@ -481,15 +481,15 @@ const DashboardPage = () => {
                     </div>
                     <div class="dashboard-item-stats">
                         <div className="card-container">
-                            <a href="/wp-admin/admin.php?page=process-manager" className="card-item">
+                            <a href={obatalaApp.admin_url +"admin.php?page=process-manager"} className="card-item">
                                 <span className="indicator">{processes.length}</span>
                                 <span className="description"><Icon icon="admin-page" /> Processes</span>
                             </a>
-                            <a href="/wp-admin/admin.php?page=process-type-manager" className="card-item">
+                            <a href={obatalaApp.admin_url +"admin.php?page=process-type-manager"} className="card-item">
                                 <span className="indicator">{processTypes.length}</span>
                                 <span className="description"><Icon icon="welcome-widgets-menus" /> Models</span>
                             </a>
-                            <a href="/wp-admin/admin.php?page=sector_manager" className="card-item">
+                            <a href={obatalaApp.admin_url +"admin.php?page=sector_manager"} className="card-item">
                                 <span className="indicator">{sectors.length}</span>
                                 <span className="description"><Icon icon="groups" /> Groups</span>
                             </a>

@@ -25,26 +25,27 @@ const BrandHeader = () => {
                         <small>{wpSiteName && `${wpSiteName}`}</small>
                     </h1>
                 </a>
-                <a href="/wp-admin/admin.php?page=obatala-main" className="menu-link"><Icon icon="admin-home" /> Dashboard</a>
-                <a href="/wp-admin/admin.php?page=process-manager" className="menu-link"><Icon icon="admin-page" /> Processes</a>
-                <a href="/wp-admin/admin.php?page=process-type-manager" className="menu-link"><Icon icon="welcome-widgets-menus" /> Models</a>
+                <a href={obatalaApp.admin_url + "admin.php?page=obatala-main"} className="menu-link"><Icon icon="admin-home" /> Dashboard</a>
+                <a href={obatalaApp.admin_url +"admin.php?page=process-manager"} className="menu-link"><Icon icon="admin-page" /> Processes</a>
+                <a href={obatalaApp.admin_url +"admin.php?page=process-type-manager"} className="menu-link"><Icon icon="welcome-widgets-menus" /> Models</a>
+                <a href={obatalaApp.admin_url +"admin.php?page=mappers"} className="menu-link"><Icon icon="welcome-widgets-menus" /> Mappers</a>
 
-                <a href="/wp-admin/admin.php?page=tainacan_admin#/home" className="menu-tainacan menu-link ms-auto">Tainacan</a>
+                <a href={obatalaApp.admin_url +"admin.php?page=tainacan_admin#/home"} className="menu-tainacan menu-link ms-auto">Tainacan</a>
                 <DropdownMenu
                     icon="admin-generic"
                     label="Settings"
                     controls={ [
                         {
                             title: 'Groups',
-                            onClick: () => window.location.href = '/wp-admin/admin.php?page=sector_manager',
+                            onClick: () => window.location.href = obatalaApp.admin_url +'admin.php?page=sector_manager',
                         },
                         {
                             title: 'Users',
-                            onClick: () => window.location.href = '/wp-admin/users.php',
+                            onClick: () => window.location.href = obatalaApp.admin_url +'users.php',
                         },
                     ] }
                 />   
-                <a href="/wp-admin/" className="menu-link menu-icon" title="Wordpress"><Icon icon="wordpress-alt" /><span className="text">Wordpress</span></a>
+                <a href={obatalaApp.admin_url}  className="menu-link menu-icon" title="Wordpress"><Icon icon="wordpress-alt" /><span className="text">Wordpress</span></a>
             </nav>
         </header>
     );

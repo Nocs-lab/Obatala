@@ -76,7 +76,16 @@ class AdminMenu {
                 'slug' => 'sector-details',
                 'callback' => 'render_page',
                 'show_in_menu' => true
-            ] 
+            ], 
+            [
+                'parent_slug' => 'obatala-main',
+                'title' => 'Mappers',
+                'menu_title' => 'Mappers',
+                'capability' => 'read',
+                'slug' => 'mappers',
+                'callback' => 'render_mappers_page',
+                'show_in_menu' => true
+            ]  
         ]
     ];
 
@@ -124,6 +133,15 @@ class AdminMenu {
     public static function render_main_page() {
         echo '<div id="dashboard"></div>';
     }
+
+    public static function render_mappers_page() {
+        echo '<div id="mappers"></div>';
+        echo '<script>console.log("div mappers encontrada:", document.getElementById("mappers"));</script>';
+    }
+
+    /**
+     * Renderiza a página de administração correta com base no slug da página atual.
+     */
 
     public static function render_page() {
         $screen = get_current_screen();

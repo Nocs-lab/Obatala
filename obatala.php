@@ -10,7 +10,8 @@ require_once __DIR__ . '/vendor/autoload.php';
 	Version: 1.6.12
 	Author: NOCs
 	License: GPLv2 or later
-	Text Domain: Obatala
+	Text Domain: obatala
+  Requires Plugins: tainacan
 */
 
 // Prevent direct access to the file
@@ -100,6 +101,9 @@ class Nocs_ObatalaPlugin
 
 		$sector_api = new \Obatala\Api\SectorApi();
 		$sector_api->register();
+
+        $exporter_api = new \Obatala\Api\ExporterApi();
+		$exporter_api->register();
 	}
 
 
