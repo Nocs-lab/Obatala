@@ -4,7 +4,7 @@ import Select from 'react-select';
 import { fetchMetadataCollectionsTainacan, fetchProcessModels, fetchFieldsProcessModels, fetchCollectionsTainacan } from '../../api/apiRequests';
 
 
-const TainacanMapper = () => {
+const TainacanMapper = ({ onSaveSuccess }) => {
     const [processModelObatala, setProcessModelObatala] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedProcessModel, setSelectedProcessModel] = useState(0);
@@ -39,7 +39,7 @@ const TainacanMapper = () => {
             .then(data => {
                 const sortedProcessTypes = data.sort((a, b) => a.title.rendered.localeCompare(b.title.rendered));
                 setProcessModelObatala(sortedProcessTypes);
-                console.log(sortedProcessTypes);
+                //console.log(sortedProcessTypes);
                 setIsLoading(false);
             })
             .catch(error => {
@@ -52,7 +52,7 @@ const TainacanMapper = () => {
         fetchCollectionsTainacan()
             .then(data => {
                 setCollectionsTainacan(data);
-                console.log(data);
+                //console.log(data);
                 setIsLoading(false);
             })
             .catch(error => {
@@ -67,7 +67,7 @@ const TainacanMapper = () => {
 
         fetchFieldsProcessModels(selectedId)
             .then((data) => {
-                console.log("Campos retornados:", data);
+                //console.log("Campos retornados:", data);
 
                 const stepOptions = data.map(field => ({
                     value: field.id,
@@ -87,12 +87,12 @@ const TainacanMapper = () => {
 
         fetchMetadataCollectionsTainacan(selectedId)
             .then((data) => {
-                console.log("Metadados retornados:", data);
+                //console.log("Metadados retornados:", data);
 
                 setMetadaTainacan(data);
             })
             .catch((error) => {
-                console.error("Erro ao buscar metadados:", error);
+               // console.error("Erro ao buscar metadados:", error);
             });
     };
 
@@ -110,6 +110,41 @@ const TainacanMapper = () => {
     const isMetadataSelected = (id, currentIndex) => {
         return selectRows.some((row, i) => i !== currentIndex && row.tainacanMetadata === id);
     };
+
+    const getMappingData = () => {
+        const mappedData = {
+            process_model_id: selectedProcessModel,
+            collection_id: selectedCollection,
+            mappings: selectRows.map((row, index) => ({
+                step_index: index,
+                obatala_field_id: row.obatalaFieldMetadata,
+                tainacan_metadata_id: row.tainacanMetadata,
+            }))
+        };
+
+        apiFetch({
+            path: '/obatala/v1/exporter/save_mapping_data',
+            method: 'POST',
+            data: mappedData,
+        }).then((response) => {
+            if (response.success) {
+                alert('Mapeamento salvo com sucesso!');
+                if (onSaveSuccess) onSaveSuccess();
+                setShowMapper(false); // volta para a tela anterior (listagem)
+                // Se precisar resetar estados, pode fazer aqui também
+                setSelectedProcessModel(0);
+                setSelectedCollection(0);
+                setSelectedSteps([]);
+                setSelectRows([{ tainacanMetadata: '', obatalaFieldMetadata: '' }]);
+            } else {
+                alert('Falha ao salvar: ' + (response.message || 'Erro desconhecido.'));
+            }
+        }).catch((error) => {
+            alert('Erro ao enviar mapeamento: ' + error.message);
+        });
+    };
+
+
 
     const formStyle = {
         display: 'flex',
@@ -325,10 +360,7 @@ const TainacanMapper = () => {
                         <button
                             type="button"
                             style={greenButtonStyle}
-                            onClick={() => {
-                                // Aqui você pode processar os mapeamentos entre os campos
-                                console.log('Mapeamentos salvos:', selectRows);
-                            }}
+                            onClick={getMappingData}
                         >
                             Salvar
                         </button>

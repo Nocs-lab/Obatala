@@ -32,6 +32,13 @@ class ExporterApi extends ObatalaAPI {
             'callback' => [$this, 'get_items_collection'],
             'permission_callback' => '__return_true',
         ]);
+
+        $this->add_route('exporter/save_mapping_data', [
+            'methods'  => 'POST',
+            'callback' => [$this, 'save_mapping_data'],
+            'permission_callback' => '__return_true', 
+        ]);
+
     }
 
     public function get_all_collections() {
@@ -88,4 +95,54 @@ class ExporterApi extends ObatalaAPI {
 
         return $this->export_xlsx($metadados, $selected_metadata_json, $mapper_type);
     }
+
+    public function save_mapping_data($request) {
+        $params = $request->get_json_params();
+
+        $process_model_id = $params['process_model_id'] ?? null;
+        $collection_id    = $params['collection_id'] ?? null;
+        $mappings         = $params['mappings'] ?? [];
+
+        if (!is_numeric($collection_id) || (int) $collection_id === 0) {
+            return new \WP_REST_Response([
+                'success' => false,
+                'message' => 'ID da coleção inválido.',
+            ], 400);
+        }
+
+        if (!$process_model_id || empty($mappings)) {
+            return new \WP_REST_Response([
+                'success' => false,
+                'message' => 'Dados incompletos.',
+            ], 400);
+        }
+
+        if (!get_post($collection_id)) {
+            return new \WP_REST_Response([
+                'success' => false,
+                'message' => 'Post (coleção) não encontrado.',
+            ], 404);
+        }
+
+        $data_to_save = [
+            'process_model_id' => (int) $process_model_id,
+            'mappings' => $mappings,
+        ];
+
+        $saved = update_post_meta((int) $process_model_id, '_obatala_mapping_data', wp_json_encode($data_to_save));
+
+        if ($saved === false) {
+            return new \WP_REST_Response([
+                'success' => false,
+                'message' => 'Erro ao salvar no banco de dados.',
+            ], 500);
+        }
+
+        return new \WP_REST_Response([
+            'success' => true,
+            'message' => 'Mapeamento salvo com sucesso.',
+            'saved_data' => $data_to_save,
+        ], 200);
+    }
+
 }

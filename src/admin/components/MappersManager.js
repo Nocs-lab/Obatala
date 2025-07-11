@@ -14,6 +14,12 @@ const MappersManager = () => {
         setShowForm(false);
     };
 
+    // Função que será passada para o TainacanExporter para avisar do sucesso
+    const handleSaveSuccess = () => {
+        setShowForm(false); // volta para a lista
+        // Se quiser, pode adicionar um alert ou atualizar listagem aqui
+    };
+
     return (
         <>
             <BrandHeader />
@@ -70,7 +76,8 @@ const MappersManager = () => {
                                 ← Voltar para lista
                             </button>
                         </div>
-                        <TainacanExporter />
+                        {/* Passa onSaveSuccess para o TainacanExporter */}
+                        <TainacanExporter onSaveSuccess={handleSaveSuccess} />
                     </>
                 )}
             </main>
