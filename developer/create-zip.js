@@ -31,6 +31,7 @@ function createZip() {
   archive.directory('languages/', 'languages');
   archive.directory('vendor/', 'vendor');
   archive.file('obatala.php', { name: 'obatala.php' });
+  archive.file('readme.txt', { name: 'readme.txt' });
 
   archive.finalize();
 }
