@@ -1,13 +1,12 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { Button, 
         ButtonGroup, 
-        Icon, 
         Tooltip,
         Notice, 
         Spinner,
         __experimentalConfirmDialog as ConfirmDialog  
     } from '@wordpress/components';
-import {trash} from '@wordpress/icons';
+import { trash } from '@wordpress/icons';
 import { assignUserToSector, deleteSectorUser, fetchUsers, fetchUsersBySector } from '../../../api/apiRequests';
 import UserSelect from './UserSelect';
 import Reducer, { initialState } from '../../../redux/reducer';
@@ -132,35 +131,38 @@ const UserManager = ({sector,loadSectorsUsers}) => {
             </ConfirmDialog>
 
             {sectorUsers.length > 0 ? (
-                <table className="wp-list-table widefat fixed striped mt-1">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>User Name</th>
-                            <th>Email</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {sectorUsers.map(user => (
-                            <tr key={user.ID}>
-                                <td>{user.display_name}</td>
-                                <td>{user.username}</td>
-                                <td>{user.email}</td>
-                                <td>
-                                    <ButtonGroup>
-                                        <Tooltip text="Remove user from sector">
-                                            <Button
-                                                icon={<Icon icon={trash} />}
-                                                onClick={() => handleConfirmDelete(user)}
-                                            />
-                                        </Tooltip>
-                                    </ButtonGroup>
-                                </td>
+                <div className="table-responsive">
+                    <table className="wp-list-table widefat striped mt-1">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>User Name</th>
+                                <th>Email</th>
+                                <th>Actions</th>
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            {sectorUsers.map(user => (
+                                <tr key={user.ID}>
+                                    <td>{user.display_name}</td>
+                                    <td>{user.username}</td>
+                                    <td>{user.email}</td>
+                                    <td>
+                                        <ButtonGroup>
+                                            <Tooltip text="Remove user from sector">
+                                                <Button
+                                                    isDestructive
+                                                    icon={trash}
+                                                    onClick={() => handleConfirmDelete(user)}
+                                                />
+                                            </Tooltip>
+                                        </ButtonGroup>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
             ) : (
                 <Notice isDismissible={false} status="warning">No existing users for this group.</Notice>
             )}

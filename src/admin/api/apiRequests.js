@@ -2,7 +2,7 @@ import apiFetch from "@wordpress/api-fetch";
 
 export const fetchProcessModels = () => {
     return apiFetch({
-      path: `/obatala/v1/process_type?per_page=100&_embed`,
+        path: `/obatala/v1/process_type?per_page=100&_embed`,
     }).then((data) => {
         return data.map((item) => {
             return {
@@ -11,6 +11,30 @@ export const fetchProcessModels = () => {
                 step_order: item.meta.step_order,
             };
         });
+    });
+};
+
+export const fetchFieldsProcessModels = (id) => {
+    return apiFetch({
+        path: `/obatala/v1/process_type/${id}/fields`,
+    }).then((data) => {
+        return data;
+    });
+};
+
+export const fetchCollectionsTainacan = () => {
+    return apiFetch({
+        path: `/obatala/v1/exporter/all_collections_tainacan`,
+    }).then((data) => {
+        return data;
+    });
+};
+
+export const fetchMetadataCollectionsTainacan = (id) => {
+    return apiFetch({
+        path: `/obatala/v1/exporter/get_metadata_collection/${id}`,
+    }).then((data) => {
+        return data;
     });
 };
 
@@ -25,8 +49,8 @@ const maybeUnserialize = (data) => {
 
 export const saveProcessType = (processType, editingProcessType) => {
     const path = editingProcessType
-      ? `/obatala/v1/process_type/${editingProcessType.id}`
-      : `/obatala/v1/process_type`;
+        ? `/obatala/v1/process_type/${editingProcessType.id}`
+        : `/obatala/v1/process_type`;
     const method = editingProcessType ? "PUT" : "POST";
     return apiFetch({ path, method, data: processType });
 };
@@ -39,7 +63,7 @@ export const updateProcessTypeMeta = (id, meta) => {
     });
 };
 export const fetchProcessTypeById = (id) => {
-    return apiFetch({path: `/obatala/v1/process_type/${id}`})
+    return apiFetch({ path: `/obatala/v1/process_type/${id}` })
 }
 export const deleteProcessType = (id) => {
     return apiFetch({ path: `/obatala/v1/process_type/${id}`, method: "DELETE" });
@@ -50,7 +74,7 @@ export const fetchProcesses = () => {
 };
 
 export const fetchProcessById = (id) => {
-    return apiFetch({path: `/obatala/v1/process_obatala/${id}`})
+    return apiFetch({ path: `/obatala/v1/process_obatala/${id}` })
 }
 
 export const fetchUserProcesses = (currentUserId) => {
@@ -58,12 +82,12 @@ export const fetchUserProcesses = (currentUserId) => {
 }
 
 export const fetchSectors = () => {
-    return apiFetch({ path: `/obatala/v1/all_sector_obatala` });   
-}; 
+    return apiFetch({ path: `/obatala/v1/all_sector_obatala` });
+};
 
 export const fetchSectorsUsers = () => {
-    return apiFetch({ path: `/obatala/v1/sector_obatala/sectors_with_users` });   
-}; 
+    return apiFetch({ path: `/obatala/v1/sector_obatala/sectors_with_users` });
+};
 
 export const saveSector = async (sector, editingSector) => {
     const path = editingSector ? `/obatala/v1/update_sector_obatala/${editingSector.id}` : `/obatala/v1/create_sector_obatala`;
@@ -76,17 +100,17 @@ export const deleteSector = (id) => {
 };
 
 export const fetchUsers = () => {
-    return apiFetch({ path: `/obatala/v1/sector_obatala/users_obatala` });   
+    return apiFetch({ path: `/obatala/v1/sector_obatala/users_obatala` });
 };
 
 export const fetchUsersBySector = (id) => {
-    return apiFetch({ path: `/obatala/v1/sector_obatala/${id}/users` });   
+    return apiFetch({ path: `/obatala/v1/sector_obatala/${id}/users` });
 };
 
 export const assignUserToSector = (data) => {
     const path = `/obatala/v1/associate_user_to_sector`;
     const method = 'POST';
-    return apiFetch({ path: path, method, data: data });   
+    return apiFetch({ path: path, method, data: data });
 };
 
 export const deleteSectorUser = (sectorId, data) => {
@@ -98,17 +122,21 @@ export const fetchNodePermission = (processId, currentUserId) => {
 }
 
 export const addComment = (processId, data) => {
-    const path =  `/obatala/v1/process_obatala/${processId}/comment`;
+    const path = `/obatala/v1/process_obatala/${processId}/comment`;
     const method = 'POST';
-    return apiFetch({path:path,method, data:data})
+    return apiFetch({ path: path, method, data: data })
 }
 
 export const fetchProcessComments = (processId, user_id) => {
-    return apiFetch({path:`/obatala/v1/process_obatala/${processId}/comments?user_id=${user_id}`})
+    return apiFetch({ path: `/obatala/v1/process_obatala/${processId}/comments?user_id=${user_id}` })
+}
+export const fetchProcess = (processId) => {
+    return apiFetch({ path: `/obatala/v1/process_obatala/${processId}` })
 }
 
+
 export const deleteComment = (commentId, user_id) => {
-    return apiFetch({path:`/obatala/v1/process_obatala/comment/${commentId}?user_id=${user_id}`, method: 'DELETE'})
+    return apiFetch({ path: `/obatala/v1/process_obatala/comment/${commentId}?user_id=${user_id}`, method: 'DELETE' })
 }
 
 export const updateComment = (commentId, meta) => {

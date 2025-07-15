@@ -22,6 +22,7 @@ import MetaFieldDisplay from "./ProcessManager/MetaFieldDisplay";
 import ProcessHeader from './ProcessManager/ProcessHeader';
 import HistoryViewer from './ProcessManager/HistoryViewer';
 import BrandHeader from './BrandHeader';
+import BrandFooter from './BrandFooter';
 
 const ProcessViewer = () => {
     const [process, setProcess] = useState(null);
@@ -42,6 +43,8 @@ const ProcessViewer = () => {
     const [uploadedFiles, setUploadedFiles] = useState({});
     const [fileInfo, setFileInfo] = useState({});
     const [notice, setNotice] = useState(null);
+    const [progress, setProgress] = useState(0);
+    const [hasComments, setHasComments] = useState(false);
     // Função para controlar o estado de expansão do accordion
     const [activeIndex, setActiveIndex] = useState(null);
 
@@ -65,18 +68,37 @@ const ProcessViewer = () => {
     const processId = getProcessIdFromUrl();
 
     useEffect(() => {
-        if (flowNodes && flowNodes.nodes && flowNodes.edges) {
-            const steps = getOrderedSteps();
-            if (steps.length > 0) {
-                setOrderedSteps(steps);
+        if (!processId) return;
 
-                const processId = getProcessIdFromUrl();
-                if (processId) {
-                    fetchMetaData(processId, steps);
-                }
+        const initializeNodeData = async () => {
+            try {
+                setIsLoading(true);
+
+                await apiFetch({
+                    path: `/obatala/v1/process_obatala/${processId}/node`,
+                    method: 'PUT',
+                });
+
+                await fetchUpdatedProcessNodes();
+                //await fetchMetaData(processId, orderedSteps);
+
+            } catch (err) {
+                setError(err.message || 'Erro ao buscar dados do node');
+            } finally {
+                setIsLoading(false);
             }
+        };
+
+        initializeNodeData();
+
+    }, [processId]);
+
+    useEffect(() => {
+        if (processId && orderedSteps.length > 0) {
+
+            fetchMetaData(processId, orderedSteps);
         }
-    }, [flowNodes]);
+    }, [orderedSteps]);
 
     useEffect(() => {
         if (!currentUser) {
@@ -110,7 +132,6 @@ const ProcessViewer = () => {
                 });
             fetchNodePermission(processId, currentUser.id)
                 .then((result) => {
-                    setFlowNodes(result.data);
                     setHasPermission(result.status);
                     setSectorUser(result.data_sector)
                 })
@@ -124,18 +145,20 @@ const ProcessViewer = () => {
         setIsLoading(false);
     }, [currentUser]);
 
-    const calculatePercentagem = () => {
-        // Filtra os nodes que não devem ser contados
-        const validNodes = flowNodes?.nodes?.filter(node => 
-            node.id !== "Start" && 
-            node.id !== "End" && 
-            !node.id.startsWith("Condicional")
-        ) || [];
-        
-        // Calcula a porcentagem baseada apenas nos nodes válidos
-        const result = (Object.keys(submittedSteps).length / validNodes.length) * 100;
-        return validNodes.length > 0 ? result.toFixed(2) : "0.00";
-    }
+    const fetchUpdatedProcessNodes = async () => {
+        try {
+            const response = await apiFetch({
+                path: `/obatala/v1/process_obatala/${processId}/node`,
+                method: 'GET',
+            });
+
+            setOrderedSteps(response.ordered_nodes); // <- pega apenas os nós ordenados
+            setProgress(response.progress)
+
+        } catch (error) {
+            console.error('Erro ao buscar etapas atualizadas:', error);
+        }
+    };
 
     const loadSectors = () => {
         fetchSectors()
@@ -165,6 +188,7 @@ const ProcessViewer = () => {
             const metaData = await apiFetch({ path: `/obatala/v1/process_obatala/${processId}/meta` });
 
             const submittedState = metaData.submittedStages || {};
+
             const updatedSubmittedSteps = steps.reduce((acc, step, index) => {
                 if (submittedState[step.id]) {
                     acc[index] = true;
@@ -252,43 +276,43 @@ const ProcessViewer = () => {
         setIsSubmitEnabled(formValues);
     };
 
-    const getOrderedSteps = useCallback(() => {
-        if (flowNodes && flowNodes.nodes) {
-            const { edges, nodes } = flowNodes;
-            const filteredNodes = nodes.filter(node => node.id !== "Start" && node.id !== "End" && !node.id.startsWith("Condicional"));
-            const nodeMap = new Map(nodes.map(node => [node.id, node]));
-            const sources = new Set(edges.map(edge => edge.source));
-            const targets = new Set(edges.map(edge => edge.target));
+    // const getOrderedSteps = useCallback(() => {
+    //     if (flowNodes && flowNodes.nodes) {
+    //         const { edges, nodes } = flowNodes;
+    //         const filteredNodes = nodes.filter(node => node.id !== "Start" && node.id !== "End" && !node.id.startsWith("Condicional"));
+    //         const nodeMap = new Map(nodes.map(node => [node.id, node]));
+    //         const sources = new Set(edges.map(edge => edge.source));
+    //         const targets = new Set(edges.map(edge => edge.target));
 
-            const initialStep = filteredNodes.filter(node => sources.has(node.id) && !targets.has(node.id));
+    //         const initialStep = filteredNodes.filter(node => sources.has(node.id) && !targets.has(node.id));
 
-            const orderedSteps = [];
-            const visited = new Set();
+    //         const orderedSteps = [];
+    //         const visited = new Set();
 
-            const visit = (nodeId) => {
-                if (visited.has(nodeId)) return;
-                visited.add(nodeId);
-                const node = nodeMap.get(nodeId);
-                if (node) {
-                    orderedSteps.push(node);
-                    edges
-                        .filter(edge => edge.source === nodeId)
-                        .forEach(edge => visit(edge.target));
-                }
-            };
+    //         const visit = (nodeId) => {
+    //             if (visited.has(nodeId)) return;
+    //             visited.add(nodeId);
+    //             const node = nodeMap.get(nodeId);
+    //             if (node) {
+    //                 orderedSteps.push(node);
+    //                 edges
+    //                     .filter(edge => edge.source === nodeId)
+    //                     .forEach(edge => visit(edge.target));
+    //             }
+    //         };
 
-            initialStep.forEach(node => visit(node.id));
+    //         initialStep.forEach(node => visit(node.id));
 
-            filteredNodes.forEach(node => {
-                if (!visited.has(node.id)) {
-                    orderedSteps.push(node);
-                }
-            });
+    //         filteredNodes.forEach(node => {
+    //             if (!visited.has(node.id)) {
+    //                 orderedSteps.push(node);
+    //             }
+    //         });
 
-            return orderedSteps;
-        }
-        return [];
-    }, [flowNodes]);
+    //         return orderedSteps;
+    //     }
+    //     return [];
+    // }, [flowNodes]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -321,6 +345,9 @@ const ProcessViewer = () => {
                     const response = await apiFetch({
                         path: `/obatala/v1/process_type/upload`,
                         method: "POST",
+                        headers: {
+                            'X-WP-Nonce': ObatalaApi.nonce,
+                        },
                         body: formData,
                     });
                     setFormValues(prev => ({
@@ -384,6 +411,16 @@ const ProcessViewer = () => {
                 ...prev,
                 [stepId]: [new Date(), currentUser.name],
             }));
+
+            // 
+            await apiFetch({
+                path: `/obatala/v1/process_obatala/${process.id}/node`,
+                method: `PUT`,
+                data: {
+                    node_id: stepId
+                }
+            })
+            await fetchUpdatedProcessNodes();
 
         } catch (error) {
             console.error('Erro ao salvar metadados:', error);
@@ -467,13 +504,13 @@ const ProcessViewer = () => {
     }));
 
     const lastUpdateStage = (stepIndex) => {
-        const stepValue = options[stepIndex]?.value; 
+        const stepValue = options[stepIndex]?.value;
         const currentStepData = currentStageData[stepValue];
         const user = currentStepData ? currentStepData[1] : 'Desconhecido';
-        const dateFormat = currentStepData && currentStepData[0] 
-            ? format(currentStepData[0], "dd 'de' MMMM 'de' yyyy", { locale: ptBR }) 
+        const dateFormat = currentStepData && currentStepData[0]
+            ? format(currentStepData[0], "dd 'de' MMMM 'de' yyyy", { locale: ptBR })
             : 'Data não disponível';
-    
+
         return { user, dateFormat };
     };
 
@@ -500,7 +537,8 @@ const ProcessViewer = () => {
                         process={process}
                         filteredProcessType={filteredProcessType}
                         authorsById={authorsById}
-                        calculatePercentagem={calculatePercentagem}
+                        progress={progress}
+                        isComplete={progress && progress === 100}
                         options={options}
                         currentStageData={currentStageData}
                         sectors={sectors}
@@ -511,8 +549,8 @@ const ProcessViewer = () => {
                             process={process}
                             filteredProcessType={filteredProcessType}
                             authorsById={authorsById}
-                            calculatePercentagem={calculatePercentagem}
-                            isComplete={parseFloat(calculatePercentagem()) === 100} // Adicionado para controle do badge
+                            isComplete={progress && progress === 100} // Adicionado para controle do badge
+                            progress={progress}
                         />
                         {notice && (
                             <Notice
@@ -533,17 +571,17 @@ const ProcessViewer = () => {
                                 {options.map((step, index) => {
                                     const isCompleted = Object.keys(currentStageData).includes(options[index]?.value);
                                     const isUserAllowed = isUserInSector(options[index].sector_stage);
-                                    const isAccessRestricted = !(process.meta?.access_level?.[0] === 'Not restricted' || 
+                                    const isAccessRestricted = !(process.meta?.access_level?.[0] === 'Not restricted' ||
                                         process.meta?.access_level?.[0] === 'not restricted');
-                                        const isDisabled = isAccessRestricted
+                                    const isDisabled = isAccessRestricted
                                         ? !isUserAllowed
                                         : (!isCompleted && !isUserAllowed);
                                     return (
                                         <div key={index} className={`accordion-item ${isDisabled ? 'disabled' : ''}`}>
-                                            <button 
-                                                className="accordion-header" 
-                                                onClick={() => !isDisabled && toggleAccordion(index)} 
-                                                aria-expanded={activeIndex === index} 
+                                            <button
+                                                className="accordion-header"
+                                                onClick={() => !isDisabled && toggleAccordion(index)}
+                                                aria-expanded={activeIndex === index}
                                                 aria-controls={`accordion-content-${index}`}
                                                 disabled={isDisabled}
                                             >
@@ -556,10 +594,10 @@ const ProcessViewer = () => {
                                                         className={`badge ${isCompleted ? 'success' : isDisabled ? 'danger' : 'warning'}`}
                                                         title={isCompleted ? `Concluído por ${lastUpdateStage(index).user}` : ''}
                                                     >
-                                                        {isCompleted 
-                                                            ? `Completed on ${lastUpdateStage(index).dateFormat}` 
-                                                            : isDisabled 
-                                                                ? 'Pending' 
+                                                        {isCompleted
+                                                            ? `Completed on ${lastUpdateStage(index).dateFormat}`
+                                                            : isDisabled
+                                                                ? 'Pending'
                                                                 : 'Pending input'}
                                                     </span>
                                                     {options[index].sector_stage && (
@@ -599,8 +637,8 @@ const ProcessViewer = () => {
                                                                         </div>
                                                                         {!submittedSteps[currentStep] && (
                                                                             <div className="action-bar">
-                                                                                <Button 
-                                                                                    variant="primary" 
+                                                                                <Button
+                                                                                    variant="primary"
                                                                                     type="submit"
                                                                                     disabled={!isSubmitEnabled || submittedSteps[currentStep] || !isUserAllowed}
                                                                                 >
@@ -642,10 +680,12 @@ const ProcessViewer = () => {
                                 })}
                             </div>
                             <aside>
-                                <Panel>
-                                    <PanelHeader>Comments</PanelHeader>
-                                    <CommentForm processId={processId || null} />
-                                </Panel>
+                                {progress === 100 && !hasComments ? (null) : (
+                                    <Panel>
+                                        <PanelHeader>Comments</PanelHeader>
+                                        <CommentForm processId={processId || null} setHasComments={setHasComments} />
+                                    </Panel>
+                                )}
                                 <Panel>
                                     <PanelHeader>History</PanelHeader>
                                     <PanelRow>
@@ -663,6 +703,7 @@ const ProcessViewer = () => {
                     </>
                 )}
             </main>
+            <BrandFooter />
         </>
     );
 }

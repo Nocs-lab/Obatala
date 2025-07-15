@@ -5,12 +5,15 @@ namespace Obatala;
 require_once __DIR__ . '/vendor/autoload.php';
 
 /*
-	Plugin Name: Obatala - Plugin de Gestão de Processos Curatoriais para WordPress
+	Plugin Name: Obatala - Gestão de Processos Curatoriais
 	Description: Adiciona funcionalidades de gestão de processos curatoriais para o plugin Tainacan
-	Version: 1.6.6
+
+	Version: 1.6.13
+
 	Author: NOCs
 	License: GPLv2 or later
 	Text Domain: obatala
+  Requires Plugins: tainacan
 */
 
 // Prevent direct access to the file
@@ -23,7 +26,8 @@ define('OBATALA_PLUGIN_URL', plugin_dir_url(__FILE__));
 /**
  * Main class for the Obatala Plugin
  */
-class Nocs_ObatalaPlugin {
+class Nocs_ObatalaPlugin
+{
 	/**
 	 * Singleton instance
 	 */
@@ -32,7 +36,8 @@ class Nocs_ObatalaPlugin {
 	/**
 	 * Returns the singleton instance of the class.
 	 */
-	public static function get_instance() {
+	public static function get_instance()
+	{
 		if (self::$instance === null) {
 			self::$instance = new self();
 		}
@@ -40,24 +45,28 @@ class Nocs_ObatalaPlugin {
 	}
 
 	// Prevents cloning of the plugin instance
-	public function __clone() {
+	public function __clone()
+	{
 	}
 
 	// Prevents unserializing of the plugin instance
-	public function __wakeup() {
+	public function __wakeup()
+	{
 	}
 
 	/**
 	 * Constructor.
 	 */
-	private function __construct() {
+	private function __construct()
+	{
 		add_action('plugins_loaded', array($this, 'initialize'));
 	}
 
 	/**
 	 * Initialize the plugin after plugins are loaded.
 	 */
-	public function initialize() {
+	public function initialize()
+	{
 		// Load plugin text domain
 		load_plugin_textdomain('obatala', false, plugin_basename(dirname(__FILE__)) . '/languages');
 
@@ -81,7 +90,8 @@ class Nocs_ObatalaPlugin {
 	/**
 	 * Register API endpoints
 	 */
-	private function register_api_endpoints() {
+	private function register_api_endpoints()
+	{
 		$custom_post_type_api = new \Obatala\Api\CustomPostTypeApi();
 		$custom_post_type_api->register();
 
@@ -93,6 +103,9 @@ class Nocs_ObatalaPlugin {
 
 		$sector_api = new \Obatala\Api\SectorApi();
 		$sector_api->register();
+
+        $exporter_api = new \Obatala\Api\ExporterApi();
+		$exporter_api->register();
 	}
 
 
@@ -100,12 +113,13 @@ class Nocs_ObatalaPlugin {
 	/**
 	 * Install the plugin
 	 */
-	public function install() {
+	public function install()
+	{
 		// Check if Tainacan plugin is active, if not, deactivate this plugin
 		if (!in_array('tainacan/tainacan.php', apply_filters('active_plugins', get_option('active_plugins')))) {
 			deactivate_plugins(plugin_basename(__FILE__));
 			wp_die(
-				__('Obatala requires the Tainacan plugin to be installed and activated.', 'obatala')
+				esc_html( __('Obatala requires the Tainacan plugin to be installed and activated.', 'Obatala') )
 			);
 		}
 	}

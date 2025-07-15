@@ -3,7 +3,7 @@ import { Icon } from '@wordpress/components';
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
 
-const ProcessHeader = ({ process, filteredProcessType, authorsById, calculatePercentagem, isComplete }) => {
+const ProcessHeader = ({ process, filteredProcessType, authorsById, isComplete, progress }) => {
     const createAtProcess = () => {
         const formatDate = format(process?.date, "dd 'de' MMMM 'de' yyyy", {
             locale: ptBR
@@ -25,18 +25,18 @@ const ProcessHeader = ({ process, filteredProcessType, authorsById, calculatePer
             </div>
             <div className="badge-container">
                 <span
-                    className={`badge ${
-                        process.meta.access_level == "not restricted" ||
+                    className={`badge ${process.meta.access_level == "not restricted" ||
                         process.meta.access_level == "Not restricted"
-                            ? "success"
-                            : "warning"
-                    }`}
+                        ? "success"
+                        : "warning"
+                        }`}
                 >
                     {process.meta.access_level}
                 </span>
                 <span className={`badge ${isComplete ? 'success' : 'default'}`}>
-                    <Icon icon={isComplete ? "yes" : "update"} /> 
-                    {calculatePercentagem()}% concluído
+                    <Icon icon={isComplete ? "yes" : "update"} />
+                    {progress
+                    }% concluído
                 </span>
                 <span className="badge default">
                     <Icon icon="admin-users" /> Aberto por: {authorsById[process?.author]?.name} em {createAtProcess()}

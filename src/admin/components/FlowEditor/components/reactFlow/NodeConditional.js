@@ -22,6 +22,7 @@ const NodeConditional = ({ id, data }) => {
     const modalRef = useRef(null);
     const containerRef = useRef(null);
     const [hasError, setHasError] = useState(false);
+    const [isInitialized, setIsInitialized] = useState(false);
 
     useEffect(() => {
         const isConnectedInput = edges.some(edge => edge.target === id);
@@ -54,20 +55,44 @@ const NodeConditional = ({ id, data }) => {
     }, []);
 
     useEffect(() => {
-        if (data.condition) {
-            setSelectedField((prev) => prev || data.condition.condition || "");
-            setSelectedFields((prev) =>
-                prev.length
-                    ? prev
-                    : matchedEdgeOutput.map((edge) => ({
-                        id: edge.target,
-                        value:
-                            data.condition.outputNodes?.find((o) => o.nodeId === edge.target)?.conditionValue || "",
-                    }))
-            );
-        }
-    }, [data.condition, matchedEdgeOutput]);
 
+        if (!isInitialized && matchedEdgeOutput.length > 0) {
+
+            if (data.condition) {
+                setSelectedField(data.condition.condition || "");
+                setSelectedFields(
+                    matchedEdgeOutput.map(edge => ({
+                        id: edge.target,
+                        value: data.condition.outputNodes?.find(o => o.nodeId === edge.target)?.conditionValue || ""
+                    }))
+                );
+            } else {
+                setSelectedField("");
+                setSelectedFields(
+                    matchedEdgeOutput.map(edge => ({
+                        id: edge.target,
+                        value: ""
+                    }))
+                );
+            }
+
+            setIsInitialized(true);
+        }
+    }, [data.condition, matchedEdgeOutput, isInitialized]);
+
+    // Resetar a flag de inicialização quando as conexões mudarem completamente
+    const prevEdgesRef = useRef();
+    useEffect(() => {
+        const currentEdgeIds = edges.map(e => e.id).join(',');
+        const prevEdgeIds = prevEdgesRef.current?.join(',');
+
+        if (currentEdgeIds !== prevEdgeIds) {
+            setIsInitialized(false);
+        }
+
+        prevEdgesRef.current = edges.map(e => e.id);
+    }, [edges]);
+    
     // Função para verificar se o valor já foi selecionado
     const isValueSelected = (value) => {
         return selectedFields.some((field) => field.value === value);

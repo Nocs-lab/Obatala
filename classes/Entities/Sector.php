@@ -10,8 +10,6 @@ class Sector {
 
     public static function add_sector($request) {
 
-        error_log('create_sector function called');
-
         $sector_name = sanitize_text_field($request['sector_name']);
         $description = sanitize_text_field($request['sector_description']);
         $status = sanitize_text_field($request['sector_status']); // Novo campo para o status do setor
@@ -99,8 +97,6 @@ class Sector {
 
     public static function get_all_sectors($request) {
 
-        error_log('retorne sector function called');
-
         // Recuperar setores já existentes no formato JSON
         $setores_json = get_option('obatala_setores', '{}'); // Recupera como JSON ou inicializa como um objeto vazio
         $setores = json_decode($setores_json, true);
@@ -110,7 +106,6 @@ class Sector {
 
     public static function update_sector($request) {
 
-        error_log('update_sector function called');
         $sector_id = sanitize_text_field($request['sector_id']);
         $sector_name = sanitize_text_field($request['sector_name']);
         $description = sanitize_text_field($request['sector_description']);
@@ -155,8 +150,6 @@ class Sector {
     }
 
     public static function delete_sector($request) {
-
-        error_log('delete_sector function called');
 
         $sector_id = sanitize_text_field($request['sector_id']);
 

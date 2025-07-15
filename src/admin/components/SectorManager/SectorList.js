@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import apiFetch from "@wordpress/api-fetch";
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
-import { Button, ButtonGroup, Tooltip, Panel, PanelHeader, PanelRow, Notice, Modal, TextControl } from '@wordpress/components';
+import { Button, ButtonGroup, Tooltip, Panel, PanelRow, Notice, Modal, TextControl } from '@wordpress/components';
 import { edit, trash, people, info } from '@wordpress/icons';
 import UsersManager from './UserManager/UserManager';
 import SectorFilter from './SectorFilters';
@@ -78,26 +78,30 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
             accessor: 'id',
             Cell: ({ row }) => (
                 <ButtonGroup>
-                    <Tooltip text="View details">
-                            <Button
-                                icon={info}
-                                onClick={() => handleViewSector(row.original)}
-                            />
-                        </Tooltip>
-                    <Tooltip text="Edit">
-                        <Button
-                            icon={edit}
-                            onClick={() => onEdit(row.original)}
-                        />
-                    </Tooltip>
+                    <Button
+                        variant="primary"
+                        icon={info}
+                        onClick={() => handleViewSector(row.original)}
+                    >
+                        View group
+                    </Button>
                     <Tooltip text="Manage users">
                         <Button
+                            variant="secondary"
                             icon={people}
                             onClick={() => handleManagerUsers(row.original)}
                         >Manage users</Button>
                     </Tooltip>
+                    <Tooltip text="Edit">
+                        <Button
+                            variant="secondary"
+                            icon={edit}
+                            onClick={() => onEdit(row.original)}
+                        />
+                    </Tooltip>
                     <Tooltip text="Delete">
                         <Button
+                            variant="secondary"
                             icon={trash}
                             onClick={() => onDelete(row.original)}
                         />
@@ -152,40 +156,42 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
                 </div>
                 {sectors.length > 0 ? (
                     <>
-                        <table {...getTableProps()} className="wp-list-table widefat fixed striped table-view-list">
-                            <thead>
-                                {headerGroups.map(headerGroup => (
-                                    <tr {...headerGroup.getHeaderGroupProps()}>
-                                        {headerGroup.headers.map(column => (
-                                            <th {...column.getHeaderProps(column.getSortByToggleProps())}>
-                                                {column.render('Header')}
-                                                <span>
-                                                    {column.isSorted
-                                                        ? column.isSortedDesc
-                                                            ? ' 🔽'
-                                                            : ' 🔼'
-                                                        : ''}
-                                                </span>
-                                            </th>
-                                        ))}
-                                    </tr>
-                                ))}
-                            </thead>
-                            <tbody {...getTableBodyProps()}>
-                                {page.map(row => {
-                                    prepareRow(row);
-                                    return (
-                                        <tr {...row.getRowProps()}>
-                                            {row.cells.map(cell => (
-                                                <td {...cell.getCellProps()}>
-                                                    {cell.render('Cell')}
-                                                </td>
+                        <div className="table-responsive">
+                            <table {...getTableProps()} className="wp-list-table widefat striped table-view-list">
+                                <thead>
+                                    {headerGroups.map(headerGroup => (
+                                        <tr {...headerGroup.getHeaderGroupProps()}>
+                                            {headerGroup.headers.map(column => (
+                                                <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                                                    {column.render('Header')}
+                                                    <span>
+                                                        {column.isSorted
+                                                            ? column.isSortedDesc
+                                                                ? ' 🔽'
+                                                                : ' 🔼'
+                                                            : ''}
+                                                    </span>
+                                                </th>
                                             ))}
                                         </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
+                                    ))}
+                                </thead>
+                                <tbody {...getTableBodyProps()}>
+                                    {page.map(row => {
+                                        prepareRow(row);
+                                        return (
+                                            <tr {...row.getRowProps()}>
+                                                {row.cells.map(cell => (
+                                                    <td {...cell.getCellProps()}>
+                                                        {cell.render('Cell')}
+                                                    </td>
+                                                ))}
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
                         <div className="pagination">
                             <Button onClick={() => previousPage()} disabled={!canPreviousPage}>
                                 Previous

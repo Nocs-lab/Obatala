@@ -16,6 +16,7 @@ class Enqueuer {
         'obatala_page_sector_manager' => 'sector_manager',
         'toplevel_page_obatala-main' => 'dashboard',
         'obatala_page_sector-details' => 'sector-details',
+        'obatala_page_mappers' => 'mappers',
     ];
 
     public static function init() {
@@ -36,6 +37,15 @@ class Enqueuer {
             );
             wp_enqueue_script('obatala-admin-scripts');
 
+            // Localiza o nonce para o JS
+            wp_localize_script(
+                'obatala-admin-scripts',
+                'ObatalaApi',
+                [
+                    'nonce' => wp_create_nonce('wp_rest'),
+                ]
+            );
+
             // Enfileirando o estilo principal do plugin
             wp_register_style(
                 'obatala-admin-styles',
@@ -53,6 +63,13 @@ class Enqueuer {
                 $asset_file['version']
             );
             wp_enqueue_style('react-flow-styles');
+
+            wp_localize_script('obatala-admin-scripts', 'obatalaApp', [
+                'admin_url' => admin_url(),
+                'site_url'  => site_url(), 
+                'plugin_url' => OBATALA_PLUGIN_URL, 
+            ]);
+
         }
     }
 }

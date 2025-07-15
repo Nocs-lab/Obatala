@@ -1,24 +1,28 @@
-# Documentação do Plugin
+# 📘 Documentação do Plugin Obatala
 
-## Visão Geral
+## 📌 Visão Geral
 
-O plugin foi desenvolvido para gerenciar funcionalidades administrativas e de interface dentro da plataforma WordPress. Este documento detalha as classes principais que compõem o sistema, como `AdminMenu`, `Enqueuer` e `SettingsPage`, explicando suas responsabilidades e interações.
+O plugin **Obatala** foi desenvolvido para gerenciar funcionalidades administrativas e interfaces dentro da plataforma WordPress. Esta documentação descreve as principais classes do sistema — `AdminMenu`, `Enqueuer` e `SettingsPage` — explicando suas funções e interações.
 
-## Conceitos Envolvidos
+---
 
-### Gerenciamento de Menus Administrativos
+## 📚 Conceitos Envolvidos
 
-A classe `AdminMenu` é responsável por gerenciar a adição de menus no painel administrativo do WordPress. Estes menus permitem que os administradores acessem páginas de configuração e funcionalidades específicas do plugin.
+### 🧭 Gerenciamento de Menus Administrativos
 
-### Enfileiramento de Scripts e Estilos
+A classe `AdminMenu` é responsável por adicionar menus e submenus personalizados ao painel administrativo do WordPress, oferecendo acesso às configurações e funcionalidades do plugin.
 
-A classe `Enqueuer` lida com o enfileiramento de scripts e estilos (JavaScript e CSS) necessários para o funcionamento correto do plugin tanto no front-end quanto no back-end.
+### 🎨 Enfileiramento de Scripts e Estilos
 
-### Páginas de Configuração
+A classe `Enqueuer` é utilizada para carregar os arquivos JavaScript e CSS necessários ao funcionamento do plugin, tanto no painel quanto na interface pública.
 
-A classe `SettingsPage` é responsável por criar e gerenciar as páginas de configuração do plugin dentro do painel administrativo, onde o usuário pode ajustar as opções e salvar suas preferências.
+### ⚙️ Páginas de Configuração
 
-## Diagrama de Classes
+A classe `SettingsPage` permite que administradores personalizem o funcionamento do plugin, fornecendo uma interface gráfica para definição de opções via painel do WordPress.
+
+---
+
+## 🧩 Diagrama de Classes
 
 ```mermaid
 classDiagram
@@ -53,158 +57,133 @@ classDiagram
     SettingsPage --> AdminMenu : renderiza configuração
 ```
 
-## Explicação do Diagrama de Classes
+## 🧠 Explicação do Diagrama
+- AdminMenu: Cria menus e páginas administrativas.
 
-O diagrama de classes acima representa as principais interações entre as classes `AdminMenu`, `Enqueuer` e `SettingsPage`.
+- Enqueuer: Carrega scripts e estilos personalizados.
 
-- **AdminMenu**: Gerencia a adição de menus e submenus no painel administrativo do WordPress.
-- **Enqueuer**: Responsável por carregar os scripts e estilos necessários para a interface do plugin.
-- **SettingsPage**: Cria e gerencia as páginas de configuração no painel administrativo, sendo associada diretamente ao menu gerido pela `AdminMenu`.
+- SettingsPage: Permite ao usuário configurar o plugin.
 
-## Descrição das Classes
+---
 
-### AdminMenu
-Classe responsável por gerenciar os menus administrativos do plugin Obatala no WordPress.
+## 📦 Classes e Responsabilidades
+### 🏛️ AdminMenu
+Classe que registra menus e páginas do plugin.
 
-#### Função
-Gerencia o menu principal e os submenus, criando páginas de administração para o plugin Obatala no WordPress.
+#### 📌 Função
+Define o menu principal “Obatala” e seus submenus com acesso a diferentes funcionalidades do plugin.
 
-#### Responsabilidades
+#### 🔧 Responsabilidades
+- init(): Inicializa o registro de menus e scripts.
 
-- **init()**  
-  Método de inicialização principal que adiciona as ações para registrar as páginas de administração (`add_admin_pages`) e enfileirar scripts (`enqueue_scripts`) no painel do WordPress.
+- add_admin_pages(): Adiciona páginas ao menu do WordPress.
 
-- **add_admin_pages()**  
-  Adiciona a página principal e submenus ao painel administrativo. Utiliza o array `self::$pages` para definir as configurações de cada item de menu.
+- render_main_page(): Exibe a tela principal.
 
-  - **Menu Principal**: Cria o menu principal usando as configurações do array `self::$pages['main']`, incluindo título, permissão, ícone e posição.
-  - **Submenus**: Adiciona submenus ao menu principal com as configurações de `self::$pages['submenus']`, permitindo definir permissões e callbacks específicos.
+- render_page(): Carrega páginas secundárias com base no submenu.
 
-- **render_main_page()**  
-  Exibe a página principal do menu Obatala. Apresenta uma mensagem de boas-vindas e orienta o usuário a selecionar uma opção do submenu.  
-  Inclui um estilo CSS inline para ocultar submenus específicos no menu lateral.
+- enqueue_scripts(): Insere estilos e scripts necessários no painel.
 
-- **render_page()**  
-  Renderiza uma página de administração com base no ID da página atual. Verifica o ID da tela atual e exibe uma div correspondente ao submenu ativo.
-
-- **enqueue_scripts()**  
-  Enfileira os scripts e estilos necessários para o funcionamento do menu de administração. Adiciona um estilo CSS para garantir que o menu principal e submenus estejam sempre visíveis ao serem selecionados.
-
-#### Estrutura do Menu
-
-A estrutura do menu é configurada no atributo `self::$pages` da classe `AdminMenu`, conforme o exemplo a seguir:
-
+#### 🧩 Exemplo de Estrutura de Menu
 ```php
-<?php
-  private static $pages = [
-      'main' => [
-          'title' => 'Obatala',
-          'menu_title' => 'Obatala',
-          'capability' => 'manage_options',
-          'slug' => 'obatala-main',
-          'callback' => 'render_main_page',
-          'icon' => 'dashicons-admin-site',
-          'position' => 2
-      ],
-      'submenus' => [
-          [
-              'parent_slug' => 'obatala-main',
-              'title' => 'Process Manager',
-              'menu_title' => 'Process Manager',
-              'capability' => 'manage_options',
-              'slug' => 'process-manager',
-              'callback' => 'render_page',
-              'show_in_menu' => true
-          ],
-          [
-              'parent_slug' => 'obatala-main',
-              'title' => 'Process Viewer',
-              'menu_title' => 'Process Viewer',
-              'capability' => 'read',
-              'slug' => 'process-viewer',
-              'callback' => 'render_page',
-              'show_in_menu' => true
-          ],
-      ]
-  ];
-?>
+private static $pages = [
+    'main' => [
+        'title' => 'Obatala',
+        'menu_title' => 'Obatala',
+        'capability' => 'manage_options',
+        'slug' => 'obatala-main',
+        'callback' => 'render_main_page',
+        'icon' => 'dashicons-admin-site',
+        'position' => 2
+    ],
+    'submenus' => [
+        [
+            'parent_slug' => 'obatala-main',
+            'title' => 'Process Manager',
+            'menu_title' => 'Process Manager',
+            'capability' => 'manage_options',
+            'slug' => 'process-manager',
+            'callback' => 'render_page',
+            'show_in_menu' => true
+        ],
+        [
+            'parent_slug' => 'obatala-main',
+            'title' => 'Process Viewer',
+            'menu_title' => 'Process Viewer',
+            'capability' => 'read',
+            'slug' => 'process-viewer',
+            'callback' => 'render_page',
+            'show_in_menu' => true
+        ],
+    ]
+];
 ```
 
-### Enqueuer
-Classe responsável por gerenciar o enfileiramento de scripts e estilos no painel administrativo do plugin Obatala no WordPress.
+### 🧱 Enqueuer
+Classe que gerencia o carregamento de arquivos de estilo e script.
 
-#### Função
-Enfileira os scripts e estilos necessários para as páginas de administração específicas do plugin Obatala, garantindo que recursos como JavaScript e CSS estejam disponíveis quando o usuário acessa as páginas administrativas.
+#### 📌 Função
+Evita carregamento desnecessário de recursos, otimizando desempenho e compatibilidade com o painel do WordPress.
 
-#### Responsabilidades
+#### 🔧 Responsabilidades
+- init(): Registra o hook admin_enqueue_scripts.
 
-- **init()**  
-  Método de inicialização principal que adiciona uma ação para enfileirar scripts (`enqueue_admin_scripts`) no painel administrativo do WordPress.
+- enqueue_admin_scripts($hook): Valida se a página atual exige scripts do plugin e os enfileira.
 
-- **enqueue_admin_scripts($hook)**  
-  Enfileira os scripts e estilos necessários para as páginas administrativas específicas do plugin. Este método verifica se o `$hook` atual corresponde a uma das páginas definidas em `self::$pages`.  
-  Quando uma correspondência é encontrada, são registrados e enfileirados:
+#### 🧩 Recursos Carregados
+- build/index.js: Código JavaScript principal.
 
-  - **Script Principal do Plugin**: Carrega o JavaScript do plugin a partir do arquivo `build/index.js`, utilizando as dependências e versão especificadas no arquivo `index.asset.php`.
-  
-  - **Estilo Principal do Plugin**: Carrega o arquivo CSS principal do plugin (`css/style.css`) para estilizar as páginas administrativas.
-  
-  - **Estilo React Flow**: Enfileira o estilo do React Flow (`css/react-flow.css`) para garantir a correta renderização de componentes interativos no plugin.
+- css/style.css: Estilização personalizada.
 
-#### Estrutura das Páginas
+- css/react-flow.css: Estilos do editor de fluxo.
 
-A lista de páginas é armazenada no atributo `self::$pages`, que define os identificadores de páginas específicas para o enfileiramento de recursos.
+#### 🧩 Lista de Páginas com Scripts
 
 ```php
-<?php
-  private static $pages = [
-      'obatala_page_process-manager' => 'process-manager',
-      'obatala_page_process-type-manager' => 'process-type-manager',
-      'obatala_page_process-viewer' => 'process-viewer',
-      'obatala_page_process-step-manager' => 'process-step-manager',
-      'obatala_page_process-type-editor' => 'process-type-editor',
-      'obatala_page_sector_manager' => 'sector_manager'
-  ];
-?>
+private static $pages = [
+    'obatala_page_process-manager' => 'process-manager',
+    'obatala_page_process-type-manager' => 'process-type-manager',
+    'obatala_page_process-viewer' => 'process-viewer',
+    'obatala_page_process-step-manager' => 'process-step-manager',
+    'obatala_page_process-type-editor' => 'process-type-editor',
+    'obatala_page_sector_manager' => 'sector_manager',
+    'toplevel_page_obatala-main' => 'dashboard',
+    'obatala_page_sector-details' => 'sector-details',
+];
 ```
 
-### Classe SettingsPage
-A classe `SettingsPage` é responsável por registrar e renderizar as configurações personalizadas para o plugin Obatala no painel administrativo do WordPress.
+### ⚙️ SettingsPage
+Classe que cria e renderiza campos configuráveis no painel de administração.
 
-#### Função
-Esta classe facilita a criação de uma página de configurações com campos personalizados, como caixas de texto e checkbox, permitindo que o administrador configure o plugin diretamente pelo painel de administração do WordPress.
+#### 📌 Função
+Permite ao administrador configurar opções como ativar/desativar funcionalidades ou informar chaves de API.
 
-#### Responsabilidades
+#### 🔧 Responsabilidades
+- register_settings(): Registra os campos na API de opções do WP.
 
-- **register_settings()**  
-  Registra os campos de configuração, agrupando-os em uma seção e adicionando os campos individuais.
+- create_settings_page(): Gera a página e o formulário HTML.
 
-- **some_setting_field_render()**     
-  Renderiza um campo de texto some_setting para ajustes específicos.
+- some_setting_field_render(): Campo de texto.
 
-- **enable_feature_field_render()**  
-  Renderiza um checkbox enable_feature para ativar ou desativar uma funcionalidade.
+- enable_feature_field_render(): Checkbox de ativação.
 
-- **api_key_field_render()**  
-  Renderiza o campo api_key, permitindo ao administrador inserir uma chave de API.
+- api_key_field_render(): Campo de chave de API.
 
-- **create_settings_page()**  
-  Gera a interface da página de configurações, exibindo o formulário de submissão.
-
-#### Estrutura do Código
-
-Abaixo estão exemplos do código que compõe cada campo de configuração:
-
-#### Estrutura de Registro
-
+#### 🧩 Exemplo de Registro de Campos
 ```php
-<?php
-  register_setting('obatala_settings_group', 'some_setting');
-  register_setting('obatala_settings_group', 'enable_feature');
-  register_setting('obatala_settings_group', 'api_key');
-?>
+register_setting('obatala_settings_group', 'some_setting');
+register_setting('obatala_settings_group', 'enable_feature');
+register_setting('obatala_settings_group', 'api_key');
 ```
 
-## Considerações Finais
+---
 
-Esta documentação detalha a estrutura básica do plugin, explicando como as classes interagem para fornecer funcionalidades administrativas no WordPress. O uso de namespaces e o enfileiramento adequado de scripts garantem que o plugin opere de forma eficiente e compatível com o ambiente do WordPress.
+### ✅ Considerações Finais
+- As classes são organizadas conforme o padrão PSR-4.
+
+- A separação de responsabilidades garante melhor manutenção do código.
+
+- O uso de namespaces evita conflitos e promove clareza.
+
+- A documentação facilita o onboarding de novos desenvolvedores e a manutenção contínua do projeto.
+

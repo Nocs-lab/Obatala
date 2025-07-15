@@ -56,7 +56,7 @@
             </div>
         </div>
     <?php else : ?>
-        <p><?php _e('No processes found.', 'obatala'); ?></p>
+        <p><?php esc_html_e('No processes found.', 'Obatala'); ?></p>
     <?php endif; ?>
 </div>
 

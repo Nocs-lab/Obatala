@@ -16,47 +16,60 @@ const { addNewNode, addNewNodeConditional, onExport, onImport } = useFlowContext
         const file = event.target.files[0];
         if (file) {
         const reader = new FileReader();
-        reader.onload = (e) => {
-            const importedData = JSON.parse(e.target.result);
-            onImport(importedData); // Chama a função para importar os dados
-        };
+            reader.onload = (e) => {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    
+                    if (importedData && importedData.nodes && importedData.edges) {
+                        onImport(importedData);
+                    } else {
+                        console.error('Formato de arquivo inválido. O JSON deve conter nodes e edges.');
+                        alert('Formato de arquivo inválido. O JSON deve conter nodes e edges.');
+                    }
+                } catch (error) {
+                    console.error('Erro ao analisar o arquivo JSON:', error);
+                    alert('Erro ao ler o arquivo. Certifique-se de que é um JSON válido.');
+                }
+            };
         reader.readAsText(file);
         }
     };
-  
+
+    const handleExport = () => {
+        if (typeof onExport === 'function') {
+            onExport();
+        }
+    };
+
     return (
         <>
             <ButtonGroup>
                 <Button icon={check} variant="primary" type="submit" onClick={onSave}>
                     Save
                 </Button>
-                <Button icon={closeSmall} variant="secondary" onClick={onCancel}>
+                <Button icon={closeSmall} onClick={onCancel}>
                     Cancel changes
                 </Button>
-                <Button icon={plus} variant="secondary" onClick={addNewNode}>
+                <Button icon={plus} onClick={addNewNode}>
                     Add step
                 </Button>
-                <Button icon={plus} variant="secondary" onClick={addNewNodeConditional}>
+                <Button icon={plus} onClick={addNewNodeConditional}>
                   Add conditional
                 </Button>
-                <Button
-                    variant="secondary"
-                    onClick={toggleFullScreen}
-                    icon={fullscreen}
-                >
+                <Button icon={fullscreen} onClick={toggleFullScreen}>
                     Fullscreen
                 </Button>
                 <DropdownMenu
-                    icon={ menu }
+                    icon={menu}
                     label="Select an option"
                     controls={ [
                         {
                             title: 'Exportar JSON',
-                            onClick: () => onExport,
+                            onClick: handleExport,
                         },
                         {
                             title: 'Importar JSON',
-                            onClick: () => handleImportClick,
+                            onClick: handleImportClick,
                         },
                     ] }
                 />              

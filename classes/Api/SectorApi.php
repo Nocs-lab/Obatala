@@ -9,8 +9,6 @@ class SectorApi extends ObatalaAPI {
 
     public function register_routes() {
 
-        error_log('Registering routes');
-
         // Route to create a new sector
         $this->add_route('create_sector_obatala', [
             'methods' => 'POST',

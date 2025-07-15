@@ -1,95 +1,126 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
-import { Button, ButtonGroup, Icon, Tooltip, Panel, PanelHeader, PanelRow, Notice, TextControl } from '@wordpress/components';
-import { edit, seen, listView } from '@wordpress/icons';
+import { Button, ButtonGroup, Tooltip, Panel, PanelRow, Notice, TextControl } from '@wordpress/components';
+import { backup, edit, info } from '@wordpress/icons';
 import ProcessFilter from './ProcessFilters';
+import apiFetch from '@wordpress/api-fetch';
 
 const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, processTypes, accessLevel, setAccessLevel, modelFilter, setModelFilter }) => {
     const columns = useMemo(
-      () => [
-        {
-            Header: "Process",
-            accessor: "title.rendered",
-            Cell: ({ row }) => (
-                <a href={`?page=process-viewer&process_id=${row.original.id}`}>
-                    {row.original.title.rendered}
-                </a>
-            ),
-        },
-        {
-            Header: "Model",
-            Cell: ({ row }) => {
-                const typeMapping = processTypeMappings.find(
-                    (m) => m.processId === row.original.id
-                );
-                const processType = typeMapping
-                    ? processTypes.find(
-                        (type) => type.id == typeMapping.processTypeId
-                    )
-                    : null;
-        
-                return processType ? processType.title.rendered : "Unknown Model";
+        () => [
+            {
+                Header: "Process",
+                accessor: "title.rendered",
+                Cell: ({ row }) => (
+                    <a href={`?page=process-viewer&process_id=${row.original.id}`}>
+                        {row.original.title.rendered}
+                    </a>
+                ),
             },
-        },
-        {
-            Header: "Current step",
-            accessor: (row) =>
-                row.meta?.current_stage
-                ? `${row.meta.current_stage} - ${
-                    row.meta.groupResponsible || "No group"
-                    }`
-                : "Not started",
-        },
-        {
-            Header: "Access level",
-            accessor: "meta.access_level",
-            Cell: ({ value }) => (
-                <span
-                    className={`badge ${
-                        value == "Not restricted" || value == "not restricted"
+            {
+                Header: "Model",
+                Cell: ({ row }) => {
+                    const typeMapping = processTypeMappings.find(
+                        (m) => m.processId === row.original.id
+                    );
+                    const processType = typeMapping
+                        ? processTypes.find(
+                            (type) => type.id == typeMapping.processTypeId
+                        )
+                        : null;
+
+                    return processType ? processType.title.rendered : "Unknown Model";
+                },
+            },
+            {
+                Header: "Current step",
+                accessor: (row) =>
+                    row.meta?.current_stage
+                        ? `${row.meta.current_stage} - ${row.meta.groupResponsible || "No group"
+                        }`
+                        : "Not started",
+            },
+            {
+                Header: "Progress",
+                Cell: ({ row }) => {
+                    const [progress, setProgress] = useState(null);
+                    useEffect(() => {
+                        const fetchProgressProcess = async () => {
+                            try {
+                                const response = await apiFetch({
+                                    path: `/obatala/v1/process_obatala/${row.original.id}/node`,
+                                    method: 'GET',
+                                });
+                                setProgress(response.progress);
+                            } catch (error) {
+                                console.error('Erro ao buscar progresso do processo:', error);
+                                setProgress(0);
+                            }
+                        };
+
+                        fetchProgressProcess();
+                    }, [row.original.id]);
+
+                    return (
+                        <div className="progress" title={`${progress}%`}>
+                            <p className="description">{progress}%</p>
+                            <progress value={progress} max="100" />
+                        </div>
+                    )
+                },
+            },
+            {
+                Header: "Access level",
+                accessor: "meta.access_level",
+                Cell: ({ value }) => (
+                    <span
+                        className={`badge ${value == "Not restricted" || value == "not restricted"
                             ? "success"
                             : "warning"
-                    }`}
-                >
-                    {value}
-                </span>
-            ),
-        },
-        {
-            Header: "Actions",
-            accessor: "id",
-            Cell: ({ row }) => (
-                <ButtonGroup>
-                    <Tooltip text="View">
+                            }`}
+                    >
+                        {value}
+                    </span>
+                ),
+            },
+            {
+                Header: "Actions",
+                accessor: "id",
+                Cell: ({ row }) => (
+                    <ButtonGroup>
                         <Button
-                            icon={<Icon icon={seen} />}
+                            variant="primary"
+                            icon={info}
                             onClick={() => onViewProcess(row.original.id)}
-                        />
-                    </Tooltip>
-                    <Tooltip text="Edit">
-                        <Button
-                            icon={<Icon icon={edit} />}
-                            onClick={() => onEdit(row.original)}
-                        />
-                    </Tooltip>
-                    <Tooltip text="History">
-                        <Button
-                            icon={<Icon icon="backup" />}
-                            onClick={() => {
-                            const url = `?page=process-viewer&process_id=${row.original.id}&view=history`;
-                            window.location.href = url;
-                    }}
-                />
-                    </Tooltip>
-                </ButtonGroup>
-            ),
-        },
-      ],
-      [processTypeMappings, processTypes]
+                        >
+                            View process
+                        </Button>
+                        <Tooltip text="Edit">
+                            <Button
+                                variant="secondary"
+                                icon={edit}
+                                onClick={() => onEdit(row.original)}
+                            />
+                        </Tooltip>
+                        <Tooltip text="History">
+                            <Button
+                                variant="secondary"
+                                icon={backup}
+                                onClick={() => {
+                                    const url = `?page=process-viewer&process_id=${row.original.id}&view=history`;
+                                    window.location.href = url;
+                                }}
+                            />
+                        </Tooltip>
+                    </ButtonGroup>
+                ),
+            },
+        ],
+        [processTypeMappings, processTypes]
     );
-  
+
     const data = useMemo(() => processes, [processes]);
-  
+
     const {
         getTableProps,
         getTableBodyProps,
@@ -136,50 +167,52 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
                 </div>
                 {processes.length > 0 ? (
                     <>
-                        <table {...getTableProps()} className="wp-list-table widefat striped table-view-list">
-                            <thead>
-                                {headerGroups.map(headerGroup => {
-                                    const { key: headerGroupKey, ...headerGroupProps } = headerGroup.getHeaderGroupProps();
-                                    return (
-                                        <tr key={headerGroupKey} {...headerGroupProps}>
-                                            {headerGroup.headers.map(column => {
-                                                const { key: columnKey, ...columnProps } = column.getHeaderProps(column.getSortByToggleProps());
-                                                return (
-                                                    <th key={columnKey} {...columnProps}>
-                                                        {column.render('Header')}
-                                                        <span>
-                                                            {column.isSorted
-                                                                ? column.isSortedDesc
-                                                                    ? ' 🔽'
-                                                                    : ' 🔼'
-                                                                : ''}
-                                                        </span>
-                                                    </th>
-                                                );
-                                            })}
-                                        </tr>
-                                    );
-                                })}
-                            </thead>
-                            <tbody {...getTableBodyProps()}>
-                                {page.map(row => {
-                                    prepareRow(row);
-                                    const { key: rowKey, ...rowProps } = row.getRowProps();
-                                    return (
-                                        <tr key={rowKey} {...rowProps}>
-                                            {row.cells.map(cell => {
-                                                const { key: cellKey, ...cellProps } = cell.getCellProps();
-                                                return (
-                                                    <td key={cellKey} {...cellProps}>
-                                                        {cell.render('Cell')}
-                                                    </td>
-                                                );
-                                            })}
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
+                        <div className="table-responsive">
+                            <table {...getTableProps()} className="wp-list-table widefat striped table-view-list">
+                                <thead>
+                                    {headerGroups.map(headerGroup => {
+                                        const { key: headerGroupKey, ...headerGroupProps } = headerGroup.getHeaderGroupProps();
+                                        return (
+                                            <tr key={headerGroupKey} {...headerGroupProps}>
+                                                {headerGroup.headers.map(column => {
+                                                    const { key: columnKey, ...columnProps } = column.getHeaderProps(column.getSortByToggleProps());
+                                                    return (
+                                                        <th key={columnKey} {...columnProps}>
+                                                            {column.render('Header')}
+                                                            <span>
+                                                                {column.isSorted
+                                                                    ? column.isSortedDesc
+                                                                        ? ' 🔽'
+                                                                        : ' 🔼'
+                                                                    : ''}
+                                                            </span>
+                                                        </th>
+                                                    );
+                                                })}
+                                            </tr>
+                                        );
+                                    })}
+                                </thead>
+                                <tbody {...getTableBodyProps()}>
+                                    {page.map(row => {
+                                        prepareRow(row);
+                                        const { key: rowKey, ...rowProps } = row.getRowProps();
+                                        return (
+                                            <tr key={rowKey} {...rowProps}>
+                                                {row.cells.map(cell => {
+                                                    const { key: cellKey, ...cellProps } = cell.getCellProps();
+                                                    return (
+                                                        <td key={cellKey} {...cellProps}>
+                                                            {cell.render('Cell')}
+                                                        </td>
+                                                    );
+                                                })}
+                                            </tr>
+                                        );
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
                         <div className="pagination">
                             <Button onClick={() => previousPage()} disabled={!canPreviousPage}>
                                 Previous
