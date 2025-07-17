@@ -7,13 +7,11 @@ require_once __DIR__ . '/vendor/autoload.php';
 /*
 	Plugin Name: Obatala - Gestão de Processos Curatoriais
 	Description: Adiciona funcionalidades de gestão de processos curatoriais para o plugin Tainacan
-
-	Version: 1.6.14
-
+	Version: 1.6.15
 	Author: NOCs
 	License: GPLv2 or later
-	Text Domain: obatala
-  Requires Plugins: tainacan
+	Text Domain: Obatala
+    Requires Plugins: tainacan
 */
 
 // Prevent direct access to the file
@@ -68,7 +66,7 @@ class Nocs_ObatalaPlugin
 	public function initialize()
 	{
 		// Load plugin text domain
-		load_plugin_textdomain('obatala', false, plugin_basename(dirname(__FILE__)) . '/languages');
+		load_plugin_textdomain('Obatala', false, plugin_basename(dirname(__FILE__)) . '/languages');
 
 		// Initialize admin menus and settings
 		\Obatala\Admin\AdminMenu::init();
