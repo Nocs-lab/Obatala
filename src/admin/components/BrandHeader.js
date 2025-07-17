@@ -19,7 +19,7 @@ const BrandHeader = () => {
         <header>
             <button id="toggleMenu" onClick={() => setMenuOpen(!menuOpen)}><Icon icon="menu" /> Menu</button>
             <nav id="mainNav" className={menuOpen ? 'active' : ''}>
-                <a href="/wp-admin/admin.php?page=obatala-main" className="menu-brand">
+                <a href={obatalaApp.admin_url + "admin.php?page=obatala-main"}  className="menu-brand">
                     <h1>
                         <strong>Obatala</strong>
                         <small>{wpSiteName && `${wpSiteName}`}</small>
