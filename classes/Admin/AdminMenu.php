@@ -172,6 +172,8 @@ document.addEventListener('DOMContentLoaded', function() {
         '#toplevel_page_obatala-main .wp-submenu li a[href*="process-type-editor"]');
     const processSector_details = document.querySelector(
         '#toplevel_page_obatala-main .wp-submenu li a[href*="sector-details"]');
+    const processTypeExport = document.querySelector(
+        '#toplevel_page_obatala-main .wp-submenu li a[href*="mappers"]');
 
     if (processSector_details) {
         processSector_details.parentElement.style.display = 'none';
@@ -183,6 +185,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     if (processTypeEditorItem) {
         processTypeEditorItem.parentElement.style.display = 'none';
+    }
+
+    if(processTypeExport){
+        processTypeExport.parentElement.style.display = 'none';
     }
 
     const menuItem = document.querySelector('#toplevel_page_obatala-main');

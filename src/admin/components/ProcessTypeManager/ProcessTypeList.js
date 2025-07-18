@@ -1,12 +1,12 @@
 import React, { useState, useMemo } from 'react';
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
 import { Button, ButtonGroup, Tooltip, Panel, PanelRow, Notice, TextControl  } from '@wordpress/components';
-import { edit, trash, layout } from '@wordpress/icons';
+import { edit, trash, layout, external } from '@wordpress/icons';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import ProcessTypeFilter from './ProcessTypeFilters';
 
-const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager, status, setStatus, authorsById }) => {
+const ProcessTypeList = ({ processTypes, onExport, onEdit, onDelete, onManager, status, setStatus, authorsById }) => {
     const columns = useMemo(() => [
         {
             Header: 'Title',
@@ -66,6 +66,13 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager, status, se
                     >
                         Manage steps
                     </Button>
+                    <Tooltip text="Edit export data">
+                        <Button
+                            variant="secondary"
+                            icon={external}
+                            onClick={() => onExport(row.original)}
+                        />
+                    </Tooltip>
                     <Tooltip text="Edit general data">
                         <Button
                             variant="secondary"
@@ -83,7 +90,7 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager, status, se
                 </ButtonGroup>
             ),
         },
-    ], [onEdit, onDelete, onManager]);
+    ], [onExport, onEdit, onDelete, onManager]);
 
     const data = useMemo(() => processTypes, [processTypes]);
 
