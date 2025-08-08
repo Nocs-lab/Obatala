@@ -38,6 +38,15 @@ export const fetchMetadataCollectionsTainacan = (id) => {
     });
 };
 
+export const fetchMapperProcessModel = async (id) => {
+    return apiFetch({
+        path: `/obatala/v1/exporter/get_mapper_process_type/${id}`,
+    }).then((data) => {
+        return data;
+    });
+};
+
+
 // Função para desserializar
 const maybeUnserialize = (data) => {
     try {
