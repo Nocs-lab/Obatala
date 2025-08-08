@@ -26,6 +26,13 @@ class ExporterApi extends ObatalaAPI {
             'permission_callback' => '__return_true',
         ]);
 
+        // Route to get mapper collection
+        $this->add_route('exporter/get_mapper_process_type/(?P<process_model_id>[a-zA-Z0-9_\-.]+)', [
+            'methods' => 'GET',
+            'callback' => [$this, 'get_mapper_process_type'],
+            'permission_callback' => '__return_true',
+        ]);
+
          // Route to get items from collection
          $this->add_route('get_items_collection/(?P<collection_id>[a-zA-Z0-9_\-.]+)', [
             'methods' => 'GET',
@@ -73,6 +80,28 @@ class ExporterApi extends ObatalaAPI {
 
         return $metadata;
     }
+
+    public function get_mapper_process_type($request) {
+        global $wpdb;
+
+        // Sanitiza o ID da coleção
+        $process_model_id = sanitize_text_field($request['process_model_id']);
+
+        // Busca na tabela wp_postmeta
+        $meta_value = $wpdb->get_var(
+            $wpdb->prepare(
+                "SELECT meta_value FROM {$wpdb->prefix}postmeta WHERE post_id = %d AND meta_key = %s",
+                $process_model_id,
+                '_obatala_mapping_data'
+            )
+        );
+
+        // Retorna o resultado (como array associativo)
+        return [
+            'mapping_data' => maybe_unserialize($meta_value),
+        ];
+    }
+
 
     public function get_items_collection($request) {
         $collection_id = sanitize_text_field($request['collection_id']);
@@ -126,17 +155,29 @@ class ExporterApi extends ObatalaAPI {
 
         $data_to_save = [
             'process_model_id' => (int) $process_model_id,
+            'collection_id' => (int) $collection_id,
             'mappings' => $mappings,
         ];
 
         $saved = update_post_meta((int) $process_model_id, '_obatala_mapping_data', wp_json_encode($data_to_save));
 
         if ($saved === false) {
+            // Verifica se os dados enviados já são os mesmos salvos
+            $current_data = get_post_meta((int) $process_model_id, '_obatala_mapping_data', true);
+            if ($current_data === wp_json_encode($data_to_save)) {
+                return new \WP_REST_Response([
+                    'success' => true,
+                    'message' => 'Dados já estavam salvos.',
+                    'saved_data' => $data_to_save,
+                ], 200);
+            }
+
             return new \WP_REST_Response([
                 'success' => false,
                 'message' => 'Erro ao salvar no banco de dados.',
             ], 500);
         }
+
 
         return new \WP_REST_Response([
             'success' => true,
