@@ -21,8 +21,8 @@ const processDataEditor = () => {
     const [processData, setProcessData] = useState(null);
     const [notice, setNotice] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const flowRef = useRef(null); // Referência para acessar os dados do fluxo
-    const [flowData, setFlowData] = useState({ nodes: [], edges: [] }); // Novo estado para o flowData
+    const flowRef = useRef(null); 
+    const [flowData, setFlowData] = useState({ nodes: [], edges: [] }); 
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
 
     const getProcessIdFromUrl = () => {
@@ -36,7 +36,6 @@ const processDataEditor = () => {
         apiFetch({ path: `/obatala/v1/process_type/${id}` })
             .then((typeData) => {
                 setProcessData(typeData);
-                // Extraindo flowData do processo carregado
                 const flowData = typeData.meta.flowData || { nodes: [], edges: [] };
                 setFlowData(flowData);
                 setIsLoading(false);
@@ -64,11 +63,9 @@ const processDataEditor = () => {
         }
     };
 
-    // funçao para verificar se todos os nos estao conectados
     const areAllNodesConnected = (nodes, edges) => {
-        if (nodes.length === 0) return true; // Nenhum nó para verificar
+        if (nodes.length === 0) return true; 
 
-        // Mapeia entradas e saídas de cada nó
         const nodeInputs = new Map();
         const nodeOutputs = new Map();
 
@@ -111,36 +108,51 @@ const processDataEditor = () => {
         };
     };
 
+    const normalizeArrayLike = (v) => {
+        if (Array.isArray(v)) return v;
+        if (v && typeof v === "object") return Object.values(v);
+        return [];
+    };
+
+    const isFilled = (v) => v !== null && v !== undefined && String(v).trim() !== "";
+
     const getInvalidConditionalNodes = (flowData) => {
-        return flowData.nodes.filter(node => {
+        return flowData.nodes.filter((node) => {
             if (node.type !== "customNodeConditional") return false;
 
             const condition = node.data?.condition;
-            const inputNode = node.data?.condition?.inputNode;
-            const outputNodes = node.data?.condition?.outputNodes;
 
-            const hasValidInput = !!inputNode;
-            const hasTwoOutputs = Array.isArray(outputNodes) && outputNodes.length === 2;
-            const outputsAreValid = hasTwoOutputs && outputNodes.every(out => out.conditionValue && out.nodeId);
+            const inputNode = condition?.inputNode ?? node.data?.inputNode;
+
+            const outputNodesRaw = condition?.outputNodes ?? node.data?.outputNodes;
+            const outputNodes = normalizeArrayLike(outputNodesRaw);
+
+            const hasValidInput = isFilled(inputNode);
+
+            const hasAtLeastTwoOutputs = outputNodes.length >= 2;
+
+            const outputsAreValid =
+                hasAtLeastTwoOutputs &&
+                outputNodes.every((out) => isFilled(out?.conditionValue) && isFilled(out?.nodeId));
 
             return !(condition && hasValidInput && outputsAreValid);
         });
     };
 
+
+
     const handleSave = async () => {
         try {
-            const flowData = flowRef.current.getFlowData(); // Obtém os dados do flow
-            // Cria lista com mensagens de erro
+            const flowData = flowRef.current.getFlowData(); 
+            
             const errorMessages = [];
 
-            //verifica se todos os nos estão conectados 
             const veriftyConnectivity = areAllNodesConnected(flowData.nodes, flowData.edges);
             if (!veriftyConnectivity.valid) {
                 errorMessages.push(...veriftyConnectivity.messages);
 
             }
 
-            // verifica se todos os nós possuem tempSector definido
             const nodesWithoutSector = flowData.nodes.filter(node => {
                 const isIgnored =
                     node.id === "Start" ||
@@ -155,7 +167,6 @@ const processDataEditor = () => {
                 );
             }
 
-            // verifica se todos os nós possuem campos definidos
             const nodesWithoutFields = flowData.nodes.filter(node => {
                 const isIgnored =
                     node.id === "Start" ||
@@ -172,7 +183,6 @@ const processDataEditor = () => {
                 );
             }
 
-            // verifica se todos os nós condicionais possuem campos definidos
             const nodesConditionalWhitoutFields = getInvalidConditionalNodes(flowData);
             if (nodesConditionalWhitoutFields.length > 0) {
                 const conditionalErrors = nodesConditionalWhitoutFields.map(condNode => {
@@ -189,7 +199,6 @@ const processDataEditor = () => {
 
             }
 
-            // Se tiver qualquer erro, exibe tudo numerado
             if (errorMessages.length > 0) {
                 setNotice({
                     status: "error",
@@ -206,13 +215,12 @@ const processDataEditor = () => {
             const updatedData = {
                 ...processData,
                 meta: {
-                    flowData, // Armazena os dados de fluxo como meta
+                    flowData, 
                     updateAt: new Date(),
                     user: currentUser?.name
                 },
             };
 
-            // Evita recarregar a página
             await apiFetch({
                 path: `/obatala/v1/process_type/${id}`,
                 method: "PUT",
@@ -230,7 +238,6 @@ const processDataEditor = () => {
                     try {
                         await updateNodeSector(node.id, node.tempSector);
 
-                        //node.tempSector = null;
                     } catch (error) {
                         console.error(`Erro ao associar setor ao nó ${node.id}:`, error);
                     }
@@ -257,7 +264,6 @@ const processDataEditor = () => {
         }
     };
 
-    // Função para alternar para tela cheia
     const toggleFullScreen = () => {
         const element = document.getElementById('flow-container');
 

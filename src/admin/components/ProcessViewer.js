@@ -45,7 +45,6 @@ const ProcessViewer = () => {
     const [notice, setNotice] = useState(null);
     const [progress, setProgress] = useState(0);
     const [hasComments, setHasComments] = useState(false);
-    // Função para controlar o estado de expansão do accordion
     const [activeIndex, setActiveIndex] = useState(null);
 
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
@@ -55,7 +54,9 @@ const ProcessViewer = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const viewMode = urlParams.get('view');
 
-    // Função para alternar o estado de um item do accordion
+    const [isProcessLoading, setIsProcessLoading] = useState(true);
+
+
     const toggleAccordion = (index) => {
         setActiveIndex(activeIndex === index ? null : index);
         setCurrentStep(index);
@@ -129,7 +130,8 @@ const ProcessViewer = () => {
                 .catch((error) => {
                     console.error("Error fetching process:", error);
                     setError("Error fetching process details.");
-                });
+                })
+                .finally(() => setIsProcessLoading(false));
             fetchNodePermission(processId, currentUser.id)
                 .then((result) => {
                     setHasPermission(result.status);
@@ -138,11 +140,13 @@ const ProcessViewer = () => {
                 .catch((error) => {
                     console.error("Error fetching process:", error);
                     setError("Error fetching process meta.");
+                })
+                .finally(() => {
+                    setIsLoading(false);
                 });
         } else {
             setError("No process ID found in the URL.");
         }
-        setIsLoading(false);
     }, [currentUser]);
 
     const fetchUpdatedProcessNodes = async () => {
@@ -275,44 +279,6 @@ const ProcessViewer = () => {
 
         setIsSubmitEnabled(formValues);
     };
-
-    // const getOrderedSteps = useCallback(() => {
-    //     if (flowNodes && flowNodes.nodes) {
-    //         const { edges, nodes } = flowNodes;
-    //         const filteredNodes = nodes.filter(node => node.id !== "Start" && node.id !== "End" && !node.id.startsWith("Condicional"));
-    //         const nodeMap = new Map(nodes.map(node => [node.id, node]));
-    //         const sources = new Set(edges.map(edge => edge.source));
-    //         const targets = new Set(edges.map(edge => edge.target));
-
-    //         const initialStep = filteredNodes.filter(node => sources.has(node.id) && !targets.has(node.id));
-
-    //         const orderedSteps = [];
-    //         const visited = new Set();
-
-    //         const visit = (nodeId) => {
-    //             if (visited.has(nodeId)) return;
-    //             visited.add(nodeId);
-    //             const node = nodeMap.get(nodeId);
-    //             if (node) {
-    //                 orderedSteps.push(node);
-    //                 edges
-    //                     .filter(edge => edge.source === nodeId)
-    //                     .forEach(edge => visit(edge.target));
-    //             }
-    //         };
-
-    //         initialStep.forEach(node => visit(node.id));
-
-    //         filteredNodes.forEach(node => {
-    //             if (!visited.has(node.id)) {
-    //                 orderedSteps.push(node);
-    //             }
-    //         });
-
-    //         return orderedSteps;
-    //     }
-    //     return [];
-    // }, [flowNodes]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -488,7 +454,9 @@ const ProcessViewer = () => {
         return sectorUser.includes(stepSector);
     };
 
-    if (!isLoading && !process) {
+    if (isProcessLoading) return <Spinner />;
+
+    if (!process) {
         return (
             <Notice status="warning" isDismissible={false}>
                 No process found.

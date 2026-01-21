@@ -1,41 +1,43 @@
-
-import React, { useState} from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   TextControl,
-  DatePicker,
   FormFileUpload,
-  //SelectControl,
   RadioControl,
   ComboboxControl,
   Button,
 } from "@wordpress/components";
-import {  closeSmall, upload } from "@wordpress/icons";
+import { closeSmall, upload } from "@wordpress/icons";
 import TainacanSearchControls from "../Tainacan/TainacanSearch";
-import { __experimentalSelectControl as SelectControl } from '@wordpress/components';
+import { __experimentalSelectControl as SelectControl } from "@wordpress/components";
 
-const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId, initalValue, noHasPermission, fileInfo, stepId}) => {
-  const [value, setValue] = useState(initalValue);
+const MetaFieldInputs = React.memo(
+  ({ field, isEditable, onFieldChange, fieldId, initalValue, noHasPermission, fileInfo, stepId }) => {
+    const [value, setValue] = useState(initalValue);
 
-    const formatDate = (date) => {
-        const d = new Date(date);
-        const day = String(d.getDate()).padStart(2, '0');
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const year = d.getFullYear();
-        return `${day}/${month}/${year}`;
+    useEffect(() => {
+      setValue(initalValue);
+    }, [stepId, fieldId]); 
+
+    const normalizeArrayLike = (v) => {
+      if (Array.isArray(v)) return v;
+      if (v && typeof v === "object") return Object.values(v);
+      return [];
     };
 
+    const normalizedSearchInitial = useMemo(() => {
+      return normalizeArrayLike(initalValue);
+    }, [stepId, fieldId]); 
+
     const handleChange = (newValue) => {
-        setValue(newValue); 
-        onFieldChange(fieldId, newValue); 
-    
-        // Validação posterior, para indicar erro ao usuário
-        const isValid =
+      setValue(newValue);
+      onFieldChange(fieldId, newValue);
+
+      const isValid =
         !field.config?.pattern || new RegExp(field.config.pattern).test(newValue);
-    
-        if (!isValid) {
-            // Exibir mensagem de erro
-            console.log("Valor inválido");
-        }
+
+      if (!isValid) {
+        console.log("Valor inválido");
+      }
     };
 
     switch (field.type) {
@@ -43,13 +45,11 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
       case "phone":
       case "address":
         return (
-          <div
-            className={`meta-field ${field.config?.required ? "required" : ""}`}
-          >
+          <div className={`meta-field ${field.config?.required ? "required" : ""}`}>
             <TextControl
               label={field.config?.label ?? "Unknow Title"}
               placeholder={field.config?.placeholder ?? "Enter a value..."}
-              value={value}
+              value={value ?? ""}
               onChange={handleChange}
               disabled={!isEditable || noHasPermission}
               required={field.config?.required ?? false}
@@ -60,42 +60,41 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
             />
           </div>
         );
+
       case "datepicker":
         return (
           <div className="meta-field sm">
             <label>{field.config?.label ?? "Unknow Title"}</label>
             <input
               type="date"
-              value={value ? value.split("/").reverse().join("-") : ""}
+              value={value ? String(value).split("/").reverse().join("-") : ""}
               onChange={(e) => {
-                  const formattedDate = e.target.value.split("-").reverse().join("/");
-                  handleChange(formattedDate);
+                const formattedDate = e.target.value.split("-").reverse().join("/");
+                handleChange(formattedDate);
               }}
               disabled={!isEditable || noHasPermission}
               required={field.config?.required ?? false}
             />
           </div>
         );
+
       case "upload":
         return (
-          <div class="meta-field">
+          <div className="meta-field">
             <p>{field.config?.label ?? "Unknow title"}</p>
             <FormFileUpload
               accept=".doc,.docx,.pdf,.jpg,.jpeg,.png"
-              value={value}
               onChange={(event) => handleChange(event.currentTarget.files)}
               disabled={!isEditable || noHasPermission}
               required={field.config?.required ?? false}
               help={field.config?.helpText}
               icon={upload}
-              style={{
-                border: "1px dashed #ccc",
-              }}
+              style={{ border: "1px dashed #ccc" }}
             >
               Upload
             </FormFileUpload>
 
-            {fileInfo[stepId]?.[fieldId] && (
+            {fileInfo?.[stepId]?.[fieldId] && (
               <div>
                 <p>
                   <strong>Arquivo:</strong> {fileInfo[stepId][fieldId].name}
@@ -104,6 +103,7 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
             )}
           </div>
         );
+
       case "number":
         return (
           <div className="meta-field sm">
@@ -112,8 +112,8 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
               min={field.config?.min}
               max={field.config?.max}
               step={field.config?.step}
-              value={value}
-              onChange={(value) => handleChange(value)}
+              value={value ?? ""}
+              onChange={(v) => handleChange(v)}
               type="number"
               disabled={!isEditable || noHasPermission}
               required={field.config?.required ?? false}
@@ -121,22 +121,26 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
             />
           </div>
         );
+
       case "select":
         return (
           <div className="meta-field">
             <ComboboxControl
               label={field.config?.label ?? "Select Options"}
-              value={value || []}
+              value={Array.isArray(value) ? value : []}
               options={field.config?.options.split(",").map((option) => ({
                 label: option.trim(),
                 value: option.trim(),
               }))}
               onChange={(selectedValue) => {
-                if (selectedValue && !value?.includes(selectedValue)) {
-                  handleChange([...(value || []), selectedValue]);
+                const arr = Array.isArray(value) ? value : [];
+                if (selectedValue && !arr.includes(selectedValue)) {
+                  handleChange([...arr, selectedValue]);
                 }
               }}
+              disabled={!isEditable || noHasPermission}
             />
+
             {Array.isArray(value) && value.length > 0 && (
               <div className="combobox-selection">
                 {value.map((selected) => (
@@ -144,13 +148,9 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
                     {selected}
                     <Button
                       icon={closeSmall}
-                      onClick={() => {
-                        const updatedValues = value.filter(
-                          (v) => v !== selected
-                        );
-                        handleChange(updatedValues);
-                      }}
+                      onClick={() => handleChange(value.filter((v) => v !== selected))}
                       className="remove-option-button"
+                      disabled={!isEditable || noHasPermission}
                     />
                   </div>
                 ))}
@@ -158,13 +158,14 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
             )}
           </div>
         );
+
       case "radio":
         return (
           <div className="meta-field">
             <RadioControl
               label={field.config?.label ?? "Unknow Title"}
-              selected={value}
-              onChange={(newValue) => handleChange(newValue)}
+              selected={value ?? ""}
+              onChange={(v) => handleChange(v)}
               options={field.config?.options
                 .split(",")
                 .map((option) => ({ label: option, value: option }))}
@@ -174,28 +175,25 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
             />
           </div>
         );
+
       case "search":
         return (
           <TainacanSearchControls
-            onFieldChange={(selectedItems) =>
-              onFieldChange(fieldId, selectedItems)
-            }
-            initialValue={initalValue}
+            onFieldChange={(selectedItems) => onFieldChange(fieldId, selectedItems)}
+            initialValue={normalizedSearchInitial}
             isEditable={isEditable}
             noHasPermission={noHasPermission}
+            key={`${stepId}-${fieldId}`}
           />
         );
+
       case "email":
         return (
-          <div
-            className={`meta-field md ${
-              field.config?.required ? "required" : ""
-            }`}
-          >
+          <div className={`meta-field md ${field.config?.required ? "required" : ""}`}>
             <TextControl
               label={field.config?.label ?? "Unknow Title"}
               placeholder={field.config?.placeholder ?? "Enter a value..."}
-              value={value}
+              value={value ?? ""}
               type="email"
               onChange={handleChange}
               disabled={!isEditable || noHasPermission}
@@ -206,9 +204,11 @@ const MetaFieldInputs = React.memo(({ field, isEditable, onFieldChange, fieldId,
             />
           </div>
         );
+
       default:
         return null;
     }
-});
+  }
+);
 
 export default MetaFieldInputs;

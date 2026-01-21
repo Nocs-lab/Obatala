@@ -155,6 +155,15 @@ class ProcessApi extends ObatalaAPI {
     public function update_meta($request) {
         $post_id = (int) $request['id'];
         $meta = $request->get_json_params();
+        
+        $post_type_id = (int) $meta['process_type'];
+        $post_type_post = get_post($post_type_id);
+
+        if ($post_type_post) {
+            $title = $post_type_post->post_title;
+            update_post_meta($post_id, 'process_title', $title);
+        }
+
         foreach ($meta as $key => $value) {
             update_post_meta($post_id, $key, $value);
         }
