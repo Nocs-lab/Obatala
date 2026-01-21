@@ -13,9 +13,7 @@ const TainacanSearchControls = ({
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const apiRoot =
-    window?.wpApiSettings?.root ||
-    'http://localhost/wordpress/index.php/wp-json/';
+  const apiRoot = window?.wpApiSettings?.root;
 
   const normalizeArrayLike = (v) => {
     if (Array.isArray(v)) return v;
