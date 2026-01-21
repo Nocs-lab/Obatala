@@ -14,7 +14,8 @@ const ProcessManager = ({ onSelectProcess }) => {
     const [processTypes, setProcessTypes] = useState([]);
     const [processes, setProcesses] = useState([]);
     const [processTypeMappings, setProcessTypeMappings] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoadingProcesses, setIsLoadingProcesses] = useState(true);
+    const [isLoadingUserProcesses, setIsLoadingUserProcesses] = useState(false);
     const [processUser, setProcessUser] = useState([]);
     const [selectedProcessId, setSelectedProcessId] = useState(null);
     const [addingProcess, setAddingProcess] = useState(null);
@@ -50,20 +51,20 @@ const ProcessManager = ({ onSelectProcess }) => {
     };
 
     const fetchProcessesUser = () => {
-        setIsLoading(true);        
+        setIsLoadingUserProcesses(true);        
         fetchUserProcesses(currentUser.id)
             .then(data => {
                 setProcessUser(data);
-                setIsLoading(false);
+                setIsLoadingUserProcesses(false);
             })
             .catch(error => {
                 console.error('Error fetching sectors:', error);
-                setIsLoading(false);
+                setIsLoadingUserProcesses(false);
             });
     };
 
     const fetchProcesses = async () => {
-        setIsLoading(true);
+        setIsLoadingProcesses(true);
         try {
             const data = await apiFetch({
                 path: `/obatala/v1/process_obatala?per_page=100&_embed`,
@@ -73,12 +74,12 @@ const ProcessManager = ({ onSelectProcess }) => {
                 await fetchProcessModelsForProcesses(data);
             } else {
                 console.error("No processes data returned.");
-                setProcesses([]); // Garanta que processes seja sempre um array
+                setProcesses([]); 
             }
         } catch (error) {
             console.error("Error fetching processes:", error);
         } finally {
-            setIsLoading(false);
+            setIsLoadingProcesses(false);
         }
     };
 
@@ -116,16 +117,15 @@ const ProcessManager = ({ onSelectProcess }) => {
             setEditingProcess(null);
         }
         else {
-            // Adiciona o novo processo à lista
             setProcesses(prevProcesses => [...prevProcesses, newProcess]);
             setAddingProcess(null);
         }
-        setIsLoading(true);
+        setIsLoadingProcesses(true);
         // Atualiza os mapeamentos de tipo de processo
         const updatedProcesses = [...processes, newProcess];
         setNotice({ status: 'success', message: 'Process saved successfully.' });
         await fetchProcessModelsForProcesses(updatedProcesses);
-        setIsLoading(false);
+        setIsLoadingProcesses(false);
     };
 
     const handleSelectProcess = (processId) => {
@@ -165,7 +165,7 @@ const ProcessManager = ({ onSelectProcess }) => {
         });
     }, [accessLevel, modelFilter, processes, filteredUserProcesses, activeTab]); 
     
-    if (isLoading) {
+    if (isLoadingProcesses) {
         return <Spinner />;
     }
     
@@ -215,6 +215,7 @@ const ProcessManager = ({ onSelectProcess }) => {
                             <div>
                                 <ProcessList
                                     processes={filteredProcess}
+                                    loading={isLoadingProcesses || (activeTab === 'my' && isLoadingUserProcesses)}
                                     onEdit={handleEditProcess}
                                     onViewProcess={handleSelectProcess}
                                     processTypeMappings={processTypeMappings}

@@ -4,6 +4,7 @@ import { Button, ButtonGroup, Tooltip, Panel, PanelRow, Notice, TextControl } fr
 import { backup, edit, info } from '@wordpress/icons';
 import ProcessFilter from './ProcessFilters';
 import apiFetch from '@wordpress/api-fetch';
+import { decodeEntities } from '@wordpress/html-entities';
 
 const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, processTypes, accessLevel, setAccessLevel, modelFilter, setModelFilter }) => {
     const columns = useMemo(
@@ -13,7 +14,7 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
                 accessor: "title.rendered",
                 Cell: ({ row }) => (
                     <a href={`?page=process-viewer&process_id=${row.original.id}`}>
-                        {row.original.title.rendered}
+                        {decodeEntities(row.original.title.rendered ?? '')}
                     </a>
                 ),
             },
@@ -28,8 +29,9 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
                             (type) => type.id == typeMapping.processTypeId
                         )
                         : null;
-
-                    return processType ? processType.title.rendered : "Unknown Model";
+                        
+                    return row.original.meta.process_title;
+                    //return processType ? processType.title.rendered : "Unknown Model";
                 },
             },
             {
