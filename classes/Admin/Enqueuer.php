@@ -37,6 +37,14 @@ class Enqueuer {
             );
             wp_enqueue_script('obatala-admin-scripts');
 
+            wp_add_inline_script(
+                'obatala-admin-scripts',
+                'window.wpApiSettings = window.wpApiSettings || {};'
+                . 'window.wpApiSettings.root = ' . wp_json_encode( esc_url_raw( rest_url() ) ) . ';'
+                . 'window.wpApiSettings.nonce = ' . wp_json_encode( wp_create_nonce('wp_rest') ) . ';',
+                'before'
+            );
+
             // Localiza o nonce para o JS
             wp_localize_script(
                 'obatala-admin-scripts',
