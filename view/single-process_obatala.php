@@ -38,7 +38,7 @@ get_header();
                 <?php endif; ?>
             </article>
         <?php endwhile; else: ?>
-        <p><?php esc_html_e('No process found.', 'Obatala'); ?></p>
+        <p><?php esc_html_e('No process found.', 'obatala'); ?></p>
     <?php endif; ?>
 </div>
 

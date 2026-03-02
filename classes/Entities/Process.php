@@ -12,20 +12,20 @@ class Process {
 
     public static function register_post_type() {
         $labels = array(
-            'name'                  => _x('Processes', 'Post type general name', 'Obatala'),
-            'singular_name'         => _x('Process', 'Post type singular name', 'Obatala'),
-            'menu_name'             => _x('Process', 'Admin Menu text', 'Obatala'),
-            'name_admin_bar'        => _x('Process', 'Add New on Toolbar', 'Obatala'),
-            'add_new'               => __('Add New', 'Obatala'),
-            'add_new_item'          => __('Add New Process', 'Obatala'),
-            'new_item'              => __('New Process', 'Obatala'),
-            'edit_item'             => __('Edit Process', 'Obatala'),
-            'view_item'             => __('View Process', 'Obatala'),
-            'all_items'             => __('All Processes', 'Obatala'),
-            'search_items'          => __('Search Processes', 'Obatala'),
-            'parent_item_colon'     => __('Parent Process:', 'Obatala'),
-            'not_found'             => __('No process found.', 'Obatala'),
-            'not_found_in_trash'    => __('No process found in Trash.', 'Obatala')
+            'name'                  => _x('Processes', 'Post type general name', 'obatala'),
+            'singular_name'         => _x('Process', 'Post type singular name', 'obatala'),
+            'menu_name'             => _x('Process', 'Admin Menu text', 'obatala'),
+            'name_admin_bar'        => _x('Process', 'Add New on Toolbar', 'obatala'),
+            'add_new'               => __('Add New', 'obatala'),
+            'add_new_item'          => __('Add New Process', 'obatala'),
+            'new_item'              => __('New Process', 'obatala'),
+            'edit_item'             => __('Edit Process', 'obatala'),
+            'view_item'             => __('View Process', 'obatala'),
+            'all_items'             => __('All Processes', 'obatala'),
+            'search_items'          => __('Search Processes', 'obatala'),
+            'parent_item_colon'     => __('Parent Process:', 'obatala'),
+            'not_found'             => __('No process found.', 'obatala'),
+            'not_found_in_trash'    => __('No process found in Trash.', 'obatala')
         );
 
         $args = array(
@@ -72,14 +72,14 @@ class Process {
 
         register_meta('comment', 'stage_id', [
             'type' => 'number',
-            'description' => __('Estágio do Processo', 'Obatala'),
+            'description' => __('Estágio do Processo', 'obatala'),
             'single' => true,
             'show_in_rest' => true
         ]);
 
         register_meta('post', 'status', [
             'type' => 'string',
-            'description' => __('Status do Processo', 'Obatala'),
+            'description' => __('Status do Processo', 'obatala'),
             'single' => true,
             'show_in_rest' => true,
             'default' => 'Stopped'

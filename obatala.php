@@ -18,7 +18,7 @@ namespace Obatala {
 		Version: 1.6.17
 		Author: NOCs
 		License: GPLv2 or later
-		Text Domain: Obatala
+		Text Domain: obatala
 		Requires Plugins: tainacan
 	*/
 
@@ -127,7 +127,7 @@ namespace Obatala {
 			if (!$is_tainacan_active) {
 				deactivate_plugins(plugin_basename(__FILE__));
 				wp_die(
-					esc_html(__('Obatala requires the Tainacan plugin to be installed and activated.', 'Obatala'))
+					esc_html(__('Obatala requires the Tainacan plugin to be installed and activated.', 'obatala'))
 				);
 			}
 		}

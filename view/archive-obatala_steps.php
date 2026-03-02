@@ -64,7 +64,7 @@ get_header();
             </div>
         </div>
     <?php else: ?>
-        <p><?php esc_html_e('No processes found.', 'Obatala'); ?></p>
+        <p><?php esc_html_e('No processes found.', 'obatala'); ?></p>
     <?php endif; ?>
 </div>
 

@@ -14,8 +14,8 @@ namespace Obatala\Admin {
     {
         private static $pages = [
             'main' => [
-                'title' => 'Obatala',
-                'menu_title' => 'Obatala',
+                'title' => 'obatala',
+                'menu_title' => 'obatala',
                 'capability' => 'manage_options',
                 'slug' => 'obatala-main',
                 'callback' => 'render_main_page',
