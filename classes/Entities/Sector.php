@@ -273,10 +273,9 @@ class Sector {
 
     // Função que retorna lista de usuarios associados a um setor
     public static function return_sector_users($sector_id) {
-        // Consulta os IDs dos usuários que possuem 'associated_sector' nos metadados
+        // Consulta os IDs dos usuários e filtra em memória os que possuem o setor associado.
         $user_query = get_users(array(
-            'meta_key'   => 'associated_sector', // Chave do meta valor associado ao setor
-            'fields'     => 'ID'                 // Retorna apenas os IDs dos usuários
+            'fields' => 'ID'
         ));
 
         if (empty($user_query)) {
@@ -314,18 +313,15 @@ class Sector {
         }
 
         $sectors_with_users = [];
+        $user_query = get_users(array(
+            'fields' => 'ID'
+        ));
 
         if (is_array($setores) && !empty($setores)) {
             foreach ($setores as $id => $sector_data) {
                 $sector_id = $id;
                 $sector_name = $sector_data['nome'];
                 $sector_status = $sector_data['status'];
-
-                // Consulta todos os usuários que têm o meta_key 'associated_sector'
-                $user_query = get_users(array(
-                    'meta_key'   => 'associated_sector', // Chave do meta valor associado ao setor
-                    'fields'     => 'ID'                 // Retorna apenas os IDs
-                ));
 
                 // Obtém os dados dos usuários associados ao setor atual
                 $users = [];

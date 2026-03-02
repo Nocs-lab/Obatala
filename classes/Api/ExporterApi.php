@@ -82,19 +82,9 @@ class ExporterApi extends ObatalaAPI {
     }
 
     public function get_mapper_process_type($request) {
-        global $wpdb;
-
         // Sanitiza o ID da coleção
-        $process_model_id = sanitize_text_field($request['process_model_id']);
-
-        // Busca na tabela wp_postmeta
-        $meta_value = $wpdb->get_var(
-            $wpdb->prepare(
-                "SELECT meta_value FROM {$wpdb->prefix}postmeta WHERE post_id = %d AND meta_key = %s",
-                $process_model_id,
-                '_obatala_mapping_data'
-            )
-        );
+        $process_model_id = (int) sanitize_text_field($request['process_model_id']);
+        $meta_value       = get_post_meta($process_model_id, '_obatala_mapping_data', true);
 
         // Retorna o resultado (como array associativo)
         return [
