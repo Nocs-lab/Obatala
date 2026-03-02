@@ -496,12 +496,12 @@ class ProcessTypeApi extends ObatalaAPI {
         $initialized = WP_Filesystem();
         
         if (!$initialized || !is_object($wp_filesystem)) {
-            wp_die(esc_html__('Falha ao inicializar o sistema de arquivos do WordPress', 'Obatala'));
+            wp_die(esc_html__('Falha ao inicializar o sistema de arquivos do WordPress', 'obatala'));
         }
         
         // Verifica se o arquivo existe
         if (!$wp_filesystem->exists($file_path)) {
-            wp_die(esc_html__('Arquivo não encontrado', 'Obatala'));
+            wp_die(esc_html__('Arquivo não encontrado', 'obatala'));
         }
         
         // Obtém o nome do arquivo seguro para saída

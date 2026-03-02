@@ -2,9 +2,9 @@
 Contributors: dgs-pereira, luciano-alexandre, fabiorochafg, fabioprocopio, JoaoNascimento2024, daltonmartins, anaclrra, PaulinhoVieira, PauloMonteiro98
 Tags: museums, management, workflow, process-management
 Requires at least: 5.9
-Tested up to: 6.8
+Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.6.14
+Stable tag: 1.6.17
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
