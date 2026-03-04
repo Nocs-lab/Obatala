@@ -32,6 +32,7 @@ function createZip() {
   archive.directory('vendor/', 'vendor');
   archive.file('obatala.php', { name: 'obatala.php' });
   archive.file('readme.txt', { name: 'readme.txt' });
+  archive.file('composer.json', { name: 'composer.json' });
 
   archive.finalize();
 }
