@@ -15,7 +15,7 @@ namespace Obatala {
 	/*
 		Plugin Name: Obatala - Gestão de Processos Curatoriais
 		Description: Adiciona funcionalidades de gestão de processos curatoriais para o plugin Tainacan
-		Version: 1.6.19
+		Version: 1.6.20
 		Author: NOCs
 		License: GPLv2 or later
 		Text Domain: obatala
