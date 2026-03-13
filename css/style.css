@@ -260,6 +260,7 @@ main {
     color: var(--white);
     font-size: 2rem;
     & small {
+      color: var(--gray-400);
       display: block;
       font-size: 1rem;
       font-weight: 300;
@@ -342,6 +343,9 @@ footer {
 
     border: 1px solid var(--wp-components-color-accent);
   }
+  &.is-link {
+    --wp-admin-theme-color: var(--primary-600);
+  }
 }
 .components-button-container {
   display: flex;
@@ -385,6 +389,13 @@ footer {
 }
 .components-button-group .components-dropdown.components-dropdown-menu {
   margin-left: .5rem;
+  &.is-secondary .components-button {
+    box-shadow: inset 0 0 0 1px var(--primary-600);
+    color: var(--primary-500);
+    &:hover {
+      color: var(--primary-700);
+    }
+  }
 }
 form .components-button-group {
   display: flex;
@@ -600,6 +611,9 @@ th[role="columnheader"][title="Toggle SortBy"] {
 .d-block {
   display: block;
 }
+.false {
+  color: var(--danger) !important;
+}
 .flex-basis-100 {
   flex-basis: 100%;
 }
@@ -607,7 +621,7 @@ th[role="columnheader"][title="Toggle SortBy"] {
   margin-bottom: 0;
 }
 .mb-1 {
-  margin-bottom: 1rem;
+  margin-bottom: 1rem !important;
 }
 .mb-2 {
   margin-bottom: 2rem;
@@ -622,7 +636,7 @@ th[role="columnheader"][title="Toggle SortBy"] {
   margin-left: 2rem !important;
 }
 .mt-1 {
-  margin-top: 1rem;
+  margin-top: 1rem !important;
 }
 .mt-2 {
   margin-top: 2rem;
@@ -1425,9 +1439,15 @@ button .components-spinner {
     background-color: rgba(255, 255, 255, .2);
     color: var(--white);
   }
-  & .components-dropdown-menu__toggle {
-    border: 1px solid var(--gray-400);
-    color: var(--gray-400);
+  & .components-button-group {
+    & .components-button {
+      &.is-secondary {
+        color: var(--primary-400);
+        &:hover {
+          color: var(--primary-700);
+        }
+      }
+    }
   }
   & .stat {
     margin-left: auto;

@@ -1,5 +1,8 @@
 /mk-docs/site
 node_modules
+build/index.css
+build/index.css.map
+build/index-rtl.css
 build/index.js
 build/index.js.map
 build/style-index-rtl.css
