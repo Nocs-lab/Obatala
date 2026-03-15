@@ -113,7 +113,7 @@ const UserManager = ({sector,loadSectorsUsers}) => {
                 onSelectUser={assignUserSector}
             />
 
-            <hr class="mt-2" />
+            <hr className="mt-2" />
              
             <div className='title-container-table'>
                 <h3>{__('Related users', 'obatala')}</h3>

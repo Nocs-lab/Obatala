@@ -412,7 +412,7 @@ const DashboardPage = () => {
                     </div>
                 </div>
                 <div className="dashboard-container">
-                    <div class="dashboard-item-personal">
+                    <div className="dashboard-item-personal">
                         <div className="card-container">
                             <div className="card-item primary-100">
                                 <img src={currentUser.avatar_urls?.[96]} className="user-photo" alt={`Foto de ${currentUser?.name}`} />
@@ -480,7 +480,7 @@ const DashboardPage = () => {
                             )}
                         </div>
                     </div>
-                    <div class="dashboard-item-stats">
+                    <div className="dashboard-item-stats">
                         <div className="card-container">
                             <a href={obatalaApp.admin_url +"admin.php?page=process-manager"} className="card-item">
                                 <span className="indicator">{processes.length}</span>

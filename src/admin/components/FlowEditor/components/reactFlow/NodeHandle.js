@@ -1,7 +1,8 @@
 import React, { useReducer } from "react";
 import { __, sprintf } from "@wordpress/i18n";
 import { useFlowContext } from "../../context/FlowContext";
-import { Tooltip, __experimentalConfirmDialog as ConfirmDialog } from "@wordpress/components";
+import { Button, Tooltip, __experimentalConfirmDialog as ConfirmDialog } from "@wordpress/components";
+import { close } from '@wordpress/icons';
 import Reducer, { initialState } from "../../../../redux/reducer";
 
 // custom handle for our nodes
@@ -35,8 +36,9 @@ const NodeHandle = (props) => {
                         <span role="img" aria-label="drag">⠿</span>
                     </div>
                 </Tooltip>
+                <h3 className="title my-0">{props?.stageName || props?.nodeId}</h3>
                 <Tooltip text={__('Remove step', 'obatala')}>
-                    <div className="btn close-btn" onClick={() => handleConfirmDelete(props?.nodeId)}></div>
+                    <Button variant="link" icon={close} onClick={() => handleConfirmDelete(props?.nodeId)} />
                 </Tooltip>
             </div>
         </>

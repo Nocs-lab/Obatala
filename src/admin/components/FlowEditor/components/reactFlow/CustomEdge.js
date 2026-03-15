@@ -1,13 +1,12 @@
 import {
     BaseEdge,
     EdgeLabelRenderer,
-    EdgeProps,
-    getBezierPath,
     getSmoothStepPath,
     useReactFlow,
 } from "@xyflow/react";
-import { Tooltip, __experimentalConfirmDialog as ConfirmDialog } from "@wordpress/components";
+import { Button, Tooltip, __experimentalConfirmDialog as ConfirmDialog } from "@wordpress/components";
 import { __, sprintf } from "@wordpress/i18n";
+import { close } from '@wordpress/icons';
 import { useReducer } from "react";
 import Reducer, { initialState } from "../../../../redux/reducer";
 
@@ -53,8 +52,6 @@ export default function CustomEdge({
         dispatch({ type: 'CLOSE_MODAL' });
     };
 
-
-
     return (
         <>
             <ConfirmDialog
@@ -79,7 +76,7 @@ export default function CustomEdge({
                     className="nodrag nopan"
                 >
                     <Tooltip text={__('Remove connection', 'obatala')}>
-                        <div className="btn close-btn" onClick={handleConfirmDelete}></div>
+                        <Button variant="link" className="close-btn" icon={close} onClick={handleConfirmDelete} />
                     </Tooltip>
                 </div>
             </EdgeLabelRenderer>
