@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Handle, Position, useReactFlow } from "@xyflow/react";
+import { Handle, Position } from "@xyflow/react";
 import { useFlowContext } from "../../context/FlowContext";
-import { Button, Icon } from "@wordpress/components";
+import { Button, Tooltip } from "@wordpress/components";
 import { close } from "@wordpress/icons";
 
 const NodeConditional = ({ id, data }) => {
@@ -16,7 +16,6 @@ const NodeConditional = ({ id, data }) => {
         radioFields = nodeInput.data.fields.filter(field => field.type === "radio");
     }
 
-    const [isVisibleToolbar, setIsVisibleToolbar] = useState(false);
     const [selectedField, setSelectedField] = useState("");
     const [selectedFields, setSelectedFields] = useState([]);
     const modalRef = useRef(null);
@@ -32,27 +31,6 @@ const NodeConditional = ({ id, data }) => {
         const isValid = isValidSelection && isConnectedInput && isConnectedOutput;
         setHasError(!isValid);
     }, [selectedField, selectedFields, edges, id]);
-
-    // Função para alternar a visibilidade da barra de ferramentas
-    const handleClick = (event) => {
-        if (!isVisibleToolbar && containerRef.current && containerRef.current.contains(event.target)) {
-            setIsVisibleToolbar(true);
-        }
-    };
-
-    // Fechar o modal quando clicar fora dele
-    useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (modalRef.current && !modalRef.current.contains(event.target)) {
-                setIsVisibleToolbar(false);
-            }
-        };
-
-        document.addEventListener("mousedown", handleClickOutside);
-        return () => {
-            document.removeEventListener("mousedown", handleClickOutside);
-        };
-    }, []);
 
     useEffect(() => {
 
@@ -175,111 +153,93 @@ const NodeConditional = ({ id, data }) => {
         updateNodeCondition(id, updatedCondition);
 
         alert("Changes applied successfully.");
-        setIsVisibleToolbar(false);
-    };
-
-    const handleCloseToolbar = (event) => {
-        event.stopPropagation();
-        setIsVisibleToolbar(false);
     };
 
     return (
         <div
             ref={containerRef}
-            className={`bpmn-conditional-operator custom-drag-handle ${hasError ? 'error' : ''}`}
-            onClick={handleClick}
+            className={`step-container custom-drag-handle ${hasError ? 'error' : ''}`}
         >
-            <span>If</span>
+            <div className="step-header">
+                <Tooltip text="Move step">
+                    <div className="custom-drag-handle">
+                        <span role="img" aria-label="drag">⠿</span>
+                    </div>
+                </Tooltip>
+                <h3 className="title my-0">Conditional</h3>
+                <Tooltip text="Remove step">
+                    <Button variant="link" icon={close} onClick={() => removeNode(id)} />
+                </Tooltip>
+            </div>
+            
             <Handle type="target" position={Position.Left} />
             <Handle type="source" position={Position.Right} />
-            {isVisibleToolbar && (
-                <div
-                    ref={modalRef}
-                    className="wp-drawer"
-                    style={{
-                        top: "50px",
-                        right: "10px",
-                        width: "500px",
-                        zIndex: 10,
-                        borderRadius: "8px",
-                        maxHeight: "500px",
-                        transition: "transform 0.3s ease"
-                    }}
-                >
-                    <Button className="close-button"
-                        icon={<Icon icon={close} size={24} onClick={handleCloseToolbar} />}
-                    ></Button>
-                    <h3 class="title">Condition settings</h3>
-                    <hr />
-                    <dl>
-                        <dt>Input stage:</dt>
-                        <dd>{matchedEdgeInput?.source || "No input stage"}</dd>
-                        <dt>Output stages:</dt>
-                        {matchedEdgeOutput?.length > 0 ? (
-                            <dd>
-                                <select
-                                    value={selectedField}
-                                    onChange={(e) => {
-                                        setSelectedField(e.target.value);
-                                        // Atualiza todos os campos com o novo selectedField
-                                        setSelectedFields((prev) =>
-                                            prev.map((field) => ({ ...field, field: e.target.value }))
-                                        );
-                                    }}
-                                >
-                                    <option value="" disabled>Select a field</option>
-                                    {radioFields.map((field, fieldIndex) => (
-                                        <option
-                                            key={fieldIndex}
-                                            value={field.config?.label || field.title || field.id}
-                                        >
-                                            {field.config?.label || field.title || field.id}
-                                        </option>
-                                    ))}
-                                </select>
-                                {matchedEdgeOutput.map((edge, index) => (
-                                    <li key={index}>
-                                        If receives
-                                        <select
-                                            value={selectedFields[index]?.value || ""}
-                                            onChange={(e) => handleValueChange(index, e.target.value)}
-                                            disabled={!selectedField}
-                                        >
-                                            <option value="" disabled>Select a value</option>
-                                            {selectedField &&
-                                                radioFields
-                                                    .find((field) => field.config?.label === selectedField)
-                                                    ?.config?.options
-                                                    ?.split(",")
-                                                    .map((option, optionIndex) => (
-                                                        <option key={optionIndex} value={option.trim()}>
-                                                            {option.trim()}
-                                                        </option>
-                                                    ))}
-                                        </select> then go to <strong>{edge.target}</strong>.
-                                    </li>
-                                ))}
-                            </dd>
-                        ) : (
-                            <dd>No output stages</dd>
-                        )}
-                    </dl>
 
-                    <hr />
-                    <div className="components-button-container">
-                        <Button variant="tertiary-outline" size="small"
-                            onClick={() => removeNode(id)}
-                        >
-                            Remove
-                        </Button>
-                        <Button variant="primary"
-                            onClick={handleSave}
-                        >
-                            Apply
-                        </Button>
-                    </div>
-                </div>
-            )}
+            <dl>
+                <dt>Input stage:</dt>
+                <dd>{matchedEdgeInput?.source || <span className="false">No input stage</span>}</dd>
+                <dt>Output stages:</dt>
+                {matchedEdgeOutput?.length > 0 ? (
+                    <>
+                        <dd>
+                            <select
+                                value={selectedField}
+                                onChange={(e) => {
+                                    setSelectedField(e.target.value);
+                                    // Atualiza todos os campos com o novo selectedField
+                                    setSelectedFields((prev) =>
+                                        prev.map((field) => ({ ...field, field: e.target.value }))
+                                    );
+                                }}
+                            >
+                                <option value="" disabled>Select a field</option>
+                                {radioFields.map((field, fieldIndex) => (
+                                    <option
+                                        key={fieldIndex}
+                                        value={field.config?.label || field.title || field.id}
+                                    >
+                                        {field.config?.label || field.title || field.id}
+                                    </option>
+                                ))}
+                            </select>
+                        </dd>
+                        {matchedEdgeOutput.map((edge, index) => (
+                            <dd className="mt-1" key={index}>
+                                If receives
+                                <select
+                                    value={selectedFields[index]?.value || ""}
+                                    onChange={(e) => handleValueChange(index, e.target.value)}
+                                    disabled={!selectedField}
+                                >
+                                    <option value="" disabled>Select a value</option>
+                                    {selectedField &&
+                                        radioFields
+                                            .find((field) => field.config?.label === selectedField)
+                                            ?.config?.options
+                                            ?.split(",")
+                                            .map((option, optionIndex) => (
+                                                <option key={optionIndex} value={option.trim()}>
+                                                    {option.trim()}
+                                                </option>
+                                            ))}
+                                </select> then go to <strong>{edge.target}</strong>.
+                            </dd>
+                        ))}
+                    </>
+                ) : (
+                    <dd className="false">No output stages</dd>
+                )}
+            </dl>
+
+            <hr />
+            <div className="components-button-container">
+                <Button variant="primary"
+                    onClick={handleSave}
+                >
+                    Apply
+                </Button>
+            </div>
+
         </div>
     );
 };

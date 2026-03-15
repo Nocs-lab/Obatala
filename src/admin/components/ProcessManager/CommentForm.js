@@ -139,7 +139,7 @@ const CommentForm = ({ processId, setHasComments }) => {
         <>
             {comments.length > 0 && (
                 <PanelRow>
-                    <div class="timeline-container">
+                    <div className="timeline-container">
                         <ul className="timeline">
                             {orderedComments.map((comment) => (
                                 <li key={comment.comment_ID} className="timeline-item">
@@ -156,7 +156,7 @@ const CommentForm = ({ processId, setHasComments }) => {
                                         <>
                                             <p className="timeline-title"><strong>{comment.comment_author || 'Anonymous'}</strong> commented <time>{formatDistanceToNow(new Date(comment.comment_date), { addSuffix: true, locale: ptBR })}</time></p>
                                             <div className="timeline-content">
-                                                <p class="timeline-text">{comment.comment_content}</p>
+                                                <p className="timeline-text">{comment.comment_content}</p>
                                                 {currentUser.id === comment.user_id && (
                                                     <DropdownMenu
                                                         icon={moreHorizontalMobile}
