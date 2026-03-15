@@ -1,12 +1,13 @@
 import React, { useEffect, useReducer, useState } from 'react';
-import { Button, 
-        ButtonGroup, 
+import { Button,
+        ButtonGroup,
         Tooltip,
-        Notice, 
+        Notice,
         Spinner,
-        __experimentalConfirmDialog as ConfirmDialog  
+        __experimentalConfirmDialog as ConfirmDialog
     } from '@wordpress/components';
 import { trash } from '@wordpress/icons';
+import { __, sprintf } from '@wordpress/i18n';
 import { assignUserToSector, deleteSectorUser, fetchUsers, fetchUsersBySector } from '../../../api/apiRequests';
 import UserSelect from './UserSelect';
 import Reducer, { initialState } from '../../../redux/reducer';
@@ -63,7 +64,7 @@ const UserManager = ({sector,loadSectorsUsers}) => {
             }, 2000); 
         } catch (error) {
             console.error('Error adding users:', error);
-            setNotice({ status: 'error', message: 'Error adding users.' });
+            setNotice({ status: 'error', message: __('Error adding users.', 'obatala') });
         }
     };
     
@@ -74,7 +75,7 @@ const UserManager = ({sector,loadSectorsUsers}) => {
             .then(() => {
                 const updatedUsers = sectorUsers.filter(type => type.id !== user.id);
                 setSectorUsers(updatedUsers);
-                setNotice({ status: 'success', message: 'User successfully removed.' })
+                setNotice({ status: 'success', message: __('User successfully removed.', 'obatala') })
                 setTimeout(() => {
                     loadSectorUsers(sector.id);
                     loadSectorsUsers();
@@ -82,7 +83,7 @@ const UserManager = ({sector,loadSectorsUsers}) => {
             })
             .catch(error => {
                 console.error('Error removing users to sector:', error);
-                setNotice({ status: 'error', message: 'Error removing user.' })
+                setNotice({ status: 'error', message: __('Error removing user.', 'obatala') })
             });
     };
 
@@ -115,7 +116,7 @@ const UserManager = ({sector,loadSectorsUsers}) => {
             <hr class="mt-2" />
              
             <div className='title-container-table'>
-                <h3>Related users</h3>
+                <h3>{__('Related users', 'obatala')}</h3>
                 <span className="badge">{sectorUsers.length}</span>
             </div>
 
@@ -127,7 +128,7 @@ const UserManager = ({sector,loadSectorsUsers}) => {
                 }}
                 onCancel={ handleCancel }
             >
-                Are you sure you want to delete user {state.user?.display_name}?
+                {sprintf(__('Are you sure you want to delete user %s?', 'obatala'), state.user?.display_name || '')}
             </ConfirmDialog>
 
             {sectorUsers.length > 0 ? (
@@ -135,10 +136,10 @@ const UserManager = ({sector,loadSectorsUsers}) => {
                     <table className="wp-list-table widefat striped mt-1">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th>User Name</th>
-                                <th>Email</th>
-                                <th>Actions</th>
+                                <th>{__('Name', 'obatala')}</th>
+                                <th>{__('Username', 'obatala')}</th>
+                                <th>{__('Email', 'obatala')}</th>
+                                <th>{__('Actions', 'obatala')}</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -164,7 +165,7 @@ const UserManager = ({sector,loadSectorsUsers}) => {
                     </table>
                 </div>
             ) : (
-                <Notice isDismissible={false} status="warning">No existing users for this group.</Notice>
+                <Notice isDismissible={false} status="warning">{__('No existing users for this group.', 'obatala')}</Notice>
             )}
         </>
     );

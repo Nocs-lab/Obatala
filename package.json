@@ -17,6 +17,8 @@
     "main": "build/index.js",
     "scripts": {
         "build": "wp-scripts build",
+        "i18n:make-pot": "wp i18n make-pot . languages/obatala.pot --domain=obatala",
+        "i18n:make-json": "node developer/i18n-make-json.js",
         "format": "wp-scripts format",
         "lint:js": "wp-scripts lint-js",
         "packages-update": "wp-scripts packages-update",
@@ -28,6 +30,7 @@
         "archiver": "^7.0.1"
     },
     "dependencies": {
+        "@wordpress/i18n": "^5.11.0",
         "@dnd-kit/core": "^6.1.0",
         "@dnd-kit/sortable": "^8.0.0",
         "@dnd-kit/utilities": "^3.2.2",

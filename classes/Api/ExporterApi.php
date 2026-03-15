@@ -16,34 +16,34 @@ class ExporterApi extends ObatalaAPI {
         $this->add_route('exporter/all_collections_tainacan', [
             'methods' => 'GET',
             'callback' => [$this, 'get_all_collections'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
         ]);
 
         // Route to get metadata collection
         $this->add_route('exporter/get_metadata_collection/(?P<collection_id>[a-zA-Z0-9_\-.]+)', [
             'methods' => 'GET',
             'callback' => [$this, 'get_metadata_collection'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
         ]);
 
         // Route to get mapper collection
         $this->add_route('exporter/get_mapper_process_type/(?P<process_model_id>[a-zA-Z0-9_\-.]+)', [
             'methods' => 'GET',
             'callback' => [$this, 'get_mapper_process_type'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
         ]);
 
          // Route to get items from collection
          $this->add_route('get_items_collection/(?P<collection_id>[a-zA-Z0-9_\-.]+)', [
             'methods' => 'GET',
             'callback' => [$this, 'get_items_collection'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
         ]);
 
         $this->add_route('exporter/save_mapping_data', [
             'methods'  => 'POST',
             'callback' => [$this, 'save_mapping_data'],
-            'permission_callback' => '__return_true', 
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'], 
         ]);
 
     }

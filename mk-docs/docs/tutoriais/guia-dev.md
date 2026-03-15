@@ -47,43 +47,75 @@ class AdminMenu {
         'submenus' => [
             [
                 'parent_slug' => 'obatala-main',
-                'title' => 'Process Manager',
-                'menu_title' => 'Process Manager',
+                'title' => 'Dashboard',
+                'menu_title' => 'Dashboard',
+                'capability' => 'manage_options',
+                'slug' => 'obatala-main',
+                'callback' => 'render_main_page',
+                'show_in_menu' => true
+            ],
+            [
+                'parent_slug' => 'obatala-main',
+                'title' => 'Processes',
+                'menu_title' => 'Processes',
                 'capability' => 'manage_options',
                 'slug' => 'process-manager',
-                'callback' => 'render_page'
+                'callback' => 'render_page',
+                'show_in_menu' => true
             ],
             [
                 'parent_slug' => 'obatala-main',
-                'title' => 'Process Viewer',
-                'menu_title' => 'Process Viewer',
-                'capability' => 'read',
-                'slug' => 'process-viewer',
-                'callback' => 'render_page'
-            ],
-            [
-                'parent_slug' => 'obatala-main',
-                'title' => 'Process Models',
-                'menu_title' => 'Process Models',
+                'title' => 'Models',
+                'menu_title' => 'Models',
                 'capability' => 'edit_posts',
                 'slug' => 'process-type-manager',
-                'callback' => 'render_page'
+                'callback' => 'render_page',
+                'show_in_menu' => true
             ],
             [
                 'parent_slug' => 'obatala-main',
-                'title' => 'Process Type Editor',
-                'menu_title' => 'Process Type Editor',
+                'title' => 'Process type editor',
+                'menu_title' => 'Process type editor',
                 'capability' => 'manage_options',
                 'slug' => 'process-type-editor',
-                'callback' => 'render_page'
+                'callback' => 'render_page',
+                'show_in_menu' => true
             ],
             [
                 'parent_slug' => 'obatala-main',
-                'title' => 'Sector Manager',
-                'menu_title' => 'Sector Manager',
+                'title' => 'Groups',
+                'menu_title' => 'Groups',
                 'capability' => 'manage_options',
                 'slug' => 'sector_manager',
-                'callback' => 'render_page'
+                'callback' => 'render_page',
+                'show_in_menu' => true
+            ],
+            [
+                'parent_slug' => 'obatala-main',
+                'title' => 'Process viewer',
+                'menu_title' => 'Process viewer',
+                'capability' => 'read',
+                'slug' => 'process-viewer',
+                'callback' => 'render_page',
+                'show_in_menu' => true
+            ],
+            [
+                'parent_slug' => 'obatala-main',
+                'title' => 'Group details',
+                'menu_title' => 'Group details',
+                'capability' => 'manage_options',
+                'slug' => 'sector-details',
+                'callback' => 'render_page',
+                'show_in_menu' => true
+            ],
+            [
+                'parent_slug' => 'obatala-main',
+                'title' => 'Mappers',
+                'menu_title' => 'Mappers',
+                'capability' => 'read',
+                'slug' => 'mappers',
+                'callback' => 'render_mappers_page',
+                'show_in_menu' => true
             ]
         ]
     ];
@@ -106,10 +138,12 @@ class AdminMenu {
         );
 
         foreach (self::$pages['submenus'] as $submenu) {
+            $title = __($submenu['title'], 'obatala');
+            $menu_title = __($submenu['menu_title'], 'obatala');
             add_submenu_page(
                 $submenu['parent_slug'],
-                __($submenu['title'], 'obatala'),
-                __($submenu['menu_title'], 'obatala'),
+                $title,
+                $menu_title,
                 $submenu['capability'],
                 $submenu['slug'],
                 [self::class, $submenu['callback']]
@@ -121,16 +155,7 @@ class AdminMenu {
 ```
 
 ### 🖥️ Renderização do Conteúdo das Páginas
-A função render_main_page define o conteúdo inicial da página principal. Os submenus utilizam render_page com base no slug:
-
-```php
-<?php
-public static function render_main_page() {
-    echo '<h1>' . __('Bem-vindo ao Obatala', 'obatala') . '</h1>';
-    echo '<p>' . __('Selecione uma opção do submenu para começar.', 'obatala') . '</p>';
-}
-?>
-```
+A função `render_main_page` define um container `<div id="dashboard"></div>` onde o React monta o Dashboard. Os submenus utilizam `render_page`, que gera um `<div id="...">` conforme o slug da página; o React monta o componente correspondente.
 
 ## 3. 🧱 Utilização de Blocos Gutenberg com React
 O Obatala utiliza blocos e componentes React dentro do painel administrativo com Gutenberg. Isso permite uma interface moderna e interativa para os usuários.
@@ -199,6 +224,9 @@ private function register_api_endpoints() {
 
     $sector_api = new \Obatala\Api\SectorApi();
     $sector_api->register();
+
+    $exporter_api = new \Obatala\Api\ExporterApi();
+    $exporter_api->register();
 }
 ?>
 ```
@@ -206,10 +234,10 @@ private function register_api_endpoints() {
 Esses endpoints fornecem acesso a dados para:
 
 - Listagem e edição de processos
-
 - Tipos de processo
-
 - Setores e suas relações
+
+**Controle de acesso:** As rotas REST usam `permission_callback` definido em `ObatalaAPI`, exigindo `is_user_logged_in()` e `current_user_can('edit_posts')`. Apenas usuários autenticados com capacidade de editar posts (Editores, Administradores) podem acessar a API.
 
 ### ✅ Conclusão
 A arquitetura do plugin Obatala integra:

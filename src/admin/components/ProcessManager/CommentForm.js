@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { __ } from '@wordpress/i18n';
 import { ptBR } from "date-fns/locale/pt-BR";
 import { formatDistanceToNow } from "date-fns";
 import { addComment, deleteComment, fetchProcess, fetchProcessComments, updateComment } from "../../api/apiRequests";
@@ -46,7 +47,7 @@ const CommentForm = ({ processId, setHasComments }) => {
                     setNotice({ status: 'warning', message: 'You do not have permission to view the comments for this process.' });
                 } else {
 
-                    setNotice({ status: 'error', message: 'Error fetching comments.' });
+                    setNotice({ status: 'error', message: __('Error fetching comments.', 'obatala') });
                 }
 
             });
@@ -60,12 +61,12 @@ const CommentForm = ({ processId, setHasComments }) => {
             })
             .catch((error) => {
                 console.error('Error fetching process:', error);
-                setNotice({ status: 'error', message: 'Error fetching process.' });
+                setNotice({ status: 'error', message: __('Error fetching process.', 'obatala') });
             });
     };
     const handleCommentSubmit = () => {
         if (!comment) {
-            setNotice({ status: 'error', message: 'Please enter a comment.' });
+            setNotice({ status: 'error', message: __('Please enter a comment.', 'obatala') });
             return;
         }
 
@@ -77,15 +78,15 @@ const CommentForm = ({ processId, setHasComments }) => {
         addComment(processId, newComment)
             .then(() => {
                 setComment('');
-                setNotice({ status: 'success', message: 'Comment added successfully.' });
+                setNotice({ status: 'success', message: __('Comment added successfully.', 'obatala') });
                 fetchComments(); // Recarregar os comentários após adicionar um novo
             })
             .catch((error) => {
                 console.error('Error adding comment:', error);
                 if (error?.error === 'Permission denied')
-                    setNotice({ status: 'error', message: 'You do not have permission to comment on this process.' });
+                    setNotice({ status: 'error', message: __('You do not have permission to comment on this process.', 'obatala') });
 
-                setNotice({ status: 'error', message: 'Error adding comment.' });
+                setNotice({ status: 'error', message: __('Error adding comment.', 'obatala') });
             });
     };
 
@@ -97,16 +98,16 @@ const CommentForm = ({ processId, setHasComments }) => {
             .catch((error) => {
                 console.error(error?.message);
                 if (error?.message === 'You do not have permission to delete this comment.') {
-                    setNotice({ status: 'error', message: 'You do not have permission to delete this comment.' });
+                    setNotice({ status: 'error', message: __('You do not have permission to delete this comment.', 'obatala') });
                 } else {
-                    setNotice({ status: 'error', message: 'Error deleting comments.' });
+                    setNotice({ status: 'error', message: __('Error deleting comments.', 'obatala') });
                 }
             });
     };
 
     const handleEditComment = (commentId) => {
         if (!editContent) {
-            setNotice({ status: 'error', message: 'Please enter a comment.' });
+            setNotice({ status: 'error', message: __('Please enter a comment.', 'obatala') });
             return;
         }
 
@@ -119,15 +120,15 @@ const CommentForm = ({ processId, setHasComments }) => {
             .then(() => {
                 setEditingComment(null);
                 setEditContent('');
-                setNotice({ status: 'success', message: 'Comment updated successfully.' });
+                setNotice({ status: 'success', message: __('Comment updated successfully.', 'obatala') });
                 fetchComments(); // Recarregar os comentários após editar
             })
             .catch((error) => {
                 console.error('Error updating comment:', error);
                 if (error?.message === 'You do not have permission to edit this comment.') {
-                    setNotice({ status: 'error', message: 'You do not have permission to edit this comment.' });
+                    setNotice({ status: 'error', message: __('You do not have permission to edit this comment.', 'obatala') });
                 } else {
-                    setNotice({ status: 'error', message: 'Error updating comment.' });
+                    setNotice({ status: 'error', message: __('Error updating comment.', 'obatala') });
                 }
             });
     };
@@ -148,24 +149,24 @@ const CommentForm = ({ processId, setHasComments }) => {
                                         <>
                                             <TextControl value={editContent} onChange={(value) => setEditContent(value)} />
                                             <div className="timeline-content-buttons">
-                                                <Button variant="secondary" onClick={() => setEditingComment(null)}>Cancel</Button>
-                                                <Button variant="primary" onClick={() => handleEditComment(comment.comment_ID)}>Save</Button>
+                                                <Button variant="secondary" onClick={() => setEditingComment(null)}>{__('Cancel', 'obatala')}</Button>
+                                                <Button variant="primary" onClick={() => handleEditComment(comment.comment_ID)}>{__('Save', 'obatala')}</Button>
                                             </div>
                                         </>
                                     ) : (
                                         <>
-                                            <p className="timeline-title"><strong>{comment.comment_author || 'Anonymous'}</strong> commented <time>{formatDistanceToNow(new Date(comment.comment_date), { addSuffix: true, locale: ptBR })}</time></p>
+                                            <p className="timeline-title"><strong>{comment.comment_author || __('Anonymous', 'obatala')}</strong> {__('commented', 'obatala')} <time>{formatDistanceToNow(new Date(comment.comment_date), { addSuffix: true, locale: ptBR })}</time></p>
                                             <div className="timeline-content">
                                                 <p class="timeline-text">{comment.comment_content}</p>
                                                 {currentUser.id === comment.user_id && (
                                                     <DropdownMenu
                                                         icon={moreHorizontalMobile}
                                                         className="timeline-actions"
-                                                        label="Select an action"
+                                                        label={__('Select an action', 'obatala')}
                                                         size="small"
                                                         controls={[
                                                             {
-                                                                title: 'Edit',
+                                                                title: __('Edit', 'obatala'),
                                                                 icon: edit,
                                                                 isDisabled: processIsFinished,
                                                                 onClick: () => {
@@ -174,7 +175,7 @@ const CommentForm = ({ processId, setHasComments }) => {
                                                                 }
                                                             },
                                                             {
-                                                                title: 'Delete',
+                                                                title: __('Delete', 'obatala'),
                                                                 icon: trash,
                                                                 isDisabled: processIsFinished,
                                                                 onClick: () => handleDeleteComment(comment.comment_ID),
@@ -192,7 +193,7 @@ const CommentForm = ({ processId, setHasComments }) => {
                 </PanelRow>
             )}
             {!processIsFinished && (
-                <PanelBody title="Submit comment" className="no-print">
+                <PanelBody title={__('Submit comment', 'obatala')} className="no-print">
                     <PanelRow>
                         {notice && (
                             <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
@@ -200,13 +201,13 @@ const CommentForm = ({ processId, setHasComments }) => {
                             </Notice>
                         )}
                         <TextControl
-                            label="Add a comment"
+                            label={__('Add a comment', 'obatala')}
                             value={comment}
                             onChange={(value) => setComment(value)}
                             disabled={processIsFinished}
                         />
                         <Button variant="primary" onClick={handleCommentSubmit} disabled={processIsFinished}
-                        >Submit</Button>
+                        >{__('Submit', 'obatala')}</Button>
                     </PanelRow>
                 </PanelBody>
             )}

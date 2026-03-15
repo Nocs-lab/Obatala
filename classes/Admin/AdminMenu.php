@@ -118,11 +118,13 @@ namespace Obatala\Admin {
             );
 
             foreach (self::$pages['submenus'] as $submenu) {
+                $title = __($submenu['title'], 'obatala');
+                $menu_title = __($submenu['menu_title'], 'obatala');
                 if ($submenu['show_in_menu']) {
                     add_submenu_page(
                         $submenu['parent_slug'],
-                        $submenu['title'],
-                        $submenu['menu_title'],
+                        $title,
+                        $menu_title,
                         $submenu['capability'],
                         $submenu['slug'],
                         [self::class, $submenu['callback']]
@@ -130,8 +132,8 @@ namespace Obatala\Admin {
                 } else {
                     add_submenu_page(
                         null,
-                        $submenu['title'],
-                        $submenu['menu_title'],
+                        $title,
+                        $menu_title,
                         $submenu['capability'],
                         $submenu['slug'],
                         [self::class, $submenu['callback']]

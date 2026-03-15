@@ -8,6 +8,7 @@ import {
   TextControl,
 } from "@wordpress/components";
 import React, { useState } from "react";
+import { __ } from "@wordpress/i18n";
 import * as Yup from "yup";
 import { useDrawer } from "../../context/DrawerContext";
 import { useFlowContext } from "../../context/FlowContext";
@@ -114,7 +115,7 @@ export const TextFieldControls = ({
 
   return (
     <form>
-      <h3>Edit field</h3>
+      <h3>{__('Edit field', 'obatala')}</h3>
 
       {/* Mensagem de sucesso ou erro */}
       {message && (
@@ -305,7 +306,7 @@ export const TextFieldControls = ({
       />
 
       <Button variant="primary" onClick={validateFields}>
-        Save
+        {__('Save', 'obatala')}
       </Button>
     </form>
   );

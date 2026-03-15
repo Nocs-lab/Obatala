@@ -1,10 +1,11 @@
 import { Button, DropdownMenu, MenuGroup, MenuItem } from '@wordpress/components';
 import { close, settings } from '@wordpress/icons';
+import { __ } from '@wordpress/i18n';
 
 const ProcessFilter = ({ accessLevel, setAccessLevel, modelFilter, setModelFilter, processTypes }) => {
     const optionsLevel = [
-        { title: "Restricted", value: "Restricted" },
-        { title: "Not Restricted", value: "Not restricted" },
+        { title: __("Restricted", "obatala"), value: "Restricted" },
+        { title: __("Not Restricted", "obatala"), value: "Not restricted" },
     ];
 
     const handleClearFilters = () => {
@@ -16,12 +17,12 @@ const ProcessFilter = ({ accessLevel, setAccessLevel, modelFilter, setModelFilte
         <>
             <DropdownMenu
                 icon={settings}
-                label="Filter"
-                text= "Filters"
+                label={__("Filter", "obatala")}
+                text={__("Filters", "obatala")}
             >
                 {({ onClose }) => (
                     <div style={{ display: "flex", gap: "16px" }}>
-                        <MenuGroup label="Access Level">
+                        <MenuGroup label={__("Access Level", "obatala")}>
                             {optionsLevel.map(option => (
                                 <MenuItem
                                     key={option.value}
@@ -35,7 +36,7 @@ const ProcessFilter = ({ accessLevel, setAccessLevel, modelFilter, setModelFilte
                             ))}
                         </MenuGroup>
 
-                        <MenuGroup label="Process Type">
+                        <MenuGroup label={__("Process Type", "obatala")}>
                             {processTypes.map(option => (
                                 <MenuItem
                                     key={option.id}
@@ -56,7 +57,7 @@ const ProcessFilter = ({ accessLevel, setAccessLevel, modelFilter, setModelFilte
                 <Button
                     icon={close}
                     onClick={() => handleClearFilters()}
-                    label="Clear"
+                    label={__("Clear", "obatala")}
                 />
             )}
         </>

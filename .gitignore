@@ -1,4 +1,5 @@
 /mk-docs/site
+developer/i18n-map.json
 node_modules
 build/index.js
 build/index.js.map

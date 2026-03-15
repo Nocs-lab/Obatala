@@ -1,5 +1,6 @@
 import React from 'react';
 import { Panel, PanelHeader, PanelRow } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
 import ProcessHeader from './ProcessHeader';
 import ProcessUserLog from './ProcessUserLog';
 
@@ -24,7 +25,7 @@ const HistoryViewer = ({
             />
 
             <Panel>
-                <PanelHeader>History</PanelHeader>
+                <PanelHeader>{__('History', 'obatala')}</PanelHeader>
                 <PanelRow>
                     <ProcessUserLog
                         stages={options}

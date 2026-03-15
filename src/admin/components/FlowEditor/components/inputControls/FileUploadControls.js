@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { __ } from "@wordpress/i18n";
 import {
   TextControl,
   CheckboxControl,
@@ -62,7 +63,7 @@ export const FileUploadControls = ({
 
   return (
     <form>
-      <h3>Edit file upload field</h3>
+      <h3>{__('Edit file upload field', 'obatala')}</h3>
 
       {/* Campo para definir o Label */}
       <TextControl
@@ -99,7 +100,7 @@ export const FileUploadControls = ({
         variant="primary"
         onClick={validateFields} // Valida os campos ao clicar em salvar
       >
-        Save
+        {__('Save', 'obatala')}
       </Button>
     </form>
   );

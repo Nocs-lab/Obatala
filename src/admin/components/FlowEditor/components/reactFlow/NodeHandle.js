@@ -1,4 +1,5 @@
 import React, { useReducer } from "react";
+import { __, sprintf } from "@wordpress/i18n";
 import { useFlowContext } from "../../context/FlowContext";
 import { Tooltip, __experimentalConfirmDialog as ConfirmDialog } from "@wordpress/components";
 import Reducer, { initialState } from "../../../../redux/reducer";
@@ -26,15 +27,15 @@ const NodeHandle = (props) => {
                 }}
                 onCancel={handleCancel}
             >
-                Are you sure you want to delete node {props?.stageName}?
+                {sprintf(__('Are you sure you want to delete node %s?', 'obatala'), props?.stageName || '')}
             </ConfirmDialog>
             <div className="step-header">
-                <Tooltip text="Move step">
+                <Tooltip text={__('Move step', 'obatala')}>
                     <div className="custom-drag-handle">
                         <span role="img" aria-label="drag">⠿</span>
                     </div>
                 </Tooltip>
-                <Tooltip text="Remove step">
+                <Tooltip text={__('Remove step', 'obatala')}>
                     <div className="btn close-btn" onClick={() => handleConfirmDelete(props?.nodeId)}></div>
                 </Tooltip>
             </div>

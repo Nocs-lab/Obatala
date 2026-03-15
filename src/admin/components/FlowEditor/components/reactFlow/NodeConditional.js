@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Handle, Position, useReactFlow } from "@xyflow/react";
 import { useFlowContext } from "../../context/FlowContext";
 import { Button, Icon } from "@wordpress/components";
+import { __ } from "@wordpress/i18n";
 import { close } from "@wordpress/icons";
 
 const NodeConditional = ({ id, data }) => {
@@ -227,7 +228,7 @@ const NodeConditional = ({ id, data }) => {
                                         );
                                     }}
                                 >
-                                    <option value="" disabled>Select a field</option>
+                                    <option value="" disabled>{__('Select a field', 'obatala')}</option>
                                     {radioFields.map((field, fieldIndex) => (
                                         <option
                                             key={fieldIndex}
@@ -239,13 +240,13 @@ const NodeConditional = ({ id, data }) => {
                                 </select>
                                 {matchedEdgeOutput.map((edge, index) => (
                                     <li key={index}>
-                                        If receives
+                                        {__('If receives', 'obatala')}
                                         <select
                                             value={selectedFields[index]?.value || ""}
                                             onChange={(e) => handleValueChange(index, e.target.value)}
                                             disabled={!selectedField}
                                         >
-                                            <option value="" disabled>Select a value</option>
+                                            <option value="" disabled>{__('Select a value', 'obatala')}</option>
                                             {selectedField &&
                                                 radioFields
                                                     .find((field) => field.config?.label === selectedField)
@@ -256,12 +257,12 @@ const NodeConditional = ({ id, data }) => {
                                                             {option.trim()}
                                                         </option>
                                                     ))}
-                                        </select> then go to <strong>{edge.target}</strong>.
+                                        </select> {__('then go to', 'obatala')} <strong>{edge.target}</strong>.
                                     </li>
                                 ))}
                             </dd>
                         ) : (
-                            <dd>No output stages</dd>
+                            <dd>{__('No output stages', 'obatala')}</dd>
                         )}
                     </dl>
 
@@ -270,12 +271,12 @@ const NodeConditional = ({ id, data }) => {
                         <Button variant="tertiary-outline" size="small"
                             onClick={() => removeNode(id)}
                         >
-                            Remove
+                            {__('Remove', 'obatala')}
                         </Button>
                         <Button variant="primary"
                             onClick={handleSave}
                         >
-                            Apply
+                            {__('Apply', 'obatala')}
                         </Button>
                     </div>
                 </div>

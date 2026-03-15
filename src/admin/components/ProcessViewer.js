@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
+import { __, sprintf } from '@wordpress/i18n';
 import {
     Icon,
     Spinner,
@@ -84,7 +85,7 @@ const ProcessViewer = () => {
                 //await fetchMetaData(processId, orderedSteps);
 
             } catch (err) {
-                setError(err.message || 'Erro ao buscar dados do node');
+                setError(err.message || __('Error fetching node data.', 'obatala'));
             } finally {
                 setIsLoading(false);
             }
@@ -122,14 +123,14 @@ const ProcessViewer = () => {
                             })
                             .catch((error) => {
                                 console.error("Error fetching process type:", error);
-                                setError("Error fetching process type.");
+                                setError(__("Error fetching process type.", "obatala"));
                             });
                     } else {
                     }
                 })
                 .catch((error) => {
                     console.error("Error fetching process:", error);
-                    setError("Error fetching process details.");
+                    setError(__("Error fetching process details.", "obatala"));
                 })
                 .finally(() => setIsProcessLoading(false));
             fetchNodePermission(processId, currentUser.id)
@@ -139,13 +140,13 @@ const ProcessViewer = () => {
                 })
                 .catch((error) => {
                     console.error("Error fetching process:", error);
-                    setError("Error fetching process meta.");
+                    setError(__("Error fetching process meta.", "obatala"));
                 })
                 .finally(() => {
                     setIsLoading(false);
                 });
         } else {
-            setError("No process ID found in the URL.");
+            setError(__("No process ID found in the URL.", "obatala"));
         }
     }, [currentUser]);
 
@@ -184,7 +185,7 @@ const ProcessViewer = () => {
 
     const getSectorName = (sectorId) => {
         const sector = sectors.find(sector => sector.id === sectorId);
-        return sector ? sector.name : "Unknown";
+        return sector ? sector.name : __("Unknown", "obatala");
     };
 
     const fetchMetaData = async (processId, steps) => {
@@ -459,7 +460,7 @@ const ProcessViewer = () => {
     if (!process) {
         return (
             <Notice status="warning" isDismissible={false}>
-                No process found.
+                {__("No process found.", "obatala")}
             </Notice>
         );
     }
@@ -531,7 +532,7 @@ const ProcessViewer = () => {
                         )}
                         {!isPublic && hasPermission === false && (
                             <Notice status="error" isDismissible={false}>
-                                You do not have permission to access this process.
+                                {__("You do not have permission to access this process.", "obatala")}
                             </Notice>
                         )}
                         <div className="panel-container">
@@ -554,7 +555,7 @@ const ProcessViewer = () => {
                                                 disabled={isDisabled}
                                             >
                                                 <span className={`status ${isCompleted ? 'success' : isDisabled ? 'danger' : 'warning'}`}>
-                                                    {isCompleted ? 'Completed' : 'Pending'}
+                                                    {isCompleted ? __('Completed', 'obatala') : __('Pending', 'obatala')}
                                                 </span>
                                                 <h2 className="accordion-title me-auto">{step.label}</h2>
                                                 <div className="badge-container">
@@ -563,10 +564,10 @@ const ProcessViewer = () => {
                                                         title={isCompleted ? `Concluído por ${lastUpdateStage(index).user}` : ''}
                                                     >
                                                         {isCompleted
-                                                            ? `Completed on ${lastUpdateStage(index).dateFormat}`
+                                                            ? sprintf(__('Completed on %s', 'obatala'), lastUpdateStage(index).dateFormat)
                                                             : isDisabled
-                                                                ? 'Pending'
-                                                                : 'Pending input'}
+                                                                ? __('Pending', 'obatala')
+                                                                : __('Pending input', 'obatala')}
                                                     </span>
                                                     {options[index].sector_stage && (
                                                         <span className="badge info" title={`Grupo responsável: ${getSectorName(options[index].sector_stage)}`}>
@@ -581,7 +582,7 @@ const ProcessViewer = () => {
                                                         <>
                                                             {!isUserAllowed && !isPublic && !isCompleted && (
                                                                 <Notice status="warning" isDismissible={false}>
-                                                                    You can only view this step.
+                                                                    {__("You can only view this step.", "obatala")}
                                                                 </Notice>
                                                             )}
                                                             {options[currentStep].fields.length > 0 ? (
@@ -610,7 +611,7 @@ const ProcessViewer = () => {
                                                                                     type="submit"
                                                                                     disabled={!isSubmitEnabled || submittedSteps[currentStep] || !isUserAllowed}
                                                                                 >
-                                                                                    Submit
+                                                                                    {__("Submit", "obatala")}
                                                                                 </Button>
                                                                             </div>
                                                                         )}
@@ -632,13 +633,13 @@ const ProcessViewer = () => {
                                                                 )
                                                             ) : (
                                                                 <Notice status="warning" isDismissible={false}>
-                                                                    No fields found for this Step.
+                                                                    {__("No fields found for this step.", "obatala")}
                                                                 </Notice>
                                                             )}
                                                         </>
                                                     ) : (
                                                         <Notice status="warning" isDismissible={false}>
-                                                            No steps found for this process.
+                                                            {__("No steps found for this process.", "obatala")}
                                                         </Notice>
                                                     )}
                                                 </div>
@@ -650,12 +651,12 @@ const ProcessViewer = () => {
                             <aside>
                                 {progress === 100 && !hasComments ? (null) : (
                                     <Panel>
-                                        <PanelHeader>Comments</PanelHeader>
+                                        <PanelHeader>{__("Comments", "obatala")}</PanelHeader>
                                         <CommentForm processId={processId || null} setHasComments={setHasComments} />
                                     </Panel>
                                 )}
                                 <Panel>
-                                    <PanelHeader>History</PanelHeader>
+                                    <PanelHeader>{__("History", "obatala")}</PanelHeader>
                                     <PanelRow>
                                         <ProcessUserLog
                                             stages={options}

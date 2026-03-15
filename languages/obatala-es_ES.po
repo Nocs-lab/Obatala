@@ -6,10 +6,10 @@ msgstr ""
 "para WordPress beta.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/Obatala\n"
 "POT-Creation-Date: 2024-05-28T20:38:23+00:00\n"
-"PO-Revision-Date: 2024-07-01 11:55-0300\n"
+"PO-Revision-Date: 2025-03-14 12:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language: pt_BR\n"
+"Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -40,129 +40,129 @@ msgstr ""
 
 #: archive-process_collection.php:59
 msgid "No processes found."
-msgstr "Processos não encontrados."
+msgstr "No se encontraron procesos."
 
 #: classes/Admin/AdminMenu.php:9 classes/Admin/AdminMenu.php:20
 msgid "Obatala Settings"
-msgstr "Configurações Obatala"
+msgstr "Configuraciones Obatala"
 
 #: classes/Admin/AdminMenu.php:21
 msgid "Settings"
-msgstr "Configurações"
+msgstr "Configuración"
 
 #: classes/Admin/AdminMenu.php:30 classes/Admin/AdminMenu.php:31
 #: classes/Entities/ProcessCollection.php:24
 msgid "All Processes"
-msgstr "Todos os processos"
+msgstr "Todos los procesos"
 
 #: classes/Admin/AdminMenu.php:39 classes/Admin/AdminMenu.php:40
 #: classes/Entities/ProcessCollection.php:20
 msgid "Add New Process"
-msgstr "Adicionar novo processo"
+msgstr "Añadir nuevo proceso"
 
 #: classes/Admin/AdminMenu.php:48 classes/Admin/AdminMenu.php:49
 msgid "All Steps"
-msgstr "Todas as etapas"
+msgstr "Todas las etapas"
 
 #: classes/Admin/AdminMenu.php:57 classes/Admin/AdminMenu.php:58
 #: classes/Entities/ProcessStepCollection.php:21
 msgid "Add New Step"
-msgstr "Adicionar nova etapa"
+msgstr "Añadir nueva etapa"
 
 #: classes/Admin/SettingsPage.php:16
 msgid "General Settings"
-msgstr "Configurações gerais"
+msgstr "Configuración general"
 
 #: classes/Admin/SettingsPage.php:24
 msgid "Some Setting"
-msgstr "Alguma configuração"
+msgstr "Alguna configuración"
 
 #: classes/Admin/SettingsPage.php:32
 msgid "Enable Feature"
-msgstr "Ativar recurso"
+msgstr "Activar recurso"
 
 #: classes/Admin/SettingsPage.php:40
 msgid "API Key"
-msgstr "Chave de API"
+msgstr "Clave de API"
 
 #: classes/Admin/SettingsPage.php:50
 msgid "Enter the value for some setting."
-msgstr "Digite o valor de alguma configuração."
+msgstr "Introduzca el valor de alguna configuración."
 
 #: classes/Admin/SettingsPage.php:56
 msgid "Enable or disable a specific feature."
-msgstr "Ativar ou desativar um recurso específico."
+msgstr "Activar o desactivar un recurso específico."
 
 #: classes/Admin/SettingsPage.php:62
 msgid "Enter your API key here."
-msgstr "Digite sua chave de API aqui."
+msgstr "Introduzca su clave de API aquí."
 
 #: classes/Admin/SettingsPage.php:73
 msgid "Save Settings"
-msgstr "Salvar configurações"
+msgstr "Guardar configuración"
 
 #: classes/Entities/ProcessCollection.php:15
 msgctxt "Post type general name"
 msgid "Processes"
-msgstr "Processos"
+msgstr "Procesos"
 
 #: classes/Entities/ProcessCollection.php:16
 msgctxt "Post type singular name"
 msgid "Process"
-msgstr "Processo"
+msgstr "Proceso"
 
 #: classes/Entities/ProcessCollection.php:17
 msgctxt "Admin Menu text"
 msgid "Process"
-msgstr "Processo"
+msgstr "Proceso"
 
 #: classes/Entities/ProcessCollection.php:18
 msgctxt "Add New on Toolbar"
 msgid "Process"
-msgstr "Processo"
+msgstr "Proceso"
 
 #: classes/Entities/ProcessCollection.php:19
 #: classes/Entities/ProcessStepCollection.php:20
 msgid "Add New"
-msgstr "Adicionar novo"
+msgstr "Añadir nuevo"
 
 #: classes/Entities/ProcessCollection.php:21
 msgid "New Process"
-msgstr "Novo processo"
+msgstr "Nuevo proceso"
 
 #: classes/Entities/ProcessCollection.php:22
 msgid "Edit Process"
-msgstr "Editar processo"
+msgstr "Editar proceso"
 
 #: classes/Entities/ProcessCollection.php:23
 msgid "View Process"
-msgstr "Visualizar processo"
+msgstr "Ver proceso"
 
 #: classes/Entities/ProcessCollection.php:25
 msgid "Search Processes"
-msgstr "Buscar processos"
+msgstr "Buscar procesos"
 
 #: classes/Entities/ProcessCollection.php:26
 msgid "Parent Process:"
-msgstr "Processo pai:"
+msgstr "Proceso padre:"
 
 #: classes/Entities/ProcessCollection.php:27 single-process_collection.php:30
 msgid "No process found."
-msgstr "Processo não encontrado."
+msgstr "Proceso no encontrado."
 
 #: classes/Entities/ProcessCollection.php:28
 msgid "No process found in Trash."
-msgstr "Processos não encontrados na lixeira."
+msgstr "No hay procesos en la papelera."
 
 #: classes/Entities/ProcessCollection.php:55
 msgctxt "taxonomy general name"
 msgid "Process Types"
-msgstr "Tipos de processos"
+msgstr "Tipos de proceso"
 
 #: classes/Entities/ProcessCollection.php:56
 msgctxt "taxonomy singular name"
 msgid "Process Type"
-msgstr "Tipo de processo"
+msgstr "Tipo de proceso"
 
 #: classes/Entities/ProcessCollection.php:57
 msgid "Search Process Types"
@@ -170,11 +170,11 @@ msgstr "Buscar tipos de processo"
 
 #: classes/Entities/ProcessCollection.php:58
 msgid "All Process Types"
-msgstr "Todos os tipos de processo"
+msgstr "Todos los tipos de proceso"
 
 #: classes/Entities/ProcessCollection.php:59
 msgid "Parent Process Type"
-msgstr "Tipo do processo pai"
+msgstr "Tipo del proceso padre"
 
 #: classes/Entities/ProcessCollection.php:60
 msgid "Parent Process Type:"
@@ -182,28 +182,28 @@ msgstr "Tipo do processo pai:"
 
 #: classes/Entities/ProcessCollection.php:61
 msgid "Edit Process Type"
-msgstr "Editar tipo de processo"
+msgstr "Editar tipo de proceso"
 
 #: classes/Entities/ProcessCollection.php:62
 msgid "Update Process Type"
-msgstr "Atualizar tipo de processo"
+msgstr "Actualizar tipo de proceso"
 
 #: classes/Entities/ProcessCollection.php:63
 msgid "Add New Process Type"
-msgstr "Adicionar novo tipo de processo"
+msgstr "Añadir nuevo tipo de proceso"
 
 #: classes/Entities/ProcessCollection.php:64
 msgid "New Process Type Name"
-msgstr "Novo nome do tipo de processo"
+msgstr "Nuevo nombre del tipo de proceso"
 
 #: classes/Entities/ProcessCollection.php:65
 msgid "Process Types"
-msgstr "Tipos de processo"
+msgstr "Tipos de proceso"
 
 #: classes/Entities/ProcessStepCollection.php:16
 msgctxt "Post type general name"
 msgid "Process Steps"
-msgstr "Etapas do processo"
+msgstr "Etapas del proceso"
 
 #: classes/Entities/ProcessStepCollection.php:17
 msgctxt "Post type singular name"
@@ -222,7 +222,7 @@ msgstr "Etapa"
 
 #: classes/Entities/ProcessStepCollection.php:22
 msgid "New Step"
-msgstr "Nova etapa"
+msgstr "Nueva etapa"
 
 #: classes/Entities/ProcessStepCollection.php:23
 msgid "Edit Step"
@@ -230,11 +230,11 @@ msgstr "Editar etapa"
 
 #: classes/Entities/ProcessStepCollection.php:24
 msgid "View Step"
-msgstr "Visualizar etapa"
+msgstr "Ver etapa"
 
 #: classes/Entities/ProcessStepCollection.php:25
 msgid "All Step"
-msgstr "Todas as etapas"
+msgstr "Todas las etapas"
 
 #: classes/Entities/ProcessStepCollection.php:26
 msgid "Search Step"
@@ -242,15 +242,15 @@ msgstr "Buscar etapa"
 
 #: classes/Entities/ProcessStepCollection.php:27
 msgid "Parent Step:"
-msgstr "Etapa pai:"
+msgstr "Etapa padre:"
 
 #: classes/Entities/ProcessStepCollection.php:28
 msgid "No step found."
-msgstr "Etapa não encontrada."
+msgstr "Etapa no encontrada."
 
 #: classes/Entities/ProcessStepCollection.php:29
 msgid "No step found in Trash."
-msgstr "Etapa não encontrada na lixeira."
+msgstr "Etapa no encontrada en la papelera."
 
 #: classes/Entities/ProcessStepCollection.php:56
 msgctxt "taxonomy general name"
@@ -268,11 +268,11 @@ msgstr "Buscar tipos de etapa"
 
 #: classes/Entities/ProcessStepCollection.php:59
 msgid "All Step Types"
-msgstr "Todos os tipos de etapa"
+msgstr "Todos los tipos de etapa"
 
 #: classes/Entities/ProcessStepCollection.php:60
 msgid "Parent Step Type"
-msgstr "Tipo da etapa pai"
+msgstr "Tipo de la etapa padre"
 
 #: classes/Entities/ProcessStepCollection.php:61
 msgid "Parent Step Type:"
@@ -284,15 +284,15 @@ msgstr "Editar tipo de etapa"
 
 #: classes/Entities/ProcessStepCollection.php:63
 msgid "Update Step Type"
-msgstr "Atualizar tipo de etapa"
+msgstr "Actualizar tipo de etapa"
 
 #: classes/Entities/ProcessStepCollection.php:64
 msgid "Add New Step Type"
-msgstr "Adicionar novo tipo de etapa"
+msgstr "Añadir nuevo tipo de etapa"
 
 #: classes/Entities/ProcessStepCollection.php:65
 msgid "New Step Type Name"
-msgstr "Novo nome do tipo de etapa"
+msgstr "Nuevo nombre del tipo de etapa"
 
 #: classes/Entities/ProcessStepCollection.php:66
 msgid "Step Types"
@@ -300,122 +300,122 @@ msgstr "Tipos de etapa"
 
 #: obatala.php:116
 msgid "Obatala requires the Tainacan plugin to be installed and activated."
-msgstr "Obatala requer a instalação e a ativação do plugin Tainacan."
+msgstr "Obatala requiere que el plugin Tainacan esté instalado y activado."
 
 # Frontend (React) strings
 msgid "Menu"
 msgstr "Menu"
 
 msgid "Dashboard"
-msgstr "Painel"
+msgstr "Panel"
 
 msgid "Processes"
-msgstr "Processos"
+msgstr "Procesos"
 
 msgid "Models"
 msgstr "Modelos"
 
 msgid "Settings"
-msgstr "Configurações"
+msgstr "Configuración"
 
 msgid "Groups"
 msgstr "Grupos"
 
 msgid "Users"
-msgstr "Usuários"
+msgstr "Usuarios"
 
 msgid "WordPress"
 msgstr "WordPress"
 
 msgid "Add new"
-msgstr "Adicionar novo"
+msgstr "Añadir nuevo"
 
 msgid "All processes"
-msgstr "Todos os processos"
+msgstr "Todos los procesos"
 
 msgid "My processes"
 msgstr "Meus processos"
 
 msgid "Edit Process"
-msgstr "Editar processo"
+msgstr "Editar proceso"
 
 msgid "Add new process"
-msgstr "Adicionar novo processo"
+msgstr "Añadir nuevo proceso"
 
 msgid "Process Title"
-msgstr "Título do processo"
+msgstr "Título del proceso"
 
 msgid "Process Model"
-msgstr "Modelo do processo"
+msgstr "Modelo del proceso"
 
 msgid "Select a process model..."
-msgstr "Selecione um modelo de processo..."
+msgstr "Seleccione un modelo de proceso..."
 
 msgid "Access level"
-msgstr "Nível de acesso"
+msgstr "Nivel de acceso"
 
 msgid "Not restricted"
-msgstr "Não restrito"
+msgstr "No restringido"
 
 msgid "Restricted"
-msgstr "Restrito"
+msgstr "Restringido"
 
 msgid "Cancel"
 msgstr "Cancelar"
 
 msgid "Save"
-msgstr "Salvar"
+msgstr "Guardar"
 
 msgid "Please provide a title and select a process type."
-msgstr "Informe um título e selecione um tipo de processo."
+msgstr "Indique un título y seleccione un tipo de proceso."
 
 msgid "Invalid process type selected."
-msgstr "Tipo de processo inválido selecionado."
+msgstr "Tipo de proceso no válido seleccionado."
 
 msgid "The process cannot be created because the selected process model is inactive"
-msgstr "O processo não pode ser criado porque o modelo de processo selecionado está inativo"
+msgstr "El proceso no puede crearse porque el modelo de proceso seleccionado está inactivo"
 
 msgid "Process updated successfully."
-msgstr "Processo atualizado com sucesso."
+msgstr "Proceso actualizado correctamente."
 
 msgid "Process saved successfully."
-msgstr "Processo salvo com sucesso."
+msgstr "Proceso guardado correctamente."
 
 msgid "Process created successfully."
-msgstr "Processo criado com sucesso."
+msgstr "Proceso creado correctamente."
 
 msgid "Error creating process."
-msgstr "Erro ao criar processo."
+msgstr "Error al crear el proceso."
 
 msgid "Group successfully saved."
-msgstr "Grupo salvo com sucesso."
+msgstr "Grupo guardado correctamente."
 
 msgid "Group already exists."
-msgstr "Grupo já existe."
+msgstr "El grupo ya existe."
 
 msgid "Error saving group."
 msgstr "Erro ao salvar grupo."
 
 msgid "Group successfully removed."
-msgstr "Grupo removido com sucesso."
+msgstr "Grupo eliminado correctamente."
 
 msgid "Cannot delete group linked to a user."
-msgstr "Não é possível excluir grupo vinculado a um usuário."
+msgstr "No se puede eliminar un grupo vinculado a un usuario."
 
 msgid "Process model saved successfully."
-msgstr "Modelo de processo salvo com sucesso."
+msgstr "Modelo de proceso guardado correctamente."
 
 msgid "Error saving process model."
-msgstr "Erro ao salvar modelo de processo."
+msgstr "Error al guardar el modelo de proceso."
 
 msgid "Add process model"
-msgstr "Adicionar modelo de processo"
+msgstr "Añadir modelo de proceso"
 
 msgid "Are you sure you want to delete process model %s?"
 msgstr "Tem certeza que deseja excluir o modelo de processo %s?"
 
 msgid "Edit process model"
-msgstr "Editar modelo de processo"
+msgstr "Editar modelo de proceso"
 
 # Additional frontend strings
 msgid "Model"
@@ -425,10 +425,10 @@ msgid "Current step"
 msgstr "Etapa atual"
 
 msgid "No group"
-msgstr "Nenhum grupo"
+msgstr "Ningún grupo"
 
 msgid "Not started"
-msgstr "Não iniciado"
+msgstr "No iniciado"
 
 msgid "Progress"
 msgstr "Progresso"
@@ -440,7 +440,7 @@ msgid "Edit"
 msgstr "Editar"
 
 msgid "History"
-msgstr "Histórico"
+msgstr "Historial"
 
 msgid "Search by title"
 msgstr "Buscar por título"
@@ -452,10 +452,10 @@ msgid "Page"
 msgstr "Página"
 
 msgid "Next"
-msgstr "Próximo"
+msgstr "Siguiente"
 
 msgid "No existing processes."
-msgstr "Nenhum processo existente."
+msgstr "Ningún proceso existente."
 
 msgid "Filter"
 msgstr "Filtrar"
@@ -464,25 +464,25 @@ msgid "Filters"
 msgstr "Filtros"
 
 msgid "Restricted"
-msgstr "Restrito"
+msgstr "Restringido"
 
 msgid "Not Restricted"
-msgstr "Não restrito"
+msgstr "No restringido"
 
 msgid "Access Level"
-msgstr "Nível de acesso"
+msgstr "Nivel de acceso"
 
 msgid "Process Type"
-msgstr "Tipo de processo"
+msgstr "Tipo de proceso"
 
 msgid "Clear"
 msgstr "Limpar"
 
 msgid "Process"
-msgstr "Processo"
+msgstr "Proceso"
 
 msgid "Back to Processes"
-msgstr "Voltar aos Processos"
+msgstr "Volver a los procesos"
 
 msgid "Current Stage"
 msgstr "Etapa atual"
@@ -491,70 +491,70 @@ msgid "View Previous Stage"
 msgstr "Ver etapa anterior"
 
 msgid "Advance Stage"
-msgstr "Avançar etapa"
+msgstr "Avanzar etapa"
 
 msgid "Reopen Stage"
 msgstr "Reabrir etapa"
 
 msgid "Comments"
-msgstr "Comentários"
+msgstr "Comentarios"
 
 msgid "Attachments"
-msgstr "Anexos"
+msgstr "Adjuntos"
 
 msgid "Attach file"
-msgstr "Anexar arquivo"
+msgstr "Adjuntar archivo"
 
 msgid "Add Comment"
-msgstr "Adicionar comentário"
+msgstr "Añadir comentario"
 
 msgid "Error fetching node data."
-msgstr "Erro ao buscar dados do nó."
+msgstr "Error al obtener los datos del nodo."
 
 msgid "Error fetching process type."
-msgstr "Erro ao buscar tipo de processo."
+msgstr "Error al obtener el tipo de proceso."
 
 msgid "Error fetching process details."
 msgstr "Erro ao buscar detalhes do processo."
 
 msgid "Error fetching process meta."
-msgstr "Erro ao buscar metadados do processo."
+msgstr "Error al obtener los metadatos del proceso."
 
 msgid "No process ID found in the URL."
-msgstr "ID do processo não encontrado na URL."
+msgstr "ID del proceso no encontrado en la URL."
 
 msgid "Unknown"
 msgstr "Desconhecido"
 
 msgid "No process found."
-msgstr "Processo não encontrado."
+msgstr "Proceso no encontrado."
 
 msgid "You do not have permission to access this process."
-msgstr "Você não tem permissão para acessar este processo."
+msgstr "No tiene permiso para acceder a este proceso."
 
 msgid "Completed"
-msgstr "Concluído"
+msgstr "Completado"
 
 msgid "Pending"
 msgstr "Pendente"
 
 msgid "Completed on %s"
-msgstr "Concluído em %s"
+msgstr "Completado el %s"
 
 msgid "Pending input"
-msgstr "Aguardando entrada"
+msgstr "Pendiente de entrada"
 
 msgid "You can only view this step."
-msgstr "Você só pode visualizar esta etapa."
+msgstr "Solo puede visualizar esta etapa."
 
 msgid "Submit"
 msgstr "Enviar"
 
 msgid "No fields found for this step."
-msgstr "Nenhum campo encontrado para esta etapa."
+msgstr "No se encontraron campos para esta etapa."
 
 msgid "No steps found for this process."
-msgstr "Nenhuma etapa encontrada para este processo."
+msgstr "No se encontraron etapas para este proceso."
 
 msgid "Process type title"
 msgstr "Título do tipo de processo"
@@ -563,10 +563,10 @@ msgid "Title"
 msgstr "Título"
 
 msgid "Description"
-msgstr "Descrição"
+msgstr "Descripción"
 
 msgid "Number of users"
-msgstr "Número de usuários"
+msgstr "Número de usuarios"
 
 msgid "Loading..."
 msgstr "Carregando..."
@@ -575,142 +575,142 @@ msgid "View group"
 msgstr "Ver grupo"
 
 msgid "Manage users"
-msgstr "Gerenciar usuários"
+msgstr "Gestionar usuarios"
 
 msgid "Delete"
-msgstr "Excluir"
+msgstr "Eliminar"
 
 msgid "Search by title or description"
-msgstr "Buscar por título ou descrição"
+msgstr "Buscar por título o descripción"
 
 msgid "No existing groups."
-msgstr "Nenhum grupo existente."
+msgstr "Ningún grupo existente."
 
 msgid "Title and description are required."
-msgstr "Título e descrição são obrigatórios."
+msgstr "El título y la descripción son obligatorios."
 
 msgid "Group saved successfully."
-msgstr "Grupo salvo com sucesso."
+msgstr "Grupo guardado correctamente."
 
 msgid "Error saving group."
 msgstr "Erro ao salvar grupo."
 
 msgid "Status"
-msgstr "Status"
+msgstr "Estado"
 
 msgid "Active"
-msgstr "Ativo"
+msgstr "Activo"
 
 msgid "Inactive"
-msgstr "Inativo"
+msgstr "Inactivo"
 
 msgid "All"
 msgstr "Todos"
 
 msgid "My Groups"
-msgstr "Meus Grupos"
+msgstr "Mis Grupos"
 
 msgid "Created at"
-msgstr "Criado em"
+msgstr "Creado el"
 
 msgid "Last update"
-msgstr "Última atualização"
+msgstr "Última actualización"
 
 msgid "Manage steps"
-msgstr "Gerenciar etapas"
+msgstr "Gestionar etapas"
 
 msgid "Edit export data"
-msgstr "Editar dados de exportação"
+msgstr "Editar datos de exportación"
 
 msgid "Edit general data"
-msgstr "Editar dados gerais"
+msgstr "Editar datos generales"
 
 msgid "Delete model"
-msgstr "Excluir modelo"
+msgstr "Eliminar modelo"
 
 msgid "No existing process models."
-msgstr "Nenhum modelo de processo existente."
+msgstr "Ningún modelo de proceso existente."
 
 msgid "Status: %s"
-msgstr "Status: %s"
+msgstr "Estado: %s"
 
 msgid "You do not have permission to view the comments for this process."
-msgstr "Você não tem permissão para visualizar os comentários deste processo."
+msgstr "No tiene permiso para ver los comentarios de este proceso."
 
 msgid "Error fetching comments."
-msgstr "Erro ao buscar comentários."
+msgstr "Error al obtener los comentarios."
 
 msgid "Error fetching process."
-msgstr "Erro ao buscar processo."
+msgstr "Error al obtener el proceso."
 
 msgid "Please enter a comment."
-msgstr "Digite um comentário."
+msgstr "Introduzca un comentario."
 
 msgid "Comment added successfully."
-msgstr "Comentário adicionado com sucesso."
+msgstr "Comentario añadido correctamente."
 
 msgid "You do not have permission to comment on this process."
-msgstr "Você não tem permissão para comentar neste processo."
+msgstr "No tiene permiso para comentar en este proceso."
 
 msgid "Error adding comment."
-msgstr "Erro ao adicionar comentário."
+msgstr "Error al añadir el comentario."
 
 msgid "You do not have permission to delete this comment."
-msgstr "Você não tem permissão para excluir este comentário."
+msgstr "No tiene permiso para eliminar este comentario."
 
 msgid "Error deleting comments."
-msgstr "Erro ao excluir comentários."
+msgstr "Error al eliminar los comentarios."
 
 msgid "You do not have permission to edit this comment."
-msgstr "Você não tem permissão para editar este comentário."
+msgstr "No tiene permiso para editar este comentario."
 
 msgid "Comment updated successfully."
-msgstr "Comentário atualizado com sucesso."
+msgstr "Comentario actualizado correctamente."
 
 msgid "Error updating comment."
-msgstr "Erro ao atualizar comentário."
+msgstr "Error al actualizar el comentario."
 
 msgid "Anonymous"
-msgstr "Anônimo"
+msgstr "Anónimo"
 
 msgid "commented"
-msgstr "comentou"
+msgstr "comentó"
 
 msgid "Select an action"
-msgstr "Selecione uma ação"
+msgstr "Seleccione una acción"
 
 msgid "Submit comment"
-msgstr "Enviar comentário"
+msgstr "Enviar comentario"
 
 msgid "Add a comment"
-msgstr "Adicionar um comentário"
+msgstr "Añadir un comentario"
 
 msgid "Process created"
-msgstr "Processo criado"
+msgstr "Proceso creado"
 
 msgid "Responsible"
-msgstr "Responsável"
+msgstr "Responsable"
 
 msgid "Unknown sector"
-msgstr "Setor desconhecido"
+msgstr "Sector desconocido"
 
 msgid "You have left the group successfully."
-msgstr "Você saiu do grupo com sucesso."
+msgstr "Ha salido del grupo correctamente."
 
 msgid "Failed to leave the group. Please try again."
-msgstr "Falha ao sair do grupo. Tente novamente."
+msgstr "Error al salir del grupo. Inténtelo de nuevo."
 
 msgid "Sector ID not found in URL"
-msgstr "ID do setor não encontrado na URL"
+msgstr "ID del sector no encontrado en la URL"
 
 msgid "Failed to load group details"
-msgstr "Falha ao carregar detalhes do grupo"
+msgstr "Error al cargar los detalles del grupo"
 
 msgid "Group not found"
-msgstr "Grupo não encontrado"
+msgstr "Grupo no encontrado"
 
 msgid "Associated users"
-msgstr "Usuários associados"
+msgstr "Usuarios asociados"
 
 msgid "Name"
 msgstr "Nome"
@@ -722,47 +722,47 @@ msgid "Email"
 msgstr "E-mail"
 
 msgid "Leave group"
-msgstr "Sair do grupo"
+msgstr "Salir del grupo"
 
 msgid "No users in this group."
-msgstr "Nenhum usuário neste grupo."
+msgstr "No hay usuarios en este grupo."
 
 msgid "Are you sure you want to leave the group \"%s\"?"
-msgstr "Tem certeza que deseja sair do grupo \"%s\"?"
+msgstr "¿Está seguro de que desea salir del grupo \"%s\"?"
 
 msgid "Unknown Title"
-msgstr "Título desconhecido"
+msgstr "Título desconocido"
 
 msgid "Unknown title"
-msgstr "Título desconhecido"
+msgstr "Título desconocido"
 
 msgid "Enter a value..."
-msgstr "Digite um valor..."
+msgstr "Introduzca un valor..."
 
 msgid "Select Options"
-msgstr "Selecionar opções"
+msgstr "Seleccionar opciones"
 
 msgid "File"
 msgstr "Arquivo"
 
 # Dashboard strings
 msgid "%1$s/%2$s completed processes"
-msgstr "%1$s/%2$s processos concluídos"
+msgstr "%1$s/%2$s procesos completados"
 
 msgid "My group"
-msgstr "Meu grupo"
+msgstr "Mi grupo"
 
 msgid "Pending processes"
-msgstr "Processos pendentes"
+msgstr "Procesos pendientes"
 
 msgid "Current stage"
 msgstr "Etapa atual"
 
 msgid "No pending processes found."
-msgstr "Nenhum processo pendente encontrado."
+msgstr "No se encontraron procesos pendientes."
 
 msgid "Top 5 most used models"
-msgstr "Top 5 modelos mais usados"
+msgstr "Top 5 modelos más usados"
 
 msgid "Quantity"
 msgstr "Quantidade"
@@ -771,26 +771,26 @@ msgid "No results."
 msgstr "Sem resultados."
 
 msgid "Obatala | Curatorial Process Management"
-msgstr "Obatala | Gestão de Processos Curatoriais"
+msgstr "Obatala | Gestión de Procesos Curatoriales"
 
 msgid "Process type saved successfully."
-msgstr "Tipo de processo salvo com sucesso."
+msgstr "Tipo de proceso guardado correctamente."
 
 msgid "Error saving process type."
-msgstr "Erro ao salvar tipo de processo."
+msgstr "Error al guardar el tipo de proceso."
 
 # FlowEditor / Process Model Editor
 msgid "Cancel changes"
-msgstr "Cancelar alterações"
+msgstr "Cancelar cambios"
 
 msgid "Add step"
-msgstr "Adicionar etapa"
+msgstr "Añadir etapa"
 
 msgid "Add conditional"
-msgstr "Adicionar condicional"
+msgstr "Añadir condicional"
 
 msgid "Fullscreen"
-msgstr "Tela cheia"
+msgstr "Pantalla completa"
 
 msgid "Export JSON"
 msgstr "Exportar JSON"
@@ -799,31 +799,31 @@ msgid "Import JSON"
 msgstr "Importar JSON"
 
 msgid "Step name"
-msgstr "Nome da etapa"
+msgstr "Nombre de la etapa"
 
 msgid "Enter the step name"
-msgstr "Digite o nome da etapa"
+msgstr "Introduzca el nombre de la etapa"
 
 msgid "Group responsible"
-msgstr "Grupo responsável"
+msgstr "Grupo responsable"
 
 msgid "Fields"
 msgstr "Campos"
 
 msgid "Add field"
-msgstr "Adicionar campo"
+msgstr "Añadir campo"
 
 msgid "Select a field to add:"
-msgstr "Selecione um campo para adicionar:"
+msgstr "Seleccione un campo para añadir:"
 
 msgid "Manage steps"
-msgstr "Gerenciar etapas"
+msgstr "Gestionar etapas"
 
 msgid "Process type and meta updated successfully."
-msgstr "Tipo de processo e metadados atualizados com sucesso."
+msgstr "Tipo de proceso y metadatos actualizados correctamente."
 
 msgid "Error updating process type and meta."
-msgstr "Erro ao atualizar tipo de processo e metadados."
+msgstr "Error al actualizar el tipo de proceso y metadatos."
 
 msgid "Start"
 msgstr "Início"
@@ -832,91 +832,91 @@ msgid "End"
 msgstr "Fim"
 
 msgid "Are you sure you want to delete node %s?"
-msgstr "Tem certeza que deseja excluir o nó %s?"
+msgstr "¿Está seguro de que desea eliminar el nodo %s?"
 
 msgid "Move step"
 msgstr "Mover etapa"
 
 msgid "Remove step"
-msgstr "Remover etapa"
+msgstr "Quitar etapa"
 
 msgid "Are you sure you want to delete connection between %s and %s?"
-msgstr "Tem certeza que deseja excluir a conexão entre %s e %s?"
+msgstr "¿Está seguro de que desea eliminar la conexión entre %s y %s?"
 
 msgid "Remove connection"
-msgstr "Remover conexão"
+msgstr "Quitar conexión"
 
 # Admin menu (PHP)
 msgid "Process type editor"
-msgstr "Editor de tipo de processo"
+msgstr "Editor de tipo de proceso"
 
 msgid "Process viewer"
-msgstr "Visualizador de processo"
+msgstr "Visualizador de proceso"
 
 msgid "Group details"
-msgstr "Detalhes do grupo"
+msgstr "Detalles del grupo"
 
 msgid "Mappers"
 msgstr "Mapeadores"
 
 # UserManager
 msgid "Select one or more users"
-msgstr "Selecione um ou mais usuários"
+msgstr "Seleccione uno o más usuarios"
 
 msgid "Add user(s)"
-msgstr "Adicionar usuário(s)"
+msgstr "Añadir usuario(s)"
 
 msgid "Related users"
-msgstr "Usuários relacionados"
+msgstr "Usuarios relacionados"
 
 msgid "No existing users for this group."
-msgstr "Nenhum usuário neste grupo."
+msgstr "No hay usuarios en este grupo."
 
 msgid "Users successfully added."
 msgstr "Usuários adicionados com sucesso."
 
 msgid "Error adding users."
-msgstr "Erro ao adicionar usuários."
+msgstr "Error al añadir usuarios."
 
 msgid "User successfully removed."
 msgstr "Usuário removido com sucesso."
 
 msgid "Error removing user."
-msgstr "Erro ao remover usuário."
+msgstr "Error al eliminar el usuario."
 
 msgid "Are you sure you want to delete user %s?"
-msgstr "Tem certeza que deseja excluir o usuário %s?"
+msgstr "¿Está seguro de que desea eliminar al usuario %s?"
 
 msgid "Actions"
-msgstr "Ações"
+msgstr "Acciones"
 
 msgid "Remove user from sector"
-msgstr "Remover usuário do setor"
+msgstr "Quitar usuario del sector"
 
 # NodeConditional, ProcessFlow
 msgid "Select a field"
-msgstr "Selecione um campo"
+msgstr "Seleccione un campo"
 
 msgid "Select a value"
-msgstr "Selecione um valor"
+msgstr "Seleccione un valor"
 
 msgid "If receives"
-msgstr "Se receber"
+msgstr "Si recibe"
 
 msgid "then go to"
-msgstr "ir para"
+msgstr "ir a"
 
 msgid "No output stages"
-msgstr "Nenhuma etapa de saída"
+msgstr "Ninguna etapa de salida"
 
 msgid "Remove"
-msgstr "Remover"
+msgstr "Quitar"
 
 msgid "Apply"
 msgstr "Aplicar"
 
 msgid "Validation Errors:"
-msgstr "Erros de validação:"
+msgstr "Errores de validación:"
 
 msgid "Edit field"
 msgstr "Editar campo"
@@ -925,10 +925,10 @@ msgid "Edit number field"
 msgstr "Editar campo numérico"
 
 msgid "Edit date picker field"
-msgstr "Editar campo de data"
+msgstr "Editar campo de fecha"
 
 msgid "Edit select field"
-msgstr "Editar campo de seleção"
+msgstr "Editar campo de selección"
 
 msgid "Edit file upload field"
-msgstr "Editar campo de upload de arquivo"
+msgstr "Editar campo de subida de archivo"

@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { __ } from '@wordpress/i18n';
 import apiFetch from "@wordpress/api-fetch";
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
 import { Button, ButtonGroup, Tooltip, Panel, PanelRow, Notice, Modal, TextControl } from '@wordpress/components';
@@ -35,7 +36,7 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
 
     const columns = useMemo(() => [
         {
-            Header: 'Title',
+            Header: __('Title', 'obatala'),
             accessor: 'name',
             Cell: ({ value, row }) => (
                 <a 
@@ -50,18 +51,20 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
             ),
         },
         {
-        Header: 'Description',
+        Header: __('Description', 'obatala'),
         accessor: 'description',
         },
         {
-        Header: 'Status',
+        Header: __('Status', 'obatala'),
         accessor: 'status',
         Cell: ({ value }) => (
-            <span className={`badge ${value === 'Active' ? 'success' : 'error'}`}>{value}</span>
+            <span className={`badge ${value === 'Active' ? 'success' : 'error'}`}>
+                {value === 'Active' ? __('Active', 'obatala') : __('Inactive', 'obatala')}
+            </span>
         ),
         },
         {
-        Header: 'Number of users',
+        Header: __('Number of users', 'obatala'),
         accessor: 'userCount',
         Cell: ({ row }) => {
             const [userCount, setUserCount] = useState(null);
@@ -70,11 +73,11 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
                 fetchUserCount(row.original.id).then(count => setUserCount(count));
             }
 
-            return userCount !== null ? userCount : 'Loading...';
+            return userCount !== null ? userCount : __('Loading...', 'obatala');
         },
         },
         {
-            Header: 'Actions',
+            Header: __('Actions', 'obatala'),
             accessor: 'id',
             Cell: ({ row }) => (
                 <ButtonGroup>
@@ -83,23 +86,23 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
                         icon={info}
                         onClick={() => handleViewSector(row.original)}
                     >
-                        View group
+                        {__('View group', 'obatala')}
                     </Button>
-                    <Tooltip text="Manage users">
+                    <Tooltip text={__('Manage users', 'obatala')}>
                         <Button
                             variant="secondary"
                             icon={people}
                             onClick={() => handleManagerUsers(row.original)}
-                        >Manage users</Button>
+                        >{__('Manage users', 'obatala')}</Button>
                     </Tooltip>
-                    <Tooltip text="Edit">
+                    <Tooltip text={__('Edit', 'obatala')}>
                         <Button
                             variant="secondary"
                             icon={edit}
                             onClick={() => onEdit(row.original)}
                         />
                     </Tooltip>
-                    <Tooltip text="Delete">
+                    <Tooltip text={__('Delete', 'obatala')}>
                         <Button
                             variant="secondary"
                             icon={trash}
@@ -144,7 +147,7 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
                         className="mb-1"
                         value={globalFilter || ''}
                         onChange={value => setGlobalFilter(value)}
-                        placeholder="Search by title or description"
+                        placeholder={__('Search by title or description', 'obatala')}
                         type="search"
                     />
                     <SectorFilter
@@ -194,25 +197,25 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
                         </div>
                         <div className="pagination">
                             <Button onClick={() => previousPage()} disabled={!canPreviousPage}>
-                                Previous
+                                {__('Previous', 'obatala')}
                             </Button>
                             <span>
-                                Page{' '}
+                                {__('Page', 'obatala')}{' '}
                                 <strong>
                                     {pageIndex + 1} of {pageOptions.length}
                                 </strong>{' '}
                             </span>
                             <Button onClick={() => nextPage()} disabled={!canNextPage}>
-                                Next
+                                {__('Next', 'obatala')}
                             </Button>
                         </div>
                     </>
                 ) : (
-                    <Notice isDismissible={false} status="warning">No existing groups.</Notice>
+                    <Notice isDismissible={false} status="warning">{__('No existing groups.', 'obatala')}</Notice>
                 )}
                 {addingUsers && (
                     <Modal
-                        title={<>Manager users: {addingUsers.name}</>}
+                        title={<>{__('Manage users', 'obatala')}: {addingUsers.name}</>}
                         onRequestClose={handleCancel}
                         isDismissible={true}
                         size="large"

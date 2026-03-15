@@ -31,6 +31,7 @@ Este documento descreve a estrutura de arquivos do plugin "Obatala", que é util
         └── 📁Api
             ├── CustomPostTypeApi.php
             ├── ObatalaAPI.php
+            ├── ExporterApi.php
             ├── ProcessApi.php
             ├── ProcessTypeApi.php
             ├── SectorApi.php
@@ -45,6 +46,7 @@ Este documento descreve a estrutura de arquivos do plugin "Obatala", que é util
         ├── style.css
     └── 📁developer
         ├── create-zip.js
+        ├── i18n-make-json.js
         ├── update-plugin-version.js
         ├── updatePlugin.py
     └── 📁images
@@ -53,6 +55,7 @@ Este documento descreve a estrutura de arquivos do plugin "Obatala", que é util
     └── 📁languages
         ├── obatala-pt_BR.mo
         ├── obatala-pt_BR.po
+        ├── obatala-pt_BR-*.json
         ├── obatala.pot
     └── 📁mk-docs
         └── 📁docs
@@ -144,6 +147,7 @@ Este documento descreve a estrutura de arquivos do plugin "Obatala", que é util
                     ├── TainacanSearch.js
                 ├── BrandFooter.js
                 ├── BrandHeader.js
+                ├── MappersManager.js
                 ├── Dashboard.js
                 ├── ProcessManager.js
                 ├── ProcessModelEditor.js
@@ -206,9 +210,9 @@ Responsável pelas interfaces administrativas do WordPress:
 #### 📁 `Api/`
 Controladores REST para comunicação entre o frontend e o backend:
 
-- `ObatalaAPI.php`: Controlador central que agrupa as rotas públicas da API.
+- `ObatalaAPI.php`: Controlador base que agrupa as rotas da API e define callbacks de permissão (`permission_check_edit_posts`, `permission_check_manage_options`). Todas as rotas exigem usuário autenticado com capacidade `edit_posts`.
 - `CustomPostTypeApi.php`: Registro e definição de custom post types.
-- `ProcessApi.php`, `ProcessTypeApi.php`, `SectorApi.php`: Rotas específicas para cada domínio funcional.
+- `ProcessApi.php`, `ProcessTypeApi.php`, `SectorApi.php`, `ExporterApi.php`: Rotas específicas para cada domínio funcional.
 
 #### 📁 `Entities/`
 Representação orientada a objetos das entidades de domínio:
@@ -302,6 +306,7 @@ Templates PHP utilizados pelo WordPress para exibir os conteúdos dos custom pos
 Scripts utilitários usados em automações de desenvolvimento:
 
 - `create-zip.js`: Gera o arquivo `.zip` do plugin para distribuição.
+- `i18n-make-json.js`: Executa `wp i18n make-json` com mapa de `src/` para `build/index.js`, gerando JSON de traduções do frontend React. Gera `i18n-map.json` (em .gitignore).
 - `update-plugin-version.js`: Atualiza a versão automaticamente.
 - `updatePlugin.py`: Script auxiliar para automações diversas em Python.
 
@@ -310,9 +315,10 @@ Scripts utilitários usados em automações de desenvolvimento:
 ### 📁 `languages/`
 Arquivos de tradução do plugin (internacionalização):
 
-- `*.pot`: Arquivo base.
-- `*.po`: Arquivo editável.
-- `*.mo`: Arquivo compilado.
+- `obatala.pot`: Template de strings (PHP + JS).
+- `obatala-pt_BR.po`: Traduções em português brasileiro.
+- `obatala-pt_BR.mo`: Compilado para PHP.
+- `obatala-pt_BR-*.json`: Traduções para o frontend React (formato Jed), geradas por `wp i18n make-json` via `npm run i18n:make-json`.
 
 ---
 

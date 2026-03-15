@@ -2,6 +2,7 @@ import React, { useRef } from "react";
 import { useFlowContext } from "../../context/FlowContext";
 import { Button, ButtonGroup, DropdownMenu } from "@wordpress/components";
 import { check, closeSmall, fullscreen, menu, plus } from "@wordpress/icons";
+import { __ } from "@wordpress/i18n";
 
 const ProcessControls = ({onSave, onCancel, toggleFullScreen}) => {
 const { addNewNode, addNewNodeConditional, onExport, onImport } = useFlowContext();
@@ -45,30 +46,30 @@ const { addNewNode, addNewNodeConditional, onExport, onImport } = useFlowContext
         <>
             <ButtonGroup>
                 <Button icon={check} variant="primary" type="submit" onClick={onSave}>
-                    Save
+                    {__('Save', 'obatala')}
                 </Button>
                 <Button icon={closeSmall} onClick={onCancel}>
-                    Cancel changes
+                    {__('Cancel changes', 'obatala')}
                 </Button>
                 <Button icon={plus} onClick={addNewNode}>
-                    Add step
+                    {__('Add step', 'obatala')}
                 </Button>
                 <Button icon={plus} onClick={addNewNodeConditional}>
-                  Add conditional
+                    {__('Add conditional', 'obatala')}
                 </Button>
                 <Button icon={fullscreen} onClick={toggleFullScreen}>
-                    Fullscreen
+                    {__('Fullscreen', 'obatala')}
                 </Button>
                 <DropdownMenu
                     icon={menu}
-                    label="Select an option"
+                    label={__('Select an option', 'obatala')}
                     controls={ [
                         {
-                            title: 'Exportar JSON',
+                            title: __('Export JSON', 'obatala'),
                             onClick: handleExport,
                         },
                         {
-                            title: 'Importar JSON',
+                            title: __('Import JSON', 'obatala'),
                             onClick: handleImportClick,
                         },
                     ] }

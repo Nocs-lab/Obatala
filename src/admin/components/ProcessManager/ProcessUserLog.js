@@ -1,4 +1,5 @@
 import React from "react";
+import { __ } from '@wordpress/i18n';
 import { formatDistanceToNow } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
 import { Icon } from "@wordpress/components";
@@ -12,7 +13,7 @@ const ProcessUserLog = ({ stages, process, currentStageData, authorsById, sector
     const getSectorName = (sectorId) => {
         if (!sectorId) return null;
         const sector = sectors.find(s => s.id === sectorId);
-        return sector ? sector.name : "Setor desconhecido";
+        return sector ? sector.name : __("Unknown sector", "obatala");
     };
 
     return (
@@ -20,7 +21,7 @@ const ProcessUserLog = ({ stages, process, currentStageData, authorsById, sector
             <ul className="timeline">
                 <li className="timeline-item">
                     <div className="timeline-badge primary"><Icon icon={plus} /></div>
-                    <p className="timeline-title"><strong>Processo criado</strong> <time>{formatDate(process?.date)}</time></p>
+                    <p className="timeline-title"><strong>{__("Process created", "obatala")}</strong> <time>{formatDate(process?.date)}</time></p>
                     <dl className="timeline-content">
                         <dt>Responsável:</dt>
                         <dd>{authorsById[process?.author]?.name}</dd>
@@ -38,7 +39,7 @@ const ProcessUserLog = ({ stages, process, currentStageData, authorsById, sector
                             <div className="timeline-badge success"><Icon icon={check} /></div>
                             <p className="timeline-title"><strong>{step.label}</strong> <time>{formatDate(stageData[0])}</time></p>
                             <dl className="timeline-content">
-                                <dt>Responsável:</dt>
+                                <dt>{__("Responsible", "obatala")}:</dt>
                                 <dd>{stageData[1]}{sectorName && ` (${sectorName})`}</dd>
                             </dl>
                         </li>

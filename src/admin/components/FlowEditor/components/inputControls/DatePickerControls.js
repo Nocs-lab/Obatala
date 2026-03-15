@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { __ } from "@wordpress/i18n";
 import {
   TextControl,
   CheckboxControl,
@@ -69,7 +70,7 @@ export const DatePickerControls = ({
 
   return (
     <form>
-      <h3>Edite date picker field</h3>
+      <h3>{__('Edit date picker field', 'obatala')}</h3>
       {/* Campo para definir o Label */}
       <TextControl
         label="Label"
@@ -116,7 +117,7 @@ export const DatePickerControls = ({
         variant="primary"
         onClick={validateFields} // Valida os campos ao clicar em salvar
       >
-        Save
+        {__('Save', 'obatala')}
       </Button>
     </form>
   );

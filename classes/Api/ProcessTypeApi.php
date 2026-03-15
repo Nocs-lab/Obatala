@@ -15,27 +15,27 @@ class ProcessTypeApi extends ObatalaAPI {
         $this->add_route('process_type/(?P<id>\d+)/meta', [
             'methods' => 'GET',
             'callback' => [$this, 'get_meta'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
         ]);
 
         $this->add_route('process_type/(?P<id>\d+)/meta', [
             'methods' => 'PUT',
             'callback' => [$this, 'update_meta'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
             'args' => $this->get_meta_args(),
         ]);
 
         $this->add_route('process_type/(?P<id>\d+)/fields', [
             'methods' => 'GET',
             'callback' => [$this, 'get_fields'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
         ]);
 
         // Rota para associar e gerenciar histórico de setores das etapas
         $this->add_route('process_type/(?P<id>\d+)/assosiate_sector', [
             'methods' => 'POST',
             'callback' => [$this, 'assosiate_sector'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
             'args' => [
                 'sector_id' => [
                     'required' => true,
@@ -55,19 +55,19 @@ class ProcessTypeApi extends ObatalaAPI {
         $this->add_route('process_type/(?P<id>\d+)/get_node', [
             'methods' => 'GET',
             'callback' => [$this, 'get_node'],
-            'permission_callback' => '__return_true', // Ajuste conforme necessário
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'], // Ajuste conforme necessário
         ]);
 
         $this->add_route('process_type/upload', [
             'methods' => 'POST',
             'callback' => [$this, 'upload'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
         ]);
 
         $this->add_route('process_type/download', [
             'methods' => 'GET',
             'callback' => [$this, 'download'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
         ]);
     }
 

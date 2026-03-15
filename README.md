@@ -21,6 +21,7 @@ Ideal para instituições que buscam inovar na apresentação e gestão de suas 
 
 ## Funcionalidades
 
+- **Internacionalização (i18n)**: Suporte a português brasileiro e outros idiomas no painel (PHP) e no frontend (React), via arquivos `.po`/`.mo` e JSON.
 - **Gerenciamento de Processos e Etapas**: Criação e edição de processos curatoriais com múltiplas etapas.
 - **Metadados Dinâmicos**: Adição e configuração de metadados personalizados para cada etapa do processo.
 - **Gestão de Setores**: Agrupamento de usuários em setores, com permissões específicas e atribuição de setores às etapas do processo.

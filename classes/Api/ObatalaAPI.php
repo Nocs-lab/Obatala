@@ -43,5 +43,27 @@ namespace Obatala\Api {
         {
             register_rest_route(self::NAMESPACE , $route, $args);
         }
+
+        /**
+         * Permission callback: user must be logged in and able to edit posts.
+         *
+         * @param \WP_REST_Request $request Request object.
+         * @return bool True if the user has permission, false otherwise.
+         */
+        public static function permission_check_edit_posts($request)
+        {
+            return is_user_logged_in() && current_user_can('edit_posts');
+        }
+
+        /**
+         * Permission callback: user must be logged in and able to manage options (admin).
+         *
+         * @param \WP_REST_Request $request Request object.
+         * @return bool True if the user has permission, false otherwise.
+         */
+        public static function permission_check_manage_options($request)
+        {
+            return is_user_logged_in() && current_user_can('manage_options');
+        }
     }
 }

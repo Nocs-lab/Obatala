@@ -7,6 +7,7 @@ import {
     PanelHeader,
     Spinner
 } from '@wordpress/components';
+import { __, sprintf } from '@wordpress/i18n';
 import { fetchProcessModels, fetchSectors, fetchSectorsUsers, } from '../api/apiRequests';
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
@@ -404,9 +405,9 @@ const DashboardPage = () => {
             <BrandHeader />
             <main>
                 <div className="title-container">
-                    <h2>Dashboard</h2>
+                    <h2>{__('Dashboard', 'obatala')}</h2>
                     <div className="stat" title={`${completedProcessesPercentage}%`}>
-                        <p className="description">{countCompletedProcesses}/{processes.length} completed processes</p>
+                        <p className="description">{sprintf(__('%1$s/%2$s completed processes', 'obatala'), countCompletedProcesses, processes.length)}</p>
                         <progress value={completedProcessesPercentage} max="100">{completedProcessesPercentage}%</progress>
                     </div>
                 </div>
@@ -423,8 +424,8 @@ const DashboardPage = () => {
                                             <table className="wp-list-table widefat transparent">
                                                 <thead>
                                                     <tr>
-                                                        <th>My group</th>
-                                                        <th>Description</th>
+                                                        <th>{__('My group', 'obatala')}</th>
+                                                        <th>{__('Description', 'obatala')}</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -448,7 +449,7 @@ const DashboardPage = () => {
                             </div>
                             {pendingProcesses.length > 0 && (
                                 <Panel className="warning">
-                                    <PanelHeader>Pending processes</PanelHeader>
+                                    <PanelHeader>{__('Pending processes', 'obatala')}</PanelHeader>
                                     <PanelRow>
                                         {pendingProcesses.length > 0 ? (
                                             <ul className="list-actions mb-0">
@@ -460,7 +461,7 @@ const DashboardPage = () => {
                                                                 <span className="text">
                                                                     {process.title}
                                                                     <small className="d-block">
-                                                                        Etapa atual: {process.currentStage || 'N/A'}
+                                                                        {__('Current stage', 'obatala')}: {process.currentStage || 'N/A'}
                                                                     </small>
                                                                 </span>
                                                                 <Icon icon="arrow-right-alt2" />
@@ -471,7 +472,7 @@ const DashboardPage = () => {
                                             </ul>
                                         ) : (
                                             <Notice status="info" isDismissible={false}>
-                                                No pending processes found.
+                                                {__('No pending processes found.', 'obatala')}
                                             </Notice>
                                         )}
                                     </PanelRow>
@@ -483,28 +484,28 @@ const DashboardPage = () => {
                         <div className="card-container">
                             <a href={obatalaApp.admin_url +"admin.php?page=process-manager"} className="card-item">
                                 <span className="indicator">{processes.length}</span>
-                                <span className="description"><Icon icon="admin-page" /> Processes</span>
+                                <span className="description"><Icon icon="admin-page" /> {__('Processes', 'obatala')}</span>
                             </a>
                             <a href={obatalaApp.admin_url +"admin.php?page=process-type-manager"} className="card-item">
                                 <span className="indicator">{processTypes.length}</span>
-                                <span className="description"><Icon icon="welcome-widgets-menus" /> Models</span>
+                                <span className="description"><Icon icon="welcome-widgets-menus" /> {__('Models', 'obatala')}</span>
                             </a>
                             <a href={obatalaApp.admin_url +"admin.php?page=sector_manager"} className="card-item">
                                 <span className="indicator">{sectors.length}</span>
-                                <span className="description"><Icon icon="groups" /> Groups</span>
+                                <span className="description"><Icon icon="groups" /> {__('Groups', 'obatala')}</span>
                             </a>
                         </div>
                         <div className="panel-container mt-2">
                             <Panel>
-                                <PanelHeader>Top 5 most used models</PanelHeader>
+                                <PanelHeader>{__('Top 5 most used models', 'obatala')}</PanelHeader>
                                 <PanelRow>
                                     {topModels.length > 0 ? (
                                         <div className="table-responsive">
                                             <table className="wp-list-table widefat striped table-view-list">
                                                 <thead>
                                                     <tr>
-                                                        <th>Nome</th>
-                                                        <th>Quantidade</th>
+                                                        <th>{__('Name', 'obatala')}</th>
+                                                        <th>{__('Quantity', 'obatala')}</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
@@ -518,7 +519,7 @@ const DashboardPage = () => {
                                             </table>
                                         </div>
                                     ) : (
-                                        <Notice isDismissible={false} status="warning">Sem resultados.</Notice>
+                                        <Notice isDismissible={false} status="warning">{__('No results.', 'obatala')}</Notice>
                                     )}
                                 </PanelRow>
                             </Panel>
