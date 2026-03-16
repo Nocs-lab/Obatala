@@ -1,5 +1,6 @@
 import React from 'react';
 import { Icon } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
 
@@ -18,7 +19,7 @@ const ProcessHeader = ({ process, filteredProcessType, authorsById, isComplete, 
                     <small>
                         {filteredProcessType
                             ? filteredProcessType.title.rendered
-                            : "Process type title"}
+                            : __("Process type title", "obatala")}
                     </small>
                     {process.title?.rendered}
                 </h2>
@@ -31,7 +32,9 @@ const ProcessHeader = ({ process, filteredProcessType, authorsById, isComplete, 
                         : "warning"
                         }`}
                 >
-                    {process.meta.access_level}
+                    {process.meta.access_level == "Not restricted" || process.meta.access_level == "not restricted"
+                        ? __('Not restricted', 'obatala')
+                        : __('Restricted', 'obatala')}
                 </span>
                 <span className={`badge ${isComplete ? 'success' : 'default'}`}>
                     <Icon icon={isComplete ? "yes" : "update"} />

@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Handle, Position } from "@xyflow/react";
 import { useFlowContext } from "../../context/FlowContext";
 import { Button, Tooltip } from "@wordpress/components";
+import { __ } from "@wordpress/i18n";
 import { close } from "@wordpress/icons";
 
 const NodeConditional = ({ id, data }) => {
@@ -161,24 +162,23 @@ const NodeConditional = ({ id, data }) => {
             className={`step-container custom-drag-handle ${hasError ? 'error' : ''}`}
         >
             <div className="step-header">
-                <Tooltip text="Move step">
+                <Tooltip text={__('Move step', 'obatala')}>
                     <div className="custom-drag-handle">
                         <span role="img" aria-label="drag">⠿</span>
                     </div>
                 </Tooltip>
                 <h3 className="title my-0">Conditional</h3>
-                <Tooltip text="Remove step">
+                <Tooltip text={__('Remove step', 'obatala')}>
                     <Button variant="link" icon={close} onClick={() => removeNode(id)} />
                 </Tooltip>
             </div>
             
             <Handle type="target" position={Position.Left} />
             <Handle type="source" position={Position.Right} />
-
             <dl>
-                <dt>Input stage:</dt>
-                <dd>{matchedEdgeInput?.source || <span className="false">No input stage</span>}</dd>
-                <dt>Output stages:</dt>
+                <dt>{__('Input stage:', 'obatala')}</dt>
+                <dd>{matchedEdgeInput?.source || <span className="false">{__('No input stage', 'obatala')}</span>}</dd>
+                <dt>{__('Output stages:', 'obatala')}</dt>
                 {matchedEdgeOutput?.length > 0 ? (
                     <>
                         <dd>
@@ -186,13 +186,12 @@ const NodeConditional = ({ id, data }) => {
                                 value={selectedField}
                                 onChange={(e) => {
                                     setSelectedField(e.target.value);
-                                    // Atualiza todos os campos com o novo selectedField
                                     setSelectedFields((prev) =>
                                         prev.map((field) => ({ ...field, field: e.target.value }))
                                     );
                                 }}
                             >
-                                <option value="" disabled>Select a field</option>
+                                <option value="" disabled>{__('Select a field', 'obatala')}</option>
                                 {radioFields.map((field, fieldIndex) => (
                                     <option
                                         key={fieldIndex}
@@ -205,13 +204,13 @@ const NodeConditional = ({ id, data }) => {
                         </dd>
                         {matchedEdgeOutput.map((edge, index) => (
                             <dd className="mt-1" key={index}>
-                                If receives
+                                {__('If receives', 'obatala')}
                                 <select
                                     value={selectedFields[index]?.value || ""}
                                     onChange={(e) => handleValueChange(index, e.target.value)}
                                     disabled={!selectedField}
                                 >
-                                    <option value="" disabled>Select a value</option>
+                                    <option value="" disabled>{__('Select a value', 'obatala')}</option>
                                     {selectedField &&
                                         radioFields
                                             .find((field) => field.config?.label === selectedField)
@@ -222,12 +221,12 @@ const NodeConditional = ({ id, data }) => {
                                                     {option.trim()}
                                                 </option>
                                             ))}
-                                </select> then go to <strong>{edge.target}</strong>.
+                                </select> {__('then go to', 'obatala')} <strong>{edge.target}</strong>.
                             </dd>
                         ))}
                     </>
                 ) : (
-                    <dd className="false">No output stages</dd>
+                    <dd className="false">{__('No output stages', 'obatala')}</dd>
                 )}
             </dl>
 
@@ -236,10 +235,9 @@ const NodeConditional = ({ id, data }) => {
                 <Button variant="primary"
                     onClick={handleSave}
                 >
-                    Apply
+                    {__('Apply', 'obatala')}
                 </Button>
             </div>
-
         </div>
     );
 };

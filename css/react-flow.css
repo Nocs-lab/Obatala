@@ -754,6 +754,12 @@ svg.react-flow__connectionline {
     min-width: 28px;
     padding: 0;
   }
+  .close-btn .components-icon,
+  .close-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+  }
 }
 
 /* custom handle */
@@ -866,10 +872,35 @@ svg.react-flow__connectionline {
   border: 2px solid var(--gray-600) !important;
   border-radius: 25px !important;
   color: var(--primary-600) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   height: 32px !important;
   min-width: 32px !important;
   padding: 0 !important;
   width: 32px !important;
+}
+.step-header .close-btn .components-icon,
+.step-header .close-btn .components-icon svg,
+.step-header .close-btn svg {
+  flex-shrink: 0;
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  min-height: 24px !important;
+  fill: currentColor;
+  display: block;
+}
+.step-header .step-header-remove-btn {
+  cursor: pointer;
+  font: inherit;
+  margin: 0;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.step-header .step-header-remove-btn svg {
+  display: block;
+  stroke: currentColor;
 }
 .components-button.has-icon.has-text {
   font-size: .75rem;

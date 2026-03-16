@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Spinner, Button, Notice, Icon, ButtonGroup, Modal, TabPanel} from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import ProcessCreator from './ProcessManager/ProcessCreator';
 import { plus } from '@wordpress/icons';
@@ -123,7 +124,7 @@ const ProcessManager = ({ onSelectProcess }) => {
         setIsLoadingProcesses(true);
         // Atualiza os mapeamentos de tipo de processo
         const updatedProcesses = [...processes, newProcess];
-        setNotice({ status: 'success', message: 'Process saved successfully.' });
+        setNotice({ status: 'success', message: __('Process saved successfully.', 'obatala') });
         await fetchProcessModelsForProcesses(updatedProcesses);
         setIsLoadingProcesses(false);
     };
@@ -174,7 +175,7 @@ const ProcessManager = ({ onSelectProcess }) => {
             <BrandHeader />
             <main>
                 <div className="title-container">
-                    <h2>Processes</h2>
+                    <h2>{__('Processes', 'obatala')}</h2>
                     <span className="badge">{filteredProcess.length}</span>
                     <ButtonGroup>
                         <Button
@@ -182,7 +183,7 @@ const ProcessManager = ({ onSelectProcess }) => {
                             icon={<Icon icon={plus} />}
                             onClick={handleAddProcess}
                         >
-                            Add new
+                            {__('Add new', 'obatala')}
                         </Button>
                     </ButtonGroup>
                 </div>
@@ -201,12 +202,12 @@ const ProcessManager = ({ onSelectProcess }) => {
                         tabs={[
                             {
                                 name: 'all',
-                                title: 'All processes',
+                                title: __('All processes', 'obatala'),
                                 className: activeTab === 'all' ? 'is-active' : ''
                             },
                             {
                                 name: 'my',
-                                title: 'My processes',
+                                title: __('My processes', 'obatala'),
                                 className: activeTab === 'my' ? 'is-active' : ''
                             },
                         ]}
@@ -231,7 +232,7 @@ const ProcessManager = ({ onSelectProcess }) => {
                 </div>
                 {editingProcess && (
                     <Modal
-                        title="Edit Process"
+                        title={__('Edit Process', 'obatala')}
                         onRequestClose={handleCancel}
                         isDismissible={true}
                     >
@@ -245,7 +246,7 @@ const ProcessManager = ({ onSelectProcess }) => {
                 )}
                 {addingProcess && (
                     <Modal
-                        title="Add new process"
+                        title={__('Add new process', 'obatala')}
                         onRequestClose={handleCancel}
                         isDismissible={true}
                     >

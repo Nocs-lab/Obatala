@@ -28,14 +28,23 @@ class Enqueuer {
            
             $asset_file = include OBATALA_PLUGIN_DIR . 'build/index.asset.php';
 
+            $script_deps = array_merge(
+                $asset_file['dependencies'],
+                ['wp-i18n']
+            );
             wp_register_script(
                 'obatala-admin-scripts',
                 OBATALA_PLUGIN_URL . 'build/index.js',
-                array_merge($asset_file['dependencies']),
+                $script_deps,
                 $asset_file['version'],
                 true
             );
             wp_enqueue_script('obatala-admin-scripts');
+            wp_set_script_translations(
+                'obatala-admin-scripts',
+                'obatala',
+                OBATALA_PLUGIN_DIR . 'languages'
+            );
 
             wp_add_inline_script(
                 'obatala-admin-scripts',

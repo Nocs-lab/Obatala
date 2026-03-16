@@ -1,22 +1,23 @@
-import { DropdownMenu, MenuGroup, MenuItem,Button } from '@wordpress/components';
+import { DropdownMenu, MenuGroup, MenuItem, Button } from '@wordpress/components';
 import { close, settings } from '@wordpress/icons';
+import { __, sprintf } from '@wordpress/i18n';
 
 const ProcessTypeFilter = ({ status, setStatus }) => {
     const options = [
-        { title: "Active", value: "Active" },
-        { title: "Inactive", value: "Inactive" },
+        { title: __('Active', 'obatala'), value: 'Active' },
+        { title: __('Inactive', 'obatala'), value: 'Inactive' },
     ];
 
   return (
       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <DropdownMenu
               icon={settings}
-              label="Filter"
-              text={`${status ? `Status: ${status}` : "Filters"}`}
+              label={__('Filter', 'obatala')}
+              text={status ? sprintf(__('Status: %s', 'obatala'), status) : __('Filters', 'obatala')}
           >
               {({ onClose }) => (
                   <>
-                      <MenuGroup label="Status">
+                      <MenuGroup label={__('Status', 'obatala')}>
                           {options.map(option => (
                               <MenuItem
                                   key={option.value}
@@ -37,7 +38,7 @@ const ProcessTypeFilter = ({ status, setStatus }) => {
               <Button
                   icon={close}
                   onClick={() => setStatus("")}
-                  label="Clear"
+                  label={__('Clear', 'obatala')}
               />
           )}
       </div>

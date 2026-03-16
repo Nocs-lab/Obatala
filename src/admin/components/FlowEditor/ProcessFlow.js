@@ -1,3 +1,4 @@
+import { __ } from "@wordpress/i18n";
 import React, {
   useState,
   forwardRef,
@@ -87,7 +88,7 @@ const ProcessFlow = forwardRef(({ initialData, onSave, onCancel,toggleFullScreen
         <div className="flow-container" id="flow-container">
             {errors.length > 0 && (
                 <div style={{ color: "red", padding: "10px" }}>
-                    <strong>Validation Errors:</strong>
+                    <strong>{__('Validation Errors:', 'obatala')}</strong>
                     <ul>
                         {errors.map((error, index) => (
                         <li key={index}>{error}</li>

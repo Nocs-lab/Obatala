@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
 import { Button, ButtonGroup, Tooltip, Panel, PanelRow, Notice, TextControl } from '@wordpress/components';
 import { backup, edit, info } from '@wordpress/icons';
+import { __ } from '@wordpress/i18n';
 import ProcessFilter from './ProcessFilters';
 import apiFetch from '@wordpress/api-fetch';
 import { decodeEntities } from '@wordpress/html-entities';
@@ -10,7 +11,7 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
     const columns = useMemo(
         () => [
             {
-                Header: "Process",
+                Header: __("Process", "obatala"),
                 accessor: "title.rendered",
                 Cell: ({ row }) => (
                     <a href={`?page=process-viewer&process_id=${row.original.id}`}>
@@ -19,7 +20,7 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
                 ),
             },
             {
-                Header: "Model",
+                Header: __("Model", "obatala"),
                 Cell: ({ row }) => {
                     const typeMapping = processTypeMappings.find(
                         (m) => m.processId === row.original.id
@@ -35,15 +36,15 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
                 },
             },
             {
-                Header: "Current step",
+                Header: __('Current step', 'obatala'),
                 accessor: (row) =>
                     row.meta?.current_stage
-                        ? `${row.meta.current_stage} - ${row.meta.groupResponsible || "No group"
+                        ? `${row.meta.current_stage} - ${row.meta.groupResponsible || __("No group", "obatala")
                         }`
-                        : "Not started",
+                        : __("Not started", "obatala"),
             },
             {
-                Header: "Progress",
+                Header: __("Progress", "obatala"),
                 Cell: ({ row }) => {
                     const [progress, setProgress] = useState(null);
                     useEffect(() => {
@@ -72,21 +73,21 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
                 },
             },
             {
-                Header: "Access level",
+                Header: __("Access level", "obatala"),
                 accessor: "meta.access_level",
-                Cell: ({ value }) => (
-                    <span
-                        className={`badge ${value == "Not restricted" || value == "not restricted"
-                            ? "success"
-                            : "warning"
-                            }`}
-                    >
-                        {value}
-                    </span>
-                ),
+                Cell: ({ value }) => {
+                    const isNotRestricted = value == "Not restricted" || value == "not restricted";
+                    return (
+                        <span
+                            className={`badge ${isNotRestricted ? "success" : "warning"}`}
+                        >
+                            {isNotRestricted ? __('Not restricted', 'obatala') : __('Restricted', 'obatala')}
+                        </span>
+                    );
+                },
             },
             {
-                Header: "Actions",
+                Header: __("Actions", "obatala"),
                 accessor: "id",
                 Cell: ({ row }) => (
                     <ButtonGroup>
@@ -95,16 +96,16 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
                             icon={info}
                             onClick={() => onViewProcess(row.original.id)}
                         >
-                            View process
+                            {__("View process", "obatala")}
                         </Button>
-                        <Tooltip text="Edit">
+                        <Tooltip text={__("Edit", "obatala")}>
                             <Button
                                 variant="secondary"
                                 icon={edit}
                                 onClick={() => onEdit(row.original)}
                             />
                         </Tooltip>
-                        <Tooltip text="History">
+                        <Tooltip text={__("History", "obatala")}>
                             <Button
                                 variant="secondary"
                                 icon={backup}
@@ -156,7 +157,7 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
                         className="mb-1"
                         value={globalFilter || ''}
                         onChange={value => setGlobalFilter(value)}
-                        placeholder="Search by title"
+                        placeholder={__("Search by title", "obatala")}
                         type="search"
                     />
                     <ProcessFilter
@@ -217,21 +218,21 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
                         </div>
                         <div className="pagination">
                             <Button onClick={() => previousPage()} disabled={!canPreviousPage}>
-                                Previous
+                                {__("Previous", "obatala")}
                             </Button>
                             <span>
-                                Page{' '}
+                                {__("Page", "obatala")}{' '}
                                 <strong>
                                     {pageIndex + 1} of {pageOptions.length}
                                 </strong>{' '}
                             </span>
                             <Button onClick={() => nextPage()} disabled={!canNextPage}>
-                                Next
+                                {__("Next", "obatala")}
                             </Button>
                         </div>
                     </>
                 ) : (
-                    <Notice isDismissible={false} status="warning">No existing processes.</Notice>
+                    <Notice isDismissible={false} status="warning">{__("No existing processes.", "obatala")}</Notice>
                 )}
             </PanelRow>
         </Panel>

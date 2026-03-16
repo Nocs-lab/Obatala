@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useReducer, useMemo } from 'react';
+import { __, sprintf } from '@wordpress/i18n';
 import {
     Button,
     ButtonGroup,
@@ -67,14 +68,14 @@ const ProcessTypeManager = () => {
             };
             await updateProcessTypeMeta(savedProcessType.id, meta);
 
-            setNotice({ status: 'success', message: 'Process model saved successfully.' });
+            setNotice({ status: 'success', message: __('Process model saved successfully.', 'obatala') });
             setEditingProcessType(null);
             setExportDataProcessType(null);
             setAddingProcessType(null);
             loadProcessTypes();
         } catch (error) {
             console.error('Error saving process model:', error);
-            setNotice({ status: 'error', message: 'Error saving process model.' });
+            setNotice({ status: 'error', message: __('Error saving process model.', 'obatala') });
             setIsLoading(false);
         }
     };
@@ -140,7 +141,7 @@ const ProcessTypeManager = () => {
             <BrandHeader />
             <main>
                 <div className="title-container">
-                    <h2>Models</h2>
+                    <h2>{__('Models', 'obatala')}</h2>
                     <span className="badge">{filteredModels.length}</span>
                     <ButtonGroup>
                         <Button
@@ -148,7 +149,7 @@ const ProcessTypeManager = () => {
                             icon={<Icon icon={plus} />}
                             onClick={handleAdd}
                         >
-                            Add process model
+                            {__('Add process model', 'obatala')}
                         </Button>
                     </ButtonGroup>
                 </div>
@@ -165,7 +166,10 @@ const ProcessTypeManager = () => {
                     }}
                     onCancel={handleCancel}
                 >
-                    Are you sure you want to delete process model {state.processModel?.title.rendered}?
+                    {sprintf(
+                        __('Are you sure you want to delete process model %s?', 'obatala'),
+                        state.processModel?.title?.rendered || ''
+                    )}
                 </ConfirmDialog>
                 <div className="panel-container">
                     <ProcessTypeList
@@ -180,7 +184,7 @@ const ProcessTypeManager = () => {
                     />
                     {addingProcessType || editingProcessType ? (
                         <Modal
-                            title={editingProcessType ? "Edit process model" : "Add process model"}
+                            title={editingProcessType ? __('Edit process model', 'obatala') : __('Add process model', 'obatala')}
                             onRequestClose={handleCancel}
                             isDismissible={true}
                             size="medium"

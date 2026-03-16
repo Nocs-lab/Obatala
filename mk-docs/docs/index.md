@@ -88,8 +88,8 @@ Define o menu principal “Obatala” e seus submenus com acesso a diferentes fu
 ```php
 private static $pages = [
     'main' => [
-        'title' => 'Obatala',
-        'menu_title' => 'Obatala',
+        'title' => 'obatala',
+        'menu_title' => 'obatala',
         'capability' => 'manage_options',
         'slug' => 'obatala-main',
         'callback' => 'render_main_page',
@@ -99,8 +99,17 @@ private static $pages = [
     'submenus' => [
         [
             'parent_slug' => 'obatala-main',
-            'title' => 'Process Manager',
-            'menu_title' => 'Process Manager',
+            'title' => 'Dashboard',
+            'menu_title' => 'Dashboard',
+            'capability' => 'manage_options',
+            'slug' => 'obatala-main',
+            'callback' => 'render_main_page',
+            'show_in_menu' => true
+        ],
+        [
+            'parent_slug' => 'obatala-main',
+            'title' => 'Processes',
+            'menu_title' => 'Processes',
             'capability' => 'manage_options',
             'slug' => 'process-manager',
             'callback' => 'render_page',
@@ -108,16 +117,28 @@ private static $pages = [
         ],
         [
             'parent_slug' => 'obatala-main',
-            'title' => 'Process Viewer',
-            'menu_title' => 'Process Viewer',
-            'capability' => 'read',
-            'slug' => 'process-viewer',
+            'title' => 'Models',
+            'menu_title' => 'Models',
+            'capability' => 'edit_posts',
+            'slug' => 'process-type-manager',
             'callback' => 'render_page',
             'show_in_menu' => true
         ],
+        [
+            'parent_slug' => 'obatala-main',
+            'title' => 'Groups',
+            'menu_title' => 'Groups',
+            'capability' => 'manage_options',
+            'slug' => 'sector_manager',
+            'callback' => 'render_page',
+            'show_in_menu' => true
+        ],
+        // ... Process type editor, Process viewer, Group details, Mappers
     ]
 ];
 ```
+
+Os títulos são traduzidos em tempo de execução via `__($submenu['title'], 'obatala')` em `add_admin_pages()`, pois funções não podem ser usadas em propriedades estáticas (expressões constantes).
 
 ### 🧱 Enqueuer
 Classe que gerencia o carregamento de arquivos de estilo e script.
@@ -149,8 +170,11 @@ private static $pages = [
     'obatala_page_sector_manager' => 'sector_manager',
     'toplevel_page_obatala-main' => 'dashboard',
     'obatala_page_sector-details' => 'sector-details',
+    'obatala_page_mappers' => 'mappers',
 ];
 ```
+
+O `Enqueuer` também chama `wp_set_script_translations()` para carregar as traduções do frontend React em JSON.
 
 ### ⚙️ SettingsPage
 Classe que cria e renderiza campos configuráveis no painel de administração.
@@ -177,6 +201,9 @@ register_setting('obatala_settings_group', 'api_key');
 ```
 
 ---
+
+### 🌐 Internacionalização
+O plugin suporta tradução em PHP (via `.po`/`.mo`) e em React (via JSON). O domínio de texto é `obatala`. Consulte [Internacionalização](internacionalizacao.md) para o fluxo de trabalho completo.
 
 ### ✅ Considerações Finais
 - As classes são organizadas conforme o padrão PSR-4.

@@ -1,7 +1,9 @@
+import { __ } from '@wordpress/i18n';
+
 const BrandFooter = () => {
     return (
         <footer>
-            <span>Obatala | Curatorial Process Management</span>
+            <span>{__('Obatala | Curatorial Process Management', 'obatala')}</span>
         </footer>
     );
 };

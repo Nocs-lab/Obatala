@@ -1,15 +1,16 @@
 import { Button, DropdownMenu, MenuGroup, MenuItem } from '@wordpress/components';
 import { close, settings } from '@wordpress/icons';
+import { __ } from '@wordpress/i18n';
 
 const SectorFilter = ({ status, setStatus, group, setGroup }) => {
     const options = [
-        { title: "Active", value: "Active" },
-        { title: "Inactive", value: "Inactive" },
+        { title: __('Active', 'obatala'), value: 'Active' },
+        { title: __('Inactive', 'obatala'), value: 'Inactive' },
     ];
 
     const options2 = [
-        { title: "All", value: "" },
-        { title: "My Groups", value: "my groups" },
+        { title: __('All', 'obatala'), value: '' },
+        { title: __('My Groups', 'obatala'), value: 'my groups' },
     ]
 
   const handleClearFilters = () => {
@@ -21,12 +22,12 @@ const SectorFilter = ({ status, setStatus, group, setGroup }) => {
       <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
           <DropdownMenu
               icon={settings}
-              label="Filter"
-              text= "Filters"
+              label={__('Filter', 'obatala')}
+              text={__('Filters', 'obatala')}
           >
               {({ onClose }) => (
                   <div style={{ display: "flex", gap: "16px" }}>
-                      <MenuGroup label="Access Level">
+                      <MenuGroup label={__('Access Level', 'obatala')}>
                           {options.map(option => (
                             <MenuItem
                                 key={option.value}
@@ -39,7 +40,7 @@ const SectorFilter = ({ status, setStatus, group, setGroup }) => {
                             </MenuItem>
                         ))}
                       </MenuGroup>
-                    <MenuGroup label="Groups">
+                    <MenuGroup label={__('Groups', 'obatala')}>
                         {options2.map(option => (
                             <MenuItem
                                 key={option.value}
@@ -60,7 +61,7 @@ const SectorFilter = ({ status, setStatus, group, setGroup }) => {
               <Button
                   icon={close}
                   onClick={() => handleClearFilters()}
-                  label="Clear"
+                  label={__('Clear', 'obatala')}
               />
           )}
       </div>

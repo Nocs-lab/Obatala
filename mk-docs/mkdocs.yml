@@ -35,6 +35,7 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Organização: organizacao.md
+  - Internacionalização: internacionalizacao.md
   - Guia do Frontend: gutenberg.md
   - Posts Customizados: posts-customizados.md
   - Metadados Dinâmicos: 
