@@ -73,7 +73,7 @@ namespace Obatala {
 		 */
 		public function initialize()
 		{
-			load_plugin_textdomain('obatala', false, dirname(plugin_basename(__FILE__)) . '/languages');
+			//load_plugin_textdomain('obatala', false, dirname(plugin_basename(__FILE__)) . '/languages');
 
 			// Initialize admin menus and settings
 			\Obatala\Admin\AdminMenu::init();

@@ -118,8 +118,8 @@ namespace Obatala\Admin {
             );
 
             foreach (self::$pages['submenus'] as $submenu) {
-                $title = __($submenu['title'], 'obatala');
-                $menu_title = __($submenu['menu_title'], 'obatala');
+                $title = $submenu['title'];
+                $menu_title = $submenu['menu_title'];
                 if ($submenu['show_in_menu']) {
                     add_submenu_page(
                         $submenu['parent_slug'],
