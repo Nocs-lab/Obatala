@@ -57,7 +57,7 @@ namespace Obatala\Admin {
                     'capability' => 'manage_options',
                     'slug' => 'process-type-editor',
                     'callback' => 'render_page',
-                    'show_in_menu' => true
+                    'show_in_menu' => false
                 ],
                 [
                     'parent_slug' => 'obatala-main',
@@ -75,7 +75,7 @@ namespace Obatala\Admin {
                     'capability' => 'read',
                     'slug' => 'process-viewer',
                     'callback' => 'render_page',
-                    'show_in_menu' => true
+                    'show_in_menu' => false
                 ],
                 [
                     'parent_slug' => 'obatala-main',
@@ -84,7 +84,7 @@ namespace Obatala\Admin {
                     'capability' => 'manage_options',
                     'slug' => 'sector-details',
                     'callback' => 'render_page',
-                    'show_in_menu' => true
+                    'show_in_menu' => false
                 ],
                 [
                     'parent_slug' => 'obatala-main',
@@ -93,7 +93,7 @@ namespace Obatala\Admin {
                     'capability' => 'read',
                     'slug' => 'mappers',
                     'callback' => 'render_mappers_page',
-                    'show_in_menu' => true
+                    'show_in_menu' => false
                 ]
             ]
         ];
