@@ -11,6 +11,10 @@ const NodeConditional = ({ id, data }) => {
     const matchedEdgeInput = edges.find(edge => edge?.target === id);
     const matchedEdgeOutput = edges.filter(edge => edge?.source === id);
     const nodeInput = nodes.find(node => node.id === matchedEdgeInput?.source);
+    const getNodeLabel = (nodeId) => {
+        const node = nodes.find((n) => n.id === nodeId);
+        return node?.data?.stageName || nodeId;
+    };
 
     let radioFields = [];
     if (nodeInput?.data?.fields && Array.isArray(nodeInput.data.fields)) {
@@ -177,7 +181,7 @@ const NodeConditional = ({ id, data }) => {
             <Handle type="source" position={Position.Right} />
             <dl>
                 <dt>{__('Input stage:', 'obatala')}</dt>
-                <dd>{matchedEdgeInput?.source || <span className="false">{__('No input stage', 'obatala')}</span>}</dd>
+                <dd>{matchedEdgeInput?.source ? getNodeLabel(matchedEdgeInput.source) : <span className="false">{__('No input stage', 'obatala')}</span>}</dd>
                 <dt>{__('Output stages:', 'obatala')}</dt>
                 {matchedEdgeOutput?.length > 0 ? (
                     <>
@@ -221,7 +225,7 @@ const NodeConditional = ({ id, data }) => {
                                                     {option.trim()}
                                                 </option>
                                             ))}
-                                </select> {__('then go to', 'obatala')} <strong>{edge.target}</strong>.
+                                </select> {__('then go to', 'obatala')} <strong>{getNodeLabel(edge.target)}</strong>.
                             </dd>
                         ))}
                     </>

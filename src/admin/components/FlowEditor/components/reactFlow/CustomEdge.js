@@ -37,8 +37,8 @@ export default function CustomEdge({
         targetPosition,
     });
     const nodes = getNodes()
-    const sourceNode = nodes.find((node) => node.id === source)?.data?.stageName || `Etapa ${source}`;
-    const targetNode = nodes.find((node) => node.id === target)?.data?.stageName || `Etapa ${target}`;
+    const sourceNode = nodes.find((node) => node.id === source)?.data?.stageName || source;
+    const targetNode = nodes.find((node) => node.id === target)?.data?.stageName || target;
 
     const onEdgeClick = () => {
         setEdges((edges) => edges.filter((edge) => edge.id !== id));
