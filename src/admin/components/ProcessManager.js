@@ -52,15 +52,23 @@ const ProcessManager = ({ onSelectProcess }) => {
     };
 
     const fetchProcessesUser = () => {
+        if (!currentUser?.id) {
+            setProcessUser([]);
+            setIsLoadingUserProcesses(false);
+            return Promise.resolve([]);
+        }
+
         setIsLoadingUserProcesses(true);        
-        fetchUserProcesses(currentUser.id)
+        return fetchUserProcesses(currentUser.id)
             .then(data => {
                 setProcessUser(data);
                 setIsLoadingUserProcesses(false);
+                return data;
             })
             .catch(error => {
                 console.error('Error fetching sectors:', error);
                 setIsLoadingUserProcesses(false);
+                return [];
             });
     };
 
@@ -126,6 +134,7 @@ const ProcessManager = ({ onSelectProcess }) => {
         const updatedProcesses = [...processes, newProcess];
         setNotice({ status: 'success', message: __('Process saved successfully.', 'obatala') });
         await fetchProcessModelsForProcesses(updatedProcesses);
+        await fetchProcessesUser();
         setIsLoadingProcesses(false);
     };
 

@@ -59,7 +59,7 @@ class CustomPostTypeApi extends ObatalaAPI {
                     }
                     return $response; // Return the final response
                 },
-                'permission_callback' => [$controller, 'get_items_permissions_check'], // Check for permissions
+                'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'], // Check for permissions
                 'args' => $controller->get_collection_params(), // Arguments for the collection
             ],
             [
@@ -96,7 +96,7 @@ class CustomPostTypeApi extends ObatalaAPI {
                     }
                     return $response; // Return the final response
                 },
-                'permission_callback' => [$controller, 'get_item_permissions_check'], // Check for permissions
+                'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'], // Check for permissions
                 'args' => [
                     'context' => [
                         'default' => 'view', // Default view context
