@@ -167,13 +167,17 @@ namespace Obatala\Admin {
             }
 
             $page_id = $screen->id;
+            $prefixes = ['obatala_page_', 'admin_page_'];
 
-            if (is_string($page_id) && strpos($page_id, 'obatala_page_') === 0) {
-                $id_cleaned = str_replace('_', '-', substr($page_id, strlen('obatala_page_')));
-                echo '<div id="' . esc_attr($id_cleaned) . '"></div>';
-            } else {
-                echo '<h1>Página não encontrada</h1>';
+            foreach ($prefixes as $prefix) {
+                if (is_string($page_id) && strpos($page_id, $prefix) === 0) {
+                    $id_cleaned = str_replace('_', '-', substr($page_id, strlen($prefix)));
+                    echo '<div id="' . esc_attr($id_cleaned) . '"></div>';
+                    return;
+                }
             }
+
+            echo '<h1>Página não encontrada</h1>';
         }
 
         public static function enqueue_scripts($hook)
