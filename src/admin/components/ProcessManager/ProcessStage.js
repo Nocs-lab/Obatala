@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Spinner, Button, TextareaControl, FormFileUpload } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { __experimentalGetSettings, dateI18n } from '@wordpress/date';
 import { useSelect } from '@wordpress/data';
@@ -91,7 +92,7 @@ const ProcessStage = ({ process, onCancelEdit }) => {
 
     const handleAddComment = () => {
         if (!newComment) {
-            alert('Please enter a comment.');
+            alert(__('Please enter a comment.', 'obatala'));
             return;
         }
 
@@ -170,34 +171,34 @@ const ProcessStage = ({ process, onCancelEdit }) => {
 
     return (
         <div className='panel'>
-            <h3>Process: {process.title.rendered}</h3>
-            <Button variant="link" onClick={onCancelEdit}>Back to Processes</Button>
+            <h3>{__('Process', 'obatala')}: {process.title.rendered}</h3>
+            <Button variant="link" onClick={onCancelEdit}>{__('Back to Processes', 'obatala')}</Button>
             <div>
-                <h4>Current Stage: {currentStage.title}</h4>
+                <h4>{__('Current Stage', 'obatala')}: {currentStage.title}</h4>
                 <p>{currentStage.content}</p>
                 <Button
                     variant="link"
                     onClick={handlePreviousStage}
                     disabled={stages.findIndex(stage => stage.id === currentStage.id) === 0}
                 >
-                    View Previous Stage
+                    {__('View Previous Stage', 'obatala')}
                 </Button>
                 <Button
                     variant="link"
                     onClick={handleAdvanceStage}
                     disabled={stages.findIndex(stage => stage.id === currentStage.id) === stages.length - 1}
                 >
-                    Advance Stage
+                    {__('Advance Stage', 'obatala')}
                 </Button>
                 <Button
                     variant="link"
                     onClick={() => handleReopenStage(currentStage.id)}
                     disabled={stages.findIndex(stage => stage.id === currentStage.id) <= stages.findIndex(stage => stage.id === process.current_stage)}
                 >
-                    Reopen Stage
+                    {__('Reopen Stage', 'obatala')}
                 </Button>
                 <div>
-                    <h5>Comments</h5>
+                    <h5>{__('Comments', 'obatala')}</h5>
                     <ul className="comment-list">
                         {comments.filter(comment => comment.meta.stage_id == currentStage.id).map(comment => (
                             <li key={comment.id} className={`comment ${comment.author === currentUser?.id ? 'current-user' : ''}`}>
@@ -209,7 +210,7 @@ const ProcessStage = ({ process, onCancelEdit }) => {
                             </li>
                         ))}
                     </ul>
-                    <h5>Attachments</h5>
+                    <h5>{__('Attachments', 'obatala')}</h5>
                     <ul className="attachment-list">
                         {attachments.map(attachment => (
                             <li key={attachment.id} className="attachment">
@@ -220,11 +221,11 @@ const ProcessStage = ({ process, onCancelEdit }) => {
                         ))}
                     </ul>
                     <FormFileUpload onChange={handleFileUpload} style={{border: "1px solid blue"}}>
-                        Attach file
+                        {__('Attach file', 'obatala')}
                     </FormFileUpload>
 
                     <TextareaControl
-                        label="Add a comment"
+                        label={__('Add a comment', 'obatala')}
                         value={newComment}
                         onChange={(value) => setNewComment(value)}
                         disabled={false}
@@ -234,7 +235,7 @@ const ProcessStage = ({ process, onCancelEdit }) => {
                         onClick={handleAddComment}
                         disabled={false}
                     >
-                        Add Comment
+                        {__('Add Comment', 'obatala')}
                     </Button>
                 </div>
             </div>

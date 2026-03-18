@@ -1,5 +1,6 @@
 // SectorDetailsPage.js
 import React, { useEffect, useState } from 'react';
+import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from "@wordpress/api-fetch";
 import { Notice, Panel, PanelHeader, PanelRow, Spinner, Button  } from '@wordpress/components';
 import BrandHeader from '../BrandHeader';
@@ -40,12 +41,12 @@ const SectorDetailsPage = () => {
                 userCount: updatedUsers.length
             });
             
-            setNotice({ status: 'success', message: 'You have left the group successfully.' });
+            setNotice({ status: 'success', message: __('You have left the group successfully.', 'obatala') });
         } catch (err) {
             console.error('Error removing user from sector:', err);
             setNotice({ 
                 status: 'error', 
-                message: err.message || 'Failed to leave the group. Please try again.' 
+                message: err.message || __('Failed to leave the group. Please try again.', 'obatala') 
             });
         } finally {
             setLoading(false);
@@ -67,7 +68,7 @@ const SectorDetailsPage = () => {
             const sectorId = getSectorIdFromUrl();
             if (!sectorId) {
                 if (isMounted) {
-                    setError('Sector ID not found in URL');
+                    setError(__('Sector ID not found in URL', 'obatala'));
                     setLoading(false);
                 }
                 return;
@@ -88,7 +89,7 @@ const SectorDetailsPage = () => {
                 }
             } catch (err) {
                 if (isMounted) {
-                    setError('Failed to load sector details');
+                    setError(__('Failed to load group details', 'obatala'));
                     console.error('Error loading sector details:', err);
                 }
             } finally {
@@ -107,7 +108,7 @@ const SectorDetailsPage = () => {
 
     if (loading) return <div style={{ padding: '20px' }}><Spinner /></div>;
     if (error) return <Notice status="error" isDismissible={false}>{error}</Notice>;
-    if (!sector) return <Notice status="warning" isDismissible={false}>Sector not found</Notice>;
+    if (!sector) return <Notice status="warning" isDismissible={false}>{__('Group not found', 'obatala')}</Notice>;
 
     return (
         <>
@@ -120,7 +121,7 @@ const SectorDetailsPage = () => {
                 )}
                 <div className="title-container">
                     <h2>
-                        <small>Group</small>
+                        <small>{__('Group', 'obatala')}</small>
                         {sector.nome}
                     </h2>
                 </div>
@@ -130,24 +131,24 @@ const SectorDetailsPage = () => {
                     </span>
                 </div>
                 <Panel>
-                    <PanelHeader>Description</PanelHeader>
+                    <PanelHeader>{__('Description', 'obatala')}</PanelHeader>
                     <PanelRow>
                         <p>{sector.descricao || 'N/A'}</p>
                     </PanelRow>
                 </Panel>
 
                 <Panel>
-                    <PanelHeader>Associated users <span className="badge">{sector.users?.length || 0}</span></PanelHeader>
+                    <PanelHeader>{__('Associated users', 'obatala')} <span className="badge">{sector.users?.length || 0}</span></PanelHeader>
                     <PanelRow>
                         {sector.users ? (
                             sector.users.length > 0 ? (
                                 <table className="wp-list-table widefat striped">
                                     <thead>
                                         <tr>
-                                            <th>Name</th>
-                                            <th>Username</th>
-                                            <th>Email</th>
-                                            <th>Actions</th>
+                                            <th>{__('Name', 'obatala')}</th>
+                                            <th>{__('Username', 'obatala')}</th>
+                                            <th>{__('Email', 'obatala')}</th>
+                                            <th>{__('Actions', 'obatala')}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -163,7 +164,7 @@ const SectorDetailsPage = () => {
                                                             onClick={() => confirmRemoveUser(user)}
                                                             disabled={loading}
                                                         >
-                                                            Leave group
+                                                            {__('Leave group', 'obatala')}
                                                         </Button>
                                                     )}
                                                 </td>
@@ -173,7 +174,7 @@ const SectorDetailsPage = () => {
                                 </table>
                             ) : (
                                 <Notice isDismissible={false} status="warning">
-                                    No users in this group.
+                                    {__('No users in this group.', 'obatala')}
                                 </Notice>
                             )
                         ) : (
@@ -186,7 +187,7 @@ const SectorDetailsPage = () => {
                     onConfirm={() => handleRemoveUser(userToRemove?.ID)}
                     onCancel={() => setShowConfirmDialog(false)}
                 >
-                    Are you sure you want to leave the group "{sector.nome}"?
+                    {sprintf(__('Are you sure you want to leave the group "%s"?', 'obatala'), sector.nome)}
                 </ConfirmDialog>
             </main>
             <BrandFooter />

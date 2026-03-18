@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { __ } from "@wordpress/i18n";
 import { Handle, Position, useReactFlow } from "@xyflow/react";
 import DragAndDropList from "../dragables/DragAndDropList";
 import NodeHandle from "./NodeHandle";
@@ -95,56 +96,56 @@ const NodeContent = ({ id, data = {} }) => {
             {/* Node Name */}
             <TextControl
                 value={stageName}
-                label="Step name"
+                label={__('Step name', 'obatala')}
                 onChange={handleStageNameChange}
-                placeholder="Digite o nome da etapa"
+                placeholder={__('Enter the step name', 'obatala')}
             />
 
             <ComboboxControl
-                label="Group responsible"
+                label={__('Group responsible', 'obatala')}
                 value={sector}
                 options={sectors.map(sector => ({
-                label: sector.name,
-                value: sector.id,
+                    label: sector.name,
+                    value: sector.id,
                 }))}
                 onChange={handleStageSectorChange}
             />
 
             {/* List of Fields */}
             <div className="components-base-control__field">
-                <label className="components-base-control__label">Fields</label>
+                <label className="components-base-control__label">{__('Fields', 'obatala')}</label>
             </div>
             {fields.length > 0 && (
                 <div className="flow-fields">
-                <DragAndDropList nodeId={id} fields={fields} updateFields={updateFields} />
+                    <DragAndDropList nodeId={id} fields={fields} updateFields={updateFields} />
                 </div>
             )}
             <Button variant="primary" size="small" icon={<Icon icon={plus} />} onClick={() => setIsAddingFields(true)}>
-                Add field
+                {__('Add field', 'obatala')}
             </Button>
 
             {/* Toolbar with Add and Delete */}
             {isAddingFields && (
                 <NodeToolbar isVisible={isSelected} position="right">
-                <div className="wp-drawer node-meta-container">
-                    <Button className="close-button"
-                    icon={<Icon icon={close} size={24} onClick={() => setIsAddingFields(false)} />}
-                    ></Button>
-                    <h3 className="title">Select a field to add:</h3>
-                    <ul className="node-meta-list-container">
-                    {FIELD_OPTIONS.map((option) => (
-                        <li className="node-meta-list">
-                        <Icon icon={option.icon} />
-                        <span
-                            key={option.id}
-                            onClick={() => addFieldToNode(option.id)}
-                        >
-                            {option.label}
-                        </span>
-                        </li>
-                    ))}
-                    </ul>
-                </div>
+                    <div className="wp-drawer node-meta-container">
+                        <Button className="close-button"
+                            icon={<Icon icon={close} size={24} onClick={() => setIsAddingFields(false)} />}
+                        ></Button>
+                        <h3 className="title">{__('Select a field to add:', 'obatala')}</h3>
+                        <ul className="node-meta-list-container">
+                            {FIELD_OPTIONS.map((option) => (
+                                <li className="node-meta-list">
+                                    <Icon icon={option.icon} />
+                                    <span
+                                        key={option.id}
+                                        onClick={() => addFieldToNode(option.id)}
+                                    >
+                                        {option.label}
+                                    </span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                 </NodeToolbar>
             )}
         </div>

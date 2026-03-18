@@ -5,6 +5,7 @@ import {
     useReactFlow,
 } from "@xyflow/react";
 import { Button, Tooltip, __experimentalConfirmDialog as ConfirmDialog } from "@wordpress/components";
+import { __, sprintf } from "@wordpress/i18n";
 import { close } from '@wordpress/icons';
 import { useReducer } from "react";
 import Reducer, { initialState } from "../../../../redux/reducer";
@@ -36,8 +37,8 @@ export default function CustomEdge({
         targetPosition,
     });
     const nodes = getNodes()
-    const sourceNode = nodes.find((node) => node.id === source)?.data?.stageName || `Etapa ${source}`;
-    const targetNode = nodes.find((node) => node.id === target)?.data?.stageName || `Etapa ${target}`;
+    const sourceNode = nodes.find((node) => node.id === source)?.data?.stageName || source;
+    const targetNode = nodes.find((node) => node.id === target)?.data?.stageName || target;
 
     const onEdgeClick = () => {
         setEdges((edges) => edges.filter((edge) => edge.id !== id));
@@ -61,7 +62,7 @@ export default function CustomEdge({
                 }}
                 onCancel={handleCancel}
             >
-                Are you sure you want to delete connection between {sourceNode} and {targetNode}?
+                {sprintf(__('Are you sure you want to delete connection between %s and %s?', 'obatala'), sourceNode, targetNode)}
             </ConfirmDialog>
             <BaseEdge path={edgePath} markerEnd={markerEnd} style={style} />
             <EdgeLabelRenderer>
@@ -74,7 +75,7 @@ export default function CustomEdge({
                     }}
                     className="nodrag nopan"
                 >
-                    <Tooltip text="Remove connection">
+                    <Tooltip text={__('Remove connection', 'obatala')}>
                         <Button variant="link" className="close-btn" icon={close} onClick={handleConfirmDelete} />
                     </Tooltip>
                 </div>

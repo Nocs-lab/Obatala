@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { DropdownMenu, Icon } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
 
 const BrandHeader = () => {
     const [wpSiteName, setWpSiteName] = useState('');
@@ -17,7 +18,7 @@ const BrandHeader = () => {
 
     return (
         <header>
-            <button id="toggleMenu" onClick={() => setMenuOpen(!menuOpen)}><Icon icon="menu" /> Menu</button>
+            <button id="toggleMenu" onClick={() => setMenuOpen(!menuOpen)}><Icon icon="menu" /> {__('Menu', 'obatala')}</button>
             <nav id="mainNav" className={menuOpen ? 'active' : ''}>
                 <a href={obatalaApp.admin_url + "admin.php?page=obatala-main"}  className="menu-brand">
                     <h1>
@@ -25,25 +26,25 @@ const BrandHeader = () => {
                         <small>{wpSiteName && `${wpSiteName}`}</small>
                     </h1>
                 </a>
-                <a href={obatalaApp.admin_url + "admin.php?page=obatala-main"} className="menu-link"><Icon icon="admin-home" /> Dashboard</a>
-                <a href={obatalaApp.admin_url +"admin.php?page=process-manager"} className="menu-link"><Icon icon="admin-page" /> Processes</a>
-                <a href={obatalaApp.admin_url +"admin.php?page=process-type-manager"} className="menu-link"><Icon icon="welcome-widgets-menus" /> Models</a>
+                <a href={obatalaApp.admin_url + "admin.php?page=obatala-main"} className="menu-link"><Icon icon="admin-home" /> {__('Dashboard', 'obatala')}</a>
+                <a href={obatalaApp.admin_url +"admin.php?page=process-manager"} className="menu-link"><Icon icon="admin-page" /> {__('Processes', 'obatala')}</a>
+                <a href={obatalaApp.admin_url +"admin.php?page=process-type-manager"} className="menu-link"><Icon icon="welcome-widgets-menus" /> {__('Models', 'obatala')}</a>
                 <a href={obatalaApp.admin_url +"admin.php?page=tainacan_admin#/home"} className="menu-tainacan menu-link ms-auto">Tainacan</a>
                 <DropdownMenu
                     icon="admin-generic"
-                    label="Settings"
+                    label={__('Settings', 'obatala')}
                     controls={ [
                         {
-                            title: 'Groups',
+                            title: __('Groups', 'obatala'),
                             onClick: () => window.location.href = obatalaApp.admin_url +'admin.php?page=sector_manager',
                         },
                         {
-                            title: 'Users',
+                            title: __('Users', 'obatala'),
                             onClick: () => window.location.href = obatalaApp.admin_url +'users.php',
                         },
                     ] }
                 />   
-                <a href={obatalaApp.admin_url}  className="menu-link menu-icon" title="Wordpress"><Icon icon="wordpress-alt" /><span className="text">Wordpress</span></a>
+                <a href={obatalaApp.admin_url}  className="menu-link menu-icon" title="WordPress"><Icon icon="wordpress-alt" /><span className="text">{__('WordPress', 'obatala')}</span></a>
             </nav>
         </header>
     );

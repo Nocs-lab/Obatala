@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { __ } from "@wordpress/i18n";
 import {
     Spinner,
     Notice,
@@ -42,7 +43,7 @@ const processDataEditor = () => {
             })
             .catch((error) => {
                 console.error("Error fetching data:", error);
-                setNotice({ status: "error", message: "Error fetching process type." });
+                setNotice({ status: "error", message: __("Error fetching process type.", "obatala") });
                 setIsLoading(false);
             });
     }, [id]);
@@ -251,13 +252,13 @@ const processDataEditor = () => {
 
             setNotice({
                 status: "success",
-                message: "Process type and meta updated successfully.",
+                message: __("Process type and meta updated successfully.", "obatala"),
             });
         } catch (error) {
             console.error(error);
             setNotice({
                 status: "error",
-                message: `Error updating process type and meta: ${error}`,
+                message: __("Error updating process type and meta.", "obatala") + ` ${error}`,
             });
         } finally {
             setIsLoading(false);
@@ -283,7 +284,7 @@ const processDataEditor = () => {
     }
 
     if (!processData) {
-        return <div>Loading...</div>;
+        return <div>{__('Loading...', 'obatala')}</div>;
     }
 
     return (
@@ -297,7 +298,7 @@ const processDataEditor = () => {
                 )}
                 <FlowProvider>
                     <div className="title-container">
-                        <h2><small>Manage steps</small>{processData.title.rendered}</h2>
+                        <h2><small>{__('Manage steps', 'obatala')}</small>{processData.title.rendered}</h2>
                         <ProcessControls
                             onSave={handleSave}
                             onCancel={handleCancelEditProcessType}

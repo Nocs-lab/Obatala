@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button, ButtonGroup, SelectControl, TextControl, Notice } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
+import { __ } from '@wordpress/i18n';
 
 const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel }) => {
     const [newProcessTitle, setNewProcessTitle] = useState('');
@@ -23,13 +24,13 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
     const handleSaveProcess = async (e) => {
         e.preventDefault();
         if (!newProcessTitle || !newProcessType) {
-            setNotice({ status: 'error', message: 'Please provide a title and select a process type.' });
+            setNotice({ status: 'error', message: __('Please provide a title and select a process type.', 'obatala') });
             return;
         }
         // get process model id
         const selectedProcessModel = processTypes.find(type => type.id === parseInt(newProcessType));
         if (!selectedProcessModel) {
-            setNotice({ status: 'error', message: 'Invalid process type selected.' });
+            setNotice({ status: 'error', message: __('Invalid process type selected.', 'obatala') });
             return;
         }
 
@@ -62,7 +63,7 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
 
             // Atualiza o meta para o processocom os dados do fluxo
             if (metaFields.status === 'Inactive') {
-                setNotice({ status: 'error', message: 'The process cannot be created because the selected process model is inactive' });
+                setNotice({ status: 'error', message: __('The process cannot be created because the selected process model is inactive', 'obatala') });
 
             } else {
                 const metaUpdateData = {
@@ -92,13 +93,13 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
                 setNewProcessTitle('');
                 setNewProcessType('');
                 setAccessLevel('public');
-                setNotice({ status: 'success', message: editingProcess ? 'Process updated successfully.' : 'Process created successfully.' });
+                setNotice({ status: 'success', message: editingProcess ? __('Process updated successfully.', 'obatala') : __('Process created successfully.', 'obatala') });
 
             }
 
         } catch (error) {
             console.error('Error creating process:', error);
-            setNotice({ status: 'error', message: 'Error creating process.' });
+            setNotice({ status: 'error', message: __('Error creating process.', 'obatala') });
         }
     };
 
@@ -121,18 +122,18 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
             )}
 
             <TextControl
-                label="Process Title"
+                label={__('Process Title', 'obatala')}
                 value={newProcessTitle}
                 onChange={(value) => setNewProcessTitle(value)}
                 disabled={!!editingProcess}
             />
 
             <SelectControl
-                label="Process Model"
+                label={__('Process Model', 'obatala')}
                 value={newProcessType}
                 options={[
                     {
-                        label: 'Select a process model...',
+                        label: __('Select a process model...', 'obatala'),
                         value: '',
                     },
                     ...modelsActives.map(type => ({ label: type.title.rendered, value: type.id }))
@@ -144,17 +145,17 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
             />
 
             <SelectControl
-                label="Access level"
+                label={__('Access level', 'obatala')}
                 value={accessLevel}
                 options={[
-                    { label: 'Not restricted', value: 'Not restricted' },
-                    { label: 'Restricted', value: 'Restricted' }
+                    { label: __('Not restricted', 'obatala'), value: 'Not restricted' },
+                    { label: __('Restricted', 'obatala'), value: 'Restricted' }
                 ]}
                 onChange={(value) => setAccessLevel(value)}
             />
             <ButtonGroup>
-                <Button variant="secondary" onClick={handleCancel}>Cancel</Button>
-                <Button variant="primary" type="submit">Save</Button>
+                <Button variant="secondary" onClick={handleCancel}>{__('Cancel', 'obatala')}</Button>
+                <Button variant="primary" type="submit">{__('Save', 'obatala')}</Button>
             </ButtonGroup>
 
         </form>

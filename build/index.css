@@ -14,7 +14,7 @@
 
 .flow-container>.components-button-group {
   justify-content: flex-end;
-  margin-bottom: 1rem;
+  margin: 1rem;
 }
 
 /* Main component */
@@ -126,7 +126,8 @@
   border-radius: var(--border-radius);
   box-shadow: 0 20px 25px -5px #0000001a,0 8px 10px -6px #0000001a;
   cursor: default;
-  max-width: 320px;
+  max-width: 380px;
+  min-width: 300px;
   padding: 1rem;
 }
 
@@ -334,7 +335,7 @@ svg.react-flow__connectionline {
   pointer-events: all;
 }
 .react-flow__handle.connectable {
-  background-color: var(--primary-400);
+  background-color: var(--success);
   cursor: crosshair;
   display: flex;
   align-items: center;
@@ -752,9 +753,34 @@ svg.react-flow__connectionline {
   align-items: center;
   margin-bottom: 1rem;
   width: 100%;
+  .components-button {
+    min-width: 28px;
+    padding: 0;
+  }
+  .close-btn .components-icon,
+  .close-btn svg {
+    width: 24px;
+    height: 24px;
+    fill: currentColor;
+  }
 }
 
 /* custom handle */
+.step-container {
+  dd {
+    margin: 0;
+    + dt {
+      margin-top: 1rem;
+    }
+  }
+  &.error {
+    border: 2px solid var(--danger);
+    box-shadow: 0 0 5px var(--danger);
+    .react-flow__handle.connectable {
+      background-color: var(--danger);
+    }
+  }
+}
 .step-container .custom-drag-handle {
   border-top-left-radius: var(--border-radius);
   border-top-right-radius: var(--border-radius);
@@ -785,40 +811,6 @@ svg.react-flow__connectionline {
 }
 
 /* custom conditional */
-.bpmn-conditional-operator {
-  background-color: var(--white);
-  border: 5px solid var(--warning);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 110px;
-  min-height: 20px;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
-  width: 110px;
-}
-.bpmn-conditional-operator span {
-  color: var(--warning);
-  font-size: 1.2rem;
-  font-weight: 900;
-}
-.bpmn-conditional-operator:hover span::before {
-  content: "⠿";
-  padding-right: .25rem;
-}
-
-.bpmn-conditional-operator .wp-drawer {
-  height: auto;
-  left: auto;
-}
-
-.bpmn-conditional-operator.error {
-  border: 2px solid red;
-  box-shadow: 0 0 5px red;
-}
-
-
 .bpmn-start-end-node {
   background-color: var(--white);
   border-radius: 50%;
@@ -850,7 +842,10 @@ svg.react-flow__connectionline {
 
 .bpmn-start-end-node:hover span::before {
   content: "⠿";
-  padding-right: .25rem;
+  position: absolute;
+  top: 1rem;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 /* custom handle buttons */
@@ -880,25 +875,40 @@ svg.react-flow__connectionline {
 
 /* Close btn */
 .close-btn {
-  background: var(--danger);
-  height: 28px;
-  width: 28px;
+  background-color: var(--primary-50) !important;
+  border: 2px solid var(--gray-600) !important;
+  border-radius: 25px !important;
+  color: var(--primary-600) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 32px !important;
+  min-width: 32px !important;
+  padding: 0 !important;
+  width: 32px !important;
 }
-.close-btn::before,
-.close-btn::after {
-  background: var(--white);
-  height: 70%;
-  width: 1px;
+.step-header .close-btn .components-icon,
+.step-header .close-btn .components-icon svg,
+.step-header .close-btn svg {
+  flex-shrink: 0;
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
+  min-height: 24px !important;
+  fill: currentColor;
+  display: block;
 }
-.close-btn::before {
-  transform: translate(-50%, -50%) rotate(45deg);
+.step-header .step-header-remove-btn {
+  cursor: pointer;
+  font: inherit;
+  margin: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+       appearance: none;
 }
-.close-btn::after {
-  transform: translate(-50%, -50%) rotate(-45deg);
-}
-.close-btn:hover::before,
-.close-btn:hover::after {
-  background: var(--primary);
+.step-header .step-header-remove-btn svg {
+  display: block;
+  stroke: currentColor;
 }
 .components-button.has-icon.has-text {
   font-size: .75rem;

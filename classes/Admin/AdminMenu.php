@@ -57,7 +57,7 @@ namespace Obatala\Admin {
                     'capability' => 'manage_options',
                     'slug' => 'process-type-editor',
                     'callback' => 'render_page',
-                    'show_in_menu' => true
+                    'show_in_menu' => false
                 ],
                 [
                     'parent_slug' => 'obatala-main',
@@ -75,7 +75,7 @@ namespace Obatala\Admin {
                     'capability' => 'read',
                     'slug' => 'process-viewer',
                     'callback' => 'render_page',
-                    'show_in_menu' => true
+                    'show_in_menu' => false
                 ],
                 [
                     'parent_slug' => 'obatala-main',
@@ -84,7 +84,7 @@ namespace Obatala\Admin {
                     'capability' => 'manage_options',
                     'slug' => 'sector-details',
                     'callback' => 'render_page',
-                    'show_in_menu' => true
+                    'show_in_menu' => false
                 ],
                 [
                     'parent_slug' => 'obatala-main',
@@ -93,7 +93,7 @@ namespace Obatala\Admin {
                     'capability' => 'read',
                     'slug' => 'mappers',
                     'callback' => 'render_mappers_page',
-                    'show_in_menu' => true
+                    'show_in_menu' => false
                 ]
             ]
         ];
@@ -118,11 +118,13 @@ namespace Obatala\Admin {
             );
 
             foreach (self::$pages['submenus'] as $submenu) {
+                $title = $submenu['title'];
+                $menu_title = $submenu['menu_title'];
                 if ($submenu['show_in_menu']) {
                     add_submenu_page(
                         $submenu['parent_slug'],
-                        $submenu['title'],
-                        $submenu['menu_title'],
+                        $title,
+                        $menu_title,
                         $submenu['capability'],
                         $submenu['slug'],
                         [self::class, $submenu['callback']]
@@ -130,8 +132,8 @@ namespace Obatala\Admin {
                 } else {
                     add_submenu_page(
                         null,
-                        $submenu['title'],
-                        $submenu['menu_title'],
+                        $title,
+                        $menu_title,
                         $submenu['capability'],
                         $submenu['slug'],
                         [self::class, $submenu['callback']]
@@ -149,7 +151,6 @@ namespace Obatala\Admin {
         public static function render_mappers_page()
         {
             echo '<div id="mappers"></div>';
-            echo '<script>console.log("div mappers encontrada:", document.getElementById("mappers"));</script>';
         }
 
         /**
@@ -175,62 +176,67 @@ namespace Obatala\Admin {
             }
         }
 
-        public static function enqueue_scripts()
+        public static function enqueue_scripts($hook)
         {
-            add_action('admin_footer', function () {
-                ?>
-                <script type="text/javascript">
-                    document.addEventListener('DOMContentLoaded', function () {
-                        const processViewerItem = document.querySelector(
-                            '#toplevel_page_obatala-main .wp-submenu li a[href*="process-viewer"]');
-                        const processTypeEditorItem = document.querySelector(
-                            '#toplevel_page_obatala-main .wp-submenu li a[href*="process-type-editor"]');
-                        const processSector_details = document.querySelector(
-                            '#toplevel_page_obatala-main .wp-submenu li a[href*="sector-details"]');
-                        const processTypeExport = document.querySelector(
-                            '#toplevel_page_obatala-main .wp-submenu li a[href*="mappers"]');
+            if (!is_string($hook) || strpos($hook, 'obatala') === false) {
+                return;
+            }
 
-                        if (processSector_details) {
-                            processSector_details.parentElement.style.display = 'none';
-                        }
+            $inline_script = "
+                document.addEventListener('DOMContentLoaded', function () {
+                    const processViewerItem = document.querySelector('#toplevel_page_obatala-main .wp-submenu li a[href*=\"process-viewer\"]');
+                    const processTypeEditorItem = document.querySelector('#toplevel_page_obatala-main .wp-submenu li a[href*=\"process-type-editor\"]');
+                    const processSectorDetails = document.querySelector('#toplevel_page_obatala-main .wp-submenu li a[href*=\"sector-details\"]');
+                    const processTypeExport = document.querySelector('#toplevel_page_obatala-main .wp-submenu li a[href*=\"mappers\"]');
 
-                        if (processViewerItem) {
-                            processViewerItem.parentElement.style.display = 'none';
-                        }
-
-                        if (processTypeEditorItem) {
-                            processTypeEditorItem.parentElement.style.display = 'none';
-                        }
-
-                        if (processTypeExport) {
-                            processTypeExport.parentElement.style.display = 'none';
-                        }
-
-                        const menuItem = document.querySelector('#toplevel_page_obatala-main');
-                        if (menuItem) {
-                            menuItem.addEventListener('click', function () {
-                                if (processViewerItem) {
-                                    processViewerItem.parentElement.style.display = 'block';
-                                }
-                                if (processTypeEditorItem) {
-                                    processTypeEditorItem.parentElement.style.display = 'block';
-                                }
-                                if (processSector_details) {
-                                    processSector_details.parentElement.style.display = 'block';
-                                }
-                            });
-                        }
-                    });
-                </script>
-                <style>
-                    #toplevel_page_obatala-main .wp-submenu li a[href*="process-viewer"],
-                    #toplevel_page_obatala-main .wp-submenu li a[href*="process-type-editor"],
-                    #toplevel_page_obatala-main .wp-submenu li a[href*="sector-details"] {
-                        display: none;
+                    if (processSectorDetails) {
+                        processSectorDetails.parentElement.style.display = 'none';
                     }
-                </style>
-                <?php
-            });
+
+                    if (processViewerItem) {
+                        processViewerItem.parentElement.style.display = 'none';
+                    }
+
+                    if (processTypeEditorItem) {
+                        processTypeEditorItem.parentElement.style.display = 'none';
+                    }
+
+                    if (processTypeExport) {
+                        processTypeExport.parentElement.style.display = 'none';
+                    }
+
+                    const menuItem = document.querySelector('#toplevel_page_obatala-main');
+                    if (menuItem) {
+                        menuItem.addEventListener('click', function () {
+                            if (processViewerItem) {
+                                processViewerItem.parentElement.style.display = 'block';
+                            }
+                            if (processTypeEditorItem) {
+                                processTypeEditorItem.parentElement.style.display = 'block';
+                            }
+                            if (processSectorDetails) {
+                                processSectorDetails.parentElement.style.display = 'block';
+                            }
+                        });
+                    }
+                });
+            ";
+
+            $inline_style = "
+                #toplevel_page_obatala-main .wp-submenu li a[href*=\"process-viewer\"],
+                #toplevel_page_obatala-main .wp-submenu li a[href*=\"process-type-editor\"],
+                #toplevel_page_obatala-main .wp-submenu li a[href*=\"sector-details\"] {
+                    display: none;
+                }
+            ";
+
+            wp_register_script('obatala-admin-menu-inline-script', false, [], null, true);
+            wp_enqueue_script('obatala-admin-menu-inline-script');
+            wp_add_inline_script('obatala-admin-menu-inline-script', $inline_script);
+
+            wp_register_style('obatala-admin-menu-inline-style', false, [], null);
+            wp_enqueue_style('obatala-admin-menu-inline-style');
+            wp_add_inline_style('obatala-admin-menu-inline-style', $inline_style);
         }
     }
 }

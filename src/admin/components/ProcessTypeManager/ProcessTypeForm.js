@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Button, ButtonGroup, TextControl, Notice, SelectControl } from "@wordpress/components";
 import { useSelect } from "@wordpress/data";
+import { __ } from "@wordpress/i18n";
 import { store as coreStore } from '@wordpress/core-data';
 
 const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
@@ -30,7 +31,7 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
         event.preventDefault();
 
         if (!title || !description) {
-            setNotice({ status: "error", message: "Title and description are required." });
+            setNotice({ status: "error", message: __("Title and description are required.", "obatala") });
             return;
         }
 
@@ -57,6 +58,18 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
         }
     };
 
+    try {
+        await onSave(updatedProcessType);
+        setNotice({
+            status: "success",
+            message: __("Process type saved successfully.", "obatala"),
+        });
+        // Não limpe os campos após o salvamento, apenas exiba o aviso de sucesso.
+        } catch (error) {
+            setNotice({ status: "error", message: __("Error saving process type.", "obatala") });
+        }
+    };
+
     return (
         <form onSubmit={handleSave}>
             {notice && (
@@ -65,23 +78,23 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
                 </Notice>
             )}
             <TextControl
-                label="Title"
+                label={__("Title", "obatala")}
                 value={title}
                 onChange={(value) => setTitle(value)}
             />
             <TextControl
-                label="Description"
+                label={__("Description", "obatala")}
                 value={description}
                 onChange={(value) => setDescription(value)}
             />
 
             {editingProcessType && (
                 <SelectControl
-                    label="Status"
+                    label={__("Status", "obatala")}
                     value={status}
                     options={[
-                    { label: 'Active', value: 'Active' },
-                    { label: 'Inactive', value: 'Inactive' }
+                    { label: __('Active', 'obatala'), value: 'Active' },
+                    { label: __('Inactive', 'obatala'), value: 'Inactive' }
                 ]}
                 onChange={(value) => setStatus(value)}    
                 />
@@ -89,10 +102,10 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
     
             <ButtonGroup>
                 <Button variant="secondary" onClick={onCancel}>
-                    Cancel
+                    {__('Cancel', 'obatala')}
                 </Button>
                 <Button variant="primary" type="submit">
-                    Save
+                    {__('Save', 'obatala')}
                 </Button>
             </ButtonGroup>
         </form>

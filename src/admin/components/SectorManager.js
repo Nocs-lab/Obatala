@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useReducer, useMemo } from 'react';
+import { __ } from '@wordpress/i18n';
 import {
     Spinner,
     Button,
@@ -80,7 +81,7 @@ const SectorManager = () => {
                 savedSector = await saveSector(newSector);
             }
         
-            setNotice({ status: 'success', message: 'Group successfully saved.' });
+            setNotice({ status: 'success', message: __('Group successfully saved.', 'obatala') });
             setEditingSector(null);
             setAddingSector(null);
             loadSectors();
@@ -88,9 +89,9 @@ const SectorManager = () => {
             console.error('Error saving sector:', error);
            
             if (error === 'Setor já existe' || error === 'Setor com o mesmo nome já existe') {
-                setNotice({ status: 'error', message: 'Group already exists.' });
+                setNotice({ status: 'error', message: __('Group already exists.', 'obatala') });
             } else {
-                setNotice({ status: 'error', message: 'Error saving group.' });
+                setNotice({ status: 'error', message: __('Error saving group.', 'obatala') });
             }
             setEditingSector(null);
             setAddingSector(null);
@@ -105,12 +106,12 @@ const SectorManager = () => {
                 const updatedSectors = sectors.filter(type => type.id !== sector.id);
                 setSectors(updatedSectors);
                 setIsLoading(false);
-                setNotice({ status: 'success', message: 'Group successfully removed.' })
+                setNotice({ status: 'success', message: __('Group successfully removed.', 'obatala') })
                 
             })
             .catch(error => {
                 if(error === 'Erro ao deletar o setor, o setor esta vinculado a um usuario'){
-                    setNotice({ status: 'error', message: 'Cannot deleting group linked to a user.' }); 
+                    setNotice({ status: 'error', message: __('Cannot delete group linked to a user.', 'obatala') }); 
                 }
                 console.error('Error deleting process type:', error);
                 setIsLoading(false);
@@ -158,13 +159,13 @@ const SectorManager = () => {
           <BrandHeader />
           <main>
               <div className="title-container">
-                  <h2>Groups</h2>
+                  <h2>{__('Groups', 'obatala')}</h2>
                   <span className="badge">{filteredSectors.length}</span>
                   <ButtonGroup>
                       <Button variant="primary"
                           icon={<Icon icon={plus} />}
                           onClick={handleAdd}
-                      >Add new</Button>
+                      >{__('Add new', 'obatala')}</Button>
                   </ButtonGroup>
               </div>
               {notice && (

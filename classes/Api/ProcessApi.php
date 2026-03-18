@@ -14,14 +14,14 @@ class ProcessApi extends ObatalaAPI {
         $this->add_route('process_obatala/(?P<id>\d+)/current_stage', [
             'methods' => 'GET',
             'callback' => [$this, 'get_current_stage'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
         ]);
 
         // Route to update the current stage
         $this->add_route('process_obatala/(?P<id>\d+)/current_stage', [
             'methods' => 'POST',
             'callback' => [$this, 'update_current_stage'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
             'args' => [
                 'current_stage' => [
                     'required' => true,
@@ -36,14 +36,14 @@ class ProcessApi extends ObatalaAPI {
         $this->add_route('process_obatala/(?P<id>\d+)/process_type', [
             'methods' => 'GET',
             'callback' => [$this, 'get_process_type'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
         ]);
 
         // Route to update the process type
         $this->add_route('process_obatala/(?P<id>\d+)/process_type', [
             'methods' => 'POST',
             'callback' => [$this, 'update_process_type'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
             'args' => [
                 'process_type' => [
                     'required' => true,
@@ -58,27 +58,27 @@ class ProcessApi extends ObatalaAPI {
         $this->add_route('process_obatala/(?P<id>\d+)/meta', [
             'methods' => 'GET',
             'callback' => [$this, 'get_meta'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
         ]);
         
         // Route to update multiple meta fields
         $this->add_route('process_obatala/(?P<id>\d+)/meta', [
             'methods' => 'POST',
             'callback' => [$this, 'update_meta'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
         ]);
 
         // Rota para obter todos os comentários associados a um processo
         $this->add_route('process_obatala/users', [
             'methods' => 'GET',
             'callback' => [$this, 'get_user_processes'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
         ]);
 
         $this->add_route('process_obatala/(?P<id>\d+)/comments', [
             'methods' => 'GET',
             'callback' => [$this, 'get_comments'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
         ]);
 
        
@@ -86,35 +86,35 @@ class ProcessApi extends ObatalaAPI {
         $this->add_route('process_obatala/(?P<id>\d+)/comment', [
             'methods' => 'POST',
             'callback' => [$this, 'add_comment'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
         ]);
 
         //Rota para editar um comentario de um processo
         $this->add_route('/process_obatala/comment/(?P<id>\d+)', [
             'methods' => 'PUT',
             'callback' => [$this, 'update_comment'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
         ]);
 
         //Rota para deletar um comentario de um processo
         $this->add_route('/process_obatala/comment/(?P<id>\d+)', [
             'methods' => 'DELETE',
             'callback' => [$this, 'delete_comment'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
         ]);
 
         //Rota para editar uma etapa de um processo(mudar node_status e parametros gerais)
         $this->add_route('/process_obatala/(?P<id>\d+)/node', [
             'methods' => 'PUT',
             'callback' => [$this, 'update_node'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
         ]);
 
         // Rota para retornar nodes validos(Started e Finished)
         $this->add_route('/process_obatala/(?P<id>\d+)/node', [
             'methods' => 'GET',
             'callback' => [$this, 'valid_nodes'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
         ]);
     }
     

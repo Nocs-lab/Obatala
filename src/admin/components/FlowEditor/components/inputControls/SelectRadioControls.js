@@ -7,6 +7,7 @@ import {
   TextControl,
 } from "@wordpress/components";
 import React, { useState } from "react";
+import { __ } from "@wordpress/i18n";
 import * as Yup from "yup";
 import { useFlowContext } from "../../context/FlowContext";
 import { useDrawer } from "../../context/DrawerContext";
@@ -76,7 +77,7 @@ export const SelectRadioControls = ({
         validateFields(); // Chama a função de validação
       }}
     >
-      <h3>Edit select field</h3>
+      <h3>{__('Edit select field', 'obatala')}</h3>
 
       {/* Campo para definir o Label */}
       <TextControl
@@ -142,7 +143,7 @@ export const SelectRadioControls = ({
         type="submit"
         //onClick={} // Valida os campos ao clicar em salvar
       >
-        Save
+        {__('Save', 'obatala')}
       </Button>
     </form>
   );

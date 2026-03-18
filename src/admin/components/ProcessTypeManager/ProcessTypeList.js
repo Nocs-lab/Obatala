@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from 'react';
+import { __ } from '@wordpress/i18n';
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
 import { Button, ButtonGroup, Tooltip, Panel, PanelRow, Notice, TextControl } from '@wordpress/components';
 import { edit, trash, layout, external } from '@wordpress/icons';
@@ -9,22 +10,24 @@ import ProcessTypeFilter from './ProcessTypeFilters';
 const ProcessTypeList = ({ processTypes, onExport, onEdit, onDelete, onManager, status, setStatus, authorsById }) => {
     const columns = useMemo(() => [
         {
-            Header: 'Title',
+            Header: __('Title', 'obatala'),
             accessor: 'title.rendered',
         },
         {
-            Header: 'Description',
+            Header: __('Description', 'obatala'),
             accessor: 'description',
         },
         {
-            Header: 'Status',
+            Header: __('Status', 'obatala'),
             accessor: 'meta.status[0]',
             Cell: ({ value }) => (
-                <span className={`badge ${value === 'Active' ? 'success' : 'error'}`}>{value}</span>
+                <span className={`badge ${value === 'Active' ? 'success' : 'error'}`}>
+                    {value === 'Active' ? __('Active', 'obatala') : __('Inactive', 'obatala')}
+                </span>
             ),
         },
         {
-            Header: 'Created at',
+            Header: __('Created at', 'obatala'),
             //accessor: 'date',
             Cell: ({ row }) => (
                 <p>
@@ -39,7 +42,7 @@ const ProcessTypeList = ({ processTypes, onExport, onEdit, onDelete, onManager, 
             Cell: ({ value }) => authorsById[value]?.name,
         }, */
         {
-            Header: 'Last update',
+            Header: __('Last update', 'obatala'),
             accessor: 'meta',
             Cell: ({ value }) => (
                 <p>
@@ -55,7 +58,7 @@ const ProcessTypeList = ({ processTypes, onExport, onEdit, onDelete, onManager, 
             ),
         },
         {
-            Header: 'Actions',
+            Header: __('Actions', 'obatala'),
             accessor: 'id',
             Cell: ({ row }) => (
                 <ButtonGroup>
@@ -64,23 +67,23 @@ const ProcessTypeList = ({ processTypes, onExport, onEdit, onDelete, onManager, 
                         icon={layout}
                         onClick={() => onManager(row.original.id)}
                     >
-                        Manage steps
+                        {__('Manage steps', 'obatala')}
                     </Button>
-                    <Tooltip text="Edit export data">
+                    <Tooltip text={__('Edit export data', 'obatala')}>
                         <Button
                             variant="secondary"
                             icon={external}
                             onClick={() => onExport(row.original)}
                         />
                     </Tooltip>
-                    <Tooltip text="Edit general data">
+                    <Tooltip text={__('Edit general data', 'obatala')}>
                         <Button
                             variant="secondary"
                             icon={edit}
                             onClick={() => onEdit(row.original)}
                         />
                     </Tooltip>
-                    <Tooltip text="Delete model">
+                    <Tooltip text={__('Delete model', 'obatala')}>
                         <Button
                             variant="secondary"
                             icon={trash}
@@ -127,7 +130,7 @@ const ProcessTypeList = ({ processTypes, onExport, onEdit, onDelete, onManager, 
                         className="mb-1"
                         value={globalFilter || ''}
                         onChange={value => setGlobalFilter(value)}
-                        placeholder="Search by title or description"
+                        placeholder={__('Search by title or description', 'obatala')}
                         type="search"
                     />
                     <ProcessTypeFilter
@@ -185,21 +188,21 @@ const ProcessTypeList = ({ processTypes, onExport, onEdit, onDelete, onManager, 
                         </div>
                         <div className="pagination">
                             <Button onClick={() => previousPage()} disabled={!canPreviousPage}>
-                                Previous
+                                {__('Previous', 'obatala')}
                             </Button>
                             <span>
-                                Page{' '}
+                                {__('Page', 'obatala')}{' '}
                                 <strong>
                                     {pageIndex + 1} of {pageOptions.length}
                                 </strong>{' '}
                             </span>
                             <Button onClick={() => nextPage()} disabled={!canNextPage}>
-                                Next
+                                {__('Next', 'obatala')}
                             </Button>
                         </div>
                     </>
                 ) : (
-                    <Notice isDismissible={false} status="warning">No existing process models.</Notice>
+                    <Notice isDismissible={false} status="warning">{__('No existing process models.', 'obatala')}</Notice>
                 )}
             </PanelRow>
         </Panel>
