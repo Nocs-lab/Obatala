@@ -3,7 +3,8 @@ import BrandHeader from "./BrandHeader";
 import BrandFooter from "./BrandFooter";
 import apiFetch from "@wordpress/api-fetch";
 import Select from 'react-select';
-import { fetchMapperCollectionTainacan, fetchMapperProcessModel, fetchMetadataCollectionsTainacan, fetchProcessModels, fetchFieldsProcessModels, fetchCollectionsTainacan } from '../api/apiRequests';
+import { Panel, PanelRow } from '@wordpress/components';
+import { fetchMapperProcessModel, fetchMetadataCollectionsTainacan, fetchProcessModels, fetchFieldsProcessModels, fetchCollectionsTainacan } from '../api/apiRequests';
 
 const MappersManager = () => {
     const [isLoading, setIsLoading] = useState(true);
@@ -27,7 +28,6 @@ const MappersManager = () => {
                 // Garante que mapping_data exista
                 if (mapper?.mapping_data) {
                     const parsedData = JSON.parse(mapper.mapping_data);
-                    console.log(parsedData);
                     setMapper(parsedData);
 
                     // Set collection
@@ -77,8 +77,6 @@ const MappersManager = () => {
         }
     }, [mapper, stepsProcessModel]);
 
-
-
     useEffect(() => {
         if (mapper && mapper.collection_id) {
             fetchMetadataCollectionsTainacan(mapper.collection_id)
@@ -100,7 +98,6 @@ const MappersManager = () => {
         }
     }, [mapper]);
 
-
     useEffect(() => {
         const idModel = new URLSearchParams(window.location.search).get('process_type_id');
 
@@ -113,7 +110,6 @@ const MappersManager = () => {
 
         fetchGetCollectionsTainacan();
     }, []);
-
 
     useEffect(() => {
         setSelectRows((prev) =>
@@ -134,7 +130,6 @@ const MappersManager = () => {
         }
     };
 
-
     const fetchGetCollectionsTainacan = async () => {
         setIsLoading(true);
         fetchCollectionsTainacan()
@@ -147,12 +142,9 @@ const MappersManager = () => {
             });
     };
 
-
     const handleProcessModelSteps = (selectedId) => {
-
         fetchFieldsProcessModels(selectedId)
             .then((data) => {
-
                 const stepOptions = data.map(field => ({
                     value: field.id,
                     label: field?.config?.label + " - " + field.stage
@@ -201,19 +193,16 @@ const MappersManager = () => {
     };
 
     const getMappingData = () => {
-
         if (!selectedCollection || selectedCollection === "0") {
             alert("Selecione uma coleção do Tainacan.");
             return;
         }
-        console.log("R:", selectRows);
         const hasIncompleteRows = selectRows.some(row => {
             const hasObatala = row.obatalaFieldMetadata && typeof row.obatalaFieldMetadata === 'object' && row.obatalaFieldMetadata.value;
             const hasTainacan = row.tainacanMetadata && row.tainacanMetadata !== '';
 
             return !(hasObatala && hasTainacan);
         });
-
 
         if (hasIncompleteRows) {
             alert("Todos os campos devem estar preenchidos antes de salvar o mapeamento.");
@@ -228,7 +217,6 @@ const MappersManager = () => {
                 tainacan_metadata_id: row.tainacanMetadata,
             }))
         };
-        console.log("map:", mappedData);
 
         apiFetch({
             path: '/obatala/v1/exporter/save_mapping_data',
@@ -259,21 +247,6 @@ const MappersManager = () => {
         setSelectedSteps([]);
         setSelectRows([{ tainacanMetadata: '', obatalaFieldMetadata: '' }]);
     }
-
-
-
-    const formStyle = {
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '16px',
-        maxWidth: '500px',
-        width: '100%',
-        margin: '0 auto',
-    };
-
-    const labelStyle = {
-        width: '100%',
-    };
 
     const selectStyle = {
         width: '100%',
@@ -317,21 +290,24 @@ const MappersManager = () => {
         <>
             <BrandHeader />
             <main>
-                <div style={{ backgroundColor: "white", paddingTop: "1px" }}>
-                    <h1 style={{ textAlign: 'center' }}>Mappers Tainacan</h1>
-                    <form style={formStyle}>
-                        <input type="hidden" name="page" value="inbcm-mapping" />
-
-                        <label style={labelStyle}>
-                            Process Model: {" "}
-                            <strong>
+                <div className="title-container">
+                    <h2>Mappers Tainacan</h2>
+                </div>
+                <Panel>
+                    <PanelRow>
+                        <dl>
+                            <dt>Process Model:</dt>
+                            <dd>
                                 {selectedProcessModel?.title?.rendered}
-                            </strong>
-                        </label>
-
-                        <label style={labelStyle}>
-                            Escolha a Coleção de Destino no Tainacan:
+                            </dd>
+                        </dl>
+                        <form>
+                            <input type="hidden" name="page" value="inbcm-mapping" />
+                            <label>
+                                Escolha a Coleção de Destino no Tainacan:
+                            </label>
                             <select
+                            
                                 onChange={handleTainacanColletionChange}
                                 value={selectedCollection}
                                 name="mapper_slug"
@@ -348,136 +324,136 @@ const MappersManager = () => {
                                     </option>
                                 ))}
                             </select>
-                        </label>
 
-                        <label style={labelStyle}>
-                            Escolha os campos do formulário que apresentam os metadados do item:
-                            <Select
-                                isMulti
-                                options={stepsProcessModel}
-                                value={selectedSteps}
-                                onChange={(selectedOptions) => {
-                                    setSelectedSteps(selectedOptions);
-                                }}
-                                styles={{
-                                    multiSelectStyle,
-                                    container: (base) => ({
-                                        ...base,
-                                        width: '100%',
-                                    }),
-                                    control: (base) => ({
-                                        ...base,
-                                        minHeight: '36px',
-                                        fontSize: '1rem',
-                                        backgroundColor: selectedProcessModel === "0" ? '#f0f0f0' : 'white', // Feedback visual opcional
-                                        cursor: selectedProcessModel === "0" ? 'not-allowed' : 'pointer',
-                                    }),
-                                }}
-                            />
-                        </label>
+                            <label>
+                                Escolha os campos do formulário que apresentam os metadados do item:
+                                <Select
+                                    isMulti
+                                    options={stepsProcessModel}
+                                    value={selectedSteps}
+                                    onChange={(selectedOptions) => {
+                                        setSelectedSteps(selectedOptions);
+                                    }}
+                                    styles={{
+                                        multiSelectStyle,
+                                        container: (base) => ({
+                                            ...base,
+                                            width: '100%',
+                                        }),
+                                        control: (base) => ({
+                                            ...base,
+                                            minHeight: '36px',
+                                            fontSize: '1rem',
+                                            backgroundColor: selectedProcessModel === "0" ? '#f0f0f0' : 'white', // Feedback visual opcional
+                                            cursor: selectedProcessModel === "0" ? 'not-allowed' : 'pointer',
+                                        }),
+                                    }}
+                                />
+                            </label>
 
-                        {/* Exibir as etapas selecionadas */}
-                        {selectedSteps.length > 0 && (
-                            <div>
-                                <h4>Campos Selecionados:</h4>
-                                <ul>
-                                    {selectedSteps.map((step, index) => (
-                                        <li key={index}>{step.label}</li>
-                                    ))}
-                                </ul>
-                            </div>
-                        )}
-
-                        <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-                            <h1>Mapeie os Metadados</h1>
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    gap: '40px',
-                                    marginTop: '2rem',
-                                }}
-                            >
+                            {/* Exibir as etapas selecionadas */}
+                            {selectedSteps.length > 0 && (
                                 <div>
-                                    <h3>Field Obatala</h3>
-                                    {selectedSteps.map((step, index) => (
-                                        <div key={index} style={{ marginBottom: '10px' }}>
-                                            <input
-                                                type="text"
-                                                value={step.label}
-                                                readOnly
-                                                style={{
-                                                    height: '36px',
-                                                    fontSize: '1rem',
-                                                    width: '250px',
-                                                    boxSizing: 'border-box',
-                                                    backgroundColor: '#f5f5f5',
-                                                    border: '1px solid #ccc',
-                                                    padding: '0 8px'
-                                                }}
-                                            />
-                                        </div>
-                                    ))}
+                                    <h4>Campos Selecionados:</h4>
+                                    <ul>
+                                        {selectedSteps.map((step, index) => (
+                                            <li key={index}>{step.label}</li>
+                                        ))}
+                                    </ul>
                                 </div>
-                                <div>
-                                    <h3>Tainacan Metadado</h3>
-                                    {selectedSteps.map((_, index) => (
-                                        <div key={index} style={{ marginBottom: '10px' }}>
-                                            <select
-                                                style={{
-                                                    height: '36px',
-                                                    fontSize: '1rem',
-                                                    width: '250px',
-                                                    boxSizing: 'border-box',
-                                                }}
-                                                value={selectRows[index]?.tainacanMetadata || ''}
-                                                onChange={(e) => handleSelectChange(index, 'tainacanMetadata', e.target.value)}
-                                            >
-                                                <option value="">-- Selecione --</option>
-                                                {metadataTainacan.map((item) => {
-                                                    const post = item["WP_Post"];
-                                                    const id = String(post.ID);
-                                                    const isUsed = isMetadataSelected(id, index);
+                            )}
 
-                                                    return (
-                                                        post?.post_title && (
-                                                            <option
-                                                                key={id}
-                                                                value={id}
-                                                                disabled={isUsed}
-                                                            >
-                                                                {post.post_title} {isUsed ? ' (já usado)' : ''}
-                                                            </option>
-                                                        )
-                                                    );
-                                                })}
-                                            </select>
-                                        </div>
-                                    ))}
+                            <div style={{ textAlign: 'center', marginTop: '2rem' }}>
+                                <h1>Mapeie os Metadados</h1>
+                                <div
+                                    style={{
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        gap: '40px',
+                                        marginTop: '2rem',
+                                    }}
+                                >
+                                    <div>
+                                        <h3>Field Obatala</h3>
+                                        {selectedSteps.map((step, index) => (
+                                            <div key={index} style={{ marginBottom: '10px' }}>
+                                                <input
+                                                    type="text"
+                                                    value={step.label}
+                                                    readOnly
+                                                    style={{
+                                                        height: '36px',
+                                                        fontSize: '1rem',
+                                                        width: '250px',
+                                                        boxSizing: 'border-box',
+                                                        backgroundColor: '#f5f5f5',
+                                                        border: '1px solid #ccc',
+                                                        padding: '0 8px'
+                                                    }}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                    <div>
+                                        <h3>Tainacan Metadado</h3>
+                                        {selectedSteps.map((_, index) => (
+                                            <div key={index} style={{ marginBottom: '10px' }}>
+                                                <select
+                                                    style={{
+                                                        height: '36px',
+                                                        fontSize: '1rem',
+                                                        width: '250px',
+                                                        boxSizing: 'border-box',
+                                                    }}
+                                                    value={selectRows[index]?.tainacanMetadata || ''}
+                                                    onChange={(e) => handleSelectChange(index, 'tainacanMetadata', e.target.value)}
+                                                >
+                                                    <option value="">-- Selecione --</option>
+                                                    {metadataTainacan.map((item) => {
+                                                        const post = item["WP_Post"];
+                                                        const id = String(post.ID);
+                                                        const isUsed = isMetadataSelected(id, index);
+
+                                                        return (
+                                                            post?.post_title && (
+                                                                <option
+                                                                    key={id}
+                                                                    value={id}
+                                                                    disabled={isUsed}
+                                                                >
+                                                                    {post.post_title} {isUsed ? ' (já usado)' : ''}
+                                                                </option>
+                                                            )
+                                                        );
+                                                    })}
+                                                </select>
+                                            </div>
+                                        ))}
+
+                                    </div>
 
                                 </div>
 
+                                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem', gap: '20px' }}>
+                                    <button
+                                        type="button"
+                                        style={greenButtonStyle}
+                                        onClick={getMappingData}
+                                    >
+                                        Salvar
+                                    </button>
+                                    <button
+                                        type="button"
+                                        style={redButtonStyle}
+                                        onClick={cancelMappingData}
+                                    >
+                                        Cancelar
+                                    </button>
+                                </div>
                             </div>
-
-                            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem', gap: '20px' }}>
-                                <button
-                                    type="button"
-                                    style={greenButtonStyle}
-                                    onClick={getMappingData}
-                                >
-                                    Salvar
-                                </button>
-                                <button
-                                    type="button"
-                                    style={redButtonStyle}
-                                    onClick={cancelMappingData}
-                                >
-                                    Cancelar
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+                        </form>
+                    </PanelRow>
+                </Panel>
             </main>
             <BrandFooter />
         </>

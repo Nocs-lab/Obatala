@@ -765,7 +765,7 @@ svg.react-flow__connectionline {
     }
   }
   &.error {
-    border: 2px solid var(--danger);
+    border: 1px solid var(--danger);
     box-shadow: 0 0 5px var(--danger);
     .react-flow__handle.connectable {
       background-color: var(--danger);
