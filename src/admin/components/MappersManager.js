@@ -3,7 +3,8 @@ import BrandHeader from "./BrandHeader";
 import BrandFooter from "./BrandFooter";
 import apiFetch from "@wordpress/api-fetch";
 import Select from 'react-select';
-import { Panel, PanelRow } from '@wordpress/components';
+import { __ } from "@wordpress/i18n";
+import { BaseControl, Button, ButtonGroup, Panel, PanelRow, SelectControl } from '@wordpress/components';
 import { fetchMapperProcessModel, fetchMetadataCollectionsTainacan, fetchProcessModels, fetchFieldsProcessModels, fetchCollectionsTainacan } from '../api/apiRequests';
 
 const MappersManager = () => {
@@ -248,85 +249,39 @@ const MappersManager = () => {
         setSelectRows([{ tainacanMetadata: '', obatalaFieldMetadata: '' }]);
     }
 
-    const selectStyle = {
-        width: '100%',
-        boxSizing: 'border-box',
-        marginTop: '4px',
-        marginBottom: '6px',
-        height: '36px',
-        fontSize: '1rem',
-    };
-
-    const multiSelectStyle = {
-        ...selectStyle,
-        minHeight: '100px', // Garante que o select de múltiplas opções tenha altura suficiente
-    };
-
-    const buttonStyle = {
-        width: '200px', // Mantém o tamanho fixo do botão
-        height: '36px',
-        fontSize: '1rem',
-        backgroundColor: '#007cba', // cor padrão do botão WP
-        color: '#fff',
-        border: 'none',
-        borderRadius: '3px',
-        cursor: 'pointer',
-        boxSizing: 'border-box',
-        margin: '10px 0', // Espaço entre os botões
-        alignSelf: 'center', // Centraliza cada botão na linha
-    };
-
-    const greenButtonStyle = {
-        ...buttonStyle,
-        backgroundColor: 'green', // Cor verde para os botões
-    };
-
-    const redButtonStyle = {
-        ...buttonStyle,
-        backgroundColor: 'red', // Cor verde para os botões
-    };
-
     return (
         <>
             <BrandHeader />
             <main>
                 <div className="title-container">
-                    <h2>Mappers Tainacan</h2>
+                    <h2>
+                        <small>Process Model: {selectedProcessModel?.title?.rendered}</small>
+                        Mappers Tainacan
+                    </h2>
                 </div>
                 <Panel>
                     <PanelRow>
-                        <dl>
-                            <dt>Process Model:</dt>
-                            <dd>
-                                {selectedProcessModel?.title?.rendered}
-                            </dd>
-                        </dl>
-                        <form>
+                        <form className="inline-edition flex-basis-100">
                             <input type="hidden" name="page" value="inbcm-mapping" />
-                            <label>
-                                Escolha a Coleção de Destino no Tainacan:
-                            </label>
-                            <select
-                            
-                                onChange={handleTainacanColletionChange}
-                                value={selectedCollection}
-                                name="mapper_slug"
-                                style={{
-                                    ...selectStyle,
-                                    backgroundColor: selectedSteps.length === 0 ? '#f0f0f0' : 'white',
-                                    cursor: selectedSteps.length === 0 ? 'not-allowed' : 'pointer'
-                                }}
-                            >
-                                <option value="0">-- Selecione --</option>
-                                {collectionsTainacan.map((collection) => (
-                                    <option key={collection["WP_Post"].ID} value={collection["WP_Post"].ID}>
-                                        {collection["WP_Post"].post_title}
-                                    </option>
-                                ))}
-                            </select>
 
-                            <label>
-                                Escolha os campos do formulário que apresentam os metadados do item:
+                            <SelectControl
+                                label="Escolha a Coleção de Destino no Tainacan:"
+                                value={selectedCollection}
+                                options={[
+                                    { label: 'Selecione uma coleção', value: '0', disabled: true },
+                                    ...collectionsTainacan.map((collection) => ({
+                                        label: collection["WP_Post"].post_title,
+                                        value: String(collection["WP_Post"].ID),
+                                    })),
+                                ]}
+                                onChange={(newValue) => {
+                                    handleTainacanColletionChange(newValue); 
+                                }}
+                            />
+
+                            <BaseControl
+                                label="Escolha os campos do formulário que apresentam os metadados do item:"
+                            >
                                 <Select
                                     isMulti
                                     options={stepsProcessModel}
@@ -334,123 +289,75 @@ const MappersManager = () => {
                                     onChange={(selectedOptions) => {
                                         setSelectedSteps(selectedOptions);
                                     }}
-                                    styles={{
-                                        multiSelectStyle,
-                                        container: (base) => ({
-                                            ...base,
-                                            width: '100%',
-                                        }),
-                                        control: (base) => ({
-                                            ...base,
-                                            minHeight: '36px',
-                                            fontSize: '1rem',
-                                            backgroundColor: selectedProcessModel === "0" ? '#f0f0f0' : 'white', // Feedback visual opcional
-                                            cursor: selectedProcessModel === "0" ? 'not-allowed' : 'pointer',
-                                        }),
-                                    }}
+                                    isDisabled={selectedProcessModel === "0"}
+                                    placeholder="Selecione os campos..."
                                 />
-                            </label>
+                            </BaseControl>
 
-                            {/* Exibir as etapas selecionadas */}
-                            {selectedSteps.length > 0 && (
-                                <div>
-                                    <h4>Campos Selecionados:</h4>
-                                    <ul>
-                                        {selectedSteps.map((step, index) => (
-                                            <li key={index}>{step.label}</li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            )}
-
-                            <div style={{ textAlign: 'center', marginTop: '2rem' }}>
-                                <h1>Mapeie os Metadados</h1>
-                                <div
-                                    style={{
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        gap: '40px',
-                                        marginTop: '2rem',
-                                    }}
+                            <div className="flex-basis-100">
+                                <BaseControl
+                                    label="Mapeamento de Metadados"
+                                    help="Relacione os campos do Obatala com os metadados do Tainacan."
                                 >
-                                    <div>
-                                        <h3>Field Obatala</h3>
-                                        {selectedSteps.map((step, index) => (
-                                            <div key={index} style={{ marginBottom: '10px' }}>
-                                                <input
-                                                    type="text"
-                                                    value={step.label}
-                                                    readOnly
-                                                    style={{
-                                                        height: '36px',
-                                                        fontSize: '1rem',
-                                                        width: '250px',
-                                                        boxSizing: 'border-box',
-                                                        backgroundColor: '#f5f5f5',
-                                                        border: '1px solid #ccc',
-                                                        padding: '0 8px'
-                                                    }}
-                                                />
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <div>
-                                        <h3>Tainacan Metadado</h3>
-                                        {selectedSteps.map((_, index) => (
-                                            <div key={index} style={{ marginBottom: '10px' }}>
-                                                <select
-                                                    style={{
-                                                        height: '36px',
-                                                        fontSize: '1rem',
-                                                        width: '250px',
-                                                        boxSizing: 'border-box',
-                                                    }}
-                                                    value={selectRows[index]?.tainacanMetadata || ''}
-                                                    onChange={(e) => handleSelectChange(index, 'tainacanMetadata', e.target.value)}
-                                                >
-                                                    <option value="">-- Selecione --</option>
-                                                    {metadataTainacan.map((item) => {
+                                    <table className="wp-list-table widefat fixed striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Field Obatala</th>
+                                                <th>Tainacan Metadado</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {selectedSteps.map((step, index) => {
+                                                const currentValue = selectRows[index]?.tainacanMetadata || '';
+                                                const options = [
+                                                    { label: 'Selecione o metadado', value: '' },
+                                                    ...metadataTainacan.map((item) => {
                                                         const post = item["WP_Post"];
                                                         const id = String(post.ID);
                                                         const isUsed = isMetadataSelected(id, index);
+                                                        return {
+                                                            label: `${post.post_title}${isUsed ? ' (já usado)' : ''}`,
+                                                            value: id,
+                                                            disabled: isUsed
+                                                        };
+                                                    })
+                                                ];
 
-                                                        return (
-                                                            post?.post_title && (
-                                                                <option
-                                                                    key={id}
-                                                                    value={id}
-                                                                    disabled={isUsed}
-                                                                >
-                                                                    {post.post_title} {isUsed ? ' (já usado)' : ''}
-                                                                </option>
-                                                            )
-                                                        );
-                                                    })}
-                                                </select>
-                                            </div>
-                                        ))}
-
-                                    </div>
-
-                                </div>
-
-                                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '1rem', gap: '20px' }}>
-                                    <button
-                                        type="button"
-                                        style={greenButtonStyle}
-                                        onClick={getMappingData}
-                                    >
-                                        Salvar
-                                    </button>
-                                    <button
-                                        type="button"
-                                        style={redButtonStyle}
-                                        onClick={cancelMappingData}
-                                    >
-                                        Cancelar
-                                    </button>
-                                </div>
+                                                return (
+                                                    <tr key={index}>
+                                                        <td>
+                                                            {step.label}
+                                                        </td>
+                                                        <td>
+                                                            <SelectControl
+                                                                value={currentValue}
+                                                                options={options}
+                                                                onChange={(value) => handleSelectChange(index, 'tainacanMetadata', value)}
+                                                            />
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                            {selectedSteps.length === 0 && (
+                                                <tr>
+                                                    <td colSpan="2">
+                                                        Nenhum campo selecionado para mapeamento.
+                                                    </td>
+                                                </tr>
+                                            )}
+                                        </tbody>
+                                    </table>
+                                </BaseControl>
                             </div>
+
+                            <ButtonGroup>
+                                <Button variant="secondary" onClick={cancelMappingData}>
+                                    {__('Cancel', 'obatala')}
+                                </Button>
+                                <Button variant="primary" onClick={getMappingData}>
+                                    {__('Save', 'obatala')}
+                                </Button>
+                            </ButtonGroup>
                         </form>
                     </PanelRow>
                 </Panel>

@@ -299,10 +299,8 @@ footer {
   + div:has(> .components-base-control) {
   width: 100%;
 }
-.components-base-control:not(.components-checkbox-control)
-  + .components-base-control,
-.components-base-control:not(.components-checkbox-control)
-  + div:has(> .components-base-control),
+.components-base-control:not(.components-checkbox-control):not(.components-select-control) + .components-base-control,
+.components-base-control:not(.components-checkbox-control) + div:has(> .components-base-control),
 .components-base-control + .components-button {
   margin-top: 1rem;
 }
@@ -445,23 +443,23 @@ form .components-button-group .components-button {
 }
 .inline-edition {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 1rem;
-  margin-left: var(--gap-external);
-  margin-right: var(--gap-external);
 }
 .inline-edition .components-base-control {
   flex-basis: 200px;
   flex-grow: 1;
 }
-.inline-edition .components-base-control .components-base-control__field {
-  margin-bottom: 0;
-}
-.inline-edition .components-button-group {
-  margin-top: 0;
-  width: auto;
+#react-select-2-live-region ~ div {
+  > div:first-of-type {
+    padding: 0 8px !important;
+  }
+  input[type="text"] {
+    min-width: 100px !important;
+    padding: 0 4px !important;
+  }
 }
 /* #endregion  */
 

@@ -829,8 +829,8 @@ svg.react-flow__connectionline {
 }
 
 .bpmn-end-node {
-  border: 5px solid var(--danger);
-  color: var(--danger);
+  border: 5px solid var(--black);
+  color: var(--black);
 }
 
 .bpmn-start-end-node:hover span::before {
@@ -892,15 +892,9 @@ svg.react-flow__connectionline {
   display: block;
 }
 .step-header .step-header-remove-btn {
+  background: transparent !important;
+  border: 0 none !important;
   cursor: pointer;
-  font: inherit;
-  margin: 0;
-  -webkit-appearance: none;
-  appearance: none;
-}
-.step-header .step-header-remove-btn svg {
-  display: block;
-  stroke: currentColor;
 }
 .components-button.has-icon.has-text {
   font-size: .75rem;
