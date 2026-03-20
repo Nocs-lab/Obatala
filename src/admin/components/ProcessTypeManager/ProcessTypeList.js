@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { __ } from '@wordpress/i18n';
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
-import { Button, ButtonGroup, Tooltip, Panel, PanelRow, Notice, TextControl  } from '@wordpress/components';
+import { Button, ButtonGroup, Tooltip, Panel, PanelRow, Notice, TextControl } from '@wordpress/components';
 import { edit, trash, layout, external } from '@wordpress/icons';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
