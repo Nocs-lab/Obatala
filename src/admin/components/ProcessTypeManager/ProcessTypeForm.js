@@ -50,21 +50,9 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
             await onSave(updatedProcessType);
             setNotice({
                 status: "success",
-                message: "Process type saved successfully.",
+                message: __("Process type saved successfully.", "obatala"),
             });
             // Não limpe os campos após o salvamento, apenas exiba o aviso de sucesso.
-        } catch (error) {
-            setNotice({ status: "error", message: "Error saving process type." });
-        }
-    };
-
-    try {
-        await onSave(updatedProcessType);
-        setNotice({
-            status: "success",
-            message: __("Process type saved successfully.", "obatala"),
-        });
-        // Não limpe os campos após o salvamento, apenas exiba o aviso de sucesso.
         } catch (error) {
             setNotice({ status: "error", message: __("Error saving process type.", "obatala") });
         }
