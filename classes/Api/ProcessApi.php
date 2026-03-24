@@ -116,6 +116,59 @@ class ProcessApi extends ObatalaAPI {
             'callback' => [$this, 'valid_nodes'],
             'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
         ]);
+
+        // Rota para gerar relatório PDF do processo
+        $this->add_route('/process_obatala/(?P<id>\d+)/report-pdf', [
+            'methods' => 'GET',
+            'callback' => [$this, 'generate_report_pdf'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+        ]);
+    }
+
+    /**
+     * Gera o relatório em PDF do processo e retorna em base64 para download no frontend.
+     *
+     * @param \WP_REST_Request $request
+     * @return \WP_REST_Response|\WP_Error
+     */
+    public function generate_report_pdf($request) {
+        $process_id = (int) $request['id'];
+        $user_id = get_current_user_id();
+        if (!$user_id) {
+            return new WP_REST_Response(['error' => 'Unauthorized', 'message' => __('You must be logged in to generate the report.', 'obatala')], 401);
+        }
+        $user = get_userdata($user_id);
+        if (!$user) {
+            return new WP_REST_Response(['error' => 'Unauthorized', 'message' => __('Invalid user.', 'obatala')], 401);
+        }
+        $permission = Sector::check_permission($user_id, $process_id);
+        if (!$permission['status']) {
+            return new WP_REST_Response([
+                'error' => 'Forbidden',
+                'message' => __('You do not have permission to generate the report for this process.', 'obatala'),
+            ], 403);
+        }
+        if (!class_exists('\Dompdf\Dompdf')) {
+            return new WP_REST_Response([
+                'error' => 'Server Error',
+                'message' => __('PDF generation library is not available. Run: composer install', 'obatala'),
+            ], 500);
+        }
+        $report = new \Obatala\Report\ProcessReportPdf($process_id, $user);
+        if (!$report->loadProcessData()) {
+            return new WP_REST_Response(['error' => 'Not Found', 'message' => __('Process not found.', 'obatala')], 404);
+        }
+        $pdf_binary = $report->generatePdfBinary();
+        if ($pdf_binary === null) {
+            return new WP_REST_Response(['error' => 'Server Error', 'message' => __('Failed to generate PDF.', 'obatala')], 500);
+        }
+        $post = get_post($process_id);
+        $safe_title = sanitize_file_name($post->post_title ?: 'process-' . $process_id);
+        $filename = $safe_title . '-report-' . date('Y-m-d-His') . '.pdf';
+        return new WP_REST_Response([
+            'pdf' => base64_encode($pdf_binary),
+            'filename' => $filename,
+        ], 200);
     }
     
     public function get_current_stage($request) {

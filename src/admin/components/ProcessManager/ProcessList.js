@@ -1,13 +1,42 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
 import { Button, ButtonGroup, Tooltip, Panel, PanelRow, Notice, TextControl } from '@wordpress/components';
-import { backup, edit, info } from '@wordpress/icons';
+import { backup, edit, info, download } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
 import ProcessFilter from './ProcessFilters';
 import apiFetch from '@wordpress/api-fetch';
 import { decodeEntities } from '@wordpress/html-entities';
+import { fetchProcessReportPdf } from '../../api/apiRequests';
 
 const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, processTypes, accessLevel, setAccessLevel, modelFilter, setModelFilter }) => {
+    const [pdfLoadingId, setPdfLoadingId] = useState(null);
+    const [pdfError, setPdfError] = useState(null);
+
+    const handlePdfDownload = useCallback(async (processId) => {
+        setPdfError(null);
+        setPdfLoadingId(processId);
+        try {
+            const { pdf: base64, filename } = await fetchProcessReportPdf(processId);
+            const binary = atob(base64);
+            const bytes = new Uint8Array(binary.length);
+            for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+            const blob = new Blob([bytes], { type: 'application/pdf' });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename || `process-${processId}-report.pdf`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (err) {
+            const rawMessage = err?.message || err?.error || __('Error generating PDF report.', 'obatala');
+            setPdfError(typeof rawMessage === 'string' ? __(rawMessage, 'obatala') : rawMessage);
+        } finally {
+            setPdfLoadingId(null);
+        }
+    }, []);
+
     const columns = useMemo(
         () => [
             {
@@ -115,11 +144,22 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
                                 }}
                             />
                         </Tooltip>
+                        <Tooltip text={__("Generate PDF report", "obatala")}>
+                            <Button
+                                variant="secondary"
+                                icon={download}
+                                onClick={() => handlePdfDownload(row.original.id)}
+                                disabled={pdfLoadingId === row.original.id}
+                                isBusy={pdfLoadingId === row.original.id}
+                            >
+                                {__("Generate PDF report", "obatala")}
+                            </Button>
+                        </Tooltip>
                     </ButtonGroup>
                 ),
             },
         ],
-        [processTypeMappings, processTypes]
+        [processTypeMappings, processTypes, pdfLoadingId, handlePdfDownload]
     );
 
     const data = useMemo(() => processes, [processes]);
@@ -152,6 +192,11 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
     return (
         <Panel>
             <PanelRow>
+                {pdfError && (
+                    <Notice status="error" isDismissible onRemove={() => setPdfError(null)} style={{ marginBottom: '12px' }}>
+                        {pdfError}
+                    </Notice>
+                )}
                 <div className='container_searchAndSelect'>
                     <TextControl
                         className="mb-1"

@@ -155,3 +155,17 @@ export const updateComment = (commentId, meta) => {
         data: meta,
     });
 };
+
+/**
+ * Gera relatório PDF do processo e retorna { pdf: base64, filename }.
+ * O frontend deve decodificar o base64, criar um Blob e disparar o download.
+ *
+ * @param {number} processId
+ * @returns {Promise<{ pdf: string, filename: string }>}
+ */
+export const fetchProcessReportPdf = (processId) => {
+    return apiFetch({
+        path: `/obatala/v1/process_obatala/${processId}/report-pdf`,
+        method: 'GET',
+    });
+};
