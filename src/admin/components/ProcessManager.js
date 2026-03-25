@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Spinner, Button, Notice, Icon, ButtonGroup, Modal, TabPanel} from '@wordpress/components';
+import { Spinner, Button, Notice, Icon, Modal, TabPanel} from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import ProcessCreator from './ProcessManager/ProcessCreator';
@@ -186,7 +186,7 @@ const ProcessManager = ({ onSelectProcess }) => {
                 <div className="title-container">
                     <h2>{__('Processes', 'obatala')}</h2>
                     <span className="badge">{filteredProcess.length}</span>
-                    <ButtonGroup>
+                    <div className="group-button">
                         <Button
                             variant="primary"
                             icon={<Icon icon={plus} />}
@@ -194,7 +194,7 @@ const ProcessManager = ({ onSelectProcess }) => {
                         >
                             {__('Add new', 'obatala')}
                         </Button>
-                    </ButtonGroup>
+                    </div>
                 </div>
 
                 {notice && (

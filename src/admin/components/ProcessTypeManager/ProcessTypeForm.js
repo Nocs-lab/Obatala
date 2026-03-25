@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Button, ButtonGroup, TextControl, Notice, SelectControl } from "@wordpress/components";
+import { Button, TextControl, Notice, SelectControl } from "@wordpress/components";
 import { useSelect } from "@wordpress/data";
 import { __ } from "@wordpress/i18n";
 import { store as coreStore } from '@wordpress/core-data';
@@ -88,14 +88,14 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
                 />
             )}
     
-            <ButtonGroup>
+            <div className="group-button">
                 <Button variant="secondary" onClick={onCancel}>
                     {__('Cancel', 'obatala')}
                 </Button>
                 <Button variant="primary" type="submit">
                     {__('Save', 'obatala')}
                 </Button>
-            </ButtonGroup>
+            </div>
         </form>
     );
 };

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useReducer, useMemo } from 'react';
 import { __, sprintf } from '@wordpress/i18n';
 import {
     Button,
-    ButtonGroup,
     Icon,
     Spinner,
     Modal,
@@ -143,7 +142,7 @@ const ProcessTypeManager = () => {
                 <div className="title-container">
                     <h2>{__('Models', 'obatala')}</h2>
                     <span className="badge">{filteredModels.length}</span>
-                    <ButtonGroup>
+                    <div className="group-button">
                         <Button
                             variant="primary"
                             icon={<Icon icon={plus} />}
@@ -151,7 +150,7 @@ const ProcessTypeManager = () => {
                         >
                             {__('Add process model', 'obatala')}
                         </Button>
-                    </ButtonGroup>
+                    </div>
                 </div>
                 {notice && (
                     <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>

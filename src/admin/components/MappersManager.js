@@ -4,7 +4,7 @@ import BrandFooter from "./BrandFooter";
 import apiFetch from "@wordpress/api-fetch";
 import Select from 'react-select';
 import { __ } from "@wordpress/i18n";
-import { BaseControl, Button, ButtonGroup, Panel, PanelRow, SelectControl } from '@wordpress/components';
+import { BaseControl, Button, Icon, Panel, PanelRow, SelectControl } from '@wordpress/components';
 import { fetchMapperProcessModel, fetchMetadataCollectionsTainacan, fetchProcessModels, fetchFieldsProcessModels, fetchCollectionsTainacan } from '../api/apiRequests';
 
 const MappersManager = () => {
@@ -255,9 +255,13 @@ const MappersManager = () => {
             <main>
                 <div className="title-container">
                     <h2>
-                        <small>Process Model: {selectedProcessModel?.title?.rendered}</small>
                         Mappers Tainacan
                     </h2>
+                </div>
+                <div className="badge-container">
+                    <span className="badge default">
+                        <Icon icon="welcome-widgets-menus" /> Process Model: {selectedProcessModel?.title?.rendered}
+                    </span>
                 </div>
                 <Panel>
                     <PanelRow>
@@ -350,14 +354,14 @@ const MappersManager = () => {
                                 </BaseControl>
                             </div>
 
-                            <ButtonGroup>
+                            <div className="group-button">
                                 <Button variant="secondary" onClick={cancelMappingData}>
                                     {__('Cancel', 'obatala')}
                                 </Button>
                                 <Button variant="primary" onClick={getMappingData}>
                                     {__('Save', 'obatala')}
                                 </Button>
-                            </ButtonGroup>
+                            </div>
                         </form>
                     </PanelRow>
                 </Panel>
