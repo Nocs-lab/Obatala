@@ -1,6 +1,5 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { Button,
-        ButtonGroup,
         Tooltip,
         Notice,
         Spinner,
@@ -149,7 +148,7 @@ const UserManager = ({sector,loadSectorsUsers}) => {
                                     <td>{user.username}</td>
                                     <td>{user.email}</td>
                                     <td>
-                                        <ButtonGroup>
+                                        <div className="group-button">
                                             <Tooltip text="Remove user from sector">
                                                 <Button
                                                     isDestructive
@@ -157,7 +156,7 @@ const UserManager = ({sector,loadSectorsUsers}) => {
                                                     onClick={() => handleConfirmDelete(user)}
                                                 />
                                             </Tooltip>
-                                        </ButtonGroup>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}

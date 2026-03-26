@@ -9,7 +9,7 @@
   height: 70vh;
 }
 
-.flow-container>.components-button-group {
+.flow-container>.group-button {
   justify-content: flex-end;
   margin: 1rem;
 }
@@ -926,12 +926,12 @@ svg.react-flow__connectionline {
   margin-right: auto;
 }
 
-.flow-fields .components-button-group {
+.flow-fields .group-button {
   display: inline-flex;
   gap: .2rem;
 }
 
-.flow-fields .components-button-group .components-button.is-small.has-icon:not(.has-text) {
+.flow-fields .group-button .components-button.is-small.has-icon:not(.has-text) {
   box-shadow: 0 0 0;
   color: var(--primary-600);
   height: 24px;

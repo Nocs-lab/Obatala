@@ -5,7 +5,6 @@ import {
     Button,
     Notice,
     Modal,
-    ButtonGroup,
     Icon,
     __experimentalConfirmDialog as ConfirmDialog 
 } from '@wordpress/components';
@@ -161,12 +160,12 @@ const SectorManager = () => {
               <div className="title-container">
                   <h2>{__('Groups', 'obatala')}</h2>
                   <span className="badge">{filteredSectors.length}</span>
-                  <ButtonGroup>
+                  <div className="group-button">
                       <Button variant="primary"
                           icon={<Icon icon={plus} />}
                           onClick={handleAdd}
                       >{__('Add new', 'obatala')}</Button>
-                  </ButtonGroup>
+                  </div>
               </div>
               {notice && (
                     <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
