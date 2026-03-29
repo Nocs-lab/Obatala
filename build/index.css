@@ -12,7 +12,7 @@
   height: 70vh;
 }
 
-.flow-container>.components-button-group {
+.flow-container>.group-button {
   justify-content: flex-end;
   margin: 1rem;
 }
@@ -774,7 +774,7 @@ svg.react-flow__connectionline {
     }
   }
   &.error {
-    border: 2px solid var(--danger);
+    border: 1px solid var(--danger);
     box-shadow: 0 0 5px var(--danger);
     .react-flow__handle.connectable {
       background-color: var(--danger);
@@ -836,8 +836,8 @@ svg.react-flow__connectionline {
 }
 
 .bpmn-end-node {
-  border: 5px solid var(--danger);
-  color: var(--danger);
+  border: 5px solid var(--black);
+  color: var(--black);
 }
 
 .bpmn-start-end-node:hover span::before {
@@ -899,16 +899,9 @@ svg.react-flow__connectionline {
   display: block;
 }
 .step-header .step-header-remove-btn {
+  background: transparent !important;
+  border: 0 none !important;
   cursor: pointer;
-  font: inherit;
-  margin: 0;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-       appearance: none;
-}
-.step-header .step-header-remove-btn svg {
-  display: block;
-  stroke: currentColor;
 }
 .components-button.has-icon.has-text {
   font-size: .75rem;
@@ -940,12 +933,12 @@ svg.react-flow__connectionline {
   margin-right: auto;
 }
 
-.flow-fields .components-button-group {
+.flow-fields .group-button {
   display: inline-flex;
   gap: .2rem;
 }
 
-.flow-fields .components-button-group .components-button.is-small.has-icon:not(.has-text) {
+.flow-fields .group-button .components-button.is-small.has-icon:not(.has-text) {
   box-shadow: 0 0 0;
   color: var(--primary-600);
   height: 24px;
