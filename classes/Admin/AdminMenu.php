@@ -234,11 +234,13 @@ namespace Obatala\Admin {
                 }
             ";
 
-            wp_register_script('obatala-admin-menu-inline-script', false, [], null, true);
+            $inline_asset_version = (string) filemtime(__FILE__);
+
+            wp_register_script('obatala-admin-menu-inline-script', false, [], $inline_asset_version, true);
             wp_enqueue_script('obatala-admin-menu-inline-script');
             wp_add_inline_script('obatala-admin-menu-inline-script', $inline_script);
 
-            wp_register_style('obatala-admin-menu-inline-style', false, [], null);
+            wp_register_style('obatala-admin-menu-inline-style', false, [], $inline_asset_version);
             wp_enqueue_style('obatala-admin-menu-inline-style');
             wp_add_inline_style('obatala-admin-menu-inline-style', $inline_style);
         }
