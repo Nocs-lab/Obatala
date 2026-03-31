@@ -16,7 +16,7 @@ namespace Obatala\Admin {
             'main' => [
                 'title' => 'obatala',
                 'menu_title' => 'obatala',
-                'capability' => 'manage_options',
+                'capability' => 'obatala_access',
                 'slug' => 'obatala-main',
                 'callback' => 'render_main_page',
                 'icon' => 'dashicons-admin-site',
@@ -27,7 +27,7 @@ namespace Obatala\Admin {
                     'parent_slug' => 'obatala-main',
                     'title' => 'Dashboard',
                     'menu_title' => 'Dashboard',
-                    'capability' => 'manage_options',
+                    'capability' => 'obatala_access',
                     'slug' => 'obatala-main',
                     'callback' => 'render_main_page',
                     'show_in_menu' => true
@@ -36,7 +36,7 @@ namespace Obatala\Admin {
                     'parent_slug' => 'obatala-main',
                     'title' => 'Processes',
                     'menu_title' => 'Processes',
-                    'capability' => 'manage_options',
+                    'capability' => 'obatala_manage_processes',
                     'slug' => 'process-manager',
                     'callback' => 'render_page',
                     'show_in_menu' => true
@@ -45,7 +45,7 @@ namespace Obatala\Admin {
                     'parent_slug' => 'obatala-main',
                     'title' => 'Models',
                     'menu_title' => 'Models',
-                    'capability' => 'edit_posts',
+                    'capability' => 'obatala_manage_models',
                     'slug' => 'process-type-manager',
                     'callback' => 'render_page',
                     'show_in_menu' => true
@@ -54,7 +54,7 @@ namespace Obatala\Admin {
                     'parent_slug' => 'obatala-main',
                     'title' => 'Process type editor',
                     'menu_title' => 'Process type editor',
-                    'capability' => 'manage_options',
+                    'capability' => 'obatala_manage_models',
                     'slug' => 'process-type-editor',
                     'callback' => 'render_page',
                     'show_in_menu' => true
@@ -63,7 +63,7 @@ namespace Obatala\Admin {
                     'parent_slug' => 'obatala-main',
                     'title' => 'Groups',
                     'menu_title' => 'Groups',
-                    'capability' => 'manage_options',
+                    'capability' => 'obatala_manage_groups',
                     'slug' => 'sector_manager',
                     'callback' => 'render_page',
                     'show_in_menu' => true
@@ -72,7 +72,7 @@ namespace Obatala\Admin {
                     'parent_slug' => 'obatala-main',
                     'title' => 'Process viewer',
                     'menu_title' => 'Process viewer',
-                    'capability' => 'read',
+                    'capability' => 'obatala_access',
                     'slug' => 'process-viewer',
                     'callback' => 'render_page',
                     'show_in_menu' => true
@@ -81,7 +81,7 @@ namespace Obatala\Admin {
                     'parent_slug' => 'obatala-main',
                     'title' => 'Group details',
                     'menu_title' => 'Group details',
-                    'capability' => 'manage_options',
+                    'capability' => 'obatala_manage_groups',
                     'slug' => 'sector-details',
                     'callback' => 'render_page',
                     'show_in_menu' => true
@@ -90,7 +90,7 @@ namespace Obatala\Admin {
                     'parent_slug' => 'obatala-main',
                     'title' => 'Mappers',
                     'menu_title' => 'Mappers',
-                    'capability' => 'read',
+                    'capability' => 'obatala_manage_mappers',
                     'slug' => 'mappers',
                     'callback' => 'render_mappers_page',
                     'show_in_menu' => true
