@@ -932,3 +932,11 @@ msgstr "Editar campo de selección"
 
 msgid "Edit file upload field"
 msgstr "Editar campo de subida de archivo"
+
+#: ProcessModelEditor.js, classes/Api/ProcessTypeApi.php
+msgid "Some fields are missing a valid title (empty or default). Check: %s"
+msgstr "Algunos campos no tienen un título válido (vacío o predeterminado). Revise: %s"
+
+#: ProcessModelEditor.js, classes/Api/ProcessTypeApi.php
+msgid "%1$s (field %2$s)"
+msgstr "%1$s (campo %2$s)"

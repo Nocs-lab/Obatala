@@ -51,11 +51,21 @@ Foi implementada a funcionalidade de **gerar relatório em PDF** por processo a 
 
 ---
 
+## Distribuição: reduzir dependência de Composer para usuários finais
+
+O plugin continua usando **Composer no desenvolvimento** e em servidores onde é possível rodar CLI. Para **instalações sem Composer** (ex.: upload por ZIP na hospedagem):
+
+1. **Pacotes oficiais (recomendado):** ao publicar uma release, rodar `composer install --no-dev --optimize-autoloader` na raiz do plugin e **incluir a pasta `vendor/` no ZIP** entregue aos usuários. Quem instala só o ZIP não precisa do Composer no servidor.
+2. **Repositório Git:** `vendor/` permanece no `.gitignore`; desenvolvedores executam `composer install` localmente ou na pipeline.
+3. **Interface:** quando o Dompdf não está disponível, o botão **“Gerar relatório PDF”** não é exibido na listagem (evita clique que falharia); permanece o aviso no admin Obatalá para quem tiver permissão, explicando a necessidade de dependências PHP.
+
+---
+
 ## Como usar
 
-1. **Backend:** Na raiz do plugin, executar `composer install` (ou `composer update`) para instalar o Dompdf.
+1. **Backend:** Na raiz do plugin, executar `composer install` (ou `composer update`) para instalar o Dompdf — **ou** usar um pacote de release que já inclua `vendor/`.
 2. **Frontend:** Rodar `npm run build` após alterações no JS.
-3. Na tela de listagem de processos, na coluna **Ações**, clicar no botão com ícone de download (tooltip “Generate PDF report”). O PDF será gerado no servidor e o download será iniciado no navegador. Em caso de erro (permissão, processo não encontrado, falha na geração), uma mensagem é exibida acima da tabela.
+3. Na tela de listagem de processos, na coluna **Ações**, clicar no botão com ícone de download (tooltip “Generate PDF report”), se o Dompdf estiver instalado. O PDF será gerado no servidor e o download será iniciado no navegador. Em caso de erro (permissão, processo não encontrado, falha na geração), uma mensagem é exibida acima da tabela.
 
 ---
 
