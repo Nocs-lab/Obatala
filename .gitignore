@@ -10,3 +10,4 @@ build/style-index-rtl.css
 build/style-index.css
 build/style-index.css.map
 build/index.asset.php
+vendor/
