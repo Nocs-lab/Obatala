@@ -7,7 +7,7 @@ import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 import { TextControl, Button, Icon, Notice, PanelBody, PanelRow, DropdownMenu } from "@wordpress/components";
 import {
-    moreHorizontalMobile,
+    moreHorizontal,
     edit,
     trash,
     commentContent,
@@ -160,7 +160,7 @@ const CommentForm = ({ processId, setHasComments }) => {
                                                 <p className="timeline-text">{comment.comment_content}</p>
                                                 {currentUser.id === comment.user_id && (
                                                     <DropdownMenu
-                                                        icon={moreHorizontalMobile}
+                                                        icon={moreHorizontal}
                                                         className="timeline-actions"
                                                         label={__('Select an action', 'obatala')}
                                                         size="small"

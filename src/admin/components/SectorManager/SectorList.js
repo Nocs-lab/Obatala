@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { __ } from '@wordpress/i18n';
 import apiFetch from "@wordpress/api-fetch";
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
-import { Button, ButtonGroup, Tooltip, Panel, PanelRow, Notice, Modal, TextControl } from '@wordpress/components';
+import { Button, Tooltip, Panel, PanelRow, Notice, Modal, TextControl } from '@wordpress/components';
 import { edit, trash, people, info } from '@wordpress/icons';
 import UsersManager from './UserManager/UserManager';
 import SectorFilter from './SectorFilters';
@@ -80,7 +80,7 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
             Header: __('Actions', 'obatala'),
             accessor: 'id',
             Cell: ({ row }) => (
-                <ButtonGroup>
+                <div className="group-button">
                     <Button
                         variant="primary"
                         icon={info}
@@ -109,7 +109,7 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
                             onClick={() => onDelete(row.original)}
                         />
                     </Tooltip>
-                </ButtonGroup>
+                </div>
             ),
         },
     ], [addingUsers]);

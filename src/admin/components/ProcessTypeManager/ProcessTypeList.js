@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react';
 import { __ } from '@wordpress/i18n';
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
-import { Button, ButtonGroup, Tooltip, Panel, PanelRow, Notice, TextControl  } from '@wordpress/components';
+import { Button, Tooltip, Panel, PanelRow, Notice, TextControl } from '@wordpress/components';
 import { edit, trash, layout, external } from '@wordpress/icons';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
@@ -61,7 +61,7 @@ const ProcessTypeList = ({ processTypes, onExport, onEdit, onDelete, onManager, 
             Header: __('Actions', 'obatala'),
             accessor: 'id',
             Cell: ({ row }) => (
-                <ButtonGroup>
+                <div className="group-button">
                     <Button
                         variant="primary"
                         icon={layout}
@@ -90,7 +90,7 @@ const ProcessTypeList = ({ processTypes, onExport, onEdit, onDelete, onManager, 
                             onClick={() => onDelete(row.original)}
                         />
                     </Tooltip>
-                </ButtonGroup>
+                </div>
             ),
         },
     ], [onExport, onEdit, onDelete, onManager]);

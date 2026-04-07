@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { useFlowContext } from "../../context/FlowContext";
-import { Button, ButtonGroup, DropdownMenu } from "@wordpress/components";
+import { Button, DropdownMenu } from "@wordpress/components";
 import { check, closeSmall, fullscreen, menu, plus } from "@wordpress/icons";
 import { __ } from "@wordpress/i18n";
 
@@ -44,7 +44,7 @@ const { addNewNode, addNewNodeConditional, onExport, onImport } = useFlowContext
 
     return (
         <>
-            <ButtonGroup>
+            <div className="group-button">
                 <Button icon={check} variant="primary" type="submit" onClick={onSave}>
                     {__('Save', 'obatala')}
                 </Button>
@@ -75,7 +75,7 @@ const { addNewNode, addNewNodeConditional, onExport, onImport } = useFlowContext
                         },
                     ] }
                 />              
-            </ButtonGroup>
+            </div>
             {/* Input invisível para carregar o arquivo JSON */}
             <input
                 type="file"

@@ -299,10 +299,8 @@ footer {
   + div:has(> .components-base-control) {
   width: 100%;
 }
-.components-base-control:not(.components-checkbox-control)
-  + .components-base-control,
-.components-base-control:not(.components-checkbox-control)
-  + div:has(> .components-base-control),
+.components-base-control:not(.components-checkbox-control):not(.components-select-control) + .components-base-control,
+.components-base-control:not(.components-checkbox-control) + div:has(> .components-base-control),
 .components-base-control + .components-button {
   margin-top: 1rem;
 }
@@ -354,9 +352,12 @@ footer {
   justify-content: flex-end;
   gap: 1rem;
 }
-.components-button-group {
+.group-button {
   display: inline-flex;
-  & .components-button {
+  flex-wrap: wrap;
+  gap: .5rem 0;
+  .components-button {
+    border-radius: 0;
     box-shadow: inset 0 0 0 1px var(--white);
     border: 0 none;
     color: var(--white);
@@ -378,16 +379,16 @@ footer {
     }
   }
 }
-.components-button-group .components-button:first-of-type {
+.group-button .components-button:first-of-type {
   border-radius: var(--border-radius) 0 0 var(--border-radius);
 }
-.components-button-group .components-button:last-of-type {
+.group-button .components-button:last-of-type {
   border-radius: 0 var(--border-radius) var(--border-radius) 0;
 }
-.components-button-group .components-button:only-of-type {
+.group-button .components-button:only-of-type {
   border-radius: var(--border-radius);
 }
-.components-button-group .components-dropdown.components-dropdown-menu {
+.group-button .components-dropdown.components-dropdown-menu {
   margin-left: .5rem;
   &.is-secondary .components-button {
     box-shadow: inset 0 0 0 1px var(--primary-600);
@@ -397,7 +398,7 @@ footer {
     }
   }
 }
-form .components-button-group {
+form .group-button {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
@@ -405,10 +406,10 @@ form .components-button-group {
   margin-top: 2rem;
   width: 100%;
 }
-form :not(.components-panel__row) > .components-button-group {
+form :not(.components-panel__row) > .group-button {
   margin-top: 2rem;
 }
-form .components-button-group .components-button {
+form .group-button .components-button {
   border-radius: var(--border-radius) !important;
 }
 .components-checkbox-control + .components-checkbox-control {
@@ -445,23 +446,23 @@ form .components-button-group .components-button {
 }
 .inline-edition {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 1rem;
-  margin-left: var(--gap-external);
-  margin-right: var(--gap-external);
 }
 .inline-edition .components-base-control {
   flex-basis: 200px;
   flex-grow: 1;
 }
-.inline-edition .components-base-control .components-base-control__field {
-  margin-bottom: 0;
-}
-.inline-edition .components-button-group {
-  margin-top: 0;
-  width: auto;
+#react-select-2-live-region ~ div {
+  > div:first-of-type {
+    padding: 0 8px !important;
+  }
+  input[type="text"] {
+    min-width: 100px !important;
+    padding: 0 4px !important;
+  }
 }
 /* #endregion  */
 
@@ -548,6 +549,12 @@ th[role="columnheader"][title="Toggle SortBy"] {
   }
   & + .accordion-item {
     margin-top: 1rem;
+  }
+
+  @media screen and (max-width: 580px) {
+    .accordion-header {
+      padding: 1rem;
+    }
   }
 }
 .accordion .status {
@@ -646,6 +653,8 @@ th[role="columnheader"][title="Toggle SortBy"] {
   margin-bottom: 0 !important;
 }
 .table-responsive {
+  flex: 1 0 100%; 
+  max-width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   width: 100%;
@@ -929,6 +938,7 @@ form .action-bar {
 .panel-container > div {
   flex-basis: 60%;
   flex-grow: 1;
+  min-width: 0; /* corrige .table-responsive internas */
 }
 .panel-container > .components-panel {
   flex-basis: 45%;
@@ -1045,7 +1055,7 @@ form .action-bar {
   padding: .5rem 2rem;
   text-align: right;
 }
-.components-panel + .components-button-group {
+.components-panel + .group-button {
   background-color: var(--white);
   border-radius: 0 0 var(--border-radius) var(--border-radius);
   display: flex;
@@ -1263,7 +1273,7 @@ button .components-spinner {
   .accordion .status,
   .accordion-header[aria-expanded]::after,
   .action-bar,
-  .components-button-group,
+  .group-button,
   .components-tab-panel__tabs-item[aria-selected="false"],
   .container_searchAndSelect,
   .metro-navigation,
@@ -1391,7 +1401,7 @@ button .components-spinner {
   flex-basis: 215px;
   margin: 0;
 }
-.step-item .components-button-group {
+.step-item .group-button {
   margin-left: auto;
 }
 .step-item .description-list {
@@ -1439,7 +1449,7 @@ button .components-spinner {
     background-color: rgba(255, 255, 255, .2);
     color: var(--white);
   }
-  & .components-button-group {
+  & .group-button {
     & .components-button {
       &.is-secondary {
         color: var(--primary-400);
@@ -1476,7 +1486,7 @@ button .components-spinner {
 .title-container strong {
   font-weight: 800;
 }
-.title-container .components-button-group {
+.title-container .group-button {
   margin-left: auto;
 }
 .title-container-table {
@@ -1550,4 +1560,10 @@ button .components-spinner {
 
 .container_searchAndSelect .components-button {
   color: var(--primary-600);
+}
+
+@media screen and (max-width: 580px) {
+  :root {
+    --gap-external:  2rem;
+  }
 }

@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
-import { Button, ButtonGroup, Tooltip, Panel, PanelRow, Notice, TextControl } from '@wordpress/components';
+import { Button, Tooltip, Panel, PanelRow, Notice, TextControl } from '@wordpress/components';
 import { backup, edit, info, download } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
 import ProcessFilter from './ProcessFilters';
@@ -119,7 +119,7 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
                 Header: __("Actions", "obatala"),
                 accessor: "id",
                 Cell: ({ row }) => (
-                    <ButtonGroup>
+                    <div className="group-button">
                         <Button
                             variant="primary"
                             icon={info}
@@ -155,7 +155,7 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
                                 {__("Generate PDF report", "obatala")}
                             </Button>
                         </Tooltip>
-                    </ButtonGroup>
+                    </div>
                 ),
             },
         ],

@@ -4,20 +4,20 @@ Tags: museums, management, workflow, process-management
 Requires at least: 5.9
 Tested up to: 6.9
 Requires PHP: 7.0
-Stable tag: 1.6.21
+Stable tag: 1.6.27
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 
-Obatala is an advanced WordPress plugin that extends Tainacan’s capabilities by introducing specialized features for managing curatorial workflows.
+Obatala is a WordPress plugin that extends Tainacan with features for managing curatorial workflows.
 
 == Description ==
 
 With Obatala, museums can manage the entire lifecycle of their exhibitions and collections — from planning and organization to execution and result analysis. The plugin streamlines detailed cataloging of artworks, exhibition setup, and collaboration among curators, artists, and other cultural professionals.
 
-Obatala also enhances audience engagement by providing tools to create richer and more immersive cultural experiences. Its integration with Tainacan ensures that information is stored securely and remains accessible, supporting rich metadata and offering flexibility in data management.
+Obatala also provides tools to support audience engagement initiatives in cultural institutions. Its integration with Tainacan supports metadata-rich workflows and centralized information management.
 
-Ideal for institutions seeking to innovate in the presentation and management of their collections, Obatala is the perfect choice to transform curatorial work into a dynamic and integrated experience — honoring the creative and just legacy of the deity Obatalá.
+Development repository: https://github.com/Nocs-lab/Obatala
 
 
 = Features =
