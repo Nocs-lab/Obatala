@@ -52,7 +52,7 @@ namespace Obatala\Api {
          */
         public static function permission_check_edit_posts($request)
         {
-            return is_user_logged_in() && current_user_can('edit_posts');
+            return \Obatala\Security\Roles::can_access_obatala();
         }
 
         /**
