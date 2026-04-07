@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, ButtonGroup, SelectControl, TextControl, Notice } from '@wordpress/components';
+import { Button, SelectControl, TextControl, Notice } from '@wordpress/components';
 import apiFetch from '@wordpress/api-fetch';
 import { __ } from '@wordpress/i18n';
 
@@ -153,10 +153,10 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
                 ]}
                 onChange={(value) => setAccessLevel(value)}
             />
-            <ButtonGroup>
+            <div className="group-button">
                 <Button variant="secondary" onClick={handleCancel}>{__('Cancel', 'obatala')}</Button>
                 <Button variant="primary" type="submit">{__('Save', 'obatala')}</Button>
-            </ButtonGroup>
+            </div>
 
         </form>
 

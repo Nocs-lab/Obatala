@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { __ } from '@wordpress/i18n';
 import {
   Button,
-  ButtonGroup,
   TextControl,
   SelectControl,
   Notice,
@@ -87,14 +86,14 @@ const SectorCreator = ({onSave, editingSector, onCancel}) => {
                 />
             )}
 
-            <ButtonGroup>
+            <div className="group-button">
                 <Button variant="secondary" onClick={handleCancel}>
                     {__('Cancel', 'obatala')}
                 </Button>
                 <Button variant="primary" type="submit">
                     {__('Save', 'obatala')}
                 </Button>
-            </ButtonGroup>
+            </div>
         </form>
     )
 }
