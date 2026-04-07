@@ -9,7 +9,9 @@
             "email": "info@nocslab.ifrn.edu.br"
         }
     ],
-    "require": {},
+    "require": {
+        "dompdf/dompdf": "^2.0"
+    },
     "autoload": {
         "psr-4": {
             "Obatala\\": "classes/"

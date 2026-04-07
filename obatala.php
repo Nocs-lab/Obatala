@@ -14,8 +14,8 @@ namespace Obatala {
 
 	/*
 		Plugin Name: Obatala - Gestão de Processos Curatoriais
-		Description: Adds curatorial workflow management features for the Tainacan plugin.
-		Version: 1.6.27
+		Description: Adiciona funcionalidades de gestão de processos curatoriais para o plugin Tainacan
+		Version: 1.7.1
 		Author: NOCs
 		License: GPLv2 or later
 		Text Domain: obatala
@@ -90,6 +90,32 @@ namespace Obatala {
 
 			// Register REST API fields
 			$this->register_api_endpoints();
+
+			add_action('admin_notices', array($this, 'maybe_notice_pdf_library'));
+		}
+
+		/**
+		 * Show admin notice when Dompdf is not available (PDF report feature).
+		 */
+		public function maybe_notice_pdf_library()
+		{
+			if (!current_user_can('edit_posts')) {
+				return;
+			}
+			$screen = function_exists('get_current_screen') ? get_current_screen() : null;
+			if (!$screen || strpos($screen->id, 'obatala') === false) {
+				return;
+			}
+			if (class_exists('\Dompdf\Dompdf')) {
+				return;
+			}
+			echo '<div class="notice notice-warning is-dismissible"><p>';
+			echo esc_html__('PDF generation library is not available. Run: composer install', 'obatala');
+			echo ' ';
+			echo '<code>composer install</code>';
+			echo ' ';
+			echo esc_html__('in the plugin folder to enable the "Generate PDF report" feature.', 'obatala');
+			echo '</p></div>';
 		}
 
 		/**
