@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { __ } from "@wordpress/i18n";
-import { Handle, Position, useReactFlow } from "@xyflow/react";
+import { Handle, Position } from "@xyflow/react";
 import DragAndDropList from "../dragables/DragAndDropList";
 import NodeHandle from "./NodeHandle";
 import { NodeToolbar } from "@xyflow/react";
 import { Button, Icon, TextControl, ComboboxControl } from "@wordpress/components";
 import { useFlowContext } from "../../context/FlowContext";
-import { set } from "date-fns";
 import { fetchSectors } from "../../../../api/apiRequests";
 import { close, file, mobile, mapMarker, paragraph, plus, search, calendar, keyboard, commentContent, listView } from '@wordpress/icons';
 
@@ -31,12 +30,9 @@ const NodeContent = ({ id, data = {} }) => {
 
     const [sectors, setSectors] = useState([]);
 
-    const { selectedNodes } = useReactFlow();
     const [isAddingFields, setIsAddingFields] = useState(false);
     const { updateNodeName } = useFlowContext();
     const { updateNodeTempSector } = useFlowContext();
-
-    const isSelected = selectedNodes?.some((node) => node.id === id);
     const [stageName, setStageName] = useState(data?.stageName || "");
     const { nodes } = useFlowContext();
     const filteredNode = nodes.find(node => node.id === id);
@@ -126,7 +122,10 @@ const NodeContent = ({ id, data = {} }) => {
 
             {/* Toolbar with Add and Delete */}
             {isAddingFields && (
-                <NodeToolbar isVisible={isSelected} position="right">
+                <NodeToolbar
+                    isVisible
+                    position="right"
+                >
                     <div className="wp-drawer node-meta-container">
                         <Button className="close-button"
                             icon={<Icon icon={close} size={24} onClick={() => setIsAddingFields(false)} />}
@@ -134,14 +133,21 @@ const NodeContent = ({ id, data = {} }) => {
                         <h3 className="title">{__('Select a field to add:', 'obatala')}</h3>
                         <ul className="node-meta-list-container">
                             {FIELD_OPTIONS.map((option) => (
-                                <li className="node-meta-list">
+                                <li
+                                    key={option.id}
+                                    className="node-meta-list"
+                                    role="button"
+                                    tabIndex={0}
+                                    onClick={() => addFieldToNode(option.id)}
+                                    onKeyDown={(e) => {
+                                        if (e.key === 'Enter' || e.key === ' ') {
+                                            e.preventDefault();
+                                            addFieldToNode(option.id);
+                                        }
+                                    }}
+                                >
                                     <Icon icon={option.icon} />
-                                    <span
-                                        key={option.id}
-                                        onClick={() => addFieldToNode(option.id)}
-                                    >
-                                        {option.label}
-                                    </span>
+                                    <span>{option.label}</span>
                                 </li>
                             ))}
                         </ul>

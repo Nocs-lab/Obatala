@@ -87,8 +87,10 @@ class Enqueuer {
 
             wp_localize_script('obatala-admin-scripts', 'obatalaApp', [
                 'admin_url' => admin_url(),
-                'site_url'  => site_url(), 
-                'plugin_url' => OBATALA_PLUGIN_URL, 
+                'site_url'  => site_url(),
+                'plugin_url' => OBATALA_PLUGIN_URL,
+                // Dompdf (composer): if false, ProcessList hides the PDF report button.
+                'pdf_report_available' => class_exists('\Dompdf\Dompdf'),
             ]);
 
         }

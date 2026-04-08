@@ -8,6 +8,11 @@ import apiFetch from '@wordpress/api-fetch';
 import { decodeEntities } from '@wordpress/html-entities';
 import { fetchProcessReportPdf } from '../../api/apiRequests';
 
+const isPdfReportAvailable =
+    typeof window !== 'undefined' &&
+    window.obatalaApp &&
+    window.obatalaApp.pdf_report_available === true;
+
 const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, processTypes, accessLevel, setAccessLevel, modelFilter, setModelFilter }) => {
     const [pdfLoadingId, setPdfLoadingId] = useState(null);
     const [pdfError, setPdfError] = useState(null);
@@ -144,22 +149,24 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
                                 }}
                             />
                         </Tooltip>
-                        <Tooltip text={__("Generate PDF report", "obatala")}>
-                            <Button
-                                variant="secondary"
-                                icon={download}
-                                onClick={() => handlePdfDownload(row.original.id)}
-                                disabled={pdfLoadingId === row.original.id}
-                                isBusy={pdfLoadingId === row.original.id}
-                            >
-                                {__("Generate PDF report", "obatala")}
-                            </Button>
-                        </Tooltip>
+                        {isPdfReportAvailable && (
+                            <Tooltip text={__("Generate PDF report", "obatala")}>
+                                <Button
+                                    variant="secondary"
+                                    icon={download}
+                                    onClick={() => handlePdfDownload(row.original.id)}
+                                    disabled={pdfLoadingId === row.original.id}
+                                    isBusy={pdfLoadingId === row.original.id}
+                                >
+                                    {__("Generate PDF report", "obatala")}
+                                </Button>
+                            </Tooltip>
+                        )}
                     </div>
                 ),
             },
         ],
-        [processTypeMappings, processTypes, pdfLoadingId, handlePdfDownload]
+        [processTypeMappings, processTypes, pdfLoadingId, handlePdfDownload, isPdfReportAvailable]
     );
 
     const data = useMemo(() => processes, [processes]);
