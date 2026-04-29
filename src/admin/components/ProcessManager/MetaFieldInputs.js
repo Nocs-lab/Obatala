@@ -65,17 +65,22 @@ const MetaFieldInputs = React.memo(
       case "datepicker":
         return (
           <div className="meta-field sm">
-            <label>{field.config?.label ?? __("Unknown Title", "obatala")}</label>
-            <input
-              type="date"
-              value={value ? String(value).split("/").reverse().join("-") : ""}
-              onChange={(e) => {
-                const formattedDate = e.target.value.split("-").reverse().join("/");
-                handleChange(formattedDate);
-              }}
-              disabled={!isEditable || noHasPermission}
-              required={field.config?.required ?? false}
-            />
+            <div className="components-base-control">
+              <div className="components-base-control__field">
+                <label className="components-base-control__label">{field.config?.label ?? __("Unknown Title", "obatala")}</label>
+                <input
+                  className="components-text-control__input"
+                  type="date"
+                  value={value ? String(value).split("/").reverse().join("-") : ""}
+                  onChange={(e) => {
+                    const formattedDate = e.target.value.split("-").reverse().join("/");
+                    handleChange(formattedDate);
+                  }}
+                  disabled={!isEditable || noHasPermission}
+                  required={field.config?.required ?? false}
+                />
+              </div>
+            </div>
           </div>
         );
 
