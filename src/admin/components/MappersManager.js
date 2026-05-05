@@ -252,12 +252,12 @@ const MappersManager = () => {
     return (
         <>
             <BrandHeader />
+            <div className="title-container">
+                <h2>
+                    Mappers Tainacan
+                </h2>
+            </div>
             <main>
-                <div className="title-container">
-                    <h2>
-                        Mappers Tainacan
-                    </h2>
-                </div>
                 <div className="badge-container">
                     <span className="badge default">
                         <Icon icon="welcome-widgets-menus" /> Process Model: {selectedProcessModel?.title?.rendered}

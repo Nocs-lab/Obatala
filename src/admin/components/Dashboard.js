@@ -403,14 +403,14 @@ const DashboardPage = () => {
     return (
         <>
             <BrandHeader />
-            <main>
-                <div className="title-container">
-                    <h2>{__('Dashboard', 'obatala')}</h2>
-                    <div className="stat" title={`${completedProcessesPercentage}%`}>
-                        <p className="description">{sprintf(__('%1$s/%2$s completed processes', 'obatala'), countCompletedProcesses, processes.length)}</p>
-                        <progress value={completedProcessesPercentage} max="100">{completedProcessesPercentage}%</progress>
-                    </div>
+            <div className="title-container">
+                <h2>{__('Dashboard', 'obatala')}</h2>
+                <div className="stat" title={`${completedProcessesPercentage}%`}>
+                    <p className="description">{sprintf(__('%1$s/%2$s completed processes', 'obatala'), countCompletedProcesses, processes.length)}</p>
+                    <progress value={completedProcessesPercentage} max="100">{completedProcessesPercentage}%</progress>
                 </div>
+            </div>
+            <main>
                 <div className="dashboard-container">
                     <div className="dashboard-item-personal">
                         <div className="card-container">

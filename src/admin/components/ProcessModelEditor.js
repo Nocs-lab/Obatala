@@ -350,6 +350,14 @@ const processDataEditor = () => {
     return (
         <>
             <BrandHeader />
+            <div className="title-container">
+                <h2><small>{__('Manage steps', 'obatala')}</small>{processData.title.rendered}</h2>
+                <ProcessControls
+                    onSave={handleSave}
+                    onCancel={handleCancelEditProcessType}
+                    toggleFullScreen={toggleFullScreen}
+                />
+            </div>
             <main>
                 {notice && (
                     <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
@@ -357,14 +365,6 @@ const processDataEditor = () => {
                     </Notice>
                 )}
                 <FlowProvider>
-                    <div className="title-container">
-                        <h2><small>{__('Manage steps', 'obatala')}</small>{processData.title.rendered}</h2>
-                        <ProcessControls
-                            onSave={handleSave}
-                            onCancel={handleCancelEditProcessType}
-                            toggleFullScreen={toggleFullScreen}
-                        />
-                    </div>
                     <ProcessFlow
                         ref={flowRef}
                         initialData={flowData}

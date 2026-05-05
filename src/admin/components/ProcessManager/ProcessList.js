@@ -134,14 +134,14 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
                         </Button>
                         <Tooltip text={__("Edit", "obatala")}>
                             <Button
-                                variant="secondary"
+                                variant="tertiary"
                                 icon={edit}
                                 onClick={() => onEdit(row.original)}
                             />
                         </Tooltip>
                         <Tooltip text={__("History", "obatala")}>
                             <Button
-                                variant="secondary"
+                                variant="tertiary"
                                 icon={backup}
                                 onClick={() => {
                                     const url = `?page=process-viewer&process_id=${row.original.id}&view=history`;
@@ -152,7 +152,7 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
                         {isPdfReportAvailable && (
                             <Tooltip text={__("Generate PDF report", "obatala")}>
                                 <Button
-                                    variant="secondary"
+                                    variant="tertiary"
                                     icon={download}
                                     onClick={() => handlePdfDownload(row.original.id)}
                                     disabled={pdfLoadingId === row.original.id}

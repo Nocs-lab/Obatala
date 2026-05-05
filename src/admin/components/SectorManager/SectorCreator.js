@@ -87,7 +87,7 @@ const SectorCreator = ({onSave, editingSector, onCancel}) => {
             )}
 
             <div className="group-button">
-                <Button variant="secondary" onClick={handleCancel}>
+                <Button variant="tertiary" onClick={handleCancel}>
                     {__('Cancel', 'obatala')}
                 </Button>
                 <Button variant="primary" type="submit">
