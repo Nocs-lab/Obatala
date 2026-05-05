@@ -118,6 +118,11 @@ const SectorDetailsPage = () => {
                     <small>{__('Group', 'obatala')}</small>
                     {sector.nome}
                 </h2>
+                <div className="badge-container">
+                    <span className={`badge ${sector.status === 'Active' ? 'success' : 'danger'}`}>
+                        {sector.status}
+                    </span>
+                </div>
             </div>
             <main>
                 {notice && (
@@ -125,11 +130,6 @@ const SectorDetailsPage = () => {
                         {notice.message}
                     </Notice>
                 )}
-                <div className="badge-container">
-                    <span className={`badge ${sector.status === 'Active' ? 'success' : 'danger'}`}>
-                        {sector.status}
-                    </span>
-                </div>
                 <Panel>
                     <PanelHeader>{__('Description', 'obatala')}</PanelHeader>
                     <PanelRow>

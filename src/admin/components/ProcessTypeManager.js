@@ -140,10 +140,11 @@ const ProcessTypeManager = () => {
             <BrandHeader />
             <div className="title-container">
                 <h2>{__('Models', 'obatala')}</h2>
-                <span className="badge">{filteredModels.length}</span>
+                <span className="badge default">{filteredModels.length}</span>
                 <div className="group-button">
                     <Button
-                        variant="primary"
+                        variant="secondary"
+                        size="small"
                         icon={<Icon icon={plus} />}
                         onClick={handleAdd}
                     >

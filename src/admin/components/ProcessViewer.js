@@ -498,6 +498,13 @@ const ProcessViewer = () => {
     return (
         <>
             <BrandHeader />
+            <ProcessHeader
+                process={process}
+                filteredProcessType={filteredProcessType}
+                authorsById={authorsById}
+                isComplete={progress && progress === 100} // Adicionado para controle do badge
+                progress={progress}
+            />
             <main>
                 {isLoading ? (
                     <Spinner />
@@ -514,13 +521,7 @@ const ProcessViewer = () => {
                     />
                 ) : (
                     <>
-                        <ProcessHeader
-                            process={process}
-                            filteredProcessType={filteredProcessType}
-                            authorsById={authorsById}
-                            isComplete={progress && progress === 100} // Adicionado para controle do badge
-                            progress={progress}
-                        />
+                        
                         {notice && (
                             <Notice
                                 status={notice.status}
@@ -548,7 +549,7 @@ const ProcessViewer = () => {
                                     return (
                                         <div key={index} className={`accordion-item ${isDisabled ? 'disabled' : ''}`}>
                                             <button
-                                                className="accordion-header"
+                                                className={`accordion-header ${isCompleted ? 'success' : isDisabled ? 'danger' : 'warning'}`}
                                                 onClick={() => !isDisabled && toggleAccordion(index)}
                                                 aria-expanded={activeIndex === index}
                                                 aria-controls={`accordion-content-${index}`}

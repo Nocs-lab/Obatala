@@ -157,9 +157,10 @@ const SectorManager = () => {
             <BrandHeader />
             <div className="title-container">
                 <h2>{__('Groups', 'obatala')}</h2>
-                <span className="badge">{filteredSectors.length}</span>
+                <span className="badge default">{filteredSectors.length}</span>
                 <div className="group-button">
-                    <Button variant="primary"
+                    <Button variant="secondary"
+                        size="small"
                         icon={<Icon icon={plus} />}
                         onClick={handleAdd}
                     >{__('Add new', 'obatala')}</Button>

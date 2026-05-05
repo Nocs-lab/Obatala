@@ -184,7 +184,7 @@ const ProcessManager = ({ onSelectProcess }) => {
             <BrandHeader />
             <div className="title-container">
                 <h2>{__('Processes', 'obatala')}</h2>
-                <span className="badge">{filteredProcess.length}</span>
+                <span className="badge default">{filteredProcess.length}</span>
                 <div className="group-button">
                     <Button
                         variant="secondary"
