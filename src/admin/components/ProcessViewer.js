@@ -555,9 +555,6 @@ const ProcessViewer = () => {
                                                 aria-controls={`accordion-content-${index}`}
                                                 disabled={isDisabled}
                                             >
-                                                <span className={`status ${isCompleted ? 'success' : isDisabled ? 'danger' : 'warning'}`}>
-                                                    {isCompleted ? __('Completed', 'obatala') : __('Pending', 'obatala')}
-                                                </span>
                                                 <h2 className="accordion-title me-auto">{step.label}</h2>
                                                 <div className="badge-container">
                                                     <span
