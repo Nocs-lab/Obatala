@@ -262,6 +262,9 @@ header {
 main {
   padding: var(--gap) var(--gap-external);
   min-height: calc(100vh - 145px);
+  .components-notice:first-child {
+    margin-top: 0;
+  }
 }
 footer {
   display: none;
@@ -783,25 +786,41 @@ form .action-bar {
 .card-container a.card-item {
   background-color: var(--primary-700);
   color: var(--white);
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 1rem var(--gap);
+  position: relative;
   text-decoration: none;
-}
-.card-container a.card-item:hover {
-  background-color: var(--primary-500);
-}
-.card-container .description {
-  font-size: 1.25rem;
-  & .dashicons {
-    margin-right: .5rem;
-    opacity: .5;
+  .description {
+    font-size: 1rem;
   }
-}
-.card-container .indicator small {
-  color: var(--gray-500);
-  font-size: 1rem;
-  font-weight: 300;
-}
-.card-container .user-photo {
-  border-radius: 50%;
+  .indicator {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    small {
+      color: var(--gray-500);
+      font-size: 1rem;
+      font-weight: 300;
+    }
+    .dashicons {
+      font-size: 2rem;
+      height: 36px;
+      opacity: .25;
+      width: 36px;
+    }
+  }
+  &::before {
+    content: '\f345';
+    color: var(--primary-900);
+    font-family: 'Dashicons';
+    font-size: 1.5rem;
+    position: absolute;
+    right: 1rem;
+  }
+  &:hover {
+    background-color: var(--primary-500);
+  }
 }
 .card-container progress {
   flex-basis: 100%;
@@ -949,6 +968,9 @@ form .action-bar {
   &.warning {
     background-color: var(--warning);
     color: var(--white);
+    .list-actions .dashicon {
+      color: var(--warning);
+    }
   }
 }
 .components-panel__header {
@@ -1204,6 +1226,30 @@ progress[value="100"]::-moz-progress-bar {
   .dashboard-item-personal {
     flex-basis: 25%;
     flex-grow: 0;
+    margin-top: 1.25rem;
+    .card-profile {
+      background-color: rgba(0, 0, 0, .4);
+      align-items: flex-start;
+      display: grid;
+      grid-template-areas: 'foto nome'
+                           'foto badges';
+      gap: 1rem;
+      justify-content: flex-start;
+      padding: 1.25rem 1rem;
+      .user-photo {
+        border-radius: 50%;
+        grid-area: foto;
+        margin-top: -2.5rem;
+      }
+      .description {
+        color: var(--white);
+        font-size: 1.25rem;
+        grid-area: nome;
+      }
+      .badge-container {
+        grid-area: badges;
+      }
+    }
   }
   .dashboard-item-stats {
     flex-basis: 300px;
