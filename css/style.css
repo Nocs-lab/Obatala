@@ -209,31 +209,43 @@ header {
       left: 0;
       width: auto;
       z-index: 1000;
-      & .menu-brand {
-        margin-bottom: 1rem;
+      .menu-brand {
+        margin-bottom: 2rem;
+        strong {
+          background-image: url(../images/logo-tainacan-processos-white.svg);
+        }
       }
-      & .menu-icon {
+      .menu-link {
+        color: var(--white);
+        padding-left: 0;
+        padding-right: 0;
+      }
+      .menu-icon {
         border-radius: var(--border-radius);
         gap: .75rem;
-        padding: .5rem 1rem;
-        & .text {
+        padding: .5rem 0;
+        .text {
           display: block;
         }
       }
-      & .menu-tainacan {
+      .menu-tainacan {
+        background-position: 0rem center;
         font-size: .9rem;
         margin-top: auto;
-        padding-left: 2.75rem;
+        padding-left: 1.75rem;
+        text-indent: 0;
         width: 100%;
       }
       & .components-dropdown-menu__toggle {
         font-size: .9rem;
         gap: .5rem;
         justify-content: flex-start;
-        padding: .5rem 1rem;
+        padding: .5rem 0;
         width: 100%;
         &::after {
           content: attr(aria-label);
+          color: var(--white);
+          font-weight: 600;
         }
       }
     }
