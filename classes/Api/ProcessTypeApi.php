@@ -6,6 +6,7 @@ defined('ABSPATH') || exit;
 
 use WP_REST_Response;
 use Obatala\Entities\Sector;
+use Obatala\Services\TainacanMappingService;
 
 class ProcessTypeApi extends ObatalaAPI {
 
@@ -132,6 +133,11 @@ class ProcessTypeApi extends ObatalaAPI {
             $flowData = json_decode($flowData, true);
         }
 
+        $mapping_service = new TainacanMappingService();
+        $flowData = is_array($flowData)
+            ? $mapping_service->apply_profile_options_to_flow_data($post_id, $flowData)
+            : [];
+
         $meta = [
             'accept_attachments' => (bool) get_post_meta($post_id, 'accept_attachments', true),
             'accept_tainacan_items' => (bool) get_post_meta($post_id, 'accept_tainacan_items', true),
@@ -140,6 +146,7 @@ class ProcessTypeApi extends ObatalaAPI {
             'status' => get_post_meta($post_id, 'status', true) ?: '',
             'step_order' => get_post_meta($post_id, 'step_order', true) ?: [],
             'flowData' => $flowData ?: [],
+            'tainacan_export_mapping' => $mapping_service->build_process_mapping_snapshot($post_id),
         ];
         return rest_ensure_response($meta);
     }
@@ -338,6 +345,9 @@ class ProcessTypeApi extends ObatalaAPI {
                 'jpg' => 'image/jpeg',
                 'jpeg' => 'image/jpeg',
                 'png' => 'image/png',
+                'csv' => 'text/csv',
+                'xls' => 'application/vnd.ms-excel',
+                'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             ],
         ];
 

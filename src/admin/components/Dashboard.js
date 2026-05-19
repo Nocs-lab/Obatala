@@ -135,12 +135,15 @@ const DashboardPage = () => {
                 ? Math.round((completedCount / totalActiveNodes) * 100)
                 : 0;
 
-            const currentStageId = process.meta?.current_stage?.[0];
+            const currentStageRef = process.meta?.current_stage?.[0];
             let currentStage = null;
             let lastUpdate = process.modified;
+            let currentStageId = null;
 
-            if (currentStageId) {
-                currentStage = nodes?.find(n => n.id === currentStageId)?.data?.stageName || currentStageId;
+            if (currentStageRef) {
+                const currentNode = getNodeByStageReference(nodes, currentStageRef);
+                currentStageId = currentNode?.id || currentStageRef;
+                currentStage = currentNode?.data?.stageName || currentStageRef;
 
                 const stageUpdate = stageData[currentStageId]?.updateAt ||
                     stageData[currentStage]?.updateAt;
@@ -208,32 +211,81 @@ const DashboardPage = () => {
             });
     };
 
+    const getNodeByStageReference = (nodes, stageReference) => {
+        if (!Array.isArray(nodes) || !stageReference) return null;
+
+        return nodes.find(node =>
+            node.id === stageReference || node.data?.stageName === stageReference
+        ) || null;
+    };
+
+    const getFirstActionableNode = (nodes, edges) => {
+        if (!Array.isArray(nodes) || !Array.isArray(edges)) return null;
+
+        let currentNodeId = edges.find(edge => edge.source === 'Start')?.target;
+        const guardLimit = nodes.length + edges.length + 1;
+        let guard = 0;
+
+        while (currentNodeId && guard < guardLimit) {
+            const node = nodes.find(item => item.id === currentNodeId);
+            if (!node) return null;
+
+            const isActionableNode = node.type === 'customNode' &&
+                !['Start', 'End'].includes(node.id) &&
+                !String(node.id).startsWith('Condicional');
+
+            if (isActionableNode) {
+                return node;
+            }
+
+            if (node.id === 'End' || node.type === 'endNode') {
+                return null;
+            }
+
+            const nextEdge = edges.find(edge => edge.source === currentNodeId);
+            if (!nextEdge) {
+                return null;
+            }
+
+            currentNodeId = nextEdge.target;
+            guard += 1;
+        }
+
+        return null;
+    };
+
+    const isUserAllowedInSector = (sectorId) => {
+        if (!sectorId) return true;
+
+        return sectorsUsers.some(sector =>
+            String(sector.sector_id) === String(sectorId) &&
+            sector.sector_status === 'Active' &&
+            sector.users?.some(user => user.ID === currentUser?.id)
+        );
+    };
+
     // Função para verificar se um processo está pendente
     const isProcessPending = (process) => {
         if (process.status !== 'publish') return false;
 
         const processStatus = process.meta?.status?.[0];
-        const currentStageId = process.meta?.current_stage?.[0];
+        const currentStageRef = process.meta?.current_stage?.[0];
 
         if (processStatus === "Finished") return false;
 
-        if (!process.meta?.flowData?.nodes) return false;
+        if (!process.meta?.flowData?.nodes || !process.meta?.flowData?.edges) return false;
 
-        if (!currentStageId) return true;
+        const nodes = process.meta.flowData.nodes;
+        const edges = process.meta.flowData.edges;
 
-        const currentNode = process.meta.flowData.nodes.find(node => node.id === currentStageId);
-
-        if (!currentNode || currentNode.type === 'endNode') return false;
-
-        if (currentNode.sector_obatala) {
-            const userInSector = sectorsUsers.some(sector =>
-                sector.sector_id === currentNode.sector_obatala &&
-                sector.users.some(user => user.ID === currentUser?.id)
-            );
-            return userInSector;
+        let currentNode = getNodeByStageReference(nodes, currentStageRef);
+        if (!currentNode) {
+            currentNode = getFirstActionableNode(nodes, edges);
         }
 
-        return true;
+        if (!currentNode || currentNode.type === 'endNode' || currentNode.id === 'End') return false;
+
+        return isUserAllowedInSector(currentNode.sector_obatala);
     };
 
     useEffect(() => {

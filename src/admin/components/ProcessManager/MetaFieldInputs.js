@@ -12,12 +12,12 @@ import TainacanSearchControls from "../Tainacan/TainacanSearch";
 import { __experimentalSelectControl as SelectControl } from "@wordpress/components";
 
 const MetaFieldInputs = React.memo(
-  ({ field, isEditable, onFieldChange, fieldId, initalValue, noHasPermission, fileInfo, stepId }) => {
+  ({ field, isEditable, onFieldChange, fieldId, initalValue, noHasPermission, fileInfo, stepId, itemIndex = null, labelOverride = null, uploadTemplateAction = null }) => {
     const [value, setValue] = useState(initalValue);
 
     useEffect(() => {
       setValue(initalValue);
-    }, [stepId, fieldId]); 
+    }, [stepId, fieldId, itemIndex, initalValue]); 
 
     const normalizeArrayLike = (v) => {
       if (Array.isArray(v)) return v;
@@ -27,11 +27,11 @@ const MetaFieldInputs = React.memo(
 
     const normalizedSearchInitial = useMemo(() => {
       return normalizeArrayLike(initalValue);
-    }, [stepId, fieldId]); 
+    }, [stepId, fieldId, itemIndex, initalValue]); 
 
     const handleChange = (newValue) => {
       setValue(newValue);
-      onFieldChange(fieldId, newValue);
+      onFieldChange(fieldId, newValue, itemIndex);
 
       const isValid =
         !field.config?.pattern || new RegExp(field.config.pattern).test(newValue);
@@ -41,6 +41,8 @@ const MetaFieldInputs = React.memo(
       }
     };
 
+    const fieldLabel = labelOverride || field.config?.label || __("Unknown Title", "obatala");
+
     switch (field.type) {
       case "text":
       case "phone":
@@ -48,7 +50,7 @@ const MetaFieldInputs = React.memo(
         return (
           <div className={`meta-field ${field.config?.required ? "required" : ""}`}>
             <TextControl
-              label={field.config?.label ?? __("Unknown Title", "obatala")}
+              label={fieldLabel}
               placeholder={field.config?.placeholder ?? __("Enter a value...", "obatala")}
               value={value ?? ""}
               onChange={handleChange}
@@ -65,7 +67,7 @@ const MetaFieldInputs = React.memo(
       case "datepicker":
         return (
           <div className="meta-field sm">
-            <label>{field.config?.label ?? __("Unknown Title", "obatala")}</label>
+            <label>{fieldLabel}</label>
             <input
               type="date"
               value={value ? String(value).split("/").reverse().join("-") : ""}
@@ -82,18 +84,31 @@ const MetaFieldInputs = React.memo(
       case "upload":
         return (
           <div className="meta-field">
-            <p>{field.config?.label ?? __("Unknown title", "obatala")}</p>
-            <FormFileUpload
-              accept=".doc,.docx,.pdf,.jpg,.jpeg,.png"
-              onChange={(event) => handleChange(event.currentTarget.files)}
-              disabled={!isEditable || noHasPermission}
-              required={field.config?.required ?? false}
-              help={field.config?.helpText}
-              icon={upload}
-              style={{ border: "1px dashed #ccc" }}
-            >
-              {__("Upload", "obatala")}
-            </FormFileUpload>
+            <p>{fieldLabel}</p>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+              <FormFileUpload
+                accept=".doc,.docx,.pdf,.jpg,.jpeg,.png,.csv,.xls,.xlsx"
+                onChange={(event) => handleChange(event.currentTarget.files)}
+                disabled={!isEditable || noHasPermission}
+                required={field.config?.required ?? false}
+                help={field.config?.helpText}
+                icon={upload}
+                style={{ border: "1px dashed #ccc" }}
+              >
+                {__("Upload", "obatala")}
+              </FormFileUpload>
+
+              {uploadTemplateAction?.show && (
+                <Button
+                  variant="link"
+                  onClick={uploadTemplateAction.onClick}
+                  isBusy={uploadTemplateAction.isLoading}
+                  disabled={uploadTemplateAction.isLoading || noHasPermission}
+                >
+                  {uploadTemplateAction.label || __("Download spreadsheet template", "obatala")}
+                </Button>
+              )}
+            </div>
 
             {fileInfo?.[stepId]?.[fieldId] && (
               <div>
@@ -109,7 +124,7 @@ const MetaFieldInputs = React.memo(
         return (
           <div className="meta-field sm">
             <TextControl
-              label={field.config?.label ?? __("Unknown title", "obatala")}
+              label={fieldLabel}
               min={field.config?.min}
               max={field.config?.max}
               step={field.config?.step}
@@ -127,7 +142,7 @@ const MetaFieldInputs = React.memo(
         return (
           <div className="meta-field">
             <ComboboxControl
-              label={field.config?.label ?? __("Select Options", "obatala")}
+              label={fieldLabel}
               value={Array.isArray(value) ? value : []}
               options={field.config?.options.split(",").map((option) => ({
                 label: option.trim(),
@@ -164,7 +179,7 @@ const MetaFieldInputs = React.memo(
         return (
           <div className="meta-field">
             <RadioControl
-              label={field.config?.label ?? __("Unknown Title", "obatala")}
+              label={fieldLabel}
               selected={value ?? ""}
               onChange={(v) => handleChange(v)}
               options={field.config?.options
@@ -180,11 +195,11 @@ const MetaFieldInputs = React.memo(
       case "search":
         return (
           <TainacanSearchControls
-            onFieldChange={(selectedItems) => onFieldChange(fieldId, selectedItems)}
+            onFieldChange={(selectedItems) => onFieldChange(fieldId, selectedItems, itemIndex)}
             initialValue={normalizedSearchInitial}
             isEditable={isEditable}
             noHasPermission={noHasPermission}
-            key={`${stepId}-${fieldId}`}
+            key={`${stepId}-${fieldId}-${itemIndex ?? 'single'}`}
           />
         );
 
@@ -192,7 +207,7 @@ const MetaFieldInputs = React.memo(
         return (
           <div className={`meta-field md ${field.config?.required ? "required" : ""}`}>
             <TextControl
-              label={field.config?.label ?? __("Unknown Title", "obatala")}
+              label={fieldLabel}
               placeholder={field.config?.placeholder ?? __("Enter a value...", "obatala")}
               value={value ?? ""}
               type="email"
