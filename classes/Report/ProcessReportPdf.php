@@ -351,6 +351,18 @@ class ProcessReportPdf {
         if ($type === 'upload' || $type === 'file') {
             return esc_html__('File attached', 'obatala') . ': ' . esc_html($value);
         }
+        if ($type === 'stage_document') {
+            $document = json_decode($value, true);
+            if (is_array($document)) {
+                $content = $document['content'] ?? '';
+                $signed = $document['signedFile']['name'] ?? '';
+                $output = $content ? wp_kses_post($content) : '<span class="not-informed">' . esc_html__('Not informed', 'obatala') . '</span>';
+                if ($signed) {
+                    $output .= '<br><strong>' . esc_html__('Signed PDF', 'obatala') . ':</strong> ' . esc_html($signed);
+                }
+                return $output;
+            }
+        }
         return nl2br(esc_html($value));
     }
 

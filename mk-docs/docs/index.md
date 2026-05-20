@@ -2,7 +2,27 @@
 
 ## 📌 Visão Geral
 
-O plugin **Obatala** foi desenvolvido para gerenciar funcionalidades administrativas e interfaces dentro da plataforma WordPress. Esta documentação descreve as principais classes do sistema — `AdminMenu`, `Enqueuer` e `SettingsPage` — explicando suas funções e interações.
+O **Obatalá** é um plugin WordPress (addon do [Tainacan](https://tainacan.org/)) para gestão de processos curatoriais: modelos de processo, etapas com campos dinâmicos, setores/grupos, permissões, notificações e geração de relatórios em PDF.
+
+### Começando
+
+| Tópico | Documento |
+|--------|-----------|
+| Colocar o sistema no ar (Composer, npm, Tainacan) | [Instalação](instalacao.md) |
+| Estrutura de pastas e PSR-4 | [Organização](organizacao.md) |
+| Campo **Documento da etapa** (editor, PDF, assinatura) | [Documento da etapa](metadados/documento-etapa.md) |
+| Traduções PHP e React | [Internacionalização](internacionalizacao.md) |
+| Menus, REST API e React no admin | [Guia do desenvolvedor](tutoriais/guia-dev.md) |
+| Metadados dinâmicos (`flowData`, `stageData`) | [Metadados](metadados/metadados.md) |
+
+!!! tip "PDFs no servidor"
+    A geração de PDF (relatório do processo e documento da etapa) exige `composer install` na pasta do plugin para instalar o **Dompdf**. Sem isso o plugin até pode falhar ao carregar. Detalhes em [Instalação](instalacao.md).
+
+---
+
+## Arquitetura do painel administrativo
+
+Esta seção descreve as classes que montam o menu e carregam o frontend React — `AdminMenu`, `Enqueuer` e `SettingsPage`.
 
 ---
 
@@ -204,6 +224,9 @@ register_setting('obatala_settings_group', 'api_key');
 
 ### 🌐 Internacionalização
 O plugin suporta tradução em PHP (via `.po`/`.mo`) e em React (via JSON). O domínio de texto é `obatala`. Consulte [Internacionalização](internacionalizacao.md) para o fluxo de trabalho completo.
+
+### 📝 Documento da etapa
+O Obatalá permite configurar um componente de documento textual nas etapas do processo, com editor formatável, geração de PDF e reanexo do PDF assinado. Consulte [Documento da etapa](metadados/documento-etapa.md) para detalhes técnicos e funcionais.
 
 ### ✅ Considerações Finais
 - As classes são organizadas conforme o padrão PSR-4.

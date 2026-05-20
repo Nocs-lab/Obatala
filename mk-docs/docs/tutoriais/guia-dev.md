@@ -1,5 +1,7 @@
 # 🧩 Criação de Interfaces no WordPress para Gerenciamento de Processos no Plugin Obatala
 
+Antes de desenvolver ou testar localmente, siga o guia [Instalação](../instalacao.md) (`composer install`, `npm run build`, Tainacan ativo).
+
 O desenvolvimento de interfaces administrativas no WordPress com o plugin **Obatala** envolve:
 
 - Criação de menus personalizados.

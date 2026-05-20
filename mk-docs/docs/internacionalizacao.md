@@ -64,6 +64,15 @@ msgfmt -o languages/obatala-pt_BR.mo languages/obatala-pt_BR.po
 
 O Poedit faz isso automaticamente ao salvar.
 
+**Sem WP-CLI ou `msgfmt` (ex.: Windows):** use o script Node que compila `.mo` e gera o JSON do frontend:
+
+```bash
+npm run i18n:po-to-mo-json          # padrão: es_ES
+node developer/po-to-mo-and-json.mjs pt_BR
+```
+
+O script está em `developer/po-to-mo-and-json.mjs` e usa `gettext-parser`.
+
 ## Uso no código React
 
 Use as funções de `@wordpress/i18n`:

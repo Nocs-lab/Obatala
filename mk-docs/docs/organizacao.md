@@ -35,6 +35,11 @@ Este documento descreve a estrutura de arquivos do plugin "Obatala", que é util
             ├── ProcessApi.php
             ├── ProcessTypeApi.php
             ├── SectorApi.php
+        └── 📁Report
+            ├── ProcessReportPdf.php
+            ├── StageDocumentPdf.php
+        └── 📁Security
+            ├── Roles.php
         └── 📁Entities
             ├── Process.php
             ├── ProcessType.php
@@ -60,8 +65,10 @@ Este documento descreve a estrutura de arquivos do plugin "Obatala", que é util
     └── 📁mk-docs
         └── 📁docs
             └── 📁metadados
+                ├── documento-etapa.md
                 ├── implementacao.md
                 ├── metadados.md
+            ├── instalacao.md
             └── 📁modelagem
                 └── 📁classes
                     ├── etapa.md
@@ -243,7 +250,7 @@ Editor visual de fluxos curatoriais:
 
 - `components/dragables/`: Lista de componentes com suporte a drag-and-drop.
   - Ex: `DragAndDropList.js`, `SortableField.js`.
-- `components/inputControls/`: Inputs customizados como seletores, datas e campos de texto.
+- `components/inputControls/`: Inputs customizados (datas, upload, rádio, **StageDocumentControls** para o tipo `stage_document`, etc.).
   - Ex: `DatePickerControls.js`, `FileUploadControls.js`, `TainacanSearch.js`.
 - `components/reactFlow/`: Nós e conexões para renderização do fluxo.
   - Ex: `CustomEdge.js`, `StartNode.js`, `NodeContent.js`.
@@ -339,16 +346,27 @@ Estrutura para a documentação técnica do projeto usando MkDocs:
 
 ---
 
+### 📁 `classes/Report/`
+Geração de PDF com Dompdf:
+
+- `ProcessReportPdf.php`: relatório consolidado do processo (lista de processos).
+- `StageDocumentPdf.php`: PDF de um campo `stage_document` em uma etapa.
+
+Ambas exigem `composer install` (pacote `dompdf/dompdf`).
+
+### 📁 `classes/Security/`
+- `Roles.php`: papéis Obatalá (`obatala_administrator`, `obatala_editor`, `obatala_author`) e capabilities (`obatala_manage_processes`, `obatala_report_generate`, etc.).
+
 ### 📁 `vendor/`
-Dependências instaladas via Composer (autoloader PSR-4 e bibliotecas externas).
+Dependências instaladas via **Composer** (autoloader PSR-4 e Dompdf). A pasta está no `.gitignore` e **não** vem no clone Git — execute `composer install` após copiar o plugin. Sem `vendor/`, o `obatala.php` não carrega.
 
 ---
 
 ### 📁 Arquivos na Raiz
 
-- `.gitignore`: Arquivos/pastas ignorados pelo Git.
-- `obatala.php`: Arquivo principal do plugin, onde o WordPress faz o bootstrap.
-- `composer.json`: Configuração do autoload e dependências PHP.
+- `.gitignore`: Arquivos/pastas ignorados pelo Git (`vendor/`, `node_modules/`, artefatos de `build/`).
+- `obatala.php`: Arquivo principal do plugin; carrega `vendor/autoload.php` e inicializa o singleton `Nocs_ObatalaPlugin`.
+- `composer.json`: Dependência `dompdf/dompdf` e autoload PSR-4 do namespace `Obatala\`.
 - `package.json` & `package-lock.json`: Dependências e scripts de build JS.
 - `README.md`: Documentação inicial do repositório.
 

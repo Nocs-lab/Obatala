@@ -303,3 +303,187 @@ msgstr ""
 #: obatala.php:116
 msgid "Obatala requires the Tainacan plugin to be installed and activated."
 msgstr ""
+
+#: classes/Api/ProcessApi.php
+#: classes/Report/StageDocumentPdf.php
+#: src/admin/components/FlowEditor/components/inputControls/StageDocumentControls.js
+#: src/admin/components/FlowEditor/components/reactFlow/NodeContent.js
+#: src/admin/components/ProcessManager/MetaFieldDisplay.js
+#: src/admin/components/ProcessManager/MetaFieldInputs.js
+#: src/admin/components/ProcessViewer.js
+msgid "Stage document"
+msgstr ""
+
+msgid "The label is required."
+msgstr ""
+
+msgid "Settings saved successfully."
+msgstr ""
+
+msgid "Edit stage document"
+msgstr ""
+
+msgid "Label"
+msgstr ""
+
+msgid "Document title"
+msgstr ""
+
+msgid "Document type"
+msgstr ""
+
+msgid "Opinion, report, order, or term"
+msgstr ""
+
+msgid "Help text"
+msgstr ""
+
+msgid "Instructions for filling this document"
+msgstr ""
+
+msgid "Required"
+msgstr ""
+
+msgid "Require document content"
+msgstr ""
+
+msgid "Require signed PDF upload"
+msgstr ""
+
+msgid "Document template"
+msgstr ""
+
+msgid "Optional initial text shown when the document is empty."
+msgstr ""
+
+msgid "Save settings"
+msgstr ""
+
+msgid "Bold"
+msgstr ""
+
+msgid "Italic"
+msgstr ""
+
+msgid "Underline"
+msgstr ""
+
+msgid "Align left"
+msgstr ""
+
+msgid "Center"
+msgstr ""
+
+msgid "Align right"
+msgstr ""
+
+msgid "Justify"
+msgstr ""
+
+msgid "Bulleted list"
+msgstr ""
+
+msgid "Numbered list"
+msgstr ""
+
+msgid "Clear formatting"
+msgstr ""
+
+msgid "Generate PDF"
+msgstr ""
+
+msgid "Replace signed PDF"
+msgstr ""
+
+msgid "Attach signed PDF"
+msgstr ""
+
+msgid "Signed PDF upload is required for this document."
+msgstr ""
+
+msgid "Document PDF generated successfully."
+msgstr ""
+
+msgid "Could not generate the document PDF."
+msgstr ""
+
+msgid "Signed PDF attached successfully."
+msgstr ""
+
+msgid "Could not attach the signed PDF."
+msgstr ""
+
+msgid "Could not download the signed PDF."
+msgstr ""
+
+msgid "Signed document"
+msgstr ""
+
+msgid "Document PDF generated"
+msgstr ""
+
+msgid "Document draft"
+msgstr ""
+
+msgid "Save draft"
+msgstr ""
+
+msgid "Saved draft"
+msgstr ""
+
+msgid "Draft saved successfully."
+msgstr ""
+
+msgid "Could not save the draft."
+msgstr ""
+
+msgid "No signed PDF was sent."
+msgstr ""
+
+msgid "Only PDF files are allowed."
+msgstr ""
+
+msgid "Could not create the document directory."
+msgstr ""
+
+msgid "Could not save the signed PDF."
+msgstr ""
+
+msgid "No signed PDF is attached to this document."
+msgstr ""
+
+msgid "Signed PDF not found."
+msgstr ""
+
+msgid "You must be logged in."
+msgstr ""
+
+msgid "The node_id and field_id parameters are required."
+msgstr ""
+
+msgid "You do not have permission to access this process document."
+msgstr ""
+
+msgid "Step not found."
+msgstr ""
+
+msgid "Stage document field not found."
+msgstr ""
+
+msgid "No document content was found for this step."
+msgstr ""
+
+msgid "Obatala - Curatorial Process Management"
+msgstr ""
+
+msgid "Document"
+msgstr ""
+
+msgid "Type"
+msgstr ""
+
+msgid "Print/export date"
+msgstr ""
+
+msgid "Signed PDF"
+msgstr ""

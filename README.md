@@ -100,9 +100,19 @@ classDiagram
     Processo "1" -- "*" Arquivo : possui
 ```
 
+## Instalação
+
+1. Instale e ative o plugin **Tainacan** no WordPress.
+2. Copie este repositório para `wp-content/plugins/Obatala/`.
+3. Na pasta do plugin, execute **`composer install`** (obrigatório — carrega o autoload PSR-4 e o **Dompdf** para geração de PDF).
+4. Execute **`npm ci`** e **`npm run build`** (interface administrativa React).
+5. Ative o plugin Obatalá no painel WordPress.
+
+Passo a passo detalhado, checklist e solução de problemas: [mk-docs/docs/instalacao.md](mk-docs/docs/instalacao.md) (também na [documentação publicada](https://nocs-lab.github.io/Obatala/instalacao/)).
+
 ## Documentação
 
-A documentação completa do plugin está disponível no diretório `mk-docs` e pode ser acessada online no seguinte link: [Documentação Oficial](https://nocs-lab.github.io/Obatala/).
+A documentação completa do plugin está no diretório `mk-docs` e online em [Documentação Oficial](https://nocs-lab.github.io/Obatala/).
 
 ## Colaboração
 
