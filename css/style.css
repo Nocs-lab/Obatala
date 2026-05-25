@@ -521,7 +521,8 @@ th[role="columnheader"][title="Toggle SortBy"] {
     content: "\f343";
   }
   & .accordion-header[disabled]::after {
-    content: "";
+    content: "\f14f";
+    color: var(--danger);
   }
   & .accordion-header[disabled] {
     cursor: not-allowed;
@@ -1069,10 +1070,10 @@ form .action-bar {
 .components-radio-control .components-flex {
   flex-direction: row;
   justify-content: start;
-  gap: 1rem;
+  gap: 1rem 1.5rem;
 }
 .components-radio-control .components-flex .components-radio-control__option {
-  flex-basis: 50px;
+  flex-basis: auto;
 }
 .components-tab-panel__tabs {
   --wp-admin-border-width-focus: 4px;
@@ -1536,6 +1537,8 @@ button .components-spinner {
   color: var(--primary-400);
   content: "Preenchimento obrigatório.";
   font-size: .75rem;
+  position: relative;
+  top: -.25rem;
 }
 .meta-field-wrapper + .action-bar {
   margin-top: var(--gap);

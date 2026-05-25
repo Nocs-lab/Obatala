@@ -4,15 +4,21 @@ namespace Obatala\Api;
 
 defined('ABSPATH') || exit;
 
+use WP_Error;
 use WP_REST_Response;
 use Obatala\Entities\Sector;
 use Obatala\Services\TainacanMappingService;
 
 class ProcessTypeApi extends ObatalaAPI {
 
-
+    /** @var bool */
+    private static $flow_title_validation_filter_registered = false;
 
     public function register_routes() {
+        if (!self::$flow_title_validation_filter_registered) {
+            add_filter('rest_pre_insert_process_type', [self::class, 'filter_rest_validate_flow_field_titles'], 10, 2);
+            self::$flow_title_validation_filter_registered = true;
+        }
         $this->add_route('process_type/(?P<id>\d+)/meta', [
             'methods' => 'GET',
             'callback' => [$this, 'get_meta'],
@@ -202,6 +208,92 @@ class ProcessTypeApi extends ObatalaAPI {
         return rest_ensure_response([]);
 }
 
+    /**
+     * REST: block saving process_type when meta.flowData has fields without a valid title.
+     *
+     * @param \WP_Post|\WP_Error $prepared_post
+     * @param \WP_REST_Request   $request
+     * @return \WP_Post|\WP_Error
+     */
+    public static function filter_rest_validate_flow_field_titles($prepared_post, $request) {
+        if (is_wp_error($prepared_post)) {
+            return $prepared_post;
+        }
+        $meta = $request->get_param('meta');
+        if (empty($meta['flowData']) || !is_array($meta['flowData'])) {
+            return $prepared_post;
+        }
+        $err = self::validate_flow_field_titles($meta['flowData']);
+        if (is_string($err) && $err !== '') {
+            return new WP_Error(
+                'obatala_field_without_title',
+                $err,
+                ['status' => 400]
+            );
+        }
+        return $prepared_post;
+    }
+
+    /**
+     * Ensures every field in custom steps has a non-empty title (not the default placeholder).
+     *
+     * @param array $flow_data flowData structure with nodes/edges.
+     * @return string|null Error message or null if valid.
+     */
+    private static function validate_flow_field_titles(array $flow_data) {
+        $default_untitled = 'Campo sem título';
+        if (empty($flow_data['nodes']) || !is_array($flow_data['nodes'])) {
+            return null;
+        }
+        $problems = [];
+        foreach ($flow_data['nodes'] as $node) {
+            $node_id = isset($node['id']) ? (string) $node['id'] : '';
+            if ($node_id === 'Start' || $node_id === 'End' || strpos($node_id, 'Condicional') === 0) {
+                continue;
+            }
+            $fields = $node['data']['fields'] ?? null;
+            if (!is_array($fields)) {
+                continue;
+            }
+            $stage_name = isset($node['data']['stageName']) ? (string) $node['data']['stageName'] : $node_id;
+            foreach ($fields as $field) {
+                if (!is_array($field)) {
+                    continue;
+                }
+                $label = '';
+                if (isset($field['config']['label']) && is_string($field['config']['label']) && trim($field['config']['label']) !== '') {
+                    $label = trim($field['config']['label']);
+                } else {
+                    $label = isset($field['title']) ? trim((string) $field['title']) : '';
+                }
+                if ($label === '' || $label === $default_untitled) {
+                    $field_id = isset($field['id']) ? (string) $field['id'] : '';
+                    $problems[] = [
+                        'stage' => $stage_name,
+                        'field' => $field_id,
+                    ];
+                }
+            }
+        }
+        if (empty($problems)) {
+            return null;
+        }
+        $parts = [];
+        foreach ($problems as $p) {
+            $parts[] = sprintf(
+                /* translators: 1: step name, 2: field id */
+                __('%1$s (field %2$s)', 'obatala'),
+                $p['stage'],
+                $p['field']
+            );
+        }
+        return sprintf(
+            /* translators: %s: semicolon-separated list of step and field id, e.g. "Step A (field x); Step B (field y)" */
+            __('Some fields are missing a valid title (empty or default). Check: %s', 'obatala'),
+            implode('; ', $parts)
+        );
+    }
+
     public function update_meta($request) {
         $post_id = (int) $request['id'];
 
@@ -223,8 +315,26 @@ class ProcessTypeApi extends ObatalaAPI {
                 if ($key === 'flowData' && is_string($request[$key])) {
                     $flowData = json_decode($request[$key], true);
                     if ($flowData) {
+                        $title_err = self::validate_flow_field_titles($flowData);
+                        if (is_string($title_err) && $title_err !== '') {
+                            return new WP_Error(
+                                'obatala_field_without_title',
+                                $title_err,
+                                ['status' => 400]
+                            );
+                        }
                         update_post_meta($post_id, $key, $flowData); // Armazena como array
                     }
+                } elseif ($key === 'flowData' && is_array($request[$key])) {
+                    $title_err = self::validate_flow_field_titles($request[$key]);
+                    if (is_string($title_err) && $title_err !== '') {
+                        return new WP_Error(
+                            'obatala_field_without_title',
+                            $title_err,
+                            ['status' => 400]
+                        );
+                    }
+                    update_post_meta($post_id, $key, $request[$key]);
                 } else {
                     update_post_meta($post_id, $key, $request[$key]);
                 }

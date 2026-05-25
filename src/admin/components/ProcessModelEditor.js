@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { __ } from "@wordpress/i18n";
+import { __, sprintf } from "@wordpress/i18n";
 import {
     Spinner,
     Notice,
@@ -117,6 +117,43 @@ const processDataEditor = () => {
 
     const isFilled = (v) => v !== null && v !== undefined && String(v).trim() !== "";
 
+    /** Default label when adding a field — must match `NodeContent` / invalid if still unchanged */
+    const DEFAULT_FIELD_TITLE = "Campo sem título";
+
+    const getFieldDisplayTitle = (field) => {
+        const cfg = field?.config?.label;
+        if (typeof cfg === "string" && cfg.trim() !== "") {
+            return cfg.trim();
+        }
+        return (field?.title ?? "").toString().trim();
+    };
+
+    const isFieldMissingTitle = (field) => {
+        const t = getFieldDisplayTitle(field);
+        return t === "" || t === DEFAULT_FIELD_TITLE;
+    };
+
+    const getFieldTitleProblems = (flowData) => {
+        const problems = [];
+        flowData.nodes.forEach((node) => {
+            const nid = node.id;
+            if (nid === "Start" || nid === "End" || (typeof nid === "string" && nid.startsWith("Condicional"))) {
+                return;
+            }
+            const fields = node?.data?.fields;
+            if (!Array.isArray(fields)) {
+                return;
+            }
+            const stageName = node.data?.stageName || nid;
+            fields.forEach((field) => {
+                if (isFieldMissingTitle(field)) {
+                    problems.push({ stageName, fieldId: field?.id || "" });
+                }
+            });
+        });
+        return problems;
+    };
+
     const getInvalidConditionalNodes = (flowData) => {
         return flowData.nodes.filter((node) => {
             if (node.type !== "customNodeConditional") return false;
@@ -181,6 +218,29 @@ const processDataEditor = () => {
                 errorMessages.push(
                     (nodesWithoutFields.length > 1 ? 'As etapas:' : 'A etapa: ') +
                     `${nodesWithoutFields.map(node => node.data?.stageName).join(', ')} não têm campos definidos.`
+                );
+            }
+
+            const fieldTitleProblems = getFieldTitleProblems(flowData);
+            if (fieldTitleProblems.length > 0) {
+                const detailList = fieldTitleProblems
+                    .map((p) =>
+                        p.fieldId
+                            ? sprintf(
+                                /* translators: 1: step name, 2: field id */
+                                __("%1$s (field %2$s)", "obatala"),
+                                p.stageName,
+                                p.fieldId
+                            )
+                            : String(p.stageName)
+                    )
+                    .join("; ");
+                errorMessages.push(
+                    sprintf(
+                        /* translators: %s: semicolon-separated list, e.g. "Step A (field x); Step B (field y)" */
+                        __("Some fields are missing a valid title (empty or default). Check: %s", "obatala"),
+                        detailList
+                    )
                 );
             }
 

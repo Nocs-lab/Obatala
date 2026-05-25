@@ -1029,3 +1029,11 @@ msgstr "Não informado"
 
 msgid "File attached"
 msgstr "Arquivo anexado"
+
+#: ProcessModelEditor.js, classes/Api/ProcessTypeApi.php
+msgid "Some fields are missing a valid title (empty or default). Check: %s"
+msgstr "Alguns campos não têm título válido (vazio ou padrão). Verifique: %s"
+
+#: ProcessModelEditor.js, classes/Api/ProcessTypeApi.php
+msgid "%1$s (field %2$s)"
+msgstr "%1$s (campo %2$s)"
