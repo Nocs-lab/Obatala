@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { __ } from "@wordpress/i18n";
-import { Handle, Position } from "@xyflow/react";
+import { Handle, Position, useReactFlow } from "@xyflow/react";
 import DragAndDropList from "../dragables/DragAndDropList";
 import NodeHandle from "./NodeHandle";
 import { NodeToolbar } from "@xyflow/react";
@@ -22,6 +22,77 @@ const FIELD_OPTIONS = [
     { id: "search", label: "Busca em Tainacan", icon: search },
 ];
 
+const TAINACAN_CONTROL_FIELDS = [
+    {
+        id: "obatala_ctrl_collection_selector",
+        type: "radio",
+        label: "Coleção de exportação",
+        options: "Coleção A, Coleção B",
+        helpText: "Selecione a coleção de exportação que será usada neste processo.",
+    },
+    {
+        id: "obatala_ctrl_multi_or_single",
+        type: "radio",
+        label: "Trata vários itens?",
+        required: true,
+        options: "Sim, Não",
+        helpText: "Escolha Sim para múltiplos itens ou Não para item único.",
+    },
+    {
+        id: "obatala_ctrl_quantity",
+        type: "number",
+        label: "Quantidade de itens",
+        required: true,
+        conditional: {
+            dependsOnFieldId: "obatala_ctrl_multi_or_single",
+            operator: "equals",
+            value: "Sim",
+        },
+        helpText: "Informe a quantidade de itens para exportação.",
+    },
+    {
+        id: "obatala_ctrl_entry_mode",
+        type: "radio",
+        label: "Origem dos dados",
+        options: "Manual, Planilha",
+        conditional: {
+            dependsOnFieldId: "obatala_ctrl_multi_or_single",
+            operator: "equals",
+            value: "Sim",
+        },
+        helpText: "Escolha Manual para formulário ou Planilha para upload.",
+    },
+    {
+        id: "obatala_ctrl_spreadsheet_upload",
+        type: "upload",
+        label: "Upload da planilha",
+        conditional: {
+            dependsOnFieldId: "obatala_ctrl_multi_or_single",
+            operator: "equals",
+            value: "Sim",
+        },
+        helpText: "Faça upload da planilha quando a origem for Planilha.",
+    },
+    {
+        id: "obatala_ctrl_same_values_mode",
+        type: "radio",
+        label: "Repetir dados base?",
+        options: "Sim, Não",
+        conditional: {
+            dependsOnFieldId: "obatala_ctrl_multi_or_single",
+            operator: "equals",
+            value: "Sim",
+        },
+        helpText: "Use Sim quando vários itens compartilham os mesmos dados base.",
+    },
+    {
+        id: "obatala_ctrl_unique_id",
+        type: "text",
+        label: "Identificador",
+        helpText: "Informe o campo que diferencia cada item na repetição.",
+    },
+];
+
 const NodeContent = ({ id, data = {} }) => {
     const {
         fields = [],
@@ -30,9 +101,14 @@ const NodeContent = ({ id, data = {} }) => {
 
     const [sectors, setSectors] = useState([]);
 
+    const { selectedNodes } = useReactFlow();
     const [isAddingFields, setIsAddingFields] = useState(false);
+    const [isDefaultFieldsExpanded, setIsDefaultFieldsExpanded] = useState(false);
+    const [isTainacanControlsExpanded, setIsTainacanControlsExpanded] = useState(false);
     const { updateNodeName } = useFlowContext();
     const { updateNodeTempSector } = useFlowContext();
+
+    const isSelected = selectedNodes?.some((node) => node.id === id);
     const [stageName, setStageName] = useState(data?.stageName || "");
     const { nodes } = useFlowContext();
     const filteredNode = nodes.find(node => node.id === id);
@@ -41,6 +117,13 @@ const NodeContent = ({ id, data = {} }) => {
     useEffect(() => {
         loadSectors();
     }, []);
+
+    useEffect(() => {
+        if (!isAddingFields) {
+            setIsDefaultFieldsExpanded(false);
+            setIsTainacanControlsExpanded(false);
+        }
+    }, [isAddingFields]);
 
     const loadSectors = () => {
         fetchSectors()
@@ -66,6 +149,58 @@ const NodeContent = ({ id, data = {} }) => {
             type: fieldId,
             title: "Campo sem título",
         };
+        updateFields([...fields, newField]);
+        setIsAddingFields(false);
+    };
+
+    const getControlFieldLocation = (fieldId) => {
+        for (const node of nodes) {
+            const nodeId = String(node?.id || "");
+            const nodeFields = Array.isArray(node?.data?.fields) ? node.data.fields : [];
+            const exists = nodeFields.some((field) => String(field?.id || "") === String(fieldId));
+            if (exists) {
+                const stageName = String(node?.data?.stageName || nodeId);
+                return { nodeId, stageName };
+            }
+        }
+
+        return null;
+    };
+
+    const addTainacanControlFieldToNode = (field) => {
+        const fieldId = String(field?.id || "");
+        if (!fieldId) return;
+
+        const existingLocation = getControlFieldLocation(fieldId);
+        if (existingLocation) {
+            return;
+        }
+
+        const newFieldConfig = {
+            label: field.label,
+            required: field.required === true,
+            helpText: field.helpText || "",
+        };
+
+        if (field.options) {
+            newFieldConfig.options = field.options;
+        }
+
+        if (field.conditional) {
+            newFieldConfig.conditional = {
+                dependsOnFieldId: String(field.conditional.dependsOnFieldId || ""),
+                operator: String(field.conditional.operator || "equals"),
+                value: String(field.conditional.value || ""),
+            };
+        }
+
+        const newField = {
+            id: fieldId,
+            type: field.type,
+            title: "Campo sem título",
+            config: newFieldConfig,
+        };
+
         updateFields([...fields, newField]);
         setIsAddingFields(false);
     };
@@ -122,34 +257,83 @@ const NodeContent = ({ id, data = {} }) => {
 
             {/* Toolbar with Add and Delete */}
             {isAddingFields && (
-                <NodeToolbar
-                    isVisible
-                    position="right"
-                >
+                <NodeToolbar isVisible={isSelected} position="right">
                     <div className="wp-drawer node-meta-container">
                         <Button className="close-button"
                             icon={<Icon icon={close} size={24} onClick={() => setIsAddingFields(false)} />}
                         ></Button>
                         <h3 className="title">{__('Select a field to add:', 'obatala')}</h3>
                         <ul className="node-meta-list-container">
-                            {FIELD_OPTIONS.map((option) => (
-                                <li
-                                    key={option.id}
-                                    className="node-meta-list"
-                                    role="button"
-                                    tabIndex={0}
-                                    onClick={() => addFieldToNode(option.id)}
-                                    onKeyDown={(e) => {
-                                        if (e.key === 'Enter' || e.key === ' ') {
-                                            e.preventDefault();
-                                            addFieldToNode(option.id);
-                                        }
+                            <li className="node-meta-list">
+                                <button
+                                    type="button"
+                                    onClick={() => setIsDefaultFieldsExpanded((previous) => !previous)}
+                                    style={{
+                                        width: "100%",
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        alignItems: "center",
+                                        background: "none",
+                                        border: "none",
+                                        padding: 0,
+                                        cursor: "pointer",
+                                        textAlign: "left",
                                     }}
                                 >
+                                    <strong>{__('Default fields', 'obatala')}</strong>
+                                    <span>{isDefaultFieldsExpanded ? '[-]' : '[+]'}</span>
+                                </button>
+                            </li>
+                            {isDefaultFieldsExpanded && FIELD_OPTIONS.map((option) => (
+                                <li className="node-meta-list" key={option.id}>
                                     <Icon icon={option.icon} />
-                                    <span>{option.label}</span>
+                                    <span
+                                        onClick={() => addFieldToNode(option.id)}
+                                    >
+                                        {option.label}
+                                    </span>
                                 </li>
                             ))}
+                            <li className="node-meta-list">
+                                <button
+                                    type="button"
+                                    onClick={() => setIsTainacanControlsExpanded((previous) => !previous)}
+                                    style={{
+                                        width: "100%",
+                                        display: "flex",
+                                        justifyContent: "space-between",
+                                        alignItems: "center",
+                                        background: "none",
+                                        border: "none",
+                                        padding: 0,
+                                        cursor: "pointer",
+                                        textAlign: "left",
+                                    }}
+                                >
+                                    <strong>{__('Tainacan control fields', 'obatala')}</strong>
+                                    <span>{isTainacanControlsExpanded ? '[-]' : '[+]'}</span>
+                                </button>
+                            </li>
+                            {isTainacanControlsExpanded && TAINACAN_CONTROL_FIELDS.map((option) => {
+                                const existingLocation = getControlFieldLocation(option.id);
+                                const isDisabled = Boolean(existingLocation);
+
+                                return (
+                                    <li className="node-meta-list" key={option.id}>
+                                        <Icon icon={option.type === "upload" ? file : (option.type === "number" ? keyboard : listView)} />
+                                        <span
+                                            onClick={() => {
+                                                if (!isDisabled) {
+                                                    addTainacanControlFieldToNode(option);
+                                                }
+                                            }}
+                                            style={isDisabled ? { opacity: 0.5, cursor: "not-allowed" } : undefined}
+                                        >
+                                            {option.label}
+                                        </span>
+                                    </li>
+                                );
+                            })}
                         </ul>
                     </div>
                 </NodeToolbar>
