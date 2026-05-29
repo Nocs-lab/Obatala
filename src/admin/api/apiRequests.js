@@ -46,6 +46,51 @@ export const fetchMapperProcessModel = async (id) => {
     });
 };
 
+export const fetchProcessExportRuntime = (processId) => {
+    return apiFetch({
+        path: `/obatala/v1/exporter/process/${processId}/runtime-config`,
+        method: 'GET',
+    });
+};
+
+export const fetchProcessSpreadsheetTemplate = (processId) => {
+    return apiFetch({
+        path: `/obatala/v1/exporter/process/${processId}/spreadsheet-template`,
+        method: 'GET',
+    });
+};
+
+export const saveProcessManualItems = (processId, rows) => {
+    return apiFetch({
+        path: `/obatala/v1/exporter/process/${processId}/manual-items`,
+        method: 'POST',
+        data: { rows },
+    });
+};
+
+export const executeProcessExport = (processId, force = false) => {
+    return apiFetch({
+        path: `/obatala/v1/exporter/process/${processId}/execute`,
+        method: 'POST',
+        data: { force },
+    });
+};
+
+export const fetchProcessExportReview = (processId, previewLimit = 20) => {
+    return apiFetch({
+        path: `/obatala/v1/exporter/process/${processId}/review?preview_limit=${previewLimit}`,
+        method: 'GET',
+    });
+};
+
+export const decideProcessExport = (processId, decision, force = false) => {
+    return apiFetch({
+        path: `/obatala/v1/exporter/process/${processId}/decision`,
+        method: 'POST',
+        data: { decision, force },
+    });
+};
+
 
 // Função para desserializar
 const maybeUnserialize = (data) => {

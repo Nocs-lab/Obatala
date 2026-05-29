@@ -7,6 +7,7 @@ defined('ABSPATH') || exit;
 use WP_REST_Response; // Certifique-se de importar a classe WP_REST_Response
 use WP_Error;
 use Obatala\Entities\Sector;
+use Obatala\Services\TainacanExportService;
 
 class ProcessApi extends ObatalaAPI {
 
@@ -774,6 +775,8 @@ class ProcessApi extends ObatalaAPI {
     public function update_node($request) {
         $post_id = (int) $request['id'];
         $node_id = $request['node_id'] ?? null;
+        $export_result = null;
+        $response_status = 'Finished';
 
         $flowData = get_post_meta($post_id, 'flowData', true);
         $flowData = maybe_unserialize($flowData);
@@ -907,7 +910,46 @@ class ProcessApi extends ObatalaAPI {
             if ($next_node_id === 'End') {
                 $progress = $this->calculate_progress_percentage($post_id, $nodes, $edges);
                 if ($progress >= 100) {
-                    update_post_meta($post_id, 'status', 'Finished');
+                    $process_status = 'Finished';
+
+                    try {
+                        $export_service = new TainacanExportService();
+                        $runtime = $export_service->get_runtime_config($post_id);
+                        $has_enabled_mapper = ($runtime['mapper_status'] ?? 'enabled') === 'enabled'
+                            && !empty($runtime['enabled']);
+
+                        if ($has_enabled_mapper) {
+                            $export_service->mark_export_pending_confirmation($post_id);
+                            $process_status = TainacanExportService::PROCESS_STATUS_AWAITING_EXPORT_CONFIRMATION;
+                            $export_result = [
+                                'status' => 'pending',
+                                'message' => 'Processo concluído. Aguardando confirmação para exportação ao Tainacan.',
+                                'process_id' => $post_id,
+                                'collection_id' => (int) ($runtime['collection_id'] ?? 0),
+                                'exported_items' => [],
+                                'failed_items' => [],
+                                'warnings' => [],
+                                'created_at' => current_time('mysql'),
+                            ];
+                        } else {
+                            $export_result = null;
+                        }
+                    } catch (\Throwable $exception) {
+                        $export_result = [
+                            'status' => 'error',
+                            'message' => 'Falha ao preparar confirmação de exportação para o Tainacan.',
+                            'process_id' => $post_id,
+                            'collection_id' => 0,
+                            'exported_items' => [],
+                            'failed_items' => [],
+                            'warnings' => [],
+                            'error' => $exception->getMessage(),
+                            'created_at' => current_time('mysql'),
+                        ];
+                    }
+
+                    update_post_meta($post_id, 'status', $process_status);
+                    $response_status = $process_status;
                 }
             }
             // Caso contrário, atualiza o status do próximo nó
@@ -931,7 +973,8 @@ class ProcessApi extends ObatalaAPI {
             'message' => 'Node updated successfully.',
             'node_id' => $node_id,
             'next_node_id' => $next_node_id ?? null,
-            'status' => 'Finished'
+            'status' => $response_status,
+            'export_result' => $export_result,
         ], 200);
     }
 

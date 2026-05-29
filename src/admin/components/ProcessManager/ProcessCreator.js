@@ -70,6 +70,7 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
                     process_type: selectedProcessModel.id,
                     access_level: accessLevel,
                     flowData: metaFields.flowData,
+                    _obatala_tainacan_mapping_snapshot: metaFields.tainacan_export_mapping || {},
                     status: 'Stopped'
                 };
 

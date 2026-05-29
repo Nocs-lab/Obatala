@@ -1548,6 +1548,29 @@ button .components-spinner {
   font-size: .85rem;
 }
 
+.obatala-items-matrix .meta-field {
+  margin-bottom: 0;
+  min-width: 180px;
+}
+
+.obatala-items-matrix .meta-field .components-base-control,
+.obatala-items-matrix .meta-field .components-base-control__field {
+  margin-bottom: 0 !important;
+}
+
+.obatala-items-matrix .meta-field .components-base-control__field > label,
+.obatala-items-matrix .meta-field .components-input-control__label,
+.obatala-items-matrix .meta-field > label,
+.obatala-items-matrix .meta-field > p,
+.obatala-items-matrix .meta-field .components-base-control__help {
+  display: none;
+}
+
+.obatala-items-matrix .meta-field.required::after {
+  content: none;
+  display: none;
+}
+
 /* tmp */
 .brand + h2 {
   margin-left: var(--gap-external);

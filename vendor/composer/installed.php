@@ -3,7 +3,7 @@
         'name' => 'nocs/obatala',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '18b7c36be6c3b575ce2494d0facec5a618805e01',
+        'reference' => '0f215e6c87ae8901eb87c3ad3c31da27a963c747',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -31,7 +31,7 @@
         'nocs/obatala' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '18b7c36be6c3b575ce2494d0facec5a618805e01',
+            'reference' => '0f215e6c87ae8901eb87c3ad3c31da27a963c747',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
