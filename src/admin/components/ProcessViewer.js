@@ -1469,6 +1469,13 @@ const ProcessViewer = () => {
     return (
         <>
             <BrandHeader />
+            <ProcessHeader
+                process={process}
+                filteredProcessType={filteredProcessType}
+                authorsById={authorsById}
+                isComplete={progress && progress === 100} // Adicionado para controle do badge
+                progress={progress}
+            />
             <main>
                 {isLoading && (
                     <div className="obatala-inline-loading">
@@ -1489,13 +1496,6 @@ const ProcessViewer = () => {
                         />
                 ) : (
                     <>
-                        <ProcessHeader
-                            process={process}
-                            filteredProcessType={filteredProcessType}
-                            authorsById={authorsById}
-                            isComplete={processIsComplete}
-                            progress={progress}
-                        />
                         {notice && (
                             <Notice
                                 status={notice.status}
@@ -1528,15 +1528,12 @@ const ProcessViewer = () => {
                                     return (
                                         <div key={index} className={`accordion-item ${isDisabled ? 'disabled' : ''}`}>
                                             <button
-                                                className="accordion-header"
+                                                className={`accordion-header ${isCompleted ? 'success' : isDisabled ? 'danger' : 'warning'}`}
                                                 onClick={() => !isDisabled && toggleAccordion(index)}
                                                 aria-expanded={activeIndex === index}
                                                 aria-controls={`accordion-content-${index}`}
                                                 disabled={isDisabled}
                                             >
-                                                <span className={`status ${isCompleted ? 'success' : isDisabled ? 'danger' : 'warning'}`}>
-                                                    {isCompleted ? __('Completed', 'obatala') : __('Pending', 'obatala')}
-                                                </span>
                                                 <h2 className="accordion-title me-auto">{step.label}</h2>
                                                 <div className="badge-container">
                                                     <span

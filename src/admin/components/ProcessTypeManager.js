@@ -138,20 +138,21 @@ const ProcessTypeManager = () => {
     return (
         <>
             <BrandHeader />
-            <main>
-                <div className="title-container">
-                    <h2>{__('Models', 'obatala')}</h2>
-                    <span className="badge">{filteredModels.length}</span>
-                    <div className="group-button">
-                        <Button
-                            variant="primary"
-                            icon={<Icon icon={plus} />}
-                            onClick={handleAdd}
-                        >
-                            {__('Add process model', 'obatala')}
-                        </Button>
-                    </div>
+            <div className="title-container">
+                <h2>{__('Models', 'obatala')}</h2>
+                <span className="badge default">{filteredModels.length}</span>
+                <div className="group-button">
+                    <Button
+                        variant="secondary"
+                        size="small"
+                        icon={<Icon icon={plus} />}
+                        onClick={handleAdd}
+                    >
+                        {__('Add process model', 'obatala')}
+                    </Button>
                 </div>
+            </div>
+            <main>
                 {notice && (
                     <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
                         {notice.message}

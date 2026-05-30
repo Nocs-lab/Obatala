@@ -113,23 +113,23 @@ const SectorDetailsPage = () => {
     return (
         <>
             <BrandHeader />
+            <div className="title-container">
+                <h2>
+                    <small>{__('Group', 'obatala')}</small>
+                    {sector.nome}
+                </h2>
+                <div className="badge-container">
+                    <span className={`badge ${sector.status === 'Active' ? 'success' : 'danger'}`}>
+                        {sector.status}
+                    </span>
+                </div>
+            </div>
             <main>
                 {notice && (
                     <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
                         {notice.message}
                     </Notice>
                 )}
-                <div className="title-container">
-                    <h2>
-                        <small>{__('Group', 'obatala')}</small>
-                        {sector.nome}
-                    </h2>
-                </div>
-                <div className="badge-container">
-                    <span className={`badge ${sector.status === 'Active' ? 'success' : 'danger'}`}>
-                        {sector.status}
-                    </span>
-                </div>
                 <Panel>
                     <PanelHeader>{__('Description', 'obatala')}</PanelHeader>
                     <PanelRow>

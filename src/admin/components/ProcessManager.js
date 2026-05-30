@@ -218,21 +218,21 @@ const ProcessManager = ({ onSelectProcess }) => {
     return (
         <>
             <BrandHeader />
-            <main>
-                <div className="title-container">
-                    <h2>{__('Processes', 'obatala')}</h2>
-                    <span className="badge">{filteredProcess.length}</span>
-                    <div className="group-button">
-                        <Button
-                            variant="primary"
-                            icon={<Icon icon={plus} />}
-                            onClick={handleAddProcess}
-                        >
-                            {__('Add new', 'obatala')}
-                        </Button>
-                    </div>
+            <div className="title-container">
+                <h2>{__('Processes', 'obatala')}</h2>
+                <span className="badge default">{filteredProcess.length}</span>
+                <div className="group-button">
+                    <Button
+                        variant="secondary"
+                        size="small"
+                        icon={<Icon icon={plus} />}
+                        onClick={handleAddProcess}
+                    >
+                        {__('Add new', 'obatala')}
+                    </Button>
                 </div>
-
+            </div>
+            <main>
                 {notice && (
                     <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
                         {notice.message}
@@ -271,21 +271,19 @@ const ProcessManager = ({ onSelectProcess }) => {
                         ]}
                     >
                         {({ tab }) => (
-                            <div>
-                                <ProcessList
-                                    processes={filteredProcess}
-                                    loading={isLoadingProcesses || (activeTab === 'my' && isLoadingUserProcesses)}
-                                    onEdit={handleEditProcess}
-                                    onViewProcess={handleSelectProcess}
-                                    onDelete={handleConfirmDelete}
-                                    processTypeMappings={processTypeMappings}
-                                    processTypes={processTypes}
-                                    accessLevel={accessLevel}
-                                    setAccessLevel={setAccessLevel}
-                                    modelFilter={modelFilter}
-                                    setModelFilter={setModelFilter}
-                                />
-                            </div>
+                            <ProcessList
+                                processes={filteredProcess}
+                                loading={isLoadingProcesses || (activeTab === 'my' && isLoadingUserProcesses)}
+                                onEdit={handleEditProcess}
+                                onViewProcess={handleSelectProcess}
+                                onDelete={handleConfirmDelete}
+                                processTypeMappings={processTypeMappings}
+                                processTypes={processTypes}
+                                accessLevel={accessLevel}
+                                setAccessLevel={setAccessLevel}
+                                modelFilter={modelFilter}
+                                setModelFilter={setModelFilter}
+                            />
                         )}
                     </TabPanel>
                 </div>

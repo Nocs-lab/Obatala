@@ -71,21 +71,21 @@ const ProcessTypeList = ({ processTypes, onExport, onEdit, onDelete, onManager, 
                     </Button>
                     <Tooltip text={__('Edit export data', 'obatala')}>
                         <Button
-                            variant="secondary"
+                            variant="tertiary"
                             icon={external}
                             onClick={() => onExport(row.original)}
                         />
                     </Tooltip>
                     <Tooltip text={__('Edit general data', 'obatala')}>
                         <Button
-                            variant="secondary"
+                            variant="tertiary"
                             icon={edit}
                             onClick={() => onEdit(row.original)}
                         />
                     </Tooltip>
                     <Tooltip text={__('Delete model', 'obatala')}>
                         <Button
-                            variant="secondary"
+                            variant="tertiary"
                             icon={trash}
                             onClick={() => onDelete(row.original)}
                         />

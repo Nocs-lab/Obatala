@@ -8,6 +8,11 @@ import apiFetch from '@wordpress/api-fetch';
 import { decodeEntities } from '@wordpress/html-entities';
 import { fetchProcessReportPdf } from '../../api/apiRequests';
 
+const isPdfReportAvailable =
+    typeof window !== 'undefined' &&
+    window.obatalaApp &&
+    window.obatalaApp.pdf_report_available === true;
+
 const ProcessList = ({ processes, onEdit, onViewProcess, onDelete, processTypeMappings, processTypes, accessLevel, setAccessLevel, modelFilter, setModelFilter }) => {
     const [pdfLoadingId, setPdfLoadingId] = useState(null);
     const [pdfError, setPdfError] = useState(null);
@@ -129,14 +134,14 @@ const ProcessList = ({ processes, onEdit, onViewProcess, onDelete, processTypeMa
                         </Button>
                         <Tooltip text={__("Edit", "obatala")}>
                             <Button
-                                variant="secondary"
+                                variant="tertiary"
                                 icon={edit}
                                 onClick={() => onEdit(row.original)}
                             />
                         </Tooltip>
                         <Tooltip text={__("History", "obatala")}>
                             <Button
-                                variant="secondary"
+                                variant="tertiary"
                                 icon={backup}
                                 onClick={() => {
                                     const url = `?page=process-viewer&process_id=${row.original.id}&view=history`;
@@ -144,18 +149,20 @@ const ProcessList = ({ processes, onEdit, onViewProcess, onDelete, processTypeMa
                                 }}
                             />
                         </Tooltip>
-                        <Tooltip text={__("Generate PDF report", "obatala")}>
-                            <Button
-                                variant="secondary"
-                                icon={download}
-                                onClick={() => handlePdfDownload(row.original.id)}
-                                disabled={pdfLoadingId === row.original.id}
-                                isBusy={pdfLoadingId === row.original.id}
-                            />
-                        </Tooltip>
+                        {isPdfReportAvailable && (
+                            <Tooltip text={__("Generate PDF report", "obatala")}>
+                                <Button
+                                    variant="tertiary"
+                                    icon={download}
+                                    onClick={() => handlePdfDownload(row.original.id)}
+                                    disabled={pdfLoadingId === row.original.id}
+                                    isBusy={pdfLoadingId === row.original.id}
+                                />
+                            </Tooltip>
+                        )}
                         <Tooltip text={__("Delete process", "obatala")}>
                             <Button
-                                variant="secondary"
+                                variant="tertiary"
                                 icon={trash}
                                 onClick={() => onDelete(row.original)}
                             />
@@ -164,7 +171,7 @@ const ProcessList = ({ processes, onEdit, onViewProcess, onDelete, processTypeMa
                 ),
             },
         ],
-        [processTypeMappings, processTypes, pdfLoadingId, handlePdfDownload, onDelete, onEdit, onViewProcess]
+        [processTypeMappings, processTypes, pdfLoadingId, handlePdfDownload, onDelete, onEdit, onViewProcess, isPdfReportAvailable]
     );
 
     const data = useMemo(() => processes, [processes]);

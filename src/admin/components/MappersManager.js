@@ -1724,17 +1724,17 @@ const MappersManager = () => {
     return (
         <>
             <BrandHeader />
-            <main>
-                <div className="title-container">
-                    <h2>
-                        Mappers Tainacan
-                    </h2>
-                </div>
+            <div className="title-container">
+                <h2>
+                    Mappers Tainacan
+                </h2>
                 <div className="badge-container">
                     <span className="badge default">
                         <Icon icon="welcome-widgets-menus" /> Process Model: {selectedProcessModel?.title?.rendered}
                     </span>
                 </div>
+            </div>
+            <main>
                 <Panel>
                     <PanelRow>
                         <form className="inline-edition flex-basis-100">
@@ -1948,7 +1948,7 @@ const MappersManager = () => {
                             </div>
 
                             <div className="group-button">
-                                <Button variant="secondary" onClick={cancelMappingData}>
+                                <Button variant="tertiary" onClick={cancelMappingData}>
                                     {__('Cancel', 'obatala')}
                                 </Button>
                                 <Button variant="primary" onClick={getMappingData}>

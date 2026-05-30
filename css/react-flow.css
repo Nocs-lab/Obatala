@@ -3,9 +3,8 @@
 
 /* Main container */
 .flow-container {
-  background-color: var(--primary-50);
+  background-color: var(--primary-100);
   border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
   height: 70vh;
 }
 
@@ -22,7 +21,7 @@
   --xy-edge-stroke-width-default: 2;
   --xy-edge-stroke-selected-default: #555;
 
-  --xy-connectionline-stroke-default: var(--primary-300);
+  --xy-connectionline-stroke-default: var(--primary-500);
   --xy-connectionline-stroke-width-default: 2;
 
   --xy-attribution-background-color-default: rgba(255, 255, 255, 0.5);
@@ -133,7 +132,7 @@
 }
 
 .react-flow__node .components-base-control__field>label {
-  color: var(--gray-600);
+  color: var(--gray-700);
   font-weight: 400;
   font-size: 1rem;
   line-height: 1.4;
@@ -345,7 +344,7 @@ svg.react-flow__connectionline {
   z-index: -1;
 }
 .react-flow__handle.connectable:hover {
-  background-color: var(--primary-600);
+  background-color: var(--primary-700);
 }
 .react-flow__handle.connectable::before {
   content: "\f344";
@@ -786,7 +785,7 @@ svg.react-flow__connectionline {
   background-size: 12.73px 12.73px;
   cursor: grab;
   text-align: center;
-  color: var(--primary-600);
+  color: var(--primary-700);
   font-size: 1.5rem;
   user-select: none;
   display: flex;
@@ -868,10 +867,10 @@ svg.react-flow__connectionline {
 
 /* Close btn */
 .close-btn {
-  background-color: var(--primary-50) !important;
-  border: 2px solid var(--gray-600) !important;
+  background-color: var(--primary-100) !important;
+  border: 2px solid var(--gray-700) !important;
   border-radius: 25px !important;
-  color: var(--primary-600) !important;
+  color: var(--primary-700) !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -910,7 +909,7 @@ svg.react-flow__connectionline {
 }
 
 .flow-fields ul li {
-  border: 1px solid var(--gray-200);
+  border: 1px solid var(--gray-300);
   border-radius: 3px;
   display: flex;
   align-items: center;
@@ -933,7 +932,7 @@ svg.react-flow__connectionline {
 
 .flow-fields .group-button .components-button.is-small.has-icon:not(.has-text) {
   box-shadow: 0 0 0;
-  color: var(--primary-600);
+  color: var(--primary-700);
   height: 24px;
   min-width: 18px;
   width: 24px;
@@ -945,7 +944,7 @@ svg.react-flow__connectionline {
 
 /* Add fields */
 .wp-drawer.node-meta-container {
-  border-left: 3px solid var(--primary-500);
+  border-left: 3px solid var(--primary-700);
   border-top-right-radius: var(--border-radius);
   border-bottom-right-radius: var(--border-radius);
   position: relative;
@@ -961,7 +960,7 @@ svg.react-flow__connectionline {
 }
 
 .node-meta-list {
-  background: var(--primary-100);
+  background: var(--primary-300);
   border-radius: var(--border-radius);
   cursor: pointer;
   display: flex;
@@ -972,7 +971,7 @@ svg.react-flow__connectionline {
 }
 
 .node-meta-list:hover {
-  background: var(--primary-200);
+  background: var(--primary-300);
 }
 
 .node-meta-list svg {
@@ -1051,7 +1050,7 @@ svg.react-flow__connectionline {
 }
 
 .wp-drawer form>fieldset {
-  border: 2px solid var(--primary-100);
+  border: 2px solid var(--primary-300);
   border-radius: var(--border-radius);
   flex-basis: 100%;
   padding: 1rem;
