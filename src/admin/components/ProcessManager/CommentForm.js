@@ -44,7 +44,7 @@ const CommentForm = ({ processId, setHasComments }) => {
             .catch((error) => {
                 console.error('Error fetching comments:', error);
                 if (error?.status === 'Usuário não possui permissão.') {
-                    setNotice({ status: 'warning', message: 'You do not have permission to view the comments for this process.' });
+                    setNotice({ status: 'warning', message: __('You do not have permission to view the comments for this process.', 'obatala') });
                 } else {
 
                     setNotice({ status: 'error', message: __('Error fetching comments.', 'obatala') });

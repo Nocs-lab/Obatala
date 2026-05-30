@@ -11,6 +11,7 @@ O **Obatalá** é um plugin WordPress (addon do [Tainacan](https://tainacan.org/
 | Colocar o sistema no ar (Composer, npm, Tainacan) | [Instalação](instalacao.md) |
 | Estrutura de pastas e PSR-4 | [Organização](organizacao.md) |
 | Campo **Documento da etapa** (editor, PDF, assinatura) | [Documento da etapa](metadados/documento-etapa.md) |
+| Listagem, exclusão lógica e PDF de processos | [Gestão de processos](processos/gestao-processos.md) |
 | Traduções PHP e React | [Internacionalização](internacionalizacao.md) |
 | Menus, REST API e React no admin | [Guia do desenvolvedor](tutoriais/guia-dev.md) |
 | Metadados dinâmicos (`flowData`, `stageData`) | [Metadados](metadados/metadados.md) |
@@ -227,6 +228,9 @@ O plugin suporta tradução em PHP (via `.po`/`.mo`) e em React (via JSON). O do
 
 ### 📝 Documento da etapa
 O Obatalá permite configurar um componente de documento textual nas etapas do processo, com editor formatável, geração de PDF e reanexo do PDF assinado. Consulte [Documento da etapa](metadados/documento-etapa.md) para detalhes técnicos e funcionais.
+
+### 🗑️ Gestão e exclusão de processos
+A listagem de processos suporta exclusão lógica (auditoria de quem excluiu e quando), relatório PDF e ações de visualização/edição. Consulte [Gestão de processos](processos/gestao-processos.md).
 
 ### ✅ Considerações Finais
 - As classes são organizadas conforme o padrão PSR-4.

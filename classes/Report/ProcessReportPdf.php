@@ -288,6 +288,9 @@ class ProcessReportPdf {
             $filled = $step_meta && !empty($step_meta['fields']) ? $step_meta['fields'] : [];
             $field_map = [];
             foreach ($filled as $f) {
+                if (empty($f['fieldId'])) {
+                    continue;
+                }
                 $field_map[$f['fieldId']] = $f['value'] ?? '';
             }
             if (empty($fields_def) && empty($field_map)) {
@@ -297,14 +300,9 @@ class ProcessReportPdf {
                     $fid = $def['id'];
                     $label = isset($def['config']['label']) ? $def['config']['label'] : (isset($def['title']) ? $def['title'] : $fid);
                     $ftype = isset($def['type']) ? $def['type'] : '';
-                    $val = isset($field_map[$fid]) ? $field_map[$fid] : null;
+                    $val = $this->resolveFieldValue($field_map, $node_id, $fid);
                     $display = $this->formatFieldValue($val, $ftype, $def);
                     $html .= '<div class="field-row"><span class="field-label">' . esc_html($label) . '</span>';
-                    $html .= '<div class="field-value">' . $display . '</div></div>';
-                }
-                foreach (array_diff_key($field_map, array_column($fields_def, 'id')) as $fid => $val) {
-                    $display = $this->formatFieldValue($val, '', []);
-                    $html .= '<div class="field-row"><span class="field-label">' . esc_html($fid) . '</span>';
                     $html .= '<div class="field-value">' . $display . '</div></div>';
                 }
             }
@@ -321,6 +319,27 @@ class ProcessReportPdf {
         $html .= '</div>';
         $html .= '</body></html>';
         return $html;
+    }
+
+    /**
+     * Resolve submitted field value by id (supports legacy keys like "Etapa 1_text-1").
+     *
+     * @param array  $field_map
+     * @param string $node_id
+     * @param string $field_id
+     * @return mixed|null
+     */
+    private function resolveFieldValue(array $field_map, $node_id, $field_id) {
+        if (isset($field_map[$field_id])) {
+            return $field_map[$field_id];
+        }
+
+        $composite_id = $node_id . '_' . $field_id;
+        if (isset($field_map[$composite_id])) {
+            return $field_map[$composite_id];
+        }
+
+        return null;
     }
 
     /**

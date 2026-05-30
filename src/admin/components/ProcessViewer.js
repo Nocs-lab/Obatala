@@ -72,6 +72,8 @@ const ProcessViewer = () => {
     const [exportReview, setExportReview] = useState(null);
     const [isExportDecisionLoading, setIsExportDecisionLoading] = useState(false);
     const [isTemplateDownloadLoading, setIsTemplateDownloadLoading] = useState(false);
+    const [isSavingDraft, setIsSavingDraft] = useState(false);
+    const [isSubmittingStep, setIsSubmittingStep] = useState(false);
 
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
     const allAuthors = useSelect(select => select(coreStore).getUsers({ who: 'authors' }), []);
@@ -86,6 +88,38 @@ const ProcessViewer = () => {
         return urlParams.get("process_id");
     };
     const processId = getProcessIdFromUrl();
+
+    const normalizeProcessTypeId = (value) => {
+        if (Array.isArray(value)) {
+            return value[0] || null;
+        }
+
+        if (value && typeof value === 'object') {
+            return value.id || Object.values(value)[0] || null;
+        }
+
+        if (typeof value === 'string') {
+            const serializedMatch = value.match(/s:\d+:"(\d+)"/);
+            if (serializedMatch?.[1]) {
+                return serializedMatch[1];
+            }
+
+            const serializedIntegerMatches = [...value.matchAll(/i:(\d+);/g)];
+            if (serializedIntegerMatches.length > 0) {
+                return serializedIntegerMatches[serializedIntegerMatches.length - 1][1];
+            }
+
+            const trimmedValue = value.trim();
+            if (/^\d+$/.test(trimmedValue)) {
+                return trimmedValue;
+            }
+
+            const numericMatch = value.match(/(?:^|[^\d])(\d+)(?:[^\d]|$)/);
+            return numericMatch?.[1] || null;
+        }
+
+        return value || null;
+    };
 
     const buildExportNoticeFromResult = (exportResult) => {
         const status = exportResult?.status || 'error';
@@ -216,7 +250,7 @@ const ProcessViewer = () => {
                     setProcess(data);
                     setIsPublic(data.meta?.access_level?.[0] === 'Not restricted' || data.meta?.access_level?.[0] === 'not restricted')
 
-                    const processTypeId = data.meta.process_type;
+                    const processTypeId = normalizeProcessTypeId(data.meta?.process_type);
                     if (processTypeId) {
                         fetchProcessTypeById(processTypeId)
                             .then((processType) => {
@@ -224,7 +258,10 @@ const ProcessViewer = () => {
                             })
                             .catch((error) => {
                                 console.error("Error fetching process type:", error);
-                                setError(__("Error fetching process type.", "obatala"));
+                                setNotice({
+                                    status: 'warning',
+                                    message: __("Process type details could not be loaded.", "obatala"),
+                                });
                             });
                     } else {
                     }
@@ -236,12 +273,17 @@ const ProcessViewer = () => {
                 .finally(() => setIsProcessLoading(false));
             fetchNodePermission(processId, currentUser.id)
                 .then((result) => {
-                    setHasPermission(result.status);
-                    setSectorUser(result.data_sector)
+                    setHasPermission(Boolean(result.status));
+                    setSectorUser(Array.isArray(result.data_sector) ? result.data_sector : [])
                 })
                 .catch((error) => {
                     console.error("Error fetching process:", error);
-                    setError(__("Error fetching process meta.", "obatala"));
+                    setHasPermission(false);
+                    setSectorUser([]);
+                    setNotice({
+                        status: 'warning',
+                        message: __("Process permissions could not be fully loaded.", "obatala"),
+                    });
                 })
                 .finally(() => {
                     setIsLoading(false);
@@ -717,6 +759,14 @@ const ProcessViewer = () => {
         return currentStepVisibleFields.filter((field) => !isSpreadsheetMappedField(field));
     }, [currentStepVisibleFields, isSpreadsheetMappedField]);
 
+    const currentStepHasStageDocument = useMemo(() => {
+        if (!Array.isArray(currentStepVisibleFields)) {
+            return false;
+        }
+
+        return currentStepVisibleFields.some((field) => field?.type === 'stage_document');
+    }, [currentStepVisibleFields]);
+
     const currentStepMatrixRowCount = useMemo(() => {
         if (!currentStepRepeatedFields.length) {
             return 0;
@@ -742,16 +792,6 @@ const ProcessViewer = () => {
 
         return visibleFields.every((field) => {
             const value = formValues?.[stepId]?.[field.id] ?? uploadedFiles?.[stepId]?.[field.id]?.[0]?.name;
-
-            if (field.type === 'stage_document') {
-                const documentValue = normalizeDocumentValue(value, field);
-                if (field.config?.requireSignedUpload && !documentValue.signedFile?.name) {
-                    const hasContent = stripHtml(documentValue.content) !== '';
-                    if (hasContent || field.config?.required) {
-                        return false;
-                    }
-                }
-            }
 
             if (!field?.config?.required) {
                 return true;
@@ -792,8 +832,9 @@ const ProcessViewer = () => {
             const stageData = metaData.stageData || {};
 
             const updatedFormValues = steps.reduce((acc, step) => {
-                if (stageData[step.id]) {
-                    acc[step.id] = stageData[step.id].fields.reduce((acc, field) => {
+                const stageFields = stageData[step.id]?.fields;
+                if (Array.isArray(stageFields)) {
+                    acc[step.id] = stageFields.reduce((acc, field) => {
                         acc[field.fieldId] = field.value || '';
                         return acc;
                     }, {});
@@ -804,7 +845,7 @@ const ProcessViewer = () => {
             setFormValues(prev => ({ ...prev, ...updatedFormValues }));
 
             const updateCurrentStageData = steps.reduce((acc, step) => {
-                if (stageData[step.id]) {
+                if (stageData[step.id]?.updateAt) {
                     acc[step.id] = [stageData[step.id].updateAt, stageData[step.id].user];
                 }
                 return acc;
@@ -875,9 +916,67 @@ const ProcessViewer = () => {
         });
     };
 
+    const handleSaveDraft = async () => {
+        const step = orderedSteps[currentStep];
+        if (!step?.id) return;
+
+        const stepId = step.id;
+        const visibleFields = getSubmittableFieldsForStep(step);
+        const fields = visibleFields.map((field) => ({
+            fieldId: field.id,
+            value: getFieldValueForSubmit(stepId, field),
+        }));
+
+        setIsSavingDraft(true);
+
+        try {
+            const existingMetaData = await apiFetch({
+                path: `/obatala/v1/process_obatala/${process.id}/meta`,
+                method: 'GET',
+            });
+
+            const existingStageData = existingMetaData.stageData && typeof existingMetaData.stageData === 'object'
+                ? existingMetaData.stageData
+                : {};
+
+            const updatedStageData = {
+                ...existingStageData,
+                [stepId]: {
+                    ...existingStageData?.[stepId],
+                    fields,
+                    draftUpdateAt: new Date().toISOString(),
+                    draftUser: currentUser.name,
+                },
+            };
+
+            await apiFetch({
+                path: `/obatala/v1/process_obatala/${process.id}/meta`,
+                method: 'POST',
+                data: {
+                    stageData: updatedStageData,
+                    submittedStages: existingMetaData.submittedStages || {},
+                    process_type: normalizeProcessTypeId(process.meta?.process_type),
+                },
+            });
+
+            setNotice({
+                status: 'success',
+                message: __('Draft saved successfully.', 'obatala'),
+            });
+        } catch (error) {
+            console.error('Erro ao salvar rascunho:', error);
+            setNotice({
+                status: 'error',
+                message: __('Could not save the draft.', 'obatala'),
+            });
+        } finally {
+            setIsSavingDraft(false);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setIsLoading(true);
+        setIsSubmittingStep(true);
 
         const step = orderedSteps[currentStep];
         const stepId = step.id;
@@ -934,7 +1033,7 @@ const ProcessViewer = () => {
             }
 
             if (uploadFailed) {
-                setIsLoading(false);
+                setIsSubmittingStep(false);
                 return;
             }
         }
@@ -1013,7 +1112,7 @@ const ProcessViewer = () => {
             console.error('Erro ao salvar metadados:', error);
 
         } finally {
-            setIsLoading(false);
+            setIsSubmittingStep(false);
         }
     };
 
@@ -1120,6 +1219,16 @@ const ProcessViewer = () => {
     };
 
     const handleSignedDocumentUpload = async (stepId, fieldId, file) => {
+        const currentValue = formValues[stepId]?.[fieldId];
+        const documentValue = Array.isArray(currentValue) ? currentValue[0] : currentValue;
+        if (documentValue?.signedFile?.name) {
+            setNotice({
+                status: 'error',
+                message: __('A signed PDF is already attached and cannot be replaced.', 'obatala'),
+            });
+            return;
+        }
+
         try {
             const formData = new FormData();
             formData.append('file', file);
@@ -1266,13 +1375,32 @@ const ProcessViewer = () => {
         return sectorUser.includes(stepSector);
     };
 
-    if (isProcessLoading) return <Spinner />;
+    if (isProcessLoading) {
+        return (
+            <>
+                <BrandHeader />
+                <main>
+                    <div className="obatala-inline-loading">
+                        <Spinner />
+                        <span>{__("Loading process...", "obatala")}</span>
+                    </div>
+                </main>
+                <BrandFooter />
+            </>
+        );
+    }
 
     if (!process) {
         return (
-            <Notice status="warning" isDismissible={false}>
-                {__("No process found.", "obatala")}
-            </Notice>
+            <>
+                <BrandHeader />
+                <main>
+                    <Notice status="warning" isDismissible={false}>
+                        {__("No process found.", "obatala")}
+                    </Notice>
+                </main>
+                <BrandFooter />
+            </>
         );
     }
 
@@ -1342,9 +1470,13 @@ const ProcessViewer = () => {
         <>
             <BrandHeader />
             <main>
-                {isLoading ? (
-                    <Spinner />
-                ) : viewMode === "history" ? (
+                {isLoading && (
+                    <div className="obatala-inline-loading">
+                        <Spinner />
+                        <span>{__("Loading process data...", "obatala")}</span>
+                    </div>
+                )}
+                {viewMode === "history" ? (
                         <HistoryViewer
                             process={process}
                             filteredProcessType={filteredProcessType}
@@ -1642,12 +1774,23 @@ const ProcessViewer = () => {
                                                                         </div>
                                                                         {!submittedSteps[currentStep] && (
                                                                             <div className="action-bar">
+                                                                                {currentStepHasStageDocument && (
+                                                                                    <Button
+                                                                                        variant="secondary"
+                                                                                        type="button"
+                                                                                        onClick={handleSaveDraft}
+                                                                                        disabled={isSavingDraft || submittedSteps[currentStep] || !isUserAllowed}
+                                                                                    >
+                                                                                        {isSavingDraft ? __('Saving...', 'obatala') : __('Save draft', 'obatala')}
+                                                                                    </Button>
+                                                                                )}
                                                                                 <Button
                                                                                     variant="primary"
                                                                                     type="submit"
-                                                                                    disabled={!canSubmitCurrentStep || submittedSteps[currentStep] || !isUserAllowed}
+                                                                                    disabled={!canSubmitCurrentStep || submittedSteps[currentStep] || !isUserAllowed || isSubmittingStep}
+                                                                                    isBusy={isSubmittingStep}
                                                                                 >
-                                                                                    {__("Submit", "obatala")}
+                                                                                    {isSubmittingStep ? __("Submitting...", "obatala") : __("Submit", "obatala")}
                                                                                 </Button>
                                                                             </div>
                                                                         )}

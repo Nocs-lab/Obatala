@@ -10,6 +10,16 @@ import {
 import { closeSmall, upload } from '@wordpress/icons';
 import TainacanSearchControls from '../Tainacan/TainacanSearch';
 
+const toEditorHtml = ( content ) => {
+	if ( ! content || typeof content !== 'string' ) {
+		return '';
+	}
+	if ( ! content.includes( '<' ) ) {
+		return content.replace( /\n/g, '<br>' );
+	}
+	return content;
+};
+
 const RichTextDocumentEditor = ( {
 	label,
 	value,
@@ -19,6 +29,8 @@ const RichTextDocumentEditor = ( {
 	help,
 } ) => {
 	const editorRef = useRef( null );
+	const isFocusedRef = useRef( false );
+
 	const renderToolbarIcon = ( icon ) => {
 		const lineProps = {
 			stroke: 'currentColor',
@@ -168,8 +180,12 @@ const RichTextDocumentEditor = ( {
 	];
 
 	useEffect( () => {
-		if ( editorRef.current && editorRef.current.innerHTML !== value ) {
-			editorRef.current.innerHTML = value || '';
+		if ( ! editorRef.current || isFocusedRef.current ) {
+			return;
+		}
+		const nextHtml = toEditorHtml( value );
+		if ( editorRef.current.innerHTML !== nextHtml ) {
+			editorRef.current.innerHTML = nextHtml;
 		}
 	}, [ value ] );
 
@@ -192,41 +208,19 @@ const RichTextDocumentEditor = ( {
 				<div
 					className="stage-document-toolbar"
 					role="toolbar"
-					style={ {
-						display: 'flex',
-						flexWrap: 'wrap',
-						gap: '4px',
-						padding: '8px',
-						border: '1px solid #8c8f94',
-						borderBottom: 0,
-						borderRadius: '4px 4px 0 0',
-						background: '#f6f7f7',
-					} }
+					aria-label={ label }
 				>
 					{ commands.map( ( item ) => (
 						<Button
 							key={ item.command }
 							variant="secondary"
 							size="small"
+							onMouseDown={ ( event ) => event.preventDefault() }
 							onClick={ () => runCommand( item.command ) }
 							disabled={ disabled }
 							label={ item.label }
 							aria-label={ item.label }
-							style={ {
-								minWidth: '32px',
-								height: '32px',
-								padding: '0 8px',
-								fontWeight:
-									item.command === 'bold' ? 700 : undefined,
-								fontStyle:
-									item.command === 'italic'
-										? 'italic'
-										: undefined,
-								textDecoration:
-									item.command === 'underline'
-										? 'underline'
-										: undefined,
-							} }
+							className="stage-document-toolbar__button"
 						>
 							{ renderToolbarIcon( item.icon ) }
 						</Button>
@@ -234,24 +228,21 @@ const RichTextDocumentEditor = ( {
 				</div>
 				<div
 					ref={ editorRef }
-					className="components-textarea-control__input stage-document-richtext"
+					className="stage-document-richtext"
 					contentEditable={ ! disabled }
 					role="textbox"
 					aria-multiline="true"
 					aria-label={ label }
 					aria-required={ required }
+					onFocus={ () => {
+						isFocusedRef.current = true;
+					} }
+					onBlur={ () => {
+						isFocusedRef.current = false;
+					} }
 					onInput={ () =>
 						onChange( editorRef.current?.innerHTML || '' )
 					}
-					style={ {
-						minHeight: '240px',
-						maxHeight: '480px',
-						overflowY: 'auto',
-						padding: '12px',
-						border: '1px solid #8c8f94',
-						borderRadius: '0 0 4px 4px',
-						background: disabled ? '#f0f0f0' : '#fff',
-					} }
 					suppressContentEditableWarning
 				/>
 				{ help && (

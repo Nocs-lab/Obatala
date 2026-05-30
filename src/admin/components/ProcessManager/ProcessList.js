@@ -1,19 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
 import { Button, Tooltip, Panel, PanelRow, Notice, TextControl } from '@wordpress/components';
-import { backup, edit, info, download } from '@wordpress/icons';
+import { backup, edit, info, download, trash } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
 import ProcessFilter from './ProcessFilters';
 import apiFetch from '@wordpress/api-fetch';
 import { decodeEntities } from '@wordpress/html-entities';
 import { fetchProcessReportPdf } from '../../api/apiRequests';
 
-const isPdfReportAvailable =
-    typeof window !== 'undefined' &&
-    window.obatalaApp &&
-    window.obatalaApp.pdf_report_available === true;
-
-const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, processTypes, accessLevel, setAccessLevel, modelFilter, setModelFilter }) => {
+const ProcessList = ({ processes, onEdit, onViewProcess, onDelete, processTypeMappings, processTypes, accessLevel, setAccessLevel, modelFilter, setModelFilter }) => {
     const [pdfLoadingId, setPdfLoadingId] = useState(null);
     const [pdfError, setPdfError] = useState(null);
 
@@ -149,24 +144,27 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
                                 }}
                             />
                         </Tooltip>
-                        {isPdfReportAvailable && (
-                            <Tooltip text={__("Generate PDF report", "obatala")}>
-                                <Button
-                                    variant="secondary"
-                                    icon={download}
-                                    onClick={() => handlePdfDownload(row.original.id)}
-                                    disabled={pdfLoadingId === row.original.id}
-                                    isBusy={pdfLoadingId === row.original.id}
-                                >
-                                    {__("Generate PDF report", "obatala")}
-                                </Button>
-                            </Tooltip>
-                        )}
+                        <Tooltip text={__("Generate PDF report", "obatala")}>
+                            <Button
+                                variant="secondary"
+                                icon={download}
+                                onClick={() => handlePdfDownload(row.original.id)}
+                                disabled={pdfLoadingId === row.original.id}
+                                isBusy={pdfLoadingId === row.original.id}
+                            />
+                        </Tooltip>
+                        <Tooltip text={__("Delete process", "obatala")}>
+                            <Button
+                                variant="secondary"
+                                icon={trash}
+                                onClick={() => onDelete(row.original)}
+                            />
+                        </Tooltip>
                     </div>
                 ),
             },
         ],
-        [processTypeMappings, processTypes, pdfLoadingId, handlePdfDownload, isPdfReportAvailable]
+        [processTypeMappings, processTypes, pdfLoadingId, handlePdfDownload, onDelete, onEdit, onViewProcess]
     );
 
     const data = useMemo(() => processes, [processes]);

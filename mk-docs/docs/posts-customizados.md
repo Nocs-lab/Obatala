@@ -1,95 +1,77 @@
-# 📌 Utilização dos Custom Post Types no Plugin Obatala
+# 📌 Custom Post Types no Plugin Obatala
 
 ## 🔍 Visão Geral
-O plugin Obatala utiliza três Custom Post Types principais para gestão de processos curatoriais:
 
-| CPT               | Função Principal                          |
-|-------------------|------------------------------------------|
-| `ProcessModel`    | Modelos de etapas do processo            |
-| `ProcessTypeManager` | Tipos/modelos de processos              |
-| `ProcessManager`  | Instâncias reais de processos            |
+O plugin Obatala utiliza **dois Custom Post Types** registrados em `classes/Entities/`:
 
-## 🏗️ Descrição dos CPTs
+| Slug REST / WP | Classe PHP | Função |
+|----------------|------------|--------|
+| `process_type` | `ProcessType` | **Modelo** de processo (fluxo, etapas, campos) |
+| `process_obatala` | `Process` | **Instância** em execução de um processo |
 
-### 1. ProcessModel
-**Função**: Modelo base para etapas de processos
+Setores/grupos **não** são CPT: ficam em metadados e tabelas gerenciadas por `Sector` e `SectorApi`.
 
-**Características**:
-- Armazena metadados para campos personalizados
-- Define a estrutura de cada etapa
-- Contém:
-  ```php
-  'title' => 'Nome da Etapa',
-  'description' => 'Descrição detalhada',
-  'flowData' => 'Dados de conexão entre etapas'
-  ```
-### 2. ProcessTypeManager
-**Função**: Template completo de processos
+## 🏗️ `process_type` (modelo)
 
-Estrutura:
+Define a estrutura reutilizável de um processo:
 
-```php
-[
-    'title' => 'Tipo de Processo',
-    'description' => 'Descrição do fluxo',
-    'steps' => ['array_de_etapas']
-]
-```
+- Título e descrição do modelo
+- `flowData`: nós (etapas), arestas (conexões) e campos dinâmicos por etapa
+- `step_order`, status ativo/inativo
+- Configuração de exportação Tainacan (mappers)
 
-### 3. ProcessManager
-**Função**: Instância executável de processos
+Editado na tela **Modelos** e no **editor de fluxo** (`process-type-editor`).
 
-**Componentes**:
+## 🏗️ `process_obatala` (instância)
 
-- Herda estrutura do ProcessTypeManager
+Representa um processo real em andamento ou concluído:
 
-- Armazena dados reais de execução
+- Herda o `flowData` do modelo associado (`process_type`)
+- `stageData`: valores preenchidos por etapa
+- `current_stage`, `status`, `access_level`
+- Metadados de exclusão lógica: `is_deleted`, `deleted_at`, `deleted_by`, `deleted_by_name`
 
-- Inclui metadados dinâmicos
+Gerenciado na tela **Processos** e no **visualizador** (`process-viewer`). Consulte [Gestão de processos](processos/gestao-processos.md) para exclusão lógica e PDF.
 
-### 🔄 Fluxo de Trabalho
+## 🔄 Fluxo de Trabalho
 
 ```mermaid
 flowchart TD
-    A[Criar ProcessModel] --> B[Definir campos/metadados]
-    B --> C[Criar ProcessTypeManager]
-    C --> D[Associar ProcessModels]
-    D --> E[Instanciar ProcessManager]
-    E --> F[Preencher dados reais]
+    A[Criar modelo process_type] --> B[Definir fluxo e campos no editor]
+    B --> C[Instanciar process_obatala]
+    C --> D[Executar etapas no Process Viewer]
+    D --> E{Concluído ou excluído?}
+    E -->|Concluído| F[Status Finished / exportação Tainacan]
+    E -->|Exclusão lógica| G[is_deleted = 1 + auditoria]
 ```
 
-### 🧩 Diagrama de Relacionamentos
+## 🧩 Diagrama de Relacionamentos
 
 ```mermaid
 classDiagram
-    class ProcessModel {
+    class ProcessType {
         +String title
-        +String description
-        +Array metadata
         +Array flowData
+        +Array step_order
     }
-    
-    class ProcessTypeManager {
+
+    class Process {
         +String title
-        +String description
-        +Array steps
+        +Integer process_type
+        +Array flowData
+        +Array stageData
+        +String status
+        +String is_deleted
     }
-    
-    class ProcessManager {
-        +String title
-        +String description
-        +Array steps
-        +Array metadata
-    }
-    
-    ProcessTypeManager "1" *-- "*" ProcessModel : Contém
-    ProcessManager "1" -- "1" ProcessTypeManager : Baseado em
-    ProcessManager "1" *-- "*" ProcessModel : Implementa
+
+    ProcessType "1" --> "*" Process : instancia
 ```
-### 💡 Conclusão
+
+## 💡 Conclusão
+
 Esta arquitetura proporciona:
 
-- ✅ Flexibilidade: Modelos reutilizáveis
-- ✅ Consistência: Estrutura padronizada
-- ✅ Extensibilidade: Fácil adição de novos tipos
-- ✅ Performance: Consultas otimizadas via metadados
+- **Flexibilidade**: modelos reutilizáveis (`process_type`)
+- **Consistência**: mesma estrutura de campos em todas as instâncias
+- **Rastreabilidade**: dados de execução e auditoria de exclusão em `process_obatala`
+- **Performance**: consultas via `post_meta` e REST API customizada (`CustomPostTypeApi`, `ProcessApi`)

@@ -487,3 +487,24 @@ msgstr ""
 
 msgid "Signed PDF"
 msgstr ""
+
+msgid "Process deleted successfully."
+msgstr ""
+
+msgid "Error deleting process."
+msgstr ""
+
+msgid "Are you sure you want to delete process %s?"
+msgstr ""
+
+msgid "Delete process"
+msgstr ""
+
+msgid "Process not found."
+msgstr ""
+
+msgid "Process already deleted."
+msgstr ""
+
+msgid "Unable to record process deletion without an authenticated user."
+msgstr ""

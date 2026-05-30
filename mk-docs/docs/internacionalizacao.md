@@ -8,13 +8,13 @@ O plugin chama `load_plugin_textdomain('obatala', ...)` em `initialize()` para c
 
 ```
 languages/
-├── obatala.pot               # Template de strings (PHP + JS)
-├── obatala-pt_BR.po          # Traduções em português brasileiro
-├── obatala-pt_BR.mo          # Compilado para PHP
-├── obatala-pt_BR-{md5}.json  # Traduções para o frontend React (gerado por wp i18n make-json)
-├── obatala-es_ES.po          # Traduções em espanhol
-├── obatala-es_ES.mo          # Compilado para PHP (msgfmt ou Poedit)
-└── obatala-es_ES-{md5}.json  # Traduções para o frontend React (gerado por wp i18n make-json)
+├── obatala.pot                              # Template de strings (PHP + JS)
+├── obatala-pt_BR.po                         # Traduções em português brasileiro
+├── obatala-pt_BR.mo                         # Compilado para PHP
+├── obatala-pt_BR-obatala-admin-scripts.json # Traduções JS (handle obatala-admin-scripts)
+├── obatala-es_ES.po                         # Traduções em espanhol
+├── obatala-es_ES.mo                         # Compilado para PHP
+└── obatala-es_ES-obatala-admin-scripts.json # Traduções JS para es_ES
 ```
 
 O plugin suporta **inglês** (código padrão), **português (pt_BR)** e **espanhol (es_ES)**. O idioma exibido segue o locale do WordPress (Configurações > Geral > Idioma do site).
@@ -48,13 +48,30 @@ O WordPress carrega as traduções do JavaScript a partir de arquivos JSON no fo
 npm run i18n:make-json
 ```
 
-O script `developer/i18n-make-json.js` gera um mapa de `src/*.js` → `build/index.js` e executa `wp i18n make-json` com `--use-map`. O resultado é `languages/obatala-{locale}-{md5}.json`, que o WordPress carrega automaticamente para o script `obatala-admin-scripts`.
+O script `developer/i18n-make-json.js` gera um mapa de `src/*.js` → `build/index.js` e executa `wp i18n make-json` com `--use-map`. O WordPress carrega o JSON cujo nome inclui o **handle do script** registrado em `Enqueuer.php`: `obatala-admin-scripts`. Exemplo: `languages/obatala-pt_BR-obatala-admin-scripts.json`.
 
 **Requisito:** WP-CLI instalado. Para WordPress em caminho custom: `WP_PATH=/caminho/wordpress npm run i18n:make-json`
 
 **Nota:** O `wp i18n make-json` só extrai strings que têm referência a arquivos `.js` no `.po`. Garanta que o `.pot` seja gerado com `wp i18n make-pot` (que escaneia PHP e JS) antes de atualizar o `.po`.
 
-### 4. Compilar o .mo (PHP)
+### 4. Compilar o .mo e o JSON (PHP + React, sem WP-CLI)
+
+Quando WP-CLI ou `msgfmt` não estiverem disponíveis (ex.: Windows), use o script Node que compila `.mo` **e** gera o JSON do frontend a partir do `.po`:
+
+```bash
+node developer/po-to-mo-and-json.mjs pt_BR
+node developer/po-to-mo-and-json.mjs es_ES
+```
+
+Ou via npm (padrão `es_ES`):
+
+```bash
+npm run i18n:po-to-mo-json
+```
+
+O script está em `developer/po-to-mo-and-json.mjs` e usa `gettext-parser`.
+
+### 5. Compilar apenas o .mo (PHP)
 
 Para as traduções PHP, compile o `.po` em `.mo`:
 
@@ -64,14 +81,27 @@ msgfmt -o languages/obatala-pt_BR.mo languages/obatala-pt_BR.po
 
 O Poedit faz isso automaticamente ao salvar.
 
-**Sem WP-CLI ou `msgfmt` (ex.: Windows):** use o script Node que compila `.mo` e gera o JSON do frontend:
+## Checklist ao adicionar novas strings
 
-```bash
-npm run i18n:po-to-mo-json          # padrão: es_ES
-node developer/po-to-mo-and-json.mjs pt_BR
-```
+1. Envolver a string em `__('...', 'obatala')` (PHP) ou `__('...', 'obatala')` via `@wordpress/i18n` (React)
+2. Adicionar a entrada em `languages/obatala.pot` (ou regenerar com `npm run i18n:make-pot`)
+3. Traduzir em `obatala-pt_BR.po` e `obatala-es_ES.po`
+4. Recompilar `.mo` e JSON: `node developer/po-to-mo-and-json.mjs pt_BR` e `es_ES`
+5. Testar com o idioma do site em **Português do Brasil** ou **Español**
 
-O script está em `developer/po-to-mo-and-json.mjs` e usa `gettext-parser`.
+!!! warning "Strings só no código não bastam"
+    Usar `__()` no JavaScript **não traduz automaticamente**. O texto só aparece no idioma do site se a string existir no arquivo JSON (`obatala-{locale}-obatala-admin-scripts.json`) gerado a partir do `.po`.
+
+### Exemplo: exclusão de processo
+
+| msgid (código) | pt_BR |
+|----------------|-------|
+| Process deleted successfully. | Processo excluído com sucesso. |
+| Error deleting process. | Erro ao excluir processo. |
+| Are you sure you want to delete process %s? | Tem certeza que deseja excluir o processo %s? |
+| Delete process | Excluir processo |
+
+No React, mensagens retornadas pela API também devem passar por `__(response.message, 'obatala')` antes de exibir ao usuário.
 
 ## Uso no código React
 

@@ -300,6 +300,7 @@ footer {
   width: 100%;
 }
 .components-base-control:not(.components-checkbox-control):not(.components-select-control) + .components-base-control,
+.components-base-control.components-select-control + .components-base-control,
 .components-base-control:not(.components-checkbox-control) + div:has(> .components-base-control),
 .components-base-control + .components-button {
   margin-top: 1rem;
@@ -477,6 +478,10 @@ table.wp-list-table {
 }
 table.wp-list-table td {
   vertical-align: middle;
+}
+table.wp-list-table td .group-button {
+  flex-wrap: nowrap;
+  white-space: nowrap;
 }
 table.wp-list-table th {
   font-weight: 500;
@@ -1542,6 +1547,17 @@ button .components-spinner {
 }
 .meta-field-wrapper + .action-bar {
   margin-top: var(--gap);
+  gap: .75rem;
+}
+.obatala-inline-loading {
+  align-items: center;
+  background: var(--white);
+  border: 1px solid var(--gray-200);
+  border-radius: var(--border-radius);
+  display: inline-flex;
+  gap: .5rem;
+  margin-bottom: 1rem;
+  padding: .75rem 1rem;
 }
 .meta-field-wrapper .components-base-control__field > label,
 .meta-field-wrapper .components-input-control__label {
@@ -1586,6 +1602,41 @@ button .components-spinner {
 
 .container_searchAndSelect .components-button {
   color: var(--primary-600);
+}
+
+.stage-document-editor .stage-document-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 8px;
+  border: 1px solid var(--gray-300);
+  border-bottom: 0;
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+  background: var(--gray-50);
+}
+
+.stage-document-editor .stage-document-toolbar__button {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+}
+
+.stage-document-editor .stage-document-toolbar__button.components-button {
+  border-radius: var(--border-radius);
+}
+
+.stage-document-editor .stage-document-richtext {
+  min-height: 240px;
+  max-height: 480px;
+  overflow-y: auto;
+  padding: 12px;
+  border: 1px solid var(--gray-300);
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
+  background: var(--white);
+}
+
+.stage-document-editor .stage-document-richtext[contenteditable="false"] {
+  background: var(--gray-50);
 }
 
 @media screen and (max-width: 580px) {

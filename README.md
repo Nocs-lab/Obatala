@@ -21,8 +21,10 @@ Ideal para instituições que buscam inovar na apresentação e gestão de suas 
 
 ## Funcionalidades
 
-- **Internacionalização (i18n)**: Suporte a português brasileiro e outros idiomas no painel (PHP) e no frontend (React), via arquivos `.po`/`.mo` e JSON.
+- **Internacionalização (i18n)**: Suporte a português brasileiro, espanhol e inglês (padrão) no painel (PHP) e no frontend (React), via arquivos `.po`/`.mo` e JSON.
 - **Gerenciamento de Processos e Etapas**: Criação e edição de processos curatoriais com múltiplas etapas.
+- **Exclusão lógica de processos**: Remoção da interface com registro de quem excluiu e quando (`deleted_at`, `deleted_by`, `deleted_by_name`).
+- **Relatórios em PDF**: Relatório consolidado do processo e PDF do documento da etapa (Dompdf via Composer).
 - **Metadados Dinâmicos**: Adição e configuração de metadados personalizados para cada etapa do processo.
 - **Gestão de Setores**: Agrupamento de usuários em setores, com permissões específicas e atribuição de setores às etapas do processo.
 - **Interação com Processos**: Usuários podem adicionar comentários e mudar o status das etapas.

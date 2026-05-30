@@ -37,6 +37,8 @@ nav:
   - Instalação: instalacao.md
   - Organização: organizacao.md
   - Internacionalização: internacionalizacao.md
+  - Processos:
+      - Gestão de processos: processos/gestao-processos.md
   - Guia do Frontend: gutenberg.md
   - Posts Customizados: posts-customizados.md
   - Metadados Dinâmicos: 

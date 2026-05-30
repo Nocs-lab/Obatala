@@ -1124,3 +1124,24 @@ msgstr "Fecha de impresión/exportación"
 
 msgid "Signed PDF"
 msgstr "PDF firmado"
+
+msgid "Process deleted successfully."
+msgstr "Proceso eliminado correctamente."
+
+msgid "Error deleting process."
+msgstr "Error al eliminar el proceso."
+
+msgid "Are you sure you want to delete process %s?"
+msgstr "¿Está seguro de que desea eliminar el proceso %s?"
+
+msgid "Delete process"
+msgstr "Eliminar proceso"
+
+msgid "Process not found."
+msgstr "Proceso no encontrado."
+
+msgid "Process already deleted."
+msgstr "El proceso ya fue eliminado."
+
+msgid "Unable to record process deletion without an authenticated user."
+msgstr "No se pudo registrar la eliminación del proceso sin un usuario autenticado."

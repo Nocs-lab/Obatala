@@ -193,25 +193,25 @@ const MetaFieldDisplay = ( {
 									{ __( 'Generate PDF', 'obatala' ) }
 								</Button>
 							) }
-							<FormFileUpload
-								accept=".pdf"
-								onChange={ ( event ) => {
-									const selectedFile =
-										event.currentTarget.files?.[ 0 ];
-									if ( selectedFile ) {
-										handleSignedDocumentUpload?.(
-											stepId,
-											fieldId,
-											selectedFile
-										);
-									}
-								} }
-								icon={ upload }
-							>
-								{ signedFile
-									? __( 'Replace signed PDF', 'obatala' )
-									: __( 'Attach signed PDF', 'obatala' ) }
-							</FormFileUpload>
+							{ ! signedFile && (
+								<FormFileUpload
+									accept=".pdf"
+									onChange={ ( event ) => {
+										const selectedFile =
+											event.currentTarget.files?.[ 0 ];
+										if ( selectedFile ) {
+											handleSignedDocumentUpload?.(
+												stepId,
+												fieldId,
+												selectedFile
+											);
+										}
+									} }
+									icon={ upload }
+								>
+									{ __( 'Attach signed PDF', 'obatala' ) }
+								</FormFileUpload>
+							) }
 							{ signedFile && (
 								<Button
 									variant="secondary"

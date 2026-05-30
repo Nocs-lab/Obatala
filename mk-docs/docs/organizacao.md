@@ -52,6 +52,7 @@ Este documento descreve a estrutura de arquivos do plugin "Obatala", que é util
     └── 📁developer
         ├── create-zip.js
         ├── i18n-make-json.js
+        ├── po-to-mo-and-json.mjs
         ├── update-plugin-version.js
         ├── updatePlugin.py
     └── 📁images
@@ -325,7 +326,7 @@ Arquivos de tradução do plugin (internacionalização):
 - `obatala.pot`: Template de strings (PHP + JS).
 - `obatala-pt_BR.po`: Traduções em português brasileiro.
 - `obatala-pt_BR.mo`: Compilado para PHP.
-- `obatala-pt_BR-*.json`: Traduções para o frontend React (formato Jed), geradas por `wp i18n make-json` via `npm run i18n:make-json`.
+- `obatala-pt_BR-obatala-admin-scripts.json`: Traduções JS (handle `obatala-admin-scripts`), geradas por `wp i18n make-json` ou `developer/po-to-mo-and-json.mjs`.
 
 ---
 

@@ -2,8 +2,11 @@
 
 namespace Obatala\Api;
 
+use Obatala\Entities\Process;
 use Obatala\Services\TainacanMappingService;
+use WP_Error;
 use WP_REST_Posts_Controller;
+use WP_REST_Response;
 use WP_REST_Server;
 
 class CustomPostTypeApi extends ObatalaAPI {
@@ -42,6 +45,12 @@ class CustomPostTypeApi extends ObatalaAPI {
                         $data = $response->get_data();
                         $mapping_service = new TainacanMappingService();
                         // Add custom meta fields (like 'step_order' and 'flowData') to each item
+                        if ($post_type === 'process_obatala') {
+                            $data = array_values(array_filter($data, function ($item) {
+                                return !Process::is_deleted($item['id']);
+                            }));
+                        }
+
                         foreach ($data as &$item) {
                             $meta = get_post_meta($item['id']);
 
@@ -95,6 +104,15 @@ class CustomPostTypeApi extends ObatalaAPI {
                     $response = $controller->get_item($request);
                     if (!is_wp_error($response)) {
                         $data = $response->get_data();
+
+                        if ($post_type === 'process_obatala' && Process::is_deleted($data['id'])) {
+                            return new WP_Error(
+                                'rest_post_invalid_id',
+                                __('Process not found.', 'obatala'),
+                                ['status' => 404]
+                            );
+                        }
+
                         $meta = get_post_meta($data['id']);
                         $mapping_service = new TainacanMappingService();
 
@@ -142,11 +160,13 @@ class CustomPostTypeApi extends ObatalaAPI {
             ],
             [
                 'methods' => WP_REST_Server::DELETABLE, // HTTP DELETE for deleting an item
-                'callback' => [$controller, 'delete_item'], // Callback for deleting an item
-                'permission_callback' => [$controller, 'delete_item_permissions_check'], // Check for permissions
+                'callback' => $post_type === 'process_obatala'
+                    ? [$this, 'soft_delete_process']
+                    : [$controller, 'delete_item'],
+                'permission_callback' => [$controller, 'delete_item_permissions_check'],
                 'args' => [
                     'force' => [
-                        'default' => false, // Whether to force delete
+                        'default' => false,
                     ],
                 ],
             ],
@@ -158,5 +178,43 @@ class CustomPostTypeApi extends ObatalaAPI {
             'callback' => [$controller, 'get_public_item_schema'], // Callback for fetching the schema
             'permission_callback' => '__return_true', // No permission check needed for schema
         ]);
+    }
+
+    /**
+     * Exclusão lógica de um processo (marca meta is_deleted em vez de remover o post).
+     */
+    public function soft_delete_process($request) {
+        $process_id = (int) $request['id'];
+        $post = get_post($process_id);
+
+        if (!$post || $post->post_type !== Process::get_post_type()) {
+            return new WP_Error(
+                'rest_post_invalid_id',
+                __('Process not found.', 'obatala'),
+                ['status' => 404]
+            );
+        }
+
+        if (Process::is_deleted($process_id)) {
+            return new WP_Error(
+                'rest_post_already_deleted',
+                __('Process already deleted.', 'obatala'),
+                ['status' => 410]
+            );
+        }
+
+        $deletion = Process::soft_delete($process_id);
+        if (is_wp_error($deletion)) {
+            return $deletion;
+        }
+
+        return new WP_REST_Response([
+            'deleted' => true,
+            'id' => $process_id,
+            'message' => __('Process deleted successfully.', 'obatala'),
+            'deleted_at' => $deletion['deleted_at'],
+            'deleted_by' => $deletion['deleted_by'],
+            'deleted_by_name' => $deletion['deleted_by_name'],
+        ], 200);
     }
 }

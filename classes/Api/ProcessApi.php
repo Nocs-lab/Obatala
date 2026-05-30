@@ -6,6 +6,7 @@ defined('ABSPATH') || exit;
 
 use WP_REST_Response; // Certifique-se de importar a classe WP_REST_Response
 use WP_Error;
+use Obatala\Entities\Process;
 use Obatala\Entities\Sector;
 use Obatala\Services\TainacanExportService;
 
@@ -261,6 +262,14 @@ class ProcessApi extends ObatalaAPI {
             return new WP_REST_Response(['error' => 'Bad Request', 'message' => __('Only PDF files are allowed.', 'obatala')], 400);
         }
 
+        $document = $context['document'];
+        if (!empty($document['signedFile']['name'])) {
+            return new WP_REST_Response([
+                'error' => 'Conflict',
+                'message' => __('A signed PDF is already attached and cannot be replaced.', 'obatala'),
+            ], 409);
+        }
+
         $directory = $this->get_stage_document_directory($context['process_id'], $context['node_id'], $context['field_id']);
         if (!wp_mkdir_p($directory)) {
             return new WP_REST_Response(['error' => 'Server Error', 'message' => __('Could not create the document directory.', 'obatala')], 500);
@@ -272,7 +281,6 @@ class ProcessApi extends ObatalaAPI {
             return new WP_REST_Response(['error' => 'Server Error', 'message' => __('Could not save the signed PDF.', 'obatala')], 500);
         }
 
-        $document = $context['document'];
         $document['status'] = 'signed';
         $document['signedFile'] = [
             'name' => $filename,
@@ -520,6 +528,9 @@ class ProcessApi extends ObatalaAPI {
         }
 
         foreach ($meta as $key => $value) {
+            if (in_array($key, ['is_deleted', 'deleted_at', 'deleted_by', 'deleted_by_name'], true)) {
+                continue;
+            }
             update_post_meta($post_id, $key, $value);
         }
         return true;
@@ -571,7 +582,10 @@ class ProcessApi extends ObatalaAPI {
     
         foreach ($processes as $process) {
             $process_id = (int) $process->ID;
-    
+
+            if (Process::is_deleted($process_id)) {
+                continue;
+            }
 
             $permission = Sector::check_permission($user_id, $process_id);
     

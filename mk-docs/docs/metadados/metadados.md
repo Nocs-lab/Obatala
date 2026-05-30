@@ -135,6 +135,8 @@ Além do nodes e edges, a estrutura atual também inclui os seguintes campos com
 
 - groupResponsible: Grupo responsável pela execução (ex: "grupo1").
 
+- is_deleted, deleted_at, deleted_by, deleted_by_name: Metadados de **exclusão lógica** do processo (instância `process_obatala`). Ver [Gestão de processos](../processos/gestao-processos.md).
+
 ## Implementação de Metadados Dinâmicos
 
 ### Criando Metadados Dinâmicos nas Etapas
