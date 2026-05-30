@@ -3,7 +3,7 @@
         'name' => 'nocs/obatala',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => 'b4770a45d3a33ba46580a67bf3536eeba9467ff7',
+        'reference' => '0f215e6c87ae8901eb87c3ad3c31da27a963c747',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),

@@ -2,6 +2,7 @@
 
 namespace Obatala\Api;
 
+use Obatala\Services\TainacanMappingService;
 use WP_REST_Posts_Controller;
 use WP_REST_Server;
 
@@ -39,6 +40,7 @@ class CustomPostTypeApi extends ObatalaAPI {
                     $response = $controller->get_items($request);
                     if (!is_wp_error($response)) {
                         $data = $response->get_data();
+                        $mapping_service = new TainacanMappingService();
                         // Add custom meta fields (like 'step_order' and 'flowData') to each item
                         foreach ($data as &$item) {
                             $meta = get_post_meta($item['id']);
@@ -50,7 +52,21 @@ class CustomPostTypeApi extends ObatalaAPI {
 
                             // Deserialize 'flowData' if it exists
                             if (isset($meta['flowData'])) {
-                                $meta['flowData'] = maybe_unserialize($meta['flowData'][0]);
+                                $flow_data = maybe_unserialize($meta['flowData'][0]);
+
+                                if (is_array($flow_data) && isset($flow_data['nodes']) && is_array($flow_data['nodes'])) {
+                                    if ($post_type === 'process_type') {
+                                        $flow_data = $mapping_service->apply_profile_options_to_flow_data((int) $item['id'], $flow_data);
+                                    } elseif ($post_type === 'process_obatala') {
+                                        $process_type_id = isset($meta['process_type'][0]) ? (int) $meta['process_type'][0] : 0;
+                                        if ($process_type_id > 0) {
+                                            $mapping_config = $mapping_service->get_mapping_config_for_process((int) $item['id'], $process_type_id);
+                                            $flow_data = $mapping_service->apply_profile_options_to_flow_data_from_config($flow_data, $mapping_config);
+                                        }
+                                    }
+                                }
+
+                                $meta['flowData'] = $flow_data;
                             }
 
                             $item['meta'] = $meta; // Attach meta data to the item
@@ -80,6 +96,7 @@ class CustomPostTypeApi extends ObatalaAPI {
                     if (!is_wp_error($response)) {
                         $data = $response->get_data();
                         $meta = get_post_meta($data['id']);
+                        $mapping_service = new TainacanMappingService();
 
                         // Deserialize 'step_order' if it exists
                         if (isset($meta['step_order'])) {
@@ -88,7 +105,21 @@ class CustomPostTypeApi extends ObatalaAPI {
 
                         // Deserialize 'flowData' if it exists
                         if (isset($meta['flowData'])) {
-                            $meta['flowData'] = maybe_unserialize($meta['flowData'][0]);
+                            $flow_data = maybe_unserialize($meta['flowData'][0]);
+
+                            if (is_array($flow_data) && isset($flow_data['nodes']) && is_array($flow_data['nodes'])) {
+                                if ($post_type === 'process_type') {
+                                    $flow_data = $mapping_service->apply_profile_options_to_flow_data((int) $data['id'], $flow_data);
+                                } elseif ($post_type === 'process_obatala') {
+                                    $process_type_id = isset($meta['process_type'][0]) ? (int) $meta['process_type'][0] : 0;
+                                    if ($process_type_id > 0) {
+                                        $mapping_config = $mapping_service->get_mapping_config_for_process((int) $data['id'], $process_type_id);
+                                        $flow_data = $mapping_service->apply_profile_options_to_flow_data_from_config($flow_data, $mapping_config);
+                                    }
+                                }
+                            }
+
+                            $meta['flowData'] = $flow_data;
                         }
 
                         $data['meta'] = $meta; // Attach meta data to the item

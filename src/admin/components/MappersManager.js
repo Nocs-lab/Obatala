@@ -1,252 +1,1724 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import BrandHeader from "./BrandHeader";
 import BrandFooter from "./BrandFooter";
 import apiFetch from "@wordpress/api-fetch";
 import Select from 'react-select';
 import { __ } from "@wordpress/i18n";
-import { BaseControl, Button, Icon, Panel, PanelRow, SelectControl } from '@wordpress/components';
-import { fetchMapperProcessModel, fetchMetadataCollectionsTainacan, fetchProcessModels, fetchFieldsProcessModels, fetchCollectionsTainacan } from '../api/apiRequests';
+import { BaseControl, Button, CheckboxControl, Icon, Panel, PanelRow, SelectControl, Spinner } from '@wordpress/components';
+import { fetchMapperProcessModel, fetchMetadataCollectionsTainacan, fetchProcessModels, fetchFieldsProcessModels, fetchCollectionsTainacan, fetchProcessTypeById, updateProcessTypeMeta } from '../api/apiRequests';
+
+const DEFAULT_DECISION_CONFIG = {
+    quantity_field_id: '',
+    quantity_fallback: '1',
+    multi_or_single_field_id: '',
+    data_entry_mode_field_id: '',
+    spreadsheet_upload_field_id: '',
+    same_values_mode_field_id: '',
+    same_values_unique_id_field_id: '',
+    same_values_prefix_mode_field_id: '',
+    same_values_prefix_text_field_id: '',
+    same_values_id_prefix: '',
+};
+
+const MAPPER_STATUS_ENABLED = 'enabled';
+const MAPPER_STATUS_DISABLED = 'disabled';
+
+const DECISION_FIELD_TYPES = ['radio'];
+const PROFILE_SELECTOR_HELP_TEXT = 'Selecione a coleção de exportação que será usada neste processo.';
+const FIXED_DECISION_VALUES = {
+    multi_items_value: 'Sim',
+    single_item_value: 'Não',
+    upload_mode_value: 'Planilha',
+    fill_mode_value: 'Manual',
+    same_values_enabled_value: 'Sim',
+};
+
+const CONTROL_FIELD_IDS = {
+    profile_selector_field_id: 'obatala_ctrl_collection_selector',
+    multi_or_single_field_id: 'obatala_ctrl_multi_or_single',
+    quantity_field_id: 'obatala_ctrl_quantity',
+    data_entry_mode_field_id: 'obatala_ctrl_entry_mode',
+    spreadsheet_upload_field_id: 'obatala_ctrl_spreadsheet_upload',
+    same_values_mode_field_id: 'obatala_ctrl_same_values_mode',
+    same_values_unique_id_field_id: 'obatala_ctrl_unique_id',
+    same_values_prefix_mode_field_id: 'obatala_ctrl_use_prefix',
+    same_values_prefix_text_field_id: 'obatala_ctrl_prefix_text',
+};
+const FIXED_PROFILE_SELECTOR_FIELD_ID = CONTROL_FIELD_IDS.profile_selector_field_id;
+
+const CONTROL_FIELD_BLUEPRINTS = [
+    {
+        decisionKey: 'profile_selector_field_id',
+        id: CONTROL_FIELD_IDS.profile_selector_field_id,
+        type: 'radio',
+        label: 'Coleção de exportação',
+        options: 'Coleção A, Coleção B',
+        helpText: PROFILE_SELECTOR_HELP_TEXT,
+    },
+    {
+        decisionKey: 'multi_or_single_field_id',
+        id: CONTROL_FIELD_IDS.multi_or_single_field_id,
+        type: 'radio',
+        label: 'Trata vários itens?',
+        required: true,
+        options: 'Sim, Não',
+        helpText: 'Escolha Sim para múltiplos itens ou Não para item único.',
+    },
+    {
+        decisionKey: 'quantity_field_id',
+        id: CONTROL_FIELD_IDS.quantity_field_id,
+        type: 'number',
+        label: 'Quantidade de itens',
+        required: true,
+        conditional: {
+            dependsOnFieldId: CONTROL_FIELD_IDS.multi_or_single_field_id,
+            operator: 'equals',
+            value: 'Sim',
+        },
+        helpText: 'Informe a quantidade de itens para exportação.',
+    },
+    {
+        decisionKey: 'data_entry_mode_field_id',
+        id: CONTROL_FIELD_IDS.data_entry_mode_field_id,
+        type: 'radio',
+        label: 'Origem dos dados',
+        conditional: {
+            dependsOnFieldId: CONTROL_FIELD_IDS.multi_or_single_field_id,
+            operator: 'equals',
+            value: 'Sim',
+        },
+        options: 'Manual, Planilha',
+        helpText: 'Escolha Manual para formulário ou Planilha para upload.',
+    },
+    {
+        decisionKey: 'spreadsheet_upload_field_id',
+        id: CONTROL_FIELD_IDS.spreadsheet_upload_field_id,
+        type: 'upload',
+        label: 'Upload da planilha',
+        conditional: {
+            dependsOnFieldId: CONTROL_FIELD_IDS.multi_or_single_field_id,
+            operator: 'equals',
+            value: 'Sim',
+        },
+        helpText: 'Faça upload da planilha quando a origem for Planilha.',
+    },
+    {
+        decisionKey: 'same_values_mode_field_id',
+        id: CONTROL_FIELD_IDS.same_values_mode_field_id,
+        type: 'radio',
+        label: 'Repetir dados base?',
+        conditional: {
+            dependsOnFieldId: CONTROL_FIELD_IDS.multi_or_single_field_id,
+            operator: 'equals',
+            value: 'Sim',
+        },
+        options: 'Sim, Não',
+        helpText: 'Use Sim quando vários itens compartilham os mesmos dados base.',
+    },
+    {
+        decisionKey: 'same_values_unique_id_field_id',
+        id: CONTROL_FIELD_IDS.same_values_unique_id_field_id,
+        type: 'text',
+        label: 'Identificador',
+        helpText: 'Informe o campo que diferencia cada item na repetição.',
+    },
+    {
+        decisionKey: 'same_values_prefix_mode_field_id',
+        id: CONTROL_FIELD_IDS.same_values_prefix_mode_field_id,
+        type: 'radio',
+        label: 'Usar prefixo base?',
+        options: 'Sim, Não',
+        conditional: {
+            dependsOnFieldId: CONTROL_FIELD_IDS.same_values_mode_field_id,
+            operator: 'equals',
+            value: 'Sim',
+        },
+        helpText: 'Escolha Sim para preencher automaticamente um prefixo base nos identificadores.',
+    },
+    {
+        decisionKey: 'same_values_prefix_text_field_id',
+        id: CONTROL_FIELD_IDS.same_values_prefix_text_field_id,
+        type: 'text',
+        label: 'Prefixo base',
+        conditional: {
+            dependsOnFieldId: CONTROL_FIELD_IDS.same_values_prefix_mode_field_id,
+            operator: 'equals',
+            value: 'Sim',
+        },
+        helpText: 'Informe o texto base do prefixo (ex.: MOEDA-).',
+    },
+];
+
+const CONTROL_FIELD_LABEL_BY_ID = CONTROL_FIELD_BLUEPRINTS.reduce((acc, blueprint) => {
+    acc[String(blueprint.id)] = String(blueprint.label || '');
+    return acc;
+}, {});
+
+const enforceFixedDecisionFields = (rawDecisionConfig = {}) => {
+    const normalized = normalizeDecisionConfig(rawDecisionConfig);
+
+    return {
+        ...normalized,
+        multi_or_single_field_id: CONTROL_FIELD_IDS.multi_or_single_field_id,
+        quantity_field_id: CONTROL_FIELD_IDS.quantity_field_id,
+        data_entry_mode_field_id: CONTROL_FIELD_IDS.data_entry_mode_field_id,
+        spreadsheet_upload_field_id: CONTROL_FIELD_IDS.spreadsheet_upload_field_id,
+        same_values_mode_field_id: CONTROL_FIELD_IDS.same_values_mode_field_id,
+        same_values_unique_id_field_id: CONTROL_FIELD_IDS.same_values_unique_id_field_id,
+        same_values_prefix_mode_field_id: CONTROL_FIELD_IDS.same_values_prefix_mode_field_id,
+        same_values_prefix_text_field_id: CONTROL_FIELD_IDS.same_values_prefix_text_field_id,
+    };
+};
+
+const getDefaultControlDecisionConfig = () => ({
+    ...enforceFixedDecisionFields(),
+});
+
+const normalizeOptionLabel = (value = '') => {
+    return String(value)
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .trim()
+        .toLowerCase();
+};
+
+const buildCollectionSelectorOptionsFromProfiles = (profiles, resolveCollectionLabel) => {
+    if (!Array.isArray(profiles)) {
+        return [];
+    }
+
+    const usedLabels = new Set();
+
+    return profiles
+        .map((profile, index) => {
+            const collectionId = String(profile?.collection_id || '0');
+            if (!collectionId || collectionId === '0') {
+                return '';
+            }
+
+            const fallbackLabel = String(
+                profile?.collection_name
+                || `Coleção ${collectionId || index + 1}`
+            ).trim();
+            const resolved = typeof resolveCollectionLabel === 'function'
+                ? String(resolveCollectionLabel(collectionId, fallbackLabel) || '').trim()
+                : fallbackLabel;
+
+            return resolved;
+        })
+        .filter((label) => {
+            const normalized = normalizeOptionLabel(label);
+            if (!normalized || usedLabels.has(normalized)) {
+                return false;
+            }
+
+            usedLabels.add(normalized);
+            return true;
+        });
+};
+
+const syncCollectionSelectorOptionsInFlowData = (rawFlowData, selectorFieldIds, optionLabels) => {
+    const normalizedFlowData = normalizeFlowDataShape(rawFlowData);
+    const flowData = JSON.parse(JSON.stringify(normalizedFlowData));
+    const uniqueFieldIds = [...new Set(
+        (Array.isArray(selectorFieldIds) ? selectorFieldIds : [selectorFieldIds])
+            .map((fieldId) => String(fieldId || '').trim())
+            .filter(Boolean)
+    )];
+    const normalizedOptionLabels = Array.isArray(optionLabels)
+        ? optionLabels.map((label) => String(label || '').trim()).filter(Boolean)
+        : [];
+
+    if (!uniqueFieldIds.length || !normalizedOptionLabels.length) {
+        return {
+            flowData,
+            changed: false,
+        };
+    }
+
+    const optionsAsString = normalizedOptionLabels.join(', ');
+    let changed = false;
+
+    flowData.nodes = (Array.isArray(flowData.nodes) ? flowData.nodes : []).map((node) => {
+        const nodeData = node?.data && typeof node.data === 'object'
+            ? node.data
+            : null;
+        const nodeFields = Array.isArray(nodeData?.fields)
+            ? nodeData.fields
+            : null;
+
+        if (!nodeData || !nodeFields) {
+            return node;
+        }
+
+        let localChanged = false;
+        const nextFields = nodeFields.map((field) => {
+            const fieldId = String(field?.id || '');
+            if (!uniqueFieldIds.includes(fieldId)) {
+                return field;
+            }
+
+            const fieldCopy = (field && typeof field === 'object') ? { ...field } : {};
+            const fieldConfig = (fieldCopy.config && typeof fieldCopy.config === 'object')
+                ? { ...fieldCopy.config }
+                : {};
+            let fieldChanged = false;
+
+            if (String(fieldConfig.options || '') !== optionsAsString) {
+                fieldConfig.options = optionsAsString;
+                fieldChanged = true;
+            }
+
+            if (fieldConfig.required !== true) {
+                fieldConfig.required = true;
+                fieldChanged = true;
+            }
+
+            if (!fieldConfig.helpText) {
+                fieldConfig.helpText = PROFILE_SELECTOR_HELP_TEXT;
+                fieldChanged = true;
+            }
+
+            if (fieldChanged) {
+                fieldCopy.config = fieldConfig;
+            }
+
+            if (fieldChanged) {
+                localChanged = true;
+            }
+
+            return fieldCopy;
+        });
+
+        if (!localChanged) {
+            return node;
+        }
+
+        changed = true;
+        return {
+            ...node,
+            data: {
+                ...nodeData,
+                fields: nextFields,
+            },
+        };
+    });
+
+    return {
+        flowData,
+        changed,
+    };
+};
+
+const normalizeDecisionConfig = (raw = {}) => {
+    return {
+        ...DEFAULT_DECISION_CONFIG,
+        ...Object.keys(DEFAULT_DECISION_CONFIG).reduce((acc, key) => {
+            if (raw[key] !== undefined && raw[key] !== null) {
+                acc[key] = String(raw[key]);
+            }
+            return acc;
+        }, {}),
+    };
+};
+
+const getFieldMappingsFromSavedData = (savedData) => {
+    if (!savedData || !savedData.mappings) return [];
+    if (Array.isArray(savedData.mappings)) return savedData.mappings;
+    if (savedData.mappings?.field_mappings && Array.isArray(savedData.mappings.field_mappings)) {
+        return savedData.mappings.field_mappings;
+    }
+    return [];
+};
+
+const getDecisionRulesFromSavedData = (savedData) => {
+    if (!savedData) return normalizeDecisionConfig();
+    if (savedData.mappings && !Array.isArray(savedData.mappings) && savedData.mappings.decision_rules) {
+        return normalizeDecisionConfig(savedData.mappings.decision_rules);
+    }
+    if (savedData.decision_rules) {
+        return normalizeDecisionConfig(savedData.decision_rules);
+    }
+    if (savedData.mappings && !Array.isArray(savedData.mappings) && Array.isArray(savedData.mappings.profiles)) {
+        const firstProfileWithRules = savedData.mappings.profiles.find(
+            (profile) => profile?.decision_rules && typeof profile.decision_rules === 'object'
+        );
+        if (firstProfileWithRules?.decision_rules) {
+            return normalizeDecisionConfig(firstProfileWithRules.decision_rules);
+        }
+    }
+    return normalizeDecisionConfig();
+};
+
+const getProfileSelectorFieldIdFromSavedData = (savedData) => {
+    if (!savedData) return '';
+    if (savedData.mappings && !Array.isArray(savedData.mappings) && savedData.mappings.profile_selector_field_id) {
+        return String(savedData.mappings.profile_selector_field_id);
+    }
+    if (savedData.profile_selector_field_id) {
+        return String(savedData.profile_selector_field_id);
+    }
+    return '';
+};
+
+const normalizeMapperStatus = (status) => {
+    const normalized = String(status || '').trim().toLowerCase();
+    return normalized === MAPPER_STATUS_DISABLED || normalized === 'desabilitado'
+        ? MAPPER_STATUS_DISABLED
+        : MAPPER_STATUS_ENABLED;
+};
+
+const getMapperStatusFromSavedData = (savedData) => {
+    if (!savedData) return MAPPER_STATUS_ENABLED;
+
+    if (savedData.mappings && !Array.isArray(savedData.mappings) && savedData.mappings.status !== undefined) {
+        return normalizeMapperStatus(savedData.mappings.status);
+    }
+
+    if (savedData.status !== undefined) {
+        return normalizeMapperStatus(savedData.status);
+    }
+
+    return MAPPER_STATUS_ENABLED;
+};
+
+const normalizeProfileKey = (value = '') => {
+    return String(value)
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '_')
+        .replace(/^_+|_+$/g, '');
+};
+
+const buildUniqueProfileKey = (baseKey, existingKeys = []) => {
+    const normalizedExisting = existingKeys.map((key) => String(key));
+    let nextKey = normalizeProfileKey(baseKey) || 'perfil';
+
+    if (!normalizedExisting.includes(nextKey)) {
+        return nextKey;
+    }
+
+    let suffix = 2;
+    while (normalizedExisting.includes(`${nextKey}_${suffix}`)) {
+        suffix += 1;
+    }
+
+    return `${nextKey}_${suffix}`;
+};
+
+const normalizeSavedFieldMappings = (fieldMappings) => {
+    if (!Array.isArray(fieldMappings)) {
+        return [];
+    }
+
+    return fieldMappings
+        .filter((mapping) => mapping && typeof mapping === 'object')
+        .map((mapping) => ({
+            obatala_field: mapping?.obatala_field || {},
+            tainacan_metadata_id: String(mapping?.tainacan_metadata_id || ''),
+        }))
+        .filter((mapping) => mapping?.obatala_field?.value);
+};
+
+const createProfileFromCollection = (collectionId, collectionName = '', existingKeys = []) => {
+    const normalizedCollectionId = String(collectionId || '0');
+    const normalizedCollectionName = String(collectionName || '').trim();
+    const keySeed = `colecao_${normalizedCollectionId || existingKeys.length + 1}`;
+
+    return {
+        key: buildUniqueProfileKey(keySeed, existingKeys),
+        collection_id: normalizedCollectionId,
+        collection_name: normalizedCollectionName,
+        field_mappings: [],
+    };
+};
+
+const getProfilesFromSavedData = (savedData) => {
+    const mappings = savedData?.mappings;
+    const savedProfiles = mappings && !Array.isArray(mappings) && Array.isArray(mappings.profiles)
+        ? mappings.profiles
+        : null;
+
+    const existingKeys = [];
+
+    if (savedProfiles && savedProfiles.length > 0) {
+        return savedProfiles.map((profile, index) => {
+            const collectionName = String(
+                profile?.collection_name
+                || profile?.collection_label
+                || profile?.label
+                || ''
+            ).trim();
+            const key = buildUniqueProfileKey(profile?.key || collectionName || `perfil_${index + 1}`, existingKeys);
+            existingKeys.push(key);
+
+            return {
+                key,
+                collection_id: String(profile?.collection_id || '0'),
+                collection_name: collectionName,
+                field_mappings: normalizeSavedFieldMappings(profile?.field_mappings),
+            };
+        });
+    }
+
+    const legacyMappings = normalizeSavedFieldMappings(getFieldMappingsFromSavedData(savedData));
+    const legacyCollectionId = String(savedData?.collection_id || '0');
+
+    if (legacyCollectionId !== '0' || legacyMappings.length > 0) {
+        return [{
+            key: 'perfil_padrao',
+            collection_id: legacyCollectionId,
+            collection_name: String(savedData?.collection_name || savedData?.label || 'Coleção padrão'),
+            field_mappings: legacyMappings,
+        }];
+    }
+
+    return [];
+};
+
+const extractFieldsFromFlowData = (flowData) => {
+    const nodes = Array.isArray(flowData?.nodes) ? flowData.nodes : [];
+
+    return nodes
+        .filter((node) => {
+            const nodeId = String(node?.id || '');
+            return nodeId !== 'Start'
+                && nodeId !== 'End'
+                && !nodeId.startsWith('Condicional');
+        })
+        .flatMap((node) => {
+            const fields = Array.isArray(node?.data?.fields) ? node.data.fields : [];
+            return fields.map((field) => ({
+                ...field,
+                stage: String(node?.data?.stageName || node?.id || ''),
+            }));
+        });
+};
+
+const normalizeProcessModelFields = (fields) => {
+    if (!Array.isArray(fields)) {
+        return [];
+    }
+
+    return fields
+        .filter((field) => field && typeof field === 'object' && field.id)
+        .map((field) => ({
+            value: String(field.id),
+            label: `${field?.config?.label || field?.title || field.id} - ${field.stage || ''}`,
+            type: field?.type || '',
+            stage: field?.stage || '',
+            fieldOptions: field?.config?.options || [],
+        }));
+};
+
+const mergeProcessModelFields = (...fieldGroups) => {
+    const merged = new Map();
+
+    fieldGroups
+        .flat()
+        .forEach((field) => {
+            if (!field || typeof field !== 'object' || !field.id) {
+                return;
+            }
+
+            const fieldId = String(field.id);
+            const existing = merged.get(fieldId) || {};
+
+            merged.set(fieldId, {
+                ...existing,
+                ...field,
+                config: {
+                    ...(existing.config || {}),
+                    ...(field.config || {}),
+                },
+                stage: field.stage || existing.stage || '',
+            });
+        });
+
+    return Array.from(merged.values());
+};
+
+const isBusinessNode = (nodeId) => {
+    const normalizedId = String(nodeId || '');
+    return normalizedId !== 'Start'
+        && normalizedId !== 'End'
+        && !normalizedId.startsWith('Condicional');
+};
+
+const sanitizeForId = (value = '') => {
+    return String(value)
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-zA-Z0-9_-]+/g, '_')
+        .replace(/^_+|_+$/g, '')
+        .toLowerCase();
+};
+
+const buildUniqueId = (baseId, usedIds = []) => {
+    const usedSet = new Set(usedIds.map((id) => String(id)));
+    let candidate = String(baseId || '').trim() || 'item';
+
+    if (!usedSet.has(candidate)) {
+        return candidate;
+    }
+
+    let suffix = 2;
+    while (usedSet.has(`${candidate}_${suffix}`)) {
+        suffix += 1;
+    }
+    return `${candidate}_${suffix}`;
+};
+
+const buildControlFieldFromBlueprint = (blueprint) => {
+    const config = {
+        label: blueprint.label,
+        required: blueprint.required === true,
+        helpText: blueprint.helpText,
+    };
+
+    if (blueprint.options) {
+        config.options = blueprint.options;
+    }
+
+    if (blueprint.conditional && typeof blueprint.conditional === 'object') {
+        config.conditional = {
+            dependsOnFieldId: String(blueprint.conditional.dependsOnFieldId || ''),
+            operator: String(blueprint.conditional.operator || 'equals'),
+            value: String(blueprint.conditional.value || ''),
+        };
+    }
+
+    return {
+        id: blueprint.id,
+        type: blueprint.type,
+        title: 'Campo sem título',
+        config,
+    };
+};
+
+const normalizeFlowDataShape = (flowData) => {
+    let source = flowData;
+
+    if (typeof source === 'string') {
+        try {
+            source = JSON.parse(source);
+        } catch (error) {
+            source = {};
+        }
+    }
+
+    if (Array.isArray(source)) {
+        source = source[0] && typeof source[0] === 'object' ? source[0] : {};
+    }
+
+    const normalized = (source && typeof source === 'object') ? { ...source } : {};
+    normalized.nodes = Array.isArray(normalized.nodes) ? normalized.nodes : [];
+    normalized.edges = Array.isArray(normalized.edges) ? normalized.edges : [];
+    return normalized;
+};
+
+const ensureControlFieldsInFlowData = (rawFlowData) => {
+    const flowData = JSON.parse(JSON.stringify(normalizeFlowDataShape(rawFlowData)));
+    let changed = false;
+    let createdDefaultStage = false;
+
+    const nodes = Array.isArray(flowData.nodes) ? flowData.nodes : [];
+    const edges = Array.isArray(flowData.edges) ? flowData.edges : [];
+    flowData.nodes = nodes;
+    flowData.edges = edges;
+
+    const getEdgeIds = () => flowData.edges.map((edge) => String(edge?.id || '')).filter(Boolean);
+    const edgeExists = (source, target) => flowData.edges.some((edge) => (
+        String(edge?.source || '') === String(source)
+        && String(edge?.target || '') === String(target)
+    ));
+    const hasOutgoingFrom = (source) => flowData.edges.some(
+        (edge) => String(edge?.source || '') === String(source)
+    );
+    const hasIncomingTo = (target) => flowData.edges.some(
+        (edge) => String(edge?.target || '') === String(target)
+    );
+    const ensureEdge = (source, target, baseId) => {
+        if (edgeExists(source, target)) {
+            return false;
+        }
+
+        flowData.edges.push({
+            id: buildUniqueId(baseId, getEdgeIds()),
+            source: String(source),
+            target: String(target),
+            type: 'buttonedge',
+        });
+        return true;
+    };
+
+    let startNode = nodes.find((node) => String(node?.id || '') === 'Start');
+    let endNode = nodes.find((node) => String(node?.id || '') === 'End');
+
+    if (!startNode) {
+        const startNodeByType = nodes.find((node) => String(node?.type || '') === 'startNode');
+        if (startNodeByType) {
+            const previousId = String(startNodeByType?.id || '');
+            if (previousId && previousId !== 'Start') {
+                startNodeByType.id = 'Start';
+                flowData.edges.forEach((edge) => {
+                    if (String(edge?.source || '') === previousId) {
+                        edge.source = 'Start';
+                    }
+                    if (String(edge?.target || '') === previousId) {
+                        edge.target = 'Start';
+                    }
+                });
+                changed = true;
+            }
+            startNode = startNodeByType;
+        }
+    }
+
+    if (!endNode) {
+        const endNodeByType = nodes.find((node) => String(node?.type || '') === 'endNode');
+        if (endNodeByType) {
+            const previousId = String(endNodeByType?.id || '');
+            if (previousId && previousId !== 'End') {
+                endNodeByType.id = 'End';
+                flowData.edges.forEach((edge) => {
+                    if (String(edge?.source || '') === previousId) {
+                        edge.source = 'End';
+                    }
+                    if (String(edge?.target || '') === previousId) {
+                        edge.target = 'End';
+                    }
+                });
+                changed = true;
+            }
+            endNode = endNodeByType;
+        }
+    }
+
+    if (!startNode) {
+        const fallbackBusinessNode = nodes.find((node) => isBusinessNode(node?.id));
+        const position = fallbackBusinessNode?.position
+            ? { x: Number(fallbackBusinessNode.position.x || 0) - 260, y: Number(fallbackBusinessNode.position.y || 0) }
+            : { x: -200, y: 130 };
+
+        startNode = {
+            id: 'Start',
+            type: 'startNode',
+            dragHandle: '.custom-drag-handle',
+            position,
+            data: {
+                fields: [],
+                stageName: 'Start',
+            },
+        };
+
+        flowData.nodes.unshift(startNode);
+        changed = true;
+    }
+
+    if (!endNode) {
+        const fallbackBusinessNode = nodes.find((node) => isBusinessNode(node?.id));
+        const position = fallbackBusinessNode?.position
+            ? { x: Number(fallbackBusinessNode.position.x || 0) + 260, y: Number(fallbackBusinessNode.position.y || 0) }
+            : { x: 460, y: 130 };
+
+        endNode = {
+            id: 'End',
+            type: 'endNode',
+            dragHandle: '.custom-drag-handle',
+            position,
+            data: {
+                fields: [],
+                stageName: 'End',
+            },
+        };
+
+        flowData.nodes.push(endNode);
+        changed = true;
+    }
+
+    const existingNodeIds = flowData.nodes.map((node) => String(node?.id || '')).filter(Boolean);
+
+    const businessNodes = nodes.filter((node) => isBusinessNode(node?.id));
+    const startEdge = edges.find((edge) => (
+        String(edge?.source || '') === 'Start'
+        && businessNodes.some((node) => String(node?.id || '') === String(edge?.target || ''))
+    ));
+
+    let targetNode = startEdge
+        ? businessNodes.find((node) => String(node?.id || '') === String(startEdge?.target || ''))
+        : businessNodes[0];
+
+    if (!targetNode) {
+        const stageBaseId = 'Etapa Controle';
+        const stageId = buildUniqueId(stageBaseId, existingNodeIds);
+        const stagePosition = startNode?.position
+            ? { x: Number(startNode.position.x || 0) + 260, y: Number(startNode.position.y || 0) }
+            : { x: 120, y: 120 };
+
+        targetNode = {
+            id: stageId,
+            node_status: 'Stopped',
+            type: 'customNode',
+            dragHandle: '.custom-drag-handle',
+            position: stagePosition,
+            data: {
+                fields: [],
+                stageName: stageId,
+            },
+        };
+
+        flowData.nodes.push(targetNode);
+        changed = true;
+        createdDefaultStage = true;
+
+        if (startNode && ensureEdge('Start', stageId, `edge_start_${sanitizeForId(stageId)}`)) {
+            changed = true;
+        }
+
+        if (endNode && ensureEdge(stageId, 'End', `edge_${sanitizeForId(stageId)}_end`)) {
+            changed = true;
+        }
+    }
+
+    if (startNode && targetNode && (
+        createdDefaultStage
+        || !hasOutgoingFrom('Start')
+        || !edgeExists('Start', targetNode.id)
+    )) {
+        if (ensureEdge('Start', targetNode.id, `edge_start_${sanitizeForId(targetNode.id)}`)) {
+            changed = true;
+        }
+    }
+
+    if (endNode && targetNode && (
+        createdDefaultStage
+        || !hasIncomingTo('End')
+        || !edgeExists(targetNode.id, 'End')
+    )) {
+        if (ensureEdge(targetNode.id, 'End', `edge_${sanitizeForId(targetNode.id)}_end`)) {
+            changed = true;
+        }
+    }
+
+    const targetNodeIndex = flowData.nodes.findIndex((node) => String(node?.id || '') === String(targetNode?.id || ''));
+    if (targetNodeIndex === -1) {
+        return {
+            flowData,
+            changed,
+            createdDefaultStage,
+            fixedFieldIds: CONTROL_FIELD_IDS,
+        };
+    }
+
+    const nodeCopy = { ...flowData.nodes[targetNodeIndex] };
+    const nodeDataCopy = (nodeCopy.data && typeof nodeCopy.data === 'object') ? { ...nodeCopy.data } : {};
+    const currentFields = Array.isArray(nodeDataCopy.fields) ? [...nodeDataCopy.fields] : [];
+    let localFieldChanges = false;
+    const controlFieldIds = new Set(CONTROL_FIELD_BLUEPRINTS.map((blueprint) => String(blueprint.id || '')));
+    const controlFieldsPresentInOtherNodes = new Set();
+
+    flowData.nodes.forEach((node, nodeIndex) => {
+        if (nodeIndex === targetNodeIndex) {
+            return;
+        }
+
+        const nodeFields = Array.isArray(node?.data?.fields) ? node.data.fields : [];
+        nodeFields.forEach((field) => {
+            const fieldId = String(field?.id || '');
+            if (controlFieldIds.has(fieldId)) {
+                controlFieldsPresentInOtherNodes.add(fieldId);
+            }
+        });
+    });
+
+    CONTROL_FIELD_BLUEPRINTS.forEach((blueprint) => {
+        const existingIndex = currentFields.findIndex((field) => String(field?.id || '') === blueprint.id);
+
+        if (existingIndex === -1) {
+            if (controlFieldsPresentInOtherNodes.has(String(blueprint.id))) {
+                return;
+            }
+            currentFields.push(buildControlFieldFromBlueprint(blueprint));
+            localFieldChanges = true;
+            return;
+        }
+
+        const existingField = currentFields[existingIndex] && typeof currentFields[existingIndex] === 'object'
+            ? { ...currentFields[existingIndex] }
+            : {};
+        const existingConfig = (existingField.config && typeof existingField.config === 'object')
+            ? { ...existingField.config }
+            : {};
+        let fieldChanged = false;
+
+        if (!existingField.type) {
+            existingField.type = blueprint.type;
+            fieldChanged = true;
+        }
+
+        if (!existingField.title) {
+            existingField.title = 'Campo sem título';
+            fieldChanged = true;
+        }
+
+        if (!existingConfig.label) {
+            existingConfig.label = blueprint.label;
+            fieldChanged = true;
+        }
+
+        if (blueprint.options && !existingConfig.options) {
+            existingConfig.options = blueprint.options;
+            fieldChanged = true;
+        }
+
+        const blueprintRequired = blueprint.required === true;
+        if (existingConfig.required !== blueprintRequired) {
+            existingConfig.required = blueprintRequired;
+            fieldChanged = true;
+        }
+
+        if (!existingConfig.helpText && blueprint.helpText) {
+            existingConfig.helpText = blueprint.helpText;
+            fieldChanged = true;
+        }
+
+        if (blueprint.conditional && typeof blueprint.conditional === 'object') {
+            const nextConditional = {
+                dependsOnFieldId: String(blueprint.conditional.dependsOnFieldId || ''),
+                operator: String(blueprint.conditional.operator || 'equals'),
+                value: String(blueprint.conditional.value || ''),
+            };
+            const currentConditional = (existingConfig.conditional && typeof existingConfig.conditional === 'object')
+                ? existingConfig.conditional
+                : null;
+
+            if (
+                !currentConditional
+                || String(currentConditional.dependsOnFieldId || '') !== nextConditional.dependsOnFieldId
+                || String(currentConditional.operator || 'equals') !== nextConditional.operator
+                || String(currentConditional.value || '') !== nextConditional.value
+            ) {
+                existingConfig.conditional = nextConditional;
+                fieldChanged = true;
+            }
+        }
+
+        if (fieldChanged) {
+            existingField.config = existingConfig;
+            currentFields[existingIndex] = existingField;
+            localFieldChanges = true;
+        }
+    });
+
+    if (localFieldChanges) {
+        nodeDataCopy.fields = currentFields;
+        nodeCopy.data = nodeDataCopy;
+        flowData.nodes[targetNodeIndex] = nodeCopy;
+        changed = true;
+    }
+
+    return {
+        flowData,
+        changed,
+        createdDefaultStage,
+        fixedFieldIds: CONTROL_FIELD_IDS,
+    };
+};
+
+const applyAutomaticControlDefaults = (decisionConfig, selectorFieldId, availableFieldIds = []) => {
+    const availableIds = new Set((availableFieldIds || []).map((id) => String(id)));
+    const nextDecisionConfig = normalizeDecisionConfig(decisionConfig || {});
+    let nextSelectorFieldId = String(selectorFieldId || '');
+    let changed = false;
+
+    const resolveFieldId = (decisionKey) => String(CONTROL_FIELD_IDS[decisionKey] || '');
+    const shouldAutoSet = (value) => {
+        const normalizedValue = String(value || '');
+        if (normalizedValue === '') return true;
+        return !availableIds.has(normalizedValue);
+    };
+
+    const selectorFixedId = resolveFieldId('profile_selector_field_id');
+    if (selectorFixedId && availableIds.has(selectorFixedId) && shouldAutoSet(nextSelectorFieldId)) {
+        nextSelectorFieldId = selectorFixedId;
+        changed = true;
+    }
+
+    [
+        'multi_or_single_field_id',
+        'quantity_field_id',
+        'data_entry_mode_field_id',
+        'spreadsheet_upload_field_id',
+        'same_values_mode_field_id',
+        'same_values_unique_id_field_id',
+        'same_values_prefix_mode_field_id',
+        'same_values_prefix_text_field_id',
+    ].forEach((decisionKey) => {
+        const fixedFieldId = resolveFieldId(decisionKey);
+        if (!fixedFieldId || !availableIds.has(fixedFieldId)) {
+            return;
+        }
+
+        if (shouldAutoSet(nextDecisionConfig[decisionKey])) {
+            nextDecisionConfig[decisionKey] = fixedFieldId;
+            changed = true;
+        }
+    });
+
+    return {
+        changed,
+        selectorFieldId: nextSelectorFieldId,
+        decisionConfig: nextDecisionConfig,
+    };
+};
+
+const extractFieldIdsFromFlowData = (flowData) => {
+    return extractFieldsFromFlowData(flowData)
+        .map((field) => String(field?.id || ''))
+        .filter(Boolean);
+};
 
 const MappersManager = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [selectedProcessModel, setSelectedProcessModel] = useState(null);
     const [stepsProcessModel, setStepsProcessModel] = useState([]);
     const [collectionsTainacan, setCollectionsTainacan] = useState([]);
-    const [selectedCollection, setSelectedCollection] = useState(0);
     const [metadataTainacan, setMetadaTainacan] = useState([]);
-    const [selectedSteps, setSelectedSteps] = useState([]);
-    const [mapper, setMapper] = useState(null);
-    const [showMapper, setShowMapper] = useState(false);
-    const [selectRows, setSelectRows] = useState([
-        { tainacanMetadata: '', obatalaFieldMetadata: '' },
+    const [mapperStatus, setMapperStatus] = useState(MAPPER_STATUS_ENABLED);
+    const [profileSelectorFieldId, setProfileSelectorFieldId] = useState(FIXED_PROFILE_SELECTOR_FIELD_ID);
+    const [decisionConfig, setDecisionConfig] = useState(getDefaultControlDecisionConfig());
+    const [profiles, setProfiles] = useState([]);
+    const [activeProfileKey, setActiveProfileKey] = useState('');
+    const isMapperEnabled = mapperStatus === MAPPER_STATUS_ENABLED;
+    const selectedProfiles = useMemo(() => {
+        return profiles.filter((profile) => String(profile?.collection_id || '0') !== '0');
+    }, [profiles]);
+
+    const ensureControlFieldsOnProcessModel = async (processModel) => {
+        if (!processModel?.id) {
+            return {
+                model: processModel,
+                availableFieldIds: [],
+            };
+        }
+
+        const normalizedFlowData = normalizeFlowDataShape(processModel?.meta?.flowData);
+        const ensureResult = ensureControlFieldsInFlowData(normalizedFlowData);
+
+        if (ensureResult.changed) {
+            await updateProcessTypeMeta(processModel.id, { flowData: ensureResult.flowData });
+        }
+
+        const updatedModel = {
+            ...processModel,
+            meta: {
+                ...(processModel.meta || {}),
+                flowData: ensureResult.flowData,
+            },
+        };
+
+        return {
+            model: updatedModel,
+            availableFieldIds: extractFieldIdsFromFlowData(ensureResult.flowData),
+        };
+    };
+
+    useEffect(() => {
+        const idModel = Number(new URLSearchParams(window.location.search).get('process_type_id'));
+
+        const loadInitialData = async () => {
+            setIsLoading(true);
+            try {
+                const [models, collections, mapperResponse] = await Promise.all([
+                    fetchProcessModels(),
+                    fetchCollectionsTainacan(),
+                    fetchMapperProcessModel(idModel),
+                ]);
+
+                const filtered = models.find((model) => model.id === idModel);
+                const fullModel = filtered?.id ? await fetchProcessTypeById(filtered.id) : null;
+                const resolvedModel = fullModel || filtered || null;
+                let parsedData = null;
+                if (mapperResponse?.mapping_data) {
+                    parsedData = mapperResponse.mapping_data;
+                    if (typeof mapperResponse.mapping_data === 'string') {
+                        parsedData = JSON.parse(mapperResponse.mapping_data);
+                    }
+                }
+
+                const savedMapperStatus = getMapperStatusFromSavedData(parsedData);
+                setMapperStatus(savedMapperStatus);
+
+                const modelWithControlFields = resolvedModel || null;
+
+                setSelectedProcessModel(modelWithControlFields);
+                setCollectionsTainacan(collections || []);
+                let availableFieldIds = extractFieldIdsFromFlowData(
+                    normalizeFlowDataShape(modelWithControlFields?.meta?.flowData)
+                );
+                let stepOptions = [];
+
+                if (modelWithControlFields?.id) {
+                    stepOptions = await handleProcessModelSteps(modelWithControlFields.id, modelWithControlFields);
+                    if (!availableFieldIds.length) {
+                        availableFieldIds = stepOptions.map((field) => String(field?.value || '')).filter(Boolean);
+                    }
+                }
+
+                if (parsedData) {
+                    const normalizedProfiles = getProfilesFromSavedData(parsedData)
+                        .filter((profile) => String(profile?.collection_id || '0') !== '0');
+                    setProfiles(normalizedProfiles);
+                    setActiveProfileKey(normalizedProfiles[0]?.key || '');
+                    const normalizedSavedRules = getDecisionRulesFromSavedData(parsedData);
+                    const normalizedSavedSelector = getProfileSelectorFieldIdFromSavedData(parsedData);
+
+                    if (savedMapperStatus === MAPPER_STATUS_ENABLED) {
+                        const autoDefaults = applyAutomaticControlDefaults(
+                            enforceFixedDecisionFields(normalizedSavedRules),
+                            normalizedSavedSelector || FIXED_PROFILE_SELECTOR_FIELD_ID,
+                            availableFieldIds
+                        );
+                        setDecisionConfig(enforceFixedDecisionFields(autoDefaults.decisionConfig));
+                        setProfileSelectorFieldId(autoDefaults.selectorFieldId || FIXED_PROFILE_SELECTOR_FIELD_ID);
+                    } else {
+                        setDecisionConfig(enforceFixedDecisionFields(normalizedSavedRules));
+                        setProfileSelectorFieldId(FIXED_PROFILE_SELECTOR_FIELD_ID);
+                    }
+                } else {
+                    const defaultProfiles = [];
+                    setProfiles(defaultProfiles);
+                    setActiveProfileKey('');
+                    const defaultControlDecisionConfig = getDefaultControlDecisionConfig();
+                    const autoDefaults = applyAutomaticControlDefaults(
+                        defaultControlDecisionConfig,
+                        FIXED_PROFILE_SELECTOR_FIELD_ID,
+                        availableFieldIds
+                    );
+
+                    setDecisionConfig(enforceFixedDecisionFields(
+                        autoDefaults.changed ? autoDefaults.decisionConfig : defaultControlDecisionConfig
+                    ));
+                    setProfileSelectorFieldId(autoDefaults.selectorFieldId || FIXED_PROFILE_SELECTOR_FIELD_ID);
+                }
+            } catch (error) {
+                console.error('Erro ao carregar dados iniciais dos mapeadores:', error);
+            } finally {
+                setIsLoading(false);
+            }
+        };
+
+        loadInitialData();
+    }, []);
+
+    const currentProfile = useMemo(() => {
+        if (!selectedProfiles.length) return null;
+        return selectedProfiles.find((profile) => profile.key === activeProfileKey) || selectedProfiles[0];
+    }, [selectedProfiles, activeProfileKey]);
+
+    const collectionLabelById = useMemo(() => {
+        return (collectionsTainacan || []).reduce((acc, collection) => {
+            const id = String(collection?.["WP_Post"]?.ID || '');
+            const title = String(collection?.["WP_Post"]?.post_title || '').trim();
+
+            if (id) {
+                acc[id] = title || `Coleção ${id}`;
+            }
+
+            return acc;
+        }, {});
+    }, [collectionsTainacan]);
+
+    const getCollectionLabel = (collectionId, fallback = '') => {
+        const normalizedId = String(collectionId || '');
+        if (!normalizedId || normalizedId === '0') {
+            return String(fallback || '').trim();
+        }
+        return collectionLabelById[normalizedId] || String(fallback || `Coleção ${normalizedId}`).trim();
+    };
+
+    const configuredCollectionSelectorOptions = useMemo(() => {
+        return buildCollectionSelectorOptionsFromProfiles(
+            profiles,
+            (collectionId, fallback) => getCollectionLabel(collectionId, fallback)
+        );
+    }, [profiles, collectionLabelById]);
+
+    useEffect(() => {
+        if (!isMapperEnabled || !selectedProcessModel?.id || !selectedProcessModel?.meta?.flowData) {
+            return;
+        }
+
+        const selectorFieldIds = [
+            CONTROL_FIELD_IDS.profile_selector_field_id,
+            profileSelectorFieldId,
+        ];
+
+        const syncResult = syncCollectionSelectorOptionsInFlowData(
+            selectedProcessModel.meta.flowData,
+            selectorFieldIds,
+            configuredCollectionSelectorOptions
+        );
+
+        if (!syncResult.changed) {
+            return;
+        }
+
+        setSelectedProcessModel((prevModel) => {
+            if (!prevModel?.id || prevModel.id !== selectedProcessModel.id) {
+                return prevModel;
+            }
+
+            return {
+                ...prevModel,
+                meta: {
+                    ...(prevModel.meta || {}),
+                    flowData: syncResult.flowData,
+                },
+            };
+        });
+    }, [
+        isMapperEnabled,
+        selectedProcessModel,
+        configuredCollectionSelectorOptions,
+        profileSelectorFieldId,
     ]);
 
     useEffect(() => {
-        const idModel = new URLSearchParams(window.location.search).get('process_type_id');
-
-        fetchMapperProcessModel(idModel)
-            .then((mapper) => {
-                // Garante que mapping_data exista
-                if (mapper?.mapping_data) {
-                    const parsedData = JSON.parse(mapper.mapping_data);
-                    setMapper(parsedData);
-
-                    // Set collection
-                    setSelectedCollection(parsedData.collection_id);
-
-                    // Mapeia as etapas selecionadas (obatala_field)
-                    const mappedSteps = parsedData.mappings.map((m) => ({
-                        value: m.obatala_field.value,
-                        label: m.obatala_field.label
-                    }));
-                    setSelectedSteps(mappedSteps);
-
-                    // Preenche os rows do select (estrutura do formulário)
-                    const rows = parsedData.mappings.map((m) => ({
-                        obatalaFieldMetadata: m.obatala_field,
-                        tainacanMetadata: m.tainacan_metadata_id,
-                    }));
-                    setSelectRows(rows);
-                } else {
-                    console.warn('Nenhum dado encontrado em mapping_data.');
-                }
-            })
-            .catch((error) => {
-                console.error('Erro ao buscar o mapper:', error);
-            });
-    }, []);
-
-    useEffect(() => {
-        if (mapper && stepsProcessModel.length > 0) {
-            const enrichedSteps = mapper.mappings.map((mapping) => {
-                const matchedStep = stepsProcessModel.find(step => step.value === mapping.obatala_field.value);
-                return {
-                    value: matchedStep?.value,
-                    label: matchedStep?.label
-                };
-            });
-            setSelectedSteps(enrichedSteps);
-
-            const updatedRows = mapper.mappings.map((mapping) => ({
-                obatalaFieldMetadata: {
-                    value: mapping.obatala_field.value,
-                    label: stepsProcessModel.find(step => step.value === mapping.obatala_field.value)?.label || mapping.obatala_field.label
-                },
-                tainacanMetadata: mapping.tainacan_metadata_id
-            }));
-            setSelectRows(updatedRows);
-        }
-    }, [mapper, stepsProcessModel]);
-
-    useEffect(() => {
-        if (mapper && mapper.collection_id) {
-            fetchMetadataCollectionsTainacan(mapper.collection_id)
+        if (currentProfile?.collection_id && currentProfile.collection_id !== '0') {
+            fetchMetadataCollectionsTainacan(currentProfile.collection_id)
                 .then((data) => {
                     setMetadaTainacan(data);
-
-                    // Após os metadados estarem prontos, preencher os selects
-                    if (mapper.mappings) {
-                        const rows = mapper.mappings.map((m) => ({
-                            obatalaFieldMetadata: m.obatala_field,
-                            tainacanMetadata: m.tainacan_metadata_id, // Usa o ID
-                        }));
-                        setSelectRows(rows);
-                    }
                 })
                 .catch((error) => {
-                    console.error("Erro ao buscar metadados da coleção mapeada:", error);
+                    console.error("Erro ao buscar metadados:", error);
+                    setMetadaTainacan([]);
                 });
+        } else {
+            setMetadaTainacan([]);
         }
-    }, [mapper]);
+    }, [currentProfile?.collection_id]);
 
-    useEffect(() => {
-        const idModel = new URLSearchParams(window.location.search).get('process_type_id');
-
-        fetchProcessModelObatala()
-            .then((models) => {
-                const filtered = models.find((model) => model.id === parseInt(idModel));
-                setSelectedProcessModel(filtered);
-                handleProcessModelSteps(filtered.id);
-            });
-
-        fetchGetCollectionsTainacan();
-    }, []);
-
-    useEffect(() => {
-        setSelectRows((prev) =>
-            selectedSteps.map((step, i) => ({
-                ...prev[i],
-                obatalaFieldMetadata: step,
-                tainacanMetadata: prev[i]?.tainacanMetadata || ''
-            }))
-        );
-    }, [selectedSteps]);
-
-    const fetchProcessModelObatala = async () => {
-        try {
-            const data = await fetchProcessModels();
-            return data;
-        } catch (error) {
-            return [];
-        }
-    };
-
-    const fetchGetCollectionsTainacan = async () => {
-        setIsLoading(true);
-        fetchCollectionsTainacan()
-            .then(data => {
-                setCollectionsTainacan(data);
-                setIsLoading(false);
-            })
-            .catch(error => {
-                setIsLoading(false);
-            });
-    };
-
-    const handleProcessModelSteps = (selectedId) => {
-        fetchFieldsProcessModels(selectedId)
+    const handleProcessModelSteps = async (selectedId, processModel = null) => {
+        return fetchFieldsProcessModels(selectedId)
             .then((data) => {
-                const stepOptions = data.map(field => ({
-                    value: field.id,
-                    label: field?.config?.label + " - " + field.stage
-                }));
+                const apiFields = Array.isArray(data) ? data : [];
+                const flowFields = processModel?.meta?.flowData
+                    ? extractFieldsFromFlowData(processModel.meta.flowData)
+                    : [];
+                const sourceFields = mergeProcessModelFields(apiFields, flowFields);
+
+                const stepOptions = normalizeProcessModelFields(sourceFields);
 
                 setStepsProcessModel(stepOptions);
+                return stepOptions;
             })
             .catch((error) => {
-                //console.error("Erro ao buscar campos:", error);
+                console.error("Erro ao buscar campos:", error);
+
+                const fallbackFields = processModel?.meta?.flowData
+                    ? extractFieldsFromFlowData(processModel.meta.flowData)
+                    : [];
+                const fallbackStepOptions = normalizeProcessModelFields(fallbackFields);
+
+                setStepsProcessModel(fallbackStepOptions);
+                return fallbackStepOptions;
             });
     };
 
-    const handleTainacanColletionChange = (e) => {
-        const selectedId = e.target.value;
+    const updateProfileByKey = (profileKey, updater) => {
+        setProfiles((prevProfiles) => prevProfiles.map((profile) => {
+            if (profile.key !== profileKey) {
+                return profile;
+            }
+            return typeof updater === 'function' ? updater(profile) : updater;
+        }));
+    };
 
-        // Limpa os mapeamentos anteriores ao trocar de coleção
-        if (selectedCollection !== selectedId) {
-            setSelectedSteps([]); // Limpa os campos multiseleção
-            setSelectRows([]);    // Limpa os mapeamentos de metadados
+    const handleCollectionCheckboxChange = (collectionId, isChecked) => {
+        const normalizedCollectionId = String(collectionId || '0');
+        if (!normalizedCollectionId || normalizedCollectionId === '0') {
+            return;
         }
 
-        setSelectedCollection(selectedId);
+        if (isChecked) {
+            setProfiles((prevProfiles) => {
+                if (prevProfiles.some((profile) => String(profile?.collection_id || '0') === normalizedCollectionId)) {
+                    return prevProfiles;
+                }
 
-        fetchMetadataCollectionsTainacan(selectedId)
-            .then((data) => {
-                setMetadaTainacan(data);
-            })
-            .catch((error) => {
-                console.error("Erro ao buscar metadados:", error);
+                const nextProfile = createProfileFromCollection(
+                    normalizedCollectionId,
+                    getCollectionLabel(normalizedCollectionId, ''),
+                    prevProfiles.map((profile) => profile.key)
+                );
+                setActiveProfileKey(nextProfile.key);
+                return [...prevProfiles, nextProfile];
             });
+            return;
+        }
+
+        setProfiles((prevProfiles) => prevProfiles.filter(
+            (profile) => String(profile?.collection_id || '0') !== normalizedCollectionId
+        ));
+    };
+
+    const handleRemoveCollectionProfile = (collectionId) => {
+        handleCollectionCheckboxChange(collectionId, false);
     };
 
     const handleSelectChange = (index, field, value) => {
-        const newSelectRows = [...selectRows];
+        updateProfileByKey(activeProfileKey, (profile) => {
+            const nextMappings = Array.isArray(profile.field_mappings) ? [...profile.field_mappings] : [];
+            const currentMapping = nextMappings[index] || { obatala_field: {}, tainacan_metadata_id: '' };
 
-        if (!newSelectRows[index]) {
-            newSelectRows[index] = { tainacanMetadata: '', obatalaFieldMetadata: '' };
-        }
+            if (field === 'tainacanMetadata') {
+                currentMapping.tainacan_metadata_id = String(value || '');
+            }
 
-        newSelectRows[index][field] = value;
-        setSelectRows(newSelectRows);
+            if (field === 'obatalaFieldMetadata') {
+                currentMapping.obatala_field = value || {};
+            }
+
+            nextMappings[index] = currentMapping;
+
+            return {
+                ...profile,
+                field_mappings: nextMappings,
+            };
+        });
     };
 
     const isMetadataSelected = (id, currentIndex) => {
-        return selectRows.some((row, i) => i !== currentIndex && row.tainacanMetadata === id);
+        return (currentProfile?.field_mappings || []).some((mapping, i) => (
+            i !== currentIndex && String(mapping?.tainacan_metadata_id || '') === String(id)
+        ));
     };
 
-    const getMappingData = () => {
-        if (!selectedCollection || selectedCollection === "0") {
-            alert("Selecione uma coleção do Tainacan.");
+    useEffect(() => {
+        if (!selectedProfiles.length) {
             return;
         }
-        const hasIncompleteRows = selectRows.some(row => {
-            const hasObatala = row.obatalaFieldMetadata && typeof row.obatalaFieldMetadata === 'object' && row.obatalaFieldMetadata.value;
-            const hasTainacan = row.tainacanMetadata && row.tainacanMetadata !== '';
 
-            return !(hasObatala && hasTainacan);
+        const activeExists = selectedProfiles.some((profile) => profile.key === activeProfileKey);
+        if (!activeExists) {
+            setActiveProfileKey(selectedProfiles[0].key);
+        }
+    }, [selectedProfiles, activeProfileKey]);
+
+    const fieldLabelById = useMemo(() => {
+        return stepsProcessModel.reduce((acc, field) => {
+            acc[String(field.value)] = field.label;
+            return acc;
+        }, {});
+    }, [stepsProcessModel]);
+
+    const getFieldLabel = (fieldId) => {
+        if (!fieldId) return 'Nao definido';
+        const normalizedId = String(fieldId);
+        return fieldLabelById[normalizedId]
+            || CONTROL_FIELD_LABEL_BY_ID[normalizedId]
+            || `Field ${fieldId}`;
+    };
+
+    const isKnownControlFieldId = (fieldId) => {
+        return Boolean(CONTROL_FIELD_LABEL_BY_ID[String(fieldId || '')]);
+    };
+
+    const currentProfileMappings = useMemo(() => {
+        return Array.isArray(currentProfile?.field_mappings) ? currentProfile.field_mappings : [];
+    }, [currentProfile]);
+
+    const selectedSteps = useMemo(() => {
+        return currentProfileMappings
+            .map((mapping) => {
+                const targetValue = String(mapping?.obatala_field?.value || '');
+                const matchedStep = stepsProcessModel.find((step) => String(step.value) === targetValue);
+                return {
+                    value: matchedStep?.value || targetValue,
+                    label: matchedStep?.label || mapping?.obatala_field?.label || targetValue,
+                    type: matchedStep?.type || mapping?.obatala_field?.type || '',
+                    stage: matchedStep?.stage || mapping?.obatala_field?.stage || '',
+                };
+            })
+            .filter((step) => step.value && step.label);
+    }, [currentProfileMappings, stepsProcessModel]);
+
+    const selectRows = useMemo(() => {
+        return currentProfileMappings.map((mapping) => ({
+            obatalaFieldMetadata: {
+                value: mapping?.obatala_field?.value,
+                label: stepsProcessModel.find((step) => String(step.value) === String(mapping?.obatala_field?.value))?.label || mapping?.obatala_field?.label,
+            },
+            tainacanMetadata: String(mapping?.tainacan_metadata_id || ''),
+        }));
+    }, [currentProfileMappings, stepsProcessModel]);
+
+    const firstStageFieldIds = useMemo(() => {
+        const flowData = selectedProcessModel?.meta?.flowData;
+        const edges = Array.isArray(flowData?.edges) ? flowData.edges : [];
+        const nodes = Array.isArray(flowData?.nodes) ? flowData.nodes : [];
+        const firstEdge = edges.find((edge) => edge?.source === 'Start');
+        const firstNodeId = String(firstEdge?.target || '');
+        if (!firstNodeId) {
+            return [];
+        }
+
+        const firstNode = nodes.find((node) => String(node?.id || '') === firstNodeId);
+        const stageKeys = [
+            String(firstNode?.id || ''),
+            String(firstNode?.data?.stageName || ''),
+        ].filter(Boolean);
+
+        return stepsProcessModel
+            .filter((field) => stageKeys.includes(String(field.stage || '')))
+            .map((field) => String(field.value));
+    }, [selectedProcessModel, stepsProcessModel]);
+
+    const buildTypedFieldOptions = (
+        allowedTypes,
+        placeholder,
+        currentValue = '',
+        fieldFilter = null,
+        incompatibleSuffix = 'tipo nao compativel'
+    ) => {
+        const filtered = stepsProcessModel.filter((field) => {
+            if (!allowedTypes.includes(field.type)) {
+                return false;
+            }
+
+            return typeof fieldFilter === 'function' ? fieldFilter(field) : true;
         });
+        const baseOptions = [
+            { label: placeholder, value: '' },
+            ...filtered.map((field) => ({
+                label: `${field.label}${field.type ? ` [${field.type}]` : ''}`,
+                value: String(field.value),
+            })),
+        ];
 
-        if (hasIncompleteRows) {
-            alert("Todos os campos devem estar preenchidos antes de salvar o mapeamento.");
+        const normalizedCurrent = String(currentValue || '');
+        if (normalizedCurrent && !baseOptions.some((option) => option.value === normalizedCurrent)) {
+            const suffixLabel = isKnownControlFieldId(normalizedCurrent)
+                ? ''
+                : ` [${incompatibleSuffix}]`;
+            baseOptions.push({
+                label: `${getFieldLabel(normalizedCurrent)}${suffixLabel}`,
+                value: normalizedCurrent,
+            });
+        }
+
+        return baseOptions;
+    };
+
+    const profileSelectorFieldOptions = useMemo(() => {
+        return buildTypedFieldOptions(
+            DECISION_FIELD_TYPES,
+            'Selecione um campo',
+            profileSelectorFieldId,
+            (field) => firstStageFieldIds.includes(String(field.value)),
+            'field fora da etapa inicial ou com tipo incompatível'
+        );
+    }, [stepsProcessModel, profileSelectorFieldId, firstStageFieldIds, fieldLabelById]);
+
+    const decisionFieldIds = useMemo(() => {
+        return [
+            profileSelectorFieldId,
+            decisionConfig.multi_or_single_field_id,
+            decisionConfig.quantity_field_id,
+            decisionConfig.data_entry_mode_field_id,
+            decisionConfig.spreadsheet_upload_field_id,
+            decisionConfig.same_values_mode_field_id,
+            decisionConfig.same_values_prefix_mode_field_id,
+            decisionConfig.same_values_prefix_text_field_id,
+        ].map((fieldId) => String(fieldId || '')).filter(Boolean);
+    }, [
+        profileSelectorFieldId,
+        decisionConfig.multi_or_single_field_id,
+        decisionConfig.quantity_field_id,
+        decisionConfig.data_entry_mode_field_id,
+        decisionConfig.spreadsheet_upload_field_id,
+        decisionConfig.same_values_mode_field_id,
+        decisionConfig.same_values_prefix_mode_field_id,
+        decisionConfig.same_values_prefix_text_field_id,
+    ]);
+
+    const metadataSelectableSteps = useMemo(() => {
+        return stepsProcessModel.filter(
+            (field) => !decisionFieldIds.includes(String(field.value))
+        );
+    }, [stepsProcessModel, decisionFieldIds]);
+
+    useEffect(() => {
+        if (!decisionFieldIds.length) {
             return;
+        }
+
+        setProfiles((prevProfiles) => prevProfiles.map((profile) => {
+            const previousMappings = Array.isArray(profile?.field_mappings) ? profile.field_mappings : [];
+            const filteredMappings = previousMappings.filter((mapping) => {
+                const fieldId = String(mapping?.obatala_field?.value || '');
+                return fieldId && !decisionFieldIds.includes(fieldId);
+            });
+
+            if (filteredMappings.length === previousMappings.length) {
+                return profile;
+            }
+
+            return {
+                ...profile,
+                field_mappings: filteredMappings,
+            };
+        }));
+    }, [decisionFieldIds]);
+
+    const handleSelectedStepsChange = (selectedOptions) => {
+        const normalizedOptions = selectedOptions || [];
+
+        updateProfileByKey(activeProfileKey, (profile) => {
+            const previousMappingsByFieldId = new Map(
+                (profile.field_mappings || []).map((mapping) => [
+                    String(mapping?.obatala_field?.value || ''),
+                    mapping,
+                ])
+            );
+
+            const nextMappings = normalizedOptions.map((step) => {
+                const fieldId = String(step.value);
+                const existingMapping = previousMappingsByFieldId.get(fieldId);
+
+                if (existingMapping) {
+                    return {
+                        ...existingMapping,
+                        obatala_field: {
+                            ...existingMapping.obatala_field,
+                            ...step,
+                        },
+                    };
+                }
+
+                return {
+                    obatala_field: step,
+                    tainacan_metadata_id: '',
+                };
+            });
+
+            return {
+                ...profile,
+                field_mappings: nextMappings,
+            };
+        });
+    };
+
+    const getMappingData = async () => {
+        if (!selectedProcessModel?.id) {
+            alert("Modelo de processo não encontrado.");
+            return;
+        }
+
+        const normalizedMapperStatus = normalizeMapperStatus(mapperStatus);
+        let modelForSave = selectedProcessModel;
+        let availableFieldIds = extractFieldIdsFromFlowData(
+            normalizeFlowDataShape(modelForSave?.meta?.flowData)
+        );
+
+        if (normalizedMapperStatus === MAPPER_STATUS_ENABLED) {
+            try {
+                const ensuredModelResult = await ensureControlFieldsOnProcessModel(modelForSave);
+                modelForSave = ensuredModelResult.model || modelForSave;
+                availableFieldIds = ensuredModelResult.availableFieldIds || availableFieldIds;
+                setSelectedProcessModel(modelForSave);
+            } catch (error) {
+                console.error('Erro ao garantir a etapa de controle no modelo de processo:', error);
+                alert('Não foi possível garantir a etapa de controle no modelo de processo.');
+                return;
+            }
+        }
+
+        let effectiveProfileSelectorFieldId = String(profileSelectorFieldId || FIXED_PROFILE_SELECTOR_FIELD_ID);
+        let effectiveDecisionConfig = enforceFixedDecisionFields(decisionConfig);
+
+        if (normalizedMapperStatus === MAPPER_STATUS_ENABLED) {
+            const autoDefaults = applyAutomaticControlDefaults(
+                effectiveDecisionConfig,
+                FIXED_PROFILE_SELECTOR_FIELD_ID,
+                availableFieldIds
+            );
+            effectiveDecisionConfig = enforceFixedDecisionFields(autoDefaults.decisionConfig);
+            effectiveProfileSelectorFieldId = autoDefaults.selectorFieldId || FIXED_PROFILE_SELECTOR_FIELD_ID;
+            setDecisionConfig(effectiveDecisionConfig);
+            setProfileSelectorFieldId(effectiveProfileSelectorFieldId);
+        }
+
+        const normalizedProfiles = selectedProfiles.map((profile, index) => {
+            const collectionId = String(profile.collection_id || '0');
+            const collectionName = getCollectionLabel(collectionId, String(profile.collection_name || '').trim());
+            const keySource = collectionName || `perfil_${index + 1}`;
+
+            return {
+                key: profile.key || buildUniqueProfileKey(keySource, profiles.map((item) => item.key)),
+                collection_id: collectionId,
+                collection_name: collectionName,
+                field_mappings: normalizeSavedFieldMappings(profile.field_mappings),
+            };
+        });
+        const normalizedDecisionRules = {
+            ...normalizeDecisionConfig(effectiveDecisionConfig),
+            ...FIXED_DECISION_VALUES,
+        };
+
+        if (normalizedMapperStatus === MAPPER_STATUS_ENABLED) {
+            if (!normalizedProfiles.length) {
+                alert("Cadastre ao menos uma coleção de exportação.");
+                return;
+            }
+
+            const hasMissingCollection = normalizedProfiles.some((profile) => !profile.collection_id || profile.collection_id === '0');
+            if (hasMissingCollection) {
+                alert("Todas as configurações precisam ter uma coleção do Tainacan selecionada.");
+                return;
+            }
+
+            const normalizedCollectionIds = normalizedProfiles.map((profile) => String(profile.collection_id));
+            if (new Set(normalizedCollectionIds).size !== normalizedCollectionIds.length) {
+                alert("Cada configuração deve apontar para uma coleção diferente.");
+                return;
+            }
+
+            const normalizedCollectionNames = normalizedProfiles.map((profile) => normalizeOptionLabel(profile.collection_name || ''));
+            if (new Set(normalizedCollectionNames).size !== normalizedCollectionNames.length) {
+                alert("As coleções selecionadas precisam ter nomes diferentes para identificação na tramitação.");
+                return;
+            }
+
+            const hasIncompleteProfileMappings = normalizedProfiles.some((profile) => (
+                profile.field_mappings.some((mapping) => {
+                    const hasObatala = mapping.obatala_field && typeof mapping.obatala_field === 'object' && mapping.obatala_field.value;
+                    const hasTainacan = mapping.tainacan_metadata_id && mapping.tainacan_metadata_id !== '';
+
+                    return !(hasObatala && hasTainacan);
+                })
+            ));
+
+            if (hasIncompleteProfileMappings) {
+                alert("Todos os campos de todas as configurações devem estar preenchidos antes de salvar o mapeamento.");
+                return;
+            }
+
+            if (normalizedDecisionRules.data_entry_mode_field_id && !normalizedDecisionRules.spreadsheet_upload_field_id) {
+                alert("Selecione o campo de upload que receberá a planilha no passo 3.");
+                return;
+            }
         }
 
         const mappedData = {
-            process_model_id: selectedProcessModel.id,
-            collection_id: selectedCollection,
-            mappings: selectRows.map((row, index) => ({
-                obatala_field: row.obatalaFieldMetadata,
-                tainacan_metadata_id: row.tainacanMetadata,
-            }))
+            process_model_id: modelForSave.id,
+            mappings: {
+                status: normalizedMapperStatus,
+                profile_selector_field_id: effectiveProfileSelectorFieldId,
+                decision_rules: normalizedDecisionRules,
+                profiles: normalizedProfiles,
+            }
         };
 
-        apiFetch({
-            path: '/obatala/v1/exporter/save_mapping_data',
-            method: 'POST',
-            data: mappedData,
-        }).then((response) => {
+        if (normalizedMapperStatus === MAPPER_STATUS_ENABLED) {
+            const selectorCollectionOptions = buildCollectionSelectorOptionsFromProfiles(
+                normalizedProfiles,
+                (collectionId, fallback) => getCollectionLabel(collectionId, fallback)
+            );
+            const selectorFieldIdsToSync = [
+                CONTROL_FIELD_IDS.profile_selector_field_id,
+                effectiveProfileSelectorFieldId,
+            ];
+            const syncResult = syncCollectionSelectorOptionsInFlowData(
+                modelForSave?.meta?.flowData,
+                selectorFieldIdsToSync,
+                selectorCollectionOptions
+            );
+
+            if (syncResult.changed) {
+                try {
+                    await updateProcessTypeMeta(modelForSave.id, { flowData: syncResult.flowData });
+                    modelForSave = {
+                        ...modelForSave,
+                        meta: {
+                            ...(modelForSave?.meta || {}),
+                            flowData: syncResult.flowData,
+                        },
+                    };
+                    setSelectedProcessModel(modelForSave);
+                } catch (error) {
+                    console.error('Erro ao sincronizar opções de coleção no modelo de processo:', error);
+                    alert('Não foi possível atualizar as opções do campo de Coleção de Exportação no modelo de processo.');
+                    return;
+                }
+            }
+        }
+
+        try {
+            const response = await apiFetch({
+                path: '/obatala/v1/exporter/save_mapping_data',
+                method: 'POST',
+                data: mappedData,
+            });
+
             if (response.success) {
                 alert('Mapeamento salvo com sucesso!');
                 window.location.href = '?page=process-type-manager';
-                setShowMapper(false);
-                setSelectedProcessModel(0);
-                setSelectedCollection(0);
-                setSelectedSteps([]);
-                setSelectRows([{ tainacanMetadata: '', obatalaFieldMetadata: '' }]);
+                const defaultProfiles = [];
+                setProfiles(defaultProfiles);
+                setActiveProfileKey('');
+                setMapperStatus(MAPPER_STATUS_ENABLED);
+                setProfileSelectorFieldId(FIXED_PROFILE_SELECTOR_FIELD_ID);
+                setDecisionConfig(getDefaultControlDecisionConfig());
             } else {
                 alert('Falha ao salvar: ' + (response.message || 'Erro desconhecido.'));
             }
-        }).catch((error) => {
+        } catch (error) {
+            console.error('Erro ao salvar mapeamento:', error);
             alert('Erro ao salvar o mapeamento.');
-        });
+        }
     };
 
     const cancelMappingData = () => {
         window.location.href = '?page=process-type-manager';
-        setShowMapper(false);
-        setSelectedProcessModel(0);
-        setSelectedCollection(0);
-        setSelectedSteps([]);
-        setSelectRows([{ tainacanMetadata: '', obatalaFieldMetadata: '' }]);
+        const defaultProfiles = [];
+        setProfiles(defaultProfiles);
+        setActiveProfileKey('');
+        setMapperStatus(MAPPER_STATUS_ENABLED);
+        setProfileSelectorFieldId(FIXED_PROFILE_SELECTOR_FIELD_ID);
+        setDecisionConfig(getDefaultControlDecisionConfig());
+    }
+
+    const helperTextStyle = {
+        marginTop: '10px',
+        marginBottom: 0,
+        color: '#50575e',
+        fontSize: '12px',
+        lineHeight: 1.45,
+    };
+
+    const sectionCardStyle = {
+        border: '1px solid #d8dee6',
+        borderRadius: '10px',
+        padding: '14px',
+        background: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)',
+        boxShadow: '0 1px 2px rgba(16, 24, 40, 0.04)',
+    };
+    const showProfileSelectorSection = false;
+
+    if (isLoading) {
+        return (
+            <>
+                <BrandHeader />
+                <main>
+                    <Spinner />
+                </main>
+                <BrandFooter />
+            </>
+        );
     }
 
     return (
@@ -268,89 +1740,210 @@ const MappersManager = () => {
                         <form className="inline-edition flex-basis-100">
                             <input type="hidden" name="page" value="inbcm-mapping" />
 
-                            <SelectControl
-                                label="Escolha a Coleção de Destino no Tainacan:"
-                                value={selectedCollection}
-                                options={[
-                                    { label: 'Selecione uma coleção', value: '0', disabled: true },
-                                    ...collectionsTainacan.map((collection) => ({
-                                        label: collection["WP_Post"].post_title,
-                                        value: String(collection["WP_Post"].ID),
-                                    })),
-                                ]}
-                                onChange={(newValue) => {
-                                    handleTainacanColletionChange(newValue); 
-                                }}
-                            />
+                            <div className="flex-basis-100" style={{ ...sectionCardStyle, background: 'linear-gradient(180deg, #f8fcf8 0%, #edf7ed 100%)' }}>
+                                <BaseControl
+                                    label="Status do Mapeador"
+                                    help="Desabilite para impedir a criação automática da etapa de controle e a exportação automática para o Tainacan."
+                                >
+                                    <SelectControl
+                                        label="Situação"
+                                        value={mapperStatus}
+                                        options={[
+                                            { label: 'Habilitado', value: MAPPER_STATUS_ENABLED },
+                                            { label: 'Desabilitado', value: MAPPER_STATUS_DISABLED },
+                                        ]}
+                                        onChange={(value) => setMapperStatus(normalizeMapperStatus(value))}
+                                    />
+                                    {!isMapperEnabled && (
+                                        <p style={{ ...helperTextStyle, marginTop: '6px' }}>
+                                            Com o mapeador desabilitado, o fluxo não gera automaticamente a etapa de controle
+                                            e não executa o envio de itens para o Tainacan ao finalizar o processo.
+                                        </p>
+                                    )}
+                                </BaseControl>
+                            </div>
 
-                            <BaseControl
-                                label="Escolha os campos do formulário que apresentam os metadados do item:"
-                            >
-                                <Select
-                                    isMulti
-                                    options={stepsProcessModel}
-                                    value={selectedSteps}
-                                    onChange={(selectedOptions) => {
-                                        setSelectedSteps(selectedOptions);
-                                    }}
-                                    isDisabled={selectedProcessModel === "0"}
-                                    placeholder="Selecione os campos..."
-                                />
-                            </BaseControl>
+                            {showProfileSelectorSection && (
+                                <div className="flex-basis-100" style={{ ...sectionCardStyle, background: 'linear-gradient(180deg, #fffdf7 0%, #fff7e6 100%)' }}>
+                                    <BaseControl
+                                        label="Seleção de Coleção no Início do Processo"
+                                        help="Escolha o field da etapa inicial que receberá automaticamente as opções de coleção."
+                                    >
+                                        <SelectControl
+                                            label="Field seletor da coleção"
+                                            value={profileSelectorFieldId}
+                                            options={profileSelectorFieldOptions}
+                                            onChange={(value) => setProfileSelectorFieldId(String(value || ''))}
+                                        />
+                                        <p style={{ ...helperTextStyle, marginTop: '6px' }}>
+                                            Esse field será exibido na etapa inicial da tramitação com as coleções disponíveis para escolha.
+                                            Hoje ele aceita fields do tipo <strong>radio</strong> da etapa inicial.
+                                        </p>
+                                    </BaseControl>
+                                </div>
+                            )}
+
+                            <div className="flex-basis-100" style={{ marginTop: '1rem' }}>
+                                <BaseControl
+                                    label="Coleções de Exportação"
+                                    help="Cada configuração representa uma coleção de destino com seu próprio mapeamento de metadados."
+                                >
+                                    <div style={{ ...sectionCardStyle, background: 'linear-gradient(180deg, #f7fbff 0%, #eff6ff 100%)' }}>
+                                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 14px', alignItems: 'flex-start' }}>
+                                            {collectionsTainacan.map((collection) => {
+                                                const collectionId = String(collection?.["WP_Post"]?.ID || '');
+                                                const collectionName = String(collection?.["WP_Post"]?.post_title || '').trim();
+                                                const isChecked = selectedProfiles.some(
+                                                    (profile) => String(profile?.collection_id || '') === collectionId
+                                                );
+
+                                                return (
+                                                    <div key={`checkbox_collection_${collectionId}`} style={{ minWidth: '220px' }}>
+                                                        <CheckboxControl
+                                                            label={collectionName || `Coleção ${collectionId}`}
+                                                            checked={isChecked}
+                                                            onChange={(checked) => handleCollectionCheckboxChange(collectionId, checked)}
+                                                            style={{ marginBottom: 0 }}
+                                                        />
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+
+                                        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '6px' }}>
+                                            {selectedProfiles.map((profile, index) => {
+                                                const displayName = getCollectionLabel(
+                                                    profile.collection_id,
+                                                    profile.collection_name || `Coleção ${index + 1}`
+                                                ) || `Coleção ${index + 1}`;
+                                                const isActive = currentProfile?.key === profile.key;
+
+                                                return (
+                                                    <div
+                                                        key={`profile_chip_${profile.key}`}
+                                                        style={{
+                                                            display: 'inline-flex',
+                                                            alignItems: 'center',
+                                                            borderRadius: '999px',
+                                                            border: `1px solid ${isActive ? '#135e96' : '#c3c4c7'}`,
+                                                            backgroundColor: isActive ? '#2271b1' : '#ffffff',
+                                                            overflow: 'hidden',
+                                                        }}
+                                                    >
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => setActiveProfileKey(profile.key)}
+                                                            style={{
+                                                                border: 'none',
+                                                                background: 'transparent',
+                                                                color: isActive ? '#ffffff' : '#1d2327',
+                                                                padding: '5px 9px',
+                                                                cursor: 'pointer',
+                                                                fontSize: '13px',
+                                                            }}
+                                                        >
+                                                            {displayName}
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handleRemoveCollectionProfile(profile.collection_id)}
+                                                            aria-label={`Remover coleção ${displayName}`}
+                                                            style={{
+                                                                border: 'none',
+                                                                borderLeft: `1px solid ${isActive ? '#135e96' : '#dcdcde'}`,
+                                                                background: isActive ? '#135e96' : '#f0f0f1',
+                                                                color: isActive ? '#ffffff' : '#b32d2e',
+                                                                width: '28px',
+                                                                height: '28px',
+                                                                cursor: 'pointer',
+                                                                fontSize: '16px',
+                                                                lineHeight: 1,
+                                                            }}
+                                                        >
+                                                            ×
+                                                        </button>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                </BaseControl>
+                            </div>
+
+                            <div className="flex-basis-100" style={{ marginTop: '1rem' }}>
+                                <BaseControl
+                                    label="Escolha os campos do formulário que apresentam os metadados do item:"
+                                    help="A lista abaixo exclui automaticamente os fields usados na configuração geral de decisão. Você pode salvar sem selecionar campos e concluir o mapeamento depois."
+                                >
+                                    <div style={{ ...sectionCardStyle, background: 'linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%)' }}>
+                                        <Select
+                                            key={currentProfile?.key || 'profile-empty'}
+                                            isMulti
+                                            options={metadataSelectableSteps}
+                                            value={selectedSteps}
+                                            onChange={handleSelectedStepsChange}
+                                            isDisabled={!currentProfile}
+                                            placeholder="Selecione os campos..."
+                                        />
+                                    </div>
+                                </BaseControl>
+                            </div>
 
                             <div className="flex-basis-100">
                                 <BaseControl
                                     label="Mapeamento de Metadados"
                                     help="Relacione os campos do Obatala com os metadados do Tainacan."
                                 >
-                                    <table className="wp-list-table widefat fixed striped">
-                                        <thead>
-                                            <tr>
-                                                <th>Field Obatala</th>
-                                                <th>Tainacan Metadado</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {selectedSteps.map((step, index) => {
-                                                const currentValue = selectRows[index]?.tainacanMetadata || '';
-                                                const options = [
-                                                    { label: 'Selecione o metadado', value: '' },
-                                                    ...metadataTainacan.map((item) => {
-                                                        const post = item["WP_Post"];
-                                                        const id = String(post.ID);
-                                                        const isUsed = isMetadataSelected(id, index);
-                                                        return {
-                                                            label: `${post.post_title}${isUsed ? ' (já usado)' : ''}`,
-                                                            value: id,
-                                                            disabled: isUsed
-                                                        };
-                                                    })
-                                                ];
+                                    <div style={{ ...sectionCardStyle, background: 'linear-gradient(180deg, #ffffff 0%, #f4fbf7 100%)' }}>
+                                        <table className="wp-list-table widefat fixed striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>Field Obatala</th>
+                                                    <th>Tainacan Metadado</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {selectedSteps.map((step, index) => {
+                                                    const currentValue = selectRows[index]?.tainacanMetadata || '';
+                                                    const options = [
+                                                        { label: 'Selecione o metadado', value: '' },
+                                                        ...metadataTainacan.map((item) => {
+                                                            const post = item["WP_Post"];
+                                                            const id = String(post.ID);
+                                                            const isUsed = isMetadataSelected(id, index);
+                                                            return {
+                                                                label: `${post.post_title}${isUsed ? ' (já usado)' : ''}`,
+                                                                value: id,
+                                                                disabled: isUsed
+                                                            };
+                                                        })
+                                                    ];
 
-                                                return (
-                                                    <tr key={index}>
-                                                        <td>
-                                                            {step.label}
-                                                        </td>
-                                                        <td>
-                                                            <SelectControl
-                                                                value={currentValue}
-                                                                options={options}
-                                                                onChange={(value) => handleSelectChange(index, 'tainacanMetadata', value)}
-                                                            />
+                                                    return (
+                                                        <tr key={index}>
+                                                            <td>
+                                                                {step.label}
+                                                            </td>
+                                                            <td>
+                                                                <SelectControl
+                                                                    value={currentValue}
+                                                                    options={options}
+                                                                    onChange={(value) => handleSelectChange(index, 'tainacanMetadata', value)}
+                                                                />
+                                                            </td>
+                                                        </tr>
+                                                    );
+                                                })}
+                                                {selectedSteps.length === 0 && (
+                                                    <tr>
+                                                        <td colSpan="2">
+                                                            Nenhum campo selecionado para mapeamento.
                                                         </td>
                                                     </tr>
-                                                );
-                                            })}
-                                            {selectedSteps.length === 0 && (
-                                                <tr>
-                                                    <td colSpan="2">
-                                                        Nenhum campo selecionado para mapeamento.
-                                                    </td>
-                                                </tr>
-                                            )}
-                                        </tbody>
-                                    </table>
+                                                )}
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </BaseControl>
                             </div>
 

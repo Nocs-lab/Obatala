@@ -829,6 +829,8 @@ svg.react-flow__connectionline {
   border-top-right-radius: var(--border-radius);
   border-bottom-right-radius: var(--border-radius);
   position: relative;
+  width: clamp(320px, 36vw, 460px);
+  max-width: calc(100vw - 2rem);
 }
 .node-meta-list-container {
   display: flex;
@@ -925,6 +927,11 @@ svg.react-flow__connectionline {
   margin-top: 0;
   margin-bottom: 1rem;
 }
+.wp-drawer.node-meta-container .title {
+  line-height: 1.3;
+  padding-right: 2.25rem;
+  white-space: normal;
+}
 .wp-drawer dt {
   font-weight: 600;
 }
@@ -957,5 +964,6 @@ svg.react-flow__connectionline {
 .edgebutton:hover {
   box-shadow: 0 0 6px 2px rgba(0, 0, 0, 0.08);
 }
+
 
 /*# sourceMappingURL=index.css.map*/
