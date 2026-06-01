@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
 import { Button, Tooltip, Panel, PanelRow, Notice, TextControl } from '@wordpress/components';
-import { backup, edit, info, download } from '@wordpress/icons';
+import { backup, edit, info, download, trash } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
 import ProcessFilter from './ProcessFilters';
 import apiFetch from '@wordpress/api-fetch';
@@ -13,7 +13,7 @@ const isPdfReportAvailable =
     window.obatalaApp &&
     window.obatalaApp.pdf_report_available === true;
 
-const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, processTypes, accessLevel, setAccessLevel, modelFilter, setModelFilter }) => {
+const ProcessList = ({ processes, onEdit, onViewProcess, onDelete, processTypeMappings, processTypes, accessLevel, setAccessLevel, modelFilter, setModelFilter }) => {
     const [pdfLoadingId, setPdfLoadingId] = useState(null);
     const [pdfError, setPdfError] = useState(null);
 
@@ -134,14 +134,14 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
                         </Button>
                         <Tooltip text={__("Edit", "obatala")}>
                             <Button
-                                variant="secondary"
+                                variant="tertiary"
                                 icon={edit}
                                 onClick={() => onEdit(row.original)}
                             />
                         </Tooltip>
                         <Tooltip text={__("History", "obatala")}>
                             <Button
-                                variant="secondary"
+                                variant="tertiary"
                                 icon={backup}
                                 onClick={() => {
                                     const url = `?page=process-viewer&process_id=${row.original.id}&view=history`;
@@ -152,21 +152,26 @@ const ProcessList = ({ processes, onEdit, onViewProcess, processTypeMappings, pr
                         {isPdfReportAvailable && (
                             <Tooltip text={__("Generate PDF report", "obatala")}>
                                 <Button
-                                    variant="secondary"
+                                    variant="tertiary"
                                     icon={download}
                                     onClick={() => handlePdfDownload(row.original.id)}
                                     disabled={pdfLoadingId === row.original.id}
                                     isBusy={pdfLoadingId === row.original.id}
-                                >
-                                    {__("Generate PDF report", "obatala")}
-                                </Button>
+                                />
                             </Tooltip>
                         )}
+                        <Tooltip text={__("Delete process", "obatala")}>
+                            <Button
+                                variant="tertiary"
+                                icon={trash}
+                                onClick={() => onDelete(row.original)}
+                            />
+                        </Tooltip>
                     </div>
                 ),
             },
         ],
-        [processTypeMappings, processTypes, pdfLoadingId, handlePdfDownload, isPdfReportAvailable]
+        [processTypeMappings, processTypes, pdfLoadingId, handlePdfDownload, onDelete, onEdit, onViewProcess, isPdfReportAvailable]
     );
 
     const data = useMemo(() => processes, [processes]);

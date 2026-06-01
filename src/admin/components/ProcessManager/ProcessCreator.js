@@ -87,7 +87,6 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
                     data: { process_type: selectedProcessModel.id }
                 });
 
-
                 // Atualiza o objeto savedProcess com os metas
                 savedProcess.meta = metaUpdateData;
                 onProcessSaved(savedProcess);
@@ -103,7 +102,6 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
             setNotice({ status: 'error', message: __('Error creating process.', 'obatala') });
         }
     };
-
 
     const handleCancel = () => {
         onCancel();
@@ -155,7 +153,7 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
                 onChange={(value) => setAccessLevel(value)}
             />
             <div className="group-button">
-                <Button variant="secondary" onClick={handleCancel}>{__('Cancel', 'obatala')}</Button>
+                <Button variant="tertiary" onClick={handleCancel}>{__('Cancel', 'obatala')}</Button>
                 <Button variant="primary" type="submit">{__('Save', 'obatala')}</Button>
             </div>
 

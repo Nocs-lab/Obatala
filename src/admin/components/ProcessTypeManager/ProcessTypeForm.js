@@ -89,7 +89,7 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
             )}
     
             <div className="group-button">
-                <Button variant="secondary" onClick={onCancel}>
+                <Button variant="tertiary" onClick={onCancel}>
                     {__('Cancel', 'obatala')}
                 </Button>
                 <Button variant="primary" type="submit">

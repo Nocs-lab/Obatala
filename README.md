@@ -1,5 +1,5 @@
 
-![Versão do Plugin](https://img.shields.io/badge/version-1.7.2-blue.svg)
+![Versão do Plugin](https://img.shields.io/badge/version-1.7.4-blue.svg)
 
 ![Compatibilidade com WordPress](https://img.shields.io/badge/WordPress-v5.7%2B-blue.svg)
 ![Licença](https://img.shields.io/badge/license-GPLv2-blue.svg)
@@ -21,8 +21,10 @@ Ideal para instituições que buscam inovar na apresentação e gestão de suas 
 
 ## Funcionalidades
 
-- **Internacionalização (i18n)**: Suporte a português brasileiro e outros idiomas no painel (PHP) e no frontend (React), via arquivos `.po`/`.mo` e JSON.
+- **Internacionalização (i18n)**: Suporte a português brasileiro, espanhol e inglês (padrão) no painel (PHP) e no frontend (React), via arquivos `.po`/`.mo` e JSON.
 - **Gerenciamento de Processos e Etapas**: Criação e edição de processos curatoriais com múltiplas etapas.
+- **Exclusão lógica de processos**: Remoção da interface com registro de quem excluiu e quando (`deleted_at`, `deleted_by`, `deleted_by_name`).
+- **Relatórios em PDF**: Relatório consolidado do processo e PDF do documento da etapa (Dompdf via Composer).
 - **Metadados Dinâmicos**: Adição e configuração de metadados personalizados para cada etapa do processo.
 - **Gestão de Setores**: Agrupamento de usuários em setores, com permissões específicas e atribuição de setores às etapas do processo.
 - **Interação com Processos**: Usuários podem adicionar comentários e mudar o status das etapas.
@@ -100,9 +102,19 @@ classDiagram
     Processo "1" -- "*" Arquivo : possui
 ```
 
+## Instalação
+
+1. Instale e ative o plugin **Tainacan** no WordPress.
+2. Copie este repositório para `wp-content/plugins/Obatala/`.
+3. Na pasta do plugin, execute **`composer install`** (obrigatório — carrega o autoload PSR-4 e o **Dompdf** para geração de PDF).
+4. Execute **`npm ci`** e **`npm run build`** (interface administrativa React).
+5. Ative o plugin Obatalá no painel WordPress.
+
+Passo a passo detalhado, checklist e solução de problemas: [mk-docs/docs/instalacao.md](mk-docs/docs/instalacao.md) (também na [documentação publicada](https://nocs-lab.github.io/Obatala/instalacao/)).
+
 ## Documentação
 
-A documentação completa do plugin está disponível no diretório `mk-docs` e pode ser acessada online no seguinte link: [Documentação Oficial](https://nocs-lab.github.io/Obatala/).
+A documentação completa do plugin está no diretório `mk-docs` e online em [Documentação Oficial](https://nocs-lab.github.io/Obatala/).
 
 ## Colaboração
 

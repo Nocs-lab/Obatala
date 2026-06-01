@@ -72,6 +72,8 @@ const ProcessViewer = () => {
     const [exportReview, setExportReview] = useState(null);
     const [isExportDecisionLoading, setIsExportDecisionLoading] = useState(false);
     const [isTemplateDownloadLoading, setIsTemplateDownloadLoading] = useState(false);
+    const [isSavingDraft, setIsSavingDraft] = useState(false);
+    const [isSubmittingStep, setIsSubmittingStep] = useState(false);
 
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
     const allAuthors = useSelect(select => select(coreStore).getUsers({ who: 'authors' }), []);
@@ -86,6 +88,38 @@ const ProcessViewer = () => {
         return urlParams.get("process_id");
     };
     const processId = getProcessIdFromUrl();
+
+    const normalizeProcessTypeId = (value) => {
+        if (Array.isArray(value)) {
+            return value[0] || null;
+        }
+
+        if (value && typeof value === 'object') {
+            return value.id || Object.values(value)[0] || null;
+        }
+
+        if (typeof value === 'string') {
+            const serializedMatch = value.match(/s:\d+:"(\d+)"/);
+            if (serializedMatch?.[1]) {
+                return serializedMatch[1];
+            }
+
+            const serializedIntegerMatches = [...value.matchAll(/i:(\d+);/g)];
+            if (serializedIntegerMatches.length > 0) {
+                return serializedIntegerMatches[serializedIntegerMatches.length - 1][1];
+            }
+
+            const trimmedValue = value.trim();
+            if (/^\d+$/.test(trimmedValue)) {
+                return trimmedValue;
+            }
+
+            const numericMatch = value.match(/(?:^|[^\d])(\d+)(?:[^\d]|$)/);
+            return numericMatch?.[1] || null;
+        }
+
+        return value || null;
+    };
 
     const buildExportNoticeFromResult = (exportResult) => {
         const status = exportResult?.status || 'error';
@@ -216,7 +250,7 @@ const ProcessViewer = () => {
                     setProcess(data);
                     setIsPublic(data.meta?.access_level?.[0] === 'Not restricted' || data.meta?.access_level?.[0] === 'not restricted')
 
-                    const processTypeId = data.meta.process_type;
+                    const processTypeId = normalizeProcessTypeId(data.meta?.process_type);
                     if (processTypeId) {
                         fetchProcessTypeById(processTypeId)
                             .then((processType) => {
@@ -224,7 +258,10 @@ const ProcessViewer = () => {
                             })
                             .catch((error) => {
                                 console.error("Error fetching process type:", error);
-                                setError(__("Error fetching process type.", "obatala"));
+                                setNotice({
+                                    status: 'warning',
+                                    message: __("Process type details could not be loaded.", "obatala"),
+                                });
                             });
                     } else {
                     }
@@ -236,12 +273,17 @@ const ProcessViewer = () => {
                 .finally(() => setIsProcessLoading(false));
             fetchNodePermission(processId, currentUser.id)
                 .then((result) => {
-                    setHasPermission(result.status);
-                    setSectorUser(result.data_sector)
+                    setHasPermission(Boolean(result.status));
+                    setSectorUser(Array.isArray(result.data_sector) ? result.data_sector : [])
                 })
                 .catch((error) => {
                     console.error("Error fetching process:", error);
-                    setError(__("Error fetching process meta.", "obatala"));
+                    setHasPermission(false);
+                    setSectorUser([]);
+                    setNotice({
+                        status: 'warning',
+                        message: __("Process permissions could not be fully loaded.", "obatala"),
+                    });
                 })
                 .finally(() => {
                     setIsLoading(false);
@@ -338,6 +380,36 @@ const ProcessViewer = () => {
         }
 
         return String(value).trim() !== '';
+    };
+
+    const stripHtml = (value) =>
+        String(value || '')
+            .replace(/<[^>]*>/g, '')
+            .replace(/&nbsp;/g, ' ')
+            .trim();
+
+    const normalizeDocumentValue = (value, field = {}) => {
+        const firstValue = Array.isArray(value) ? value[0] : value;
+        if (firstValue && typeof firstValue === 'object') {
+            return firstValue;
+        }
+        const templateText = field.config?.templateText || '';
+        return {
+            content:
+                typeof firstValue === 'string' && firstValue
+                    ? firstValue
+                    : templateText,
+            status: firstValue || templateText ? 'draft' : 'empty',
+        };
+    };
+
+    const fieldHasValue = (field, value) => {
+        if (field?.type === 'stage_document') {
+            const documentValue = normalizeDocumentValue(value, field);
+            return stripHtml(documentValue.content) !== '';
+        }
+
+        return hasValue(value);
     };
 
     const unwrapSingleValue = (value) => {
@@ -521,6 +593,11 @@ const ProcessViewer = () => {
             ));
         }
 
+        if (field.type === 'stage_document') {
+            const documentValue = normalizeDocumentValue(currentValue, field);
+            return [documentValue];
+        }
+
         if (hasValue(currentValue)) {
             return currentValue;
         }
@@ -682,6 +759,14 @@ const ProcessViewer = () => {
         return currentStepVisibleFields.filter((field) => !isSpreadsheetMappedField(field));
     }, [currentStepVisibleFields, isSpreadsheetMappedField]);
 
+    const currentStepHasStageDocument = useMemo(() => {
+        if (!Array.isArray(currentStepVisibleFields)) {
+            return false;
+        }
+
+        return currentStepVisibleFields.some((field) => field?.type === 'stage_document');
+    }, [currentStepVisibleFields]);
+
     const currentStepMatrixRowCount = useMemo(() => {
         if (!currentStepRepeatedFields.length) {
             return 0;
@@ -706,6 +791,8 @@ const ProcessViewer = () => {
         const visibleFields = getSubmittableFieldsForStep(step);
 
         return visibleFields.every((field) => {
+            const value = formValues?.[stepId]?.[field.id] ?? uploadedFiles?.[stepId]?.[field.id]?.[0]?.name;
+
             if (!field?.config?.required) {
                 return true;
             }
@@ -716,15 +803,14 @@ const ProcessViewer = () => {
                 const repeatedValues = normalizeArrayLike(formValues?.[stepId]?.[field.id]);
 
                 for (let index = 0; index < repeatCount; index += 1) {
-                    if (!hasValue(repeatedValues[index])) {
+                    if (!fieldHasValue(field, repeatedValues[index])) {
                         return false;
                     }
                 }
                 return true;
             }
 
-            const value = formValues?.[stepId]?.[field.id] ?? uploadedFiles?.[stepId]?.[field.id]?.[0]?.name;
-            return hasValue(value);
+            return fieldHasValue(field, value);
         });
     }, [formValues, uploadedFiles, orderedSteps, currentStep, manualMultipleConfig, getSubmittableFieldsForStep]);
 
@@ -746,8 +832,9 @@ const ProcessViewer = () => {
             const stageData = metaData.stageData || {};
 
             const updatedFormValues = steps.reduce((acc, step) => {
-                if (stageData[step.id]) {
-                    acc[step.id] = stageData[step.id].fields.reduce((acc, field) => {
+                const stageFields = stageData[step.id]?.fields;
+                if (Array.isArray(stageFields)) {
+                    acc[step.id] = stageFields.reduce((acc, field) => {
                         acc[field.fieldId] = field.value || '';
                         return acc;
                     }, {});
@@ -758,7 +845,7 @@ const ProcessViewer = () => {
             setFormValues(prev => ({ ...prev, ...updatedFormValues }));
 
             const updateCurrentStageData = steps.reduce((acc, step) => {
-                if (stageData[step.id]) {
+                if (stageData[step.id]?.updateAt) {
                     acc[step.id] = [stageData[step.id].updateAt, stageData[step.id].user];
                 }
                 return acc;
@@ -829,9 +916,67 @@ const ProcessViewer = () => {
         });
     };
 
+    const handleSaveDraft = async () => {
+        const step = orderedSteps[currentStep];
+        if (!step?.id) return;
+
+        const stepId = step.id;
+        const visibleFields = getSubmittableFieldsForStep(step);
+        const fields = visibleFields.map((field) => ({
+            fieldId: field.id,
+            value: getFieldValueForSubmit(stepId, field),
+        }));
+
+        setIsSavingDraft(true);
+
+        try {
+            const existingMetaData = await apiFetch({
+                path: `/obatala/v1/process_obatala/${process.id}/meta`,
+                method: 'GET',
+            });
+
+            const existingStageData = existingMetaData.stageData && typeof existingMetaData.stageData === 'object'
+                ? existingMetaData.stageData
+                : {};
+
+            const updatedStageData = {
+                ...existingStageData,
+                [stepId]: {
+                    ...existingStageData?.[stepId],
+                    fields,
+                    draftUpdateAt: new Date().toISOString(),
+                    draftUser: currentUser.name,
+                },
+            };
+
+            await apiFetch({
+                path: `/obatala/v1/process_obatala/${process.id}/meta`,
+                method: 'POST',
+                data: {
+                    stageData: updatedStageData,
+                    submittedStages: existingMetaData.submittedStages || {},
+                    process_type: normalizeProcessTypeId(process.meta?.process_type),
+                },
+            });
+
+            setNotice({
+                status: 'success',
+                message: __('Draft saved successfully.', 'obatala'),
+            });
+        } catch (error) {
+            console.error('Erro ao salvar rascunho:', error);
+            setNotice({
+                status: 'error',
+                message: __('Could not save the draft.', 'obatala'),
+            });
+        } finally {
+            setIsSavingDraft(false);
+        }
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setIsLoading(true);
+        setIsSubmittingStep(true);
 
         const step = orderedSteps[currentStep];
         const stepId = step.id;
@@ -888,7 +1033,7 @@ const ProcessViewer = () => {
             }
 
             if (uploadFailed) {
-                setIsLoading(false);
+                setIsSubmittingStep(false);
                 return;
             }
         }
@@ -967,7 +1112,7 @@ const ProcessViewer = () => {
             console.error('Erro ao salvar metadados:', error);
 
         } finally {
-            setIsLoading(false);
+            setIsSubmittingStep(false);
         }
     };
 
@@ -1018,6 +1163,133 @@ const ProcessViewer = () => {
                 setNotice({ status: 'error', message: 'Ocorreu um erro ao tentar baixar o arquivo.' });
             }
             console.error('Erro ao tentar baixar o arquivo:', error);
+        }
+    };
+
+    const downloadBase64Pdf = (pdf, filename) => {
+        const byteCharacters = atob(pdf);
+        const byteNumbers = Array.from(byteCharacters, (char) => char.charCodeAt(0));
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: 'application/pdf' });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename || 'stage-document.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+    };
+
+    const setStageDocumentValue = (stepId, fieldId, documentValue) => {
+        setFormValues((prev) => ({
+            ...prev,
+            [stepId]: {
+                ...prev[stepId],
+                [fieldId]: [documentValue],
+            },
+        }));
+    };
+
+    const handleGenerateStageDocumentPdf = async (stepId, fieldId) => {
+        try {
+            const params = new URLSearchParams({
+                node_id: stepId,
+                field_id: fieldId,
+            });
+            const response = await apiFetch({
+                path: `/obatala/v1/process_obatala/${process.id}/stage-document-pdf?${params}`,
+                method: 'GET',
+            });
+
+            downloadBase64Pdf(response.pdf, response.filename);
+            if (response.document) {
+                setStageDocumentValue(stepId, fieldId, response.document);
+            }
+            setNotice({
+                status: 'success',
+                message: __('Document PDF generated successfully.', 'obatala'),
+            });
+        } catch (error) {
+            setNotice({
+                status: 'error',
+                message: error.message || __('Could not generate the document PDF.', 'obatala'),
+            });
+        }
+    };
+
+    const handleSignedDocumentUpload = async (stepId, fieldId, file) => {
+        const currentValue = formValues[stepId]?.[fieldId];
+        const documentValue = Array.isArray(currentValue) ? currentValue[0] : currentValue;
+        if (documentValue?.signedFile?.name) {
+            setNotice({
+                status: 'error',
+                message: __('A signed PDF is already attached and cannot be replaced.', 'obatala'),
+            });
+            return;
+        }
+
+        try {
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('node_id', stepId);
+            formData.append('field_id', fieldId);
+
+            const response = await apiFetch({
+                path: `/obatala/v1/process_obatala/${process.id}/stage-document-signed`,
+                method: 'POST',
+                headers: {
+                    'X-WP-Nonce': ObatalaApi.nonce,
+                },
+                body: formData,
+            });
+
+            if (response.document) {
+                setStageDocumentValue(stepId, fieldId, response.document);
+            }
+            await fetchUpdatedProcessNodes();
+            setNotice({
+                status: 'success',
+                message: __('Signed PDF attached successfully.', 'obatala'),
+            });
+        } catch (error) {
+            setNotice({
+                status: 'error',
+                message: error.message || __('Could not attach the signed PDF.', 'obatala'),
+            });
+        }
+    };
+
+    const handleDownloadSignedDocument = async (stepId, fieldId) => {
+        try {
+            const params = new URLSearchParams({
+                node_id: stepId,
+                field_id: fieldId,
+            });
+            const response = await apiFetch({
+                path: `/obatala/v1/process_obatala/${process.id}/stage-document-signed?${params}`,
+                method: 'GET',
+                parse: false,
+            });
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            const contentDisposition = response.headers.get('content-disposition');
+            const fileName = contentDisposition
+                ? contentDisposition.split('filename=')[1]?.replace(/"/g, '') || 'signed-document.pdf'
+                : 'signed-document.pdf';
+            link.setAttribute('download', fileName);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            setNotice({
+                status: 'error',
+                message: error.message || __('Could not download the signed PDF.', 'obatala'),
+            });
         }
     };
 
@@ -1103,13 +1375,32 @@ const ProcessViewer = () => {
         return sectorUser.includes(stepSector);
     };
 
-    if (isProcessLoading) return <Spinner />;
+    if (isProcessLoading) {
+        return (
+            <>
+                <BrandHeader />
+                <main>
+                    <div className="obatala-inline-loading">
+                        <Spinner />
+                        <span>{__("Loading process...", "obatala")}</span>
+                    </div>
+                </main>
+                <BrandFooter />
+            </>
+        );
+    }
 
     if (!process) {
         return (
-            <Notice status="warning" isDismissible={false}>
-                {__("No process found.", "obatala")}
-            </Notice>
+            <>
+                <BrandHeader />
+                <main>
+                    <Notice status="warning" isDismissible={false}>
+                        {__("No process found.", "obatala")}
+                    </Notice>
+                </main>
+                <BrandFooter />
+            </>
         );
     }
 
@@ -1178,10 +1469,21 @@ const ProcessViewer = () => {
     return (
         <>
             <BrandHeader />
+            <ProcessHeader
+                process={process}
+                filteredProcessType={filteredProcessType}
+                authorsById={authorsById}
+                isComplete={progress && progress === 100} // Adicionado para controle do badge
+                progress={progress}
+            />
             <main>
-                {isLoading ? (
-                    <Spinner />
-                ) : viewMode === "history" ? (
+                {isLoading && (
+                    <div className="obatala-inline-loading">
+                        <Spinner />
+                        <span>{__("Loading process data...", "obatala")}</span>
+                    </div>
+                )}
+                {viewMode === "history" ? (
                         <HistoryViewer
                             process={process}
                             filteredProcessType={filteredProcessType}
@@ -1194,13 +1496,6 @@ const ProcessViewer = () => {
                         />
                 ) : (
                     <>
-                        <ProcessHeader
-                            process={process}
-                            filteredProcessType={filteredProcessType}
-                            authorsById={authorsById}
-                            isComplete={processIsComplete}
-                            progress={progress}
-                        />
                         {notice && (
                             <Notice
                                 status={notice.status}
@@ -1233,15 +1528,12 @@ const ProcessViewer = () => {
                                     return (
                                         <div key={index} className={`accordion-item ${isDisabled ? 'disabled' : ''}`}>
                                             <button
-                                                className="accordion-header"
+                                                className={`accordion-header ${isCompleted ? 'success' : isDisabled ? 'danger' : 'warning'}`}
                                                 onClick={() => !isDisabled && toggleAccordion(index)}
                                                 aria-expanded={activeIndex === index}
                                                 aria-controls={`accordion-content-${index}`}
                                                 disabled={isDisabled}
                                             >
-                                                <span className={`status ${isCompleted ? 'success' : isDisabled ? 'danger' : 'warning'}`}>
-                                                    {isCompleted ? __('Completed', 'obatala') : __('Pending', 'obatala')}
-                                                </span>
                                                 <h2 className="accordion-title me-auto">{step.label}</h2>
                                                 <div className="badge-container">
                                                     <span
@@ -1479,12 +1771,23 @@ const ProcessViewer = () => {
                                                                         </div>
                                                                         {!submittedSteps[currentStep] && (
                                                                             <div className="action-bar">
+                                                                                {currentStepHasStageDocument && (
+                                                                                    <Button
+                                                                                        variant="secondary"
+                                                                                        type="button"
+                                                                                        onClick={handleSaveDraft}
+                                                                                        disabled={isSavingDraft || submittedSteps[currentStep] || !isUserAllowed}
+                                                                                    >
+                                                                                        {isSavingDraft ? __('Saving...', 'obatala') : __('Save draft', 'obatala')}
+                                                                                    </Button>
+                                                                                )}
                                                                                 <Button
                                                                                     variant="primary"
                                                                                     type="submit"
-                                                                                    disabled={!canSubmitCurrentStep || submittedSteps[currentStep] || !isUserAllowed}
+                                                                                    disabled={!canSubmitCurrentStep || submittedSteps[currentStep] || !isUserAllowed || isSubmittingStep}
+                                                                                    isBusy={isSubmittingStep}
                                                                                 >
-                                                                                    {__("Submit", "obatala")}
+                                                                                    {isSubmittingStep ? __("Submitting...", "obatala") : __("Submit", "obatala")}
                                                                                 </Button>
                                                                             </div>
                                                                         )}
@@ -1500,6 +1803,10 @@ const ProcessViewer = () => {
                                                                                 }
                                                                                 handleDownload={handleDownload}
                                                                                 fieldId={field.id}
+                                                                                stepId={orderedSteps[currentStep].id}
+                                                                                handleGenerateStageDocumentPdf={handleGenerateStageDocumentPdf}
+                                                                                handleSignedDocumentUpload={handleSignedDocumentUpload}
+                                                                                handleDownloadSignedDocument={handleDownloadSignedDocument}
                                                                             />
                                                                         )) : null}
                                                                     </dl>

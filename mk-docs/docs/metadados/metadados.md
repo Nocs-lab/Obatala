@@ -7,6 +7,8 @@ Os snippets de código neste documento são apenas modelos ilustrativos.
 
 O plugin Obatala permite a criação e o gerenciamento de processos curatoriais no WordPress, utilizando metadados dinâmicos para atender às necessidades específicas de cada etapa. Esta documentação detalha como implementar e utilizar esses metadados dentro das interfaces de processos e etapas.
 
+Para o campo especial **Documento da etapa** (`stage_document`), com editor rico, PDF e anexo assinado, consulte [Documento da etapa](documento-etapa.md). A geração de PDF exige [Composer instalado](../instalacao.md#2-instalar-dependências-php-composer).
+
 ---
 
 ## Conceito de Metadados Dinâmicos
@@ -132,6 +134,8 @@ Além do nodes e edges, a estrutura atual também inclui os seguintes campos com
 - current_stage: Etapa atual do processo (ex: "Etapa 5").
 
 - groupResponsible: Grupo responsável pela execução (ex: "grupo1").
+
+- is_deleted, deleted_at, deleted_by, deleted_by_name: Metadados de **exclusão lógica** do processo (instância `process_obatala`). Ver [Gestão de processos](../processos/gestao-processos.md).
 
 ## Implementação de Metadados Dinâmicos
 

@@ -1,11 +1,11 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Spinner, Button, Notice, Icon, Modal, TabPanel} from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { Spinner, Button, Notice, Icon, Modal, TabPanel, __experimentalConfirmDialog as ConfirmDialog } from '@wordpress/components';
+import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import ProcessCreator from './ProcessManager/ProcessCreator';
 import { plus } from '@wordpress/icons';
 import ProcessList from './ProcessManager/ProcessList';
-import { fetchUserProcesses } from '../api/apiRequests';
+import { fetchUserProcesses, deleteProcess } from '../api/apiRequests';
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 import BrandHeader from './BrandHeader';
@@ -24,7 +24,9 @@ const ProcessManager = ({ onSelectProcess }) => {
     const [accessLevel, setAccessLevel] = useState(null);
     const [modelFilter, setModelFilter] = useState(null);
     const [notice, setNotice] = useState(null);
-    const [activeTab, setActiveTab] = useState('all'); 
+    const [activeTab, setActiveTab] = useState('all');
+    const [processToDelete, setProcessToDelete] = useState(null);
+    const [isDeletingProcess, setIsDeletingProcess] = useState(false);
 
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
 
@@ -155,6 +157,40 @@ const ProcessManager = ({ onSelectProcess }) => {
         setAddingProcess(null);
     };
 
+    const handleConfirmDelete = (process) => {
+        setProcessToDelete(process);
+    };
+
+    const handleDeleteProcess = async () => {
+        if (!processToDelete) {
+            return;
+        }
+
+        setIsDeletingProcess(true);
+        try {
+            const response = await deleteProcess(processToDelete.id);
+            setProcesses((prev) => prev.filter((p) => p.id !== processToDelete.id));
+            setProcessTypeMappings((prev) => prev.filter((m) => m.processId !== processToDelete.id));
+            const successMessage = response?.message
+                ? __(response.message, 'obatala')
+                : __('Process deleted successfully.', 'obatala');
+            setNotice({ status: 'success', message: successMessage });
+            await fetchProcessesUser();
+        } catch (error) {
+            console.error('Error deleting process:', error);
+            const rawMessage = error?.message || error?.data?.message;
+            setNotice({
+                status: 'error',
+                message: typeof rawMessage === 'string'
+                    ? __(rawMessage, 'obatala')
+                    : __('Error deleting process.', 'obatala'),
+            });
+        } finally {
+            setIsDeletingProcess(false);
+            setProcessToDelete(null);
+        }
+    };
+
     const filteredUserProcesses =useMemo(() => { 
         return Array.isArray(processUser)
         ?   processes.filter(process => processUser?.includes(process.id))
@@ -182,26 +218,39 @@ const ProcessManager = ({ onSelectProcess }) => {
     return (
         <>
             <BrandHeader />
-            <main>
-                <div className="title-container">
-                    <h2>{__('Processes', 'obatala')}</h2>
-                    <span className="badge">{filteredProcess.length}</span>
-                    <div className="group-button">
-                        <Button
-                            variant="primary"
-                            icon={<Icon icon={plus} />}
-                            onClick={handleAddProcess}
-                        >
-                            {__('Add new', 'obatala')}
-                        </Button>
-                    </div>
+            <div className="title-container">
+                <h2>{__('Processes', 'obatala')}</h2>
+                <span className="badge default">{filteredProcess.length}</span>
+                <div className="group-button">
+                    <Button
+                        variant="secondary"
+                        size="small"
+                        icon={<Icon icon={plus} />}
+                        onClick={handleAddProcess}
+                    >
+                        {__('Add new', 'obatala')}
+                    </Button>
                 </div>
-
+            </div>
+            <main>
                 {notice && (
                     <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
                         {notice.message}
                     </Notice>
                 )}
+                <ConfirmDialog
+                    isOpen={!!processToDelete}
+                    onConfirm={handleDeleteProcess}
+                    onCancel={() => setProcessToDelete(null)}
+                    confirmButtonText={__('Delete', 'obatala')}
+                    cancelButtonText={__('Cancel', 'obatala')}
+                    isBusy={isDeletingProcess}
+                >
+                    {sprintf(
+                        __('Are you sure you want to delete process %s?', 'obatala'),
+                        processToDelete?.title?.rendered || ''
+                    )}
+                </ConfirmDialog>
                 <div className="panel-container">
                     <TabPanel
                         className="process-tabs"
@@ -222,20 +271,19 @@ const ProcessManager = ({ onSelectProcess }) => {
                         ]}
                     >
                         {({ tab }) => (
-                            <div>
-                                <ProcessList
-                                    processes={filteredProcess}
-                                    loading={isLoadingProcesses || (activeTab === 'my' && isLoadingUserProcesses)}
-                                    onEdit={handleEditProcess}
-                                    onViewProcess={handleSelectProcess}
-                                    processTypeMappings={processTypeMappings}
-                                    processTypes={processTypes}
-                                    accessLevel={accessLevel}
-                                    setAccessLevel={setAccessLevel}
-                                    modelFilter={modelFilter}
-                                    setModelFilter={setModelFilter}
-                                />
-                            </div>
+                            <ProcessList
+                                processes={filteredProcess}
+                                loading={isLoadingProcesses || (activeTab === 'my' && isLoadingUserProcesses)}
+                                onEdit={handleEditProcess}
+                                onViewProcess={handleSelectProcess}
+                                onDelete={handleConfirmDelete}
+                                processTypeMappings={processTypeMappings}
+                                processTypes={processTypes}
+                                accessLevel={accessLevel}
+                                setAccessLevel={setAccessLevel}
+                                modelFilter={modelFilter}
+                                setModelFilter={setModelFilter}
+                            />
                         )}
                     </TabPanel>
                 </div>

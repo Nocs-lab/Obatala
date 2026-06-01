@@ -1,5 +1,7 @@
 # 🧩 Criação de Interfaces no WordPress para Gerenciamento de Processos no Plugin Obatala
 
+Antes de desenvolver ou testar localmente, siga o guia [Instalação](../instalacao.md) (`composer install`, `npm run build`, Tainacan ativo).
+
 O desenvolvimento de interfaces administrativas no WordPress com o plugin **Obatala** envolve:
 
 - Criação de menus personalizados.
@@ -234,10 +236,20 @@ private function register_api_endpoints() {
 Esses endpoints fornecem acesso a dados para:
 
 - Listagem e edição de processos
+- Exclusão lógica de processos (`DELETE /obatala/v1/process_obatala/{id}`)
 - Tipos de processo
 - Setores e suas relações
+- Relatórios PDF (`GET /obatala/v1/process_obatala/{id}/report-pdf`)
 
-**Controle de acesso:** As rotas REST usam `permission_callback` definido em `ObatalaAPI`, exigindo `is_user_logged_in()` e `current_user_can('edit_posts')`. Apenas usuários autenticados com capacidade de editar posts (Editores, Administradores) podem acessar a API.
+### Exclusão lógica de processo
+
+```http
+DELETE /wp-json/obatala/v1/process_obatala/{id}
+```
+
+Marca `is_deleted = 1` e grava `deleted_at`, `deleted_by` e `deleted_by_name`. Processos excluídos não aparecem nas listagens REST nem na interface. Detalhes em [Gestão de processos](../processos/gestao-processos.md).
+
+**Controle de acesso:** As rotas REST usam `permission_callback` definido em `ObatalaAPI` (`Obatala\Security\Roles::can_access_obatala()`), exigindo usuário autenticado com permissão Obatalá adequada.
 
 ### ✅ Conclusão
 A arquitetura do plugin Obatala integra:

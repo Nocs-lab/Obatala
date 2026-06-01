@@ -1,52 +1,53 @@
-import React from "react";
-import { Icon } from "@wordpress/components";
+import React from 'react';
+import { Icon } from '@wordpress/components';
 import {
-  edit,
-  trash,
-  paragraph,
-  check,
-  keyboard,
-  calendar,
-  link,
-  commentEditLink,
-  seen,
-  listView,
-  commentContent,
-  mobile,
-  file,
-  mapMarker,
-} from "@wordpress/icons";
+	edit,
+	trash,
+	paragraph,
+	check,
+	keyboard,
+	calendar,
+	link,
+	commentEditLink,
+	seen,
+	listView,
+	commentContent,
+	mobile,
+	file,
+	mapMarker,
+} from '@wordpress/icons';
 
-const IconForType = ({ type }) => {
-  const iconMapping = {
-    text: paragraph, // Ícone para tipo de input texto
-    edit: edit,
-    checkbox: check,
-    radio: listView,
-    select: listView,
-    number: keyboard,
-    datepicker: calendar,
-    email: commentContent,
-    url: link,
-    textarea: commentEditLink,
-    password: seen,
-    phone: mobile,
-    upload: file,
-    address: mapMarker,
-  };
+const IconForType = ( { type } ) => {
+	const iconMapping = {
+		text: paragraph, // Ícone para tipo de input texto
+		edit: edit,
+		checkbox: check,
+		radio: listView,
+		select: listView,
+		number: keyboard,
+		datepicker: calendar,
+		email: commentContent,
+		url: link,
+		textarea: commentEditLink,
+		password: seen,
+		phone: mobile,
+		upload: file,
+		stage_document: file,
+		address: mapMarker,
+	};
 
-  const SelectedIcon = iconMapping[type]; // Pega o componente do ícone correspondente
+	const SelectedIcon = iconMapping[ type ]; // Pega o componente do ícone correspondente
 
-  return SelectedIcon ? <Icon icon={SelectedIcon} size={12} /> : null; // Retorna null se o type não corresponder a nenhum ícone
+	return SelectedIcon ? <Icon icon={ SelectedIcon } size={ 12 } /> : null; // Retorna null se o type não corresponder a nenhum ícone
 };
 
-const LabelWithIcon = ({ label, type }) => (
-  <>
-    <span className="step-icon">
-      <IconForType type={type} /> 
-    </span>
-    <span className="step-label">{label}</span>
-  </>
+const LabelWithIcon = ( { label, type } ) => (
+	<>
+		<span className="step-icon">
+			<IconForType type={ type } />
+		</span>
+		<span className="step-label">{ label }</span>
+	</>
 );
 
 export default LabelWithIcon;

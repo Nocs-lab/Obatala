@@ -90,21 +90,21 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
                     </Button>
                     <Tooltip text={__('Manage users', 'obatala')}>
                         <Button
-                            variant="secondary"
+                            variant="tertiary"
                             icon={people}
                             onClick={() => handleManagerUsers(row.original)}
                         >{__('Manage users', 'obatala')}</Button>
                     </Tooltip>
                     <Tooltip text={__('Edit', 'obatala')}>
                         <Button
-                            variant="secondary"
+                            variant="tertiary"
                             icon={edit}
                             onClick={() => onEdit(row.original)}
                         />
                     </Tooltip>
                     <Tooltip text={__('Delete', 'obatala')}>
                         <Button
-                            variant="secondary"
+                            variant="tertiary"
                             icon={trash}
                             onClick={() => onDelete(row.original)}
                         />

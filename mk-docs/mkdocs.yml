@@ -34,13 +34,17 @@ markdown_extensions:
 
 nav:
   - Home: index.md
+  - Instalação: instalacao.md
   - Organização: organizacao.md
   - Internacionalização: internacionalizacao.md
+  - Processos:
+      - Gestão de processos: processos/gestao-processos.md
   - Guia do Frontend: gutenberg.md
   - Posts Customizados: posts-customizados.md
   - Metadados Dinâmicos: 
     - Conceito: metadados/metadados.md
     - Implementação: metadados/implementacao.md
+    - Documento da etapa: metadados/documento-etapa.md
   - Tutoriais:
       - Guia básico: tutoriais/guia-dev.md
   # - Modelagem: 

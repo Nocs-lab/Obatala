@@ -455,48 +455,26 @@ const DashboardPage = () => {
     return (
         <>
             <BrandHeader />
-            <main>
-                <div className="title-container">
-                    <h2>{__('Dashboard', 'obatala')}</h2>
-                    <div className="stat" title={`${completedProcessesPercentage}%`}>
-                        <p className="description">{sprintf(__('%1$s/%2$s completed processes', 'obatala'), countCompletedProcesses, processes.length)}</p>
-                        <progress value={completedProcessesPercentage} max="100">{completedProcessesPercentage}%</progress>
-                    </div>
+            <div className="title-container">
+                <h2>{__('Dashboard', 'obatala')}</h2>
+                <div className="stat" title={`${completedProcessesPercentage}%`}>
+                    <p className="description">{sprintf(__('%1$s/%2$s completed processes', 'obatala'), countCompletedProcesses, processes.length)}</p>
+                    <progress value={completedProcessesPercentage} max="100">{completedProcessesPercentage}%</progress>
                 </div>
+            </div>
+            <main>
                 <div className="dashboard-container">
                     <div className="dashboard-item-personal">
                         <div className="card-container">
-                            <div className="card-item primary-100">
+                            <div className="card-item card-profile">
                                 <img src={currentUser.avatar_urls?.[96]} className="user-photo" alt={`Foto de ${currentUser?.name}`} />
                                 <span className="description">Olá, <strong>{currentUser.name}</strong>!</span>
-
                                 {matchesSectors.length > 0 && (
-                                    <>
-                                        <div className="table-responsive mt-2">
-                                            <table className="wp-list-table widefat transparent">
-                                                <thead>
-                                                    <tr>
-                                                        <th>{__('My group', 'obatala')}</th>
-                                                        <th>{__('Description', 'obatala')}</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    {matchesSectors.map((sector) => (
-                                                        <tr key={sector.id}>
-                                                            <td>
-                                                                <a
-                                                                    href={`/wp-admin/admin.php?page=sector-details&sector_id=${sector.id}`}
-                                                                >
-                                                                    {sector.name}
-                                                                </a>
-                                                            </td>
-                                                            <td>{sector.description}</td>
-                                                        </tr>
-                                                    ))}
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </>
+                                    <div className="badge-container">
+                                        {matchesSectors.map((sector) => (
+                                            <span class="badge info"><Icon icon="groups" /> {sector.name}</span>
+                                        ))}
+                                    </div>
                                 )}
                             </div>
                             {pendingProcesses.length > 0 && (
@@ -535,16 +513,16 @@ const DashboardPage = () => {
                     <div className="dashboard-item-stats">
                         <div className="card-container">
                             <a href={obatalaApp.admin_url +"admin.php?page=process-manager"} className="card-item">
-                                <span className="indicator">{processes.length}</span>
-                                <span className="description"><Icon icon="admin-page" /> {__('Processes', 'obatala')}</span>
+                                <span className="description">{__('Processes', 'obatala')}</span>
+                                <span className="indicator">{processes.length} <Icon icon="admin-page" /></span>
                             </a>
                             <a href={obatalaApp.admin_url +"admin.php?page=process-type-manager"} className="card-item">
-                                <span className="indicator">{processTypes.length}</span>
-                                <span className="description"><Icon icon="welcome-widgets-menus" /> {__('Models', 'obatala')}</span>
+                                <span className="description">{__('Models', 'obatala')}</span>
+                                <span className="indicator">{processTypes.length} <Icon icon="welcome-widgets-menus" /></span>
                             </a>
                             <a href={obatalaApp.admin_url +"admin.php?page=sector_manager"} className="card-item">
-                                <span className="indicator">{sectors.length}</span>
-                                <span className="description"><Icon icon="groups" /> {__('Groups', 'obatala')}</span>
+                                <span className="description">{__('Groups', 'obatala')}</span>
+                                <span className="indicator">{sectors.length} <Icon icon="groups" /></span>
                             </a>
                         </div>
                         <div className="panel-container mt-2">

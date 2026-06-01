@@ -1,5 +1,7 @@
 # Implementação de Metadados Dinâmicos
 
+Os dados de execução das etapas são persistidos principalmente em `stageData` e `submittedStages` (post meta do processo), expostos pela `ProcessApi` (`GET/POST .../meta`). O tipo de campo `stage_document` tem fluxo próprio de PDF e upload assinado — veja [Documento da etapa](documento-etapa.md).
+
 ## Arquivos e Classes
 ```mermaid
 classDiagram

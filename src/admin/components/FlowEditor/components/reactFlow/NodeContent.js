@@ -17,6 +17,7 @@ const FIELD_OPTIONS = [
     { id: "number", label: "Número", icon: keyboard },
     { id: "datepicker", label: "Date Picker", icon: calendar },
     { id: "upload", label: "Upload de Arquivo", icon: file },
+    { id: "stage_document", label: __("Stage document", "obatala"), icon: file },
     { id: "select", label: "Select (Múltiplas Opções)", icon: listView },
     { id: "radio", label: "Radio (Opções de Seleção)", icon: listView },
     { id: "search", label: "Busca em Tainacan", icon: search },

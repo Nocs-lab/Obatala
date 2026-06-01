@@ -1037,3 +1037,208 @@ msgstr "Alguns campos não têm título válido (vazio ou padrão). Verifique: %
 #: ProcessModelEditor.js, classes/Api/ProcessTypeApi.php
 msgid "%1$s (field %2$s)"
 msgstr "%1$s (campo %2$s)"
+
+#: classes/Api/ProcessApi.php
+#: classes/Report/StageDocumentPdf.php
+#: src/admin/components/FlowEditor/components/inputControls/StageDocumentControls.js
+#: src/admin/components/FlowEditor/components/reactFlow/NodeContent.js
+#: src/admin/components/ProcessManager/MetaFieldDisplay.js
+#: src/admin/components/ProcessManager/MetaFieldInputs.js
+#: src/admin/components/ProcessViewer.js
+msgid "Stage document"
+msgstr "Documento da etapa"
+
+msgid "The label is required."
+msgstr "O rótulo é obrigatório."
+
+msgid "Settings saved successfully."
+msgstr "Configurações salvas com sucesso."
+
+msgid "Edit stage document"
+msgstr "Editar documento da etapa"
+
+msgid "Label"
+msgstr "Rótulo"
+
+msgid "Document title"
+msgstr "Título do documento"
+
+msgid "Document type"
+msgstr "Tipo de documento"
+
+msgid "Opinion, report, order, or term"
+msgstr "Parecer, relatório, despacho ou termo"
+
+msgid "Help text"
+msgstr "Texto de ajuda"
+
+msgid "Instructions for filling this document"
+msgstr "Instruções para preencher este documento"
+
+msgid "Required"
+msgstr "Obrigatório"
+
+msgid "Require document content"
+msgstr "Exigir preenchimento do documento"
+
+msgid "Require signed PDF upload"
+msgstr "Exigir upload do PDF assinado"
+
+msgid "Document template"
+msgstr "Modelo do documento"
+
+msgid "Optional initial text shown when the document is empty."
+msgstr "Texto inicial opcional exibido quando o documento estiver vazio."
+
+msgid "Save settings"
+msgstr "Salvar configurações"
+
+msgid "Bold"
+msgstr "Negrito"
+
+msgid "Italic"
+msgstr "Itálico"
+
+msgid "Underline"
+msgstr "Sublinhado"
+
+msgid "Align left"
+msgstr "Alinhar à esquerda"
+
+msgid "Center"
+msgstr "Centralizar"
+
+msgid "Align right"
+msgstr "Alinhar à direita"
+
+msgid "Justify"
+msgstr "Justificar"
+
+msgid "Bulleted list"
+msgstr "Lista com marcadores"
+
+msgid "Numbered list"
+msgstr "Lista numerada"
+
+msgid "Clear formatting"
+msgstr "Limpar formatação"
+
+msgid "Generate PDF"
+msgstr "Gerar PDF"
+
+msgid "Replace signed PDF"
+msgstr "Substituir PDF assinado"
+
+msgid "Attach signed PDF"
+msgstr "Anexar PDF assinado"
+
+msgid "Signed PDF upload is required for this document."
+msgstr "O upload do PDF assinado é obrigatório para este documento."
+
+msgid "Document PDF generated successfully."
+msgstr "PDF do documento gerado com sucesso."
+
+msgid "Could not generate the document PDF."
+msgstr "Não foi possível gerar o PDF do documento."
+
+msgid "Signed PDF attached successfully."
+msgstr "PDF assinado anexado com sucesso."
+
+msgid "Could not attach the signed PDF."
+msgstr "Não foi possível anexar o PDF assinado."
+
+msgid "Could not download the signed PDF."
+msgstr "Não foi possível baixar o PDF assinado."
+
+msgid "Signed document"
+msgstr "Documento assinado"
+
+msgid "Document PDF generated"
+msgstr "PDF do documento gerado"
+
+msgid "Document draft"
+msgstr "Rascunho do documento"
+
+msgid "Save draft"
+msgstr "Salvar rascunho"
+
+msgid "Saved draft"
+msgstr "Rascunho salvo"
+
+msgid "Draft saved successfully."
+msgstr "Rascunho salvo com sucesso."
+
+msgid "Could not save the draft."
+msgstr "Não foi possível salvar o rascunho."
+
+msgid "No signed PDF was sent."
+msgstr "Nenhum PDF assinado foi enviado."
+
+msgid "Only PDF files are allowed."
+msgstr "Apenas arquivos PDF são permitidos."
+
+msgid "Could not create the document directory."
+msgstr "Não foi possível criar o diretório do documento."
+
+msgid "Could not save the signed PDF."
+msgstr "Não foi possível salvar o PDF assinado."
+
+msgid "No signed PDF is attached to this document."
+msgstr "Nenhum PDF assinado está anexado a este documento."
+
+msgid "Signed PDF not found."
+msgstr "PDF assinado não encontrado."
+
+msgid "You must be logged in."
+msgstr "Você precisa estar logado."
+
+msgid "The node_id and field_id parameters are required."
+msgstr "Os parâmetros node_id e field_id são obrigatórios."
+
+msgid "You do not have permission to access this process document."
+msgstr "Você não tem permissão para acessar este documento do processo."
+
+msgid "Step not found."
+msgstr "Etapa não encontrada."
+
+msgid "Stage document field not found."
+msgstr "Campo de documento da etapa não encontrado."
+
+msgid "No document content was found for this step."
+msgstr "Nenhum conteúdo de documento foi encontrado para esta etapa."
+
+msgid "Obatala - Curatorial Process Management"
+msgstr "Obatalá - Gestão de Processos Curatoriais"
+
+msgid "Document"
+msgstr "Documento"
+
+msgid "Type"
+msgstr "Tipo"
+
+msgid "Print/export date"
+msgstr "Data de impressão/exportação"
+
+msgid "Signed PDF"
+msgstr "PDF assinado"
+
+msgid "Process deleted successfully."
+msgstr "Processo excluído com sucesso."
+
+msgid "Error deleting process."
+msgstr "Erro ao excluir processo."
+
+msgid "Are you sure you want to delete process %s?"
+msgstr "Tem certeza que deseja excluir o processo %s?"
+
+msgid "Delete process"
+msgstr "Excluir processo"
+
+msgid "Process not found."
+msgstr "Processo não encontrado."
+
+msgid "Process already deleted."
+msgstr "Processo já excluído."
+
+msgid "Unable to record process deletion without an authenticated user."
+msgstr "Não foi possível registrar a exclusão do processo sem um usuário autenticado."

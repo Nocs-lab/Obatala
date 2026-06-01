@@ -5,6 +5,8 @@ namespace Obatala\Api;
 defined('ABSPATH') || exit;
 
 use WP_REST_Response; // Certifique-se de importar a classe WP_REST_Response
+use WP_Error;
+use Obatala\Entities\Process;
 use Obatala\Entities\Sector;
 use Obatala\Services\TainacanExportService;
 
@@ -124,6 +126,24 @@ class ProcessApi extends ObatalaAPI {
             'callback' => [$this, 'generate_report_pdf'],
             'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
         ]);
+
+        $this->add_route('/process_obatala/(?P<id>\d+)/stage-document-pdf', [
+            'methods' => 'GET',
+            'callback' => [$this, 'generate_stage_document_pdf'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+        ]);
+
+        $this->add_route('/process_obatala/(?P<id>\d+)/stage-document-signed', [
+            'methods' => 'POST',
+            'callback' => [$this, 'upload_signed_stage_document'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+        ]);
+
+        $this->add_route('/process_obatala/(?P<id>\d+)/stage-document-signed', [
+            'methods' => 'GET',
+            'callback' => [$this, 'download_signed_stage_document'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+        ]);
     }
 
     /**
@@ -171,6 +191,290 @@ class ProcessApi extends ObatalaAPI {
             'filename' => $filename,
         ], 200);
     }
+
+    public function generate_stage_document_pdf($request) {
+        $context = $this->get_stage_document_context($request);
+        if (is_wp_error($context)) {
+            return $this->error_response($context);
+        }
+
+        if (!class_exists('\Dompdf\Dompdf')) {
+            return new WP_REST_Response([
+                'error' => 'Server Error',
+                'message' => __('PDF generation library is not available. Run: composer install', 'obatala'),
+            ], 500);
+        }
+
+        $report = new \Obatala\Report\StageDocumentPdf(
+            $context['post'],
+            $context['node'],
+            $context['field'],
+            $context['document'],
+            $context['user']
+        );
+        $pdf_binary = $report->generatePdfBinary();
+        if ($pdf_binary === null) {
+            return new WP_REST_Response(['error' => 'Server Error', 'message' => __('Failed to generate PDF.', 'obatala')], 500);
+        }
+
+        $safe_title = sanitize_file_name($context['post']->post_title ?: 'process-' . $context['process_id']);
+        $field_label = $context['field']['config']['label'] ?? $context['field_id'];
+        $filename = $safe_title . '-' . sanitize_file_name($field_label) . '-' . date('Y-m-d-His') . '.pdf';
+
+        $document = $context['document'];
+        $document['status'] = !empty($document['signedFile']) ? 'signed' : 'pdf_generated';
+        $document['generatedPdf'] = [
+            'filename' => $filename,
+            'generatedAt' => current_time('mysql'),
+            'generatedBy' => $context['user']->display_name,
+            'generatedById' => $context['user']->ID,
+        ];
+        $document['history'][] = [
+            'event' => 'pdf_generated',
+            'at' => current_time('mysql'),
+            'user' => $context['user']->display_name,
+            'userId' => $context['user']->ID,
+            'filename' => $filename,
+        ];
+        $this->update_stage_document_value($context['process_id'], $context['node_id'], $context['field_id'], $document);
+
+        return new WP_REST_Response([
+            'pdf' => base64_encode($pdf_binary),
+            'filename' => $filename,
+            'document' => $document,
+        ], 200);
+    }
+
+    public function upload_signed_stage_document($request) {
+        $context = $this->get_stage_document_context($request);
+        if (is_wp_error($context)) {
+            return $this->error_response($context);
+        }
+
+        $files = $request->get_file_params();
+        if (empty($files['file']) || !empty($files['file']['error'])) {
+            return new WP_REST_Response(['error' => 'Bad Request', 'message' => __('No signed PDF was sent.', 'obatala')], 400);
+        }
+
+        $file = $files['file'];
+        $mime = wp_check_filetype_and_ext($file['tmp_name'], $file['name']);
+        if (($mime['type'] ?? '') !== 'application/pdf') {
+            return new WP_REST_Response(['error' => 'Bad Request', 'message' => __('Only PDF files are allowed.', 'obatala')], 400);
+        }
+
+        $document = $context['document'];
+        if (!empty($document['signedFile']['name'])) {
+            return new WP_REST_Response([
+                'error' => 'Conflict',
+                'message' => __('A signed PDF is already attached and cannot be replaced.', 'obatala'),
+            ], 409);
+        }
+
+        $directory = $this->get_stage_document_directory($context['process_id'], $context['node_id'], $context['field_id']);
+        if (!wp_mkdir_p($directory)) {
+            return new WP_REST_Response(['error' => 'Server Error', 'message' => __('Could not create the document directory.', 'obatala')], 500);
+        }
+
+        $filename = date('YmdHis') . '-' . sanitize_file_name($file['name']);
+        $destination = trailingslashit($directory) . $filename;
+        if (!move_uploaded_file($file['tmp_name'], $destination)) {
+            return new WP_REST_Response(['error' => 'Server Error', 'message' => __('Could not save the signed PDF.', 'obatala')], 500);
+        }
+
+        $document['status'] = 'signed';
+        $document['signedFile'] = [
+            'name' => $filename,
+            'originalName' => sanitize_file_name($file['name']),
+            'uploadedAt' => current_time('mysql'),
+            'uploadedBy' => $context['user']->display_name,
+            'uploadedById' => $context['user']->ID,
+            'sha256' => hash_file('sha256', $destination),
+        ];
+        $document['history'][] = [
+            'event' => 'signed_pdf_uploaded',
+            'at' => current_time('mysql'),
+            'user' => $context['user']->display_name,
+            'userId' => $context['user']->ID,
+            'filename' => $filename,
+        ];
+
+        $this->update_stage_document_value($context['process_id'], $context['node_id'], $context['field_id'], $document);
+
+        return new WP_REST_Response([
+            'message' => __('Signed PDF attached successfully.', 'obatala'),
+            'document' => $document,
+        ], 200);
+    }
+
+    public function download_signed_stage_document($request) {
+        $context = $this->get_stage_document_context($request);
+        if (is_wp_error($context)) {
+            return $this->error_response($context);
+        }
+
+        $filename = $context['document']['signedFile']['name'] ?? '';
+        if (!$filename) {
+            return new WP_REST_Response(['error' => 'Not Found', 'message' => __('No signed PDF is attached to this document.', 'obatala')], 404);
+        }
+
+        $directory = $this->get_stage_document_directory($context['process_id'], $context['node_id'], $context['field_id']);
+        $file_path = realpath(trailingslashit($directory) . basename($filename));
+        $real_directory = realpath($directory);
+
+        if (!$file_path || !$real_directory || strpos($file_path, $real_directory) !== 0 || !file_exists($file_path)) {
+            return new WP_REST_Response(['error' => 'Not Found', 'message' => __('Signed PDF not found.', 'obatala')], 404);
+        }
+
+        header('Content-Type: application/pdf');
+        header('Content-Disposition: attachment; filename="' . basename($filename) . '"');
+        header('Content-Length: ' . filesize($file_path));
+        readfile($file_path);
+        exit;
+    }
+
+    private function get_stage_document_context($request) {
+        $process_id = (int) $request['id'];
+        $node_id = sanitize_text_field((string) $request->get_param('node_id'));
+        $field_id = sanitize_text_field((string) $request->get_param('field_id'));
+        $user_id = get_current_user_id();
+
+        if (!$user_id) {
+            return new WP_Error('unauthorized', __('You must be logged in.', 'obatala'), ['status' => 401]);
+        }
+        if (!$node_id || !$field_id) {
+            return new WP_Error('bad_request', __('The node_id and field_id parameters are required.', 'obatala'), ['status' => 400]);
+        }
+
+        $post = get_post($process_id);
+        if (!$post || $post->post_type !== 'process_obatala') {
+            return new WP_Error('not_found', __('Process not found.', 'obatala'), ['status' => 404]);
+        }
+
+        $permission = Sector::check_permission($user_id, $process_id);
+        if (!$permission['status']) {
+            return new WP_Error('forbidden', __('You do not have permission to access this process document.', 'obatala'), ['status' => 403]);
+        }
+
+        $flow_data = maybe_unserialize(get_post_meta($process_id, 'flowData', true));
+        $stage_data = maybe_unserialize(get_post_meta($process_id, 'stageData', true));
+        if (!is_array($flow_data)) {
+            $flow_data = [];
+        }
+        if (!is_array($stage_data)) {
+            $stage_data = [];
+        }
+
+        $node = null;
+        foreach (($flow_data['nodes'] ?? []) as $candidate) {
+            if (($candidate['id'] ?? '') === $node_id) {
+                $node = $candidate;
+                break;
+            }
+        }
+        if (!$node) {
+            return new WP_Error('not_found', __('Step not found.', 'obatala'), ['status' => 404]);
+        }
+
+        $field = null;
+        foreach (($node['data']['fields'] ?? []) as $candidate) {
+            if (($candidate['id'] ?? '') === $field_id) {
+                $field = $candidate;
+                break;
+            }
+        }
+        if (!$field || ($field['type'] ?? '') !== 'stage_document') {
+            return new WP_Error('not_found', __('Stage document field not found.', 'obatala'), ['status' => 404]);
+        }
+
+        $document = $this->get_stage_document_value($stage_data, $node_id, $field_id);
+        if (empty($document['content']) && empty($document['signedFile'])) {
+            return new WP_Error('not_found', __('No document content was found for this step.', 'obatala'), ['status' => 404]);
+        }
+
+        return [
+            'process_id' => $process_id,
+            'node_id' => $node_id,
+            'field_id' => $field_id,
+            'post' => $post,
+            'node' => $node,
+            'field' => $field,
+            'document' => $document,
+            'user' => get_userdata($user_id),
+        ];
+    }
+
+    private function get_stage_document_value($stage_data, $node_id, $field_id) {
+        $fields = $stage_data[$node_id]['fields'] ?? [];
+        foreach ($fields as $field) {
+            if (($field['fieldId'] ?? '') !== $field_id) {
+                continue;
+            }
+            $value = $field['value'] ?? [];
+            $document = is_array($value) && isset($value[0]) ? $value[0] : $value;
+            if (is_array($document)) {
+                return $document;
+            }
+            return [
+                'content' => is_string($document) ? $document : '',
+                'status' => $document ? 'draft' : 'empty',
+            ];
+        }
+
+        return [
+            'content' => '',
+            'status' => 'empty',
+        ];
+    }
+
+    private function update_stage_document_value($process_id, $node_id, $field_id, $document) {
+        $this->sanitize_stage_document_payload($document);
+        $stage_data = maybe_unserialize(get_post_meta($process_id, 'stageData', true));
+        if (!is_array($stage_data)) {
+            $stage_data = [];
+        }
+        if (!isset($stage_data[$node_id]) || !is_array($stage_data[$node_id])) {
+            $stage_data[$node_id] = ['fields' => []];
+        }
+        if (!isset($stage_data[$node_id]['fields']) || !is_array($stage_data[$node_id]['fields'])) {
+            $stage_data[$node_id]['fields'] = [];
+        }
+
+        $updated = false;
+        foreach ($stage_data[$node_id]['fields'] as &$field) {
+            if (($field['fieldId'] ?? '') === $field_id) {
+                $field['value'] = [$document];
+                $updated = true;
+                break;
+            }
+        }
+        unset($field);
+
+        if (!$updated) {
+            $stage_data[$node_id]['fields'][] = [
+                'fieldId' => $field_id,
+                'value' => [$document],
+            ];
+        }
+
+        update_post_meta($process_id, 'stageData', $stage_data);
+    }
+
+    private function get_stage_document_directory($process_id, $node_id, $field_id) {
+        $upload_dir = wp_upload_dir();
+        return trailingslashit($upload_dir['basedir'])
+            . 'obatala/stage-documents/'
+            . (int) $process_id . '/'
+            . sanitize_file_name($node_id) . '/'
+            . sanitize_file_name($field_id);
+    }
+
+    private function error_response(WP_Error $error) {
+        $status = $error->get_error_data()['status'] ?? 500;
+        return new WP_REST_Response([
+            'error' => $error->get_error_code(),
+            'message' => $error->get_error_message(),
+        ], $status);
+    }
     
     public function get_current_stage($request) {
         $post_id = (int) $request['id'];
@@ -209,9 +513,14 @@ class ProcessApi extends ObatalaAPI {
     public function update_meta($request) {
         $post_id = (int) $request['id'];
         $meta = $request->get_json_params();
+        $this->sanitize_stage_document_meta($meta);
         
-        $post_type_id = (int) $meta['process_type'];
-        $post_type_post = get_post($post_type_id);
+        $raw_process_type = $meta['process_type'] ?? 0;
+        if (is_array($raw_process_type)) {
+            $raw_process_type = reset($raw_process_type);
+        }
+        $post_type_id = (int) $raw_process_type;
+        $post_type_post = $post_type_id ? get_post($post_type_id) : null;
 
         if ($post_type_post) {
             $title = $post_type_post->post_title;
@@ -219,9 +528,47 @@ class ProcessApi extends ObatalaAPI {
         }
 
         foreach ($meta as $key => $value) {
+            if (in_array($key, ['is_deleted', 'deleted_at', 'deleted_by', 'deleted_by_name'], true)) {
+                continue;
+            }
             update_post_meta($post_id, $key, $value);
         }
         return true;
+    }
+
+    private function sanitize_stage_document_meta(&$meta) {
+        if (empty($meta['stageData']) || !is_array($meta['stageData'])) {
+            return;
+        }
+
+        foreach ($meta['stageData'] as &$stage) {
+            if (empty($stage['fields']) || !is_array($stage['fields'])) {
+                continue;
+            }
+
+            foreach ($stage['fields'] as &$field) {
+                if (empty($field['value']) || !is_array($field['value'])) {
+                    continue;
+                }
+
+                foreach ($field['value'] as &$value) {
+                    if (is_array($value) && array_key_exists('content', $value)) {
+                        $this->sanitize_stage_document_payload($value);
+                    }
+                }
+                unset($value);
+            }
+            unset($field);
+        }
+        unset($stage);
+    }
+
+    private function sanitize_stage_document_payload(&$document) {
+        $document['content'] = isset($document['content']) ? wp_kses_post((string) $document['content']) : '';
+        $document['status'] = isset($document['status']) ? sanitize_key((string) $document['status']) : 'empty';
+        if (isset($document['updatedAt'])) {
+            $document['updatedAt'] = sanitize_text_field((string) $document['updatedAt']);
+        }
     }
     
     public function get_user_processes($request) {
@@ -235,7 +582,10 @@ class ProcessApi extends ObatalaAPI {
     
         foreach ($processes as $process) {
             $process_id = (int) $process->ID;
-    
+
+            if (Process::is_deleted($process_id)) {
+                continue;
+            }
 
             $permission = Sector::check_permission($user_id, $process_id);
     
@@ -499,6 +849,14 @@ class ProcessApi extends ObatalaAPI {
         $updated_node = $node_to_update;
         $updated_node['node_status'] = 'Finished';
 
+        foreach ($nodes as &$node) {
+            if ($node['id'] === $node_id) {
+                $node = $updated_node;
+                break;
+            }
+        }
+        unset($node);
+
         // Encontra a próxima conexão
         $next_edge = null;
         foreach ($edges as $edge) {
@@ -562,49 +920,52 @@ class ProcessApi extends ObatalaAPI {
                 }
             }
 
-            // Se o próximo nó for End, atualiza o status do post
+            // Se o próximo nó for End, conclui o processo apenas se todos os requisitos foram atendidos
             if ($next_node_id === 'End') {
-                $process_status = 'Finished';
+                $progress = $this->calculate_progress_percentage($post_id, $nodes, $edges);
+                if ($progress >= 100) {
+                    $process_status = 'Finished';
 
-                try {
-                    $export_service = new TainacanExportService();
-                    $runtime = $export_service->get_runtime_config($post_id);
-                    $has_enabled_mapper = ($runtime['mapper_status'] ?? 'enabled') === 'enabled'
-                        && !empty($runtime['enabled']);
+                    try {
+                        $export_service = new TainacanExportService();
+                        $runtime = $export_service->get_runtime_config($post_id);
+                        $has_enabled_mapper = ($runtime['mapper_status'] ?? 'enabled') === 'enabled'
+                            && !empty($runtime['enabled']);
 
-                    if ($has_enabled_mapper) {
-                        $export_service->mark_export_pending_confirmation($post_id);
-                        $process_status = TainacanExportService::PROCESS_STATUS_AWAITING_EXPORT_CONFIRMATION;
+                        if ($has_enabled_mapper) {
+                            $export_service->mark_export_pending_confirmation($post_id);
+                            $process_status = TainacanExportService::PROCESS_STATUS_AWAITING_EXPORT_CONFIRMATION;
+                            $export_result = [
+                                'status' => 'pending',
+                                'message' => 'Processo concluído. Aguardando confirmação para exportação ao Tainacan.',
+                                'process_id' => $post_id,
+                                'collection_id' => (int) ($runtime['collection_id'] ?? 0),
+                                'exported_items' => [],
+                                'failed_items' => [],
+                                'warnings' => [],
+                                'created_at' => current_time('mysql'),
+                            ];
+                        } else {
+                            $export_result = null;
+                        }
+                    } catch (\Throwable $exception) {
                         $export_result = [
-                            'status' => 'pending',
-                            'message' => 'Processo concluído. Aguardando confirmação para exportação ao Tainacan.',
+                            'status' => 'error',
+                            'message' => 'Falha ao preparar confirmação de exportação para o Tainacan.',
                             'process_id' => $post_id,
-                            'collection_id' => (int) ($runtime['collection_id'] ?? 0),
+                            'collection_id' => 0,
                             'exported_items' => [],
                             'failed_items' => [],
                             'warnings' => [],
+                            'error' => $exception->getMessage(),
                             'created_at' => current_time('mysql'),
                         ];
-                    } else {
-                        $export_result = null;
                     }
-                } catch (\Throwable $exception) {
-                    $export_result = [
-                        'status' => 'error',
-                        'message' => 'Falha ao preparar confirmação de exportação para o Tainacan.',
-                        'process_id' => $post_id,
-                        'collection_id' => 0,
-                        'exported_items' => [],
-                        'failed_items' => [],
-                        'warnings' => [],
-                        'error' => $exception->getMessage(),
-                        'created_at' => current_time('mysql'),
-                    ];
-                }
 
-                update_post_meta($post_id, 'status', $process_status);
-                $response_status = $process_status;
-            } 
+                    update_post_meta($post_id, 'status', $process_status);
+                    $response_status = $process_status;
+                }
+            }
             // Caso contrário, atualiza o status do próximo nó
             else {
                 foreach ($nodes as &$node) {
@@ -613,14 +974,6 @@ class ProcessApi extends ObatalaAPI {
                         break;
                     }
                 }
-            }
-        }
-
-        // Atualiza o nó atual
-        foreach ($nodes as &$node) {
-            if ($node['id'] === $node_id) {
-                $node = $updated_node;
-                break;
             }
         }
 
@@ -737,7 +1090,7 @@ class ProcessApi extends ObatalaAPI {
             $current = $this->findNextValid($current, $graph, $nodeMap, $validNodeMap, $visited);
         }
 
-        $progress = $this->calculate_progress_percentage($nodes, $edges);
+        $progress = $this->calculate_progress_percentage($post_id, $nodes, $edges);
 
         return new WP_REST_Response([
             'ordered_nodes' => $orderedNodes,
@@ -745,7 +1098,66 @@ class ProcessApi extends ObatalaAPI {
         ], 200);       
     }
 
-    public function calculate_progress_percentage($nodes, $edges) {
+    private function get_process_stage_data($post_id) {
+        $stage_data = maybe_unserialize(get_post_meta($post_id, 'stageData', true));
+        return is_array($stage_data) ? $stage_data : [];
+    }
+
+    private function stage_document_content_filled($document) {
+        if (!is_array($document)) {
+            return false;
+        }
+        $content = isset($document['content']) ? (string) $document['content'] : '';
+        return trim(wp_strip_all_tags($content)) !== '';
+    }
+
+    private function stage_document_signed_uploaded($document) {
+        if (!is_array($document)) {
+            return false;
+        }
+        $name = $document['signedFile']['name'] ?? '';
+        return trim((string) $name) !== '';
+    }
+
+    private function is_flow_field_requirement_met($field, $node_id, $stage_data) {
+        $config = $field['config'] ?? [];
+        $field_id = $field['id'] ?? '';
+        $type = $field['type'] ?? '';
+
+        if ($type !== 'stage_document') {
+            return true;
+        }
+
+        $document = $this->get_stage_document_value($stage_data, $node_id, $field_id);
+
+        if (!empty($config['required']) && !$this->stage_document_content_filled($document)) {
+            return false;
+        }
+
+        if (!empty($config['requireSignedUpload']) && !$this->stage_document_signed_uploaded($document)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function is_node_progress_complete($node, $stage_data) {
+        if (($node['node_status'] ?? '') !== 'Finished') {
+            return false;
+        }
+
+        $node_id = $node['id'] ?? '';
+        $fields = $node['data']['fields'] ?? [];
+        foreach ($fields as $field) {
+            if (!$this->is_flow_field_requirement_met($field, $node_id, $stage_data)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public function calculate_progress_percentage($post_id, $nodes, $edges) {
         if (!$nodes || !$edges) {
             return 0;
         }
@@ -793,13 +1205,16 @@ class ProcessApi extends ObatalaAPI {
             $current = $this->findNextValid($current, $graph, $nodeMap, $validNodeMap, $visited);
         }
 
-        // Calcula percentual
+        // Calcula percentual (etapa só conta se requisitos do documento estiverem atendidos)
         $totalValid = count($orderedNodes);
-        if ($totalValid === 0) return 0;
+        if ($totalValid === 0) {
+            return 0;
+        }
 
+        $stage_data = $this->get_process_stage_data($post_id);
         $finishedCount = 0;
         foreach ($orderedNodes as $node) {
-            if ($node['node_status'] === 'Finished') {
+            if ($this->is_node_progress_complete($node, $stage_data)) {
                 $finishedCount++;
             }
         }

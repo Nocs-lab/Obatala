@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { useFlowContext } from "../../context/FlowContext";
-import { Button, DropdownMenu } from "@wordpress/components";
-import { check, closeSmall, fullscreen, menu, plus } from "@wordpress/icons";
+import { Button } from "@wordpress/components";
+import { check, closeSmall, download, fullscreen, menu, plus, upload } from "@wordpress/icons";
 import { __ } from "@wordpress/i18n";
 
 const ProcessControls = ({onSave, onCancel, toggleFullScreen}) => {
@@ -45,36 +45,27 @@ const { addNewNode, addNewNodeConditional, onExport, onImport } = useFlowContext
     return (
         <>
             <div className="group-button">
-                <Button icon={check} variant="primary" type="submit" onClick={onSave}>
+                <Button icon={check} variant="primary" size="small" type="submit" onClick={onSave}>
                     {__('Save', 'obatala')}
                 </Button>
-                <Button icon={plus} variant="secondary" onClick={addNewNode}>
+                <Button icon={plus} variant="secondary" size="small" onClick={addNewNode}>
                     {__('Add step', 'obatala')}
                 </Button>
-                <Button icon={plus} variant="secondary" onClick={addNewNodeConditional}>
+                <Button icon={plus} variant="secondary" size="small" onClick={addNewNodeConditional}>
                     {__('Add conditional', 'obatala')}
                 </Button>
-                <Button icon={closeSmall} variant="secondary" onClick={onCancel}>
+                <Button icon={closeSmall} variant="secondary" size="small" onClick={onCancel}>
                     {__('Cancel changes', 'obatala')}
                 </Button>
-                <Button icon={fullscreen} variant="secondary" onClick={toggleFullScreen}>
+                <Button icon={fullscreen} variant="secondary" size="small" onClick={toggleFullScreen}>
                     {__('Fullscreen', 'obatala')}
                 </Button>
-                <DropdownMenu
-                    className="is-secondary"
-                    icon={menu}
-                    label={__('Select an option', 'obatala')}
-                    controls={ [
-                        {
-                            title: __('Export JSON', 'obatala'),
-                            onClick: handleExport,
-                        },
-                        {
-                            title: __('Import JSON', 'obatala'),
-                            onClick: handleImportClick,
-                        },
-                    ] }
-                />              
+                <Button icon={download} variant="secondary" size="small" onClick={handleExport}>
+                    {__('Export JSON', 'obatala')}
+                </Button>
+                <Button icon={upload} variant="secondary" size="small" onClick={handleImportClick}>
+                    {__('Import JSON', 'obatala')}
+                </Button>            
             </div>
             {/* Input invisível para carregar o arquivo JSON */}
             <input
