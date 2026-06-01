@@ -41,6 +41,7 @@
         "@wordpress/icons": "^10.21.0",
         "@xyflow/react": "^12.2.1",
         "date-fns": "^3.6.0",
+        "html-to-image": "^1.11.13",
         "php-unserialize": "^0.0.1",
         "react-beautiful-dnd": "^13.1.1",
         "react-router-dom": "^6.25.1",

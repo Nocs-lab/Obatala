@@ -795,6 +795,15 @@ msgstr "Tela cheia"
 msgid "Export JSON"
 msgstr "Exportar JSON"
 
+msgid "Export"
+msgstr "Exportar"
+
+msgid "No steps to export."
+msgstr "Não há etapas para exportar."
+
+msgid "Error exporting diagram."
+msgstr "Erro ao exportar o diagrama."
+
 msgid "Import JSON"
 msgstr "Importar JSON"
 
