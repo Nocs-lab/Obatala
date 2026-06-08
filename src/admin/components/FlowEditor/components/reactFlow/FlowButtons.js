@@ -1,11 +1,11 @@
 import React, { useRef } from "react";
 import { useFlowContext } from "../../context/FlowContext";
 import { Button } from "@wordpress/components";
-import { check, closeSmall, download, fullscreen, menu, plus, upload } from "@wordpress/icons";
+import { check, closeSmall, download, fullscreen, image, plus, upload } from "@wordpress/icons";
 import { __ } from "@wordpress/i18n";
 
 const ProcessControls = ({onSave, onCancel, toggleFullScreen}) => {
-const { addNewNode, addNewNodeConditional, onExport, onImport } = useFlowContext();
+const { addNewNode, addNewNodeConditional, onExport, onImport, exportFlowImage } = useFlowContext();
 
     const fileInputRef = useRef(null);
 
@@ -59,6 +59,9 @@ const { addNewNode, addNewNodeConditional, onExport, onImport } = useFlowContext
                 </Button>
                 <Button icon={fullscreen} variant="secondary" size="small" onClick={toggleFullScreen}>
                     {__('Fullscreen', 'obatala')}
+                </Button>
+                <Button icon={image} variant="secondary" size="small" onClick={exportFlowImage}>
+                    {__('Export', 'obatala')}
                 </Button>
                 <Button icon={download} variant="secondary" size="small" onClick={handleExport}>
                     {__('Export JSON', 'obatala')}

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useEffect } from "react";
+import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
 import { addEdge, useNodesState, useEdgesState } from "@xyflow/react";
 import validateInitialData from "../helpers/dataValidator";
 
@@ -12,6 +12,17 @@ export const useFlowContext = () => {
 export const FlowProvider = ({ children }) => {
     const [errors, setErrors] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
+    const exportFlowImageRef = useRef(null);
+
+    const registerExportFlowImage = useCallback((fn) => {
+        exportFlowImageRef.current = fn;
+    }, []);
+
+    const exportFlowImage = useCallback(async () => {
+        if (typeof exportFlowImageRef.current === 'function') {
+            await exportFlowImageRef.current();
+        }
+    }, []);
 
     // Utilizando estados diretamente para nodes e edges
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -431,6 +442,8 @@ export const FlowProvider = ({ children }) => {
         errors,
         onExport,
         onImport,
+        exportFlowImage,
+        registerExportFlowImage,
         setNodes,
         updateNodeCondition,
         addStartNode,

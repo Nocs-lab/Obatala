@@ -17,6 +17,7 @@ import { useFlowContext } from "./context/FlowContext";
 import StartNode from './components/reactFlow/StartNode';
 import EndNode from './components/reactFlow/EndNode';
 import NodeConditional from "./components/reactFlow/NodeConditional";
+import FlowImageExporter from "./components/reactFlow/FlowImageExporter";
 
 
 const nodeTypes = {
@@ -121,6 +122,7 @@ const ProcessFlow = forwardRef(({ initialData, onSave, onCancel,toggleFullScreen
                     proOptions={{ hideAttribution: true }}
                     >
                     <SlidingDrawer toggleDrawer={toggleDrawer} />
+                    <FlowImageExporter />
                     <Controls />
                     <MiniMap />
                     <Background />

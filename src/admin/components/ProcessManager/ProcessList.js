@@ -11,7 +11,7 @@ import { fetchProcessReportPdf } from '../../api/apiRequests';
 const isPdfReportAvailable =
     typeof window !== 'undefined' &&
     window.obatalaApp &&
-    window.obatalaApp.pdf_report_available === true;
+    Boolean(window.obatalaApp.pdf_report_available);
 
 const ProcessList = ({ processes, onEdit, onViewProcess, onDelete, processTypeMappings, processTypes, accessLevel, setAccessLevel, modelFilter, setModelFilter }) => {
     const [pdfLoadingId, setPdfLoadingId] = useState(null);
