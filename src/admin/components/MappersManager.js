@@ -4,7 +4,7 @@ import BrandFooter from "./BrandFooter";
 import apiFetch from "@wordpress/api-fetch";
 import Select from 'react-select';
 import { __ } from "@wordpress/i18n";
-import { BaseControl, Button, CheckboxControl, Icon, Panel, PanelRow, SelectControl, Spinner } from '@wordpress/components';
+import { BaseControl, Button, CheckboxControl, Icon, Notice, Panel, PanelRow, SelectControl, Spinner, ToggleControl } from '@wordpress/components';
 import { fetchMapperProcessModel, fetchMetadataCollectionsTainacan, fetchProcessModels, fetchFieldsProcessModels, fetchCollectionsTainacan, fetchProcessTypeById, updateProcessTypeMeta } from '../api/apiRequests';
 
 const DEFAULT_DECISION_CONFIG = {
@@ -1692,21 +1692,6 @@ const MappersManager = () => {
         setDecisionConfig(getDefaultControlDecisionConfig());
     }
 
-    const helperTextStyle = {
-        marginTop: '10px',
-        marginBottom: 0,
-        color: '#50575e',
-        fontSize: '12px',
-        lineHeight: 1.45,
-    };
-
-    const sectionCardStyle = {
-        border: '1px solid #d8dee6',
-        borderRadius: '10px',
-        padding: '14px',
-        background: 'linear-gradient(180deg, #ffffff 0%, #f8fafc 100%)',
-        boxShadow: '0 1px 2px rgba(16, 24, 40, 0.04)',
-    };
     const showProfileSelectorSection = false;
 
     if (isLoading) {
@@ -1726,13 +1711,8 @@ const MappersManager = () => {
             <BrandHeader />
             <div className="title-container">
                 <h2>
-                    Mappers Tainacan
+                    <small>Edit export data</small>{selectedProcessModel?.title?.rendered}
                 </h2>
-                <div className="badge-container">
-                    <span className="badge default">
-                        <Icon icon="welcome-widgets-menus" /> Process Model: {selectedProcessModel?.title?.rendered}
-                    </span>
-                </div>
             </div>
             <main>
                 <Panel>
@@ -1740,55 +1720,46 @@ const MappersManager = () => {
                         <form className="inline-edition flex-basis-100">
                             <input type="hidden" name="page" value="inbcm-mapping" />
 
-                            <div className="flex-basis-100" style={{ ...sectionCardStyle, background: 'linear-gradient(180deg, #f8fcf8 0%, #edf7ed 100%)' }}>
-                                <BaseControl
-                                    label="Status do Mapeador"
-                                    help="Desabilite para impedir a criação automática da etapa de controle e a exportação automática para o Tainacan."
-                                >
-                                    <SelectControl
-                                        label="Situação"
-                                        value={mapperStatus}
-                                        options={[
-                                            { label: 'Habilitado', value: MAPPER_STATUS_ENABLED },
-                                            { label: 'Desabilitado', value: MAPPER_STATUS_DISABLED },
-                                        ]}
-                                        onChange={(value) => setMapperStatus(normalizeMapperStatus(value))}
-                                    />
-                                    {!isMapperEnabled && (
-                                        <p style={{ ...helperTextStyle, marginTop: '6px' }}>
-                                            Com o mapeador desabilitado, o fluxo não gera automaticamente a etapa de controle
-                                            e não executa o envio de itens para o Tainacan ao finalizar o processo.
-                                        </p>
+                            <ToggleControl
+                                label="Status do Mapeador"
+                                help="Desabilite para impedir a criação automática da etapa de controle e a exportação automática para o Tainacan."
+                                checked={ mapperStatus === MAPPER_STATUS_ENABLED }
+                                onChange={ (isChecked) => {
+                                    const newValue = isChecked ? MAPPER_STATUS_ENABLED : MAPPER_STATUS_DISABLED;
+                                    setMapperStatus(normalizeMapperStatus(newValue));
+                                } }
+                            />
+
+                            {!isMapperEnabled ? (
+                                <Notice status="warning" isDismissible={false}>
+                                    Com o mapeador desabilitado, o fluxo não gera automaticamente a etapa de controle
+                                    e não executa o envio de itens para o Tainacan ao finalizar o processo.
+                                </Notice>
+                            ) : (
+                                <div className="counter-container flex-basis-100">
+                                    <hr className="mb-2" />
+                                    {showProfileSelectorSection && (
+                                        <BaseControl
+                                            label="Seleção de Coleção no Início do Processo"
+                                            help="Escolha o field da etapa inicial que receberá automaticamente as opções de coleção."
+                                        >
+                                            <SelectControl
+                                                label="Field seletor da coleção"
+                                                value={profileSelectorFieldId}
+                                                options={profileSelectorFieldOptions}
+                                                onChange={(value) => setProfileSelectorFieldId(String(value || ''))}
+                                            />
+                                            <p>
+                                                Esse field será exibido na etapa inicial da tramitação com as coleções disponíveis para escolha.
+                                                Hoje ele aceita fields do tipo <strong>radio</strong> da etapa inicial.
+                                            </p>
+                                        </BaseControl>
                                     )}
-                                </BaseControl>
-                            </div>
 
-                            {showProfileSelectorSection && (
-                                <div className="flex-basis-100" style={{ ...sectionCardStyle, background: 'linear-gradient(180deg, #fffdf7 0%, #fff7e6 100%)' }}>
-                                    <BaseControl
-                                        label="Seleção de Coleção no Início do Processo"
-                                        help="Escolha o field da etapa inicial que receberá automaticamente as opções de coleção."
+                                    <BaseControl className="counter-item"
+                                        label="Coleções de Exportação"
+                                        help="Cada configuração representa uma coleção de destino com seu próprio mapeamento de metadados."
                                     >
-                                        <SelectControl
-                                            label="Field seletor da coleção"
-                                            value={profileSelectorFieldId}
-                                            options={profileSelectorFieldOptions}
-                                            onChange={(value) => setProfileSelectorFieldId(String(value || ''))}
-                                        />
-                                        <p style={{ ...helperTextStyle, marginTop: '6px' }}>
-                                            Esse field será exibido na etapa inicial da tramitação com as coleções disponíveis para escolha.
-                                            Hoje ele aceita fields do tipo <strong>radio</strong> da etapa inicial.
-                                        </p>
-                                    </BaseControl>
-                                </div>
-                            )}
-
-                            <div className="flex-basis-100" style={{ marginTop: '1rem' }}>
-                                <BaseControl
-                                    label="Coleções de Exportação"
-                                    help="Cada configuração representa uma coleção de destino com seu próprio mapeamento de metadados."
-                                >
-                                    <div style={{ ...sectionCardStyle, background: 'linear-gradient(180deg, #f7fbff 0%, #eff6ff 100%)' }}>
                                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 14px', alignItems: 'flex-start' }}>
                                             {collectionsTainacan.map((collection) => {
                                                 const collectionId = String(collection?.["WP_Post"]?.ID || '');
@@ -1866,16 +1837,12 @@ const MappersManager = () => {
                                                 );
                                             })}
                                         </div>
-                                    </div>
-                                </BaseControl>
-                            </div>
+                                    </BaseControl>
 
-                            <div className="flex-basis-100" style={{ marginTop: '1rem' }}>
-                                <BaseControl
-                                    label="Escolha os campos do formulário que apresentam os metadados do item:"
-                                    help="A lista abaixo exclui automaticamente os fields usados na configuração geral de decisão. Você pode salvar sem selecionar campos e concluir o mapeamento depois."
-                                >
-                                    <div style={{ ...sectionCardStyle, background: 'linear-gradient(180deg, #f8fbff 0%, #eef5ff 100%)' }}>
+                                    <BaseControl className="counter-item"
+                                        label="Escolha os campos do formulário que apresentam os metadados do item:"
+                                        help="A lista abaixo exclui automaticamente os fields usados na configuração geral de decisão. Você pode salvar sem selecionar campos e concluir o mapeamento depois."
+                                    >
                                         <Select
                                             key={currentProfile?.key || 'profile-empty'}
                                             isMulti
@@ -1885,16 +1852,12 @@ const MappersManager = () => {
                                             isDisabled={!currentProfile}
                                             placeholder="Selecione os campos..."
                                         />
-                                    </div>
-                                </BaseControl>
-                            </div>
+                                    </BaseControl>
 
-                            <div className="flex-basis-100">
-                                <BaseControl
-                                    label="Mapeamento de Metadados"
-                                    help="Relacione os campos do Obatala com os metadados do Tainacan."
-                                >
-                                    <div style={{ ...sectionCardStyle, background: 'linear-gradient(180deg, #ffffff 0%, #f4fbf7 100%)' }}>
+                                    <BaseControl className="counter-item"
+                                        label="Mapeamento de Metadados"
+                                        help="Relacione os campos do Obatala com os metadados do Tainacan."
+                                    >
                                         <table className="wp-list-table widefat fixed striped">
                                             <thead>
                                                 <tr>
@@ -1943,9 +1906,9 @@ const MappersManager = () => {
                                                 )}
                                             </tbody>
                                         </table>
-                                    </div>
-                                </BaseControl>
-                            </div>
+                                    </BaseControl>
+                                </div>
+                            )}
 
                             <div className="group-button">
                                 <Button variant="tertiary" onClick={cancelMappingData}>
