@@ -1579,6 +1579,24 @@ button .components-spinner {
       font-weight: 300;
       margin-bottom: .2rem;
     }
+    .process-title-with-number {
+      align-items: baseline;
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: .75rem;
+    }
+    .process-number {
+      background-color: rgba(255, 255, 255, .18);
+      border-radius: 999px;
+      color: var(--white);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: .85rem;
+      font-weight: 500;
+      letter-spacing: .02em;
+      line-height: 1;
+      padding: .35rem .65rem;
+      white-space: nowrap;
+    }
   }
   & progress::-webkit-progress-bar {
     background-color: rgba(0,0,0,.1);

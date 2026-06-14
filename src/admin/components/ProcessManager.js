@@ -11,6 +11,38 @@ import { store as coreStore } from '@wordpress/core-data';
 import BrandHeader from './BrandHeader';
 import BrandFooter from './BrandFooter';
 
+const getMetaValue = (meta, key) => {
+    if (!meta || meta[key] === undefined || meta[key] === null) {
+        return '';
+    }
+    const value = meta[key];
+    return Array.isArray(value) ? (value[0] ?? '') : value;
+};
+
+const sortProcessesNewestFirst = (processList) => {
+    return [...processList].sort((a, b) => {
+        const aAno = parseInt(getMetaValue(a.meta, 'ano_processo') || '0', 10);
+        const bAno = parseInt(getMetaValue(b.meta, 'ano_processo') || '0', 10);
+        if (aAno !== bAno) {
+            return bAno - aAno;
+        }
+
+        const aSeq = parseInt(getMetaValue(a.meta, 'sequencial_processo') || '0', 10);
+        const bSeq = parseInt(getMetaValue(b.meta, 'sequencial_processo') || '0', 10);
+        if (aSeq !== bSeq) {
+            return bSeq - aSeq;
+        }
+
+        const aDate = new Date(a.date || a.modified || 0).getTime();
+        const bDate = new Date(b.date || b.modified || 0).getTime();
+        if (aDate !== bDate) {
+            return bDate - aDate;
+        }
+
+        return (b.id || 0) - (a.id || 0);
+    });
+};
+
 const ProcessManager = ({ onSelectProcess }) => {
     const [processTypes, setProcessTypes] = useState([]);
     const [processes, setProcesses] = useState([]);
@@ -81,7 +113,7 @@ const ProcessManager = ({ onSelectProcess }) => {
                 path: `/obatala/v1/process_obatala?per_page=100&_embed`,
             });
             if (data && Array.isArray(data)) {
-                setProcesses(data);
+                setProcesses(sortProcessesNewestFirst(data));
                 await fetchProcessModelsForProcesses(data);
             } else {
                 console.error("No processes data returned.");
@@ -121,23 +153,31 @@ const ProcessManager = ({ onSelectProcess }) => {
 
     const handleProcessSaved = async (newProcess) => {
         if (editingProcess) {
-            const updatedProcesses = processes.map(process =>
-                process.id === editingProcess.id ? newProcess : process
+            setProcesses((prev) =>
+                sortProcessesNewestFirst(
+                    prev.map((process) =>
+                        process.id === editingProcess.id ? newProcess : process
+                    )
+                )
             );
-            setProcesses(updatedProcesses);
             setEditingProcess(null);
-        }
-        else {
-            setProcesses(prevProcesses => [...prevProcesses, newProcess]);
+        } else {
+            setProcesses((prev) => sortProcessesNewestFirst([...prev, newProcess]));
             setAddingProcess(null);
         }
-        setIsLoadingProcesses(true);
-        // Atualiza os mapeamentos de tipo de processo
-        const updatedProcesses = [...processes, newProcess];
+
         setNotice({ status: 'success', message: __('Process saved successfully.', 'obatala') });
-        await fetchProcessModelsForProcesses(updatedProcesses);
+
+        setProcessTypeMappings((prev) => {
+            const processTypeId = newProcess.meta?.process_type?.[0] ?? newProcess.meta?.process_type;
+            const withoutCurrent = prev.filter((m) => m.processId !== newProcess.id);
+            return [
+                ...withoutCurrent,
+                { processId: newProcess.id, processTypeId: processTypeId ?? null },
+            ];
+        });
+
         await fetchProcessesUser();
-        setIsLoadingProcesses(false);
     };
 
     const handleSelectProcess = (processId) => {
@@ -200,15 +240,17 @@ const ProcessManager = ({ onSelectProcess }) => {
     const filteredProcess = useMemo(() => {
         const processList = activeTab === 'all' ? processes : filteredUserProcesses;  
 
-        return processList.filter(process => {
-            const matchesAccessLevel = !accessLevel || 
-                process?.meta?.access_level?.[0]?.includes(accessLevel);
-            
-            const matchesProcessType = !modelFilter || 
-                process?.meta?.process_type?.[0]?.includes(modelFilter.toString());
-            
-            return matchesAccessLevel && matchesProcessType;
-        });
+        return sortProcessesNewestFirst(
+            processList.filter(process => {
+                const matchesAccessLevel = !accessLevel || 
+                    process?.meta?.access_level?.[0]?.includes(accessLevel);
+                
+                const matchesProcessType = !modelFilter || 
+                    process?.meta?.process_type?.[0]?.includes(modelFilter.toString());
+                
+                return matchesAccessLevel && matchesProcessType;
+            })
+        );
     }, [accessLevel, modelFilter, processes, filteredUserProcesses, activeTab]); 
     
     if (isLoadingProcesses) {

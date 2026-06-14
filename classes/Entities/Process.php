@@ -113,6 +113,34 @@ class Process {
             'single' => true,
             'show_in_rest' => true,
         ]);
+
+        register_meta('post', 'numero_processo', [
+            'type' => 'string',
+            'description' => __('Número único do processo (AAAA-NNNNN-DV)', 'obatala'),
+            'single' => true,
+            'show_in_rest' => true,
+        ]);
+
+        register_meta('post', 'ano_processo', [
+            'type' => 'integer',
+            'description' => __('Ano do número do processo', 'obatala'),
+            'single' => true,
+            'show_in_rest' => true,
+        ]);
+
+        register_meta('post', 'sequencial_processo', [
+            'type' => 'integer',
+            'description' => __('Sequencial anual do processo', 'obatala'),
+            'single' => true,
+            'show_in_rest' => true,
+        ]);
+
+        register_meta('post', 'digito_verificador_processo', [
+            'type' => 'integer',
+            'description' => __('Dígito verificador do número do processo', 'obatala'),
+            'single' => true,
+            'show_in_rest' => true,
+        ]);
     }
 
     public static function is_deleted($process_id) {

@@ -103,6 +103,14 @@ O Poedit faz isso automaticamente ao salvar.
 
 No React, mensagens retornadas pela API também devem passar por `__(response.message, 'obatala')` antes de exibir ao usuário.
 
+### Exemplo: numeração de processo
+
+| msgid (código) | pt_BR |
+|----------------|-------|
+| Process number | Nº do processo |
+| No numbering | Sem numeração |
+| Search by title or process number | Buscar por título ou número do processo |
+
 ## Uso no código React
 
 Use as funções de `@wordpress/i18n`:

@@ -445,6 +445,15 @@ msgstr "Histórico"
 msgid "Search by title"
 msgstr "Buscar por título"
 
+msgid "Search by title or process number"
+msgstr "Buscar por título ou número do processo"
+
+msgid "Process number"
+msgstr "Nº do processo"
+
+msgid "No numbering"
+msgstr "Sem numeração"
+
 msgid "Previous"
 msgstr "Anterior"
 

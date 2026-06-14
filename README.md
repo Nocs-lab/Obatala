@@ -23,6 +23,7 @@ Ideal para instituições que buscam inovar na apresentação e gestão de suas 
 
 - **Internacionalização (i18n)**: Suporte a português brasileiro, espanhol e inglês (padrão) no painel (PHP) e no frontend (React), via arquivos `.po`/`.mo` e JSON.
 - **Gerenciamento de Processos e Etapas**: Criação e edição de processos curatoriais com múltiplas etapas.
+- **Numeração única de processos**: Identificador automático no formato `AAAA-NNNNN-DV` (ex.: `2026-00042-6`), com dígito verificador, sequencial anual e busca na listagem.
 - **Exclusão lógica de processos**: Remoção da interface com registro de quem excluiu e quando (`deleted_at`, `deleted_by`, `deleted_by_name`).
 - **Relatórios em PDF**: Relatório consolidado do processo e PDF do documento da etapa (Dompdf via Composer).
 - **Metadados Dinâmicos**: Adição e configuração de metadados personalizados para cada etapa do processo.
@@ -115,6 +116,11 @@ Passo a passo detalhado, checklist e solução de problemas: [mk-docs/docs/insta
 ## Documentação
 
 A documentação completa do plugin está no diretório `mk-docs` e online em [Documentação Oficial](https://nocs-lab.github.io/Obatala/).
+
+Tópicos recentes:
+
+- [Gestão de processos](mk-docs/docs/processos/gestao-processos.md) — numeração única (`AAAA-NNNNN-DV`), listagem, busca, exclusão lógica e PDF
+- [Instalação](mk-docs/docs/instalacao.md) — Composer, npm, tabelas de numeração e backfill
 
 ## Colaboração
 
