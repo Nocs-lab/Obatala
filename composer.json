@@ -12,9 +12,15 @@
     "require": {
         "dompdf/dompdf": "^2.0"
     },
+    "require-dev": {
+        "phpunit/phpunit": "^9.6"
+    },
     "autoload": {
         "psr-4": {
             "Obatala\\": "classes/"
         }
+    },
+    "scripts": {
+        "test": "phpunit"
     }
 }

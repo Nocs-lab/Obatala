@@ -214,6 +214,13 @@ class ProcessReportPdf {
         }
         $created = $this->post->post_date;
         $modified = $this->post->post_modified;
+        $process_number = get_post_meta($this->process_id, 'numero_processo', true);
+        if (is_array($process_number)) {
+            $process_number = reset($process_number);
+        }
+        $process_number_display = (is_string($process_number) && $process_number !== '')
+            ? $process_number
+            : '—';
         $generated_at = current_time('Y-m-d H:i:s');
         $generated_by_name = $this->generated_by->display_name ?: $this->generated_by->user_login;
 
@@ -244,6 +251,7 @@ class ProcessReportPdf {
         $html .= '<h2>' . esc_html__('General data', 'obatala') . '</h2>';
         $html .= '<table><tr><th>' . esc_html__('Field', 'obatala') . '</th><th>' . esc_html__('Value', 'obatala') . '</th></tr>';
         $html .= '<tr><td>' . esc_html__('Process ID', 'obatala') . '</td><td>' . esc_html((string) $this->process_id) . '</td></tr>';
+        $html .= '<tr><td>' . esc_html__('Process number', 'obatala') . '</td><td>' . esc_html($process_number_display) . '</td></tr>';
         $html .= '<tr><td>' . esc_html__('Process name', 'obatala') . '</td><td>' . esc_html($title) . '</td></tr>';
         $html .= '<tr><td>' . esc_html__('Model (type)', 'obatala') . '</td><td>' . esc_html($model_name) . '</td></tr>';
         $html .= '<tr><td>' . esc_html__('Status', 'obatala') . '</td><td>' . esc_html($status ?: '—') . '</td></tr>';

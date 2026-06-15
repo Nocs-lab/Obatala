@@ -610,6 +610,76 @@ const ProcessViewer = () => {
         return currentValue;
     };
 
+    const uploadVisibleStepFiles = async (stepId, visibleFieldIds) => {
+        if (!uploadedFiles[stepId]) {
+            return { ok: true };
+        }
+
+        for (const [fieldId, files] of Object.entries(uploadedFiles[stepId])) {
+            if (!visibleFieldIds.has(String(fieldId))) {
+                continue;
+            }
+
+            if (!files || !Array.isArray(files) || files.length === 0) {
+                continue;
+            }
+
+            const file = files[0];
+            if (!(file instanceof File)) {
+                continue;
+            }
+
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('id', process.id);
+            formData.append('node_id', stepId);
+
+            try {
+                await apiFetch({
+                    path: `/obatala/v1/process_type/upload`,
+                    method: 'POST',
+                    headers: {
+                        'X-WP-Nonce': ObatalaApi.nonce,
+                    },
+                    body: formData,
+                });
+
+                setFormValues((prev) => ({
+                    ...prev,
+                    [stepId]: {
+                        ...prev[stepId],
+                        [fieldId]: file.name,
+                    },
+                }));
+
+                setFileInfo((prev) => ({
+                    ...prev,
+                    [stepId]: {
+                        ...prev[stepId],
+                        [fieldId]: { name: file.name, size: file.size },
+                    },
+                }));
+            } catch (error) {
+                return {
+                    ok: false,
+                    message: sprintf(
+                        __('Error uploading file for field %s.', 'obatala'),
+                        fieldId
+                    ),
+                };
+            }
+        }
+
+        return { ok: true };
+    };
+
+    const buildStepFieldsPayload = (stepId, visibleFields) => {
+        return visibleFields.map((field) => ({
+            fieldId: field.id,
+            value: getFieldValueForSubmit(stepId, field),
+        }));
+    };
+
     const isFieldVisibleByCondition = useCallback((stepId, field) => {
         let conditional = field?.config?.conditional;
         const fieldId = String(field?.id || '');
@@ -759,13 +829,10 @@ const ProcessViewer = () => {
         return currentStepVisibleFields.filter((field) => !isSpreadsheetMappedField(field));
     }, [currentStepVisibleFields, isSpreadsheetMappedField]);
 
-    const currentStepHasStageDocument = useMemo(() => {
-        if (!Array.isArray(currentStepVisibleFields)) {
-            return false;
-        }
-
-        return currentStepVisibleFields.some((field) => field?.type === 'stage_document');
-    }, [currentStepVisibleFields]);
+    const currentStepCanSaveDraft = useMemo(() => {
+        const step = orderedSteps[currentStep];
+        return getSubmittableFieldsForStep(step).length > 0;
+    }, [orderedSteps, currentStep, getSubmittableFieldsForStep]);
 
     const currentStepMatrixRowCount = useMemo(() => {
         if (!currentStepRepeatedFields.length) {
@@ -922,14 +989,22 @@ const ProcessViewer = () => {
 
         const stepId = step.id;
         const visibleFields = getSubmittableFieldsForStep(step);
-        const fields = visibleFields.map((field) => ({
-            fieldId: field.id,
-            value: getFieldValueForSubmit(stepId, field),
-        }));
+        const visibleFieldIds = new Set(visibleFields.map((field) => String(field?.id || '')));
 
         setIsSavingDraft(true);
 
         try {
+            const uploadResult = await uploadVisibleStepFiles(stepId, visibleFieldIds);
+            if (!uploadResult.ok) {
+                setNotice({
+                    status: 'error',
+                    message: uploadResult.message || __('Could not save the draft.', 'obatala'),
+                });
+                return;
+            }
+
+            const fields = buildStepFieldsPayload(stepId, visibleFields);
+
             const existingMetaData = await apiFetch({
                 path: `/obatala/v1/process_obatala/${process.id}/meta`,
                 method: 'GET',
@@ -982,61 +1057,18 @@ const ProcessViewer = () => {
         const stepId = step.id;
         const visibleFields = getSubmittableFieldsForStep(step);
         const visibleFieldIds = new Set(visibleFields.map((field) => String(field?.id || '')));
-        const fields = visibleFields.map(field => ({
-            fieldId: field.id,
-            value: getFieldValueForSubmit(stepId, field),
-        }));
 
-        // Upload de arquivos 
-        let uploadFailed = false;
-
-        if (uploadedFiles[stepId]) {
-            for (const [fieldId, files] of Object.entries(uploadedFiles[stepId])) {
-                if (!visibleFieldIds.has(String(fieldId))) {
-                    continue;
-                }
-
-                if (!files || !Array.isArray(files) || files.length === 0) {
-                    continue;
-                }
-
-                const file = files[0];
-                const formData = new FormData();
-                formData.append('file', file);
-                formData.append('id', process.id);
-                formData.append('node_id', stepId);
-
-                try {
-                    const response = await apiFetch({
-                        path: `/obatala/v1/process_type/upload`,
-                        method: "POST",
-                        headers: {
-                            'X-WP-Nonce': ObatalaApi.nonce,
-                        },
-                        body: formData,
-                    });
-                    setFormValues(prev => ({
-                        ...prev,
-                        [stepId]: {
-                            ...prev[stepId],
-                            [fieldId]: file.name,
-                        }
-                    }));
-
-                    setNotice({ status: 'success', message: 'Uploaded successfully.' });
-                    setFileInfo({ name: file.name, size: file.size });
-                } catch (error) {
-                    setNotice({ status: 'error', message: `Erro ao enviar arquivo para o campo ${fieldId}: ${error}` });
-                    uploadFailed = true;
-                    break;
-                }
-            }
-
-            if (uploadFailed) {
-                setIsSubmittingStep(false);
-                return;
-            }
+        const uploadResult = await uploadVisibleStepFiles(stepId, visibleFieldIds);
+        if (!uploadResult.ok) {
+            setNotice({
+                status: 'error',
+                message: uploadResult.message || __('Could not save the draft.', 'obatala'),
+            });
+            setIsSubmittingStep(false);
+            return;
         }
+
+        const fields = buildStepFieldsPayload(stepId, visibleFields);
 
         // Salvar metadados
         try {
@@ -1771,12 +1803,13 @@ const ProcessViewer = () => {
                                                                         </div>
                                                                         {!submittedSteps[currentStep] && (
                                                                             <div className="action-bar">
-                                                                                {currentStepHasStageDocument && (
+                                                                                {currentStepCanSaveDraft && (
                                                                                     <Button
                                                                                         variant="secondary"
                                                                                         type="button"
                                                                                         onClick={handleSaveDraft}
                                                                                         disabled={isSavingDraft || submittedSteps[currentStep] || !isUserAllowed}
+                                                                                        isBusy={isSavingDraft}
                                                                                     >
                                                                                         {isSavingDraft ? __('Saving...', 'obatala') : __('Save draft', 'obatala')}
                                                                                     </Button>

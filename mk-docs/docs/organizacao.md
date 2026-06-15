@@ -35,11 +35,17 @@ Este documento descreve a estrutura de arquivos do plugin "Obatala", que é util
             ├── ProcessApi.php
             ├── ProcessTypeApi.php
             ├── SectorApi.php
+        └── 📁Database
+            ├── ProcessNumberSchema.php
         └── 📁Report
             ├── ProcessReportPdf.php
             ├── StageDocumentPdf.php
         └── 📁Security
             ├── Roles.php
+        └── 📁Services
+            ├── ProcessNumberService.php
+            ├── TainacanExportService.php
+            ├── TainacanMappingService.php
         └── 📁Entities
             ├── Process.php
             ├── ProcessType.php
@@ -111,6 +117,7 @@ Este documento descreve a estrutura de arquivos do plugin "Obatala", que é util
                             ├── CustomEdge.js
                             ├── EndNode.js
                             ├── FlowButtons.js
+                            ├── FlowImageExporter.js
                             ├── NodeConditional.js
                             ├── NodeContent.js
                             ├── NodeHandle.js
@@ -355,6 +362,23 @@ Geração de PDF com Dompdf:
 
 Ambas exigem `composer install` (pacote `dompdf/dompdf`).
 
+### 📁 `classes/Database/`
+Schema de tabelas customizadas (via `dbDelta`):
+
+- `ProcessNumberSchema.php`: tabelas `{prefix}obatala_process_sequence` e `{prefix}obatala_process_numbers` para sequencial anual atômico, unicidade e índice de busca por `numero_processo`.
+
+### 📁 `classes/Services/`
+Lógica de negócio reutilizável:
+
+- `ProcessNumberService.php`: geração do número `AAAA-NNNNN-DV`, cálculo do DV, backfill de processos antigos e busca por número.
+- `TainacanMappingService.php`, `TainacanExportService.php`: integração com exportação Tainacan.
+
+### 📁 `tests/`
+Testes unitários (sem bootstrap WordPress completo para regras puras):
+
+- `ProcessNumberServiceTest.php` (PHPUnit)
+- `run-process-number-tests.php` (runner standalone: `php tests/run-process-number-tests.php`)
+
 ### 📁 `classes/Security/`
 - `Roles.php`: papéis Obatalá (`obatala_administrator`, `obatala_editor`, `obatala_author`) e capabilities (`obatala_manage_processes`, `obatala_report_generate`, etc.).
 
@@ -367,7 +391,8 @@ Dependências instaladas via **Composer** (autoloader PSR-4 e Dompdf). A pasta e
 
 - `.gitignore`: Arquivos/pastas ignorados pelo Git (`vendor/`, `node_modules/`, artefatos de `build/`).
 - `obatala.php`: Arquivo principal do plugin; carrega `vendor/autoload.php` e inicializa o singleton `Nocs_ObatalaPlugin`.
-- `composer.json`: Dependência `dompdf/dompdf` e autoload PSR-4 do namespace `Obatala\`.
+- `composer.json`: Dependências (`dompdf/dompdf`), autoload PSR-4 do namespace `Obatala\` e script `composer test` (PHPUnit).
+- `phpunit.xml`: Configuração de testes unitários.
 - `package.json` & `package-lock.json`: Dependências e scripts de build JS.
 - `README.md`: Documentação inicial do repositório.
 

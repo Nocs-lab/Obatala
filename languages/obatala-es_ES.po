@@ -445,6 +445,15 @@ msgstr "Historial"
 msgid "Search by title"
 msgstr "Buscar por título"
 
+msgid "Search by title or process number"
+msgstr "Buscar por título o número de proceso"
+
+msgid "Process number"
+msgstr "N.º de proceso"
+
+msgid "No numbering"
+msgstr "Sin numeración"
+
 msgid "Previous"
 msgstr "Anterior"
 
@@ -1154,3 +1163,6 @@ msgstr "El proceso ya fue eliminado."
 
 msgid "Unable to record process deletion without an authenticated user."
 msgstr "No se pudo registrar la eliminación del proceso sin un usuario autenticado."
+
+msgid "Error uploading file for field %s."
+msgstr "Error al enviar el archivo del campo %s."

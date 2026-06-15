@@ -137,6 +137,8 @@ Além do nodes e edges, a estrutura atual também inclui os seguintes campos com
 
 - is_deleted, deleted_at, deleted_by, deleted_by_name: Metadados de **exclusão lógica** do processo (instância `process_obatala`). Ver [Gestão de processos](../processos/gestao-processos.md).
 
+- numero_processo, ano_processo, sequencial_processo, digito_verificador_processo: **Numeração única** atribuída automaticamente na criação do processo (formato `AAAA-NNNNN-DV`). Somente leitura via API; persistência auxiliar em tabelas `{prefix}obatala_process_*`. Ver [Gestão de processos](../processos/gestao-processos.md#numeracao-unica-do-processo).
+
 ## Implementação de Metadados Dinâmicos
 
 ### Criando Metadados Dinâmicos nas Etapas

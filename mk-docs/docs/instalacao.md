@@ -125,6 +125,19 @@ Funcionalidades que **dependem do Composer / Dompdf**:
 
 O upload do **PDF assinado** não usa Dompdf (apenas armazena o arquivo), mas o fluxo completo de documento da etapa pressupõe que a geração do PDF intermediário funcione.
 
+### 7. Numeração de processos (tabelas e backfill)
+
+Na **primeira ativação** ou **atualização** do plugin, o Obatalá cria automaticamente:
+
+- `{prefix}obatala_process_sequence` — contador de sequencial por ano
+- `{prefix}obatala_process_numbers` — registro único de cada número atribuído
+
+Processos já existentes recebem numeração retroativa (backfill) com base no ano de criação (`post_date`), na ordem cronológica.
+
+Após atualizar o código, **reative o plugin** ou acesse o admin uma vez para garantir que as tabelas existam. Novos processos passam a exibir o número na coluna **Nº do processo** (ex.: `2026-00042-6`).
+
+Detalhes da regra `AAAA-NNNNN-DV`, API e busca: [Gestão de processos — Numeração](processos/gestao-processos.md#numeracao-unica-do-processo).
+
 ---
 
 ## Instalação para desenvolvimento

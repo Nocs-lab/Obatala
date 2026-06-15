@@ -3,6 +3,7 @@
 namespace Obatala\Api;
 
 use Obatala\Entities\Process;
+use Obatala\Services\ProcessNumberService;
 use Obatala\Services\TainacanMappingService;
 use WP_Error;
 use WP_REST_Posts_Controller;
@@ -39,57 +40,48 @@ class CustomPostTypeApi extends ObatalaAPI {
             [
                 'methods' => WP_REST_Server::READABLE, // HTTP GET
                 'callback' => function ($request) use ($controller, $post_type) {
-                    // Retrieve the collection of items for this post type
                     $response = $controller->get_items($request);
-                    if (!is_wp_error($response)) {
-                        $data = $response->get_data();
-                        $mapping_service = new TainacanMappingService();
-                        // Add custom meta fields (like 'step_order' and 'flowData') to each item
-                        if ($post_type === 'process_obatala') {
-                            $data = array_values(array_filter($data, function ($item) {
-                                return !Process::is_deleted($item['id']);
-                            }));
-                        }
-
-                        foreach ($data as &$item) {
-                            $meta = get_post_meta($item['id']);
-
-                            // Deserialize 'step_order' if it exists
-                            if (isset($meta['step_order'])) {
-                                $meta['step_order'] = maybe_unserialize($meta['step_order'][0]);
-                            }
-
-                            // Deserialize 'flowData' if it exists
-                            if (isset($meta['flowData'])) {
-                                $flow_data = maybe_unserialize($meta['flowData'][0]);
-
-                                if (is_array($flow_data) && isset($flow_data['nodes']) && is_array($flow_data['nodes'])) {
-                                    if ($post_type === 'process_type') {
-                                        $flow_data = $mapping_service->apply_profile_options_to_flow_data((int) $item['id'], $flow_data);
-                                    } elseif ($post_type === 'process_obatala') {
-                                        $process_type_id = isset($meta['process_type'][0]) ? (int) $meta['process_type'][0] : 0;
-                                        if ($process_type_id > 0) {
-                                            $mapping_config = $mapping_service->get_mapping_config_for_process((int) $item['id'], $process_type_id);
-                                            $flow_data = $mapping_service->apply_profile_options_to_flow_data_from_config($flow_data, $mapping_config);
-                                        }
-                                    }
-                                }
-
-                                $meta['flowData'] = $flow_data;
-                            }
-
-                            $item['meta'] = $meta; // Attach meta data to the item
-                        }
-                        $response->set_data($data); // Update response with modified data
+                    if (is_wp_error($response)) {
+                        return $response;
                     }
-                    return $response; // Return the final response
+
+                    $data = $response->get_data();
+                    if (!is_array($data)) {
+                        return $response;
+                    }
+
+                    if ($post_type === 'process_obatala') {
+                        $data = $this->filter_processes_by_number_query($data, $request);
+                        $data = array_values(array_filter($data, function ($item) {
+                            return !Process::is_deleted($item['id']);
+                        }));
+                    }
+
+                    foreach ($data as &$item) {
+                        $item = $this->attach_process_meta($item, $post_type);
+                    }
+                    unset($item);
+
+                    $response->set_data($data);
+                    return $response;
                 },
                 'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'], // Check for permissions
-                'args' => $controller->get_collection_params(), // Arguments for the collection
+                'args' => array_merge($controller->get_collection_params(), [
+                    'numero_processo' => [
+                        'type' => 'string',
+                        'description' => __('Filter processes by number (full, partial, or unmasked).', 'obatala'),
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ]),
             ],
             [
                 'methods' => WP_REST_Server::CREATABLE, // HTTP POST
-                'callback' => [$controller, 'create_item'], // Callback for creating an item
+                'callback' => function ($request) use ($controller, $post_type) {
+                    if ($post_type === 'process_obatala') {
+                        return $this->create_process_item($request, $controller);
+                    }
+                    return $controller->create_item($request);
+                },
                 'permission_callback' => [$controller, 'create_item_permissions_check'], // Check for permissions
                 'args' => $controller->get_endpoint_args_for_item_schema(WP_REST_Server::CREATABLE), // Arguments for item creation
             ],
@@ -113,34 +105,7 @@ class CustomPostTypeApi extends ObatalaAPI {
                             );
                         }
 
-                        $meta = get_post_meta($data['id']);
-                        $mapping_service = new TainacanMappingService();
-
-                        // Deserialize 'step_order' if it exists
-                        if (isset($meta['step_order'])) {
-                            $meta['step_order'] = maybe_unserialize($meta['step_order'][0]);
-                        }
-
-                        // Deserialize 'flowData' if it exists
-                        if (isset($meta['flowData'])) {
-                            $flow_data = maybe_unserialize($meta['flowData'][0]);
-
-                            if (is_array($flow_data) && isset($flow_data['nodes']) && is_array($flow_data['nodes'])) {
-                                if ($post_type === 'process_type') {
-                                    $flow_data = $mapping_service->apply_profile_options_to_flow_data((int) $data['id'], $flow_data);
-                                } elseif ($post_type === 'process_obatala') {
-                                    $process_type_id = isset($meta['process_type'][0]) ? (int) $meta['process_type'][0] : 0;
-                                    if ($process_type_id > 0) {
-                                        $mapping_config = $mapping_service->get_mapping_config_for_process((int) $data['id'], $process_type_id);
-                                        $flow_data = $mapping_service->apply_profile_options_to_flow_data_from_config($flow_data, $mapping_config);
-                                    }
-                                }
-                            }
-
-                            $meta['flowData'] = $flow_data;
-                        }
-
-                        $data['meta'] = $meta; // Attach meta data to the item
+                        $data = $this->attach_process_meta($data, $post_type);
                         $response->set_data($data); // Update response with modified data
                     }
                     return $response; // Return the final response
@@ -216,5 +181,90 @@ class CustomPostTypeApi extends ObatalaAPI {
             'deleted_by' => $deletion['deleted_by'],
             'deleted_by_name' => $deletion['deleted_by_name'],
         ], 200);
+    }
+
+    /**
+     * Creates a process and assigns its unique number.
+     */
+    public function create_process_item($request, WP_REST_Posts_Controller $controller) {
+        $response = $controller->create_item($request);
+        if (is_wp_error($response)) {
+            return $response;
+        }
+
+        $data = $response->get_data();
+        $post_id = isset($data['id']) ? (int) $data['id'] : 0;
+        if ($post_id <= 0) {
+            return $response;
+        }
+
+        $number_service = new ProcessNumberService();
+        $assigned = $number_service->assignToProcess($post_id);
+        if (is_wp_error($assigned)) {
+            wp_delete_post($post_id, true);
+            return $assigned;
+        }
+
+        $data = $this->attach_process_meta($data, Process::get_post_type());
+        $response->set_data($data);
+        return $response;
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $items
+     * @return array<int, array<string, mixed>>
+     */
+    protected function filter_processes_by_number_query(array $items, $request) {
+        $query = $request->get_param('numero_processo');
+        $query = is_string($query) ? trim($query) : '';
+        if ($query === '') {
+            return $items;
+        }
+
+        return array_values(array_filter($items, function ($item) use ($query) {
+            $post_id = (int) ($item['id'] ?? 0);
+            $number_data = ProcessNumberService::getProcessNumberData($post_id) ?? [];
+
+            if (!empty($number_data) && ProcessNumberService::matchesSearchQuery($number_data, $query)) {
+                return true;
+            }
+
+            $title = isset($item['title']['rendered']) ? (string) $item['title']['rendered'] : '';
+            return stripos($title, $query) !== false;
+        }));
+    }
+
+    /**
+     * @param array<string, mixed> $item
+     * @return array<string, mixed>
+     */
+    protected function attach_process_meta(array $item, $post_type) {
+        $meta = get_post_meta($item['id']);
+        $mapping_service = new TainacanMappingService();
+
+        if (isset($meta['step_order'])) {
+            $meta['step_order'] = maybe_unserialize($meta['step_order'][0]);
+        }
+
+        if (isset($meta['flowData'])) {
+            $flow_data = maybe_unserialize($meta['flowData'][0]);
+
+            if (is_array($flow_data) && isset($flow_data['nodes']) && is_array($flow_data['nodes'])) {
+                if ($post_type === 'process_type') {
+                    $flow_data = $mapping_service->apply_profile_options_to_flow_data((int) $item['id'], $flow_data);
+                } elseif ($post_type === 'process_obatala') {
+                    $process_type_id = isset($meta['process_type'][0]) ? (int) $meta['process_type'][0] : 0;
+                    if ($process_type_id > 0) {
+                        $mapping_config = $mapping_service->get_mapping_config_for_process((int) $item['id'], $process_type_id);
+                        $flow_data = $mapping_service->apply_profile_options_to_flow_data_from_config($flow_data, $mapping_config);
+                    }
+                }
+            }
+
+            $meta['flowData'] = $flow_data;
+        }
+
+        $item['meta'] = $meta;
+        return $item;
     }
 }

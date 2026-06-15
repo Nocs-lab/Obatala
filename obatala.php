@@ -15,7 +15,7 @@ namespace Obatala {
 	/*
 		Plugin Name: Obatala - Gestão de Processos Curatoriais
 		Description: Adiciona funcionalidades de gestão de processos curatoriais para o plugin Tainacan
-		Version: 1.7.5
+		Version: 1.7.6
 		Author: NOCs
 		License: GPLv2 or later
 		Text Domain: obatala
@@ -83,6 +83,7 @@ namespace Obatala {
 			// Register the custom post types and taxonomies
 			add_action('init', ['Obatala\Entities\Process', 'init']);
 			add_action('init', ['Obatala\Entities\ProcessType', 'init']);
+			add_action('init', ['Obatala\Database\ProcessNumberSchema', 'maybe_upgrade']);
 
 			// Register and enqueue scripts and styles
 			// Register and enqueue scripts and styles
@@ -161,6 +162,10 @@ namespace Obatala {
 			}
 
 			\Obatala\Security\Roles::ensure_roles();
+			\Obatala\Database\ProcessNumberSchema::install();
+
+			$number_service = new \Obatala\Services\ProcessNumberService();
+			$number_service->backfillMissingNumbers();
 		}
 	}
 

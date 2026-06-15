@@ -8,6 +8,7 @@ use WP_REST_Response; // Certifique-se de importar a classe WP_REST_Response
 use WP_Error;
 use Obatala\Entities\Process;
 use Obatala\Entities\Sector;
+use Obatala\Services\ProcessNumberService;
 use Obatala\Services\TainacanExportService;
 
 class ProcessApi extends ObatalaAPI {
@@ -529,6 +530,9 @@ class ProcessApi extends ObatalaAPI {
 
         foreach ($meta as $key => $value) {
             if (in_array($key, ['is_deleted', 'deleted_at', 'deleted_by', 'deleted_by_name'], true)) {
+                continue;
+            }
+            if (in_array($key, ProcessNumberService::PROTECTED_META_KEYS, true)) {
                 continue;
             }
             update_post_meta($post_id, $key, $value);
