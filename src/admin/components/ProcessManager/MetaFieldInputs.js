@@ -561,6 +561,7 @@ const MetaFieldInputs = React.memo(
 						initialValue={ normalizedSearchInitial }
 						isEditable={ isEditable }
 						noHasPermission={ noHasPermission }
+						label={ fieldLabel }
 						key={ `${ stepId }-${ fieldId }-${ itemIndex ?? 'single' }` }
 					/>
 				);

@@ -5,6 +5,8 @@
  * Usage: php tests/run-process-number-tests.php
  */
 
+defined('ABSPATH') || define('ABSPATH', __DIR__ . '/');
+
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Obatala\Services\ProcessNumberService;
@@ -43,6 +45,7 @@ assert_same(true, ProcessNumberService::matchesSearchQuery($number_data, '00042'
 assert_same(true, ProcessNumberService::matchesSearchQuery($number_data, '2026'), 'search year');
 assert_same(true, ProcessNumberService::matchesSearchQuery($number_data, '2026000426'), 'search unmasked');
 assert_same(false, ProcessNumberService::matchesSearchQuery($number_data, '1999-00001-1'), 'search no match');
+assert_same(false, ProcessNumberService::matchesSearchQuery($number_data, 'abc'), 'search letters no match');
 
 if ($failures > 0) {
     echo "\n{$failures} test(s) failed.\n";

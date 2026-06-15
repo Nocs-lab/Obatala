@@ -77,6 +77,7 @@ class ProcessNumberServiceTest extends TestCase {
             'unmasked full' => ['2026000426', true],
             'unmasked base' => ['202600042', true],
             'no match' => ['1999-00001-1', false],
+            'letters no match' => ['abc', false],
         ];
     }
 

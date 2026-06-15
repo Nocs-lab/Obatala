@@ -1,13 +1,5 @@
 /mk-docs/site
 developer/i18n-map.json
 node_modules
-build/index.css
-build/index.css.map
-build/index-rtl.css
-build/index.js
-build/index.js.map
-build/style-index-rtl.css
-build/style-index.css
-build/style-index.css.map
-build/index.asset.php
+/build/
 vendor//build/

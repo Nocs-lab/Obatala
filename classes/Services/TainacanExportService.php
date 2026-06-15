@@ -275,6 +275,147 @@ class TainacanExportService {
         return $pending;
     }
 
+    public function append_process_reference_to_linked_items($process_id) {
+        $process_id = (int) $process_id;
+        $result = [
+            'success' => true,
+            'message' => '',
+            'process_id' => $process_id,
+            'linked_item_ids' => [],
+            'updated_item_ids' => [],
+            'already_linked_item_ids' => [],
+            'failed_items' => [],
+            'warnings' => [],
+        ];
+
+        if ($process_id <= 0) {
+            $result['success'] = false;
+            $result['message'] = 'Processo inválido para vinculação com itens do Tainacan.';
+            return $result;
+        }
+
+        if (
+            !class_exists('\\Tainacan\\Repositories\\Items')
+            || !class_exists('\\Tainacan\\Repositories\\Item_Metadata')
+            || !class_exists('\\Tainacan\\Repositories\\Metadata')
+            || !class_exists('\\Tainacan\\Entities\\Item')
+            || !class_exists('\\Tainacan\\Entities\\Item_Metadata_Entity')
+        ) {
+            $result['success'] = false;
+            $result['message'] = 'As classes do Tainacan não estão disponíveis para vincular o processo aos itens selecionados.';
+            return $result;
+        }
+
+        $stage_field_index = $this->build_stage_field_index($this->get_stage_data($process_id));
+        $flow_fields_index = $this->build_flow_fields_index($process_id);
+        $linked_item_ids = [];
+
+        foreach ($flow_fields_index as $field_id => $field) {
+            if (strtolower((string) ($field['type'] ?? '')) !== 'search') {
+                continue;
+            }
+
+            $field_value = $stage_field_index[$field_id]['value'] ?? [];
+            $linked_item_ids = array_merge(
+                $linked_item_ids,
+                $this->extract_tainacan_item_ids_from_search_value($field_value)
+            );
+        }
+
+        $linked_item_ids = array_values(array_unique(array_filter(array_map('intval', $linked_item_ids))));
+        $result['linked_item_ids'] = $linked_item_ids;
+
+        if (empty($linked_item_ids)) {
+            $result['message'] = 'Nenhum item do Tainacan foi vinculado em campos de busca deste processo.';
+            return $result;
+        }
+
+        $process_reference_url = $this->build_process_reference_url($process_id);
+        if ($process_reference_url === '') {
+            $result['success'] = false;
+            $result['message'] = 'Não foi possível gerar a URL de referência do processo.';
+            return $result;
+        }
+
+        $items_repository = \Tainacan\Repositories\Items::get_instance();
+        $metadata_repository = \Tainacan\Repositories\Metadata::get_instance();
+        $item_metadata_repository = \Tainacan\Repositories\Item_Metadata::get_instance();
+        $metadatum_by_collection = [];
+
+        foreach ($linked_item_ids as $item_id) {
+            try {
+                $item = $items_repository->fetch($item_id);
+                if (!$item instanceof \Tainacan\Entities\Item) {
+                    $result['failed_items'][] = [
+                        'item_id' => $item_id,
+                        'message' => 'Item do Tainacan não encontrado ou indisponível.',
+                    ];
+                    continue;
+                }
+
+                $collection = $item->get_collection();
+                if (!$collection instanceof \Tainacan\Entities\Collection) {
+                    $result['failed_items'][] = [
+                        'item_id' => $item_id,
+                        'message' => 'Não foi possível identificar a coleção do item no Tainacan.',
+                    ];
+                    continue;
+                }
+
+                $collection_id = (int) $collection->get_id();
+                if (!array_key_exists($collection_id, $metadatum_by_collection)) {
+                    $metadatum_by_collection[$collection_id] = $this->ensure_process_reference_metadatum(
+                        $collection,
+                        $metadata_repository,
+                        $result['warnings']
+                    );
+                }
+
+                $process_reference_metadatum = $metadatum_by_collection[$collection_id];
+                if (!$process_reference_metadatum instanceof \Tainacan\Entities\Metadatum) {
+                    $result['failed_items'][] = [
+                        'item_id' => $item_id,
+                        'message' => 'Metadado de referência do processo indisponível na coleção do item.',
+                    ];
+                    continue;
+                }
+
+                $append_result = $this->append_process_reference_to_item(
+                    $item,
+                    $process_reference_metadatum,
+                    $process_reference_url,
+                    $item_metadata_repository
+                );
+
+                if ($append_result['status'] === 'updated') {
+                    $result['updated_item_ids'][] = $item_id;
+                } elseif ($append_result['status'] === 'unchanged') {
+                    $result['already_linked_item_ids'][] = $item_id;
+                } else {
+                    $result['failed_items'][] = [
+                        'item_id' => $item_id,
+                        'metadata_id' => (int) $process_reference_metadatum->get_id(),
+                        'message' => (string) ($append_result['message'] ?? 'Falha ao vincular o processo ao item.'),
+                        'errors' => $append_result['errors'] ?? [],
+                    ];
+                }
+            } catch (\Throwable $error) {
+                $result['failed_items'][] = [
+                    'item_id' => $item_id,
+                    'message' => 'Erro ao vincular o processo ao item do Tainacan.',
+                    'errors' => [$error->getMessage()],
+                ];
+            }
+        }
+
+        $result['success'] = empty($result['failed_items']);
+        $result['message'] = $result['success']
+            ? 'Referência do processo atualizada nos itens vinculados do Tainacan.'
+            : 'A referência do processo foi atualizada parcialmente nos itens vinculados do Tainacan.';
+
+        return $result;
+    }
+
     public function get_export_review_data($process_id, $max_preview_rows = 20) {
         $process_id = (int) $process_id;
         $runtime = $this->get_runtime_config($process_id);
@@ -1063,25 +1204,20 @@ class TainacanExportService {
                 && $this->is_process_reference_metadatum_compatible($process_reference_metadatum)
                 && $process_reference_url !== ''
             ) {
-                $process_reference_item_metadata = new \Tainacan\Entities\Item_Metadata_Entity($item, $process_reference_metadatum);
-                $process_reference_item_metadata->set_value($process_reference_url);
+                $append_result = $this->append_process_reference_to_item(
+                    $item,
+                    $process_reference_metadatum,
+                    $process_reference_url,
+                    $item_metadata_repository
+                );
 
-                if (!$process_reference_item_metadata->validate()) {
+                if ($append_result['status'] === 'error') {
                     $warnings[] = [
                         'row' => $row_index + 1,
                         'metadata_id' => (int) $process_reference_metadatum->get_id(),
-                        'message' => 'Não foi possível salvar o link de referência do processo no Obatala.',
-                        'errors' => $process_reference_item_metadata->get_errors(),
+                        'message' => (string) ($append_result['message'] ?? 'Não foi possível salvar o link de referência do processo no Obatala.'),
+                        'errors' => $append_result['errors'] ?? [],
                     ];
-                } else {
-                    $inserted_process_reference = $item_metadata_repository->insert($process_reference_item_metadata);
-                    if (!$inserted_process_reference) {
-                        $warnings[] = [
-                            'row' => $row_index + 1,
-                            'metadata_id' => (int) $process_reference_metadatum->get_id(),
-                            'message' => 'Falha ao persistir o link de referência do processo no Obatala.',
-                        ];
-                    }
                 }
             }
 
@@ -1565,7 +1701,11 @@ class TainacanExportService {
         $existing_metadatum = $this->find_process_reference_metadatum($collection_id, $metadata_repository);
         if ($existing_metadatum instanceof \Tainacan\Entities\Metadatum) {
             if ($this->is_process_reference_metadatum_compatible($existing_metadatum)) {
-                return $existing_metadatum;
+                return $this->ensure_process_reference_metadatum_is_multiple(
+                    $existing_metadatum,
+                    $metadata_repository,
+                    $warnings
+                );
             }
 
             $this->maybe_warn_process_reference_metadatum_type($existing_metadatum, $warnings);
@@ -1580,6 +1720,8 @@ class TainacanExportService {
             $process_reference_metadatum->set_metadata_type(self::PROCESS_REFERENCE_METADATA_TYPE);
             $process_reference_metadatum->set_status('publish');
             $process_reference_metadatum->set_display('yes');
+            $process_reference_metadatum->set_multiple('yes');
+            $process_reference_metadatum->set_html_formatting('list');
 
             $next_order = $this->get_next_collection_metadata_order($collection_id, $metadata_repository);
             if ($next_order > 0) {
@@ -1609,6 +1751,64 @@ class TainacanExportService {
 
         $warnings[] = [
             'message' => 'Falha ao criar o metadado de referência do processo no Obatala.',
+        ];
+
+        return null;
+    }
+
+    private function ensure_process_reference_metadatum_is_multiple($metadatum, $metadata_repository, array &$warnings) {
+        if (!$metadatum instanceof \Tainacan\Entities\Metadatum) {
+            return null;
+        }
+
+        $needs_update = !$metadatum->is_multiple();
+        $cardinality = method_exists($metadatum, 'get_cardinality')
+            ? trim((string) $metadatum->get_cardinality())
+            : '';
+
+        if ($cardinality !== '') {
+            $needs_update = true;
+        }
+
+        if (!$needs_update) {
+            return $metadatum;
+        }
+
+        try {
+            $metadatum->set_multiple('yes');
+            if (method_exists($metadatum, 'set_cardinality')) {
+                $metadatum->set_cardinality('');
+            }
+
+            if (!$metadatum->validate()) {
+                $warnings[] = [
+                    'metadata_id' => (int) $metadatum->get_id(),
+                    'message' => 'Não foi possível configurar o metadado de referência do processo para aceitar múltiplas URLs.',
+                    'errors' => $metadatum->get_errors(),
+                ];
+                return null;
+            }
+
+            $updated_metadatum = $metadata_repository->update($metadatum, [
+                'multiple' => 'yes',
+                'cardinality' => '',
+            ]);
+
+            if ($updated_metadatum instanceof \Tainacan\Entities\Metadatum) {
+                return $updated_metadatum;
+            }
+        } catch (\Throwable $error) {
+            $warnings[] = [
+                'metadata_id' => (int) $metadatum->get_id(),
+                'message' => 'Erro ao configurar o metadado de referência do processo para múltiplas URLs.',
+                'errors' => [$error->getMessage()],
+            ];
+            return null;
+        }
+
+        $warnings[] = [
+            'metadata_id' => (int) $metadatum->get_id(),
+            'message' => 'Falha ao configurar o metadado de referência do processo para múltiplas URLs.',
         ];
 
         return null;
@@ -1658,7 +1858,7 @@ class TainacanExportService {
         }
 
         $matches = $metadata_repository->fetch([
-            'posts_per_page' => 1,
+            'posts_per_page' => -1,
             'parent' => 0,
             'post_status' => 'any',
             'meta_query' => [
@@ -1674,9 +1874,23 @@ class TainacanExportService {
         ], 'OBJECT');
 
         if (is_array($matches) && !empty($matches)) {
-            $candidate = reset($matches);
-            if ($candidate instanceof \Tainacan\Entities\Metadatum) {
-                return $candidate;
+            $fallback_candidate = null;
+            foreach ($matches as $candidate) {
+                if (!$candidate instanceof \Tainacan\Entities\Metadatum) {
+                    continue;
+                }
+
+                if ($this->is_process_reference_metadatum_compatible($candidate)) {
+                    return $candidate;
+                }
+
+                if (!$fallback_candidate) {
+                    $fallback_candidate = $candidate;
+                }
+            }
+
+            if ($fallback_candidate instanceof \Tainacan\Entities\Metadatum) {
+                return $fallback_candidate;
             }
         }
 
@@ -1750,6 +1964,102 @@ class TainacanExportService {
 
         $type = (string) $metadatum->get_metadata_type();
         return $type !== '' && strcasecmp($type, self::PROCESS_REFERENCE_METADATA_TYPE) === 0;
+    }
+
+    private function append_process_reference_to_item($item, $metadatum, $process_reference_url, $item_metadata_repository) {
+        if (
+            !$item instanceof \Tainacan\Entities\Item
+            || !$metadatum instanceof \Tainacan\Entities\Metadatum
+            || !$this->is_process_reference_metadatum_compatible($metadatum)
+            || !$metadatum->is_multiple()
+            || !is_object($item_metadata_repository)
+            || !method_exists($item_metadata_repository, 'insert')
+        ) {
+            return [
+                'status' => 'error',
+                'message' => 'Metadado de referência incompatível com uma lista de URLs.',
+                'errors' => [],
+            ];
+        }
+
+        $process_reference_url = esc_url_raw((string) $process_reference_url);
+        if ($process_reference_url === '') {
+            return [
+                'status' => 'error',
+                'message' => 'URL de referência do processo inválida.',
+                'errors' => [],
+            ];
+        }
+
+        $item_metadata = new \Tainacan\Entities\Item_Metadata_Entity($item, $metadatum);
+        $current_value = $item_metadata->get_value();
+        $current_values = is_array($current_value) ? $current_value : [$current_value];
+        $current_values = array_values(array_filter(array_map(function($value) {
+            return trim((string) $value);
+        }, $current_values)));
+
+        if (in_array($process_reference_url, $current_values, true)) {
+            return [
+                'status' => 'unchanged',
+                'message' => 'O item já possui a referência deste processo.',
+                'errors' => [],
+            ];
+        }
+
+        $current_values[] = $process_reference_url;
+        $item_metadata->set_value(array_values(array_unique($current_values)));
+
+        if (!$item_metadata->validate()) {
+            return [
+                'status' => 'error',
+                'message' => 'Não foi possível validar a lista de referências do processo no item.',
+                'errors' => $item_metadata->get_errors(),
+            ];
+        }
+
+        $saved_item_metadata = $item_metadata_repository->insert($item_metadata);
+        if (!$saved_item_metadata) {
+            return [
+                'status' => 'error',
+                'message' => 'Falha ao persistir a lista de referências do processo no item.',
+                'errors' => [],
+            ];
+        }
+
+        return [
+            'status' => 'updated',
+            'message' => 'Referência do processo adicionada ao item.',
+            'errors' => [],
+        ];
+    }
+
+    private function extract_tainacan_item_ids_from_search_value($value) {
+        if (is_object($value)) {
+            $value = get_object_vars($value);
+        }
+
+        if (!is_array($value)) {
+            return [];
+        }
+
+        if (array_key_exists('id', $value) && array_key_exists('type', $value)) {
+            $type = strtolower(trim((string) $value['type']));
+            $item_id = isset($value['id']) ? (int) $value['id'] : 0;
+
+            return $type === 'item' && $item_id > 0 ? [$item_id] : [];
+        }
+
+        $item_ids = [];
+        foreach ($value as $entry) {
+            if (is_array($entry) || is_object($entry)) {
+                $item_ids = array_merge(
+                    $item_ids,
+                    $this->extract_tainacan_item_ids_from_search_value($entry)
+                );
+            }
+        }
+
+        return $item_ids;
     }
 
     private function build_process_reference_url($process_id) {

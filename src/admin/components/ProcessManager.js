@@ -64,13 +64,13 @@ const ProcessManager = ({ onSelectProcess }) => {
 
     useEffect(() => {
         fetchProcessModels();
-        fetchProcesses();        
+        fetchProcesses();
     }, []);
-    
+
     useEffect(() => {
         fetchProcessesUser();
     }, [currentUser])
-    
+
 
     const fetchProcessModels = () => {
         apiFetch({ path: `/obatala/v1/process_type?per_page=100&_embed` })
@@ -92,7 +92,7 @@ const ProcessManager = ({ onSelectProcess }) => {
             return Promise.resolve([]);
         }
 
-        setIsLoadingUserProcesses(true);        
+        setIsLoadingUserProcesses(true);
         return fetchUserProcesses(currentUser.id)
             .then(data => {
                 setProcessUser(data);
@@ -117,7 +117,7 @@ const ProcessManager = ({ onSelectProcess }) => {
                 await fetchProcessModelsForProcesses(data);
             } else {
                 console.error("No processes data returned.");
-                setProcesses([]); 
+                setProcesses([]);
             }
         } catch (error) {
             console.error("Error fetching processes:", error);
@@ -231,32 +231,32 @@ const ProcessManager = ({ onSelectProcess }) => {
         }
     };
 
-    const filteredUserProcesses =useMemo(() => { 
+    const filteredUserProcesses =useMemo(() => {
         return Array.isArray(processUser)
         ?   processes.filter(process => processUser?.includes(process.id))
         : []
     }, [processUser,processes]);
-      
+
     const filteredProcess = useMemo(() => {
-        const processList = activeTab === 'all' ? processes : filteredUserProcesses;  
+        const processList = activeTab === 'all' ? processes : filteredUserProcesses;
 
         return sortProcessesNewestFirst(
             processList.filter(process => {
-                const matchesAccessLevel = !accessLevel || 
+                const matchesAccessLevel = !accessLevel ||
                     process?.meta?.access_level?.[0]?.includes(accessLevel);
-                
-                const matchesProcessType = !modelFilter || 
+
+                const matchesProcessType = !modelFilter ||
                     process?.meta?.process_type?.[0]?.includes(modelFilter.toString());
-                
+
                 return matchesAccessLevel && matchesProcessType;
             })
         );
-    }, [accessLevel, modelFilter, processes, filteredUserProcesses, activeTab]); 
-    
+    }, [accessLevel, modelFilter, processes, filteredUserProcesses, activeTab]);
+
     if (isLoadingProcesses) {
         return <Spinner />;
     }
-    
+
     return (
         <>
             <BrandHeader />

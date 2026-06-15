@@ -275,7 +275,7 @@ const ProcessList = ({ processes, onEdit, onViewProcess, onDelete, processTypeMa
             columns,
             data,
             initialState: { pageIndex: 0, pageSize: 10 },
-            globalFilterFn: processListGlobalFilter,
+            globalFilter: processListGlobalFilter,
         },
         useGlobalFilter,
         useSortBy,

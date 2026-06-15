@@ -794,6 +794,7 @@ class ProcessApi extends ObatalaAPI {
         $post_id = (int) $request['id'];
         $node_id = $request['node_id'] ?? null;
         $export_result = null;
+        $linked_item_reference_result = null;
         $response_status = 'Finished';
 
         $flowData = get_post_meta($post_id, 'flowData', true);
@@ -932,6 +933,17 @@ class ProcessApi extends ObatalaAPI {
 
                     try {
                         $export_service = new TainacanExportService();
+                        try {
+                            $linked_item_reference_result = $export_service->append_process_reference_to_linked_items($post_id);
+                        } catch (\Throwable $reference_exception) {
+                            $linked_item_reference_result = [
+                                'success' => false,
+                                'message' => 'Falha ao vincular o processo aos itens selecionados no Tainacan.',
+                                'process_id' => $post_id,
+                                'failed_items' => [],
+                                'warnings' => [$reference_exception->getMessage()],
+                            ];
+                        }
                         $runtime = $export_service->get_runtime_config($post_id);
                         $has_enabled_mapper = ($runtime['mapper_status'] ?? 'enabled') === 'enabled'
                             && !empty($runtime['enabled']);
@@ -993,6 +1005,7 @@ class ProcessApi extends ObatalaAPI {
             'next_node_id' => $next_node_id ?? null,
             'status' => $response_status,
             'export_result' => $export_result,
+            'linked_item_reference_result' => $linked_item_reference_result,
         ], 200);
     }
 

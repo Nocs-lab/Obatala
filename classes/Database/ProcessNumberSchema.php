@@ -9,7 +9,7 @@ defined('ABSPATH') || exit;
  */
 class ProcessNumberSchema {
 
-    public const DB_VERSION = '1.0.0';
+    public const DB_VERSION = '1.0.1';
     public const DB_VERSION_OPTION = 'obatala_process_number_db_version';
 
     public static function get_sequence_table_name() {

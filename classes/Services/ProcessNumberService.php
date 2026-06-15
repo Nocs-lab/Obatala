@@ -229,9 +229,15 @@ class ProcessNumberService {
             'orderby' => 'date',
             'order' => 'ASC',
             'meta_query' => [
+                'relation' => 'OR',
                 [
                     'key' => self::META_NUMERO,
                     'compare' => 'NOT EXISTS',
+                ],
+                [
+                    'key' => self::META_NUMERO,
+                    'value' => '',
+                    'compare' => '=',
                 ],
             ],
         ]);
@@ -271,7 +277,7 @@ class ProcessNumberService {
         }
 
         $seq_padded = sprintf('%05d', $sequencial);
-        if ($sequencial > 0 && strpos($seq_padded, $query_digits) !== false) {
+        if ($query_digits !== "" && $sequencial > 0 && strpos($seq_padded, $query_digits) !== false) {
             return true;
         }
 

@@ -21,6 +21,7 @@ class Enqueuer {
         'obatala_page_mappers' => 'mappers',
         'admin_page_mappers' => 'mappers',
         'admin_page_process-viewer' => 'process-viewer',
+        'admin_page_collection-items' => 'collection-items',
     ];
 
     public static function init() {

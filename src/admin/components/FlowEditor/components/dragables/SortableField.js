@@ -125,7 +125,15 @@ const SortableField = ( { id, nodeId, title, type, config } ) => {
 					/>
 				);
 			case 'search':
-				return <TainacanSearchDetails />;
+				return (
+					<TainacanSearchDetails
+						nodeId={ nodeId }
+						fieldId={ id }
+						label={ label }
+						setLabel={ setLabel }
+						config={ config }
+					/>
+				);
 			default:
 				return null;
 		}
