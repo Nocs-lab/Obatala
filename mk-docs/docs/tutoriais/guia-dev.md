@@ -236,10 +236,23 @@ private function register_api_endpoints() {
 Esses endpoints fornecem acesso a dados para:
 
 - Listagem e edição de processos
+- **Numeração única** na criação (`POST /obatala/v1/process_obatala`) e filtro `?numero_processo=` na listagem
 - Exclusão lógica de processos (`DELETE /obatala/v1/process_obatala/{id}`)
 - Tipos de processo
 - Setores e suas relações
 - Relatórios PDF (`GET /obatala/v1/process_obatala/{id}/report-pdf`)
+
+### Numeração de processo
+
+Ao criar uma instância (`POST /obatala/v1/process_obatala`), o backend atribui automaticamente um número no formato **`AAAA-NNNNN-DV`** (ex.: `2026-00042-6`). Os metadados `numero_processo`, `ano_processo`, `sequencial_processo` e `digito_verificador_processo` são gravados e retornados na resposta.
+
+Filtrar listagem por número (completo, parcial ou sem máscara):
+
+```http
+GET /wp-json/obatala/v1/process_obatala?numero_processo=2026-00042-6
+```
+
+Regra do dígito verificador: soma dos dígitos de `AAAANNNNN` módulo 10. Detalhes, tabelas de banco e testes em [Gestão de processos](../processos/gestao-processos.md#numeracao-unica-do-processo).
 
 ### Exclusão lógica de processo
 

@@ -1167,6 +1167,9 @@ msgstr "El proceso ya fue eliminado."
 msgid "Unable to record process deletion without an authenticated user."
 msgstr "No se pudo registrar la eliminación del proceso sin un usuario autenticado."
 
+msgid "Error uploading file for field %s."
+msgstr "Error al enviar el archivo del campo %s."
+
 #: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Tainacan is not available."
 msgstr "Tainacan no está disponible."

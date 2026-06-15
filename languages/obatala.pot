@@ -660,3 +660,7 @@ msgstr ""
 #: src/admin/components/ProcessManager/ProcessList.js
 msgid "No numbering"
 msgstr ""
+
+#: src/admin/components/ProcessViewer.js
+msgid "Error uploading file for field %s."
+msgstr ""

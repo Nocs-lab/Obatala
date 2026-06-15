@@ -26,12 +26,13 @@ Editado na tela **Modelos** e no **editor de fluxo** (`process-type-editor`).
 
 Representa um processo real em andamento ou concluído:
 
+- **Numeração única** automática: `numero_processo`, `ano_processo`, `sequencial_processo`, `digito_verificador_processo` (formato `AAAA-NNNNN-DV`)
 - Herda o `flowData` do modelo associado (`process_type`)
 - `stageData`: valores preenchidos por etapa
 - `current_stage`, `status`, `access_level`
 - Metadados de exclusão lógica: `is_deleted`, `deleted_at`, `deleted_by`, `deleted_by_name`
 
-Gerenciado na tela **Processos** e no **visualizador** (`process-viewer`). Consulte [Gestão de processos](processos/gestao-processos.md) para exclusão lógica e PDF.
+Gerenciado na tela **Processos** e no **visualizador** (`process-viewer`). Consulte [Gestão de processos](processos/gestao-processos.md) para numeração, exclusão lógica e PDF.
 
 ## 🔄 Fluxo de Trabalho
 
@@ -57,6 +58,10 @@ classDiagram
 
     class Process {
         +String title
+        +String numero_processo
+        +Integer ano_processo
+        +Integer sequencial_processo
+        +Integer digito_verificador_processo
         +Integer process_type
         +Array flowData
         +Array stageData
@@ -73,5 +78,5 @@ Esta arquitetura proporciona:
 
 - **Flexibilidade**: modelos reutilizáveis (`process_type`)
 - **Consistência**: mesma estrutura de campos em todas as instâncias
-- **Rastreabilidade**: dados de execução e auditoria de exclusão em `process_obatala`
+- **Rastreabilidade**: dados de execução, numeração oficial e auditoria de exclusão em `process_obatala`
 - **Performance**: consultas via `post_meta` e REST API customizada (`CustomPostTypeApi`, `ProcessApi`)
