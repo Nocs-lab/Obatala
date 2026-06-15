@@ -7,7 +7,8 @@ const TainacanSearchControls = ({
   onFieldChange,
   initialValue = [],
   isEditable,
-  noHasPermission
+  noHasPermission,
+  label = 'Search Tainacan'
 }) => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
@@ -165,7 +166,7 @@ const TainacanSearchControls = ({
     <div style={{ width: '800px', margin: 'auto' }}>
       {isEditable && (
         <TextControl
-          label="Search Tainacan"
+          label={label}
           value={query}
           disabled={noHasPermission}
           onChange={handleSearch}

@@ -837,6 +837,10 @@ form .action-bar {
 .card-container progress {
   flex-basis: 100%;
 }
+.dashboard-stats-cards .card-item {
+  flex-basis: 160px;
+  min-width: 0;
+}
 .description-list {
   display: flex;
   flex-wrap: wrap;

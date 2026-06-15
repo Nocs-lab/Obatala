@@ -321,6 +321,9 @@ msgstr "Configurações"
 msgid "Groups"
 msgstr "Grupos"
 
+msgid "Collection items"
+msgstr "Itens do acervo"
+
 msgid "Users"
 msgstr "Usuários"
 

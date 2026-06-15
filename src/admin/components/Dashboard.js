@@ -8,7 +8,12 @@ import {
     Spinner
 } from '@wordpress/components';
 import { __, sprintf } from '@wordpress/i18n';
-import { fetchProcessModels, fetchSectors, fetchSectorsUsers, } from '../api/apiRequests';
+import {
+    fetchProcessModels,
+    fetchSectors,
+    fetchSectorsUsers,
+    fetchTainacanItemsCount,
+} from '../api/apiRequests';
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
 import apiFetch from '@wordpress/api-fetch';
@@ -23,6 +28,7 @@ const DashboardPage = () => {
     const [topModels, setTopModels] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [pendingProcesses, setPendingProcesses] = useState([]);
+    const [tainacanItemsCount, setTainacanItemsCount] = useState(0);
 
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
 
@@ -192,6 +198,7 @@ const DashboardPage = () => {
         loadProcesses();
         loadSectors();
         loadSectorsUsers();
+        loadTainacanItemsCount();
     }, []);
 
     useEffect(() => {
@@ -378,6 +385,15 @@ const DashboardPage = () => {
             });
     };
 
+    const loadTainacanItemsCount = () => {
+        fetchTainacanItemsCount()
+            .then(setTainacanItemsCount)
+            .catch(() => {
+                console.error('Error fetching Tainacan items count:');
+                setTainacanItemsCount(0);
+            });
+    };
+
     const sectorsUserLogged = useMemo(() => {
         return sectorsUsers.filter(sector => {
             const matchesUser = currentUser?.id
@@ -448,6 +464,10 @@ const DashboardPage = () => {
         return processes.length ? Math.round((countCompletedProcesses / processes.length) * 100) : 0;
     }, [countCompletedProcesses, processes.length]);
 
+    const formattedTainacanItemsCount = useMemo(() => {
+        return new Intl.NumberFormat(document.documentElement.lang || 'pt-BR').format(tainacanItemsCount);
+    }, [tainacanItemsCount]);
+
     if (isLoading) {
         return <Spinner />;
     }
@@ -511,7 +531,7 @@ const DashboardPage = () => {
                         </div>
                     </div>
                     <div className="dashboard-item-stats">
-                        <div className="card-container">
+                        <div className="card-container dashboard-stats-cards">
                             <a href={obatalaApp.admin_url +"admin.php?page=process-manager"} className="card-item">
                                 <span className="description">{__('Processes', 'obatala')}</span>
                                 <span className="indicator">{processes.length} <Icon icon="admin-page" /></span>
@@ -523,6 +543,10 @@ const DashboardPage = () => {
                             <a href={obatalaApp.admin_url +"admin.php?page=sector_manager"} className="card-item">
                                 <span className="description">{__('Groups', 'obatala')}</span>
                                 <span className="indicator">{sectors.length} <Icon icon="groups" /></span>
+                            </a>
+                            <a href={obatalaApp.admin_url +"admin.php?page=tainacan_admin#/items"} className="card-item">
+                                <span className="description">{__('Collection items', 'obatala')}</span>
+                                <span className="indicator">{formattedTainacanItemsCount} <Icon icon="archive" /></span>
                             </a>
                         </div>
                         <div className="panel-container mt-2">

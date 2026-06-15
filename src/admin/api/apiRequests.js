@@ -30,6 +30,15 @@ export const fetchCollectionsTainacan = () => {
     });
 };
 
+export const fetchTainacanItemsCount = () => {
+    return apiFetch({
+        path: `/tainacan/v2/items?perpage=1&status=publish`,
+        parse: false,
+    }).then((response) => {
+        return Number(response.headers.get('X-WP-Total')) || 0;
+    });
+};
+
 export const fetchMetadataCollectionsTainacan = (id) => {
     return apiFetch({
         path: `/obatala/v1/exporter/get_metadata_collection/${id}`,
