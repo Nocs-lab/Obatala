@@ -70,6 +70,15 @@ namespace Obatala\Admin {
                 ],
                 [
                     'parent_slug' => 'obatala-main',
+                    'title' => 'Collection items',
+                    'menu_title' => 'Collection items',
+                    'capability' => 'obatala_access',
+                    'slug' => 'collection-items',
+                    'callback' => 'render_page',
+                    'show_in_menu' => false
+                ],
+                [
+                    'parent_slug' => 'obatala-main',
                     'title' => 'Process viewer',
                     'menu_title' => 'Process viewer',
                     'capability' => 'obatala_access',

@@ -448,6 +448,15 @@ msgstr "Historial"
 msgid "Search by title"
 msgstr "Buscar por título"
 
+msgid "Search by title or process number"
+msgstr "Buscar por título o número de proceso"
+
+msgid "Process number"
+msgstr "N.º de proceso"
+
+msgid "No numbering"
+msgstr "Sin numeración"
+
 msgid "Previous"
 msgstr "Anterior"
 
@@ -1157,3 +1166,143 @@ msgstr "El proceso ya fue eliminado."
 
 msgid "Unable to record process deletion without an authenticated user."
 msgstr "No se pudo registrar la eliminación del proceso sin un usuario autenticado."
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Tainacan is not available."
+msgstr "Tainacan no está disponible."
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Process #%d"
+msgstr "Proceso #%d"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Obatala process"
+msgstr "Proceso de Obatalá"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Published"
+msgstr "Publicado"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Under review"
+msgstr "En revisión"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Draft"
+msgstr "Borrador"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Private"
+msgstr "Privado"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Error loading collection items."
+msgstr "Error al cargar los ítems de la colección."
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "All collections"
+msgstr "Todas las colecciones"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "All situations"
+msgstr "Todas las situaciones"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Error downloading item data."
+msgstr "Error al descargar los datos del ítem."
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Item deleted successfully."
+msgstr "Ítem eliminado correctamente."
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Error deleting item."
+msgstr "Error al eliminar el ítem."
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "%s process"
+msgstr "%s proceso"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "%s processes"
+msgstr "%s procesos"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Add item"
+msgstr "Añadir ítem"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "All items"
+msgstr "Todos los ítems"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "My items"
+msgstr "Mis ítems"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Search collection items"
+msgstr "Buscar ítems de la colección"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Search by title, registration number, or keyword"
+msgstr "Buscar por título, número de registro o palabra clave"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Situation"
+msgstr "Situación"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Clear filters"
+msgstr "Limpiar filtros"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Registration number"
+msgstr "N.º de registro"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Linked processes"
+msgstr "Procesos vinculados"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Item #%d"
+msgstr "Ítem #%d"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "by %s"
+msgstr "por %s"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "View item"
+msgstr "Ver ítem"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Edit item"
+msgstr "Editar ítem"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "View details and history"
+msgstr "Ver detalles e historial"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Download item data"
+msgstr "Descargar datos del ítem"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Delete item"
+msgstr "Eliminar ítem"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Page %1$s of %2$s"
+msgstr "Página %1$s de %2$s"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "No collection items found."
+msgstr "No se encontraron ítems de la colección."
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Linked processes for %s"
+msgstr "Procesos vinculados a %s"
+
+#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Are you sure you want to delete item %s?"
+msgstr "¿Está seguro de que desea eliminar el ítem %s?"

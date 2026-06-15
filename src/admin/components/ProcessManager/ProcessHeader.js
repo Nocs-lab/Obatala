@@ -4,6 +4,14 @@ import { __ } from '@wordpress/i18n';
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
 
+const getMetaValue = (meta, key) => {
+    if (!meta || meta[key] === undefined || meta[key] === null) {
+        return '';
+    }
+    const value = meta[key];
+    return Array.isArray(value) ? (value[0] ?? '') : value;
+};
+
 const ProcessHeader = ({ process, filteredProcessType, authorsById, isComplete, progress }) => {
     const createAtProcess = () => {
         const formatDate = format(process?.date, "dd 'de' MMMM 'de' yyyy", {
@@ -11,6 +19,8 @@ const ProcessHeader = ({ process, filteredProcessType, authorsById, isComplete, 
         });
         return formatDate;
     };
+
+    const processNumber = getMetaValue(process?.meta, 'numero_processo');
 
     return (
         <>
@@ -21,7 +31,14 @@ const ProcessHeader = ({ process, filteredProcessType, authorsById, isComplete, 
                             ? filteredProcessType.title.rendered
                             : __("Process type title", "obatala")}
                     </small>
-                    {process.title?.rendered}
+                    <span className="process-title-with-number">
+                        {process.title?.rendered}
+                        {processNumber ? (
+                            <span className="process-number" title={__('Process number', 'obatala')}>
+                                {processNumber}
+                            </span>
+                        ) : null}
+                    </span>
                 </h2>
                 <div className="badge-container">
                     <span

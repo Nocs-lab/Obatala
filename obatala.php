@@ -83,6 +83,7 @@ namespace Obatala {
 			// Register the custom post types and taxonomies
 			add_action('init', ['Obatala\Entities\Process', 'init']);
 			add_action('init', ['Obatala\Entities\ProcessType', 'init']);
+			add_action('init', ['Obatala\Database\ProcessNumberSchema', 'maybe_upgrade']);
 
 			// Register and enqueue scripts and styles
 			// Register and enqueue scripts and styles
@@ -138,6 +139,9 @@ namespace Obatala {
 
 			$exporter_api = new \Obatala\Api\ExporterApi();
 			$exporter_api->register();
+
+			$tainacan_items_api = new \Obatala\Api\TainacanItemsApi();
+			$tainacan_items_api->register();
 		}
 
 
@@ -161,6 +165,10 @@ namespace Obatala {
 			}
 
 			\Obatala\Security\Roles::ensure_roles();
+			\Obatala\Database\ProcessNumberSchema::install();
+
+			$number_service = new \Obatala\Services\ProcessNumberService();
+			$number_service->backfillMissingNumbers();
 		}
 	}
 

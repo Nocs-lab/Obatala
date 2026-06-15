@@ -8,6 +8,76 @@ import apiFetch from '@wordpress/api-fetch';
 import { decodeEntities } from '@wordpress/html-entities';
 import { fetchProcessReportPdf } from '../../api/apiRequests';
 
+const getMetaValue = (meta, key) => {
+    if (!meta || meta[key] === undefined || meta[key] === null) {
+        return '';
+    }
+    const value = meta[key];
+    return Array.isArray(value) ? (value[0] ?? '') : value;
+};
+
+const processMatchesSearch = (process, filterValue) => {
+    const query = String(filterValue || '').trim();
+    if (!query) {
+        return true;
+    }
+
+    const queryLower = query.toLowerCase();
+    const queryDigits = query.replace(/\D/g, '');
+    const title = decodeEntities(process.title?.rendered ?? '').toLowerCase();
+
+    if (title.includes(queryLower)) {
+        return true;
+    }
+
+    const numero = String(getMetaValue(process.meta, 'numero_processo') || '');
+    if (!numero) {
+        return false;
+    }
+
+    const ano = String(getMetaValue(process.meta, 'ano_processo') || '');
+    const sequencial = parseInt(getMetaValue(process.meta, 'sequencial_processo') || '0', 10);
+    const dv = String(getMetaValue(process.meta, 'digito_verificador_processo') || '');
+    const seqPadded = String(sequencial).padStart(5, '0');
+
+    if (numero.toLowerCase().includes(queryLower)) {
+        return true;
+    }
+
+    if (ano && queryLower === ano) {
+        return true;
+    }
+
+    if (queryDigits && seqPadded.includes(queryDigits)) {
+        return true;
+    }
+
+    if (queryDigits) {
+        const baseDigits = `${ano}${seqPadded}`;
+        const fullDigits = `${baseDigits}${dv}`;
+        const numeroDigits = numero.replace(/\D/g, '');
+
+        if (numeroDigits.includes(queryDigits)) {
+            return true;
+        }
+        if (baseDigits.includes(queryDigits)) {
+            return true;
+        }
+        if (fullDigits.includes(queryDigits)) {
+            return true;
+        }
+    }
+
+    return false;
+};
+
+const processListGlobalFilter = (rows, _columnIds, filterValue) => {
+    if (!filterValue) {
+        return rows;
+    }
+    return rows.filter(({ original }) => processMatchesSearch(original, filterValue));
+};
+
 const isPdfReportAvailable =
     typeof window !== 'undefined' &&
     window.obatalaApp &&
@@ -51,6 +121,16 @@ const ProcessList = ({ processes, onEdit, onViewProcess, onDelete, processTypeMa
                     <a href={`?page=process-viewer&process_id=${row.original.id}`}>
                         {decodeEntities(row.original.title.rendered ?? '')}
                     </a>
+                ),
+            },
+            {
+                Header: __("Process number", "obatala"),
+                id: "numero_processo",
+                accessor: (row) => getMetaValue(row.meta, 'numero_processo'),
+                Cell: ({ value }) => (
+                    value
+                        ? <span className="process-number">{value}</span>
+                        : <span className="description">{__("No numbering", "obatala")}</span>
                 ),
             },
             {
@@ -195,6 +275,7 @@ const ProcessList = ({ processes, onEdit, onViewProcess, onDelete, processTypeMa
             columns,
             data,
             initialState: { pageIndex: 0, pageSize: 10 },
+            globalFilter: processListGlobalFilter,
         },
         useGlobalFilter,
         useSortBy,
@@ -214,7 +295,7 @@ const ProcessList = ({ processes, onEdit, onViewProcess, onDelete, processTypeMa
                         className="mb-1"
                         value={globalFilter || ''}
                         onChange={value => setGlobalFilter(value)}
-                        placeholder={__("Search by title", "obatala")}
+                        placeholder={__("Search by title or process number", "obatala")}
                         type="search"
                     />
                     <ProcessFilter
