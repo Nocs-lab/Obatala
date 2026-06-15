@@ -532,6 +532,10 @@ const DashboardPage = () => {
                     </div>
                     <div className="dashboard-item-stats">
                         <div className="card-container dashboard-stats-cards">
+                            <a href={obatalaApp.admin_url +"admin.php?page=tainacan_admin#/items"} className="card-item">
+                                <span className="description">{__('Collection items', 'obatala')}</span>
+                                <span className="indicator">{formattedTainacanItemsCount} <Icon icon="archive" /></span>
+                            </a>
                             <a href={obatalaApp.admin_url +"admin.php?page=process-manager"} className="card-item">
                                 <span className="description">{__('Processes', 'obatala')}</span>
                                 <span className="indicator">{processes.length} <Icon icon="admin-page" /></span>
@@ -543,10 +547,6 @@ const DashboardPage = () => {
                             <a href={obatalaApp.admin_url +"admin.php?page=sector_manager"} className="card-item">
                                 <span className="description">{__('Groups', 'obatala')}</span>
                                 <span className="indicator">{sectors.length} <Icon icon="groups" /></span>
-                            </a>
-                            <a href={obatalaApp.admin_url +"admin.php?page=tainacan_admin#/items"} className="card-item">
-                                <span className="description">{__('Collection items', 'obatala')}</span>
-                                <span className="indicator">{formattedTainacanItemsCount} <Icon icon="archive" /></span>
                             </a>
                         </div>
                         <div className="panel-container mt-2">
