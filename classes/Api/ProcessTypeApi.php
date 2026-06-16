@@ -530,7 +530,7 @@ class ProcessTypeApi extends ObatalaAPI {
         }
 
         // Tentar mover o arquivo para o diretório personalizado
-        if ( ! $wp_filesystem->move( $upload_path, $new_file_path ) ) {
+        if ( ! $wp_filesystem->move( $upload_path, $new_file_path, true ) ) {
             return new WP_REST_Response([
                 'error' => 'Erro ao salvar o arquivo no diretório personalizado.',
             ], 500);

@@ -633,12 +633,6 @@ const ensureControlFieldsInFlowData = (rawFlowData) => {
         String(edge?.source || '') === String(source)
         && String(edge?.target || '') === String(target)
     ));
-    const hasOutgoingFrom = (source) => flowData.edges.some(
-        (edge) => String(edge?.source || '') === String(source)
-    );
-    const hasIncomingTo = (target) => flowData.edges.some(
-        (edge) => String(edge?.target || '') === String(target)
-    );
     const ensureEdge = (source, target, baseId) => {
         if (edgeExists(source, target)) {
             return false;
@@ -778,26 +772,6 @@ const ensureControlFieldsInFlowData = (rawFlowData) => {
         }
 
         if (endNode && ensureEdge(stageId, 'End', `edge_${sanitizeForId(stageId)}_end`)) {
-            changed = true;
-        }
-    }
-
-    if (startNode && targetNode && (
-        createdDefaultStage
-        || !hasOutgoingFrom('Start')
-        || !edgeExists('Start', targetNode.id)
-    )) {
-        if (ensureEdge('Start', targetNode.id, `edge_start_${sanitizeForId(targetNode.id)}`)) {
-            changed = true;
-        }
-    }
-
-    if (endNode && targetNode && (
-        createdDefaultStage
-        || !hasIncomingTo('End')
-        || !edgeExists(targetNode.id, 'End')
-    )) {
-        if (ensureEdge(targetNode.id, 'End', `edge_${sanitizeForId(targetNode.id)}_end`)) {
             changed = true;
         }
     }

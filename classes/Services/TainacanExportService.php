@@ -47,6 +47,10 @@ class TainacanExportService {
             'manual_items' => $this->get_saved_manual_items($process_id),
             'spreadsheet_file_name' => '',
             'spreadsheet_file_exists' => false,
+            'spreadsheet_rows' => [],
+            'spreadsheet_rows_source' => 'none',
+            'spreadsheet_rows_message' => '',
+            'spreadsheet_rows_warnings' => [],
             'show_manual_matrix' => false,
             'existing_export_result' => $this->get_saved_export_result($process_id),
             'export_decision' => $this->build_default_export_decision('not_required', 'Confirmação de exportação não é necessária para este processo.'),
@@ -116,6 +120,13 @@ class TainacanExportService {
             $spreadsheet_file_name = $this->extract_scalar_value($stage_field_index[$decision['upload_field_id']]['value'] ?? '');
             $spreadsheet_file_name = sanitize_file_name((string) $spreadsheet_file_name);
         }
+        $spreadsheet_file_path = $this->resolve_uploaded_file_path($spreadsheet_file_name);
+        $spreadsheet_rows_state = $this->build_spreadsheet_rows_state(
+            $spreadsheet_file_path,
+            $mapped_fields,
+            is_array($runtime['manual_items'] ?? null) ? $runtime['manual_items'] : [],
+            $decision
+        );
 
         $runtime['enabled'] = true;
         $runtime['requires_export_confirmation'] = true;
@@ -129,7 +140,11 @@ class TainacanExportService {
         $runtime['decision'] = $decision;
         $runtime['mapped_fields'] = $mapped_fields;
         $runtime['spreadsheet_file_name'] = $spreadsheet_file_name;
-        $runtime['spreadsheet_file_exists'] = !empty($this->resolve_uploaded_file_path($spreadsheet_file_name));
+        $runtime['spreadsheet_file_exists'] = !empty($spreadsheet_file_path);
+        $runtime['spreadsheet_rows'] = $spreadsheet_rows_state['rows'];
+        $runtime['spreadsheet_rows_source'] = $spreadsheet_rows_state['source'];
+        $runtime['spreadsheet_rows_message'] = $spreadsheet_rows_state['message'];
+        $runtime['spreadsheet_rows_warnings'] = $spreadsheet_rows_state['warnings'];
         $runtime['show_manual_matrix'] = $decision['is_multiple'] && $decision['entry_mode'] === 'manual';
         $runtime['export_decision'] = $this->get_saved_export_decision($process_id);
         if (
@@ -813,6 +828,49 @@ class TainacanExportService {
         return $mapped_fields;
     }
 
+    private function build_spreadsheet_rows_state($file_path, array $mapped_fields, array $manual_items, array $decision) {
+        $state = [
+            'rows' => [],
+            'source' => 'none',
+            'message' => '',
+            'warnings' => [],
+        ];
+
+        if (($decision['entry_mode'] ?? '') !== 'upload') {
+            return $state;
+        }
+
+        $manual_rows = $this->normalize_saved_manual_rows($manual_items, $mapped_fields);
+        if (!empty($manual_rows)) {
+            $state['rows'] = $manual_rows;
+            $state['source'] = 'manual';
+            $state['message'] = 'Valores da planilha ajustados manualmente no Obatala.';
+            return $state;
+        }
+
+        if (empty($file_path)) {
+            $state['message'] = 'Aguardando upload da planilha.';
+            return $state;
+        }
+
+        $sheet_rows = $this->parse_spreadsheet_rows($file_path, $mapped_fields);
+        if (!empty($sheet_rows['success'])) {
+            $state['rows'] = is_array($sheet_rows['rows'] ?? null) ? $sheet_rows['rows'] : [];
+            $state['source'] = empty($state['rows']) ? 'error' : 'file';
+            $state['message'] = empty($state['rows'])
+                ? 'A planilha foi lida, mas não contém linhas válidas para exportação.'
+                : (string) ($sheet_rows['message'] ?? 'Planilha lida com sucesso.');
+            $state['warnings'] = is_array($sheet_rows['warnings'] ?? null) ? $sheet_rows['warnings'] : [];
+            return $state;
+        }
+
+        $state['source'] = 'error';
+        $state['message'] = (string) ($sheet_rows['message'] ?? 'Não foi possível ler a planilha.');
+        $state['warnings'] = is_array($sheet_rows['warnings'] ?? null) ? $sheet_rows['warnings'] : [];
+
+        return $state;
+    }
+
     private function resolve_decision_state(array $decision_rules, array $stage_field_index) {
         $multi_raw = $this->extract_scalar_value($stage_field_index[$decision_rules['multi_or_single_field_id']]['value'] ?? '');
         $quantity_raw = $this->extract_scalar_value($stage_field_index[$decision_rules['quantity_field_id']]['value'] ?? '');
@@ -896,36 +954,46 @@ class TainacanExportService {
         $decision = $runtime['decision'];
 
         if ($decision['entry_mode'] === 'upload') {
-            $file_name = $runtime['spreadsheet_file_name'] ?? '';
-            $file_path = $this->resolve_uploaded_file_path($file_name);
-            if (empty($file_path)) {
-                return [
-                    'success' => false,
-                    'message' => 'Modo planilha ativo, mas nenhum arquivo de planilha válido foi encontrado.',
-                    'warnings' => [],
-                    'rows' => [],
-                ];
-            }
+            $manual_rows = $this->normalize_saved_manual_rows(
+                is_array($runtime['manual_items'] ?? null) ? $runtime['manual_items'] : [],
+                $runtime['mapped_fields']
+            );
 
-            $sheet_rows = $this->parse_spreadsheet_rows($file_path, $runtime['mapped_fields']);
-            if (!$sheet_rows['success']) {
-                return [
-                    'success' => false,
-                    'message' => $sheet_rows['message'],
-                    'warnings' => is_array($sheet_rows['warnings'] ?? null) ? $sheet_rows['warnings'] : [],
-                    'rows' => [],
-                ];
-            }
+            if (!empty($manual_rows)) {
+                $rows = $manual_rows;
+                $warnings[] = 'A exportação usou valores da planilha editados manualmente no Obatala.';
+            } else {
+                $file_name = $runtime['spreadsheet_file_name'] ?? '';
+                $file_path = $this->resolve_uploaded_file_path($file_name);
+                if (empty($file_path)) {
+                    return [
+                        'success' => false,
+                        'message' => 'Modo planilha ativo, mas nenhum arquivo de planilha válido foi encontrado.',
+                        'warnings' => [],
+                        'rows' => [],
+                    ];
+                }
 
-            $rows = $sheet_rows['rows'];
-            $warnings = array_merge($warnings, is_array($sheet_rows['warnings'] ?? null) ? $sheet_rows['warnings'] : []);
-            if (empty($rows)) {
-                return [
-                    'success' => false,
-                    'message' => 'A planilha foi lida, mas não contém linhas válidas para exportação.',
-                    'warnings' => [],
-                    'rows' => [],
-                ];
+                $sheet_rows = $this->parse_spreadsheet_rows($file_path, $runtime['mapped_fields']);
+                if (!$sheet_rows['success']) {
+                    return [
+                        'success' => false,
+                        'message' => $sheet_rows['message'],
+                        'warnings' => is_array($sheet_rows['warnings'] ?? null) ? $sheet_rows['warnings'] : [],
+                        'rows' => [],
+                    ];
+                }
+
+                $rows = $sheet_rows['rows'];
+                $warnings = array_merge($warnings, is_array($sheet_rows['warnings'] ?? null) ? $sheet_rows['warnings'] : []);
+                if (empty($rows)) {
+                    return [
+                        'success' => false,
+                        'message' => 'A planilha foi lida, mas não contém linhas válidas para exportação.',
+                        'warnings' => [],
+                        'rows' => [],
+                    ];
+                }
             }
         } else {
             if ($decision['is_multiple']) {
@@ -982,6 +1050,36 @@ class TainacanExportService {
             'warnings' => $warnings,
             'rows' => $rows,
         ];
+    }
+
+    private function normalize_saved_manual_rows(array $rows, array $mapped_fields) {
+        $allowed_field_ids = array_values(array_filter(array_map(function($mapped_field) {
+            return (string) ($mapped_field['obatala_field_id'] ?? '');
+        }, $mapped_fields)));
+
+        if (empty($allowed_field_ids)) {
+            return [];
+        }
+
+        $normalized_rows = [];
+        foreach ($rows as $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+
+            $clean_row = [];
+            foreach ($allowed_field_ids as $field_id) {
+                if (array_key_exists($field_id, $row)) {
+                    $clean_row[$field_id] = $this->sanitize_mixed_value($row[$field_id]);
+                }
+            }
+
+            if (!$this->is_empty_value($clean_row)) {
+                $normalized_rows[] = $clean_row;
+            }
+        }
+
+        return $normalized_rows;
     }
 
     private function extract_manual_item_values_from_stage($value, $target_quantity, $replicate_single_value = false) {
@@ -1413,7 +1511,7 @@ class TainacanExportService {
         }
 
         $first_row = array_map(function($cell) {
-            return trim((string) $cell);
+            return $this->clean_spreadsheet_header_label($cell);
         }, $rows[0]);
 
         $header_index = [];
@@ -1424,21 +1522,25 @@ class TainacanExportService {
             }
         }
 
+        $expected_header_labels = $this->build_unique_spreadsheet_header_labels($mapped_fields);
         $mapped_column_by_field = [];
         $mapped_field_by_id = [];
-        foreach ($mapped_fields as $mapped_field) {
+        $mapped_field_index_by_id = [];
+        foreach ($mapped_fields as $index => $mapped_field) {
             $field_id = (string) ($mapped_field['obatala_field_id'] ?? '');
             if ($field_id === '') {
                 continue;
             }
             $mapped_field_by_id[$field_id] = $mapped_field;
+            $mapped_field_index_by_id[$field_id] = $index;
 
-            $aliases = array_filter([
-                $this->normalize_header_key($field_id),
-                $this->normalize_header_key($mapped_field['obatala_field_label'] ?? ''),
-                $this->normalize_header_key((string) ($mapped_field['tainacan_metadata_id'] ?? '')),
-                $this->normalize_header_key($mapped_field['tainacan_metadata_name'] ?? ''),
-            ]);
+            $aliases = array_filter(array_map(function($candidate) {
+                return $this->normalize_header_key($candidate);
+            }, $this->get_mapped_field_header_candidates(
+                $mapped_field,
+                $index,
+                $expected_header_labels[$index] ?? ''
+            )));
 
             foreach ($aliases as $alias) {
                 if (isset($header_index[$alias])) {
@@ -1449,17 +1551,24 @@ class TainacanExportService {
         }
 
         $has_header_match = !empty($mapped_column_by_field);
-        if ($has_header_match && count($mapped_column_by_field) < count($mapped_field_by_id)) {
+        if (!empty($mapped_field_by_id) && count($mapped_column_by_field) < count($mapped_field_by_id)) {
             $missing_headers = [];
             foreach ($mapped_field_by_id as $field_id => $mapped_field) {
                 if (!isset($mapped_column_by_field[$field_id])) {
-                    $missing_headers[] = $this->get_mapped_field_display_label($mapped_field);
+                    $index = $mapped_field_index_by_id[$field_id] ?? null;
+                    $missing_headers[] = $expected_header_labels[$index]
+                        ?? $this->get_mapped_field_display_label($mapped_field, $index);
                 }
             }
 
             return [
                 'success' => false,
-                'message' => 'A planilha não possui todas as colunas mapeadas. Faltando: ' . implode(', ', $missing_headers) . '.',
+                'message' => $this->build_spreadsheet_missing_headers_message(
+                    $missing_headers,
+                    $first_row,
+                    $mapped_fields,
+                    !$has_header_match
+                ),
                 'rows' => [],
                 'warnings' => [],
             ];
@@ -1543,13 +1652,106 @@ class TainacanExportService {
         ];
     }
 
-    private function get_mapped_field_display_label(array $mapped_field) {
-        $label = trim((string) ($mapped_field['tainacan_metadata_name'] ?? ''));
+    private function build_spreadsheet_missing_headers_message(array $missing_headers, array $detected_headers, array $mapped_fields, $no_match = false) {
+        $expected_headers = $this->build_unique_spreadsheet_header_labels($mapped_fields);
+
+        $base_message = $no_match
+            ? 'A primeira linha da planilha não corresponde a nenhum field mapeado.'
+            : 'A planilha não possui todas as colunas mapeadas.';
+
+        return sprintf(
+            '%s Colunas faltando: %s. Colunas encontradas: %s. Cabeçalhos esperados no modelo: %s.',
+            $base_message,
+            $this->format_spreadsheet_header_list($missing_headers, 'nenhuma'),
+            $this->format_spreadsheet_header_list($detected_headers, 'nenhuma'),
+            $this->format_spreadsheet_header_list($expected_headers, 'nenhum')
+        );
+    }
+
+    private function format_spreadsheet_header_list(array $headers, $fallback) {
+        $clean_headers = array_values(array_filter(array_map(function($header) {
+            return $this->clean_spreadsheet_header_label($header);
+        }, $headers), function($header) {
+            return $header !== '';
+        }));
+
+        return !empty($clean_headers) ? implode(', ', $clean_headers) : $fallback;
+    }
+
+    private function build_unique_spreadsheet_header_labels(array $mapped_fields) {
+        $labels = [];
+        $used_headers = [];
+
+        foreach ($mapped_fields as $index => $mapped_field) {
+            if (!is_array($mapped_field)) {
+                continue;
+            }
+
+            $base_label = $this->get_mapped_field_display_label($mapped_field, $index);
+            $candidate = $base_label;
+            $counter = 2;
+            $normalized_candidate = $this->normalize_header_key($candidate);
+
+            while ($normalized_candidate !== '' && in_array($normalized_candidate, $used_headers, true)) {
+                $candidate = sprintf('%s (%d)', $base_label, $counter);
+                $normalized_candidate = $this->normalize_header_key($candidate);
+                $counter++;
+            }
+
+            if ($normalized_candidate !== '') {
+                $used_headers[] = $normalized_candidate;
+            }
+
+            $labels[$index] = $candidate;
+        }
+
+        return $labels;
+    }
+
+    private function get_mapped_field_header_candidates(array $mapped_field, $index = null, $expected_header_label = '') {
+        $candidates = [
+            (string) $expected_header_label,
+            $this->get_mapped_field_display_label($mapped_field, $index),
+            (string) ($mapped_field['obatala_field_id'] ?? ''),
+            (string) ($mapped_field['tainacan_metadata_name'] ?? ''),
+            (string) ($mapped_field['tainacan_metadata_id'] ?? ''),
+        ];
+
+        $unique_candidates = [];
+        foreach ($candidates as $candidate) {
+            $candidate = trim((string) $candidate);
+            $normalized_candidate = $this->normalize_header_key($candidate);
+
+            if ($candidate === '' || $normalized_candidate === '' || isset($unique_candidates[$normalized_candidate])) {
+                continue;
+            }
+
+            $unique_candidates[$normalized_candidate] = $candidate;
+        }
+
+        return array_values($unique_candidates);
+    }
+
+    private function clean_spreadsheet_header_label($value) {
+        $value = (string) $value;
+        $without_bom = preg_replace('/^\xEF\xBB\xBF|\x{FEFF}/u', '', $value);
+        if (is_string($without_bom)) {
+            $value = $without_bom;
+        }
+
+        return trim($value);
+    }
+
+    private function get_mapped_field_display_label(array $mapped_field, $index = null) {
+        $label = trim((string) ($mapped_field['obatala_field_label'] ?? ''));
         if ($label === '') {
-            $label = trim((string) ($mapped_field['obatala_field_label'] ?? ''));
+            $label = trim((string) ($mapped_field['tainacan_metadata_name'] ?? ''));
         }
         if ($label === '') {
             $label = trim((string) ($mapped_field['obatala_field_id'] ?? 'Campo'));
+        }
+        if ($label === 'Campo' && $index !== null) {
+            $label = 'Campo ' . ((int) $index + 1);
         }
 
         return $label;
@@ -2143,6 +2345,11 @@ class TainacanExportService {
     }
 
     private function normalize_header_key($value) {
+        $value = (string) $value;
+        $without_bom = preg_replace('/^\xEF\xBB\xBF|\x{FEFF}/u', '', $value);
+        if (is_string($without_bom)) {
+            $value = $without_bom;
+        }
         $value = strtolower(trim((string) $value));
         if ($value === '') {
             return '';

@@ -3,3 +3,4 @@ developer/i18n-map.json
 node_modules
 /build/
 vendor//build/
+.codex

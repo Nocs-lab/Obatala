@@ -906,6 +906,11 @@ class ProcessApi extends ObatalaAPI {
             return new WP_REST_Response(['message' => 'Node not found.'], 404);
         }
 
+        $spreadsheet_validation = $this->validate_node_spreadsheet_before_finish($post_id, $node_to_update);
+        if (is_wp_error($spreadsheet_validation)) {
+            return $this->error_response($spreadsheet_validation);
+        }
+
         // Atualiza apenas o status do nó
         $updated_node = $node_to_update;
         $updated_node['node_status'] = 'Finished';
@@ -1063,6 +1068,54 @@ class ProcessApi extends ObatalaAPI {
             'export_result' => $export_result,
             'linked_item_reference_result' => $linked_item_reference_result,
         ], 200);
+    }
+
+    private function validate_node_spreadsheet_before_finish($process_id, array $node) {
+        $runtime = (new TainacanExportService())->get_runtime_config((int) $process_id);
+
+        if (empty($runtime['enabled'])) {
+            return true;
+        }
+
+        $decision = is_array($runtime['decision'] ?? null) ? $runtime['decision'] : [];
+        if (($decision['entry_mode'] ?? '') !== 'upload') {
+            return true;
+        }
+
+        $upload_field_id = (string) ($decision['upload_field_id'] ?? '');
+        if ($upload_field_id === '') {
+            return true;
+        }
+
+        $node_fields = $node['data']['fields'] ?? [];
+        if (!is_array($node_fields)) {
+            return true;
+        }
+
+        $node_has_upload_field = false;
+        foreach ($node_fields as $field) {
+            if ((string) ($field['id'] ?? '') === $upload_field_id) {
+                $node_has_upload_field = true;
+                break;
+            }
+        }
+
+        if (!$node_has_upload_field) {
+            return true;
+        }
+
+        $rows_source = (string) ($runtime['spreadsheet_rows_source'] ?? 'none');
+        $rows = is_array($runtime['spreadsheet_rows'] ?? null) ? $runtime['spreadsheet_rows'] : [];
+        if (in_array($rows_source, ['file', 'manual'], true) && !empty($rows)) {
+            return true;
+        }
+
+        $message = (string) ($runtime['spreadsheet_rows_message'] ?? '');
+        if ($message === '') {
+            $message = __('A planilha precisa ser enviada e validada antes de concluir esta etapa.', 'obatala');
+        }
+
+        return new WP_Error('invalid_spreadsheet', $message, ['status' => 400]);
     }
 
     public function init_node($flowData, $post_id) {
@@ -1233,6 +1286,11 @@ class ProcessApi extends ObatalaAPI {
                     );
                 }
             }
+
+            $spreadsheet_validation = $this->validate_node_spreadsheet_before_finish($post_id, $nodes_by_id[$node_id]);
+            if (is_wp_error($spreadsheet_validation)) {
+                return $spreadsheet_validation;
+            }
         }
 
         return null;
@@ -1271,6 +1329,10 @@ class ProcessApi extends ObatalaAPI {
             if (!$this->is_flow_field_requirement_met($field, $node_id, $stage_data)) {
                 return false;
             }
+        }
+
+        if (is_wp_error($this->validate_node_spreadsheet_before_finish($post_id, $node))) {
+            return false;
         }
 
         return true;

@@ -389,9 +389,11 @@ const MetaFieldInputs = React.memo(
 						>
 							<FormFileUpload
 								accept=".doc,.docx,.pdf,.jpg,.jpeg,.png,.csv,.xls,.xlsx"
-								onChange={ ( event ) =>
-									handleChange( event.currentTarget.files )
-								}
+								onChange={ ( event ) => {
+									const file = event.currentTarget.files?.[0];
+									handleChange( file || event.currentTarget.files );
+									event.currentTarget.value = '';
+								} }
 								disabled={ ! isEditable || noHasPermission }
 								required={ field.config?.required ?? false }
 								help={ field.config?.helpText }
