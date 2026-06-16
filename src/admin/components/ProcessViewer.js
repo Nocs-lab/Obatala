@@ -412,6 +412,65 @@ const ProcessViewer = () => {
         return hasValue(value);
     };
 
+    const stageDocumentRequiresSignedUpload = (field) => {
+        return field?.type === 'stage_document' && Boolean(field?.config?.requireSignedUpload);
+    };
+
+    const stageDocumentHasSignedUpload = (value, field) => {
+        const documentValue = normalizeDocumentValue(value, field);
+        const signedName = documentValue?.signedFile?.name ?? '';
+        return String(signedName).trim() !== '';
+    };
+
+    const fieldBlocksSubmit = (field) => {
+        return isFieldRequired(field) || stageDocumentRequiresSignedUpload(field);
+    };
+
+    const fieldMeetsSubmitRequirements = (field, value) => {
+        if (field?.type === 'stage_document') {
+            const documentValue = normalizeDocumentValue(value, field);
+
+            if (isFieldRequired(field) && stripHtml(documentValue.content) === '') {
+                return false;
+            }
+
+            if (stageDocumentRequiresSignedUpload(field) && !stageDocumentHasSignedUpload(value, field)) {
+                return false;
+            }
+
+            return true;
+        }
+
+        if (!isFieldRequired(field)) {
+            return true;
+        }
+
+        return fieldHasValue(field, value);
+    };
+
+    const isFieldRequired = (field) => {
+        const required = field?.config?.required;
+
+        if (required === true || required === 1) {
+            return true;
+        }
+
+        if (required === false || required === 0 || required === null || required === undefined) {
+            return false;
+        }
+
+        if (typeof required === 'string') {
+            const normalized = required.trim().toLowerCase();
+            if (normalized === 'false' || normalized === '0' || normalized === 'no' || normalized === 'nao' || normalized === 'não') {
+                return false;
+            }
+
+            return normalized === 'true' || normalized === '1' || normalized === 'yes' || normalized === 'sim';
+        }
+
+        return Boolean(required);
+    };
+
     const unwrapSingleValue = (value) => {
         if (Array.isArray(value) && value.length === 1) {
             const first = value[0];
@@ -553,7 +612,9 @@ const ProcessViewer = () => {
             return '';
         }
 
-        const singleValue = rawValue ?? uploadedFiles?.[stepId]?.[field.id]?.[0]?.name;
+        const singleValue = rawValue
+            ?? uploadedFiles?.[stepId]?.[field.id]?.[0]?.name
+            ?? fileInfo?.[stepId]?.[field.id]?.name;
         if (hasValue(singleValue)) {
             return unwrapSingleValue(singleValue);
         }
@@ -565,8 +626,44 @@ const ProcessViewer = () => {
         return unwrapSingleValue(singleValue);
     };
 
+    const resolveFieldValueForValidation = (stepId, field, itemIndex = 0) => {
+        const repeatCount = getFieldRepeatCount(field);
+
+        if (repeatCount > 1) {
+            const repeatedValues = normalizeArrayLike(formValues?.[stepId]?.[field.id]);
+            const sourceValue = repeatedValues[itemIndex];
+
+            if (fieldHasValue(field, sourceValue)) {
+                return sourceValue;
+            }
+
+            return getFieldInitialValue(stepId, field, itemIndex);
+        }
+
+        const currentValue = formValues?.[stepId]?.[field.id]
+            ?? uploadedFiles?.[stepId]?.[field.id]?.[0]?.name
+            ?? fileInfo?.[stepId]?.[field.id]?.name;
+
+        if (field.type === 'stage_document') {
+            return normalizeDocumentValue(currentValue, field);
+        }
+
+        if (fieldHasValue(field, currentValue)) {
+            return unwrapSingleValue(currentValue);
+        }
+
+        const fallbackValue = getFieldInitialValue(stepId, field, itemIndex);
+        if (field.type === 'stage_document') {
+            return normalizeDocumentValue(fallbackValue, field);
+        }
+
+        return unwrapSingleValue(fallbackValue);
+    };
+
     const getFieldValueForSubmit = (stepId, field) => {
-        const currentValue = formValues?.[stepId]?.[field.id] ?? uploadedFiles?.[stepId]?.[field.id]?.[0]?.name;
+        const currentValue = formValues?.[stepId]?.[field.id]
+            ?? uploadedFiles?.[stepId]?.[field.id]?.[0]?.name
+            ?? fileInfo?.[stepId]?.[field.id]?.name;
         const repeatCount = getFieldRepeatCount(field);
 
         if (repeatCount > 1) {
@@ -858,28 +955,24 @@ const ProcessViewer = () => {
         const visibleFields = getSubmittableFieldsForStep(step);
 
         return visibleFields.every((field) => {
-            const value = formValues?.[stepId]?.[field.id] ?? uploadedFiles?.[stepId]?.[field.id]?.[0]?.name;
-
-            if (!field?.config?.required) {
+            if (!fieldBlocksSubmit(field)) {
                 return true;
             }
 
             const repeatCount = getFieldRepeatCount(field);
 
             if (repeatCount > 1) {
-                const repeatedValues = normalizeArrayLike(formValues?.[stepId]?.[field.id]);
-
                 for (let index = 0; index < repeatCount; index += 1) {
-                    if (!fieldHasValue(field, repeatedValues[index])) {
+                    if (!fieldMeetsSubmitRequirements(field, resolveFieldValueForValidation(stepId, field, index))) {
                         return false;
                     }
                 }
                 return true;
             }
 
-            return fieldHasValue(field, value);
+            return fieldMeetsSubmitRequirements(field, resolveFieldValueForValidation(stepId, field, 0));
         });
-    }, [formValues, uploadedFiles, orderedSteps, currentStep, manualMultipleConfig, getSubmittableFieldsForStep]);
+    }, [formValues, uploadedFiles, fileInfo, orderedSteps, currentStep, manualMultipleConfig, getSubmittableFieldsForStep]);
 
     const fetchMetaData = async (processId, steps) => {
         try {
@@ -898,18 +991,42 @@ const ProcessViewer = () => {
 
             const stageData = metaData.stageData || {};
 
-            const updatedFormValues = steps.reduce((acc, step) => {
+            const updatedFormValues = {};
+            const updatedFileInfo = {};
+
+            steps.forEach((step) => {
                 const stageFields = stageData[step.id]?.fields;
-                if (Array.isArray(stageFields)) {
-                    acc[step.id] = stageFields.reduce((acc, field) => {
-                        acc[field.fieldId] = field.value || '';
-                        return acc;
-                    }, {});
+                if (!Array.isArray(stageFields)) {
+                    return;
                 }
-                return acc;
-            }, {});
+
+                updatedFormValues[step.id] = stageFields.reduce((acc, field) => {
+                    const storedValue = field.value ?? '';
+                    acc[field.fieldId] = storedValue;
+
+                    const fieldDefinition = step.data?.fields?.find(
+                        (stepField) => String(stepField.id) === String(field.fieldId)
+                    );
+
+                    if (fieldDefinition?.type === 'upload' && hasValue(storedValue)) {
+                        const fileName = String(extractConditionalValue(storedValue) || '').trim();
+                        if (fileName) {
+                            if (!updatedFileInfo[step.id]) {
+                                updatedFileInfo[step.id] = {};
+                            }
+                            updatedFileInfo[step.id][field.fieldId] = { name: fileName };
+                        }
+                    }
+
+                    return acc;
+                }, {});
+            });
 
             setFormValues(prev => ({ ...prev, ...updatedFormValues }));
+
+            if (Object.keys(updatedFileInfo).length > 0) {
+                setFileInfo(prev => ({ ...prev, ...updatedFileInfo }));
+            }
 
             const updateCurrentStageData = steps.reduce((acc, step) => {
                 if (stageData[step.id]?.updateAt) {
@@ -946,6 +1063,13 @@ const ProcessViewer = () => {
                 [stepId]: {
                     ...prev[stepId],
                     [fieldId]: { name: file.name, size: file.size },
+                },
+            }));
+            setFormValues((prev) => ({
+                ...prev,
+                [stepId]: {
+                    ...prev[stepId],
+                    [fieldId]: file.name,
                 },
             }));
             return;
@@ -1057,6 +1181,15 @@ const ProcessViewer = () => {
         const stepId = step.id;
         const visibleFields = getSubmittableFieldsForStep(step);
         const visibleFieldIds = new Set(visibleFields.map((field) => String(field?.id || '')));
+
+        if (!canSubmitCurrentStep) {
+            setNotice({
+                status: 'error',
+                message: __('Complete all required fields before submitting this step.', 'obatala'),
+            });
+            setIsSubmittingStep(false);
+            return;
+        }
 
         const uploadResult = await uploadVisibleStepFiles(stepId, visibleFieldIds);
         if (!uploadResult.ok) {
@@ -1223,15 +1356,44 @@ const ProcessViewer = () => {
         }));
     };
 
+    const getStageDocumentPayload = (stepId, fieldId) => {
+        const step = orderedSteps[currentStep];
+        const fieldDefinition = step?.data?.fields?.find(
+            (field) => String(field.id) === String(fieldId)
+        );
+        const rawValue = formValues?.[stepId]?.[fieldId];
+        const documentValue = normalizeDocumentValue(rawValue, fieldDefinition || {});
+
+        if (stripHtml(documentValue.content) === '') {
+            return null;
+        }
+
+        return {
+            content: documentValue.content,
+            status: documentValue.status || 'draft',
+            updatedAt: documentValue.updatedAt || new Date().toISOString(),
+        };
+    };
+
     const handleGenerateStageDocumentPdf = async (stepId, fieldId) => {
-        try {
-            const params = new URLSearchParams({
-                node_id: stepId,
-                field_id: fieldId,
+        const documentPayload = getStageDocumentPayload(stepId, fieldId);
+        if (!documentPayload) {
+            setNotice({
+                status: 'error',
+                message: __('Fill in the document content before generating the PDF.', 'obatala'),
             });
+            return;
+        }
+
+        try {
             const response = await apiFetch({
-                path: `/obatala/v1/process_obatala/${process.id}/stage-document-pdf?${params}`,
-                method: 'GET',
+                path: `/obatala/v1/process_obatala/${process.id}/stage-document-pdf`,
+                method: 'POST',
+                data: {
+                    node_id: stepId,
+                    field_id: fieldId,
+                    document: documentPayload,
+                },
             });
 
             downloadBase64Pdf(response.pdf, response.filename);
@@ -1261,11 +1423,21 @@ const ProcessViewer = () => {
             return;
         }
 
+        const documentPayload = getStageDocumentPayload(stepId, fieldId);
+        if (!documentPayload) {
+            setNotice({
+                status: 'error',
+                message: __('Fill in the document content before attaching the signed PDF.', 'obatala'),
+            });
+            return;
+        }
+
         try {
             const formData = new FormData();
             formData.append('file', file);
             formData.append('node_id', stepId);
             formData.append('field_id', fieldId);
+            formData.append('document', JSON.stringify(documentPayload));
 
             const response = await apiFetch({
                 path: `/obatala/v1/process_obatala/${process.id}/stage-document-signed`,
@@ -1721,6 +1893,9 @@ const ProcessViewer = () => {
                                                                                         handleDownload={handleDownload}
                                                                                         uploadTemplateAction={uploadTemplateAction}
                                                                                         stepId={stepId}
+                                                                                        handleGenerateStageDocumentPdf={handleGenerateStageDocumentPdf}
+                                                                                        handleSignedDocumentUpload={handleSignedDocumentUpload}
+                                                                                        handleDownloadSignedDocument={handleDownloadSignedDocument}
                                                                                     />
                                                                                 );
                                                                             }) : null}
@@ -1788,6 +1963,9 @@ const ProcessViewer = () => {
                                                                                                                             fileInfo={fileInfo}
                                                                                                                             handleDownload={handleDownload}
                                                                                                                             stepId={stepId}
+                                                                                                                            handleGenerateStageDocumentPdf={handleGenerateStageDocumentPdf}
+                                                                                                                            handleSignedDocumentUpload={handleSignedDocumentUpload}
+                                                                                                                            handleDownloadSignedDocument={handleDownloadSignedDocument}
                                                                                                                         />
                                                                                                                     </td>
                                                                                                                 ))}

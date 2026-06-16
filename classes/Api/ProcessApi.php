@@ -129,7 +129,7 @@ class ProcessApi extends ObatalaAPI {
         ]);
 
         $this->add_route('/process_obatala/(?P<id>\d+)/stage-document-pdf', [
-            'methods' => 'GET',
+            'methods' => ['GET', 'POST'],
             'callback' => [$this, 'generate_stage_document_pdf'],
             'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
         ]);
@@ -194,7 +194,8 @@ class ProcessApi extends ObatalaAPI {
     }
 
     public function generate_stage_document_pdf($request) {
-        $context = $this->get_stage_document_context($request);
+        $sync_document = $this->get_request_stage_document_payload($request);
+        $context = $this->get_stage_document_context($request, $sync_document);
         if (is_wp_error($context)) {
             return $this->error_response($context);
         }
@@ -247,7 +248,8 @@ class ProcessApi extends ObatalaAPI {
     }
 
     public function upload_signed_stage_document($request) {
-        $context = $this->get_stage_document_context($request);
+        $sync_document = $this->get_request_stage_document_payload($request);
+        $context = $this->get_stage_document_context($request, $sync_document);
         if (is_wp_error($context)) {
             return $this->error_response($context);
         }
@@ -333,7 +335,44 @@ class ProcessApi extends ObatalaAPI {
         exit;
     }
 
-    private function get_stage_document_context($request) {
+    private function get_request_stage_document_payload($request) {
+        $params = $request->get_json_params();
+        if (!is_array($params) || empty($params)) {
+            $params = $request->get_body_params();
+        }
+        if (!is_array($params)) {
+            $params = [];
+        }
+
+        $document = $params['document'] ?? null;
+        if (is_string($document)) {
+            $decoded = json_decode(wp_unslash($document), true);
+            $document = is_array($decoded) ? $decoded : null;
+        }
+
+        return is_array($document) ? $document : null;
+    }
+
+    private function merge_stage_document($stored, $incoming) {
+        $merged = is_array($stored) ? $stored : [
+            'content' => '',
+            'status' => 'empty',
+        ];
+
+        if (array_key_exists('content', $incoming)) {
+            $merged['content'] = (string) $incoming['content'];
+        }
+        if (array_key_exists('status', $incoming)) {
+            $merged['status'] = sanitize_key((string) $incoming['status']);
+        }
+        if (array_key_exists('updatedAt', $incoming)) {
+            $merged['updatedAt'] = sanitize_text_field((string) $incoming['updatedAt']);
+        }
+
+        return $merged;
+    }
+
+    private function get_stage_document_context($request, $sync_document = null) {
         $process_id = (int) $request['id'];
         $node_id = sanitize_text_field((string) $request->get_param('node_id'));
         $field_id = sanitize_text_field((string) $request->get_param('field_id'));
@@ -388,6 +427,15 @@ class ProcessApi extends ObatalaAPI {
         }
 
         $document = $this->get_stage_document_value($stage_data, $node_id, $field_id);
+
+        if (is_array($sync_document)) {
+            $document = $this->merge_stage_document($document, $sync_document);
+            $this->sanitize_stage_document_payload($document);
+            if (trim(wp_strip_all_tags($document['content'] ?? '')) !== '') {
+                $this->update_stage_document_value($process_id, $node_id, $field_id, $document);
+            }
+        }
+
         if (empty($document['content']) && empty($document['signedFile'])) {
             return new WP_Error('not_found', __('No document content was found for this step.', 'obatala'), ['status' => 404]);
         }
@@ -515,6 +563,14 @@ class ProcessApi extends ObatalaAPI {
         $post_id = (int) $request['id'];
         $meta = $request->get_json_params();
         $this->sanitize_stage_document_meta($meta);
+
+        $submission_error = $this->validate_stage_submissions($post_id, $meta);
+        if (is_wp_error($submission_error)) {
+            return new WP_REST_Response([
+                'error' => $submission_error->get_error_code(),
+                'message' => $submission_error->get_error_message(),
+            ], 400);
+        }
         
         $raw_process_type = $meta['process_type'] ?? 0;
         if (is_array($raw_process_type)) {
@@ -1134,6 +1190,52 @@ class ProcessApi extends ObatalaAPI {
         }
         $name = $document['signedFile']['name'] ?? '';
         return trim((string) $name) !== '';
+    }
+
+    private function validate_stage_submissions($post_id, $meta) {
+        if (empty($meta['submittedStages']) || !is_array($meta['submittedStages'])) {
+            return null;
+        }
+
+        $stage_data = $meta['stageData'] ?? [];
+        if (!is_array($stage_data)) {
+            $stage_data = [];
+        }
+
+        $flow_data = maybe_unserialize(get_post_meta($post_id, 'flowData', true));
+        if (!is_array($flow_data)) {
+            $flow_data = [];
+        }
+
+        $nodes_by_id = [];
+        foreach (($flow_data['nodes'] ?? []) as $node) {
+            $node_id = $node['id'] ?? '';
+            if ($node_id) {
+                $nodes_by_id[$node_id] = $node;
+            }
+        }
+
+        foreach ($meta['submittedStages'] as $node_id => $is_submitted) {
+            if (!$is_submitted || empty($nodes_by_id[$node_id])) {
+                continue;
+            }
+
+            $fields = $nodes_by_id[$node_id]['data']['fields'] ?? [];
+            foreach ($fields as $field) {
+                if (!$this->is_flow_field_requirement_met($field, $node_id, $stage_data)) {
+                    $label = $field['config']['label'] ?? ($field['id'] ?? '');
+                    return new WP_Error(
+                        'stage_requirements_not_met',
+                        sprintf(
+                            __('The step cannot be submitted because the field "%s" does not meet the requirements.', 'obatala'),
+                            $label
+                        )
+                    );
+                }
+            }
+        }
+
+        return null;
     }
 
     private function is_flow_field_requirement_met($field, $node_id, $stage_data) {
