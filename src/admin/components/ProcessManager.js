@@ -295,7 +295,6 @@ const ProcessManager = ({ onSelectProcess }) => {
                 </ConfirmDialog>
                 <div className="panel-container">
                     <TabPanel
-                        className="process-tabs"
                         activeClass="active-tab"
                         onSelect={(tabName) => setActiveTab(tabName)}
                         initialTabName="all"

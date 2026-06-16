@@ -279,7 +279,6 @@ const TainacanItemsPage = () => {
 				) }
 
 				<TabPanel
-					className="tainacan-items-tabs"
 					activeClass="active-tab"
 					initialTabName="all"
 					onSelect={ ( tabName ) => {
@@ -292,9 +291,9 @@ const TainacanItemsPage = () => {
 					] }
 				>
 					{ () => (
-						<Panel className="tainacan-items-panel">
+						<Panel>
 							<PanelRow>
-								<div className="tainacan-items-toolbar">
+								<div className="container_searchAndSelect">
 									<TextControl
 										label={ __(
 											'Search collection items',
