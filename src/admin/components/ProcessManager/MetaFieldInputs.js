@@ -6,8 +6,9 @@ import {
 	RadioControl,
 	ComboboxControl,
 	Button,
+	Notice,
 } from '@wordpress/components';
-import { closeSmall, upload } from '@wordpress/icons';
+import { closeSmall, download, file, upload } from '@wordpress/icons';
 import TainacanSearchControls from '../Tainacan/TainacanSearch';
 
 const toEditorHtml = ( content ) => {
@@ -266,6 +267,9 @@ const MetaFieldInputs = React.memo(
 		itemIndex = null,
 		labelOverride = null,
 		uploadTemplateAction = null,
+		handleGenerateStageDocumentPdf = null,
+		handleSignedDocumentUpload = null,
+		handleDownloadSignedDocument = null,
 	} ) => {
 		const [ value, setValue ] = useState( initalValue );
 
@@ -432,6 +436,13 @@ const MetaFieldInputs = React.memo(
 					value,
 					field.config
 				);
+				const hasContent =
+					documentValue.content &&
+					String( documentValue.content ).trim() !== '';
+				const signedFile = documentValue.signedFile?.name;
+				const requiresSignedUpload = Boolean(
+					field.config?.requireSignedUpload
+				);
 
 				return (
 					<div
@@ -457,6 +468,73 @@ const MetaFieldInputs = React.memo(
 							required={ field.config?.required ?? false }
 							help={ field.config?.helpText }
 						/>
+						{ ( requiresSignedUpload || hasContent ) && (
+							<div className="action-bar" style={ { marginTop: '12px' } }>
+								{ requiresSignedUpload && ! signedFile && (
+									<Notice
+										status="warning"
+										isDismissible={ false }
+									>
+										{ __(
+											'Signed PDF upload is required for this document.',
+											'obatala'
+										) }
+									</Notice>
+								) }
+								{ hasContent && handleGenerateStageDocumentPdf && (
+									<Button
+										variant="secondary"
+										onClick={ () =>
+											handleGenerateStageDocumentPdf(
+												stepId,
+												fieldId
+											)
+										}
+										disabled={ ! isEditable || noHasPermission }
+										iconPosition="left"
+										icon={ file }
+									>
+										{ __( 'Generate PDF', 'obatala' ) }
+									</Button>
+								) }
+								{ ! signedFile && handleSignedDocumentUpload && (
+									<FormFileUpload
+										accept=".pdf"
+										onChange={ ( event ) => {
+											const selectedFile =
+												event.currentTarget.files?.[ 0 ];
+											if ( selectedFile ) {
+												handleSignedDocumentUpload(
+													stepId,
+													fieldId,
+													selectedFile
+												);
+											}
+										} }
+										disabled={ ! isEditable || noHasPermission }
+										icon={ upload }
+									>
+										{ __( 'Attach signed PDF', 'obatala' ) }
+									</FormFileUpload>
+								) }
+								{ signedFile && handleDownloadSignedDocument && (
+									<Button
+										variant="secondary"
+										onClick={ () =>
+											handleDownloadSignedDocument(
+												stepId,
+												fieldId
+											)
+										}
+										disabled={ noHasPermission }
+										iconPosition="left"
+										icon={ download }
+									>
+										{ signedFile }
+									</Button>
+								) }
+							</div>
+						) }
 					</div>
 				);
 			}
@@ -537,7 +615,11 @@ const MetaFieldInputs = React.memo(
 					<div className="meta-field">
 						<RadioControl
 							label={ fieldLabel }
-							selected={ value ?? '' }
+							selected={
+								Array.isArray( value )
+									? ( value[ 0 ] ?? '' )
+									: ( value ?? '' )
+							}
 							onChange={ ( v ) => handleChange( v ) }
 							options={ field.config?.options
 								.split( ',' )
