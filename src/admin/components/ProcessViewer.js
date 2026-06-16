@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { __, sprintf } from '@wordpress/i18n';
 import {
     Icon,
@@ -8,6 +8,8 @@ import {
     PanelHeader,
     PanelRow,
     Button,
+    Modal,
+    TextControl,
 } from "@wordpress/components";
 import apiFetch from "@wordpress/api-fetch";
 import MetroNavigation from "./ProcessManager/MetroNavigation";
@@ -23,6 +25,7 @@ import {
     fetchProcessSpreadsheetTemplate,
     fetchProcessTypeById,
     fetchSectors,
+    saveProcessManualItems,
 } from "../api/apiRequests";
 import { useSelect } from '@wordpress/data';
 import { store as coreStore } from '@wordpress/core-data';
@@ -45,6 +48,520 @@ const CONTROL_FIELD_IDS = {
 };
 const CONTROL_FIELD_ID_SET = new Set(Object.values(CONTROL_FIELD_IDS));
 const EXPORT_REVIEW_STEP_ID = '__obatala_export_review__';
+
+const spreadsheetCellHasValue = (value) => {
+    if (Array.isArray(value)) {
+        return value.some((entry) => spreadsheetCellHasValue(entry));
+    }
+
+    if (value && typeof value === 'object') {
+        return Object.values(value).some((entry) => spreadsheetCellHasValue(entry));
+    }
+
+    if (value === undefined || value === null) {
+        return false;
+    }
+
+    return String(value).trim() !== '';
+};
+
+const stringifySpreadsheetCellValue = (value) => {
+    if (Array.isArray(value)) {
+        return value.map((entry) => stringifySpreadsheetCellValue(entry)).filter(Boolean).join(' | ');
+    }
+
+    if (value && typeof value === 'object') {
+        return Object.values(value)
+            .map((entry) => stringifySpreadsheetCellValue(entry))
+            .filter(Boolean)
+            .join(' | ');
+    }
+
+    if (value === undefined || value === null) {
+        return '';
+    }
+
+    return String(value);
+};
+
+const normalizeSpreadsheetRowsForEditor = (rows) => {
+    if (!Array.isArray(rows)) {
+        return [];
+    }
+
+    return rows.map((row) => {
+        if (!row || typeof row !== 'object' || Array.isArray(row)) {
+            return {};
+        }
+
+        return { ...row };
+    });
+};
+
+const getSpreadsheetFieldLabel = (field) => {
+    return field?.config?.label || field?.title || field?.id || __('Field', 'obatala');
+};
+
+const normalizeSpreadsheetHeaderKey = (value) => {
+    let normalized = String(value ?? '').replace(/^\uFEFF/, '').trim().toLowerCase();
+
+    if (!normalized) {
+        return '';
+    }
+
+    if (typeof normalized.normalize === 'function') {
+        normalized = normalized.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    }
+
+    return normalized
+        .replace(/\s+/g, ' ')
+        .replace(/[_-]/g, ' ')
+        .trim();
+};
+
+const countCsvDelimiterOutsideQuotes = (line, delimiter) => {
+    let count = 0;
+    let inQuotes = false;
+
+    for (let index = 0; index < line.length; index++) {
+        const character = line[index];
+
+        if (character === '"') {
+            if (inQuotes && line[index + 1] === '"') {
+                index++;
+                continue;
+            }
+
+            inQuotes = !inQuotes;
+            continue;
+        }
+
+        if (character === delimiter && !inQuotes) {
+            count++;
+        }
+    }
+
+    return count;
+};
+
+const detectCsvDelimiter = (line) => {
+    const semicolonCount = countCsvDelimiterOutsideQuotes(line, ';');
+    const commaCount = countCsvDelimiterOutsideQuotes(line, ',');
+
+    return semicolonCount > commaCount ? ';' : ',';
+};
+
+const parseCsvHeaderLine = (line, delimiter) => {
+    const cells = [];
+    let value = '';
+    let inQuotes = false;
+
+    for (let index = 0; index < line.length; index++) {
+        const character = line[index];
+
+        if (character === '"') {
+            if (inQuotes && line[index + 1] === '"') {
+                value += '"';
+                index++;
+                continue;
+            }
+
+            inQuotes = !inQuotes;
+            continue;
+        }
+
+        if (character === delimiter && !inQuotes) {
+            cells.push(value.trim());
+            value = '';
+            continue;
+        }
+
+        value += character;
+    }
+
+    cells.push(value.trim());
+    return cells;
+};
+
+const getMappedFieldDisplayName = (mappedField, index = 0) => {
+    return String(
+        mappedField?.obatala_field_label
+        || mappedField?.tainacan_metadata_name
+        || mappedField?.obatala_field_id
+        || sprintf(__('Campo %d', 'obatala'), index + 1)
+    ).trim();
+};
+
+const getUniqueSpreadsheetHeaderLabels = (mappedFields) => {
+    const usedHeaders = new Set();
+
+    return mappedFields.map((mappedField, index) => {
+        const baseLabel = getMappedFieldDisplayName(mappedField, index) || sprintf(__('Campo %d', 'obatala'), index + 1);
+        let candidate = baseLabel;
+        let counter = 2;
+        let normalizedCandidate = normalizeSpreadsheetHeaderKey(candidate);
+
+        while (normalizedCandidate && usedHeaders.has(normalizedCandidate)) {
+            candidate = sprintf('%1$s (%2$d)', baseLabel, counter);
+            normalizedCandidate = normalizeSpreadsheetHeaderKey(candidate);
+            counter++;
+        }
+
+        if (normalizedCandidate) {
+            usedHeaders.add(normalizedCandidate);
+        }
+
+        return candidate;
+    });
+};
+
+const getMappedFieldHeaderAliases = (mappedField, index = 0, expectedHeader = '') => {
+    const candidates = [
+        expectedHeader,
+        mappedField?.obatala_field_label,
+        mappedField?.obatala_field_id,
+        mappedField?.tainacan_metadata_name,
+        mappedField?.tainacan_metadata_id,
+        getMappedFieldDisplayName(mappedField, index),
+    ];
+
+    return candidates
+        .map((candidate) => normalizeSpreadsheetHeaderKey(candidate))
+        .filter((candidate, candidateIndex, aliases) => (
+            candidate && aliases.indexOf(candidate) === candidateIndex
+        ));
+};
+
+const formatSpreadsheetHeaderList = (values, fallback) => {
+    const safeValues = values
+        .map((value) => String(value ?? '').trim())
+        .filter(Boolean);
+
+    return safeValues.length > 0 ? safeValues.join(', ') : fallback;
+};
+
+const buildSpreadsheetStructureMessage = (missingHeaders, headers, expectedHeaders, noMatch = false) => {
+    const foundHeaders = headers.map((header) => String(header ?? '').trim()).filter(Boolean);
+
+    const baseMessage = noMatch
+        ? __('O cabeçalho da planilha não corresponde a nenhum field mapeado.', 'obatala')
+        : __('A planilha não possui todas as colunas mapeadas.', 'obatala');
+
+    return sprintf(
+        __('%1$s Colunas faltando: %2$s. Colunas encontradas: %3$s. Cabeçalhos esperados no modelo: %4$s.', 'obatala'),
+        baseMessage,
+        formatSpreadsheetHeaderList(missingHeaders, __('nenhuma', 'obatala')),
+        formatSpreadsheetHeaderList(foundHeaders, __('nenhuma', 'obatala')),
+        formatSpreadsheetHeaderList(expectedHeaders, __('nenhum', 'obatala'))
+    );
+};
+
+const validateSpreadsheetCsvStructure = (csvContent, mappedFields) => {
+    const safeMappedFields = Array.isArray(mappedFields)
+        ? mappedFields.filter((mappedField) => mappedField && typeof mappedField === 'object')
+        : [];
+
+    if (safeMappedFields.length === 0) {
+        return { status: 'skipped' };
+    }
+
+    const headerLine = String(csvContent || '')
+        .split(/\r\n|\n|\r/)
+        .find((line) => String(line || '').trim() !== '');
+
+    if (!headerLine) {
+        return {
+            status: 'invalid',
+            message: __('A planilha está vazia.', 'obatala'),
+        };
+    }
+
+    const delimiter = detectCsvDelimiter(headerLine);
+    const headers = parseCsvHeaderLine(headerLine, delimiter);
+    const normalizedHeaders = new Set(
+        headers
+            .map((header) => normalizeSpreadsheetHeaderKey(header))
+            .filter(Boolean)
+    );
+    const expectedHeaders = getUniqueSpreadsheetHeaderLabels(safeMappedFields);
+    const missingHeaders = [];
+
+    safeMappedFields.forEach((mappedField, index) => {
+        const hasColumn = getMappedFieldHeaderAliases(
+            mappedField,
+            index,
+            expectedHeaders[index] || ''
+        ).some((alias) => normalizedHeaders.has(alias));
+
+        if (!hasColumn) {
+            missingHeaders.push(expectedHeaders[index] || getMappedFieldDisplayName(mappedField, index));
+        }
+    });
+
+    const noMatch = missingHeaders.length === safeMappedFields.length;
+
+    if (missingHeaders.length > 0) {
+        return {
+            status: 'invalid',
+            message: buildSpreadsheetStructureMessage(missingHeaders, headers, expectedHeaders, noMatch),
+        };
+    }
+
+    return { status: 'valid' };
+};
+
+const validateSpreadsheetFileStructure = (file, mappedFields) => {
+    if (!(file instanceof File)) {
+        return Promise.resolve({ status: 'skipped' });
+    }
+
+    const fileName = String(file.name || '').toLowerCase();
+    const fileType = String(file.type || '').toLowerCase();
+    const isCsvFile = fileName.endsWith('.csv') || fileType.includes('csv');
+
+    if (!isCsvFile) {
+        return Promise.resolve({ status: 'unsupported' });
+    }
+
+    return new Promise((resolve) => {
+        const reader = new FileReader();
+
+        reader.onload = () => {
+            resolve(validateSpreadsheetCsvStructure(String(reader.result || ''), mappedFields));
+        };
+        reader.onerror = () => {
+            resolve({
+                status: 'invalid',
+                message: __('Não foi possível ler o arquivo selecionado para validar as colunas.', 'obatala'),
+            });
+        };
+
+        reader.readAsText(file);
+    });
+};
+
+const toSpreadsheetInputDate = (value) => {
+    const stringValue = stringifySpreadsheetCellValue(value);
+    if (!stringValue) return '';
+
+    const brDateMatch = stringValue.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+    if (brDateMatch) {
+        return `${brDateMatch[3]}-${brDateMatch[2]}-${brDateMatch[1]}`;
+    }
+
+    return stringValue;
+};
+
+const fromSpreadsheetInputDate = (value) => {
+    if (!value) return '';
+
+    const inputDateMatch = String(value).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (inputDateMatch) {
+        return `${inputDateMatch[3]}/${inputDateMatch[2]}/${inputDateMatch[1]}`;
+    }
+
+    return String(value);
+};
+
+const SpreadsheetMappedFieldsSummary = ({
+    fields,
+    rows,
+    runtimeConfig,
+    onOpenField,
+    canEdit,
+    isSaving,
+}) => {
+    if (!Array.isArray(fields) || fields.length === 0) {
+        return null;
+    }
+
+    const safeRows = Array.isArray(rows) ? rows : [];
+    const rowCount = safeRows.length;
+    const source = String(runtimeConfig?.spreadsheet_rows_source || 'none');
+    const message = String(runtimeConfig?.spreadsheet_rows_message || '');
+    const warnings = Array.isArray(runtimeConfig?.spreadsheet_rows_warnings)
+        ? runtimeConfig.spreadsheet_rows_warnings
+        : [];
+    const noticeStatus = source === 'error'
+        ? 'error'
+        : source === 'manual'
+            ? 'success'
+            : rowCount > 0
+                ? 'info'
+                : 'warning';
+
+    const buildSummaryValue = (field) => {
+        const fieldId = String(field?.id || '');
+        const values = safeRows
+            .map((row) => row?.[fieldId])
+            .filter((value) => spreadsheetCellHasValue(value));
+
+        if (rowCount === 0) {
+            return runtimeConfig?.spreadsheet_file_exists
+                ? __('No spreadsheet values found.', 'obatala')
+                : __('Waiting for spreadsheet upload.', 'obatala');
+        }
+
+        if (values.length === 0) {
+            return __('No values filled in the spreadsheet.', 'obatala');
+        }
+
+        if (rowCount === 1) {
+            return stringifySpreadsheetCellValue(values[0]);
+        }
+
+        return sprintf(
+            __('%d spreadsheet row(s), %d filled value(s).', 'obatala'),
+            rowCount,
+            values.length
+        );
+    };
+
+    return (
+        <div className="flex-basis-100 obatala-spreadsheet-summary">
+            {message && (
+                <Notice status={noticeStatus} isDismissible={false}>
+                    {message}
+                </Notice>
+            )}
+
+            {warnings.length > 0 && (
+                <Notice status="warning" isDismissible={false}>
+                    {warnings.join(' | ')}
+                </Notice>
+            )}
+
+            <div className="obatala-spreadsheet-summary__fields">
+                {fields.map((field) => {
+                    const fieldId = String(field?.id || '');
+                    const label = getSpreadsheetFieldLabel(field);
+                    const buttonLabel = rowCount > 1
+                        ? sprintf(__('View/edit %d values', 'obatala'), rowCount)
+                        : __('Edit spreadsheet value', 'obatala');
+
+                    return (
+                        <div
+                            className="meta-field md obatala-spreadsheet-summary__field"
+                            key={`spreadsheet-summary-${fieldId}`}
+                        >
+                            <TextControl
+                                label={label}
+                                value={buildSummaryValue(field)}
+                                disabled
+                            />
+                            {rowCount > 0 && (
+                                <Button
+                                    variant="secondary"
+                                    onClick={() => onOpenField(field)}
+                                    disabled={!canEdit || isSaving}
+                                >
+                                    {buttonLabel}
+                                </Button>
+                            )}
+                        </div>
+                    );
+                })}
+            </div>
+        </div>
+    );
+};
+
+const SpreadsheetRowsModal = ({
+    field,
+    rows,
+    canEdit,
+    isSaving,
+    onChange,
+    onClose,
+    onSave,
+}) => {
+    if (!field) {
+        return null;
+    }
+
+    const safeRows = Array.isArray(rows) ? rows : [];
+    const fieldId = String(field?.id || '');
+    const fieldType = String(field?.type || '');
+    const label = getSpreadsheetFieldLabel(field);
+
+    return (
+        <Modal
+            title={sprintf(__('Spreadsheet values: %s', 'obatala'), label)}
+            onRequestClose={onClose}
+            className="obatala-spreadsheet-modal"
+            shouldCloseOnClickOutside={!isSaving}
+        >
+            <div className="obatala-spreadsheet-modal__table-wrap">
+                <table className="wp-list-table widefat fixed striped obatala-spreadsheet-modal__table">
+                    <thead>
+                        <tr>
+                            <th>{__('Row', 'obatala')}</th>
+                            <th>{label}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {safeRows.map((row, rowIndex) => {
+                            const value = row?.[fieldId] ?? '';
+                            const inputLabel = sprintf(
+                                __('%1$s, row %2$d', 'obatala'),
+                                label,
+                                rowIndex + 1
+                            );
+
+                            return (
+                                <tr key={`spreadsheet-modal-${fieldId}-${rowIndex}`}>
+                                    <td><strong>{rowIndex + 1}</strong></td>
+                                    <td>
+                                        {fieldType === 'datepicker' ? (
+                                            <input
+                                                type="date"
+                                                aria-label={inputLabel}
+                                                value={toSpreadsheetInputDate(value)}
+                                                onChange={(event) => onChange(
+                                                    rowIndex,
+                                                    fieldId,
+                                                    fromSpreadsheetInputDate(event.target.value)
+                                                )}
+                                                disabled={!canEdit || isSaving}
+                                            />
+                                        ) : (
+                                            <TextControl
+                                                label={inputLabel}
+                                                hideLabelFromVision
+                                                type={fieldType === 'number' ? 'number' : 'text'}
+                                                value={stringifySpreadsheetCellValue(value)}
+                                                onChange={(newValue) => onChange(rowIndex, fieldId, newValue)}
+                                                disabled={!canEdit || isSaving}
+                                            />
+                                        )}
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            </div>
+
+            <div className="action-bar obatala-spreadsheet-modal__actions">
+                <Button
+                    variant="primary"
+                    onClick={onSave}
+                    disabled={!canEdit || isSaving}
+                    isBusy={isSaving}
+                >
+                    {isSaving ? __('Saving...', 'obatala') : __('Save spreadsheet values', 'obatala')}
+                </Button>
+                <Button
+                    variant="secondary"
+                    onClick={onClose}
+                    disabled={isSaving}
+                >
+                    {__('Close', 'obatala')}
+                </Button>
+            </div>
+        </Modal>
+    );
+};
 
 const ProcessViewer = () => {
     const [process, setProcess] = useState(null);
@@ -74,6 +591,12 @@ const ProcessViewer = () => {
     const [isTemplateDownloadLoading, setIsTemplateDownloadLoading] = useState(false);
     const [isSavingDraft, setIsSavingDraft] = useState(false);
     const [isSubmittingStep, setIsSubmittingStep] = useState(false);
+    const [spreadsheetRows, setSpreadsheetRows] = useState([]);
+    const [activeSpreadsheetField, setActiveSpreadsheetField] = useState(null);
+    const [isSpreadsheetRowsSaving, setIsSpreadsheetRowsSaving] = useState(false);
+    const [isCorrectedSpreadsheetUploading, setIsCorrectedSpreadsheetUploading] = useState(false);
+    const [pendingSpreadsheetUpload, setPendingSpreadsheetUpload] = useState(null);
+    const spreadsheetValidationRequestRef = useRef(0);
 
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
     const allAuthors = useSelect(select => select(coreStore).getUsers({ who: 'authors' }), []);
@@ -236,6 +759,10 @@ const ProcessViewer = () => {
             loadExportReview();
         }
     }, [processId, loadExportRuntime, loadExportReview]);
+
+    useEffect(() => {
+        setSpreadsheetRows(normalizeSpreadsheetRowsForEditor(exportRuntimeConfig?.spreadsheet_rows));
+    }, [exportRuntimeConfig]);
 
     useEffect(() => {
         if (!currentUser) {
@@ -529,6 +1056,21 @@ const ProcessViewer = () => {
         exportRuntimeConfig?.decision?.upload_field_id || CONTROL_FIELD_IDS.spreadsheetUpload
     );
     const isSpreadsheetEntryModeActive = exportRuntimeConfig?.decision?.entry_mode === 'upload';
+    const isCurrentSpreadsheetUploadField = useCallback((field) => {
+        const fieldId = String(field?.id || field || '');
+        const fieldType = String(field?.type || '');
+
+        if (!fieldId) {
+            return false;
+        }
+
+        if (fieldType && fieldType !== 'upload') {
+            return false;
+        }
+
+        return fieldId === currentRuntimeSpreadsheetUploadFieldId
+            || fieldId === CONTROL_FIELD_IDS.spreadsheetUpload;
+    }, [currentRuntimeSpreadsheetUploadFieldId]);
 
     const mappedFieldIdsForCurrentStep = useMemo(() => {
         const mappedFieldIds = new Set();
@@ -557,7 +1099,7 @@ const ProcessViewer = () => {
             return false;
         }
 
-        if (fieldId === currentRuntimeSpreadsheetUploadFieldId) {
+        if (isCurrentSpreadsheetUploadField(field)) {
             return false;
         }
 
@@ -569,9 +1111,113 @@ const ProcessViewer = () => {
     }, [
         isSpreadsheetEntryModeActive,
         exportRuntimeConfig,
-        currentRuntimeSpreadsheetUploadFieldId,
+        isCurrentSpreadsheetUploadField,
         mappedFieldIdsForCurrentStep,
     ]);
+
+    const clearSpreadsheetUploadValidationState = useCallback(() => {
+        setSpreadsheetRows([]);
+        setActiveSpreadsheetField(null);
+        setExportRuntimeConfig((previousRuntime) => {
+            if (!previousRuntime) {
+                return previousRuntime;
+            }
+
+            return {
+                ...previousRuntime,
+                spreadsheet_rows: [],
+                spreadsheet_rows_source: 'none',
+                spreadsheet_rows_message: '',
+                spreadsheet_rows_warnings: [],
+            };
+        });
+        setNotice((previousNotice) => (
+            previousNotice?.status === 'error' ? null : previousNotice
+        ));
+    }, []);
+
+    const applySpreadsheetFileStructureValidation = useCallback((file) => {
+        const requestId = spreadsheetValidationRequestRef.current + 1;
+        spreadsheetValidationRequestRef.current = requestId;
+
+        let mappedFields = Array.isArray(exportRuntimeConfig?.mapped_fields)
+            ? exportRuntimeConfig.mapped_fields
+            : [];
+
+        const runValidation = async () => {
+            if (mappedFields.length === 0 && processId) {
+                try {
+                    const runtime = await fetchProcessExportRuntime(processId);
+                    if (spreadsheetValidationRequestRef.current !== requestId) {
+                        return;
+                    }
+
+                    setExportRuntimeConfig((previousRuntime) => ({
+                        ...(previousRuntime || {}),
+                        ...(runtime || {}),
+                        spreadsheet_rows: [],
+                        spreadsheet_rows_source: 'none',
+                        spreadsheet_rows_message: '',
+                        spreadsheet_rows_warnings: [],
+                    }));
+                    mappedFields = Array.isArray(runtime?.mapped_fields) ? runtime.mapped_fields : [];
+                } catch (runtimeError) {
+                    console.error('Erro ao carregar mapeamento para validar a planilha:', runtimeError);
+                }
+            }
+
+            const validationResult = await validateSpreadsheetFileStructure(file, mappedFields);
+
+            if (spreadsheetValidationRequestRef.current !== requestId) {
+                return;
+            }
+
+            if (validationResult?.status === 'invalid') {
+                const message = validationResult.message || __('Não foi possível validar as colunas da planilha.', 'obatala');
+                setPendingSpreadsheetUpload((previousUpload) => (
+                    previousUpload
+                        ? {
+                            ...previousUpload,
+                            validationStatus: 'invalid',
+                            validationMessage: message,
+                        }
+                        : previousUpload
+                ));
+                return;
+            }
+
+            if (validationResult?.status === 'valid') {
+                const message = __('Colunas da planilha validadas. Envie a etapa para processar o arquivo.', 'obatala');
+                setPendingSpreadsheetUpload((previousUpload) => (
+                    previousUpload
+                        ? {
+                            ...previousUpload,
+                            validationStatus: 'valid',
+                            validationMessage: message,
+                        }
+                        : previousUpload
+                ));
+                return;
+            }
+
+            const validationStatus = validationResult?.status || 'skipped';
+            const validationMessage = validationStatus === 'unsupported'
+                ? __('Arquivo selecionado. A estrutura será validada ao enviar a etapa.', 'obatala')
+                : '';
+
+            setPendingSpreadsheetUpload((previousUpload) => (
+                previousUpload
+                    ? {
+                        ...previousUpload,
+                        validationStatus,
+                        validationMessage,
+                    }
+                    : previousUpload
+            ));
+        };
+
+        runValidation();
+    }, [exportRuntimeConfig, processId]);
 
     const isRepeatedMappedField = (field) => {
         if (!field || field.type === 'upload') return false;
@@ -741,6 +1387,30 @@ const ProcessViewer = () => {
                     body: formData,
                 });
 
+                if (
+                    isSpreadsheetEntryModeActive &&
+                    (
+                        String(fieldId) === currentRuntimeSpreadsheetUploadFieldId
+                        || String(fieldId) === CONTROL_FIELD_IDS.spreadsheetUpload
+                    )
+                ) {
+                    setPendingSpreadsheetUpload((previousUpload) => (
+                        previousUpload
+                        && String(previousUpload.stepId || '') === String(stepId)
+                        && String(previousUpload.fieldId || '') === String(fieldId)
+                            ? null
+                            : previousUpload
+                    ));
+
+                    try {
+                        await saveProcessManualItems(process.id, []);
+                        setSpreadsheetRows([]);
+                        setActiveSpreadsheetField(null);
+                    } catch (clearError) {
+                        console.error('Erro ao limpar edições anteriores da planilha:', clearError);
+                    }
+                }
+
                 setFormValues((prev) => ({
                     ...prev,
                     [stepId]: {
@@ -757,12 +1427,24 @@ const ProcessViewer = () => {
                     },
                 }));
             } catch (error) {
+                const serverMessage = error?.message
+                    || error?.error
+                    || error?.data?.message
+                    || error?.data?.error
+                    || '';
+
                 return {
                     ok: false,
-                    message: sprintf(
-                        __('Error uploading file for field %s.', 'obatala'),
-                        fieldId
-                    ),
+                    message: serverMessage
+                        ? sprintf(
+                            __('Erro ao enviar o campo %1$s: %2$s', 'obatala'),
+                            fieldId,
+                            String(serverMessage)
+                        )
+                        : sprintf(
+                            __('Erro ao enviar o campo %s.', 'obatala'),
+                            fieldId
+                        ),
                 };
             }
         }
@@ -918,6 +1600,57 @@ const ProcessViewer = () => {
         return currentStepVisibleFields.filter((field) => isSpreadsheetMappedField(field));
     }, [currentStepVisibleFields, isSpreadsheetMappedField]);
 
+    const currentStepSpreadsheetUploadField = useMemo(() => {
+        if (!Array.isArray(currentStepVisibleFields)) {
+            return null;
+        }
+
+        return currentStepVisibleFields.find((field) => (
+            String(field?.type || '') === 'upload'
+            && isCurrentSpreadsheetUploadField(field)
+        )) || null;
+    }, [currentStepVisibleFields, isCurrentSpreadsheetUploadField]);
+
+    const hasPendingCurrentSpreadsheetUpload = Boolean(
+        pendingSpreadsheetUpload
+        && String(pendingSpreadsheetUpload.stepId || '') === String(currentStepNodeId || '')
+        && (
+            String(pendingSpreadsheetUpload.fieldId || '') === String(currentStepSpreadsheetUploadField?.id || '')
+            || String(pendingSpreadsheetUpload.fieldId || '') === currentRuntimeSpreadsheetUploadFieldId
+            || String(pendingSpreadsheetUpload.fieldId || '') === CONTROL_FIELD_IDS.spreadsheetUpload
+        )
+    );
+    const currentSpreadsheetUploadValidationStatus = hasPendingCurrentSpreadsheetUpload
+        ? String(pendingSpreadsheetUpload?.validationStatus || '')
+        : '';
+    const currentSpreadsheetUploadValidationMessage = hasPendingCurrentSpreadsheetUpload
+        ? String(pendingSpreadsheetUpload?.validationMessage || '')
+        : '';
+    const hasSpreadsheetValidationError = Boolean(
+        exportRuntimeConfig?.enabled
+        && isSpreadsheetEntryModeActive
+        && String(exportRuntimeConfig?.spreadsheet_rows_source || '') === 'error'
+    );
+    const isSpreadsheetFileStructureValidationPending = Boolean(
+        hasPendingCurrentSpreadsheetUpload
+        && currentSpreadsheetUploadValidationStatus === 'pending'
+    );
+    const hasBlockingSpreadsheetValidationError = Boolean(
+        currentStepSpreadsheetUploadField
+        && (
+            hasPendingCurrentSpreadsheetUpload
+                ? currentSpreadsheetUploadValidationStatus === 'invalid'
+                : hasSpreadsheetValidationError
+        )
+    );
+    const spreadsheetValidationBlockingMessage = currentSpreadsheetUploadValidationMessage
+        || exportRuntimeConfig?.spreadsheet_rows_message
+        || __('A planilha contém erros de validação. Envie uma planilha corrigida antes de concluir a etapa.', 'obatala');
+    const shouldKeepCurrentStepOpenForSpreadsheet = Boolean(
+        (hasSpreadsheetValidationError || hasPendingCurrentSpreadsheetUpload)
+        && currentStepSpreadsheetUploadField
+    );
+
     const currentStepDisplayFields = useMemo(() => {
         if (!Array.isArray(currentStepVisibleFields)) {
             return [];
@@ -943,6 +1676,7 @@ const ProcessViewer = () => {
 
     useEffect(() => {
         setIsItemsMatrixOpen(false);
+        setActiveSpreadsheetField(null);
     }, [currentStep, activeIndex]);
 
     const canSubmitCurrentStep = useMemo(() => {
@@ -1049,8 +1783,38 @@ const ProcessViewer = () => {
         if (!step?.id) return;
         const stepId = step.id;
 
-        if (newValue instanceof FileList) {
-            const file = newValue[0];
+        const isFileSelection = (
+            (typeof FileList !== 'undefined' && newValue instanceof FileList)
+            || (typeof File !== 'undefined' && newValue instanceof File)
+            || (
+                newValue
+                && typeof newValue === 'object'
+                && typeof newValue.length === 'number'
+                && typeof File !== 'undefined'
+                && newValue[0] instanceof File
+            )
+        );
+
+        if (isFileSelection) {
+            const file = (typeof File !== 'undefined' && newValue instanceof File) ? newValue : newValue[0];
+            if (typeof File === 'undefined' || !(file instanceof File)) {
+                return;
+            }
+            const fieldDefinition = step.data?.fields?.find((field) => String(field?.id || '') === String(fieldId));
+            const isSpreadsheetUploadChange = isCurrentSpreadsheetUploadField(fieldDefinition || fieldId);
+
+            if (isSpreadsheetUploadChange) {
+                setPendingSpreadsheetUpload({
+                    stepId: String(stepId),
+                    fieldId: String(fieldId),
+                    fileName: file.name,
+                    validationStatus: 'pending',
+                    validationMessage: __('Validando estrutura da planilha...', 'obatala'),
+                });
+                clearSpreadsheetUploadValidationState();
+                applySpreadsheetFileStructureValidation(file);
+            }
+
             setUploadedFiles(prev => ({
                 ...prev,
                 [stepId]: {
@@ -1107,6 +1871,184 @@ const ProcessViewer = () => {
         });
     };
 
+    const handleOpenSpreadsheetField = (field) => {
+        setActiveSpreadsheetField(field);
+    };
+
+    const handleCloseSpreadsheetModal = () => {
+        if (!isSpreadsheetRowsSaving) {
+            setActiveSpreadsheetField(null);
+        }
+    };
+
+    const handleSpreadsheetCellChange = (rowIndex, fieldId, value) => {
+        setSpreadsheetRows((previousRows) => {
+            const updatedRows = normalizeSpreadsheetRowsForEditor(previousRows);
+            while (updatedRows.length <= rowIndex) {
+                updatedRows.push({});
+            }
+
+            updatedRows[rowIndex] = {
+                ...updatedRows[rowIndex],
+                [fieldId]: value,
+            };
+
+            return updatedRows;
+        });
+    };
+
+    const handleSaveSpreadsheetRows = async () => {
+        if (!processId) return;
+
+        setIsSpreadsheetRowsSaving(true);
+        try {
+            const response = await saveProcessManualItems(processId, spreadsheetRows);
+            const savedRows = normalizeSpreadsheetRowsForEditor(response?.saved_rows || spreadsheetRows);
+
+            setSpreadsheetRows(savedRows);
+            setExportRuntimeConfig((previousRuntime) => ({
+                ...(previousRuntime || {}),
+                manual_items: savedRows,
+                spreadsheet_rows: savedRows,
+                spreadsheet_rows_source: savedRows.length > 0 ? 'manual' : 'none',
+                spreadsheet_rows_message: savedRows.length > 0
+                    ? __('Values edited manually in Obatala.', 'obatala')
+                    : __('Spreadsheet values cleared.', 'obatala'),
+            }));
+            setNotice({
+                status: response?.success ? 'success' : 'error',
+                message: response?.message || __('Spreadsheet values saved.', 'obatala'),
+            });
+
+            if (response?.success) {
+                setActiveSpreadsheetField(null);
+                await loadExportRuntime();
+                await loadExportReview();
+            }
+        } catch (error) {
+            const errorMessage = error?.message || error?.error || __('Could not save spreadsheet values.', 'obatala');
+            setNotice({
+                status: 'error',
+                message: String(errorMessage),
+            });
+        } finally {
+            setIsSpreadsheetRowsSaving(false);
+        }
+    };
+
+    const handleCorrectedSpreadsheetUpload = async () => {
+        const step = orderedSteps[currentStep];
+        const uploadField = currentStepSpreadsheetUploadField;
+
+        if (!step?.id || !uploadField?.id) {
+            return;
+        }
+
+        const stepId = step.id;
+        const fieldId = String(uploadField.id);
+        const selectedFile = uploadedFiles?.[stepId]?.[fieldId]?.[0];
+
+        if (!(selectedFile instanceof File)) {
+            setNotice({
+                status: 'error',
+                message: __('Select a corrected spreadsheet before saving.', 'obatala'),
+            });
+            return;
+        }
+
+        if (isSpreadsheetFileStructureValidationPending) {
+            if (!currentStepSpreadsheetUploadField) {
+                setNotice({
+                    status: 'info',
+                    message: __('Aguarde a validação da estrutura da planilha antes de salvar.', 'obatala'),
+                });
+            }
+            return;
+        }
+
+        if (hasBlockingSpreadsheetValidationError) {
+            if (!currentStepSpreadsheetUploadField) {
+                setNotice({
+                    status: 'error',
+                    message: spreadsheetValidationBlockingMessage,
+                });
+            }
+            return;
+        }
+
+        setIsCorrectedSpreadsheetUploading(true);
+
+        try {
+            const uploadResult = await uploadVisibleStepFiles(stepId, new Set([fieldId]));
+            if (!uploadResult.ok) {
+                setNotice({
+                    status: 'error',
+                    message: uploadResult.message || __('Could not upload the corrected spreadsheet.', 'obatala'),
+                });
+                return;
+            }
+
+            const existingMetaData = await apiFetch({
+                path: `/obatala/v1/process_obatala/${process.id}/meta`,
+                method: 'GET',
+            });
+
+            const existingStageData = existingMetaData.stageData && typeof existingMetaData.stageData === 'object'
+                ? existingMetaData.stageData
+                : {};
+            const currentStagePayload = existingStageData?.[stepId] && typeof existingStageData[stepId] === 'object'
+                ? existingStageData[stepId]
+                : {};
+            const currentFields = Array.isArray(currentStagePayload.fields)
+                ? currentStagePayload.fields
+                : [];
+            const fields = [
+                ...currentFields.filter((field) => String(field?.fieldId || '') !== fieldId),
+                {
+                    fieldId,
+                    value: selectedFile.name,
+                },
+            ];
+
+            const updatedStageData = {
+                ...existingStageData,
+                [stepId]: {
+                    ...currentStagePayload,
+                    fields,
+                    updateAt: currentStagePayload.updateAt || new Date(),
+                    correctedSpreadsheetUpdateAt: new Date().toISOString(),
+                    correctedSpreadsheetUser: currentUser?.name || '',
+                },
+            };
+
+            await apiFetch({
+                path: `/obatala/v1/process_obatala/${process.id}/meta`,
+                method: 'POST',
+                data: {
+                    stageData: updatedStageData,
+                    submittedStages: existingMetaData.submittedStages || {},
+                    process_type: normalizeProcessTypeId(process.meta?.process_type),
+                },
+            });
+
+            setNotice({
+                status: 'success',
+                message: __('Corrected spreadsheet uploaded successfully.', 'obatala'),
+            });
+            await fetchUpdatedProcessNodes();
+            await loadExportRuntime();
+            await loadExportReview();
+        } catch (error) {
+            const errorMessage = error?.message || error?.error || __('Could not save the corrected spreadsheet.', 'obatala');
+            setNotice({
+                status: 'error',
+                message: String(errorMessage),
+            });
+        } finally {
+            setIsCorrectedSpreadsheetUploading(false);
+        }
+    };
+
     const handleSaveDraft = async () => {
         const step = orderedSteps[currentStep];
         if (!step?.id) return;
@@ -1118,6 +2060,26 @@ const ProcessViewer = () => {
         setIsSavingDraft(true);
 
         try {
+            if (isSpreadsheetFileStructureValidationPending) {
+                if (!currentStepSpreadsheetUploadField) {
+                    setNotice({
+                        status: 'info',
+                        message: __('Aguarde a validação da estrutura da planilha antes de salvar.', 'obatala'),
+                    });
+                }
+                return;
+            }
+
+            if (hasBlockingSpreadsheetValidationError) {
+                if (!currentStepSpreadsheetUploadField) {
+                    setNotice({
+                        status: 'error',
+                        message: spreadsheetValidationBlockingMessage,
+                    });
+                }
+                return;
+            }
+
             const uploadResult = await uploadVisibleStepFiles(stepId, visibleFieldIds);
             if (!uploadResult.ok) {
                 setNotice({
@@ -1162,6 +2124,8 @@ const ProcessViewer = () => {
                 status: 'success',
                 message: __('Draft saved successfully.', 'obatala'),
             });
+            await loadExportRuntime();
+            await loadExportReview();
         } catch (error) {
             console.error('Erro ao salvar rascunho:', error);
             setNotice({
@@ -1191,6 +2155,28 @@ const ProcessViewer = () => {
             return;
         }
 
+        if (isSpreadsheetFileStructureValidationPending) {
+            if (!currentStepSpreadsheetUploadField) {
+                setNotice({
+                    status: 'info',
+                    message: __('Aguarde a validação da estrutura da planilha antes de enviar.', 'obatala'),
+                });
+            }
+            setIsSubmittingStep(false);
+            return;
+        }
+
+        if (hasBlockingSpreadsheetValidationError) {
+            if (!currentStepSpreadsheetUploadField) {
+                setNotice({
+                    status: 'error',
+                    message: spreadsheetValidationBlockingMessage,
+                });
+            }
+            setIsSubmittingStep(false);
+            return;
+        }
+
         const uploadResult = await uploadVisibleStepFiles(stepId, visibleFieldIds);
         if (!uploadResult.ok) {
             setNotice({
@@ -1210,13 +2196,48 @@ const ProcessViewer = () => {
                 method: 'GET',
             });
 
+            const existingStageData = existingMetaData.stageData && typeof existingMetaData.stageData === 'object'
+                ? existingMetaData.stageData
+                : {};
             const updatedStageData = {
-                ...existingMetaData.stageData,
+                ...existingStageData,
                 [stepId]: {
+                    ...existingStageData?.[stepId],
                     fields, updateAt: new Date(),
                     user: currentUser.name
                 },
             };
+
+            if (
+                isSpreadsheetEntryModeActive
+                && currentStepSpreadsheetUploadField
+                && visibleFieldIds.has(String(currentStepSpreadsheetUploadField.id))
+            ) {
+                await apiFetch({
+                    path: `/obatala/v1/process_obatala/${process.id}/meta`,
+                    method: 'POST',
+                    data: {
+                        stageData: updatedStageData,
+                        submittedStages: existingMetaData.submittedStages || {},
+                        process_type: normalizeProcessTypeId(process.meta?.process_type),
+                    },
+                });
+
+                const runtime = await fetchProcessExportRuntime(process.id);
+                setExportRuntimeConfig(runtime);
+                setSpreadsheetRows(normalizeSpreadsheetRowsForEditor(runtime?.spreadsheet_rows));
+
+                if (String(runtime?.spreadsheet_rows_source || '') === 'error') {
+                    if (!currentStepSpreadsheetUploadField) {
+                        setNotice({
+                            status: 'error',
+                            message: runtime?.spreadsheet_rows_message || __('The spreadsheet contains validation errors. Upload a corrected spreadsheet before submitting this step.', 'obatala'),
+                        });
+                    }
+                    await loadExportReview();
+                    return;
+                }
+            }
 
             await apiFetch({
                 path: `/obatala/v1/process_obatala/${process.id}/meta`,
@@ -1227,6 +2248,15 @@ const ProcessViewer = () => {
                         ...existingMetaData.submittedStages,
                         [stepId]: true,
                     },
+                    process_type: normalizeProcessTypeId(process.meta?.process_type),
+                }
+            });
+
+            const nodeUpdateResponse = await apiFetch({
+                path: `/obatala/v1/process_obatala/${process.id}/node`,
+                method: `PUT`,
+                data: {
+                    node_id: stepId
                 }
             });
 
@@ -1239,14 +2269,6 @@ const ProcessViewer = () => {
                 ...prev,
                 [stepId]: [new Date(), currentUser.name],
             }));
-
-            const nodeUpdateResponse = await apiFetch({
-                path: `/obatala/v1/process_obatala/${process.id}/node`,
-                method: `PUT`,
-                data: {
-                    node_id: stepId
-                }
-            });
 
             const nextNodeId = nodeUpdateResponse?.next_node_id;
             if (nextNodeId) {
@@ -1275,7 +2297,13 @@ const ProcessViewer = () => {
 
         } catch (error) {
             console.error('Erro ao salvar metadados:', error);
-
+            const errorMessage = error?.message || error?.error || __('Could not submit this step.', 'obatala');
+            setNotice({
+                status: 'error',
+                message: String(errorMessage),
+            });
+            await loadExportRuntime();
+            await loadExportReview();
         } finally {
             setIsSubmittingStep(false);
         }
@@ -1639,6 +2667,20 @@ const ProcessViewer = () => {
         ]
         : baseOptions;
     const processIsComplete = progress === 100 && (!shouldShowExportReviewStep || isExportReviewCompleted);
+    const activeOption = options[currentStep];
+    const activeSpreadsheetStepUserAllowed = activeOption?.isVirtualExportReview
+        ? (hasPermission || isPublic)
+        : isUserInSector(activeOption?.sector_stage);
+    const canEditActiveSpreadsheetRows = Boolean(
+        activeSpreadsheetField &&
+        activeSpreadsheetStepUserAllowed &&
+        !isExportReviewCompleted
+    );
+    const shouldShowCorrectedSpreadsheetUpload = Boolean(
+        hasSpreadsheetValidationError
+        && currentStepSpreadsheetUploadField
+        && !isExportReviewCompleted
+    );
 
     const lastUpdateStage = (stepIndex) => {
         const stepValue = options[stepIndex]?.value;
@@ -1709,6 +2751,17 @@ const ProcessViewer = () => {
                                 {notice.message}
                             </Notice>
                         )}
+                        {activeSpreadsheetField && (
+                            <SpreadsheetRowsModal
+                                field={activeSpreadsheetField}
+                                rows={spreadsheetRows}
+                                canEdit={canEditActiveSpreadsheetRows}
+                                isSaving={isSpreadsheetRowsSaving}
+                                onChange={handleSpreadsheetCellChange}
+                                onClose={handleCloseSpreadsheetModal}
+                                onSave={handleSaveSpreadsheetRows}
+                            />
+                        )}
                         {!isPublic && hasPermission === false && (
                             <Notice status="error" isDismissible={false}>
                                 {__("You do not have permission to access this process.", "obatala")}
@@ -1718,9 +2771,15 @@ const ProcessViewer = () => {
                             <div className="accordion">
                                 {options.map((step, index) => {
                                     const isVirtualExportReview = step.isVirtualExportReview === true;
-                                    const isCompleted = isVirtualExportReview
+                                    const baseIsCompleted = isVirtualExportReview
                                         ? isExportReviewCompleted
                                         : Object.keys(currentStageData).includes(options[index]?.value);
+                                    const stepHasInvalidSpreadsheet = Boolean(
+                                        hasSpreadsheetValidationError
+                                        && Array.isArray(step.fields)
+                                        && step.fields.some((field) => String(field?.id || '') === currentRuntimeSpreadsheetUploadFieldId)
+                                    );
+                                    const isCompleted = baseIsCompleted && !stepHasInvalidSpreadsheet;
                                     const isUserAllowed = isVirtualExportReview
                                         ? (hasPermission || isPublic)
                                         : isUserInSector(options[index].sector_stage);
@@ -1863,13 +2922,15 @@ const ProcessViewer = () => {
                                                                 </Notice>
                                                             )}
                                                             {currentStepVisibleFields.length > 0 ? (
-                                                                !submittedSteps[currentStep] ? (
+                                                                (!submittedSteps[currentStep] || shouldKeepCurrentStepOpenForSpreadsheet) ? (
                                                                     <form onSubmit={handleSubmit}>
                                                                         <div className="meta-field-wrapper">
                                                                             {Array.isArray(currentStepSingleFields) ? currentStepSingleFields.map((field, idx) => {
                                                                                 const stepId = orderedSteps[currentStep].id;
-                                                                                const isSpreadsheetUploadField = String(field?.id || '') === currentRuntimeSpreadsheetUploadFieldId
-                                                                                    && String(field?.type || '') === 'upload';
+                                                                                const isSpreadsheetUploadField = String(field?.type || '') === 'upload'
+                                                                                    && isCurrentSpreadsheetUploadField(field);
+                                                                                const fieldCanBeEdited = !submittedSteps[currentStep]
+                                                                                    || (shouldKeepCurrentStepOpenForSpreadsheet && isSpreadsheetUploadField);
                                                                                 const uploadTemplateAction = isSpreadsheetUploadField
                                                                                     ? {
                                                                                         show: true,
@@ -1879,40 +2940,57 @@ const ProcessViewer = () => {
                                                                                     }
                                                                                     : null;
 
+                                                                                const spreadsheetUploadNoticeMessage = isSpreadsheetUploadField
+                                                                                    ? currentSpreadsheetUploadValidationMessage
+                                                                                    : '';
+                                                                                const spreadsheetUploadNoticeStatus = hasBlockingSpreadsheetValidationError
+                                                                                    ? 'error'
+                                                                                    : isSpreadsheetFileStructureValidationPending
+                                                                                        ? 'info'
+                                                                                        : currentSpreadsheetUploadValidationStatus === 'valid'
+                                                                                            ? 'success'
+                                                                                            : currentSpreadsheetUploadValidationStatus === 'unsupported'
+                                                                                                ? 'info'
+                                                                                                : 'warning';
+
                                                                                 return (
-                                                                                    <MetaFieldInputs
-                                                                                        key={`${stepId}-meta-${idx}-single`}
-                                                                                        field={field}
-                                                                                        fieldId={field.id}
-                                                                                        itemIndex={null}
-                                                                                        initalValue={getFieldInitialValue(stepId, field, 0)}
-                                                                                        isEditable={!submittedSteps[currentStep]}
-                                                                                        noHasPermission={!isUserAllowed}
-                                                                                        onFieldChange={handleFieldChange}
-                                                                                        fileInfo={fileInfo}
-                                                                                        handleDownload={handleDownload}
-                                                                                        uploadTemplateAction={uploadTemplateAction}
-                                                                                        stepId={stepId}
-                                                                                        handleGenerateStageDocumentPdf={handleGenerateStageDocumentPdf}
-                                                                                        handleSignedDocumentUpload={handleSignedDocumentUpload}
-                                                                                        handleDownloadSignedDocument={handleDownloadSignedDocument}
-                                                                                    />
+                                                                                    <React.Fragment key={`${stepId}-meta-${idx}-single`}>
+                                                                                        <MetaFieldInputs
+                                                                                            field={field}
+                                                                                            fieldId={field.id}
+                                                                                            itemIndex={null}
+                                                                                            initalValue={getFieldInitialValue(stepId, field, 0)}
+                                                                                            isEditable={fieldCanBeEdited}
+                                                                                            noHasPermission={!isUserAllowed}
+                                                                                            onFieldChange={handleFieldChange}
+                                                                                            fileInfo={fileInfo}
+                                                                                            handleDownload={handleDownload}
+                                                                                            uploadTemplateAction={uploadTemplateAction}
+                                                                                            stepId={stepId}
+                                                                                            handleGenerateStageDocumentPdf={handleGenerateStageDocumentPdf}
+                                                                                            handleSignedDocumentUpload={handleSignedDocumentUpload}
+                                                                                            handleDownloadSignedDocument={handleDownloadSignedDocument}
+                                                                                        />
+                                                                                        {isSpreadsheetUploadField && spreadsheetUploadNoticeMessage && (
+                                                                                            <div className="flex-basis-100">
+                                                                                                <Notice status={spreadsheetUploadNoticeStatus} isDismissible={false}>
+                                                                                                    {spreadsheetUploadNoticeMessage}
+                                                                                                </Notice>
+                                                                                            </div>
+                                                                                        )}
+                                                                                    </React.Fragment>
                                                                                 );
                                                                             }) : null}
 
                                                                             {currentStepSpreadsheetMappedFields.length > 0 && (
-                                                                                <div className="flex-basis-100">
-                                                                                    <Notice status="info" isDismissible={false}>
-                                                                                        {__('The metadata fields below will be loaded from the spreadsheet rows after upload.', 'obatala')}
-                                                                                    </Notice>
-                                                                                    <p style={{ marginTop: '8px' }}>
-                                                                                        <strong>{__('Mapped metadata fields', 'obatala')}:</strong>{' '}
-                                                                                        {currentStepSpreadsheetMappedFields
-                                                                                            .map((field) => field?.config?.label || field?.id)
-                                                                                            .filter(Boolean)
-                                                                                            .join(', ')}
-                                                                                    </p>
-                                                                                </div>
+                                                                                <SpreadsheetMappedFieldsSummary
+                                                                                    fields={currentStepSpreadsheetMappedFields}
+                                                                                    rows={spreadsheetRows}
+                                                                                    runtimeConfig={exportRuntimeConfig}
+                                                                                    onOpenField={handleOpenSpreadsheetField}
+                                                                                    canEdit={isUserAllowed && !isExportReviewCompleted}
+                                                                                    isSaving={isSpreadsheetRowsSaving}
+                                                                                />
                                                                             )}
 
                                                                             {currentStepRepeatedFields.length > 0 && (
@@ -1979,14 +3057,14 @@ const ProcessViewer = () => {
                                                                                 </div>
                                                                             )}
                                                                         </div>
-                                                                        {!submittedSteps[currentStep] && (
+                                                                        {(!submittedSteps[currentStep] || shouldKeepCurrentStepOpenForSpreadsheet) && (
                                                                             <div className="action-bar">
                                                                                 {currentStepCanSaveDraft && (
                                                                                     <Button
                                                                                         variant="secondary"
                                                                                         type="button"
                                                                                         onClick={handleSaveDraft}
-                                                                                        disabled={isSavingDraft || submittedSteps[currentStep] || !isUserAllowed}
+                                                                                        disabled={isSavingDraft || isSpreadsheetFileStructureValidationPending || hasBlockingSpreadsheetValidationError || (submittedSteps[currentStep] && !shouldKeepCurrentStepOpenForSpreadsheet) || !isUserAllowed}
                                                                                         isBusy={isSavingDraft}
                                                                                     >
                                                                                         {isSavingDraft ? __('Saving...', 'obatala') : __('Save draft', 'obatala')}
@@ -1995,7 +3073,7 @@ const ProcessViewer = () => {
                                                                                 <Button
                                                                                     variant="primary"
                                                                                     type="submit"
-                                                                                    disabled={!canSubmitCurrentStep || submittedSteps[currentStep] || !isUserAllowed || isSubmittingStep}
+                                                                                    disabled={!canSubmitCurrentStep || isSpreadsheetFileStructureValidationPending || hasBlockingSpreadsheetValidationError || (submittedSteps[currentStep] && !shouldKeepCurrentStepOpenForSpreadsheet) || !isUserAllowed || isSubmittingStep}
                                                                                     isBusy={isSubmittingStep}
                                                                                 >
                                                                                     {isSubmittingStep ? __("Submitting...", "obatala") : __("Submit", "obatala")}
@@ -2004,23 +3082,74 @@ const ProcessViewer = () => {
                                                                         )}
                                                                     </form>
                                                                 ) : (
-                                                                    <dl className="description-list my-0">
-                                                                        {Array.isArray(currentStepDisplayFields) ? currentStepDisplayFields.map((field, idx) => (
-                                                                            <MetaFieldDisplay
-                                                                                key={`${orderedSteps[currentStep].id}-meta-${idx}`}
-                                                                                field={field}
-                                                                                value={
-                                                                                    formValues[orderedSteps[currentStep].id]?.[field.id] || uploadedFiles[orderedSteps[currentStep].id]?.[field.id]?.[0]?.name
-                                                                                }
-                                                                                handleDownload={handleDownload}
-                                                                                fieldId={field.id}
-                                                                                stepId={orderedSteps[currentStep].id}
-                                                                                handleGenerateStageDocumentPdf={handleGenerateStageDocumentPdf}
-                                                                                handleSignedDocumentUpload={handleSignedDocumentUpload}
-                                                                                handleDownloadSignedDocument={handleDownloadSignedDocument}
+                                                                    <>
+                                                                        <dl className="description-list my-0">
+                                                                            {Array.isArray(currentStepDisplayFields) ? currentStepDisplayFields.map((field, idx) => (
+                                                                                <MetaFieldDisplay
+                                                                                    key={`${orderedSteps[currentStep].id}-meta-${idx}`}
+                                                                                    field={field}
+                                                                                    value={
+                                                                                        formValues[orderedSteps[currentStep].id]?.[field.id] || uploadedFiles[orderedSteps[currentStep].id]?.[field.id]?.[0]?.name
+                                                                                    }
+                                                                                    handleDownload={handleDownload}
+                                                                                    fieldId={field.id}
+                                                                                    stepId={orderedSteps[currentStep].id}
+                                                                                    handleGenerateStageDocumentPdf={handleGenerateStageDocumentPdf}
+                                                                                    handleSignedDocumentUpload={handleSignedDocumentUpload}
+                                                                                    handleDownloadSignedDocument={handleDownloadSignedDocument}
+                                                                                />
+                                                                            )) : null}
+                                                                        </dl>
+
+                                                                        {shouldShowCorrectedSpreadsheetUpload && (
+                                                                            <div className="meta-field-wrapper obatala-spreadsheet-correction">
+                                                                                <Notice status="error" isDismissible={false}>
+                                                                                    {exportRuntimeConfig?.spreadsheet_rows_message || __('The uploaded spreadsheet could not be validated. Upload a corrected file to continue.', 'obatala')}
+                                                                                </Notice>
+                                                                                <MetaFieldInputs
+                                                                                    key={`${orderedSteps[currentStep].id}-corrected-spreadsheet-upload`}
+                                                                                    field={currentStepSpreadsheetUploadField}
+                                                                                    fieldId={currentStepSpreadsheetUploadField.id}
+                                                                                    itemIndex={null}
+                                                                                    initalValue={getFieldInitialValue(orderedSteps[currentStep].id, currentStepSpreadsheetUploadField, 0)}
+                                                                                    isEditable
+                                                                                    noHasPermission={!isUserAllowed}
+                                                                                    onFieldChange={handleFieldChange}
+                                                                                    fileInfo={fileInfo}
+                                                                                    uploadTemplateAction={{
+                                                                                        show: true,
+                                                                                        onClick: handleDownloadSpreadsheetTemplate,
+                                                                                        isLoading: isTemplateDownloadLoading,
+                                                                                        label: __('Download spreadsheet example', 'obatala'),
+                                                                                    }}
+                                                                                    stepId={orderedSteps[currentStep].id}
+                                                                                />
+                                                                                <div className="action-bar obatala-spreadsheet-correction__actions">
+                                                                                    <Button
+                                                                                        variant="primary"
+                                                                                        onClick={handleCorrectedSpreadsheetUpload}
+                                                                                        disabled={!isUserAllowed || isSpreadsheetFileStructureValidationPending || hasBlockingSpreadsheetValidationError || isCorrectedSpreadsheetUploading}
+                                                                                        isBusy={isCorrectedSpreadsheetUploading}
+                                                                                    >
+                                                                                        {isCorrectedSpreadsheetUploading
+                                                                                            ? __('Uploading...', 'obatala')
+                                                                                            : __('Upload corrected spreadsheet', 'obatala')}
+                                                                                    </Button>
+                                                                                </div>
+                                                                            </div>
+                                                                        )}
+
+                                                                        {currentStepSpreadsheetMappedFields.length > 0 && (
+                                                                            <SpreadsheetMappedFieldsSummary
+                                                                                fields={currentStepSpreadsheetMappedFields}
+                                                                                rows={spreadsheetRows}
+                                                                                runtimeConfig={exportRuntimeConfig}
+                                                                                onOpenField={handleOpenSpreadsheetField}
+                                                                                canEdit={isUserAllowed && !isExportReviewCompleted}
+                                                                                isSaving={isSpreadsheetRowsSaving}
                                                                             />
-                                                                        )) : null}
-                                                                    </dl>
+                                                                        )}
+                                                                    </>
                                                                 )
                                                             ) : (
                                                                 <Notice status="warning" isDismissible={false}>

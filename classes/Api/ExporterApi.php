@@ -420,12 +420,12 @@ class ExporterApi extends ObatalaAPI {
                 continue;
             }
 
-            $header_label = sanitize_text_field((string) ($mapped_field['tainacan_metadata_name'] ?? ''));
+            $header_label = sanitize_text_field((string) ($mapped_field['obatala_field_label'] ?? ''));
             if ($header_label === '') {
-                $header_label = sanitize_text_field((string) ($mapped_field['obatala_field_label'] ?? ''));
+                $header_label = sanitize_text_field((string) ($mapped_field['tainacan_metadata_name'] ?? ''));
             }
             if ($header_label === '') {
-                $header_label = 'Metadado ' . ((int) $index + 1);
+                $header_label = 'Campo ' . ((int) $index + 1);
             }
 
             $unique_header = $this->build_unique_header_label($header_label, $used_headers);

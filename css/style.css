@@ -1717,6 +1717,82 @@ button .components-spinner {
   display: none;
 }
 
+.obatala-spreadsheet-summary {
+  width: 100%;
+}
+
+.obatala-spreadsheet-summary .components-notice {
+  margin: 0 0 .75rem;
+}
+
+.obatala-spreadsheet-summary__fields {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: .5rem;
+}
+
+.obatala-spreadsheet-summary__field {
+  flex: 1 1 260px;
+  min-width: 240px;
+}
+
+.obatala-spreadsheet-summary__field .components-base-control {
+  margin-bottom: .5rem;
+}
+
+.obatala-spreadsheet-correction {
+  border: 1px solid var(--gray-200);
+  border-radius: var(--border-radius);
+  margin: 1rem 0;
+  padding: 1rem;
+}
+
+.obatala-spreadsheet-correction .components-notice {
+  flex-basis: 100%;
+  margin: 0;
+}
+
+.obatala-spreadsheet-correction__actions {
+  align-items: flex-end;
+  margin-top: 0;
+}
+
+.obatala-spreadsheet-modal {
+  max-width: 960px;
+  width: calc(100vw - 2rem);
+}
+
+.obatala-spreadsheet-modal__table-wrap {
+  border: 1px solid var(--gray-200);
+  border-radius: var(--border-radius);
+  max-height: min(60vh, 620px);
+  overflow: auto;
+}
+
+.obatala-spreadsheet-modal__table {
+  min-width: 560px;
+}
+
+.obatala-spreadsheet-modal__table th:first-child,
+.obatala-spreadsheet-modal__table td:first-child {
+  width: 90px;
+}
+
+.obatala-spreadsheet-modal__table td .components-base-control,
+.obatala-spreadsheet-modal__table td .components-base-control__field {
+  margin-bottom: 0 !important;
+}
+
+.obatala-spreadsheet-modal__table td input {
+  width: 100%;
+}
+
+.obatala-spreadsheet-modal__actions {
+  justify-content: flex-end;
+  margin-top: 1rem;
+}
+
 /* tmp */
 .brand + h2 {
   margin-left: var(--gap-external);
