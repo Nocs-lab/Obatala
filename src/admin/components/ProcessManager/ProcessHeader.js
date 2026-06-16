@@ -31,14 +31,8 @@ const ProcessHeader = ({ process, filteredProcessType, authorsById, isComplete, 
                             ? filteredProcessType.title.rendered
                             : __("Process type title", "obatala")}
                     </small>
-                    <span className="process-title-with-number">
-                        {process.title?.rendered}
-                        {processNumber ? (
-                            <span className="process-number" title={__('Process number', 'obatala')}>
-                                {processNumber}
-                            </span>
-                        ) : null}
-                    </span>
+                    {processNumber ? `${processNumber} - ` : null}
+                    {process.title?.rendered}
                 </h2>
                 <div className="badge-container">
                     <span

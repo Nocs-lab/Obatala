@@ -509,7 +509,7 @@ const TainacanItemsPage = () => {
 																	</span>
 																</td>
 																<td>
-																	<div className="group-button tainacan-item-actions">
+																	<div className="group-button">
 																		<Button
 																			variant="primary"
 																			icon={

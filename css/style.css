@@ -390,16 +390,16 @@ footer {
     &:hover {
       background-color: var(--primary-300);
     }
+    &:first-child {
+      border-radius: var(--border-radius) 0 0 var(--border-radius);
+    }
+    &:last-child {
+      border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    }
+    &:only-child {
+      border-radius: var(--border-radius);
+    }
   }
-}
-.group-button .components-button:first-of-type {
-  border-radius: var(--border-radius) 0 0 var(--border-radius);
-}
-.group-button .components-button:last-of-type {
-  border-radius: 0 var(--border-radius) var(--border-radius) 0;
-}
-.group-button .components-button:only-of-type {
-  border-radius: var(--border-radius);
 }
 .group-button .components-dropdown.components-dropdown-menu {
   margin-left: .5rem;
@@ -1581,24 +1581,6 @@ button .components-spinner {
       font-weight: 300;
       margin-bottom: .2rem;
     }
-    .process-title-with-number {
-      align-items: baseline;
-      display: inline-flex;
-      flex-wrap: wrap;
-      gap: .75rem;
-    }
-    .process-number {
-      background-color: rgba(255, 255, 255, .18);
-      border-radius: 999px;
-      color: var(--white);
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: .85rem;
-      font-weight: 500;
-      letter-spacing: .02em;
-      line-height: 1;
-      padding: .35rem .65rem;
-      white-space: nowrap;
-    }
   }
   & progress::-webkit-progress-bar {
     background-color: rgba(0,0,0,.1);
@@ -1631,19 +1613,6 @@ button .components-spinner {
   @media screen and (max-width: 1200px) {
     margin-top: 0;    
   }
-}
-.wp-list-table .process-number {
-  background-color: var(--gray-100);
-  border-radius: 999px;
-  color: var(--primary-900);
-  display: inline-block;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  font-size: .85rem;
-  font-weight: 500;
-  letter-spacing: .02em;
-  line-height: 1;
-  padding: .35rem .65rem;
-  white-space: nowrap;
 }
 .title-container p {
   font-size: 1rem;
@@ -1891,13 +1860,6 @@ button .components-spinner {
 }
 .tainacan-process-count.is-empty {
   color: var(--gray-700);
-}
-.tainacan-item-actions {
-  flex-wrap: nowrap;
-}
-.tainacan-item-actions .components-button {
-  min-width: 40px;
-  white-space: nowrap;
 }
 .tainacan-linked-processes-list {
   display: flex;

@@ -115,22 +115,22 @@ const ProcessList = ({ processes, onEdit, onViewProcess, onDelete, processTypeMa
     const columns = useMemo(
         () => [
             {
+                Header: __("Process number", "obatala"),
+                id: "numero_processo",
+                accessor: (row) => getMetaValue(row.meta, 'numero_processo'),
+                Cell: ({ value }) => (
+                    value
+                        ? <span>{value}</span>
+                        : <span className="description">{__("No numbering", "obatala")}</span>
+                ),
+            },
+            {
                 Header: __("Process", "obatala"),
                 accessor: "title.rendered",
                 Cell: ({ row }) => (
                     <a href={`?page=process-viewer&process_id=${row.original.id}`}>
                         {decodeEntities(row.original.title.rendered ?? '')}
                     </a>
-                ),
-            },
-            {
-                Header: __("Process number", "obatala"),
-                id: "numero_processo",
-                accessor: (row) => getMetaValue(row.meta, 'numero_processo'),
-                Cell: ({ value }) => (
-                    value
-                        ? <span className="process-number">{value}</span>
-                        : <span className="description">{__("No numbering", "obatala")}</span>
                 ),
             },
             {
