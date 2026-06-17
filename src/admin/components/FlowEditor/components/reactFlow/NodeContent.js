@@ -108,6 +108,7 @@ const NodeContent = ({ id, data = {} }) => {
     const [isTainacanControlsExpanded, setIsTainacanControlsExpanded] = useState(false);
     const { updateNodeName } = useFlowContext();
     const { updateNodeTempSector } = useFlowContext();
+    const isTainacanMapperEnabled = data?.isTainacanMapperEnabled !== false;
 
     const isSelected = selectedNodes?.some((node) => node.id === id);
     const [stageName, setStageName] = useState(data?.stageName || "");
@@ -125,6 +126,12 @@ const NodeContent = ({ id, data = {} }) => {
             setIsTainacanControlsExpanded(false);
         }
     }, [isAddingFields]);
+
+    useEffect(() => {
+        if (!isTainacanMapperEnabled) {
+            setIsTainacanControlsExpanded(false);
+        }
+    }, [isTainacanMapperEnabled]);
 
     const loadSectors = () => {
         fetchSectors()
@@ -169,6 +176,10 @@ const NodeContent = ({ id, data = {} }) => {
     };
 
     const addTainacanControlFieldToNode = (field) => {
+        if (!isTainacanMapperEnabled) {
+            return;
+        }
+
         const fieldId = String(field?.id || "");
         if (!fieldId) return;
 
@@ -265,27 +276,29 @@ const NodeContent = ({ id, data = {} }) => {
                         ></Button>
                         <h3 className="title">{__('Select a field to add:', 'obatala')}</h3>
                         <ul className="node-meta-list-container">
-                            <li className="node-meta-list">
-                                <button
-                                    type="button"
-                                    onClick={() => setIsDefaultFieldsExpanded((previous) => !previous)}
-                                    style={{
-                                        width: "100%",
-                                        display: "flex",
-                                        justifyContent: "space-between",
-                                        alignItems: "center",
-                                        background: "none",
-                                        border: "none",
-                                        padding: 0,
-                                        cursor: "pointer",
-                                        textAlign: "left",
-                                    }}
-                                >
-                                    <strong>{__('Default fields', 'obatala')}</strong>
-                                    <span>{isDefaultFieldsExpanded ? '[-]' : '[+]'}</span>
-                                </button>
-                            </li>
-                            {isDefaultFieldsExpanded && FIELD_OPTIONS.map((option) => (
+                            {isTainacanMapperEnabled && (
+                                <li className="node-meta-list">
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsDefaultFieldsExpanded((previous) => !previous)}
+                                        style={{
+                                            width: "100%",
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            alignItems: "center",
+                                            background: "none",
+                                            border: "none",
+                                            padding: 0,
+                                            cursor: "pointer",
+                                            textAlign: "left",
+                                        }}
+                                    >
+                                        <strong>{__('Default fields', 'obatala')}</strong>
+                                        <span>{isDefaultFieldsExpanded ? '[-]' : '[+]'}</span>
+                                    </button>
+                                </li>
+                            )}
+                            {(!isTainacanMapperEnabled || isDefaultFieldsExpanded) && FIELD_OPTIONS.map((option) => (
                                 <li className="node-meta-list" key={option.id}>
                                     <Icon icon={option.icon} />
                                     <span
@@ -295,27 +308,29 @@ const NodeContent = ({ id, data = {} }) => {
                                     </span>
                                 </li>
                             ))}
-                            <li className="node-meta-list">
-                                <button
-                                    type="button"
-                                    onClick={() => setIsTainacanControlsExpanded((previous) => !previous)}
-                                    style={{
-                                        width: "100%",
-                                        display: "flex",
-                                        justifyContent: "space-between",
-                                        alignItems: "center",
-                                        background: "none",
-                                        border: "none",
-                                        padding: 0,
-                                        cursor: "pointer",
-                                        textAlign: "left",
-                                    }}
-                                >
-                                    <strong>{__('Tainacan control fields', 'obatala')}</strong>
-                                    <span>{isTainacanControlsExpanded ? '[-]' : '[+]'}</span>
-                                </button>
-                            </li>
-                            {isTainacanControlsExpanded && TAINACAN_CONTROL_FIELDS.map((option) => {
+                            {isTainacanMapperEnabled && (
+                                <li className="node-meta-list">
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsTainacanControlsExpanded((previous) => !previous)}
+                                        style={{
+                                            width: "100%",
+                                            display: "flex",
+                                            justifyContent: "space-between",
+                                            alignItems: "center",
+                                            background: "none",
+                                            border: "none",
+                                            padding: 0,
+                                            cursor: "pointer",
+                                            textAlign: "left",
+                                        }}
+                                    >
+                                        <strong>{__('Tainacan control fields', 'obatala')}</strong>
+                                        <span>{isTainacanControlsExpanded ? '[-]' : '[+]'}</span>
+                                    </button>
+                                </li>
+                            )}
+                            {isTainacanMapperEnabled && isTainacanControlsExpanded && TAINACAN_CONTROL_FIELDS.map((option) => {
                                 const existingLocation = getControlFieldLocation(option.id);
                                 const isDisabled = Boolean(existingLocation);
 

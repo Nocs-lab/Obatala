@@ -9,6 +9,7 @@ import ProcessFlow from "./FlowEditor/ProcessFlow";
 import { FlowProvider } from "./FlowEditor/context/FlowContext";
 import ProcessControls from "./FlowEditor/components/reactFlow/FlowButtons";
 import { DrawerProvider } from "./FlowEditor/context/DrawerContext";
+import { fetchMapperProcessModel } from "../api/apiRequests";
 
 import { useSelect } from "@wordpress/data";
 import { store as coreStore } from '@wordpress/core-data';
@@ -16,15 +17,60 @@ import { update } from "@wordpress/icons";
 import BrandHeader from "./BrandHeader";
 import BrandFooter from "./BrandFooter";
 
+const MAPPER_STATUS_ENABLED = "enabled";
+const MAPPER_STATUS_DISABLED = "disabled";
+
+const normalizeMapperStatus = (status) => {
+    const normalized = String(status || "").trim().toLowerCase();
+    return normalized === MAPPER_STATUS_DISABLED || normalized === "desabilitado"
+        ? MAPPER_STATUS_DISABLED
+        : MAPPER_STATUS_ENABLED;
+};
+
+const parseMappingData = (mappingData) => {
+    if (!mappingData) {
+        return null;
+    }
+
+    if (typeof mappingData !== "string") {
+        return mappingData;
+    }
+
+    try {
+        return JSON.parse(mappingData);
+    } catch (error) {
+        console.error("Error parsing mapper data:", error);
+        return null;
+    }
+};
+
+const getMapperStatusFromSavedData = (savedData) => {
+    if (!savedData) {
+        return MAPPER_STATUS_ENABLED;
+    }
+
+    if (savedData.mappings && !Array.isArray(savedData.mappings) && savedData.mappings.status !== undefined) {
+        return normalizeMapperStatus(savedData.mappings.status);
+    }
+
+    if (savedData.status !== undefined) {
+        return normalizeMapperStatus(savedData.status);
+    }
+
+    return MAPPER_STATUS_ENABLED;
+};
+
 const processDataEditor = () => {
     const params = new URLSearchParams(window.location.search);
     const id = params.get("process_type_id");
     const [processData, setProcessData] = useState(null);
     const [notice, setNotice] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [mapperStatus, setMapperStatus] = useState(MAPPER_STATUS_ENABLED);
     const flowRef = useRef(null); 
     const [flowData, setFlowData] = useState({ nodes: [], edges: [] }); 
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
+    const isTainacanMapperEnabled = mapperStatus === MAPPER_STATUS_ENABLED;
 
     const getProcessIdFromUrl = () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -34,11 +80,24 @@ const processDataEditor = () => {
     useEffect(() => {
         setIsLoading(true);
 
-        apiFetch({ path: `/obatala/v1/process_type/${id}` })
-            .then((typeData) => {
+        const mapperStatusRequest = fetchMapperProcessModel(id)
+            .then((mapperResponse) => {
+                return getMapperStatusFromSavedData(parseMappingData(mapperResponse?.mapping_data));
+            })
+            .catch((error) => {
+                console.error("Error fetching mapper status:", error);
+                return MAPPER_STATUS_ENABLED;
+            });
+
+        Promise.all([
+            apiFetch({ path: `/obatala/v1/process_type/${id}` }),
+            mapperStatusRequest,
+        ])
+            .then(([typeData, loadedMapperStatus]) => {
                 setProcessData(typeData);
                 const flowData = typeData.meta.flowData || { nodes: [], edges: [] };
                 setFlowData(flowData);
+                setMapperStatus(normalizeMapperStatus(loadedMapperStatus));
                 setIsLoading(false);
             })
             .catch((error) => {
@@ -368,6 +427,7 @@ const processDataEditor = () => {
                     <ProcessFlow
                         ref={flowRef}
                         initialData={flowData}
+                        isTainacanMapperEnabled={isTainacanMapperEnabled}
                         onSave={handleSave}
                         onCancel={handleCancelEditProcessType}
                         toggleFullScreen={toggleFullScreen}
