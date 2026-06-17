@@ -857,6 +857,12 @@ class ProcessApi extends ObatalaAPI {
         $flowData = maybe_unserialize($flowData);
         $nodes = $flowData['nodes'];
         $edges = $flowData['edges'];
+        $hydrated_nodes = $this->hydrate_nodes_from_submitted_stages($post_id, $nodes);
+        $nodes = $hydrated_nodes['nodes'];
+        if ($hydrated_nodes['changed']) {
+            $flowData['nodes'] = $nodes;
+            update_post_meta($post_id, 'flowData', $flowData);
+        }
         
         $first_edge = null;
         foreach ($edges as $edge) {
@@ -1172,6 +1178,12 @@ class ProcessApi extends ObatalaAPI {
 
         $nodes = $flowData['nodes'];
         $edges = $flowData['edges'];
+        $hydrated_nodes = $this->hydrate_nodes_from_submitted_stages($post_id, $nodes);
+        $nodes = $hydrated_nodes['nodes'];
+        if ($hydrated_nodes['changed']) {
+            $flowData['nodes'] = $nodes;
+            update_post_meta($post_id, 'flowData', $flowData);
+        }
 
         // Cria mapa de id => node
         $nodeMap = [];
@@ -1318,7 +1330,65 @@ class ProcessApi extends ObatalaAPI {
         return true;
     }
 
-    private function is_node_progress_complete($node, $stage_data) {
+    private function is_submitted_stage_value_truthy($value) {
+        return $value === true || $value === 1 || $value === '1' || $value === 'true';
+    }
+
+    private function is_process_stage_node($node) {
+        $node_id = (string) ($node['id'] ?? '');
+
+        return $node_id !== ''
+            && $node_id !== 'Start'
+            && $node_id !== 'End'
+            && strpos($node_id, 'Condicional') !== 0;
+    }
+
+    private function get_process_submitted_stages($post_id) {
+        $submitted_stages = maybe_unserialize(get_post_meta($post_id, 'submittedStages', true));
+        return is_array($submitted_stages) ? $submitted_stages : [];
+    }
+
+    private function hydrate_nodes_from_submitted_stages($post_id, $nodes) {
+        if (!is_array($nodes)) {
+            return [
+                'nodes' => [],
+                'changed' => false,
+            ];
+        }
+
+        $submitted_stages = $this->get_process_submitted_stages($post_id);
+        if (empty($submitted_stages)) {
+            return [
+                'nodes' => $nodes,
+                'changed' => false,
+            ];
+        }
+
+        $changed = false;
+        foreach ($nodes as &$node) {
+            if (!$this->is_process_stage_node($node)) {
+                continue;
+            }
+
+            $node_id = (string) ($node['id'] ?? '');
+            if (
+                array_key_exists($node_id, $submitted_stages)
+                && $this->is_submitted_stage_value_truthy($submitted_stages[$node_id])
+                && ($node['node_status'] ?? '') !== 'Finished'
+            ) {
+                $node['node_status'] = 'Finished';
+                $changed = true;
+            }
+        }
+        unset($node);
+
+        return [
+            'nodes' => $nodes,
+            'changed' => $changed,
+        ];
+    }
+
+    private function is_node_progress_complete($post_id, $node, $stage_data) {
         if (($node['node_status'] ?? '') !== 'Finished') {
             return false;
         }
@@ -1342,6 +1412,8 @@ class ProcessApi extends ObatalaAPI {
         if (!$nodes || !$edges) {
             return 0;
         }
+        $hydrated_nodes = $this->hydrate_nodes_from_submitted_stages($post_id, $nodes);
+        $nodes = $hydrated_nodes['nodes'];
 
         // Mapa de id => node
         $nodeMap = [];
@@ -1395,7 +1467,7 @@ class ProcessApi extends ObatalaAPI {
         $stage_data = $this->get_process_stage_data($post_id);
         $finishedCount = 0;
         foreach ($orderedNodes as $node) {
-            if ($this->is_node_progress_complete($node, $stage_data)) {
+            if ($this->is_node_progress_complete($post_id, $node, $stage_data)) {
                 $finishedCount++;
             }
         }

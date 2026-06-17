@@ -1,5 +1,5 @@
 
-![Versão do Plugin](https://img.shields.io/badge/version-1.7.9-blue.svg)
+![Versão do Plugin](https://img.shields.io/badge/version-1.7.10-blue.svg)
 
 ![Compatibilidade com WordPress](https://img.shields.io/badge/WordPress-v5.7%2B-blue.svg)
 ![Licença](https://img.shields.io/badge/license-GPLv2-blue.svg)

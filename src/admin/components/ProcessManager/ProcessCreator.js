@@ -23,13 +23,15 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
 
     const handleSaveProcess = async (e) => {
         e.preventDefault();
-        if (!newProcessTitle || !newProcessType) {
+        if (!newProcessTitle || (!editingProcess && !newProcessType)) {
             setNotice({ status: 'error', message: __('Please provide a title and select a process type.', 'obatala') });
             return;
         }
         // get process model id
-        const selectedProcessModel = processTypes.find(type => type.id === parseInt(newProcessType));
-        if (!selectedProcessModel) {
+        const selectedProcessModel = editingProcess
+            ? null
+            : processTypes.find(type => type.id === parseInt(newProcessType));
+        if (!editingProcess && !selectedProcessModel) {
             setNotice({ status: 'error', message: __('Invalid process type selected.', 'obatala') });
             return;
         }
@@ -49,6 +51,22 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
                     method: 'POST',
                     data: { ...newProcess }
                 });
+
+                await apiFetch({
+                    path: `/obatala/v1/process_obatala/${savedProcess.id}/meta`,
+                    method: 'POST',
+                    data: {
+                        access_level: accessLevel,
+                    }
+                });
+
+                const fullProcess = await apiFetch({
+                    path: `/obatala/v1/process_obatala/${savedProcess.id}`,
+                });
+
+                onProcessSaved(fullProcess);
+                setNotice({ status: 'success', message: __('Process updated successfully.', 'obatala') });
+                return;
             } else {
                 // Cria o processo
                 savedProcess = await apiFetch({
@@ -94,7 +112,7 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
                 onProcessSaved(fullProcess);
                 setNewProcessTitle('');
                 setNewProcessType('');
-                setAccessLevel('public');
+                setAccessLevel('Not restricted');
                 setNotice({ status: 'success', message: editingProcess ? __('Process updated successfully.', 'obatala') : __('Process created successfully.', 'obatala') });
 
             }
