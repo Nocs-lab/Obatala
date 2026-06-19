@@ -86,6 +86,38 @@ const isPdfReportAvailable =
 const ProcessList = ({ processes, onEdit, onViewProcess, onDelete, processTypeMappings, processTypes, accessLevel, setAccessLevel, modelFilter, setModelFilter }) => {
     const [pdfLoadingId, setPdfLoadingId] = useState(null);
     const [pdfError, setPdfError] = useState(null);
+    const [progressMap, setProgressMap] = useState({});
+    const [fetchedProcessIds, setFetchedProcessIds] = useState(new Set());
+
+    useEffect(() => {
+        processes.forEach((process) => {
+            const processId = process.id;
+            if (!fetchedProcessIds.has(processId)) {
+                setFetchedProcessIds((prev) => {
+                    const newSet = new Set(prev);
+                    newSet.add(processId);
+                    return newSet;
+                });
+                apiFetch({
+                    path: `/obatala/v1/process_obatala/${processId}/node`,
+                    method: 'GET',
+                })
+                .then((response) => {
+                    setProgressMap((prev) => ({
+                        ...prev,
+                        [processId]: response.progress,
+                    }));
+                })
+                .catch((error) => {
+                    console.error('Erro ao buscar progresso do processo:', error);
+                    setProgressMap((prev) => ({
+                        ...prev,
+                        [processId]: 0,
+                    }));
+                });
+            }
+        });
+    }, [processes, fetchedProcessIds]);
 
     const handlePdfDownload = useCallback(async (processId) => {
         setPdfError(null);
@@ -151,39 +183,27 @@ const ProcessList = ({ processes, onEdit, onViewProcess, onDelete, processTypeMa
             },
             {
                 Header: __('Current step', 'obatala'),
-                accessor: (row) =>
-                    row.meta?.current_stage
+                accessor: (row) => {
+                    if (row.progress === 100) {
+                        return __('Finished', 'obatala');
+                    }
+                    return row.meta?.current_stage
                         ? `${row.meta.current_stage} - ${row.meta.groupResponsible || __("No group", "obatala")
                         }`
-                        : __("Not started", "obatala"),
+                        : __("Not started", "obatala");
+                },
             },
             {
                 Header: __("Progress", "obatala"),
-                Cell: ({ row }) => {
-                    const [progress, setProgress] = useState(null);
-                    useEffect(() => {
-                        const fetchProgressProcess = async () => {
-                            try {
-                                const response = await apiFetch({
-                                    path: `/obatala/v1/process_obatala/${row.original.id}/node`,
-                                    method: 'GET',
-                                });
-                                setProgress(response.progress);
-                            } catch (error) {
-                                console.error('Erro ao buscar progresso do processo:', error);
-                                setProgress(0);
-                            }
-                        };
-
-                        fetchProgressProcess();
-                    }, [row.original.id]);
-
+                accessor: 'progress',
+                Cell: ({ value }) => {
+                    const isLoadingProgress = value === null || value === undefined;
                     return (
-                        <div className="progress" title={`${progress}%`}>
-                            <p className="description">{progress}%</p>
-                            <progress value={progress} max="100" />
+                        <div className="progress" title={isLoadingProgress ? "..." : `${value}%`}>
+                            <p className="description">{isLoadingProgress ? "..." : `${value}%`}</p>
+                            <progress value={isLoadingProgress ? 0 : value} max="100" />
                         </div>
-                    )
+                    );
                 },
             },
             {
@@ -254,7 +274,12 @@ const ProcessList = ({ processes, onEdit, onViewProcess, onDelete, processTypeMa
         [processTypeMappings, processTypes, pdfLoadingId, handlePdfDownload, onDelete, onEdit, onViewProcess, isPdfReportAvailable]
     );
 
-    const data = useMemo(() => processes, [processes]);
+    const data = useMemo(() => {
+        return processes.map((p) => ({
+            ...p,
+            progress: progressMap[p.id] !== undefined ? progressMap[p.id] : null,
+        }));
+    }, [processes, progressMap]);
 
     const {
         getTableProps,

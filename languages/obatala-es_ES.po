@@ -2,8 +2,8 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Obatala - Plugin de Gestão de Processos Curatoriais "
-"para WordPress beta.0.1\n"
+"Project-Id-Version: Obatala - Plugin de Gestão de Processos Curatoriais para "
+"WordPress beta.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/Obatala\n"
 "POT-Creation-Date: 2024-05-28T20:38:23+00:00\n"
 "PO-Revision-Date: 2025-03-14 12:00+0000\n"
@@ -315,9 +315,6 @@ msgstr "Procesos"
 msgid "Models"
 msgstr "Modelos"
 
-msgid "Settings"
-msgstr "Configuración"
-
 msgid "Groups"
 msgstr "Grupos"
 
@@ -338,9 +335,6 @@ msgstr "Todos los procesos"
 
 msgid "My processes"
 msgstr "Meus processos"
-
-msgid "Edit Process"
-msgstr "Editar proceso"
 
 msgid "Add new process"
 msgstr "Añadir nuevo proceso"
@@ -375,8 +369,11 @@ msgstr "Indique un título y seleccione un tipo de proceso."
 msgid "Invalid process type selected."
 msgstr "Tipo de proceso no válido seleccionado."
 
-msgid "The process cannot be created because the selected process model is inactive"
-msgstr "El proceso no puede crearse porque el modelo de proceso seleccionado está inactivo"
+msgid ""
+"The process cannot be created because the selected process model is inactive"
+msgstr ""
+"El proceso no puede crearse porque el modelo de proceso seleccionado está "
+"inactivo"
 
 msgid "Process updated successfully."
 msgstr "Proceso actualizado correctamente."
@@ -475,9 +472,6 @@ msgstr "Filtrar"
 msgid "Filters"
 msgstr "Filtros"
 
-msgid "Restricted"
-msgstr "Restringido"
-
 msgid "Not Restricted"
 msgstr "No restringido"
 
@@ -537,9 +531,6 @@ msgstr "ID del proceso no encontrado en la URL."
 
 msgid "Unknown"
 msgstr "Desconhecido"
-
-msgid "No process found."
-msgstr "Proceso no encontrado."
 
 msgid "You do not have permission to access this process."
 msgstr "No tiene permiso para acceder a este proceso."
@@ -606,9 +597,6 @@ msgstr "El título y la descripción son obligatorios."
 
 msgid "Group saved successfully."
 msgstr "Grupo guardado correctamente."
-
-msgid "Error saving group."
-msgstr "Erro ao salvar grupo."
 
 msgid "Status"
 msgstr "Estado"
@@ -840,9 +828,6 @@ msgstr "Añadir campo"
 msgid "Select a field to add:"
 msgstr "Seleccione un campo para añadir:"
 
-msgid "Manage steps"
-msgstr "Gestionar etapas"
-
 msgid "Process type and meta updated successfully."
 msgstr "Tipo de proceso y metadatos actualizados correctamente."
 
@@ -959,14 +944,15 @@ msgstr "Editar campo de subida de archivo"
 
 #: ProcessModelEditor.js, classes/Api/ProcessTypeApi.php
 msgid "Some fields are missing a valid title (empty or default). Check: %s"
-msgstr "Algunos campos no tienen un título válido (vacío o predeterminado). Revise: %s"
+msgstr ""
+"Algunos campos no tienen un título válido (vacío o predeterminado). Revise: "
+"%s"
 
 #: ProcessModelEditor.js, classes/Api/ProcessTypeApi.php
 msgid "%1$s (field %2$s)"
 msgstr "%1$s (campo %2$s)"
 
-#: classes/Api/ProcessApi.php
-#: classes/Report/StageDocumentPdf.php
+#: classes/Api/ProcessApi.php classes/Report/StageDocumentPdf.php
 #: src/admin/components/FlowEditor/components/inputControls/StageDocumentControls.js
 #: src/admin/components/FlowEditor/components/reactFlow/NodeContent.js
 #: src/admin/components/ProcessManager/MetaFieldDisplay.js
@@ -1171,147 +1157,186 @@ msgid "Process already deleted."
 msgstr "El proceso ya fue eliminado."
 
 msgid "Unable to record process deletion without an authenticated user."
-msgstr "No se pudo registrar la eliminación del proceso sin un usuario autenticado."
+msgstr ""
+"No se pudo registrar la eliminación del proceso sin un usuario autenticado."
 
 msgid "Error uploading file for field %s."
 msgstr "Error al enviar el archivo del campo %s."
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Tainacan is not available."
 msgstr "Tainacan no está disponible."
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Process #%d"
 msgstr "Proceso #%d"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Obatala process"
 msgstr "Proceso de Obatalá"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Published"
 msgstr "Publicado"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Under review"
 msgstr "En revisión"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Draft"
 msgstr "Borrador"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Private"
 msgstr "Privado"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Error loading collection items."
 msgstr "Error al cargar los ítems de la colección."
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "All collections"
 msgstr "Todas las colecciones"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "All situations"
 msgstr "Todas las situaciones"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Error downloading item data."
 msgstr "Error al descargar los datos del ítem."
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Item deleted successfully."
 msgstr "Ítem eliminado correctamente."
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Error deleting item."
 msgstr "Error al eliminar el ítem."
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "%s process"
 msgstr "%s proceso"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "%s processes"
 msgstr "%s procesos"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Add item"
 msgstr "Añadir ítem"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "All items"
 msgstr "Todos los ítems"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "My items"
 msgstr "Mis ítems"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Search collection items"
 msgstr "Buscar ítems de la colección"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Search by title, registration number, or keyword"
 msgstr "Buscar por título, número de registro o palabra clave"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Situation"
 msgstr "Situación"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Clear filters"
 msgstr "Limpiar filtros"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Registration number"
 msgstr "N.º de registro"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Linked processes"
 msgstr "Procesos vinculados"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Item #%d"
 msgstr "Ítem #%d"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "by %s"
 msgstr "por %s"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "View item"
 msgstr "Ver ítem"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Edit item"
 msgstr "Editar ítem"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "View details and history"
 msgstr "Ver detalles e historial"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Download item data"
 msgstr "Descargar datos del ítem"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Delete item"
 msgstr "Eliminar ítem"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Page %1$s of %2$s"
 msgstr "Página %1$s de %2$s"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "No collection items found."
 msgstr "No se encontraron ítems de la colección."
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Linked processes for %s"
 msgstr "Procesos vinculados a %s"
 
-#: classes/Api/TainacanItemsApi.php src/admin/components/TainacanItems/TainacanItemsPage.js
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Are you sure you want to delete item %s?"
 msgstr "¿Está seguro de que desea eliminar el ítem %s?"
+
+msgid "Finished"
+msgstr "Finalizado"
