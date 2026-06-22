@@ -670,3 +670,6 @@ msgstr ""
 #: src/admin/components/ProcessViewer.js
 msgid "Error uploading file for field %s."
 msgstr ""
+
+msgid "Finished"
+msgstr ""

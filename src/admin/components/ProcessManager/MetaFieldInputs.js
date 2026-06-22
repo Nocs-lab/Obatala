@@ -351,8 +351,9 @@ const MetaFieldInputs = React.memo(
 			case 'datepicker':
 				return (
 					<div className="meta-field sm">
-						<label>{ fieldLabel }</label>
+						<label className="components-base-control__label">{ fieldLabel }</label>
 						<input
+							className="components-text-control__input"
 							type="date"
 							value={
 								value
