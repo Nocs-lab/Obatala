@@ -314,9 +314,19 @@ footer {
 .components-base-control.components-checkbox-control {
   padding-top: 1.1rem;
 }
-.components-base-control__field > label {
+.components-base-control__field > label,
+.components-base-control__label,
+legend.components-base-control__label {
+  font-size: .85rem;
+  font-weight: 400;
   margin-bottom: .1rem;
   text-transform: none;
+  &:has(+ .components-text-control__input[required]) {
+    font-weight: 600;
+  }
+}
+legend.components-base-control__label {
+  margin-bottom: .5rem;
 }
 .components-button {
   border-radius: var(--border-radius);
@@ -437,6 +447,9 @@ form .group-button .components-button {
   border-radius: var(--border-radius) !important;
   height: 38px !important;
   min-height: 38px !important;
+  &[required]:valid {
+    border-color: var(--success);
+  }
 }
 .components-input-control__input[required],
 .components-select-control__input[required],
@@ -1153,9 +1166,6 @@ progress::-webkit-progress-bar {
   background-color: rgba(0,0,0,.1);
   border-radius: var(--border-radius);
 }
-progress[value="0"]::-webkit-progress-bar {
-  background-color: var(--danger-100);
-}
 progress::-webkit-progress-value {
   background-color: var(--warning);
   border-radius: var(--border-radius);
@@ -1661,19 +1671,20 @@ button .components-spinner {
 .meta-field-wrapper > .meta-field {
   flex-basis: 500px;
   flex-grow: 1;
+  &.required::after {
+    color: var(--primary-500);
+    content: "Preenchimento obrigatório.";
+    font-size: .75rem;
+    position: relative;
+    top: .25rem;
+    left: .5rem;
+  }
 }
 .meta-field-wrapper > .meta-field.md {
   flex-basis: 200px;
 }
 .meta-field-wrapper > .meta-field.sm {
   flex-basis: 100px;
-}
-.meta-field-wrapper > .meta-field.required::after {
-  color: var(--primary-500);
-  content: "Preenchimento obrigatório.";
-  font-size: .75rem;
-  position: relative;
-  top: -.25rem;
 }
 .meta-field-wrapper + .action-bar {
   margin-top: var(--gap);
@@ -1932,9 +1943,6 @@ button .components-spinner {
   white-space: nowrap;
 }
 .tainacan-item-update small {
-  color: var(--gray-700);
-}
-.tainacan-process-count.is-empty {
   color: var(--gray-700);
 }
 .tainacan-linked-processes-list {

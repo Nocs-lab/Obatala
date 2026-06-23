@@ -178,7 +178,9 @@ const DashboardPage = () => {
 			let lastUpdate = process.modified;
 			let currentStageId = null;
 
-			if ( currentStageRef ) {
+			if ( percentage === 100 ) {
+				currentStage = __( 'Finished', 'obatala' );
+			} else if ( currentStageRef ) {
 				const currentNode = getNodeByStageReference(
 					nodes,
 					currentStageRef
