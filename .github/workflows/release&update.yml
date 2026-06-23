@@ -29,7 +29,9 @@ jobs:
         run: npm run build
 
       - name: Install PHP dependencies
-        run: composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader
+        run: |
+          rm -rf vendor
+          composer install --no-dev --prefer-dist --no-interaction --optimize-autoloader
 
       - name: Get version from package.json
         id: get_version
