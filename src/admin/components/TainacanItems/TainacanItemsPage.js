@@ -237,7 +237,7 @@ const TainacanItemsPage = () => {
 
 		if ( processCount === 0 ) {
 			return (
-				<span className="tainacan-process-count is-empty">
+				<span>
 					{ label }
 				</span>
 			);
@@ -256,16 +256,6 @@ const TainacanItemsPage = () => {
 			<div className="title-container">
 				<h2>{ __( 'Collection items', 'obatala' ) }</h2>
 				<span className="badge default">{ formatCount( total ) }</span>
-				<div className="group-button">
-					<Button
-						variant="secondary"
-						size="small"
-						icon={ <Icon icon={ plus } /> }
-						href={ getTainacanAdminUrl( '/items/new' ) }
-					>
-						{ __( 'Add item', 'obatala' ) }
-					</Button>
-				</div>
 			</div>
 			<main className="tainacan-items-page">
 				{ notice && (
@@ -278,391 +268,311 @@ const TainacanItemsPage = () => {
 					</Notice>
 				) }
 
-				<TabPanel
-					activeClass="active-tab"
-					initialTabName="all"
-					onSelect={ ( tabName ) => {
-						setScope( tabName );
-						setPage( 1 );
-					} }
-					tabs={ [
-						{ name: 'all', title: __( 'All items', 'obatala' ) },
-						{ name: 'mine', title: __( 'My items', 'obatala' ) },
-					] }
-				>
-					{ () => (
-						<Panel>
-							<PanelRow>
-								<div className="container_searchAndSelect">
-									<TextControl
-										label={ __(
-											'Search collection items',
-											'obatala'
-										) }
-										hideLabelFromVision
-										value={ searchInput }
-										onChange={ setSearchInput }
-										placeholder={ __(
-											'Search by title, registration number, or keyword',
-											'obatala'
-										) }
-										type="search"
-									/>
-									<Button
-										variant="tertiary"
-										icon="filter"
-										onClick={ () =>
-											setShowFilters(
-												( value ) => ! value
-											)
-										}
-										aria-expanded={ showFilters }
-									>
-										{ __( 'Filters', 'obatala' ) }
-									</Button>
-								</div>
-
-								{ showFilters && (
-									<div className="tainacan-items-filters">
-										<SelectControl
-											label={ __(
-												'Collection',
-												'obatala'
-											) }
-											value={ collectionId }
-											options={ collectionOptions }
-											onChange={ ( value ) => {
-												setCollectionId( value );
-												setPage( 1 );
-											} }
-										/>
-										<SelectControl
-											label={ __(
-												'Situation',
-												'obatala'
-											) }
-											value={ status }
-											options={ statusOptions }
-											onChange={ ( value ) => {
-												setStatus( value );
-												setPage( 1 );
-											} }
-										/>
-										{ hasActiveFilters && (
-											<Button
-												variant="link"
-												onClick={ clearFilters }
-											>
-												{ __(
-													'Clear filters',
-													'obatala'
-												) }
-											</Button>
-										) }
-									</div>
+				<Panel>
+					<PanelRow>
+						<div className="container_searchAndSelect">
+							<TextControl
+								label={ __(
+									'Search collection items',
+									'obatala'
 								) }
+								hideLabelFromVision
+								value={ searchInput }
+								onChange={ setSearchInput }
+								placeholder={ __(
+									'Search by title, registration number, or keyword',
+									'obatala'
+								) }
+								type="search"
+							/>
+							<Button
+								variant="tertiary"
+								icon="filter"
+								onClick={ () =>
+									setShowFilters(
+										( value ) => ! value
+									)
+								}
+								aria-expanded={ showFilters }
+							>
+								{ __( 'Filters', 'obatala' ) }
+							</Button>
+						</div>
 
-								{ isLoading ? (
-									<div className="tainacan-items-loading">
-										<Spinner />
-									</div>
-								) : items.length > 0 ? (
-									<>
-										<div className="table-responsive">
-											<table className="wp-list-table widefat striped table-view-list tainacan-items-table">
-												<thead>
-													<tr>
-														<th>
-															{ __(
-																'Item',
-																'obatala'
-															) }
-														</th>
-														<th>
-															{ __(
-																'Registration number',
-																'obatala'
-															) }
-														</th>
-														<th>
-															{ __(
-																'Collection',
-																'obatala'
-															) }
-														</th>
-														<th>
-															{ __(
-																'Situation',
-																'obatala'
-															) }
-														</th>
-														<th>
-															{ __(
-																'Linked processes',
-																'obatala'
-															) }
-														</th>
-														<th>
-															{ __(
-																'Last update',
-																'obatala'
-															) }
-														</th>
-														<th>
-															{ __(
-																'Actions',
-																'obatala'
-															) }
-														</th>
-													</tr>
-												</thead>
-												<tbody>
-													{ items.map( ( item ) => {
-														const statusDetails =
-															getStatusDetails(
-																item.status
-															);
-														const itemDetailsUrl =
-															getTainacanAdminUrl(
-																`/collections/${ item.collection_id }/items/${ item.id }`
-															);
-														const itemEditUrl =
-															getTainacanAdminUrl(
-																`/collections/${ item.collection_id }/items/${ item.id }/edit`
-															);
-
-														return (
-															<tr key={ item.id }>
-																<td>
-																	<div className="tainacan-item-summary">
-																		<div className="tainacan-item-thumbnail">
-																			{ item.thumbnail ? (
-																				<img
-																					src={
-																						item.thumbnail
-																					}
-																					alt={
-																						item.thumbnail_alt ||
-																						''
-																					}
-																				/>
-																			) : (
-																				<Icon icon="archive" />
-																			) }
-																		</div>
-																		<a
-																			href={
-																				itemDetailsUrl
-																			}
-																		>
-																			{ item.title ||
-																				sprintf(
-																					/* translators: %d: Tainacan item ID. */
-																					__(
-																						'Item #%d',
-																						'obatala'
-																					),
-																					item.id
-																				) }
-																		</a>
-																	</div>
-																</td>
-																<td>
-																	{ item.registration_number ||
-																		'-' }
-																</td>
-																<td>
-																	{ item.collection_name ||
-																		'-' }
-																</td>
-																<td>
-																	<span
-																		className={ `badge ${ statusDetails.className }` }
-																	>
-																		{
-																			statusDetails.label
-																		}
-																	</span>
-																</td>
-																<td>
-																	{ renderProcessesLink(
-																		item
-																	) }
-																</td>
-																<td>
-																	<span className="tainacan-item-update">
-																		{ formatDate(
-																			item.modified
-																		) }
-																		{ item.modified_by && (
-																			<small>
-																				{ sprintf(
-																					/* translators: %s: user display name. */
-																					__(
-																						'by %s',
-																						'obatala'
-																					),
-																					item.modified_by
-																				) }
-																			</small>
-																		) }
-																	</span>
-																</td>
-																<td>
-																	<div className="group-button">
-																		<Button
-																			variant="primary"
-																			icon={
-																				info
-																			}
-																			href={
-																				itemDetailsUrl
-																			}
-																		>
-																			{ __(
-																				'View item',
-																				'obatala'
-																			) }
-																		</Button>
-																		{ item.can_edit && (
-																			<Tooltip
-																				text={ __(
-																					'Edit item',
-																					'obatala'
-																				) }
-																			>
-																				<Button
-																					variant="tertiary"
-																					icon={
-																						edit
-																					}
-																					href={
-																						itemEditUrl
-																					}
-																				/>
-																			</Tooltip>
-																		) }
-																		<Tooltip
-																			text={ __(
-																				'View details and history',
-																				'obatala'
-																			) }
-																		>
-																			<Button
-																				variant="tertiary"
-																				icon={
-																					backup
-																				}
-																				href={
-																					itemDetailsUrl
-																				}
-																			/>
-																		</Tooltip>
-																		<Tooltip
-																			text={ __(
-																				'Download item data',
-																				'obatala'
-																			) }
-																		>
-																			<Button
-																				variant="tertiary"
-																				icon={
-																					download
-																				}
-																				onClick={ () =>
-																					handleDownload(
-																						item
-																					)
-																				}
-																				isBusy={
-																					downloadingItemId ===
-																					item.id
-																				}
-																				disabled={
-																					downloadingItemId ===
-																					item.id
-																				}
-																			/>
-																		</Tooltip>
-																		{ item.can_delete && (
-																			<Tooltip
-																				text={ __(
-																					'Delete item',
-																					'obatala'
-																				) }
-																			>
-																				<Button
-																					variant="tertiary"
-																					isDestructive
-																					icon={
-																						trash
-																					}
-																					onClick={ () =>
-																						setItemToDelete(
-																							item
-																						)
-																					}
-																				/>
-																			</Tooltip>
-																		) }
-																	</div>
-																</td>
-															</tr>
-														);
-													} ) }
-												</tbody>
-											</table>
-										</div>
-
-										<div className="pagination">
-											<Button
-												onClick={ () =>
-													setPage(
-														( value ) => value - 1
-													)
-												}
-												disabled={ page <= 1 }
-											>
-												{ __( 'Previous', 'obatala' ) }
-											</Button>
-											<span>
-												{ sprintf(
-													/* translators: 1: current page number, 2: total pages. */
-													__(
-														'Page %1$s of %2$s',
-														'obatala'
-													),
-													page,
-													totalPages || 1
-												) }
-											</span>
-											<Button
-												onClick={ () =>
-													setPage(
-														( value ) => value + 1
-													)
-												}
-												disabled={ page >= totalPages }
-											>
-												{ __( 'Next', 'obatala' ) }
-											</Button>
-										</div>
-									</>
-								) : (
-									<Notice
-										isDismissible={ false }
-										status="info"
+						{ showFilters && (
+							<div className="tainacan-items-filters">
+								<SelectControl
+									label={ __(
+										'Collection',
+										'obatala'
+									) }
+									value={ collectionId }
+									options={ collectionOptions }
+									onChange={ ( value ) => {
+										setCollectionId( value );
+										setPage( 1 );
+									} }
+								/>
+								<SelectControl
+									label={ __(
+										'Situation',
+										'obatala'
+									) }
+									value={ status }
+									options={ statusOptions }
+									onChange={ ( value ) => {
+										setStatus( value );
+										setPage( 1 );
+									} }
+								/>
+								{ hasActiveFilters && (
+									<Button
+										variant="link"
+										onClick={ clearFilters }
 									>
 										{ __(
-											'No collection items found.',
+											'Clear filters',
 											'obatala'
 										) }
-									</Notice>
+									</Button>
 								) }
-							</PanelRow>
-						</Panel>
-					) }
-				</TabPanel>
+							</div>
+						) }
+
+						{ isLoading ? (
+							<div className="tainacan-items-loading">
+								<Spinner />
+							</div>
+						) : items.length > 0 ? (
+							<>
+								<div className="table-responsive">
+									<table className="wp-list-table widefat striped table-view-list tainacan-items-table">
+										<thead>
+											<tr>
+												<th>
+													{ __(
+														'Item',
+														'obatala'
+													) }
+												</th>
+												<th>
+													{ __(
+														'Collection',
+														'obatala'
+													) }
+												</th>
+												<th>
+													{ __(
+														'Situation',
+														'obatala'
+													) }
+												</th>
+												<th>
+													{ __(
+														'Linked processes',
+														'obatala'
+													) }
+												</th>
+												<th>
+													{ __(
+														'Last update',
+														'obatala'
+													) }
+												</th>
+												<th>
+													{ __(
+														'Actions',
+														'obatala'
+													) }
+												</th>
+											</tr>
+										</thead>
+										<tbody>
+											{ items.map( ( item ) => {
+												const statusDetails =
+													getStatusDetails(
+														item.status
+													);
+												const itemDetailsUrl =
+													getTainacanAdminUrl(
+														`/collections/${ item.collection_id }/items/${ item.id }`
+													);
+												const itemEditUrl =
+													getTainacanAdminUrl(
+														`/collections/${ item.collection_id }/items/${ item.id }/edit`
+													);
+
+												return (
+													<tr key={ item.id }>
+														<td>
+															<div className="tainacan-item-summary">
+																<div className="tainacan-item-thumbnail">
+																	{ item.thumbnail ? (
+																		<img
+																			src={
+																				item.thumbnail
+																			}
+																			alt={
+																				item.thumbnail_alt ||
+																				''
+																			}
+																		/>
+																	) : (
+																		<Icon icon="archive" />
+																	) }
+																</div>
+																<a
+																	href={
+																		itemDetailsUrl
+																	}
+																>
+																	{ item.title ||
+																		sprintf(
+																			/* translators: %d: Tainacan item ID. */
+																			__(
+																				'Item #%d',
+																				'obatala'
+																			),
+																			item.id
+																		) }
+																</a>
+															</div>
+														</td>
+														<td>
+															{ item.collection_name ||
+																'-' }
+														</td>
+														<td>
+															<span
+																className={ `badge ${ statusDetails.className }` }
+															>
+																{
+																	statusDetails.label
+																}
+															</span>
+														</td>
+														<td>
+															{ renderProcessesLink(
+																item
+															) }
+														</td>
+														<td>
+															<span className="tainacan-item-update">
+																{ formatDate(
+																	item.modified
+																) }
+																{ item.modified_by && (
+																	<small>
+																		{ sprintf(
+																			/* translators: %s: user display name. */
+																			__(
+																				'by %s',
+																				'obatala'
+																			),
+																			item.modified_by
+																		) }
+																	</small>
+																) }
+															</span>
+														</td>
+														<td>
+															<div className="group-button">
+																<Button
+																	variant="primary"
+																	icon={
+																		info
+																	}
+																	href={
+																		itemDetailsUrl
+																	}
+																>
+																	{ __(
+																		'View item',
+																		'obatala'
+																	) }
+																</Button>
+																<Tooltip
+																	text={ __(
+																		'Download item data',
+																		'obatala'
+																	) }
+																>
+																	<Button
+																		variant="tertiary"
+																		icon={
+																			download
+																		}
+																		onClick={ () =>
+																			handleDownload(
+																				item
+																			)
+																		}
+																		isBusy={
+																			downloadingItemId ===
+																			item.id
+																		}
+																		disabled={
+																			downloadingItemId ===
+																			item.id
+																		}
+																	/>
+																</Tooltip>
+															</div>
+														</td>
+													</tr>
+												);
+											} ) }
+										</tbody>
+									</table>
+								</div>
+
+								<div className="pagination">
+									<Button
+										onClick={ () =>
+											setPage(
+												( value ) => value - 1
+											)
+										}
+										disabled={ page <= 1 }
+									>
+										{ __( 'Previous', 'obatala' ) }
+									</Button>
+									<span>
+										{ sprintf(
+											/* translators: 1: current page number, 2: total pages. */
+											__(
+												'Page %1$s of %2$s',
+												'obatala'
+											),
+											page,
+											totalPages || 1
+										) }
+									</span>
+									<Button
+										onClick={ () =>
+											setPage(
+												( value ) => value + 1
+											)
+										}
+										disabled={ page >= totalPages }
+									>
+										{ __( 'Next', 'obatala' ) }
+									</Button>
+								</div>
+							</>
+						) : (
+							<Notice
+								isDismissible={ false }
+								status="info"
+							>
+								{ __(
+									'No collection items found.',
+									'obatala'
+								) }
+							</Notice>
+						) }
+					</PanelRow>
+				</Panel>
 
 				{ processesItem && (
 					<Modal

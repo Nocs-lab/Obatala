@@ -207,6 +207,9 @@ class ProcessReportPdf {
         $model_name = is_string($process_title_meta) ? $process_title_meta : $title;
         $status = get_post_meta($this->process_id, 'status', true);
         $current_stage = get_post_meta($this->process_id, 'current_stage', true);
+        if ($status === 'Finished') {
+            $current_stage = __('Finished', 'obatala');
+        }
         $group_responsible = get_post_meta($this->process_id, 'groupResponsible', true);
         $access_level = get_post_meta($this->process_id, 'access_level', true);
         if (is_array($access_level)) {
