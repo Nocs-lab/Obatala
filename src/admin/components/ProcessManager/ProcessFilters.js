@@ -14,7 +14,7 @@ const ProcessFilter = ({ accessLevel, setAccessLevel, modelFilter, setModelFilte
     }
 
     return (
-        <>
+        <div className="search-filter-controls">
             <DropdownMenu
                 icon={settings}
                 label={__("Filter", "obatala")}
@@ -60,7 +60,7 @@ const ProcessFilter = ({ accessLevel, setAccessLevel, modelFilter, setModelFilte
                     label={__("Clear", "obatala")}
                 />
             )}
-        </>
+        </div>
     );
 };
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from "@wordpress/api-fetch";
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
 import { Button, Tooltip, Panel, PanelRow, Notice, Modal, TextControl } from '@wordpress/components';
@@ -200,10 +200,12 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
                                 {__('Previous', 'obatala')}
                             </Button>
                             <span>
-                                {__('Page', 'obatala')}{' '}
-                                <strong>
-                                    {pageIndex + 1} of {pageOptions.length}
-                                </strong>{' '}
+                                {sprintf(
+                                    /* translators: 1: current page number, 2: total pages. */
+                                    __('Page %1$s of %2$s', 'obatala'),
+                                    pageIndex + 1,
+                                    pageOptions.length
+                                )}
                             </span>
                             <Button onClick={() => nextPage()} disabled={!canNextPage}>
                                 {__('Next', 'obatala')}

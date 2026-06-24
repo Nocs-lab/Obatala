@@ -8,7 +8,6 @@ import {
 	Notice,
 	Panel,
 	PanelRow,
-	SelectControl,
 	Spinner,
 	TabPanel,
 	TextControl,
@@ -19,6 +18,7 @@ import { backup, download, edit, info, plus, trash } from '@wordpress/icons';
 import { __, sprintf } from '@wordpress/i18n';
 import BrandFooter from '../BrandFooter';
 import BrandHeader from '../BrandHeader';
+import TainacanItemsFilters from './TainacanItemsFilters';
 import {
 	deleteTainacanItem,
 	fetchTainacanItemById,
@@ -78,7 +78,6 @@ const TainacanItemsPage = () => {
 	const [ search, setSearch ] = useState( '' );
 	const [ collectionId, setCollectionId ] = useState( '' );
 	const [ status, setStatus ] = useState( '' );
-	const [ showFilters, setShowFilters ] = useState( false );
 	const [ isLoading, setIsLoading ] = useState( true );
 	const [ downloadingItemId, setDownloadingItemId ] = useState( null );
 	const [ processesItem, setProcessesItem ] = useState( null );
@@ -132,17 +131,6 @@ const TainacanItemsPage = () => {
 		return () => window.clearTimeout( timer );
 	}, [ searchInput ] );
 
-	const collectionOptions = useMemo(
-		() => [
-			{ label: __( 'All collections', 'obatala' ), value: '' },
-			...collections.map( ( collection ) => ( {
-				label: collection.name,
-				value: String( collection.id ),
-			} ) ),
-		],
-		[ collections ]
-	);
-
 	const statusOptions = useMemo(
 		() => [
 			{ label: __( 'All situations', 'obatala' ), value: '' },
@@ -154,11 +142,7 @@ const TainacanItemsPage = () => {
 		[]
 	);
 
-	const hasActiveFilters = collectionId !== '' || status !== '';
-
-	const clearFilters = () => {
-		setCollectionId( '' );
-		setStatus( '' );
+	const handleFilterChange = () => {
 		setPage( 1 );
 	};
 
@@ -272,6 +256,7 @@ const TainacanItemsPage = () => {
 					<PanelRow>
 						<div className="container_searchAndSelect">
 							<TextControl
+								className="mb-1"
 								label={ __(
 									'Search collection items',
 									'obatala'
@@ -285,59 +270,16 @@ const TainacanItemsPage = () => {
 								) }
 								type="search"
 							/>
-							<Button
-								variant="tertiary"
-								icon="filter"
-								onClick={ () =>
-									setShowFilters(
-										( value ) => ! value
-									)
-								}
-								aria-expanded={ showFilters }
-							>
-								{ __( 'Filters', 'obatala' ) }
-							</Button>
+							<TainacanItemsFilters
+								collectionId={ collectionId }
+								setCollectionId={ setCollectionId }
+								status={ status }
+								setStatus={ setStatus }
+								collections={ collections }
+								statusOptions={ statusOptions }
+								onFilterChange={ handleFilterChange }
+							/>
 						</div>
-
-						{ showFilters && (
-							<div className="tainacan-items-filters">
-								<SelectControl
-									label={ __(
-										'Collection',
-										'obatala'
-									) }
-									value={ collectionId }
-									options={ collectionOptions }
-									onChange={ ( value ) => {
-										setCollectionId( value );
-										setPage( 1 );
-									} }
-								/>
-								<SelectControl
-									label={ __(
-										'Situation',
-										'obatala'
-									) }
-									value={ status }
-									options={ statusOptions }
-									onChange={ ( value ) => {
-										setStatus( value );
-										setPage( 1 );
-									} }
-								/>
-								{ hasActiveFilters && (
-									<Button
-										variant="link"
-										onClick={ clearFilters }
-									>
-										{ __(
-											'Clear filters',
-											'obatala'
-										) }
-									</Button>
-								) }
-							</div>
-						) }
 
 						{ isLoading ? (
 							<div className="tainacan-items-loading">

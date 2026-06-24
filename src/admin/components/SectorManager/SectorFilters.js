@@ -19,7 +19,7 @@ const SectorFilter = ({ status, setStatus, group, setGroup }) => {
   }
 
   return (
-      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+      <div className="search-filter-controls">
           <DropdownMenu
               icon={settings}
               label={__('Filter', 'obatala')}

@@ -1814,8 +1814,41 @@ button .components-spinner {
   display: flex;
   justify-content: center;
   align-items: flex-start;
+  gap: 0.5rem;
   margin-top: 1rem;
   width: 100%;
+}
+
+.container_searchAndSelect .components-base-control {
+  flex: 1;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.container_searchAndSelect .components-base-control__field {
+  margin-bottom: 0;
+}
+
+.container_searchAndSelect .search-filter-controls {
+  align-items: stretch;
+  display: flex;
+  flex-shrink: 0;
+  gap: 8px;
+  height: 38px;
+  margin-top: 0;
+  padding: 0;
+  align-self: flex-start;
+}
+
+.container_searchAndSelect .search-filter-controls > .components-dropdown,
+.container_searchAndSelect .search-filter-controls > .components-dropdown-menu,
+.container_searchAndSelect .search-filter-controls > .components-button,
+.container_searchAndSelect .components-dropdown-menu__toggle,
+.container_searchAndSelect .search-filter-controls .components-button {
+  align-items: center;
+  display: inline-flex;
+  height: 38px;
+  min-height: 38px;
 }
 
 .container_searchAndSelect .components-button {
