@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
 import { Button, Tooltip, Panel, PanelRow, Notice, TextControl } from '@wordpress/components';
 import { backup, edit, info, download, trash } from '@wordpress/icons';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import ProcessFilter from './ProcessFilters';
 import apiFetch from '@wordpress/api-fetch';
 import { decodeEntities } from '@wordpress/html-entities';
@@ -384,10 +384,12 @@ const ProcessList = ({ processes, onEdit, onViewProcess, onDelete, processTypeMa
                                 {__("Previous", "obatala")}
                             </Button>
                             <span>
-                                {__("Page", "obatala")}{' '}
-                                <strong>
-                                    {pageIndex + 1} of {pageOptions.length}
-                                </strong>{' '}
+                                {sprintf(
+                                    /* translators: 1: current page number, 2: total pages. */
+                                    __('Page %1$s of %2$s', 'obatala'),
+                                    pageIndex + 1,
+                                    pageOptions.length
+                                )}
                             </span>
                             <Button onClick={() => nextPage()} disabled={!canNextPage}>
                                 {__("Next", "obatala")}
