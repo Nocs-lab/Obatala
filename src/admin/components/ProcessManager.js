@@ -418,7 +418,6 @@ const ProcessManager = ({ onSelectProcess }) => {
                         {onSelectProcess(selectedProcessId)}
                     </div>
                 )}
-
             </main>
             <BrandFooter />
         </>

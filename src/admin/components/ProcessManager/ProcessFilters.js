@@ -28,11 +28,12 @@ const ProcessFilter = ({ accessLevel, setAccessLevel, modelFilter, setModelFilte
                 text={__("Filters", "obatala")}
             >
                 {({ onClose }) => (
-                    <div style={{ display: "flex", gap: "16px" }}>
+                    <div className="search-filter-controls-popover">
                         <MenuGroup label={__("Access Level", "obatala")}>
                             {optionsLevel.map(option => (
                                 <MenuItem
                                     key={option.value}
+                                    className={option.value === accessLevel ? 'active' : undefined}
                                     onClick={() => {
                                         setAccessLevel(option.value);
                                         onClose();
@@ -47,6 +48,7 @@ const ProcessFilter = ({ accessLevel, setAccessLevel, modelFilter, setModelFilte
                             {processTypes.map(option => (
                                 <MenuItem
                                     key={option.id}
+                                    className={option.id === modelFilter ? 'active' : undefined}
                                     onClick={() => {
                                         setModelFilter(option.id);
                                         onClose();
@@ -61,6 +63,7 @@ const ProcessFilter = ({ accessLevel, setAccessLevel, modelFilter, setModelFilte
                             {optionsProgress.map(option => (
                                 <MenuItem
                                     key={option.value}
+                                    className={option.value === progressFilter ? 'active' : undefined}
                                     onClick={() => {
                                         setProgressFilter(option.value);
                                         onClose();

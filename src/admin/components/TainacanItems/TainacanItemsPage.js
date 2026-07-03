@@ -505,7 +505,7 @@ const TainacanItemsPage = () => {
 						) : (
 							<Notice
 								isDismissible={ false }
-								status="info"
+								status="warning"
 							>
 								{ __(
 									'No collection items found.',

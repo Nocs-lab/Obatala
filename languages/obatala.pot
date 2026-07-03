@@ -170,6 +170,9 @@ msgstr ""
 msgid "Search Process Types"
 msgstr ""
 
+msgid "All groups"
+msgstr ""
+
 #: classes/Entities/ProcessCollection.php:58
 msgid "All Process Types"
 msgstr ""

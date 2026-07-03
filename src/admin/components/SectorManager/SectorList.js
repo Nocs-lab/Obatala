@@ -153,8 +153,6 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
                     <SectorFilter
                         status={status}
                         setStatus={setStatus}
-                        group={group}
-                        setGroup={setGroup} 
                     />
                 </div>
                 {sectors.length > 0 ? (

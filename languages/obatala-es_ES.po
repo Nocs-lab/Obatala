@@ -610,8 +610,11 @@ msgstr "Inactivo"
 msgid "All"
 msgstr "Todos"
 
-msgid "My Groups"
-msgstr "Mis Grupos"
+msgid "All groups"
+msgstr "Todos los grupos"
+
+msgid "My groups"
+msgstr "Mis grupos"
 
 msgid "Created at"
 msgstr "Creado el"

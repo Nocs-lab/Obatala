@@ -6,6 +6,7 @@ import {
     Notice,
     Modal,
     Icon,
+    TabPanel,
     __experimentalConfirmDialog as ConfirmDialog 
 } from '@wordpress/components';
 import { plus } from "@wordpress/icons";
@@ -183,15 +184,27 @@ const SectorManager = () => {
                     Are you sure you want to delete group {state.sector?.name}?
                 </ConfirmDialog>
 
-                <SectorList sectors={filteredSectors}
-                    onEdit={handleEdit}
-                    onDelete={handleConfirmDelete}
-                    status={status}
-                    setStatus={setStatus}
-                    group={group}
-                    setGroup={setGroup}
-                    loadSectorsUsers={loadSectorsUsers}
-                />
+                <TabPanel
+                    activeClass="active-tab"
+                    onSelect={(tabName) => setGroup(tabName === 'all' ? '' : 'my groups')}
+                    initialTabName={group === 'my groups' ? 'my' : 'all'}
+                    tabs={[
+                        { name: 'all', title: __('All groups', 'obatala'), className: group === '' ? 'is-active' : '' },
+                        { name: 'my', title: __('My groups', 'obatala'), className: group === 'my groups' ? 'is-active' : '' },
+                    ]}
+                >
+                    {({ tab }) => (
+                        <SectorList sectors={filteredSectors}
+                            onEdit={handleEdit}
+                            onDelete={handleConfirmDelete}
+                            status={status}
+                            setStatus={setStatus}
+                            group={group}
+                            setGroup={setGroup}
+                            loadSectorsUsers={loadSectorsUsers}
+                        />
+                    )}
+                </TabPanel>
 
                 {/* Open modal to editing Sector */}
                 {editingSector && (

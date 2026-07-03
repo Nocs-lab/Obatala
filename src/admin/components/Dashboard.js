@@ -338,6 +338,15 @@ const DashboardPage = () => {
 		const processStatus = process.meta?.status?.[ 0 ];
 		const currentStageRef = process.meta?.current_stage?.[ 0 ];
 
+		try {
+			const details = getProcessDetails( process );
+			if ( details.percentage >= 100 ) {
+				return false;
+			}
+		} catch ( e ) {
+
+		}
+
 		if ( processStatus === 'Finished' ) {
 			return false;
 		}
