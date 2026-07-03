@@ -8,41 +8,42 @@ const ProcessTypeFilter = ({ status, setStatus }) => {
         { title: __('Inactive', 'obatala'), value: 'Inactive' },
     ];
 
-  return (
-      <div className="search-filter-controls">
-          <DropdownMenu
-              icon={settings}
-              label={__('Filter', 'obatala')}
-              text={status ? sprintf(__('Status: %s', 'obatala'), status) : __('Filters', 'obatala')}
-          >
-              {({ onClose }) => (
-                  <>
-                      <MenuGroup label={__('Status', 'obatala')}>
-                          {options.map(option => (
-                              <MenuItem
-                                  key={option.value}
-                                  onClick={() => {
-                                      setStatus(option.value);
-                                      onClose();
-                                  }}
-                              >
-                                  {option.title}
-                              </MenuItem>
-                          ))}
-                      </MenuGroup>
-                  </>
-              )}
-          </DropdownMenu>
+    return (
+        <div className="search-filter-controls">
+            <DropdownMenu
+                icon={settings}
+                label={__('Filter', 'obatala')}
+                text={status ? sprintf(__('Status: %s', 'obatala'), status) : __('Filters', 'obatala')}
+            >
+                {({ onClose }) => (
+                    <div className="search-filter-controls-popover">
+                        <MenuGroup label={__('Status', 'obatala')}>
+                            {options.map(option => (
+                                <MenuItem
+                                    key={option.value}
+                                    className={option.value === status ? 'active' : undefined}
+                                    onClick={() => {
+                                        setStatus(option.value);
+                                        onClose();
+                                    }}
+                                >
+                                    {option.title}
+                                </MenuItem>
+                            ))}
+                        </MenuGroup>
+                    </div>
+                )}
+            </DropdownMenu>
 
-          {status && (
-              <Button
-                  icon={close}
-                  onClick={() => setStatus("")}
-                  label={__('Clear', 'obatala')}
-              />
-          )}
-      </div>
-  );
+            {status && (
+                <Button
+                    icon={close}
+                    onClick={() => setStatus("")}
+                    label={__('Clear', 'obatala')}
+                />
+            )}
+        </div>
+    );
 };
 
 export default ProcessTypeFilter;

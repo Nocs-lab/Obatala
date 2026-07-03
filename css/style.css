@@ -1851,6 +1851,29 @@ button .components-spinner {
   min-height: 38px;
 }
 
+.search-filter-controls-popover {
+  display: flex;
+  gap: 1.5rem;
+  .components-menu-group__label {
+    border-bottom: 1px solid var(--gray-300);
+    font-size: .9rem;
+    font-weight: 600;
+    margin-bottom: .5rem;
+    padding-bottom: .5rem;
+    text-transform: none;
+  }
+  .components-button.components-menu-item__button {
+    color: var(--primary);
+    &:focus:not(:active) {
+      box-shadow: 0 0 0;
+    }
+    &.active {
+      border: 1px solid var(--success);
+      color: var(--success);
+    }
+  }
+}
+
 .container_searchAndSelect .components-button {
   color: var(--primary-700);
 }

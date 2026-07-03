@@ -27,27 +27,29 @@ const TainacanItemsFilters = ( {
 				text={ __( 'Filters', 'obatala' ) }
 			>
 				{ ( { onClose } ) => (
-					<div style={ { display: 'flex', gap: '16px' } }>
+					<div className="search-filter-controls-popover">
 						<MenuGroup label={ __( 'Collection', 'obatala' ) }>
-							<MenuItem
-								onClick={ () => {
-									setCollectionId( '' );
-									onFilterChange?.();
-									onClose();
-								} }
-							>
-								{ __( 'All collections', 'obatala' ) }
-							</MenuItem>
-							{ collections.map( ( collection ) => (
 								<MenuItem
-									key={ collection.id }
+									className={ collectionId === '' ? 'active' : undefined }
 									onClick={ () => {
-										setCollectionId(
-											String( collection.id )
-										);
+										setCollectionId( '' );
 										onFilterChange?.();
 										onClose();
 									} }
+								>
+									{ __( 'All collections', 'obatala' ) }
+								</MenuItem>
+							{ collections.map( ( collection ) => (
+								<MenuItem
+									key={ collection.id }
+										className={ String( collection.id ) === collectionId ? 'active' : undefined }
+										onClick={ () => {
+											setCollectionId(
+												String( collection.id )
+											);
+											onFilterChange?.();
+											onClose();
+										} }
 								>
 									{ collection.name }
 								</MenuItem>
@@ -56,6 +58,7 @@ const TainacanItemsFilters = ( {
 
 						<MenuGroup label={ __( 'Situation', 'obatala' ) }>
 							<MenuItem
+								className={ status === '' ? 'active' : undefined }
 								onClick={ () => {
 									setStatus( '' );
 									onFilterChange?.();
@@ -69,6 +72,7 @@ const TainacanItemsFilters = ( {
 								.map( ( option ) => (
 									<MenuItem
 										key={ option.value }
+										className={ option.value === status ? 'active' : undefined }
 										onClick={ () => {
 											setStatus( option.value );
 											onFilterChange?.();

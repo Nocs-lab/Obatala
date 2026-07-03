@@ -431,7 +431,7 @@ msgid "Not started"
 msgstr "No iniciado"
 
 msgid "Progress"
-msgstr "Progresso"
+msgstr "Progreso"
 
 msgid "View process"
 msgstr "Ver processo"
@@ -610,8 +610,11 @@ msgstr "Inactivo"
 msgid "All"
 msgstr "Todos"
 
-msgid "My Groups"
-msgstr "Mis Grupos"
+msgid "All groups"
+msgstr "Todos los grupos"
+
+msgid "My groups"
+msgstr "Mis grupos"
 
 msgid "Created at"
 msgstr "Creado el"
@@ -1340,3 +1343,6 @@ msgstr "¿Está seguro de que desea eliminar el ítem %s?"
 
 msgid "Finished"
 msgstr "Finalizado"
+
+msgid "In progress"
+msgstr "En progreso"

@@ -2,15 +2,22 @@ import { Button, DropdownMenu, MenuGroup, MenuItem } from '@wordpress/components
 import { close, settings } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
 
-const ProcessFilter = ({ accessLevel, setAccessLevel, modelFilter, setModelFilter, processTypes }) => {
+const ProcessFilter = ({ accessLevel, setAccessLevel, modelFilter, setModelFilter, processTypes, progressFilter, setProgressFilter }) => {
     const optionsLevel = [
         { title: __("Restricted", "obatala"), value: "Restricted" },
         { title: __("Not Restricted", "obatala"), value: "Not restricted" },
     ];
 
+    const optionsProgress = [
+        { title: __("Not started", "obatala"), value: "not_started" },
+        { title: __("In progress", "obatala"), value: "in_progress" },
+        { title: __("Finished", "obatala"), value: "finished" },
+    ];
+
     const handleClearFilters = () => {
         setAccessLevel('');
         setModelFilter('');
+        setProgressFilter('');
     }
 
     return (
@@ -21,11 +28,12 @@ const ProcessFilter = ({ accessLevel, setAccessLevel, modelFilter, setModelFilte
                 text={__("Filters", "obatala")}
             >
                 {({ onClose }) => (
-                    <div style={{ display: "flex", gap: "16px" }}>
+                    <div className="search-filter-controls-popover">
                         <MenuGroup label={__("Access Level", "obatala")}>
                             {optionsLevel.map(option => (
                                 <MenuItem
                                     key={option.value}
+                                    className={option.value === accessLevel ? 'active' : undefined}
                                     onClick={() => {
                                         setAccessLevel(option.value);
                                         onClose();
@@ -40,6 +48,7 @@ const ProcessFilter = ({ accessLevel, setAccessLevel, modelFilter, setModelFilte
                             {processTypes.map(option => (
                                 <MenuItem
                                     key={option.id}
+                                    className={option.id === modelFilter ? 'active' : undefined}
                                     onClick={() => {
                                         setModelFilter(option.id);
                                         onClose();
@@ -49,11 +58,26 @@ const ProcessFilter = ({ accessLevel, setAccessLevel, modelFilter, setModelFilte
                                 </MenuItem>
                               ))}
                         </MenuGroup> 
+
+                        <MenuGroup label={__("Progress", "obatala")}>
+                            {optionsProgress.map(option => (
+                                <MenuItem
+                                    key={option.value}
+                                    className={option.value === progressFilter ? 'active' : undefined}
+                                    onClick={() => {
+                                        setProgressFilter(option.value);
+                                        onClose();
+                                    }}
+                                >
+                                    {option.title}
+                                </MenuItem>
+                            ))}
+                        </MenuGroup>
                     </div>
                 )}
             </DropdownMenu>
 
-            {(accessLevel || modelFilter) && (
+            {(accessLevel || modelFilter || progressFilter) && (
                 <Button
                     icon={close}
                     onClick={() => handleClearFilters()}

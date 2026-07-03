@@ -170,6 +170,9 @@ msgstr ""
 msgid "Search Process Types"
 msgstr ""
 
+msgid "All groups"
+msgstr ""
+
 #: classes/Entities/ProcessCollection.php:58
 msgid "All Process Types"
 msgstr ""
@@ -672,4 +675,7 @@ msgid "Error uploading file for field %s."
 msgstr ""
 
 msgid "Finished"
+msgstr ""
+
+msgid "In progress"
 msgstr ""

@@ -607,8 +607,11 @@ msgstr "Inativo"
 msgid "All"
 msgstr "Todos"
 
-msgid "My Groups"
-msgstr "Meus Grupos"
+msgid "All groups"
+msgstr "Todos os grupos"
+
+msgid "My groups"
+msgstr "Meus grupos"
 
 msgid "Created at"
 msgstr "Criado em"
@@ -1414,3 +1417,6 @@ msgstr "Tem certeza que deseja excluir o item %s?"
 
 msgid "Finished"
 msgstr "Finalizado"
+
+msgid "In progress"
+msgstr "Em progresso"
