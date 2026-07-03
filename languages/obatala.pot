@@ -673,3 +673,6 @@ msgstr ""
 
 msgid "Finished"
 msgstr ""
+
+msgid "In progress"
+msgstr ""

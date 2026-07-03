@@ -59,6 +59,9 @@ const ProcessManager = ({ onSelectProcess }) => {
     const [activeTab, setActiveTab] = useState('all');
     const [processToDelete, setProcessToDelete] = useState(null);
     const [isDeletingProcess, setIsDeletingProcess] = useState(false);
+    const [progressMap, setProgressMap] = useState({});
+    const [fetchedProcessIds, setFetchedProcessIds] = useState(new Set());
+    const [progressFilter, setProgressFilter] = useState('');
 
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
 
@@ -70,6 +73,36 @@ const ProcessManager = ({ onSelectProcess }) => {
     useEffect(() => {
         fetchProcessesUser();
     }, [currentUser])
+
+    useEffect(() => {
+        processes.forEach((process) => {
+            const processId = process.id;
+            if (!fetchedProcessIds.has(processId)) {
+                setFetchedProcessIds((prev) => {
+                    const newSet = new Set(prev);
+                    newSet.add(processId);
+                    return newSet;
+                });
+                apiFetch({
+                    path: `/obatala/v1/process_obatala/${processId}/node`,
+                    method: 'GET',
+                })
+                .then((response) => {
+                    setProgressMap((prev) => ({
+                        ...prev,
+                        [processId]: response.progress,
+                    }));
+                })
+                .catch((error) => {
+                    console.error('Erro ao buscar progresso do processo:', error);
+                    setProgressMap((prev) => ({
+                        ...prev,
+                        [processId]: 0,
+                    }));
+                });
+            }
+        });
+    }, [processes, fetchedProcessIds]);
 
 
     const fetchProcessModels = () => {
@@ -166,6 +199,12 @@ const ProcessManager = ({ onSelectProcess }) => {
             setAddingProcess(null);
         }
 
+        setFetchedProcessIds((prev) => {
+            const newSet = new Set(prev);
+            newSet.delete(newProcess.id);
+            return newSet;
+        });
+
         setNotice({ status: 'success', message: __('Process saved successfully.', 'obatala') });
 
         setProcessTypeMappings((prev) => {
@@ -248,10 +287,25 @@ const ProcessManager = ({ onSelectProcess }) => {
                 const matchesProcessType = !modelFilter ||
                     process?.meta?.process_type?.[0]?.includes(modelFilter.toString());
 
-                return matchesAccessLevel && matchesProcessType;
+                if (!matchesAccessLevel || !matchesProcessType) {
+                    return false;
+                }
+
+                const progress = progressMap[process.id];
+                if (progressFilter === 'not_started') {
+                    return progress === 0;
+                }
+                if (progressFilter === 'in_progress') {
+                    return progress > 0 && progress < 100;
+                }
+                if (progressFilter === 'finished') {
+                    return progress === 100;
+                }
+
+                return true;
             })
         );
-    }, [accessLevel, modelFilter, processes, filteredUserProcesses, activeTab]);
+    }, [accessLevel, modelFilter, processes, filteredUserProcesses, activeTab, progressMap, progressFilter]);
 
     if (isLoadingProcesses) {
         return <Spinner />;
@@ -314,6 +368,9 @@ const ProcessManager = ({ onSelectProcess }) => {
                         {({ tab }) => (
                             <ProcessList
                                 processes={filteredProcess}
+                                progressMap={progressMap}
+                                progressFilter={progressFilter}
+                                setProgressFilter={setProgressFilter}
                                 loading={isLoadingProcesses || (activeTab === 'my' && isLoadingUserProcesses)}
                                 onEdit={handleEditProcess}
                                 onViewProcess={handleSelectProcess}

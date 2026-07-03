@@ -83,41 +83,9 @@ const isPdfReportAvailable =
     window.obatalaApp &&
     Boolean(window.obatalaApp.pdf_report_available);
 
-const ProcessList = ({ processes, onEdit, onViewProcess, onDelete, processTypeMappings, processTypes, accessLevel, setAccessLevel, modelFilter, setModelFilter }) => {
+const ProcessList = ({ processes, progressMap, progressFilter, setProgressFilter, onEdit, onViewProcess, onDelete, processTypeMappings, processTypes, accessLevel, setAccessLevel, modelFilter, setModelFilter }) => {
     const [pdfLoadingId, setPdfLoadingId] = useState(null);
     const [pdfError, setPdfError] = useState(null);
-    const [progressMap, setProgressMap] = useState({});
-    const [fetchedProcessIds, setFetchedProcessIds] = useState(new Set());
-
-    useEffect(() => {
-        processes.forEach((process) => {
-            const processId = process.id;
-            if (!fetchedProcessIds.has(processId)) {
-                setFetchedProcessIds((prev) => {
-                    const newSet = new Set(prev);
-                    newSet.add(processId);
-                    return newSet;
-                });
-                apiFetch({
-                    path: `/obatala/v1/process_obatala/${processId}/node`,
-                    method: 'GET',
-                })
-                .then((response) => {
-                    setProgressMap((prev) => ({
-                        ...prev,
-                        [processId]: response.progress,
-                    }));
-                })
-                .catch((error) => {
-                    console.error('Erro ao buscar progresso do processo:', error);
-                    setProgressMap((prev) => ({
-                        ...prev,
-                        [processId]: 0,
-                    }));
-                });
-            }
-        });
-    }, [processes, fetchedProcessIds]);
 
     const handlePdfDownload = useCallback(async (processId) => {
         setPdfError(null);
@@ -329,6 +297,8 @@ const ProcessList = ({ processes, onEdit, onViewProcess, onDelete, processTypeMa
                         modelFilter={modelFilter}
                         setModelFilter={setModelFilter}
                         processTypes={processTypes}
+                        progressFilter={progressFilter}
+                        setProgressFilter={setProgressFilter}
                     />
                 </div>
                 {processes.length > 0 ? (

@@ -431,7 +431,7 @@ msgid "Not started"
 msgstr "No iniciado"
 
 msgid "Progress"
-msgstr "Progresso"
+msgstr "Progreso"
 
 msgid "View process"
 msgstr "Ver processo"
@@ -1340,3 +1340,6 @@ msgstr "¿Está seguro de que desea eliminar el ítem %s?"
 
 msgid "Finished"
 msgstr "Finalizado"
+
+msgid "In progress"
+msgstr "En progreso"

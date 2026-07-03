@@ -1414,3 +1414,6 @@ msgstr "Tem certeza que deseja excluir o item %s?"
 
 msgid "Finished"
 msgstr "Finalizado"
+
+msgid "In progress"
+msgstr "Em progresso"
