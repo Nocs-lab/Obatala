@@ -28,6 +28,7 @@ function createZip() {
   archive.directory('build/', 'build');
   archive.directory('classes/', 'classes');
   archive.directory('css/', 'css');
+  archive.directory('images/', 'images');
   archive.directory('languages/', 'languages');
   archive.directory('vendor/', 'vendor');
   archive.file('obatala.php', { name: 'obatala.php' });
