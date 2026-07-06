@@ -1,20 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { DropdownMenu, Icon } from '@wordpress/components';
 import { __ } from '@wordpress/i18n';
 
 const BrandHeader = () => {
-    const [wpSiteName, setWpSiteName] = useState('');
     const [menuOpen, setMenuOpen] = useState(false);
-
-    useEffect(() => {
-        fetch('/wp-json')
-            .then(response => response.json())
-            .then(data => {
-                if (data.name) {
-                    setWpSiteName(data.name);
-                }
-            });
-    }, []);
 
     return (
         <header>
@@ -22,8 +11,7 @@ const BrandHeader = () => {
             <nav id="mainNav" className={menuOpen ? 'active' : ''}>
                 <a href={obatalaApp.admin_url + "admin.php?page=obatala-main"}  className="menu-brand">
                     <h1>
-                        <strong>Obatala</strong>
-                        <small>{wpSiteName && `${wpSiteName}`}</small>
+                        <strong>Tainacan Gestão</strong>
                     </h1>
                 </a>
                 <a href={obatalaApp.admin_url + "admin.php?page=obatala-main"} className="menu-link"><Icon icon="admin-home" /> {__('Dashboard', 'obatala')}</a>
