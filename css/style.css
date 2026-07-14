@@ -1119,7 +1119,7 @@ form .action-bar {
     border: 1px solid var(--secondary-400);
     border-radius: var(--border-radius);
     margin-left: 4rem;
-    padding: 2rem;
+    padding: 1rem;
     position: relative;
     width: calc(100% - 4rem);
     &::before {
@@ -1373,6 +1373,13 @@ button .components-spinner {
     &:last-child {
       border-bottom: 0 none;
     }
+  }
+}
+.react-select-2-input-container {
+  input[type="text"] {
+    grid-area: 1 / 3 !important;
+    min-height: 20px;
+    padding: 0 .25rem !important;
   }
 }
 #obatala-manage-processes {

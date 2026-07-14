@@ -1713,7 +1713,7 @@ const MappersManager = () => {
                                 <div className="counter-container flex-basis-100">
                                     <hr className="mb-2" />
                                     {showProfileSelectorSection && (
-                                        <BaseControl
+                                        <BaseControl className="counter-item"
                                             label="Seleção de Coleção no Início do Processo"
                                             help="Escolha o field da etapa inicial que receberá automaticamente as opções de coleção."
                                         >
@@ -1755,7 +1755,7 @@ const MappersManager = () => {
                                             })}
                                         </div>
 
-                                        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '6px' }}>
+                                        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }} className="mt-1">
                                             {selectedProfiles.map((profile, index) => {
                                                 const displayName = getCollectionLabel(
                                                     profile.collection_id,
@@ -1825,6 +1825,7 @@ const MappersManager = () => {
                                             onChange={handleSelectedStepsChange}
                                             isDisabled={!currentProfile}
                                             placeholder="Selecione os campos..."
+                                            className="react-select-2-input-container"
                                         />
                                     </BaseControl>
 
