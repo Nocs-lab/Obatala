@@ -2,6 +2,7 @@
 
 namespace Obatala\Api;
 
+use Obatala\Entities\Process;
 use Obatala\Services\ProcessNumberService;
 use WP_Error;
 use WP_REST_Response;
@@ -12,6 +13,18 @@ class TainacanItemsApi extends ObatalaAPI {
     private const PROCESS_REFERENCE_METADATA_MARKER_META_KEY = '_obatala_process_reference_metadata';
 
     public function register_routes() {
+        $this->add_route('tainacan/items/(?P<id>\d+)', [
+            'methods' => WP_REST_Server::READABLE,
+            'callback' => [$this, 'get_item'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'args' => [
+                'id' => [
+                    'required' => true,
+                    'sanitize_callback' => 'absint',
+                ],
+            ],
+        ]);
+
         $this->add_route('tainacan/items', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'get_items'],
@@ -126,7 +139,51 @@ class TainacanItemsApi extends ObatalaAPI {
         ], 200);
     }
 
-    private function prepare_item($item) {
+    public function get_item($request) {
+        if (
+            !class_exists('\\Tainacan\\Repositories\\Item_Metadata')
+            || !class_exists('\\Tainacan\\Entities\\Item')
+        ) {
+            return new WP_Error(
+                'obatala_tainacan_unavailable',
+                __('Tainacan is not available.', 'obatala'),
+                ['status' => 503]
+            );
+        }
+
+        $item_id = (int) $request->get_param('id');
+        $post = $item_id > 0 ? get_post($item_id) : null;
+
+        if (!$post instanceof \WP_Post) {
+            return new WP_Error(
+                'obatala_tainacan_item_not_found',
+                __('Item not found.', 'obatala'),
+                ['status' => 404]
+            );
+        }
+
+        try {
+            $item = new \Tainacan\Entities\Item($post);
+        } catch (\Throwable $error) {
+            return new WP_Error(
+                'obatala_tainacan_item_invalid',
+                __('Unable to load item data.', 'obatala'),
+                ['status' => 500]
+            );
+        }
+
+        if (!$item->can_read()) {
+            return new WP_Error(
+                'obatala_tainacan_item_forbidden',
+                __('You do not have permission to view this item.', 'obatala'),
+                ['status' => 403]
+            );
+        }
+
+        return new WP_REST_Response($this->prepare_item($item, true), 200);
+    }
+
+    private function prepare_item($item, $include_details = false) {
         $item_id = (int) $item->get_id();
         $collection = $item->get_collection();
         $collection_id = $collection instanceof \Tainacan\Entities\Collection
@@ -136,7 +193,7 @@ class TainacanItemsApi extends ObatalaAPI {
             ? (string) $collection->get_name()
             : '';
 
-        $metadata = $this->extract_item_metadata($item);
+        $metadata = $this->extract_item_metadata($item, $include_details);
         $thumbnail = $this->get_thumbnail_url($item);
         $last_editor_id = (int) get_post_meta($item_id, '_edit_last', true);
         $last_editor = $last_editor_id > 0 ? get_userdata($last_editor_id) : null;
@@ -151,23 +208,28 @@ class TainacanItemsApi extends ObatalaAPI {
             'thumbnail' => $thumbnail,
             'thumbnail_alt' => (string) get_post_meta((int) $item->get__thumbnail_id(), '_wp_attachment_image_alt', true),
             'registration_number' => $metadata['registration_number'],
+            'description' => $include_details ? $this->decode_text((string) $item->get_description()) : '',
             'collection_id' => $collection_id,
             'collection_name' => $this->decode_text($collection_name),
             'status' => (string) $item->get_status(),
             'author_id' => (int) $item->get_author_id(),
             'author_name' => (string) $item->get_author_name(),
+            'created' => (string) get_post_time('c', false, $item_id),
             'modified' => (string) get_post_modified_time('c', false, $item_id),
             'modified_by' => (string) $modified_by,
             'processes' => $metadata['processes'],
+            'process_summary' => $this->summarize_processes($metadata['processes']),
+            'metadata' => $include_details ? $metadata['fields'] : [],
             'can_edit' => (bool) $item->can_edit(),
             'can_delete' => (bool) $item->can_delete(),
         ];
     }
 
-    private function extract_item_metadata($item) {
+    private function extract_item_metadata($item, $include_fields = false) {
         $registration_number = '';
         $registration_score = 0;
         $processes = [];
+        $fields = [];
         $item_metadata_repository = \Tainacan\Repositories\Item_Metadata::get_instance();
 
         try {
@@ -183,6 +245,8 @@ class TainacanItemsApi extends ObatalaAPI {
                     continue;
                 }
 
+                $value = trim((string) $item_metadata->get_value_as_string());
+
                 if ($this->is_process_reference_metadatum($metadatum)) {
                     $processes = array_merge(
                         $processes,
@@ -191,12 +255,20 @@ class TainacanItemsApi extends ObatalaAPI {
                     continue;
                 }
 
+                if ($include_fields && $value !== '') {
+                    $fields[] = [
+                        'id' => (int) $metadatum->get_id(),
+                        'name' => $this->decode_text((string) $metadatum->get_name()),
+                        'slug' => sanitize_title((string) $metadatum->get_slug()),
+                        'value' => $this->decode_text($value),
+                    ];
+                }
+
                 $score = $this->get_registration_metadatum_score($metadatum);
                 if ($score <= $registration_score) {
                     continue;
                 }
 
-                $value = trim((string) $item_metadata->get_value_as_string());
                 if ($value !== '') {
                     $registration_number = $this->decode_text($value);
                     $registration_score = $score;
@@ -206,16 +278,28 @@ class TainacanItemsApi extends ObatalaAPI {
             }
         }
 
-        $processes_by_url = [];
+        $processes_by_key = [];
         foreach ($processes as $process) {
-            if (!empty($process['url'])) {
-                $processes_by_url[$process['url']] = $process;
+            $key = !empty($process['id'])
+                ? 'id:' . (int) $process['id']
+                : 'url:' . (string) ($process['url'] ?? '');
+
+            if ($key === 'url:') {
+                continue;
             }
+
+            $processes_by_key[$key] = $process;
         }
+
+        $processes = array_values($processes_by_key);
+        usort($processes, function($left, $right) {
+            return strcmp((string) ($left['date'] ?? ''), (string) ($right['date'] ?? ''));
+        });
 
         return [
             'registration_number' => $registration_number,
-            'processes' => array_values($processes_by_url),
+            'processes' => $processes,
+            'fields' => $fields,
         ];
     }
 
@@ -293,15 +377,245 @@ class TainacanItemsApi extends ObatalaAPI {
                     : __('Obatala process', 'obatala');
             }
 
-            $processes[] = [
+            $processes[] = array_merge([
                 'id' => $process_id,
                 'number' => $process_number,
                 'title' => $title,
                 'url' => $url,
-            ];
+            ], $this->get_process_timeline_data($process_id));
         }
 
         return $processes;
+    }
+
+    private function get_process_timeline_data($process_id) {
+        $process_id = (int) $process_id;
+        $post = $process_id > 0 ? get_post($process_id) : null;
+
+        if (!$post instanceof \WP_Post || $post->post_type !== 'process_obatala') {
+            return [
+                'status' => '',
+                'status_group' => 'pending',
+                'created_at' => '',
+                'modified_at' => '',
+                'date' => '',
+                'responsible' => '',
+                'current_stage' => '',
+                'current_stage_label' => '',
+                'current_stage_updated_at' => '',
+                'current_stage_user' => '',
+                'progress' => null,
+                'is_deleted' => false,
+                'summary' => '',
+                'process_type' => '',
+            ];
+        }
+
+        $status = (string) get_post_meta($process_id, 'status', true);
+        $status = $status !== '' ? $status : 'Stopped';
+        $created_at = (string) get_post_time('c', false, $process_id);
+        $modified_at = (string) get_post_modified_time('c', false, $process_id);
+        $author = get_userdata((int) $post->post_author);
+        $stage_context = $this->get_process_stage_context($process_id);
+        $progress = $this->calculate_process_progress($process_id);
+        $process_type = (string) get_post_meta($process_id, 'process_title', true);
+        $date = $stage_context['current_stage_updated_at'] ?: $modified_at ?: $created_at;
+        $status_group = $this->get_process_status_group($status, $progress);
+
+        return [
+            'status' => $status,
+            'status_group' => $status_group,
+            'created_at' => $created_at,
+            'modified_at' => $modified_at,
+            'date' => $date,
+            'responsible' => $stage_context['current_stage_user'] ?: ($author instanceof \WP_User ? $author->display_name : ''),
+            'current_stage' => $stage_context['current_stage'],
+            'current_stage_label' => $stage_context['current_stage_label'],
+            'current_stage_updated_at' => $stage_context['current_stage_updated_at'],
+            'current_stage_user' => $stage_context['current_stage_user'],
+            'progress' => $progress,
+            'is_deleted' => class_exists(Process::class) ? Process::is_deleted($process_id) : false,
+            'summary' => $this->build_process_summary($status, $stage_context, $progress),
+            'process_type' => $this->decode_text($process_type),
+        ];
+    }
+
+    private function get_process_stage_context($process_id) {
+        $flow_data = maybe_unserialize(get_post_meta((int) $process_id, 'flowData', true));
+        $stage_data = maybe_unserialize(get_post_meta((int) $process_id, 'stageData', true));
+        $current_stage = (string) get_post_meta((int) $process_id, 'current_stage', true);
+        $nodes = is_array($flow_data) && isset($flow_data['nodes']) && is_array($flow_data['nodes'])
+            ? $flow_data['nodes']
+            : [];
+        $current_node = null;
+
+        foreach ($nodes as $node) {
+            if ((string) ($node['id'] ?? '') === $current_stage) {
+                $current_node = $node;
+                break;
+            }
+        }
+
+        if (!$current_node) {
+            foreach ($nodes as $node) {
+                if (($node['node_status'] ?? '') === 'Started') {
+                    $current_node = $node;
+                    break;
+                }
+            }
+        }
+
+        if (!$current_node) {
+            foreach ($nodes as $node) {
+                if ($this->is_process_stage_node($node)) {
+                    $current_node = $node;
+                    break;
+                }
+            }
+        }
+
+        $current_stage_id = $current_node ? (string) ($current_node['id'] ?? '') : $current_stage;
+        $current_stage_label = $current_node
+            ? $this->decode_text((string) ($current_node['data']['stageName'] ?? $current_stage_id))
+            : $this->decode_text($current_stage_id);
+        $stage_update = $this->find_latest_stage_update(is_array($stage_data) ? $stage_data : [], $current_stage_id);
+
+        return [
+            'current_stage' => $current_stage_id,
+            'current_stage_label' => $current_stage_label,
+            'current_stage_updated_at' => $stage_update['date'],
+            'current_stage_user' => $stage_update['user'],
+        ];
+    }
+
+    private function find_latest_stage_update($stage_data, $preferred_stage_id = '') {
+        $latest = [
+            'date' => '',
+            'user' => '',
+        ];
+
+        foreach ($stage_data as $stage_id => $stage) {
+            if (!is_array($stage)) {
+                continue;
+            }
+
+            $candidates = [
+                ['date' => $stage['updateAt'] ?? '', 'user' => $stage['user'] ?? ''],
+                ['date' => $stage['draftUpdateAt'] ?? '', 'user' => $stage['draftUser'] ?? ''],
+                ['date' => $stage['correctedSpreadsheetUpdateAt'] ?? '', 'user' => $stage['correctedSpreadsheetUser'] ?? ''],
+            ];
+
+            foreach ($candidates as $candidate) {
+                $date = $this->normalize_datetime((string) ($candidate['date'] ?? ''));
+                if ($date === '') {
+                    continue;
+                }
+
+                if ((string) $stage_id === (string) $preferred_stage_id) {
+                    return [
+                        'date' => $date,
+                        'user' => $this->decode_text((string) ($candidate['user'] ?? '')),
+                    ];
+                }
+
+                if ($latest['date'] === '' || strtotime($date) > strtotime($latest['date'])) {
+                    $latest = [
+                        'date' => $date,
+                        'user' => $this->decode_text((string) ($candidate['user'] ?? '')),
+                    ];
+                }
+            }
+        }
+
+        return $latest;
+    }
+
+    private function calculate_process_progress($process_id) {
+        $flow_data = maybe_unserialize(get_post_meta((int) $process_id, 'flowData', true));
+        $submitted_stages = maybe_unserialize(get_post_meta((int) $process_id, 'submittedStages', true));
+        $nodes = is_array($flow_data) && isset($flow_data['nodes']) && is_array($flow_data['nodes'])
+            ? array_filter($flow_data['nodes'], [$this, 'is_process_stage_node'])
+            : [];
+        $total = count($nodes);
+
+        if ($total === 0) {
+            $status = (string) get_post_meta((int) $process_id, 'status', true);
+            return $status === 'Finished' ? 100 : 0;
+        }
+
+        $finished = 0;
+        foreach ($nodes as $node) {
+            $node_id = (string) ($node['id'] ?? '');
+            $is_submitted = is_array($submitted_stages)
+                && array_key_exists($node_id, $submitted_stages)
+                && $this->is_truthy($submitted_stages[$node_id]);
+
+            if (($node['node_status'] ?? '') === 'Finished' || $is_submitted) {
+                $finished++;
+            }
+        }
+
+        return (int) round(($finished / $total) * 100);
+    }
+
+    private function is_process_stage_node($node) {
+        $node_id = (string) ($node['id'] ?? '');
+
+        return $node_id !== ''
+            && $node_id !== 'Start'
+            && $node_id !== 'End'
+            && strpos($node_id, 'Condicional') !== 0;
+    }
+
+    private function is_truthy($value) {
+        return $value === true || $value === 1 || $value === '1' || $value === 'true';
+    }
+
+    private function get_process_status_group($status, $progress) {
+        if ($status === 'Finished' || (int) $progress >= 100) {
+            return 'finished';
+        }
+
+        if ($status === 'Started' || (int) $progress > 0) {
+            return 'in_progress';
+        }
+
+        return 'pending';
+    }
+
+    private function build_process_summary($status, $stage_context, $progress) {
+        if ($status === 'Finished' || (int) $progress >= 100) {
+            return __('Process completed.', 'obatala');
+        }
+
+        if (!empty($stage_context['current_stage_label'])) {
+            return sprintf(
+                __('Current step: %s.', 'obatala'),
+                $stage_context['current_stage_label']
+            );
+        }
+
+        return __('Process linked to this item.', 'obatala');
+    }
+
+    private function summarize_processes($processes) {
+        $summary = [
+            'total' => 0,
+            'finished' => 0,
+            'in_progress' => 0,
+            'pending' => 0,
+        ];
+
+        foreach ((array) $processes as $process) {
+            $summary['total']++;
+            $group = (string) ($process['status_group'] ?? 'pending');
+            if (!isset($summary[$group])) {
+                $group = 'pending';
+            }
+            $summary[$group]++;
+        }
+
+        return $summary;
     }
 
     private function flatten_values($value) {
@@ -318,6 +632,20 @@ class TainacanItemsApi extends ObatalaAPI {
 
     private function decode_text($value) {
         return html_entity_decode(wp_strip_all_tags((string) $value), ENT_QUOTES, 'UTF-8');
+    }
+
+    private function normalize_datetime($value) {
+        $value = trim((string) $value);
+        if ($value === '') {
+            return '';
+        }
+
+        $timestamp = strtotime($value);
+        if (!$timestamp) {
+            return $value;
+        }
+
+        return wp_date('c', $timestamp);
     }
 
     private function get_thumbnail_url($item) {
