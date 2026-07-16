@@ -4,23 +4,23 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import {
 	Button,
 	Icon,
-	Modal,
 	Notice,
 	Panel,
 	PanelRow,
 	Spinner,
-	TabPanel,
 	TextControl,
 	Tooltip,
 	__experimentalConfirmDialog as ConfirmDialog,
 } from '@wordpress/components';
-import { backup, download, edit, info, plus, trash } from '@wordpress/icons';
+import { download, info } from '@wordpress/icons';
 import { __, sprintf } from '@wordpress/i18n';
 import BrandFooter from '../BrandFooter';
 import BrandHeader from '../BrandHeader';
 import TainacanItemsFilters from './TainacanItemsFilters';
+import TainacanItemTimeline from './TainacanItemTimeline';
 import {
 	deleteTainacanItem,
+	fetchObatalaTainacanItemById,
 	fetchTainacanItemById,
 	fetchTainacanRepositoryItems,
 } from '../../api/apiRequests';
@@ -67,6 +67,12 @@ const getStatusDetails = ( status ) => {
 const getTainacanAdminUrl = ( path ) =>
 	`${ obatalaApp.admin_url }admin.php?page=tainacan_admin#${ path }`;
 
+const getObatalaItemUrl = ( itemId ) =>
+	`${ obatalaApp.admin_url }admin.php?page=collection-items&item_id=${ itemId }`;
+
+const getSelectedItemIdFromUrl = () =>
+	new URLSearchParams( window.location.search ).get( 'item_id' ) || '';
+
 const TainacanItemsPage = () => {
 	const [ items, setItems ] = useState( [] );
 	const [ collections, setCollections ] = useState( [] );
@@ -80,7 +86,12 @@ const TainacanItemsPage = () => {
 	const [ status, setStatus ] = useState( '' );
 	const [ isLoading, setIsLoading ] = useState( true );
 	const [ downloadingItemId, setDownloadingItemId ] = useState( null );
-	const [ processesItem, setProcessesItem ] = useState( null );
+	const [ selectedItemId, setSelectedItemId ] = useState(
+		getSelectedItemIdFromUrl
+	);
+	const [ selectedItem, setSelectedItem ] = useState( null );
+	const [ isDetailLoading, setIsDetailLoading ] = useState( false );
+	const [ detailNotice, setDetailNotice ] = useState( null );
 	const [ itemToDelete, setItemToDelete ] = useState( null );
 	const [ isDeleting, setIsDeleting ] = useState( false );
 	const [ notice, setNotice ] = useState( null );
@@ -119,8 +130,12 @@ const TainacanItemsPage = () => {
 	}, [ collectionId, page, scope, search, status ] );
 
 	useEffect( () => {
+		if ( selectedItemId ) {
+			return;
+		}
+
 		loadItems();
-	}, [ loadItems ] );
+	}, [ loadItems, selectedItemId ] );
 
 	useEffect( () => {
 		const timer = window.setTimeout( () => {
@@ -130,6 +145,54 @@ const TainacanItemsPage = () => {
 
 		return () => window.clearTimeout( timer );
 	}, [ searchInput ] );
+
+	useEffect( () => {
+		const handlePopState = () => {
+			setSelectedItemId( getSelectedItemIdFromUrl() );
+		};
+
+		window.addEventListener( 'popstate', handlePopState );
+
+		return () => window.removeEventListener( 'popstate', handlePopState );
+	}, [] );
+
+	useEffect( () => {
+		if ( ! selectedItemId ) {
+			setSelectedItem( null );
+			setDetailNotice( null );
+			setIsDetailLoading( false );
+			return;
+		}
+
+		let isMounted = true;
+		setIsDetailLoading( true );
+		setDetailNotice( null );
+
+		fetchObatalaTainacanItemById( selectedItemId )
+			.then( ( data ) => {
+				if ( isMounted ) {
+					setSelectedItem( data );
+				}
+			} )
+			.catch( () => {
+				if ( isMounted ) {
+					setSelectedItem( null );
+					setDetailNotice( {
+						status: 'error',
+						message: __( 'Error loading item details.', 'obatala' ),
+					} );
+				}
+			} )
+			.finally( () => {
+				if ( isMounted ) {
+					setIsDetailLoading( false );
+				}
+			} );
+
+		return () => {
+			isMounted = false;
+		};
+	}, [ selectedItemId ] );
 
 	const statusOptions = useMemo(
 		() => [
@@ -145,6 +208,26 @@ const TainacanItemsPage = () => {
 	const handleFilterChange = () => {
 		setPage( 1 );
 	};
+
+	const handleOpenItemDetail = useCallback( ( item ) => {
+		const nextItemId = String( item?.id || '' );
+		if ( ! nextItemId ) {
+			return;
+		}
+
+		setSelectedItem( item );
+		setSelectedItemId( nextItemId );
+		window.history.pushState( {}, '', getObatalaItemUrl( nextItemId ) );
+	}, [] );
+
+	const handleBackToList = useCallback( () => {
+		const url = new URL( window.location.href );
+		url.searchParams.delete( 'item_id' );
+		window.history.pushState( {}, '', `${ url.pathname }${ url.search }` );
+		setSelectedItemId( '' );
+		setSelectedItem( null );
+		setDetailNotice( null );
+	}, [] );
 
 	const handleDownload = async ( item ) => {
 		setDownloadingItemId( item.id );
@@ -228,11 +311,26 @@ const TainacanItemsPage = () => {
 		}
 
 		return (
-			<Button variant="link" onClick={ () => setProcessesItem( item ) }>
+			<Button variant="link" onClick={ () => handleOpenItemDetail( item ) }>
 				{ label }
 			</Button>
 		);
 	};
+
+	if ( selectedItemId ) {
+		return (
+			<>
+				<BrandHeader />
+				<TainacanItemTimeline
+					item={ selectedItem }
+					isLoading={ isDetailLoading }
+					notice={ detailNotice }
+					onBack={ handleBackToList }
+				/>
+				<BrandFooter />
+			</>
+		);
+	}
 
 	return (
 		<>
@@ -339,10 +437,6 @@ const TainacanItemsPage = () => {
 													getTainacanAdminUrl(
 														`/collections/${ item.collection_id }/items/${ item.id }`
 													);
-												const itemEditUrl =
-													getTainacanAdminUrl(
-														`/collections/${ item.collection_id }/items/${ item.id }/edit`
-													);
 
 												return (
 													<tr key={ item.id }>
@@ -364,10 +458,11 @@ const TainacanItemsPage = () => {
 																	) }
 																</div>
 																<a
-																	href={
-																		itemDetailsUrl
-																	}
-																>
+															href={ getObatalaItemUrl( item.id ) }
+															onClick={ ( event ) => {
+																event.preventDefault();
+																handleOpenItemDetail( item );
+															} } >
 																	{ item.title ||
 																		sprintf(
 																			/* translators: %d: Tainacan item ID. */
@@ -421,18 +516,22 @@ const TainacanItemsPage = () => {
 															<div className="group-button">
 																<Button
 																	variant="primary"
-																	icon={
-																		info
-																	}
-																	href={
-																		itemDetailsUrl
+																	icon={ info }
+																	onClick={ () =>
+																		handleOpenItemDetail( item )
 																	}
 																>
-																	{ __(
-																		'View item',
-																		'obatala'
-																	) }
+																	{ __( 'View item', 'obatala' ) }
 																</Button>
+																<Tooltip
+																	text={ __( 'Open in Tainacan', 'obatala' ) }
+																>
+																	<Button
+																		variant="tertiary"
+																		icon="external"
+																		href={ itemDetailsUrl }
+																	/>
+																</Tooltip>
 																<Tooltip
 																	text={ __(
 																		'Download item data',
@@ -515,32 +614,6 @@ const TainacanItemsPage = () => {
 						) }
 					</PanelRow>
 				</Panel>
-
-				{ processesItem && (
-					<Modal
-						title={ sprintf(
-							/* translators: %s: item title. */
-							__( 'Linked processes for %s', 'obatala' ),
-							processesItem.title
-						) }
-						onRequestClose={ () => setProcessesItem( null ) }
-						size="small"
-					>
-						<ul className="tainacan-linked-processes-list">
-							{ processesItem.processes.map(
-								( process, index ) => (
-									<li key={ `${ process.url }-${ index }` }>
-										<a href={ process.url }>
-											{ [ process.number, process.title ]
-												.filter( Boolean )
-												.join( ' — ' ) }
-										</a>
-									</li>
-								)
-							) }
-						</ul>
-					</Modal>
-				) }
 
 				<ConfirmDialog
 					isOpen={ !! itemToDelete }

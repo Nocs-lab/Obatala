@@ -70,6 +70,10 @@ export const fetchTainacanRepositoryItems = ( {
 	} );
 };
 
+export const fetchObatalaTainacanItemById = ( itemId ) => {
+	return apiFetch( { path: `/obatala/v1/tainacan/items/${ itemId }` } );
+};
+
 export const fetchTainacanItemById = ( itemId ) => {
 	return apiFetch( { path: `/tainacan/v2/items/${ itemId }?context=edit` } );
 };
