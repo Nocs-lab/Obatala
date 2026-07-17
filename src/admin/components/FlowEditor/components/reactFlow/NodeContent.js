@@ -277,57 +277,36 @@ const NodeContent = ({ id, data = {} }) => {
                         <h3 className="title">{__('Select a field to add:', 'obatala')}</h3>
                         <ul className="node-meta-list-container">
                             {isTainacanMapperEnabled && (
-                                <li className="node-meta-list">
-                                    <button
-                                        type="button"
+                                <li>
+                                    <Button
+                                        variant="primary"
+                                        icon={<Icon icon={isDefaultFieldsExpanded ? close : plus} />}
                                         onClick={() => setIsDefaultFieldsExpanded((previous) => !previous)}
-                                        style={{
-                                            width: "100%",
-                                            display: "flex",
-                                            justifyContent: "space-between",
-                                            alignItems: "center",
-                                            background: "none",
-                                            border: "none",
-                                            padding: 0,
-                                            cursor: "pointer",
-                                            textAlign: "left",
-                                        }}
                                     >
-                                        <strong>{__('Default fields', 'obatala')}</strong>
-                                        <span>{isDefaultFieldsExpanded ? '[-]' : '[+]'}</span>
-                                    </button>
+                                        {__('Default fields', 'obatala')}
+                                    </Button>
                                 </li>
                             )}
                             {(!isTainacanMapperEnabled || isDefaultFieldsExpanded) && FIELD_OPTIONS.map((option) => (
-                                <li className="node-meta-list" key={option.id}>
-                                    <Icon icon={option.icon} />
-                                    <span
+                                <li key={option.id}>
+                                    <Button
+                                        variant="secondary"
+                                        icon icon={option.icon}
                                         onClick={() => addFieldToNode(option.id)}
                                     >
                                         {option.label}
-                                    </span>
+                                    </Button>
                                 </li>
                             ))}
                             {isTainacanMapperEnabled && (
-                                <li className="node-meta-list">
-                                    <button
-                                        type="button"
+                                <li>
+                                    <Button
+                                        variant="primary"
+                                        icon={<Icon icon={isTainacanControlsExpanded ? close : plus} />}
                                         onClick={() => setIsTainacanControlsExpanded((previous) => !previous)}
-                                        style={{
-                                            width: "100%",
-                                            display: "flex",
-                                            justifyContent: "space-between",
-                                            alignItems: "center",
-                                            background: "none",
-                                            border: "none",
-                                            padding: 0,
-                                            cursor: "pointer",
-                                            textAlign: "left",
-                                        }}
                                     >
-                                        <strong>{__('Tainacan control fields', 'obatala')}</strong>
-                                        <span>{isTainacanControlsExpanded ? '[-]' : '[+]'}</span>
-                                    </button>
+                                        {__('Tainacan control fields', 'obatala')}
+                                    </Button>
                                 </li>
                             )}
                             {isTainacanMapperEnabled && isTainacanControlsExpanded && TAINACAN_CONTROL_FIELDS.map((option) => {
@@ -335,9 +314,10 @@ const NodeContent = ({ id, data = {} }) => {
                                 const isDisabled = Boolean(existingLocation);
 
                                 return (
-                                    <li className="node-meta-list" key={option.id}>
-                                        <Icon icon={option.type === "upload" ? file : (option.type === "number" ? keyboard : listView)} />
-                                        <span
+                                    <li key={option.id}>
+                                        <Button
+                                            variant="secondary"
+                                            icon icon={option.type === "upload" ? file : (option.type === "number" ? keyboard : listView)}
                                             onClick={() => {
                                                 if (!isDisabled) {
                                                     addTainacanControlFieldToNode(option);
@@ -346,7 +326,7 @@ const NodeContent = ({ id, data = {} }) => {
                                             style={isDisabled ? { opacity: 0.5, cursor: "not-allowed" } : undefined}
                                         >
                                             {option.label}
-                                        </span>
+                                        </Button>
                                     </li>
                                 );
                             })}

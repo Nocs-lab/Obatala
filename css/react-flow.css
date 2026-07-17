@@ -959,26 +959,6 @@ svg.react-flow__connectionline {
   margin: 0;
 }
 
-.node-meta-list {
-  background: var(--primary-300);
-  border-radius: var(--border-radius);
-  cursor: pointer;
-  display: flex;
-  gap: .5rem;
-  list-style: none;
-  margin: 0;
-  padding: .35rem 1rem;
-}
-
-.node-meta-list:hover {
-  background: var(--primary-300);
-}
-
-.node-meta-list svg {
-  height: 18px;
-  width: 18px;
-}
-
 /* Edit field */
 .wp-drawer {
   background-color: var(--white);
