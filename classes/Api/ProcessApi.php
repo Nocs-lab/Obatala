@@ -954,6 +954,9 @@ class ProcessApi extends ObatalaAPI {
                 if ($conditional_node) {
                     $input_node_id = $conditional_node['data']['condition']['inputNode'];
                     $radio_name = $conditional_node['data']['condition']['condition'];
+                    $radio_id = isset($conditional_node['data']['condition']['fieldId'])
+                        ? (string) $conditional_node['data']['condition']['fieldId']
+                        : '';
                     
                     $input_node = null;
                     foreach ($nodes as $node) {
@@ -963,11 +966,12 @@ class ProcessApi extends ObatalaAPI {
                         }
                     }
                     
-                    $radio_id = null;
-                    foreach ($input_node['data']['fields'] as $field) {
-                        if ($field['config']['label'] === $radio_name) {
-                            $radio_id = $field['id'];
-                            break;
+                    if ($radio_id === '') {
+                        foreach ($input_node['data']['fields'] as $field) {
+                            if (($field['config']['label'] ?? '') === $radio_name) {
+                                $radio_id = $field['id'];
+                                break;
+                            }
                         }
                     }
                     
@@ -1012,7 +1016,7 @@ class ProcessApi extends ObatalaAPI {
                             ];
                         }
                         $runtime = $export_service->get_runtime_config($post_id);
-                        $has_enabled_mapper = ($runtime['mapper_status'] ?? 'enabled') === 'enabled'
+                        $has_enabled_mapper = ($runtime['mapper_status'] ?? 'disabled') === 'enabled'
                             && !empty($runtime['enabled']);
 
                         if ($has_enabled_mapper) {

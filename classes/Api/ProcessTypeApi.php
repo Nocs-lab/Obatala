@@ -246,6 +246,7 @@ class ProcessTypeApi extends ObatalaAPI {
             return null;
         }
         $problems = [];
+        $duplicates = [];
         foreach ($flow_data['nodes'] as $node) {
             $node_id = isset($node['id']) ? (string) $node['id'] : '';
             if ($node_id === 'Start' || $node_id === 'End' || strpos($node_id, 'Condicional') === 0) {
@@ -256,7 +257,8 @@ class ProcessTypeApi extends ObatalaAPI {
                 continue;
             }
             $stage_name = isset($node['data']['stageName']) ? (string) $node['data']['stageName'] : $node_id;
-            foreach ($fields as $field) {
+            $seen_labels = [];
+            foreach ($fields as $field_index => $field) {
                 if (!is_array($field)) {
                     continue;
                 }
@@ -267,31 +269,52 @@ class ProcessTypeApi extends ObatalaAPI {
                     $label = isset($field['title']) ? trim((string) $field['title']) : '';
                 }
                 if ($label === '' || $label === $default_untitled) {
-                    $field_id = isset($field['id']) ? (string) $field['id'] : '';
                     $problems[] = [
                         'stage' => $stage_name,
-                        'field' => $field_id,
+                        'position' => (int) $field_index + 1,
+                    ];
+                    continue;
+                }
+
+                $normalized_label = strtolower(remove_accents($label));
+                if (isset($seen_labels[$normalized_label])) {
+                    $duplicates[$stage_name . "\0" . $normalized_label] = [
+                        'stage' => $stage_name,
+                        'label' => $label,
                     ];
                 }
+                $seen_labels[$normalized_label] = true;
             }
         }
-        if (empty($problems)) {
-            return null;
-        }
-        $parts = [];
-        foreach ($problems as $p) {
-            $parts[] = sprintf(
-                /* translators: 1: step name, 2: field id */
-                __('%1$s (field %2$s)', 'obatala'),
-                $p['stage'],
-                $p['field']
+        if (!empty($problems)) {
+            $parts = [];
+            foreach ($problems as $p) {
+                $parts[] = sprintf(
+                    /* translators: 1: step name, 2: field position within the step */
+                    __('%1$s (field %2$d)', 'obatala'),
+                    $p['stage'],
+                    $p['position']
+                );
+            }
+            return sprintf(
+                /* translators: %s: semicolon-separated list, e.g. "Step A (field 1); Step B (field 2)" */
+                __('Some fields have an empty or default name. Check: %s', 'obatala'),
+                implode('; ', $parts)
             );
         }
-        return sprintf(
-            /* translators: %s: semicolon-separated list of step and field id, e.g. "Step A (field x); Step B (field y)" */
-            __('Some fields are missing a valid title (empty or default). Check: %s', 'obatala'),
-            implode('; ', $parts)
-        );
+
+        if (!empty($duplicates)) {
+            $parts = array_map(function ($duplicate) {
+                return $duplicate['stage'] . ': ' . $duplicate['label'];
+            }, array_values($duplicates));
+
+            return sprintf(
+                __('Field names must be unique within each step. Check: %s', 'obatala'),
+                implode('; ', $parts)
+            );
+        }
+
+        return null;
     }
 
     public function update_meta($request) {

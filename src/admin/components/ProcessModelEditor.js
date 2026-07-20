@@ -22,9 +22,9 @@ const MAPPER_STATUS_DISABLED = "disabled";
 
 const normalizeMapperStatus = (status) => {
     const normalized = String(status || "").trim().toLowerCase();
-    return normalized === MAPPER_STATUS_DISABLED || normalized === "desabilitado"
-        ? MAPPER_STATUS_DISABLED
-        : MAPPER_STATUS_ENABLED;
+    return normalized === MAPPER_STATUS_ENABLED || normalized === "habilitado"
+        ? MAPPER_STATUS_ENABLED
+        : MAPPER_STATUS_DISABLED;
 };
 
 const parseMappingData = (mappingData) => {
@@ -46,7 +46,7 @@ const parseMappingData = (mappingData) => {
 
 const getMapperStatusFromSavedData = (savedData) => {
     if (!savedData) {
-        return MAPPER_STATUS_ENABLED;
+        return MAPPER_STATUS_DISABLED;
     }
 
     if (savedData.mappings && !Array.isArray(savedData.mappings) && savedData.mappings.status !== undefined) {
@@ -57,7 +57,7 @@ const getMapperStatusFromSavedData = (savedData) => {
         return normalizeMapperStatus(savedData.status);
     }
 
-    return MAPPER_STATUS_ENABLED;
+    return MAPPER_STATUS_DISABLED;
 };
 
 const processDataEditor = () => {
@@ -66,7 +66,7 @@ const processDataEditor = () => {
     const [processData, setProcessData] = useState(null);
     const [notice, setNotice] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [mapperStatus, setMapperStatus] = useState(MAPPER_STATUS_ENABLED);
+    const [mapperStatus, setMapperStatus] = useState(MAPPER_STATUS_DISABLED);
     const flowRef = useRef(null); 
     const [flowData, setFlowData] = useState({ nodes: [], edges: [] }); 
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
@@ -86,7 +86,7 @@ const processDataEditor = () => {
             })
             .catch((error) => {
                 console.error("Error fetching mapper status:", error);
-                return MAPPER_STATUS_ENABLED;
+                return MAPPER_STATUS_DISABLED;
             });
 
         Promise.all([
@@ -204,13 +204,51 @@ const processDataEditor = () => {
                 return;
             }
             const stageName = node.data?.stageName || nid;
-            fields.forEach((field) => {
+            fields.forEach((field, fieldIndex) => {
                 if (isFieldMissingTitle(field)) {
-                    problems.push({ stageName, fieldId: field?.id || "" });
+                    problems.push({ stageName, fieldPosition: fieldIndex + 1 });
                 }
             });
         });
         return problems;
+    };
+
+    const getDuplicateFieldTitles = (flowData) => {
+        const duplicates = [];
+
+        flowData.nodes.forEach((node) => {
+            const nodeId = String(node?.id || "");
+            if (nodeId === "Start" || nodeId === "End" || nodeId.startsWith("Condicional")) {
+                return;
+            }
+
+            const seenTitles = new Set();
+            const duplicateTitles = new Set();
+            (Array.isArray(node?.data?.fields) ? node.data.fields : []).forEach((field) => {
+                const title = getFieldDisplayTitle(field);
+                if (!title || title === DEFAULT_FIELD_TITLE) {
+                    return;
+                }
+
+                const normalizedTitle = title
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, "")
+                    .toLocaleLowerCase();
+                if (seenTitles.has(normalizedTitle)) {
+                    duplicateTitles.add(title);
+                }
+                seenTitles.add(normalizedTitle);
+            });
+
+            duplicateTitles.forEach((title) => {
+                duplicates.push({
+                    stageName: node?.data?.stageName || nodeId,
+                    title,
+                });
+            });
+        });
+
+        return duplicates;
     };
 
     const getInvalidConditionalNodes = (flowData) => {
@@ -284,21 +322,31 @@ const processDataEditor = () => {
             if (fieldTitleProblems.length > 0) {
                 const detailList = fieldTitleProblems
                     .map((p) =>
-                        p.fieldId
-                            ? sprintf(
-                                /* translators: 1: step name, 2: field id */
-                                __("%1$s (field %2$s)", "obatala"),
-                                p.stageName,
-                                p.fieldId
-                            )
-                            : String(p.stageName)
+                        sprintf(
+                            /* translators: 1: step name, 2: field position within the step */
+                            __("%1$s (field %2$d)", "obatala"),
+                            p.stageName,
+                            p.fieldPosition
+                        )
                     )
                     .join("; ");
                 errorMessages.push(
                     sprintf(
-                        /* translators: %s: semicolon-separated list, e.g. "Step A (field x); Step B (field y)" */
-                        __("Some fields are missing a valid title (empty or default). Check: %s", "obatala"),
+                        /* translators: %s: semicolon-separated list, e.g. "Step A (field 1); Step B (field 2)" */
+                        __("Some fields have an empty or default name. Check: %s", "obatala"),
                         detailList
+                    )
+                );
+            }
+
+            const duplicateFieldTitles = getDuplicateFieldTitles(flowData);
+            if (duplicateFieldTitles.length > 0) {
+                errorMessages.push(
+                    sprintf(
+                        __("Field names must be unique within each step. Check: %s", "obatala"),
+                        duplicateFieldTitles
+                            .map(({ stageName, title }) => `${stageName}: ${title}`)
+                            .join("; ")
                     )
                 );
             }

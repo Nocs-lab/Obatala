@@ -42,7 +42,10 @@ const NodeConditional = ({ id, data }) => {
         if (!isInitialized && matchedEdgeOutput.length > 0) {
 
             if (data.condition) {
-                setSelectedField(data.condition.condition || "");
+                const legacyField = radioFields.find(
+                    field => (field.config?.label || field.title || field.id) === data.condition.condition
+                );
+                setSelectedField(data.condition.fieldId || legacyField?.id || "");
                 setSelectedFields(
                     matchedEdgeOutput.map(edge => ({
                         id: edge.target,
@@ -139,7 +142,10 @@ const NodeConditional = ({ id, data }) => {
 
         const updatedCondition = {
             inputNode: data.condition?.inputNode || matchedEdgeInput?.source,
-            condition: selectedField,
+            fieldId: selectedField,
+            condition: radioFields.find(field => field.id === selectedField)?.config?.label
+                || radioFields.find(field => field.id === selectedField)?.title
+                || selectedField,
             outputNodes: selectedFields.map((field) => ({
                 conditionValue: field.value,
                 nodeId: field.id,
@@ -199,7 +205,7 @@ const NodeConditional = ({ id, data }) => {
                                 {radioFields.map((field, fieldIndex) => (
                                     <option
                                         key={fieldIndex}
-                                        value={field.config?.label || field.title || field.id}
+                                        value={field.id}
                                     >
                                         {field.config?.label || field.title || field.id}
                                     </option>
@@ -217,7 +223,7 @@ const NodeConditional = ({ id, data }) => {
                                     <option value="" disabled>{__('Select a value', 'obatala')}</option>
                                     {selectedField &&
                                         radioFields
-                                            .find((field) => field.config?.label === selectedField)
+                                            .find((field) => field.id === selectedField)
                                             ?.config?.options
                                             ?.split(",")
                                             .map((option, optionIndex) => (

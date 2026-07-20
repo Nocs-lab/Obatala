@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
 import { addEdge, useNodesState, useEdgesState } from "@xyflow/react";
 import validateInitialData from "../helpers/dataValidator";
+import { fetchSectors } from "../../../api/apiRequests";
 
 // Cria o contexto para o fluxo
 const FlowContext = createContext();
@@ -363,7 +364,7 @@ export const FlowProvider = ({ children }) => {
     }, [nodes, edges]);
 
     // Função para importar dados e sobrescrever o estado
-    const onImport = useCallback((importedData) => {
+    const onImport = useCallback(async (importedData) => {
 
         try {
             const flowData = importedData.meta?.flowData || importedData;
@@ -386,23 +387,40 @@ export const FlowProvider = ({ children }) => {
                 return false;
             }
 
-            const processedNodes = flowData.nodes.map(node => ({
-                ...node,
-                type: node.type || 'customNode',
-                dragHandle: ".custom-drag-handle",
-                position: node.position || { x: 0, y: 0 },
-                data: {
-                    ...node.data,
-                    fields: node.data?.fields || [],
-                    stageName: node.data?.stageName || node.id || "Sem nome",
-                    condition: node.data?.condition || {},
-                    updateFields: (newFields) => updateFieldsForNode(node.id, newFields),
-                    updateNodeName: (newName) => updateNodeName(node.id, newName),
-                    updatePosition: (newPosition) => updateNodePosition(node.id, newPosition),
-                },
-                measured: node.measured || { width: 244, height: 320 },
-                selected: false
-            }));
+            const localSectors = await fetchSectors();
+            const validSectorIds = new Set(
+                Object.keys(localSectors || {}).map((sectorId) => String(sectorId))
+            );
+
+            const processedNodes = flowData.nodes.map(node => {
+                const importedSectorId = node.tempSector || node.sector_obatala;
+                const normalizedSectorId = importedSectorId
+                    ? String(importedSectorId)
+                    : "";
+                const validSectorId = validSectorIds.has(normalizedSectorId)
+                    ? normalizedSectorId
+                    : null;
+
+                return {
+                    ...node,
+                    type: node.type || 'customNode',
+                    dragHandle: ".custom-drag-handle",
+                    position: node.position || { x: 0, y: 0 },
+                    data: {
+                        ...node.data,
+                        fields: node.data?.fields || [],
+                        stageName: node.data?.stageName || node.id || "Sem nome",
+                        condition: node.data?.condition || {},
+                        updateFields: (newFields) => updateFieldsForNode(node.id, newFields),
+                        updateNodeName: (newName) => updateNodeName(node.id, newName),
+                        updatePosition: (newPosition) => updateNodePosition(node.id, newPosition),
+                    },
+                    sector_obatala: validSectorId,
+                    tempSector: validSectorId,
+                    measured: node.measured || { width: 244, height: 320 },
+                    selected: false
+                };
+            });
 
             setNodes(processedNodes);
             setEdges(flowData.edges || []);

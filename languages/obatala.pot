@@ -679,3 +679,17 @@ msgstr ""
 
 msgid "In progress"
 msgstr ""
+
+msgid ""
+"The selected process model is incomplete. Connect all steps and define at "
+"least one field and a valid group for each step."
+msgstr ""
+
+msgid "Field names must be unique within each step. Check: %s"
+msgstr ""
+
+msgid "Some fields have an empty or default name. Check: %s"
+msgstr ""
+
+msgid "%1$s (field %2$d)"
+msgstr ""

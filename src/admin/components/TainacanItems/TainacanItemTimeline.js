@@ -118,6 +118,27 @@ const getProcessTitle = ( process ) =>
 		Number( process?.id ) || 0
 	);
 
+const getProcessTimestamp = ( process ) => {
+	const value = process?.date || process?.modified_at || process?.created_at;
+	const timestamp = value ? new Date( value ).getTime() : 0;
+
+	return Number.isNaN( timestamp ) ? 0 : timestamp;
+};
+
+const getCurrentStageLabel = ( value ) => {
+	const normalizedValue = String( value || '' ).trim().toLowerCase();
+
+	if ( normalizedValue === 'end' ) {
+		return __( 'Finished', 'obatala' );
+	}
+
+	if ( normalizedValue === 'start' ) {
+		return __( 'Not started', 'obatala' );
+	}
+
+	return value;
+};
+
 const InfoRow = ( { label, value } ) => {
 	if ( value === undefined || value === null || String( value ).trim() === '' ) {
 		return null;
@@ -139,6 +160,15 @@ const TainacanItemTimeline = ( { item, isLoading, notice, onBack } ) => {
 	const title = getItemTitle( item );
 	const tainacanUrl = getTainacanAdminUrl( item );
 	const tainacanEditUrl = getTainacanEditUrl( item );
+	const sortedProcesses = useMemo(
+		() =>
+			[ ...processes ].sort(
+				( firstProcess, secondProcess ) =>
+					getProcessTimestamp( secondProcess ) -
+					getProcessTimestamp( firstProcess )
+			),
+		[ processes ]
+	);
 
 	const visibleMetadata = useMemo( () => {
 		const hiddenSlugs = new Set( [
@@ -160,7 +190,7 @@ const TainacanItemTimeline = ( { item, isLoading, notice, onBack } ) => {
 				<div>
 					<Button
 						className="tainacan-item-detail-back"
-						variant="tertiary"
+						variant="primary"
 						icon="arrow-left-alt2"
 						onClick={ onBack }
 					>
@@ -235,9 +265,9 @@ const TainacanItemTimeline = ( { item, isLoading, notice, onBack } ) => {
 								</span>
 							</div>
 
-							{ processes.length > 0 ? (
+							{ sortedProcesses.length > 0 ? (
 								<ol className="tainacan-item-process-timeline">
-									{ processes.map( ( process, index ) => {
+									{ sortedProcesses.map( ( process, index ) => {
 										const processStatus = getProcessStatusDetails( process );
 										const parts = formatDateParts(
 											process.date || process.modified_at || process.created_at
@@ -279,7 +309,7 @@ const TainacanItemTimeline = ( { item, isLoading, notice, onBack } ) => {
 														/>
 														<InfoRow
 															label={ __( 'Current step', 'obatala' ) }
-															value={ process.current_stage_label }
+															value={ getCurrentStageLabel( process.current_stage_label ) }
 														/>
 														<InfoRow
 															label={ __( 'Progress', 'obatala' ) }
@@ -292,7 +322,12 @@ const TainacanItemTimeline = ( { item, isLoading, notice, onBack } ) => {
 													</dl>
 
 													{ process.url && (
-														<Button variant="link" icon="arrow-right-alt2" href={ process.url }>
+														<Button
+															className="tainacan-item-view-process"
+															variant="primary"
+															icon="arrow-right-alt2"
+															href={ process.url }
+														>
 															{ __( 'View process', 'obatala' ) }
 														</Button>
 													) }

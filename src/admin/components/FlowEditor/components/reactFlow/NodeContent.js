@@ -117,6 +117,10 @@ const NodeContent = ({ id, data = {} }) => {
     const [sector, setSector] = useState(filteredNode?.sector_obatala || '');
 
     useEffect(() => {
+        setSector(filteredNode?.tempSector || filteredNode?.sector_obatala || '');
+    }, [filteredNode?.tempSector, filteredNode?.sector_obatala]);
+
+    useEffect(() => {
         loadSectors();
     }, []);
 
@@ -151,9 +155,19 @@ const NodeContent = ({ id, data = {} }) => {
     };
 
     const addFieldToNode = (fieldId) => {
-        const sameTypeFields = fields.filter(field => field.type === fieldId).length;   
+        const existingIds = new Set(fields.map(field => String(field.id)));
+        let uniqueSuffix;
+        let newFieldId;
+
+        do {
+            uniqueSuffix = typeof globalThis.crypto?.randomUUID === "function"
+                ? globalThis.crypto.randomUUID()
+                : `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`;
+            newFieldId = `${id}_${fieldId}-${uniqueSuffix}`;
+        } while (existingIds.has(newFieldId));
+
         const newField = {
-            id: `${id}_${fieldId}-${sameTypeFields + 1}`,
+            id: newFieldId,
             type: fieldId,
             title: "Campo sem título",
         };
