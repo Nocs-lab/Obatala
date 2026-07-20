@@ -10,6 +10,7 @@ class TainacanExportService {
     const EXPORT_DECISION_META_KEY = '_obatala_tainacan_export_decision';
     const PROCESS_STATUS_AWAITING_EXPORT_CONFIRMATION = 'Awaiting export confirmation';
     private const MAPPER_STATUS_ENABLED = 'enabled';
+    private const MAPPER_STATUS_DISABLED = 'disabled';
     private const PROCESS_STATUS_FINISHED = 'Finished';
     private const PROCESS_REFERENCE_METADATA_SLUG = 'obatala-process-reference';
     private const PROCESS_REFERENCE_METADATA_NAME = 'Link do processo no Obatala';
@@ -22,7 +23,7 @@ class TainacanExportService {
 
         $runtime = [
             'enabled' => false,
-            'mapper_status' => self::MAPPER_STATUS_ENABLED,
+            'mapper_status' => self::MAPPER_STATUS_DISABLED,
             'requires_export_confirmation' => false,
             'process_id' => $process_id,
             'process_type_id' => $process_type_id,
@@ -66,7 +67,7 @@ class TainacanExportService {
         $stage_field_index = $this->build_stage_field_index($stage_data);
         $flow_fields_index = $this->build_flow_fields_index($process_id);
         $mapping_config = $this->get_mapping_service()->get_mapping_config_for_process($process_id, $process_type_id);
-        $runtime['mapper_status'] = (string) ($mapping_config['status'] ?? self::MAPPER_STATUS_ENABLED);
+        $runtime['mapper_status'] = (string) ($mapping_config['status'] ?? self::MAPPER_STATUS_DISABLED);
 
         if ($runtime['mapper_status'] !== self::MAPPER_STATUS_ENABLED) {
             $runtime['message'] = 'Mapeador desabilitado para este modelo de processo.';

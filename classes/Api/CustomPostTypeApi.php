@@ -187,6 +187,12 @@ class CustomPostTypeApi extends ObatalaAPI {
      * Creates a process and assigns its unique number.
      */
     public function create_process_item($request, WP_REST_Posts_Controller $controller) {
+        $process_type_id = (int) $request->get_param('process_type');
+        $validation_error = $this->validate_process_type_for_creation($process_type_id);
+        if (is_wp_error($validation_error)) {
+            return $validation_error;
+        }
+
         $response = $controller->create_item($request);
         if (is_wp_error($response)) {
             return $response;
@@ -208,6 +214,122 @@ class CustomPostTypeApi extends ObatalaAPI {
         $data = $this->attach_process_meta($data, Process::get_post_type());
         $response->set_data($data);
         return $response;
+    }
+
+    /**
+     * Prevents process creation from inactive or structurally incomplete models.
+     */
+    private function validate_process_type_for_creation($process_type_id) {
+        $process_type = get_post($process_type_id);
+        if (!$process_type || $process_type->post_type !== 'process_type') {
+            return new WP_Error(
+                'obatala_invalid_process_type',
+                __('Invalid process model selected.', 'obatala'),
+                ['status' => 400]
+            );
+        }
+
+        if (get_post_meta($process_type_id, 'status', true) !== 'Active') {
+            return new WP_Error(
+                'obatala_inactive_process_type',
+                __('The process cannot be created because the selected process model is inactive', 'obatala'),
+                ['status' => 400]
+            );
+        }
+
+        $flow_data = get_post_meta($process_type_id, 'flowData', true);
+        if (is_string($flow_data)) {
+            $flow_data = json_decode($flow_data, true);
+        }
+
+        $nodes = is_array($flow_data) && isset($flow_data['nodes']) && is_array($flow_data['nodes'])
+            ? $flow_data['nodes']
+            : [];
+        $edges = is_array($flow_data) && isset($flow_data['edges']) && is_array($flow_data['edges'])
+            ? $flow_data['edges']
+            : [];
+
+        $nodes_by_id = [];
+        foreach ($nodes as $node) {
+            $node_id = isset($node['id']) ? (string) $node['id'] : '';
+            if ($node_id !== '') {
+                $nodes_by_id[$node_id] = $node;
+            }
+        }
+
+        $regular_nodes = array_filter($nodes_by_id, function ($node, $node_id) {
+            return $node_id !== 'Start'
+                && $node_id !== 'End'
+                && strpos($node_id, 'Condicional') !== 0;
+        }, ARRAY_FILTER_USE_BOTH);
+
+        $sectors = json_decode((string) get_option('obatala_setores', '{}'), true);
+        $sectors = is_array($sectors) ? $sectors : [];
+
+        if (!isset($nodes_by_id['Start'], $nodes_by_id['End']) || empty($regular_nodes)) {
+            return $this->incomplete_process_type_error();
+        }
+
+        foreach ($regular_nodes as $node) {
+            $fields = $node['data']['fields'] ?? [];
+            $sector_id = (string) ($node['tempSector'] ?? $node['sector_obatala'] ?? '');
+            if (empty($fields) || $sector_id === '' || !isset($sectors[$sector_id])) {
+                return $this->incomplete_process_type_error();
+            }
+        }
+
+        $incoming = array_fill_keys(array_keys($nodes_by_id), 0);
+        $outgoing = array_fill_keys(array_keys($nodes_by_id), 0);
+        $graph = array_fill_keys(array_keys($nodes_by_id), []);
+
+        foreach ($edges as $edge) {
+            $source = isset($edge['source']) ? (string) $edge['source'] : '';
+            $target = isset($edge['target']) ? (string) $edge['target'] : '';
+            if (!isset($nodes_by_id[$source], $nodes_by_id[$target])) {
+                continue;
+            }
+            $outgoing[$source]++;
+            $incoming[$target]++;
+            $graph[$source][] = $target;
+        }
+
+        foreach ($nodes_by_id as $node_id => $node) {
+            if (
+                ($node_id !== 'Start' && $incoming[$node_id] === 0)
+                || ($node_id !== 'End' && $outgoing[$node_id] === 0)
+            ) {
+                return $this->incomplete_process_type_error();
+            }
+        }
+
+        $visited = [];
+        $queue = ['Start'];
+        while (!empty($queue)) {
+            $node_id = array_shift($queue);
+            if (isset($visited[$node_id])) {
+                continue;
+            }
+            $visited[$node_id] = true;
+            foreach ($graph[$node_id] as $target) {
+                if (!isset($visited[$target])) {
+                    $queue[] = $target;
+                }
+            }
+        }
+
+        if (count($visited) !== count($nodes_by_id) || !isset($visited['End'])) {
+            return $this->incomplete_process_type_error();
+        }
+
+        return null;
+    }
+
+    private function incomplete_process_type_error() {
+        return new WP_Error(
+            'obatala_incomplete_process_type',
+            __('The selected process model is incomplete. Connect all steps and define at least one field and a valid group for each step.', 'obatala'),
+            ['status' => 400]
+        );
     }
 
     /**

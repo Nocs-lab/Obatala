@@ -375,6 +375,22 @@ msgstr ""
 "O processo não pode ser criado porque o modelo de processo selecionado está "
 "inativo"
 
+msgid ""
+"The selected process model is incomplete. Connect all steps and define at "
+"least one field and a valid group for each step."
+msgstr ""
+"O modelo de processo selecionado está incompleto. Conecte todas as etapas e "
+"defina pelo menos um campo e um grupo válido para cada etapa."
+
+msgid "Field names must be unique within each step. Check: %s"
+msgstr "Os nomes dos campos devem ser únicos dentro de cada etapa. Verifique: %s"
+
+msgid "Some fields have an empty or default name. Check: %s"
+msgstr "Alguns campos estão sem nome ou mantêm o nome padrão. Verifique: %s"
+
+msgid "%1$s (field %2$d)"
+msgstr "%1$s (campo %2$d)"
+
 msgid "Process updated successfully."
 msgstr "Processo atualizado com sucesso."
 

@@ -569,10 +569,10 @@ class ExporterApi extends ObatalaAPI {
 
     private function normalize_mapper_status($status) {
         $normalized = strtolower(trim((string) $status));
-        if ($normalized === self::MAPPER_STATUS_DISABLED || $normalized === 'desabilitado') {
-            return self::MAPPER_STATUS_DISABLED;
+        if ($normalized === self::MAPPER_STATUS_ENABLED || $normalized === 'habilitado') {
+            return self::MAPPER_STATUS_ENABLED;
         }
-        return self::MAPPER_STATUS_ENABLED;
+        return self::MAPPER_STATUS_DISABLED;
     }
 
     private function build_unique_header_label($header_label, array &$used_headers) {

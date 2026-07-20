@@ -3,6 +3,67 @@ import { Button, SelectControl, TextControl, Notice } from '@wordpress/component
 import apiFetch from '@wordpress/api-fetch';
 import { __ } from '@wordpress/i18n';
 
+const isProcessModelComplete = (flowData) => {
+    const nodes = Array.isArray(flowData?.nodes) ? flowData.nodes : [];
+    const edges = Array.isArray(flowData?.edges) ? flowData.edges : [];
+    const nodesById = new Map(nodes.filter(node => node?.id).map(node => [String(node.id), node]));
+    const regularNodes = nodes.filter(node => {
+        const nodeId = String(node?.id || '');
+        return nodeId !== 'Start' && nodeId !== 'End' && !nodeId.startsWith('Condicional');
+    });
+
+    if (!nodesById.has('Start') || !nodesById.has('End') || regularNodes.length === 0) {
+        return false;
+    }
+
+    if (regularNodes.some(node => {
+        const fields = node?.data?.fields;
+        return !Array.isArray(fields) || fields.length === 0 || !(node.tempSector || node.sector_obatala);
+    })) {
+        return false;
+    }
+
+    const incoming = new Map([...nodesById.keys()].map(nodeId => [nodeId, 0]));
+    const outgoing = new Map([...nodesById.keys()].map(nodeId => [nodeId, 0]));
+    const graph = new Map([...nodesById.keys()].map(nodeId => [nodeId, []]));
+
+    edges.forEach(edge => {
+        const source = String(edge?.source || '');
+        const target = String(edge?.target || '');
+        if (!nodesById.has(source) || !nodesById.has(target)) {
+            return;
+        }
+        outgoing.set(source, outgoing.get(source) + 1);
+        incoming.set(target, incoming.get(target) + 1);
+        graph.get(source).push(target);
+    });
+
+    const hasDisconnectedNode = [...nodesById.keys()].some(nodeId =>
+        (nodeId !== 'Start' && incoming.get(nodeId) === 0)
+        || (nodeId !== 'End' && outgoing.get(nodeId) === 0)
+    );
+    if (hasDisconnectedNode) {
+        return false;
+    }
+
+    const visited = new Set();
+    const queue = ['Start'];
+    while (queue.length > 0) {
+        const nodeId = queue.shift();
+        if (visited.has(nodeId)) {
+            continue;
+        }
+        visited.add(nodeId);
+        graph.get(nodeId).forEach(target => {
+            if (!visited.has(target)) {
+                queue.push(target);
+            }
+        });
+    }
+
+    return visited.size === nodesById.size && visited.has('End');
+};
+
 const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel }) => {
     const [newProcessTitle, setNewProcessTitle] = useState('');
     const [newProcessType, setNewProcessType] = useState('');
@@ -67,23 +128,33 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
                 onProcessSaved(fullProcess);
                 setNotice({ status: 'success', message: __('Process updated successfully.', 'obatala') });
                 return;
-            } else {
-                // Cria o processo
-                savedProcess = await apiFetch({
-                    path: `/obatala/v1/process_obatala`,
-                    method: 'POST',
-                    data: newProcess
-                });
             }
 
             // get our process type meta fields
             const metaFields = await apiFetch({ path: `/obatala/v1/process_type/${selectedProcessModel.id}/meta` })
 
-            // Atualiza o meta para o processocom os dados do fluxo
-            if (metaFields.status === 'Inactive') {
+            if (metaFields.status !== 'Active') {
                 setNotice({ status: 'error', message: __('The process cannot be created because the selected process model is inactive', 'obatala') });
+                return;
+            }
 
-            } else {
+            if (!isProcessModelComplete(metaFields.flowData)) {
+                setNotice({
+                    status: 'error',
+                    message: __('The selected process model is incomplete. Connect all steps and define at least one field and a valid group for each step.', 'obatala')
+                });
+                return;
+            }
+
+            savedProcess = await apiFetch({
+                path: `/obatala/v1/process_obatala`,
+                method: 'POST',
+                data: {
+                    ...newProcess,
+                    process_type: selectedProcessModel.id,
+                }
+            });
+
                 const metaUpdateData = {
                     process_type: selectedProcessModel.id,
                     access_level: accessLevel,
@@ -115,11 +186,9 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
                 setAccessLevel('Not restricted');
                 setNotice({ status: 'success', message: editingProcess ? __('Process updated successfully.', 'obatala') : __('Process created successfully.', 'obatala') });
 
-            }
-
         } catch (error) {
             console.error('Error creating process:', error);
-            setNotice({ status: 'error', message: __('Error creating process.', 'obatala') });
+            setNotice({ status: 'error', message: error?.message || __('Error creating process.', 'obatala') });
         }
     };
 

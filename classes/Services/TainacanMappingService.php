@@ -53,7 +53,7 @@ class TainacanMappingService {
 
     public function normalize_mapping_config(array $mapping_data) {
         $mappings = is_array($mapping_data['mappings'] ?? null) ? $mapping_data['mappings'] : [];
-        $raw_status = self::MAPPER_STATUS_ENABLED;
+        $raw_status = self::MAPPER_STATUS_DISABLED;
         if (isset($mappings['status'])) {
             $raw_status = $mappings['status'];
         } elseif (isset($mapping_data['status'])) {
@@ -127,7 +127,7 @@ class TainacanMappingService {
 
     public function build_process_mapping_snapshot($process_type_id) {
         $config = $this->get_mapping_config_for_process_type($process_type_id);
-        $status = $this->normalize_mapper_status($config['status'] ?? self::MAPPER_STATUS_ENABLED);
+        $status = $this->normalize_mapper_status($config['status'] ?? self::MAPPER_STATUS_DISABLED);
 
         if (empty($config['profiles']) && $status !== self::MAPPER_STATUS_DISABLED) {
             return [];
@@ -151,7 +151,7 @@ class TainacanMappingService {
     }
 
     public function apply_profile_options_to_flow_data_from_config(array $flow_data, array $mapping_config) {
-        if ($this->normalize_mapper_status($mapping_config['status'] ?? self::MAPPER_STATUS_ENABLED) === self::MAPPER_STATUS_DISABLED) {
+        if ($this->normalize_mapper_status($mapping_config['status'] ?? self::MAPPER_STATUS_DISABLED) === self::MAPPER_STATUS_DISABLED) {
             return $flow_data;
         }
 
@@ -422,9 +422,9 @@ class TainacanMappingService {
 
     private function normalize_mapper_status($status) {
         $normalized = strtolower(trim((string) $status));
-        if ($normalized === self::MAPPER_STATUS_DISABLED || $normalized === 'desabilitado') {
-            return self::MAPPER_STATUS_DISABLED;
+        if ($normalized === self::MAPPER_STATUS_ENABLED || $normalized === 'habilitado') {
+            return self::MAPPER_STATUS_ENABLED;
         }
-        return self::MAPPER_STATUS_ENABLED;
+        return self::MAPPER_STATUS_DISABLED;
     }
 }

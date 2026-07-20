@@ -375,6 +375,22 @@ msgstr ""
 "El proceso no puede crearse porque el modelo de proceso seleccionado está "
 "inactivo"
 
+msgid ""
+"The selected process model is incomplete. Connect all steps and define at "
+"least one field and a valid group for each step."
+msgstr ""
+"El modelo de proceso seleccionado está incompleto. Conecte todas las etapas "
+"y defina al menos un campo y un grupo válido para cada etapa."
+
+msgid "Field names must be unique within each step. Check: %s"
+msgstr "Los nombres de los campos deben ser únicos dentro de cada etapa. Compruebe: %s"
+
+msgid "Some fields have an empty or default name. Check: %s"
+msgstr "Algunos campos no tienen nombre o mantienen el nombre predeterminado. Compruebe: %s"
+
+msgid "%1$s (field %2$d)"
+msgstr "%1$s (campo %2$d)"
+
 msgid "Process updated successfully."
 msgstr "Proceso actualizado correctamente."
 

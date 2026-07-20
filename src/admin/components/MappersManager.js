@@ -363,13 +363,13 @@ const getProfileSelectorFieldIdFromSavedData = (savedData) => {
 
 const normalizeMapperStatus = (status) => {
     const normalized = String(status || '').trim().toLowerCase();
-    return normalized === MAPPER_STATUS_DISABLED || normalized === 'desabilitado'
-        ? MAPPER_STATUS_DISABLED
-        : MAPPER_STATUS_ENABLED;
+    return normalized === MAPPER_STATUS_ENABLED || normalized === 'habilitado'
+        ? MAPPER_STATUS_ENABLED
+        : MAPPER_STATUS_DISABLED;
 };
 
 const getMapperStatusFromSavedData = (savedData) => {
-    if (!savedData) return MAPPER_STATUS_ENABLED;
+    if (!savedData) return MAPPER_STATUS_DISABLED;
 
     if (savedData.mappings && !Array.isArray(savedData.mappings) && savedData.mappings.status !== undefined) {
         return normalizeMapperStatus(savedData.mappings.status);
@@ -379,7 +379,7 @@ const getMapperStatusFromSavedData = (savedData) => {
         return normalizeMapperStatus(savedData.status);
     }
 
-    return MAPPER_STATUS_ENABLED;
+    return MAPPER_STATUS_DISABLED;
 };
 
 const normalizeProfileKey = (value = '') => {
@@ -960,7 +960,7 @@ const MappersManager = () => {
     const [stepsProcessModel, setStepsProcessModel] = useState([]);
     const [collectionsTainacan, setCollectionsTainacan] = useState([]);
     const [metadataTainacan, setMetadaTainacan] = useState([]);
-    const [mapperStatus, setMapperStatus] = useState(MAPPER_STATUS_ENABLED);
+    const [mapperStatus, setMapperStatus] = useState(MAPPER_STATUS_DISABLED);
     const [profileSelectorFieldId, setProfileSelectorFieldId] = useState(FIXED_PROFILE_SELECTOR_FIELD_ID);
     const [decisionConfig, setDecisionConfig] = useState(getDefaultControlDecisionConfig());
     const [profiles, setProfiles] = useState([]);
@@ -1644,7 +1644,7 @@ const MappersManager = () => {
                 const defaultProfiles = [];
                 setProfiles(defaultProfiles);
                 setActiveProfileKey('');
-                setMapperStatus(MAPPER_STATUS_ENABLED);
+                setMapperStatus(MAPPER_STATUS_DISABLED);
                 setProfileSelectorFieldId(FIXED_PROFILE_SELECTOR_FIELD_ID);
                 setDecisionConfig(getDefaultControlDecisionConfig());
             } else {
@@ -1661,7 +1661,7 @@ const MappersManager = () => {
         const defaultProfiles = [];
         setProfiles(defaultProfiles);
         setActiveProfileKey('');
-        setMapperStatus(MAPPER_STATUS_ENABLED);
+        setMapperStatus(MAPPER_STATUS_DISABLED);
         setProfileSelectorFieldId(FIXED_PROFILE_SELECTOR_FIELD_ID);
         setDecisionConfig(getDefaultControlDecisionConfig());
     }
