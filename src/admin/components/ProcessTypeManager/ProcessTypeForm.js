@@ -54,7 +54,10 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
             });
             // Não limpe os campos após o salvamento, apenas exiba o aviso de sucesso.
         } catch (error) {
-            setNotice({ status: "error", message: __("Error saving process type.", "obatala") });
+            setNotice({
+                status: "error",
+                message: error?.message || __("Error saving process type.", "obatala")
+            });
         }
     };
 

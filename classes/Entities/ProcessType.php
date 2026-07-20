@@ -80,6 +80,28 @@ class ProcessType {
             'show_in_rest' => true,
         ]);
 
+        register_post_meta('process_type', 'status', [
+            'type' => 'string',
+            'description' => 'Process Type Status',
+            'single' => true,
+            'show_in_rest' => true,
+            'default' => 'Active',
+        ]);
+
+        register_post_meta('process_type', 'updateAt', [
+            'type' => 'string',
+            'description' => 'Process Type Last Update',
+            'single' => true,
+            'show_in_rest' => true,
+        ]);
+
+        register_post_meta('process_type', 'user', [
+            'type' => 'string',
+            'description' => 'Process Type Last Editor',
+            'single' => true,
+            'show_in_rest' => true,
+        ]);
+
         register_post_meta('process_type', 'step_order', [
             'type' => 'array',
             'description' => 'Order of the Steps',

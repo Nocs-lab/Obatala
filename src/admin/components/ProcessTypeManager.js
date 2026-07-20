@@ -9,7 +9,7 @@ import {
     __experimentalConfirmDialog as ConfirmDialog 
 } from '@wordpress/components';
 import { plus } from "@wordpress/icons";
-import { fetchProcessModels, saveProcessType, deleteProcessType, updateProcessTypeMeta } from '../api/apiRequests';
+import { fetchProcessModels, saveProcessType, deleteProcessType } from '../api/apiRequests';
 import ProcessTypeForm from './ProcessTypeManager/ProcessTypeForm';
 import ProcessTypeList from './ProcessTypeManager/ProcessTypeList';
 import Reducer, { initialState } from '../redux/reducer';
@@ -52,20 +52,11 @@ const ProcessTypeManager = () => {
     const handleSaveProcessType = async (processType) => {
         setIsLoading(true);
         try {
-            let savedProcessType;
             if (editingProcessType) {
-                savedProcessType = await saveProcessType(processType, editingProcessType);
-
+                await saveProcessType(processType, editingProcessType);
             } else {
-                savedProcessType = await saveProcessType(processType);
-            }          
-            const meta = {
-                description: processType.meta.description || '',
-                status: processType.meta.status || '',
-                updateAt: processType.meta.updateAt,
-                user: processType.meta.user || ''
-            };
-            await updateProcessTypeMeta(savedProcessType.id, meta);
+                await saveProcessType(processType);
+            }
 
             setNotice({ status: 'success', message: __('Process model saved successfully.', 'obatala') });
             setEditingProcessType(null);
@@ -74,8 +65,12 @@ const ProcessTypeManager = () => {
             loadProcessTypes();
         } catch (error) {
             console.error('Error saving process model:', error);
-            setNotice({ status: 'error', message: __('Error saving process model.', 'obatala') });
+            setNotice({
+                status: 'error',
+                message: error?.message || __('Error saving process model.', 'obatala')
+            });
             setIsLoading(false);
+            throw error;
         }
     };
 
