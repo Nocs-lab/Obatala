@@ -450,12 +450,6 @@ const processDataEditor = () => {
                 data: updatedData,
             });
 
-            await debugApiRequest({
-                path: `/obatala/v1/process_type/${id}/meta`,
-                method: "PUT",
-                data: updatedData.meta,
-            });
-
             for (const node of flowData.nodes) {
                 if (node.tempSector) {
                     try {
