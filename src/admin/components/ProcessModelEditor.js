@@ -20,6 +20,61 @@ import BrandFooter from "./BrandFooter";
 const MAPPER_STATUS_ENABLED = "enabled";
 const MAPPER_STATUS_DISABLED = "disabled";
 
+const debugApiRequest = async ({ path, method, data }) => {
+    const startedAt = performance.now();
+
+    try {
+        const response = await apiFetch({
+            path,
+            method,
+            data,
+            parse: false,
+        });
+        const rawBody = await response.text();
+
+        if (!rawBody) {
+            return null;
+        }
+
+        try {
+            return JSON.parse(rawBody);
+        } catch (parseError) {
+            console.group("Obatalá: resposta REST inválida");
+            console.error("A resposta não é um JSON válido.", parseError);
+            console.log("URL:", response.url || path);
+            console.log("Método:", method);
+            console.log("Status:", response.status, response.statusText);
+            console.log("Content-Type:", response.headers.get("content-type"));
+            console.log("Duração:", `${Math.round(performance.now() - startedAt)}ms`);
+            console.log("Corpo bruto:", rawBody);
+            console.groupEnd();
+
+            throw new Error(
+                `Resposta inválida em ${method} ${path}. HTTP ${response.status}. Consulte o console.`
+            );
+        }
+    } catch (error) {
+        if (error instanceof Response) {
+            const rawBody = await error.text();
+
+            console.group("Obatalá: erro na requisição REST");
+            console.error("URL:", error.url || path);
+            console.log("Método:", method);
+            console.log("Status:", error.status, error.statusText);
+            console.log("Content-Type:", error.headers.get("content-type"));
+            console.log("Duração:", `${Math.round(performance.now() - startedAt)}ms`);
+            console.log("Corpo bruto:", rawBody);
+            console.groupEnd();
+
+            throw new Error(
+                `Erro HTTP ${error.status} em ${method} ${path}. Consulte o console.`
+            );
+        }
+
+        throw error;
+    }
+};
+
 const normalizeMapperStatus = (status) => {
     const normalized = String(status || "").trim().toLowerCase();
     return normalized === MAPPER_STATUS_ENABLED || normalized === "habilitado"
@@ -389,13 +444,13 @@ const processDataEditor = () => {
                 },
             };
 
-            await apiFetch({
+            await debugApiRequest({
                 path: `/obatala/v1/process_type/${id}`,
                 method: "PUT",
                 data: updatedData,
             });
 
-            await apiFetch({
+            await debugApiRequest({
                 path: `/obatala/v1/process_type/${id}/meta`,
                 method: "PUT",
                 data: updatedData.meta,
