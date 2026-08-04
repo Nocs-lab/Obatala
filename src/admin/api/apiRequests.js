@@ -1,4 +1,5 @@
 import apiFetch from '@wordpress/api-fetch';
+import { __ } from '@wordpress/i18n';
 
 export const fetchProcessModels = () => {
 	return apiFetch( {
@@ -108,6 +109,14 @@ export const fetchProcessExportRuntime = ( processId ) => {
 	} );
 };
 
+export const saveProcessExportInput = ( processId, input ) => {
+	return apiFetch( {
+		path: `/obatala/v1/exporter/process/${ processId }/input`,
+		method: 'POST',
+		data: { input },
+	} );
+};
+
 export const fetchProcessSpreadsheetTemplate = ( processId ) => {
 	return apiFetch( {
 		path: `/obatala/v1/exporter/process/${ processId }/spreadsheet-template`,
@@ -155,12 +164,40 @@ const maybeUnserialize = ( data ) => {
 	}
 };
 
-export const saveProcessType = ( processType, editingProcessType ) => {
+export const saveProcessType = async ( processType, editingProcessType ) => {
 	const path = editingProcessType
 		? `/obatala/v1/process_type/${ editingProcessType.id }`
 		: `/obatala/v1/process_type`;
 	const method = editingProcessType ? 'PUT' : 'POST';
-	return apiFetch( { path, method, data: processType } );
+	const { meta = {}, ...postData } = processType || {};
+	const savedProcessType = await apiFetch( {
+		path,
+		method,
+		data: postData,
+	} );
+	const processTypeId = editingProcessType?.id || savedProcessType?.id;
+
+	if ( ! processTypeId ) {
+		throw new Error( __( 'Error saving process model.', 'obatala' ) );
+	}
+
+	if ( Object.keys( meta ).length > 0 ) {
+		await updateProcessTypeMeta( processTypeId, meta );
+	}
+
+	const persistedProcessType = await fetchProcessTypeById( processTypeId );
+	if ( Object.prototype.hasOwnProperty.call( meta, 'description' ) ) {
+		const persistedDescription = Array.isArray(
+			persistedProcessType?.meta?.description
+		)
+			? persistedProcessType.meta.description[ 0 ]
+			: persistedProcessType?.meta?.description;
+		if ( String( persistedDescription || '' ) !== String( meta.description || '' ) ) {
+			throw new Error( __( 'Error saving process model.', 'obatala' ) );
+		}
+	}
+
+	return persistedProcessType;
 };
 
 export const updateProcessTypeMeta = ( id, meta ) => {

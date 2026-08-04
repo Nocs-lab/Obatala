@@ -638,6 +638,117 @@ msgstr "Última atualização"
 msgid "Manage steps"
 msgstr "Gerenciar etapas"
 
+msgid "Manage model"
+msgstr "Gerenciar Modelo"
+
+msgid "Tainacan Export"
+msgstr "Exportação para o Tainacan"
+
+msgid "Enable mapper status"
+msgstr "Ativar status do mapeador"
+
+msgid "Mapper status"
+msgstr "Status do mapeador"
+
+msgid "Enable to configure field export to Tainacan."
+msgstr "Ative para configurar a exportação dos fields para o Tainacan."
+
+msgid "Target collections"
+msgstr "Coleções de destino"
+
+msgid "Select one or more collections…"
+msgstr "Selecione uma ou mais coleções…"
+
+msgid "Select at least one collection to map fields."
+msgstr "Selecione ao menos uma coleção para mapear os fields."
+
+msgid "Tainacan mapping summary"
+msgstr "Resumo do mapeamento Tainacan"
+
+msgid "Obatala field"
+msgstr "Field do Obatalá"
+
+msgid "Tainacan metadata"
+msgstr "Metadado Tainacan"
+
+msgid "No fields mapped in this collection."
+msgstr "Nenhum field mapeado nesta coleção."
+
+msgid "Do not map this field"
+msgstr "Não mapear este field"
+
+msgid "Select metadata"
+msgstr "Selecione o metadado"
+
+msgid "Target collection"
+msgstr "Coleção de destino"
+
+msgid "Target metadata"
+msgstr "Metadado de destino"
+
+msgid "Could not load the Tainacan configuration."
+msgstr "Não foi possível carregar a configuração do Tainacan."
+
+msgid "Could not save the mapping."
+msgstr "Não foi possível salvar o mapeamento."
+
+msgid "Select at least one target collection to configure the mapper."
+msgstr "Selecione ao menos uma coleção de destino para configurar o mapeador."
+
+msgid "Tainacan export preparation"
+msgstr "Preparação da exportação para o Tainacan"
+
+msgid "Define how this process will generate items without adding technical fields to its steps."
+msgstr "Defina como este processo gerará itens sem adicionar fields técnicos às etapas."
+
+msgid "Number of items"
+msgstr "Número de itens"
+
+msgid "One item"
+msgstr "Um item"
+
+msgid "Multiple items"
+msgstr "Vários itens"
+
+msgid "Quantity of items"
+msgstr "Quantidade de itens"
+
+msgid "Data source"
+msgstr "Origem dos dados"
+
+msgid "Manual entry"
+msgstr "Preenchimento manual"
+
+msgid "Spreadsheet"
+msgstr "Planilha"
+
+msgid "Select spreadsheet"
+msgstr "Selecionar planilha"
+
+msgid "Repeat base values between items"
+msgstr "Repetir valores-base entre os itens"
+
+msgid "Unique identifier field"
+msgstr "Field identificador único"
+
+msgid "Select a field…"
+msgstr "Selecione um field…"
+
+msgid "Use an identifier prefix"
+msgstr "Usar prefixo no identificador"
+
+msgid "Identifier prefix"
+msgstr "Prefixo do identificador"
+
+msgid "Save export preparation"
+msgstr "Salvar preparação da exportação"
+
+msgid "Could not save the export preparation."
+msgstr "Não foi possível salvar a preparação da exportação."
+
+msgid "Export preparation saved successfully."
+msgstr "Preparação da exportação salva com sucesso."
+
 msgid "Edit export data"
 msgstr "Editar dados de exportação"
 

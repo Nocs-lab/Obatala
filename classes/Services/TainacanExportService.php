@@ -8,7 +8,9 @@ class TainacanExportService {
     const MANUAL_ITEMS_META_KEY = '_obatala_tainacan_manual_items';
     const EXPORT_RESULT_META_KEY = '_obatala_tainacan_export_result';
     const EXPORT_DECISION_META_KEY = '_obatala_tainacan_export_decision';
+    const PROCESS_EXPORT_INPUT_META_KEY = '_obatala_tainacan_export_input';
     const PROCESS_STATUS_AWAITING_EXPORT_CONFIRMATION = 'Awaiting export confirmation';
+    const PROCESS_STATUS_AWAITING_EXPORT_PREPARATION = 'Awaiting export preparation';
     private const MAPPER_STATUS_ENABLED = 'enabled';
     private const MAPPER_STATUS_DISABLED = 'disabled';
     private const PROCESS_STATUS_FINISHED = 'Finished';
@@ -23,6 +25,8 @@ class TainacanExportService {
 
         $runtime = [
             'enabled' => false,
+            'configured' => false,
+            'prepared' => false,
             'mapper_status' => self::MAPPER_STATUS_DISABLED,
             'requires_export_confirmation' => false,
             'process_id' => $process_id,
@@ -56,6 +60,7 @@ class TainacanExportService {
             'existing_export_result' => $this->get_saved_export_result($process_id),
             'export_decision' => $this->build_default_export_decision('not_required', 'Confirmação de exportação não é necessária para este processo.'),
             'message' => 'Mapeamento não encontrado para este modelo de processo.',
+            'input' => [],
         ];
 
         if (!$process_type_id) {
@@ -70,28 +75,58 @@ class TainacanExportService {
         $runtime['mapper_status'] = (string) ($mapping_config['status'] ?? self::MAPPER_STATUS_DISABLED);
 
         if ($runtime['mapper_status'] !== self::MAPPER_STATUS_ENABLED) {
-            $runtime['message'] = 'Mapeador desabilitado para este modelo de processo.';
+            $runtime['message'] = $runtime['mapper_status'] === 'draft'
+                ? 'A configuração de exportação está em rascunho e ainda não possui fields mapeados.'
+                : 'Mapeador desabilitado para este modelo de processo.';
             return $runtime;
         }
+
+        $valid_profiles = array_values(array_filter(
+            is_array($mapping_config['profiles'] ?? null) ? $mapping_config['profiles'] : [],
+            function($profile) {
+                return !empty($profile['collection_id']) && !empty($profile['field_mappings']);
+            }
+        ));
+        if (empty($valid_profiles)) {
+            $runtime['message'] = 'Mapeamento incompleto: nenhuma coleção possui fields configurados.';
+            return $runtime;
+        }
+        $mapping_config['profiles'] = $valid_profiles;
+        $runtime['configured'] = true;
         $runtime['requires_export_confirmation'] = true;
 
-        if (empty($mapping_config['profiles'])) {
-            return $runtime;
-        }
-
-        $runtime['available_profiles'] = array_map(function($profile) {
+        $runtime['available_profiles'] = array_map(function($profile) use ($flow_fields_index) {
             $profile_label = (string) ($profile['collection_name'] ?? ($profile['label'] ?? ''));
             return [
                 'key' => (string) ($profile['key'] ?? ''),
                 'label' => $profile_label,
+                'collection_id' => (int) ($profile['collection_id'] ?? 0),
+                'mapped_fields' => $this->build_mapped_fields(
+                    is_array($profile['field_mappings'] ?? null) ? $profile['field_mappings'] : [],
+                    $flow_fields_index
+                ),
             ];
         }, $mapping_config['profiles']);
 
-        $profile_resolution = $this->resolve_runtime_profile($mapping_config, $stage_field_index);
+        $process_input = $this->get_process_export_input($process_id);
+        $runtime['input'] = $process_input;
+        $runtime['prepared'] = !empty($process_input['prepared']);
+        $profile_resolution = $runtime['prepared']
+            ? $this->resolve_runtime_profile_from_input($mapping_config, $process_input)
+            : $this->resolve_runtime_profile($mapping_config, $stage_field_index);
         $selected_profile = $profile_resolution['profile'];
         $selected_profile_raw = $profile_resolution['selected_raw'];
 
+        if (!$runtime['prepared'] && !empty($selected_profile_raw)) {
+            $runtime['prepared'] = true;
+            $runtime['input_source'] = 'legacy_fields';
+        }
+
         if (empty($selected_profile)) {
+            if (!$runtime['prepared']) {
+                $runtime['message'] = 'Prepare a exportação deste processo antes de concluir a tramitação.';
+                return $runtime;
+            }
             if (count($mapping_config['profiles']) > 1) {
                 $runtime['message'] = $selected_profile_raw === ''
                     ? 'Coleção de exportação ainda não foi selecionada no processo.'
@@ -114,10 +149,12 @@ class TainacanExportService {
         }
 
         $mapped_fields = $this->build_mapped_fields($field_mappings, $flow_fields_index);
-        $decision = $this->resolve_decision_state($decision_rules, $stage_field_index);
+        $decision = !empty($process_input['prepared'])
+            ? $this->resolve_decision_state_from_input($process_input)
+            : $this->resolve_decision_state($decision_rules, $stage_field_index);
 
-        $spreadsheet_file_name = '';
-        if (!empty($decision['upload_field_id'])) {
+        $spreadsheet_file_name = sanitize_file_name((string) ($process_input['spreadsheet_file_name'] ?? ''));
+        if ($spreadsheet_file_name === '' && !empty($decision['upload_field_id'])) {
             $spreadsheet_file_name = $this->extract_scalar_value($stage_field_index[$decision['upload_field_id']]['value'] ?? '');
             $spreadsheet_file_name = sanitize_file_name((string) $spreadsheet_file_name);
         }
@@ -130,6 +167,7 @@ class TainacanExportService {
         );
 
         $runtime['enabled'] = true;
+        $runtime['prepared'] = true;
         $runtime['requires_export_confirmation'] = true;
         $runtime['collection_id'] = $collection_id;
         $runtime['selected_profile'] = [
@@ -160,6 +198,93 @@ class TainacanExportService {
         $runtime['message'] = 'Configuração de exportação carregada.';
 
         return $runtime;
+    }
+
+    public function get_process_export_input($process_id) {
+        $raw = get_post_meta((int) $process_id, self::PROCESS_EXPORT_INPUT_META_KEY, true);
+        if (is_string($raw)) {
+            $decoded = json_decode($raw, true);
+            $raw = is_array($decoded) ? $decoded : [];
+        }
+        return is_array($raw) ? $raw : [];
+    }
+
+    public function save_process_export_input($process_id, array $input) {
+        $process_id = (int) $process_id;
+        $process_type_id = $this->get_process_type_id($process_id);
+        $mapping_config = $this->get_mapping_service()->get_mapping_config_for_process($process_id, $process_type_id);
+        $profiles = array_values(array_filter(
+            is_array($mapping_config['profiles'] ?? null) ? $mapping_config['profiles'] : [],
+            function($profile) {
+                return !empty($profile['collection_id']) && !empty($profile['field_mappings']);
+            }
+        ));
+
+        if (($mapping_config['status'] ?? '') !== self::MAPPER_STATUS_ENABLED || empty($profiles)) {
+            return [
+                'success' => false,
+                'message' => 'O modelo não possui uma configuração de exportação ativa e válida.',
+            ];
+        }
+
+        $profile_key = sanitize_key($input['profile_key'] ?? '');
+        $selected_profile = null;
+        foreach ($profiles as $profile) {
+            if ($profile_key !== '' && sanitize_key($profile['key'] ?? '') === $profile_key) {
+                $selected_profile = $profile;
+                break;
+            }
+        }
+        if (!$selected_profile && count($profiles) === 1) {
+            $selected_profile = $profiles[0];
+            $profile_key = sanitize_key($selected_profile['key'] ?? '');
+        }
+        if (!$selected_profile) {
+            return ['success' => false, 'message' => 'Selecione uma coleção de exportação válida.'];
+        }
+
+        $mode = sanitize_key($input['mode'] ?? 'single');
+        $is_multiple = $mode === 'multiple';
+        $quantity = $is_multiple ? max(1, (int) ($input['quantity'] ?? 1)) : 1;
+        $entry_mode = sanitize_key($input['entry_mode'] ?? 'manual');
+        if (!in_array($entry_mode, ['manual', 'upload'], true)) {
+            $entry_mode = 'manual';
+        }
+        $spreadsheet_file_name = sanitize_file_name($input['spreadsheet_file_name'] ?? '');
+        if ($is_multiple && $entry_mode === 'upload' && $spreadsheet_file_name === '') {
+            return ['success' => false, 'message' => 'Envie a planilha antes de preparar a exportação.'];
+        }
+
+        $normalized = [
+            'schema_version' => 1,
+            'prepared' => true,
+            'profile_key' => $profile_key,
+            'collection_id' => (int) ($selected_profile['collection_id'] ?? 0),
+            'mode' => $is_multiple ? 'multiple' : 'single',
+            'quantity' => $quantity,
+            'entry_mode' => $entry_mode,
+            'spreadsheet_file_name' => $spreadsheet_file_name,
+            'spreadsheet_attachment_id' => (int) ($input['spreadsheet_attachment_id'] ?? 0),
+            'same_values' => !empty($input['same_values']),
+            'unique_field_id' => sanitize_text_field($input['unique_field_id'] ?? ''),
+            'use_prefix' => !empty($input['use_prefix']),
+            'prefix' => sanitize_text_field($input['prefix'] ?? ''),
+            'updated_at' => current_time('mysql'),
+            'updated_by' => (int) get_current_user_id(),
+        ];
+
+        update_post_meta($process_id, self::PROCESS_EXPORT_INPUT_META_KEY, $normalized);
+        if (get_post_meta($process_id, 'status', true) === self::PROCESS_STATUS_AWAITING_EXPORT_PREPARATION) {
+            $this->mark_export_pending_confirmation($process_id);
+            update_post_meta($process_id, 'status', self::PROCESS_STATUS_AWAITING_EXPORT_CONFIRMATION);
+        }
+
+        return [
+            'success' => true,
+            'message' => 'Preparação da exportação salva com sucesso.',
+            'input' => $normalized,
+            'runtime' => $this->get_runtime_config($process_id),
+        ];
     }
 
     public function save_manual_items($process_id, $rows) {
@@ -695,6 +820,33 @@ class TainacanExportService {
         ];
     }
 
+    private function resolve_runtime_profile_from_input(array $mapping_config, array $input) {
+        $profiles = is_array($mapping_config['profiles'] ?? null) ? $mapping_config['profiles'] : [];
+        $profile_key = sanitize_key($input['profile_key'] ?? '');
+        $collection_id = (int) ($input['collection_id'] ?? 0);
+
+        foreach ($profiles as $profile) {
+            if (
+                ($profile_key !== '' && sanitize_key($profile['key'] ?? '') === $profile_key)
+                || ($collection_id > 0 && (int) ($profile['collection_id'] ?? 0) === $collection_id)
+            ) {
+                return [
+                    'profile' => $profile,
+                    'selected_raw' => $profile_key ?: (string) $collection_id,
+                ];
+            }
+        }
+
+        if (count($profiles) === 1) {
+            return [
+                'profile' => $profiles[0],
+                'selected_raw' => (string) ($profiles[0]['key'] ?? ''),
+            ];
+        }
+
+        return ['profile' => null, 'selected_raw' => $profile_key];
+    }
+
     private function get_stage_data($process_id) {
         $stage_data = get_post_meta((int) $process_id, 'stageData', true);
         $stage_data = maybe_unserialize($stage_data);
@@ -934,6 +1086,27 @@ class TainacanExportService {
             'upload_field_id' => (string) $decision_rules['spreadsheet_upload_field_id'],
             'same_values_unique_id_field_id' => (string) $decision_rules['same_values_unique_id_field_id'],
             'same_values_id_prefix' => $same_values_id_prefix,
+        ];
+    }
+
+    private function resolve_decision_state_from_input(array $input) {
+        $is_multiple = ($input['mode'] ?? 'single') === 'multiple';
+        $entry_mode = ($input['entry_mode'] ?? 'manual') === 'upload' ? 'upload' : 'manual';
+        $use_prefix = !empty($input['use_prefix']);
+
+        return [
+            'is_multiple' => $is_multiple,
+            'quantity' => $is_multiple ? max(1, (int) ($input['quantity'] ?? 1)) : 1,
+            'entry_mode' => $entry_mode,
+            'same_values_mode' => !empty($input['same_values']),
+            'multi_or_single_raw' => $is_multiple ? 'Sim' : 'Não',
+            'data_entry_mode_raw' => $entry_mode === 'upload' ? 'Planilha' : 'Manual',
+            'same_values_raw' => !empty($input['same_values']) ? 'Sim' : 'Não',
+            'same_values_prefix_mode_raw' => $use_prefix ? 'Sim' : 'Não',
+            'same_values_prefix_text_raw' => $use_prefix ? (string) ($input['prefix'] ?? '') : '',
+            'upload_field_id' => '',
+            'same_values_unique_id_field_id' => (string) ($input['unique_field_id'] ?? ''),
+            'same_values_id_prefix' => $use_prefix ? (string) ($input['prefix'] ?? '') : '',
         ];
     }
 
@@ -1924,7 +2097,9 @@ class TainacanExportService {
             $process_reference_metadatum->set_status('publish');
             $process_reference_metadatum->set_display('yes');
             $process_reference_metadatum->set_multiple('yes');
-            $process_reference_metadatum->set_html_formatting('list');
+            if (method_exists($process_reference_metadatum, 'set_html_formatting')) {
+                $process_reference_metadatum->set_html_formatting('list');
+            }
 
             $next_order = $this->get_next_collection_metadata_order($collection_id, $metadata_repository);
             if ($next_order > 0) {

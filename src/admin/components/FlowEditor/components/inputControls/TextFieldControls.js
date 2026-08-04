@@ -48,6 +48,7 @@ export const TextFieldControls = ({
   label,
   setLabel,
   config,
+  tainacanMappingControls,
 }) => {
   const { updateFieldConfig } = useFlowContext(); // Usando a função do contexto
   const [errors, setErrors] = useState({}); // Estado para armazenar erros de validação
@@ -305,6 +306,7 @@ export const TextFieldControls = ({
         placeholder="Digite um texto de ajuda"
       />
 
+      {tainacanMappingControls}
       <Button variant="primary" onClick={validateFields}>
         {__('Save', 'obatala')}
       </Button>

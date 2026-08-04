@@ -33,6 +33,7 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
 import MetaFieldDisplay from "./ProcessManager/MetaFieldDisplay";
 import ProcessHeader from './ProcessManager/ProcessHeader';
+import TainacanExportPreparation from './ProcessManager/TainacanExportPreparation';
 import HistoryViewer from './ProcessManager/HistoryViewer';
 import BrandHeader from './BrandHeader';
 import BrandFooter from './BrandFooter';
@@ -713,6 +714,20 @@ const ProcessViewer = () => {
             setExportReview(null);
         }
     }, [processId]);
+
+    const handleExportPreparationSaved = async (response) => {
+        if (response?.runtime) {
+            setExportRuntimeConfig(response.runtime);
+        } else {
+            await loadExportRuntime();
+        }
+        setNotice({
+            status: 'success',
+            message: response?.message || __('Export preparation saved successfully.', 'obatala'),
+        });
+        await loadExportReview();
+        await fetchUpdatedProcessNodes();
+    };
 
 
     const toggleAccordion = (index) => {
@@ -2645,6 +2660,9 @@ const ProcessViewer = () => {
     }));
 
     const isTramitationFinished = progress === 100;
+    const requiresExportPreparation = Boolean(
+        exportRuntimeConfig?.configured && !exportRuntimeConfig?.prepared
+    );
     const shouldShowExportReviewStep = Boolean(
         isTramitationFinished
         && exportReview?.runtime?.enabled
@@ -2666,7 +2684,9 @@ const ProcessViewer = () => {
             },
         ]
         : baseOptions;
-    const processIsComplete = progress === 100 && (!shouldShowExportReviewStep || isExportReviewCompleted);
+    const processIsComplete = progress === 100
+        && !requiresExportPreparation
+        && (!shouldShowExportReviewStep || isExportReviewCompleted);
     const activeOption = options[currentStep];
     const activeSpreadsheetStepUserAllowed = activeOption?.isVirtualExportReview
         ? (hasPermission || isPublic)
@@ -2719,7 +2739,7 @@ const ProcessViewer = () => {
                 process={process}
                 filteredProcessType={filteredProcessType}
                 authorsById={authorsById}
-                isComplete={progress && progress === 100} // Adicionado para controle do badge
+                isComplete={processIsComplete}
                 progress={progress}
             />
             <main>
@@ -2766,6 +2786,14 @@ const ProcessViewer = () => {
                             <Notice status="error" isDismissible={false}>
                                 {__("You do not have permission to access this process.", "obatala")}
                             </Notice>
+                        )}
+                        {exportRuntimeConfig?.configured && !isExportReviewCompleted && (
+                            <TainacanExportPreparation
+                                processId={processId}
+                                runtime={exportRuntimeConfig}
+                                canEdit={hasPermission || isPublic}
+                                onSaved={handleExportPreparationSaved}
+                            />
                         )}
                         <div className="panel-container">
                             <div className="accordion">

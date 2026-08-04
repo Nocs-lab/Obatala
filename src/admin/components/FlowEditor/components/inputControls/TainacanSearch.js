@@ -10,6 +10,7 @@ const TainacanSearchDetails = ( {
 	label,
 	setLabel,
 	config,
+	tainacanMappingControls,
 } ) => {
 	const { updateFieldConfig } = useFlowContext();
 	const { toggleDrawer } = useDrawer();
@@ -58,6 +59,7 @@ const TainacanSearchDetails = ( {
 				placeholder="Busca em Tainacan"
 			/>
 
+			{ tainacanMappingControls }
 			<Button variant="primary" type="button" onClick={ save }>
 				{ __( 'Save settings', 'obatala' ) }
 			</Button>

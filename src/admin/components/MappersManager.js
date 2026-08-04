@@ -182,7 +182,7 @@ const normalizeOptionLabel = (value = '') => {
         .toLowerCase();
 };
 
-const buildCollectionSelectorOptionsFromProfiles = (profiles, resolveCollectionLabel) => {
+export const buildCollectionSelectorOptionsFromProfiles = (profiles, resolveCollectionLabel) => {
     if (!Array.isArray(profiles)) {
         return [];
     }
@@ -217,7 +217,7 @@ const buildCollectionSelectorOptionsFromProfiles = (profiles, resolveCollectionL
         });
 };
 
-const syncCollectionSelectorOptionsInFlowData = (rawFlowData, selectorFieldIds, optionLabels) => {
+export const syncCollectionSelectorOptionsInFlowData = (rawFlowData, selectorFieldIds, optionLabels) => {
     const normalizedFlowData = normalizeFlowDataShape(rawFlowData);
     const flowData = JSON.parse(JSON.stringify(normalizedFlowData));
     const uniqueFieldIds = [...new Set(
@@ -618,7 +618,7 @@ const normalizeFlowDataShape = (flowData) => {
     return normalized;
 };
 
-const ensureControlFieldsInFlowData = (rawFlowData) => {
+export const ensureControlFieldsInFlowData = (rawFlowData) => {
     const flowData = JSON.parse(JSON.stringify(normalizeFlowDataShape(rawFlowData)));
     let changed = false;
     let createdDefaultStage = false;
@@ -954,7 +954,14 @@ const extractFieldIdsFromFlowData = (flowData) => {
         .filter(Boolean);
 };
 
-const MappersManager = () => {
+const MappersManager = ({
+    embedded = false,
+    processTypeId = null,
+    processModel = null,
+    flowData = null,
+    onMappingSaved = null,
+    onCancel = null,
+}) => {
     const [isLoading, setIsLoading] = useState(true);
     const [selectedProcessModel, setSelectedProcessModel] = useState(null);
     const [stepsProcessModel, setStepsProcessModel] = useState([]);
@@ -1000,7 +1007,9 @@ const MappersManager = () => {
     };
 
     useEffect(() => {
-        const idModel = Number(new URLSearchParams(window.location.search).get('process_type_id'));
+        const idModel = Number(
+            processTypeId || new URLSearchParams(window.location.search).get('process_type_id')
+        );
 
         const loadInitialData = async () => {
             setIsLoading(true);
@@ -1013,7 +1022,17 @@ const MappersManager = () => {
 
                 const filtered = models.find((model) => model.id === idModel);
                 const fullModel = filtered?.id ? await fetchProcessTypeById(filtered.id) : null;
-                const resolvedModel = fullModel || filtered || null;
+                const resolvedModel = processModel || fullModel || filtered || null;
+                const resolvedFlowData = flowData || resolvedModel?.meta?.flowData;
+                const modelWithCurrentFlow = resolvedModel
+                    ? {
+                        ...resolvedModel,
+                        meta: {
+                            ...(resolvedModel.meta || {}),
+                            ...(resolvedFlowData ? { flowData: resolvedFlowData } : {}),
+                        },
+                    }
+                    : null;
                 let parsedData = null;
                 if (mapperResponse?.mapping_data) {
                     parsedData = mapperResponse.mapping_data;
@@ -1025,7 +1044,7 @@ const MappersManager = () => {
                 const savedMapperStatus = getMapperStatusFromSavedData(parsedData);
                 setMapperStatus(savedMapperStatus);
 
-                const modelWithControlFields = resolvedModel || null;
+                const modelWithControlFields = modelWithCurrentFlow;
 
                 setSelectedProcessModel(modelWithControlFields);
                 setCollectionsTainacan(collections || []);
@@ -1085,7 +1104,38 @@ const MappersManager = () => {
         };
 
         loadInitialData();
-    }, []);
+    }, [processTypeId]);
+
+    useEffect(() => {
+        if (!embedded || !flowData) {
+            return;
+        }
+
+        setSelectedProcessModel((previousModel) => {
+            if (!previousModel) {
+                return previousModel;
+            }
+
+            return {
+                ...previousModel,
+                meta: {
+                    ...(previousModel.meta || {}),
+                    flowData,
+                },
+            };
+        });
+
+        handleProcessModelSteps(
+            Number(processTypeId || selectedProcessModel?.id),
+            {
+                ...(selectedProcessModel || processModel || {}),
+                meta: {
+                    ...((selectedProcessModel || processModel)?.meta || {}),
+                    flowData,
+                },
+            }
+        );
+    }, [embedded, flowData, processTypeId]);
 
     const currentProfile = useMemo(() => {
         if (!selectedProfiles.length) return null;
@@ -1581,6 +1631,27 @@ const MappersManager = () => {
                 return;
             }
 
+            const availableFieldIdSet = new Set(availableFieldIds.map((fieldId) => String(fieldId)));
+            const invalidMappedFields = normalizedProfiles.flatMap((profile) => (
+                profile.field_mappings
+                    .filter((mapping) => !availableFieldIdSet.has(String(mapping?.obatala_field?.value || '')))
+                    .map((mapping) => ({
+                        collection: profile.collection_name,
+                        field: mapping?.obatala_field?.label || mapping?.obatala_field?.value,
+                    }))
+            ));
+
+            if (invalidMappedFields.length) {
+                alert(
+                    "Existem campos mapeados que não estão mais presentes nas etapas: "
+                    + invalidMappedFields
+                        .map(({ collection, field }) => `${collection}: ${field}`)
+                        .join("; ")
+                    + ". Revise o mapeamento antes de salvar."
+                );
+                return;
+            }
+
             if (normalizedDecisionRules.data_entry_mode_field_id && !normalizedDecisionRules.spreadsheet_upload_field_id) {
                 alert("Selecione o campo de upload que receberá a planilha no passo 3.");
                 return;
@@ -1639,14 +1710,24 @@ const MappersManager = () => {
             });
 
             if (response.success) {
-                alert('Mapeamento salvo com sucesso!');
-                window.location.href = '?page=process-type-manager';
-                const defaultProfiles = [];
-                setProfiles(defaultProfiles);
-                setActiveProfileKey('');
-                setMapperStatus(MAPPER_STATUS_DISABLED);
-                setProfileSelectorFieldId(FIXED_PROFILE_SELECTOR_FIELD_ID);
-                setDecisionConfig(getDefaultControlDecisionConfig());
+                if (embedded) {
+                    if (typeof onMappingSaved === 'function') {
+                        onMappingSaved({
+                            message: 'Mapeamento salvo com sucesso!',
+                            flowData: modelForSave?.meta?.flowData,
+                            mapperStatus: normalizedMapperStatus,
+                        });
+                    }
+                } else {
+                    alert('Mapeamento salvo com sucesso!');
+                    window.location.href = '?page=process-type-manager';
+                    const defaultProfiles = [];
+                    setProfiles(defaultProfiles);
+                    setActiveProfileKey('');
+                    setMapperStatus(MAPPER_STATUS_DISABLED);
+                    setProfileSelectorFieldId(FIXED_PROFILE_SELECTOR_FIELD_ID);
+                    setDecisionConfig(getDefaultControlDecisionConfig());
+                }
             } else {
                 alert('Falha ao salvar: ' + (response.message || 'Erro desconhecido.'));
             }
@@ -1657,6 +1738,10 @@ const MappersManager = () => {
     };
 
     const cancelMappingData = () => {
+        if (embedded && typeof onCancel === 'function') {
+            onCancel();
+            return;
+        }
         window.location.href = '?page=process-type-manager';
         const defaultProfiles = [];
         setProfiles(defaultProfiles);
@@ -1667,8 +1752,12 @@ const MappersManager = () => {
     }
 
     const showProfileSelectorSection = false;
+    const ContentWrapper = embedded ? 'div' : 'main';
 
     if (isLoading) {
+        if (embedded) {
+            return <Spinner />;
+        }
         return (
             <>
                 <BrandHeader />
@@ -1682,13 +1771,15 @@ const MappersManager = () => {
 
     return (
         <>
-            <BrandHeader />
-            <div className="title-container">
-                <h2>
-                    <small>Edit export data</small>{selectedProcessModel?.title?.rendered}
-                </h2>
-            </div>
-            <main>
+            {!embedded && <BrandHeader />}
+            {!embedded && (
+                <div className="title-container">
+                    <h2>
+                        <small>Edit export data</small>{selectedProcessModel?.title?.rendered}
+                    </h2>
+                </div>
+            )}
+            <ContentWrapper className={embedded ? "obatala-embedded-mapper" : undefined}>
                 <Panel>
                     <PanelRow>
                         <form className="inline-edition flex-basis-100">
@@ -1895,8 +1986,8 @@ const MappersManager = () => {
                         </form>
                     </PanelRow>
                 </Panel>
-            </main>
-            <BrandFooter />
+            </ContentWrapper>
+            {!embedded && <BrandFooter />}
         </>
     );
 };

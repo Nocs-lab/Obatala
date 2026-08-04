@@ -16,12 +16,21 @@ import { store as coreStore } from '@wordpress/core-data';
 import { update } from "@wordpress/icons";
 import BrandHeader from "./BrandHeader";
 import BrandFooter from "./BrandFooter";
+import {
+    TainacanExportProvider,
+} from "./FlowEditor/context/TainacanExportContext";
+import TainacanExportPanel from "./FlowEditor/components/TainacanExportPanel";
+import TainacanMappingSummary from "./FlowEditor/components/TainacanMappingSummary";
 
 const MAPPER_STATUS_ENABLED = "enabled";
 const MAPPER_STATUS_DISABLED = "disabled";
+const MAPPER_STATUS_DRAFT = "draft";
 
 const normalizeMapperStatus = (status) => {
     const normalized = String(status || "").trim().toLowerCase();
+    if (normalized === MAPPER_STATUS_DRAFT || normalized === "rascunho") {
+        return MAPPER_STATUS_DRAFT;
+    }
     return normalized === MAPPER_STATUS_ENABLED || normalized === "habilitado"
         ? MAPPER_STATUS_ENABLED
         : MAPPER_STATUS_DISABLED;
@@ -69,8 +78,10 @@ const processDataEditor = () => {
     const [mapperStatus, setMapperStatus] = useState(MAPPER_STATUS_DISABLED);
     const flowRef = useRef(null); 
     const [flowData, setFlowData] = useState({ nodes: [], edges: [] }); 
+    const canManageMappers = window.obatalaApp?.can_manage_mappers !== false;
+    const exportConfigRef = useRef(null);
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
-    const isTainacanMapperEnabled = mapperStatus === MAPPER_STATUS_ENABLED;
+    const isTainacanMapperEnabled = mapperStatus !== MAPPER_STATUS_DISABLED;
 
     const getProcessIdFromUrl = () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -80,14 +91,14 @@ const processDataEditor = () => {
     useEffect(() => {
         setIsLoading(true);
 
-        const mapperStatusRequest = fetchMapperProcessModel(id)
+        const mapperStatusRequest = canManageMappers ? fetchMapperProcessModel(id)
             .then((mapperResponse) => {
                 return getMapperStatusFromSavedData(parseMappingData(mapperResponse?.mapping_data));
             })
             .catch((error) => {
                 console.error("Error fetching mapper status:", error);
                 return MAPPER_STATUS_DISABLED;
-            });
+            }) : Promise.resolve(MAPPER_STATUS_DISABLED);
 
         Promise.all([
             apiFetch({ path: `/obatala/v1/process_type/${id}` }),
@@ -278,7 +289,11 @@ const processDataEditor = () => {
 
     const handleSave = async () => {
         try {
-            const flowData = flowRef.current.getFlowData(); 
+            let flowData = flowRef.current.getFlowData();
+            if (canManageMappers && exportConfigRef.current?.prepareFlowData) {
+                flowData = exportConfigRef.current.prepareFlowData(flowData);
+                setFlowData(flowData);
+            }
             
             const errorMessages = [];
 
@@ -380,20 +395,19 @@ const processDataEditor = () => {
                 });
                 return;
             }
-            const updatedData = {
-                ...processData,
-                meta: {
-                    flowData, 
-                    updateAt: new Date(),
-                    user: currentUser?.name
-                },
-            };
-
             await apiFetch({
-                path: `/obatala/v1/process_type/${id}`,
+                path: `/obatala/v1/process_type/${id}/meta`,
                 method: "PUT",
-                data: updatedData,
+                data: {
+                    flowData,
+                    updateAt: new Date().toISOString(),
+                    user: currentUser?.name || "",
+                },
             });
+
+            if (canManageMappers && exportConfigRef.current?.save) {
+                await exportConfigRef.current.save();
+            }
 
             for (const node of flowData.nodes) {
                 if (node.tempSector) {
@@ -406,9 +420,28 @@ const processDataEditor = () => {
                 }
             }
 
+            const savedMeta = await apiFetch({
+                path: `/obatala/v1/process_type/${id}/meta`,
+            });
+            const savedFlowData = savedMeta?.flowData;
+            if (
+                !savedFlowData
+                || !Array.isArray(savedFlowData.nodes)
+                || !Array.isArray(savedFlowData.edges)
+            ) {
+                throw new Error(
+                    __("Error updating process type and meta.", "obatala")
+                );
+            }
+
+            setFlowData(savedFlowData);
             setProcessData({
                 ...processData,
-                meta: updatedData.meta,
+                meta: {
+                    ...processData.meta,
+                    ...savedMeta,
+                    flowData: savedFlowData,
+                },
             });
 
             setNotice({
@@ -452,29 +485,39 @@ const processDataEditor = () => {
         <>
             <BrandHeader />
             <FlowProvider>
-                <div className="title-container">
-                    <h2><small>{__('Manage steps', 'obatala')}</small>{processData.title.rendered}</h2>
-                    <ProcessControls
-                        onSave={handleSave}
-                        onCancel={handleCancelEditProcessType}
-                        toggleFullScreen={toggleFullScreen}
-                    />
-                </div>
-                <main>
-                    {notice && (
-                        <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                            {notice.message}
-                        </Notice>
-                    )}
-                    <ProcessFlow
-                        ref={flowRef}
-                        initialData={flowData}
-                        isTainacanMapperEnabled={isTainacanMapperEnabled}
-                        onSave={handleSave}
-                        onCancel={handleCancelEditProcessType}
-                        toggleFullScreen={toggleFullScreen}
-                    />
-                </main>
+                <TainacanExportProvider
+                    ref={exportConfigRef}
+                    processTypeId={id}
+                    available={canManageMappers}
+                    onStatusChange={(status) => setMapperStatus(normalizeMapperStatus(status))}
+                    onNotice={setNotice}
+                >
+                    <div className="title-container">
+                        <h2><small>{__('Edit process model', 'obatala')}</small>{processData.title.rendered}</h2>
+                        <ProcessControls
+                            onSave={handleSave}
+                            onCancel={handleCancelEditProcessType}
+                            toggleFullScreen={toggleFullScreen}
+                        />
+                    </div>
+                    <main>
+                        {notice && (
+                            <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                                {notice.message}
+                            </Notice>
+                        )}
+                        {canManageMappers && <TainacanExportPanel />}
+                        <ProcessFlow
+                            ref={flowRef}
+                            initialData={flowData}
+                            isTainacanMapperEnabled={isTainacanMapperEnabled}
+                            onSave={handleSave}
+                            onCancel={handleCancelEditProcessType}
+                            toggleFullScreen={toggleFullScreen}
+                        />
+                        {canManageMappers && <TainacanMappingSummary />}
+                    </main>
+                </TainacanExportProvider>
             </FlowProvider>
             <BrandFooter />
         </>

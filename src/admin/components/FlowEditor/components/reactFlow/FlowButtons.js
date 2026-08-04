@@ -1,11 +1,13 @@
 import React, { useRef } from "react";
 import { useFlowContext } from "../../context/FlowContext";
-import { Button } from "@wordpress/components";
-import { check, closeSmall, download, fullscreen, image, plus, upload } from "@wordpress/icons";
+import { Button, Icon } from "@wordpress/components";
+import { check, chevronDown, closeSmall, download, fullscreen, image, plus, upload } from "@wordpress/icons";
 import { __ } from "@wordpress/i18n";
+import { useTainacanExport } from "../../context/TainacanExportContext";
 
 const ProcessControls = ({onSave, onCancel, toggleFullScreen}) => {
 const { addNewNode, addNewNodeConditional, onExport, onImport, exportFlowImage } = useFlowContext();
+    const { togglePanel, isPanelOpen, available: isTainacanExportAvailable } = useTainacanExport();
 
     const fileInputRef = useRef(null);
 
@@ -54,6 +56,20 @@ const { addNewNode, addNewNodeConditional, onExport, onImport, exportFlowImage }
                 <Button icon={plus} variant="secondary" size="small" onClick={addNewNodeConditional}>
                     {__('Add conditional', 'obatala')}
                 </Button>
+                {isTainacanExportAvailable && (
+                    <Button
+                        variant={isPanelOpen ? "primary" : "secondary"}
+                        size="small"
+                        onClick={togglePanel}
+                        aria-expanded={isPanelOpen}
+                    >
+                        <span>{__('Tainacan Export', 'obatala')}</span>
+                        <Icon
+                            icon={chevronDown}
+                            className={`obatala-export-toggle-icon ${isPanelOpen ? "is-open" : ""}`}
+                        />
+                    </Button>
+                )}
                 <Button icon={closeSmall} variant="secondary" size="small" onClick={onCancel}>
                     {__('Cancel changes', 'obatala')}
                 </Button>

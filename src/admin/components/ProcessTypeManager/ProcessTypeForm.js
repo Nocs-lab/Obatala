@@ -41,8 +41,8 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
             meta: {
                 description,
                 status: editingProcessType ? status : "Active" ,
-                updateAt: new Date(),
-                user: currentUser.name
+                updateAt: new Date().toISOString(),
+                user: currentUser?.name || ""
             },
         };
 

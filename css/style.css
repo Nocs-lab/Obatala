@@ -1624,6 +1624,135 @@ button .components-spinner {
     margin-top: 0;    
   }
 }
+
+.obatala-tainacan-export-panel {
+  width: min(100%, 960px);
+  margin: 0 auto 1.5rem;
+}
+
+.obatala-tainacan-export-panel .components-panel__row {
+  padding: 1.5rem 2rem;
+}
+
+.obatala-tainacan-collections-select {
+  max-width: 720px;
+}
+
+.obatala-export-toggle-icon {
+  margin-left: 0.35rem;
+  transition: transform 160ms ease;
+}
+
+.obatala-export-toggle-icon.is-open {
+  transform: rotate(180deg);
+}
+
+.obatala-tainacan-export-panel .components-notice {
+  margin: 1rem 0 0;
+}
+
+.obatala-mapper-status-control {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.obatala-mapper-status-control input[type="checkbox"] {
+  flex: 0 0 auto;
+  margin: 0.15rem 0 0;
+  cursor: pointer;
+}
+
+.obatala-mapper-status-control strong {
+  display: block;
+  font-size: 0.9rem;
+}
+
+.obatala-mapper-status-control p {
+  margin: 0.25rem 0 0;
+  color: #646970;
+  font-size: 0.85rem;
+}
+
+.obatala-tainacan-field-mapping {
+  margin: 1.5rem 0 0;
+  padding: 1rem;
+  border: 1px solid #c3c4c7;
+  border-radius: 2px;
+  background: #f6f7f7;
+}
+
+.obatala-tainacan-field-mapping legend {
+  padding: 0 0.35rem;
+  color: #1d2327;
+  font-weight: 600;
+}
+
+.obatala-tainacan-mapping-summary {
+  width: min(100%, 960px);
+  margin: 1.5rem auto 0;
+}
+
+.obatala-export-preparation {
+  width: min(100%, 960px);
+  margin: 0 auto 1.5rem;
+  padding: 1.5rem 2rem;
+  border: 1px solid #c3c4c7;
+  border-left: 4px solid #2271b1;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.obatala-export-preparation > h3 {
+  margin-top: 0;
+}
+
+.obatala-export-preparation__file {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.obatala-tainacan-mapping-summary .components-panel__row {
+  padding: 1.5rem 2rem 2rem;
+}
+
+.obatala-tainacan-summary-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.obatala-tainacan-summary-header h3 {
+  margin-top: 0.5rem;
+}
+
+.obatala-tainacan-summary-header .components-base-control {
+  min-width: 260px;
+}
+
+@media (max-width: 782px) {
+  .obatala-tainacan-export-panel .components-panel__row,
+  .obatala-tainacan-mapping-summary .components-panel__row {
+    padding: 1rem;
+  }
+
+  .obatala-tainacan-summary-header {
+    flex-direction: column;
+  }
+
+  .obatala-tainacan-summary-header .components-base-control {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .obatala-export-preparation {
+    padding: 1rem;
+  }
+}
 .title-container p {
   font-size: 1rem;
   margin: 0;

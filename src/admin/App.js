@@ -75,7 +75,17 @@ document.addEventListener( 'DOMContentLoaded', () => {
 	}
 
 	if ( mappersManagerElement ) {
-		createRoot( mappersManagerElement ).render( <MappersManager /> );
+		const params = new URLSearchParams( window.location.search );
+		const processTypeId = params.get( 'process_type_id' );
+		if ( processTypeId ) {
+			window.location.replace(
+				`?page=process-type-editor&process_type_id=${ encodeURIComponent(
+					processTypeId
+				) }&section=export`
+			);
+		} else {
+			createRoot( mappersManagerElement ).render( <MappersManager /> );
+		}
 	}
 
 	if ( tainacanItemsElement ) {

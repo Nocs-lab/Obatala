@@ -28,7 +28,8 @@ export const SelectRadioControls = ({
   required,
   helpText,
   config,
-  isSelect // Recebendo a configuração do campo
+  isSelect, // Recebendo a configuração do campo
+  tainacanMappingControls,
 }) => {
   const { updateFieldConfig } = useFlowContext(); // Usando a função do contexto
   const [errors, setErrors] = useState({}); // Estado para armazenar erros de validação
@@ -139,6 +140,7 @@ export const SelectRadioControls = ({
       />
 
       {/* Botão Salvar */}
+      {tainacanMappingControls}
       <Button variant="primary"
         type="submit"
         //onClick={} // Valida os campos ao clicar em salvar

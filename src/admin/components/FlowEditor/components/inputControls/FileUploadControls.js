@@ -24,6 +24,7 @@ export const FileUploadControls = ({
   required,
   helpText,
   config, // Recebendo a configuração do campo
+  tainacanMappingControls,
 }) => {
   const { updateFieldConfig } = useFlowContext(); // Usando a função do contexto
   const [errors, setErrors] = useState({}); // Estado para armazenar erros de validação
@@ -95,6 +96,7 @@ export const FileUploadControls = ({
         placeholder="Digite um texto de ajuda"
       />
 
+      {tainacanMappingControls}
       {/* Botão Salvar */}
       <Button
         variant="primary"

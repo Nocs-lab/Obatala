@@ -16,6 +16,7 @@ export const StageDocumentControls = ( {
 	label,
 	setLabel,
 	config,
+	tainacanMappingControls,
 } ) => {
 	const { updateFieldConfig } = useFlowContext();
 	const { toggleDrawer } = useDrawer();
@@ -138,6 +139,7 @@ export const StageDocumentControls = ( {
 				rows={ 8 }
 			/>
 
+			{ tainacanMappingControls }
 			<Button variant="primary" onClick={ save }>
 				{ __( 'Save settings', 'obatala' ) }
 			</Button>

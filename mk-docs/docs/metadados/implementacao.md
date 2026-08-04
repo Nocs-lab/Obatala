@@ -2,6 +2,27 @@
 
 Os dados de execução das etapas são persistidos principalmente em `stageData` e `submittedStages` (post meta do processo), expostos pela `ProcessApi` (`GET/POST .../meta`). O tipo de campo `stage_document` tem fluxo próprio de PDF e upload assinado — veja [Documento da etapa](documento-etapa.md).
 
+## Exportação para o Tainacan no editor do modelo
+
+A configuração de exportação faz parte do editor do modelo de processo. Um
+usuário com a capability `obatala_manage_mappers` pode selecionar as coleções de
+destino e, no drawer de cada field, associá-lo a um metadado do Tainacan.
+
+O mapeador possui três estados: `disabled` (desativado), `draft` (configuração
+sem fields mapeados) e `enabled` (ao menos uma coleção com mapeamento válido).
+
+Os controles operacionais de exportação não são fields das etapas. Para cada
+processo, o painel **Preparação da exportação para o Tainacan** permite definir
+coleção, quantidade, entrada manual ou por planilha, repetição de valores,
+identificador único e prefixo. Esses dados são persistidos no post meta
+`_obatala_tainacan_export_input`.
+
+O mapeamento do modelo continua em `_obatala_mapping_data` e uma cópia permanece
+associada ao processo. Processos antigos que contêm fields `obatala_ctrl_*`
+continuam sendo interpretados pelo runtime. Ao salvar novamente um modelo pela
+interface nova, esses fields técnicos são removidos do `flowData`; processos já
+criados mantêm seu snapshot e podem concluir pelo formato legado.
+
 ## Arquivos e Classes
 ```mermaid
 classDiagram

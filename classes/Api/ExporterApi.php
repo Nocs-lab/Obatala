@@ -26,6 +26,7 @@ class ExporterApi extends ObatalaAPI {
         'same_values_enabled_value' => 'Sim',
     ];
     private const MAPPER_STATUS_ENABLED = 'enabled';
+    private const MAPPER_STATUS_DRAFT = 'draft';
     private const MAPPER_STATUS_DISABLED = 'disabled';
 
     public function register_routes() {
@@ -34,21 +35,21 @@ class ExporterApi extends ObatalaAPI {
         $this->add_route('exporter/all_collections_tainacan', [
             'methods' => 'GET',
             'callback' => [$this, 'get_all_collections'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [$this, 'permission_check_manage_mappers'],
         ]);
 
         // Route to get metadata collection
         $this->add_route('exporter/get_metadata_collection/(?P<collection_id>[a-zA-Z0-9_\-.]+)', [
             'methods' => 'GET',
             'callback' => [$this, 'get_metadata_collection'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [$this, 'permission_check_manage_mappers'],
         ]);
 
         // Route to get mapper collection
         $this->add_route('exporter/get_mapper_process_type/(?P<process_model_id>[a-zA-Z0-9_\-.]+)', [
             'methods' => 'GET',
             'callback' => [$this, 'get_mapper_process_type'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [$this, 'permission_check_manage_mappers'],
         ]);
 
          // Route to get items from collection
@@ -61,7 +62,25 @@ class ExporterApi extends ObatalaAPI {
         $this->add_route('exporter/save_mapping_data', [
             'methods'  => 'POST',
             'callback' => [$this, 'save_mapping_data'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'], 
+            'permission_callback' => [$this, 'permission_check_manage_mappers'],
+        ]);
+
+        $this->add_route('exporter/process/(?P<process_id>\d+)/input', [
+            'methods' => 'GET',
+            'callback' => [$this, 'get_process_export_input'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+        ]);
+
+        $this->add_route('exporter/process/(?P<process_id>\d+)/input-file', [
+            'methods' => 'POST',
+            'callback' => [$this, 'upload_process_export_input_file'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+        ]);
+
+        $this->add_route('exporter/process/(?P<process_id>\d+)/input', [
+            'methods' => 'POST',
+            'callback' => [$this, 'save_process_export_input'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
         ]);
 
         $this->add_route('exporter/process/(?P<process_id>\d+)/runtime-config', [
@@ -192,8 +211,8 @@ class ExporterApi extends ObatalaAPI {
         if (is_array($mappings) && isset($mappings['profile_selector_field_id'])) {
             $profile_selector_field_id = sanitize_text_field($mappings['profile_selector_field_id']);
         }
-        $mapper_status = $this->normalize_mapper_status(is_array($mappings) ? ($mappings['status'] ?? null) : null);
-        $mapper_is_enabled = $mapper_status === self::MAPPER_STATUS_ENABLED;
+        $requested_mapper_status = $this->normalize_mapper_status(is_array($mappings) ? ($mappings['status'] ?? null) : null);
+        $mapper_is_requested = $requested_mapper_status !== self::MAPPER_STATUS_DISABLED;
 
         $decision_rules_payload = [];
         if (is_array($mappings) && isset($mappings['decision_rules']) && is_array($mappings['decision_rules'])) {
@@ -209,7 +228,7 @@ class ExporterApi extends ObatalaAPI {
             $profiles = [];
         }
 
-        if ($mapper_is_enabled && empty($profiles)) {
+        if ($mapper_is_requested && empty($profiles)) {
             return new \WP_REST_Response([
                 'success' => false,
                 'message' => 'Cadastre ao menos uma coleção de exportação.',
@@ -221,14 +240,14 @@ class ExporterApi extends ObatalaAPI {
         }
         $decision_rules = $this->normalize_decision_rules($decision_rules_payload);
 
-        if ($mapper_is_enabled && $profile_selector_field_id === '') {
+        if ($mapper_is_requested && $profile_selector_field_id === '') {
             $profile_selector_field_id = TainacanMappingService::DEFAULT_PROFILE_SELECTOR_FIELD_ID;
         }
 
         $has_data_entry_mode_field = !empty($decision_rules['data_entry_mode_field_id']);
         $has_spreadsheet_upload_field = !empty($decision_rules['spreadsheet_upload_field_id']);
 
-        if ($mapper_is_enabled && $has_data_entry_mode_field && !$has_spreadsheet_upload_field) {
+        if ($mapper_is_requested && $has_data_entry_mode_field && !$has_spreadsheet_upload_field) {
             return new \WP_REST_Response([
                 'success' => false,
                 'message' => 'Selecione o campo de upload que receberá a planilha no passo 3.',
@@ -238,6 +257,7 @@ class ExporterApi extends ObatalaAPI {
         $used_profile_keys = [];
         $used_collection_ids = [];
         $used_collection_names = [];
+        $used_field_ids = [];
         $normalized_profiles = [];
 
         foreach ($profiles as $index => $profile) {
@@ -250,14 +270,14 @@ class ExporterApi extends ObatalaAPI {
                 ? $profile['field_mappings']
                 : [];
 
-            if ($mapper_is_enabled && !$collection_id) {
+            if ($mapper_is_requested && !$collection_id) {
                 return new \WP_REST_Response([
                     'success' => false,
                     'message' => 'Todas as configurações precisam ter uma coleção válida.',
                 ], 400);
             }
 
-            if ($mapper_is_enabled && in_array($collection_id, $used_collection_ids, true)) {
+            if ($mapper_is_requested && in_array($collection_id, $used_collection_ids, true)) {
                 return new \WP_REST_Response([
                     'success' => false,
                     'message' => 'Cada configuração deve apontar para uma coleção diferente.',
@@ -265,7 +285,7 @@ class ExporterApi extends ObatalaAPI {
             }
 
             $collection_post = $collection_id > 0 ? get_post($collection_id) : null;
-            if ($mapper_is_enabled && !$collection_post) {
+            if ($mapper_is_requested && !$collection_post) {
                 return new \WP_REST_Response([
                     'success' => false,
                     'message' => 'Coleção de destino não encontrada para uma das configurações.',
@@ -283,7 +303,7 @@ class ExporterApi extends ObatalaAPI {
             }
 
             $normalized_collection_name = strtolower(remove_accents($collection_name));
-            if ($mapper_is_enabled && in_array($normalized_collection_name, $used_collection_names, true)) {
+            if ($mapper_is_requested && in_array($normalized_collection_name, $used_collection_names, true)) {
                 return new \WP_REST_Response([
                     'success' => false,
                     'message' => 'As coleções selecionadas precisam ter nomes diferentes para identificação na tramitação.',
@@ -304,6 +324,7 @@ class ExporterApi extends ObatalaAPI {
             }
 
             $normalized_field_mappings = [];
+            $used_metadata_ids = [];
             foreach ($field_mappings as $mapping) {
                 if (!is_array($mapping)) {
                     continue;
@@ -313,7 +334,7 @@ class ExporterApi extends ObatalaAPI {
                 $field_id = isset($obatala_field['value']) ? sanitize_text_field($obatala_field['value']) : '';
                 $metadata_id = isset($mapping['tainacan_metadata_id']) ? (int) $mapping['tainacan_metadata_id'] : 0;
 
-                if ($mapper_is_enabled && ($field_id === '' || !$metadata_id)) {
+                if ($mapper_is_requested && ($field_id === '' || !$metadata_id)) {
                     return new \WP_REST_Response([
                         'success' => false,
                         'message' => 'Todos os campos de todas as configurações devem estar mapeados corretamente.',
@@ -324,10 +345,26 @@ class ExporterApi extends ObatalaAPI {
                     continue;
                 }
 
+                if (in_array($field_id, $used_field_ids, true)) {
+                    return new \WP_REST_Response([
+                        'success' => false,
+                        'message' => 'Cada field do Obatala pode ser mapeado somente uma vez.',
+                    ], 400);
+                }
+
+                if (in_array($metadata_id, $used_metadata_ids, true)) {
+                    return new \WP_REST_Response([
+                        'success' => false,
+                        'message' => 'Cada metadado do Tainacan pode receber somente um field.',
+                    ], 400);
+                }
+
                 $normalized_field_mappings[] = [
                     'obatala_field' => $obatala_field,
                     'tainacan_metadata_id' => $metadata_id,
                 ];
+                $used_field_ids[] = $field_id;
+                $used_metadata_ids[] = $metadata_id;
             }
 
             $normalized_profiles[] = [
@@ -341,6 +378,17 @@ class ExporterApi extends ObatalaAPI {
             $used_collection_ids[] = $collection_id;
             $used_collection_names[] = $normalized_collection_name;
         }
+
+        $has_field_mappings = false;
+        foreach ($normalized_profiles as $normalized_profile) {
+            if (!empty($normalized_profile['field_mappings'])) {
+                $has_field_mappings = true;
+                break;
+            }
+        }
+        $mapper_status = $requested_mapper_status === self::MAPPER_STATUS_DISABLED
+            ? self::MAPPER_STATUS_DISABLED
+            : ($has_field_mappings ? self::MAPPER_STATUS_ENABLED : self::MAPPER_STATUS_DRAFT);
 
         $data_to_save = [
             'schema_version' => 3,
@@ -376,8 +424,70 @@ class ExporterApi extends ObatalaAPI {
 
         return new \WP_REST_Response([
             'success' => true,
-            'message' => 'Mapeamento salvo com sucesso.',
             'saved_data' => $data_to_save,
+            'mapper_status' => $mapper_status,
+            'message' => $mapper_status === self::MAPPER_STATUS_DRAFT
+                ? 'Configuração salva como rascunho. Mapeie ao menos um field para ativar a exportação.'
+                : 'Mapeamento salvo com sucesso.',
+        ], 200);
+    }
+
+    public function permission_check_manage_mappers($request) {
+        return is_user_logged_in() && current_user_can('obatala_manage_mappers');
+    }
+
+    public function get_process_export_input($request) {
+        $process_id = (int) $request['process_id'];
+        $service = $this->get_export_service();
+        return new WP_REST_Response([
+            'success' => true,
+            'input' => $service->get_process_export_input($process_id),
+            'runtime' => $service->get_runtime_config($process_id),
+        ], 200);
+    }
+
+    public function save_process_export_input($request) {
+        $process_id = (int) $request['process_id'];
+        $params = $request->get_json_params();
+        $input = is_array($params['input'] ?? null) ? $params['input'] : [];
+        $result = $this->get_export_service()->save_process_export_input($process_id, $input);
+        return new WP_REST_Response($result, !empty($result['success']) ? 200 : 400);
+    }
+
+    public function upload_process_export_input_file($request) {
+        if (empty($_FILES['file'])) {
+            return new WP_REST_Response(['success' => false, 'message' => 'Nenhum arquivo enviado.'], 400);
+        }
+        if (!function_exists('wp_handle_upload')) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+        }
+        $uploaded = wp_handle_upload($_FILES['file'], [
+            'test_form' => false,
+            'mimes' => [
+                'csv' => 'text/csv',
+                'xls' => 'application/vnd.ms-excel',
+                'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            ],
+        ]);
+        if (!empty($uploaded['error'])) {
+            return new WP_REST_Response(['success' => false, 'message' => $uploaded['error']], 400);
+        }
+
+        $upload_dir = wp_upload_dir();
+        $custom_dir = trailingslashit($upload_dir['basedir']) . 'obatala';
+        if (!wp_mkdir_p($custom_dir)) {
+            return new WP_REST_Response(['success' => false, 'message' => 'Não foi possível preparar o diretório de upload.'], 500);
+        }
+        $file_name = sanitize_file_name(wp_basename($uploaded['file']));
+        $target = trailingslashit($custom_dir) . $file_name;
+        if (!@rename($uploaded['file'], $target)) {
+            return new WP_REST_Response(['success' => false, 'message' => 'Não foi possível armazenar a planilha.'], 500);
+        }
+
+        return new WP_REST_Response([
+            'success' => true,
+            'file_name' => $file_name,
+            'message' => 'Planilha enviada com sucesso.',
         ], 200);
     }
 
@@ -571,6 +681,9 @@ class ExporterApi extends ObatalaAPI {
         $normalized = strtolower(trim((string) $status));
         if ($normalized === self::MAPPER_STATUS_ENABLED || $normalized === 'habilitado') {
             return self::MAPPER_STATUS_ENABLED;
+        }
+        if ($normalized === self::MAPPER_STATUS_DRAFT || $normalized === 'rascunho') {
+            return self::MAPPER_STATUS_DRAFT;
         }
         return self::MAPPER_STATUS_DISABLED;
     }

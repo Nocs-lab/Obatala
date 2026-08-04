@@ -7,7 +7,13 @@ import {
 } from "@dnd-kit/sortable";
 import SortableField from "./SortableField"; // Certifique-se de estar importando corretamente o SortableField
 
-const DragAndDropList = ({nodeId, fields = [], updateFields }) => {
+const DragAndDropList = ({
+  nodeId,
+  fields = [],
+  updateFields,
+  autoEditFieldId = '',
+  onAutoEditOpened,
+}) => {
   // Função para lidar com o fim do arraste
   const handleDragEnd = (event) => {
     const { active, over } = event;
@@ -41,6 +47,8 @@ const DragAndDropList = ({nodeId, fields = [], updateFields }) => {
               title={title}
               config={config}
               type={type}
+              autoOpen={String(autoEditFieldId) === String(id)}
+              onAutoOpened={onAutoEditOpened}
               updateField={(id, newValue) => {
                 // Atualiza o valor do campo específico
                 const newFields = fields.map((field) =>
