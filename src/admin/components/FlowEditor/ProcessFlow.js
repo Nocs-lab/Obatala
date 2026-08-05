@@ -1,9 +1,9 @@
 import { __ } from "@wordpress/i18n";
 import React, {
-  useState,
-  forwardRef,
-  useImperativeHandle,
-  useEffect,
+    useState,
+    forwardRef,
+    useImperativeHandle,
+    useEffect,
 } from "react";
 import { ReactFlow, Background, MiniMap, Controls } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
@@ -21,75 +21,73 @@ import FlowImageExporter from "./components/reactFlow/FlowImageExporter";
 
 
 const nodeTypes = {
-  customNode: NodeContent,
-  startNode: StartNode,
-  endNode: EndNode,
-  customNodeConditional: NodeConditional
+    customNode: NodeContent,
+    startNode: StartNode,
+    endNode: EndNode,
+    customNodeConditional: NodeConditional
 };
 
 const edgeTypes = {
-  buttonedge: ButtonEdge,
+    buttonedge: ButtonEdge,
 };
 
 const ProcessFlow = forwardRef(({
-  initialData,
-  isTainacanMapperEnabled = true,
-  onSave,
-  onCancel,
-  toggleFullScreen
+    initialData,
+    isTainacanMapperEnabled = true,
+    onSave,
+    onCancel,
+    toggleFullScreen
 }, ref,) => {
-  const {
-    nodes,
-    edges,
-    onNodesChangeHandler,
-    onEdgesChangeHandler,
-    onConnect,
-    initializeData,
-  } = useFlowContext();
+    const {
+        nodes,
+        edges,
+        onNodesChangeHandler,
+        onEdgesChangeHandler,
+        onConnect,
+        initializeData,
+    } = useFlowContext();
 
-  const [errors, setErrors] = useState([]); // Armazena os erros de validação
-  const [isOpen, setIsOpen] = useState(false);
-  const [openFullScreen, setOpenFullScreen] = useState(false);
+    const [errors, setErrors] = useState([]); // Armazena os erros de validação
+    const [isOpen, setIsOpen] = useState(false);
+    const [openFullScreen, setOpenFullScreen] = useState(false);
 
+    useEffect(() => {
+        const handleFullScreenChange = () => {
+        const isFullScreen = !!document.fullscreenElement;
+        setOpenFullScreen(isFullScreen);
+        }
+        document.addEventListener("fullscreenchange", handleFullScreenChange);
 
-  useEffect(() => {
-    const handleFullScreenChange = () => {
-      const isFullScreen = !!document.fullscreenElement;
-      setOpenFullScreen(isFullScreen);
-    }
-    document.addEventListener("fullscreenchange", handleFullScreenChange);
-
-    return () => {
-      document.removeEventListener('fullscreenchange', handleFullScreenChange);
-    };
-  }, []);
+        return () => {
+        document.removeEventListener('fullscreenchange', handleFullScreenChange);
+        };
+    }, []);
   
+    // Função para abrir/fechar a gaveta
+    const toggleDrawer = () => {
+        setIsOpen(!isOpen);
+    };
 
-  // Função para abrir/fechar a gaveta
-  const toggleDrawer = () => {
-    setIsOpen(!isOpen);
-  };
+    // Expondo os dados do flow e dos nodes para o componente pai
+    useImperativeHandle(ref, () => ({
+        getFlowData: () => ({
+        nodes,
+        edges,
+        }),
+        getNodesData: () => nodes, // Função que retorna apenas os nodes
+        getEdgesData: () => edges, // Função que retorna apenas os edges
+    }));
 
-  // Expondo os dados do flow e dos nodes para o componente pai
-  useImperativeHandle(ref, () => ({
-    getFlowData: () => ({
-      nodes,
-      edges,
-    }),
-    getNodesData: () => nodes, // Função que retorna apenas os nodes
-    getEdgesData: () => edges, // Função que retorna apenas os edges
-  }));
+    // Atualiza os dados iniciais quando o initialData for alterado
+    useEffect(() => {
+        if (initialData) {
+        initializeData(initialData); // Valida e inicializa os dados
+        }
+    }, [initialData]);
 
-  // Atualiza os dados iniciais quando o initialData for alterado
-  useEffect(() => {
-    if (initialData) {
-      initializeData(initialData); // Valida e inicializa os dados
-    }
-  }, [initialData]);
-
-  useEffect(() => {
-    console.log("Nodes:", nodes, "Edges:", edges);
-  }, [nodes, edges]);
+    useEffect(() => {
+        console.log("Nodes:", nodes, "Edges:", edges);
+    }, [nodes, edges]);
 
     return (
         <div className="flow-container" id="flow-container">

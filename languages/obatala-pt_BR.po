@@ -430,8 +430,8 @@ msgstr "Adicionar modelo de processo"
 msgid "Are you sure you want to delete process model %s?"
 msgstr "Tem certeza que deseja excluir o modelo de processo %s?"
 
-msgid "Edit process model"
-msgstr "Editar modelo de processo"
+msgid "Manage process model"
+msgstr "Gerenciar modelo de processo"
 
 # Additional frontend strings
 msgid "Model"

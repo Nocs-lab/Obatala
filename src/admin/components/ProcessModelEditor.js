@@ -21,6 +21,8 @@ import {
 } from "./FlowEditor/context/TainacanExportContext";
 import TainacanExportPanel from "./FlowEditor/components/TainacanExportPanel";
 import TainacanMappingSummary from "./FlowEditor/components/TainacanMappingSummary";
+import { Panel, PanelBody, PanelRow } from "@wordpress/components";
+
 
 const MAPPER_STATUS_ENABLED = "enabled";
 const MAPPER_STATUS_DISABLED = "disabled";
@@ -379,7 +381,6 @@ const processDataEditor = () => {
                 });
 
                 errorMessages.push(...conditionalErrors);
-
             }
 
             if (errorMessages.length > 0) {
@@ -506,16 +507,32 @@ const processDataEditor = () => {
                                 {notice.message}
                             </Notice>
                         )}
-                        {canManageMappers && <TainacanExportPanel />}
-                        <ProcessFlow
-                            ref={flowRef}
-                            initialData={flowData}
-                            isTainacanMapperEnabled={isTainacanMapperEnabled}
-                            onSave={handleSave}
-                            onCancel={handleCancelEditProcessType}
-                            toggleFullScreen={toggleFullScreen}
-                        />
-                        {canManageMappers && <TainacanMappingSummary />}
+                        <Panel header={ __('Manage process model', 'obatala') }>
+                            <PanelBody 
+                                title={ __('Tainacan Export', 'obatala') } 
+                                initialOpen={ false }
+                            >
+                                <PanelRow>
+                                    {canManageMappers && <TainacanExportPanel />}
+                                    {canManageMappers && <TainacanMappingSummary />}
+                                </PanelRow>
+                            </PanelBody>
+                            <PanelBody 
+                                title={ __('Manage steps', 'obatala') } 
+                                initialOpen={ true }
+                            >
+                                <PanelRow>
+                                    <ProcessFlow
+                                        ref={flowRef}
+                                        initialData={flowData}
+                                        isTainacanMapperEnabled={isTainacanMapperEnabled}
+                                        onSave={handleSave}
+                                        onCancel={handleCancelEditProcessType}
+                                        toggleFullScreen={toggleFullScreen}
+                                    />
+                                </PanelRow>
+                            </PanelBody>
+                        </Panel>
                     </main>
                 </TainacanExportProvider>
             </FlowProvider>

@@ -3,12 +3,9 @@ import { useFlowContext } from "../../context/FlowContext";
 import { Button, DropdownMenu, Icon } from "@wordpress/components";
 import { addCard, check, chevronDown, closeSmall, fullscreen, menu } from "@wordpress/icons";
 import { __ } from "@wordpress/i18n";
-import { useTainacanExport } from "../../context/TainacanExportContext";
 
 const ProcessControls = ({onSave, onCancel, toggleFullScreen}) => {
     const { addNewNode, addNewNodeConditional, onExport, onImport, exportFlowImage } = useFlowContext();
-    const { togglePanel, isPanelOpen, available: isTainacanExportAvailable } = useTainacanExport();
-
     const fileInputRef = useRef(null);
 
     const handleImportClick = () => {
@@ -76,20 +73,6 @@ const ProcessControls = ({onSave, onCancel, toggleFullScreen}) => {
                         },
                     ] }
                 />
-                {isTainacanExportAvailable && (
-                    <Button
-                        variant={isPanelOpen ? "primary" : "secondary"}
-                        size="small"
-                        onClick={togglePanel}
-                        aria-expanded={isPanelOpen}
-                    >
-                        <span>{__('Tainacan Export', 'obatala')}</span>
-                        <Icon
-                            icon={chevronDown}
-                            className={`obatala-export-toggle-icon ${isPanelOpen ? "is-open" : ""}`}
-                        />
-                    </Button>
-                )}
                 <Button icon={fullscreen} variant="secondary" size="small" onClick={toggleFullScreen}>
                     {__('Fullscreen', 'obatala')}
                 </Button>
