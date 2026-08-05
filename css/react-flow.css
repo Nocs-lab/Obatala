@@ -11,6 +11,7 @@
 .flow-container>.group-button {
   justify-content: flex-end;
   margin: 1rem;
+  width: calc(100% - 2rem);
 }
 
 /* Main component */

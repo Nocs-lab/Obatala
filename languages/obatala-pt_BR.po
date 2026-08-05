@@ -913,6 +913,9 @@ msgstr "Erro ao salvar tipo de processo."
 msgid "Cancel changes"
 msgstr "Cancelar alterações"
 
+msgid "Elements"
+msgstr "Elementos"
+
 msgid "Add step"
 msgstr "Adicionar etapa"
 
