@@ -84,6 +84,7 @@ const processDataEditor = () => {
     const exportConfigRef = useRef(null);
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
     const isTainacanMapperEnabled = mapperStatus !== MAPPER_STATUS_DISABLED;
+    const shouldOpenExportPanel = params.get("section") === "export";
 
     const getProcessIdFromUrl = () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -508,15 +509,17 @@ const processDataEditor = () => {
                             </Notice>
                         )}
                         <Panel header={ __('Manage process model', 'obatala') }>
-                            <PanelBody 
-                                title={ __('Tainacan Export', 'obatala') } 
-                                initialOpen={ false }
-                            >
-                                <PanelRow>
-                                    {canManageMappers && <TainacanExportPanel />}
-                                    {canManageMappers && <TainacanMappingSummary />}
-                                </PanelRow>
-                            </PanelBody>
+                            {canManageMappers && (
+                                <PanelBody 
+                                    title={ __('Tainacan Export', 'obatala') } 
+                                    initialOpen={ shouldOpenExportPanel }
+                                >
+                                    <PanelRow>
+                                        <TainacanExportPanel />
+                                        <TainacanMappingSummary />
+                                    </PanelRow>
+                                </PanelBody>
+                            )}
                             <PanelBody 
                                 title={ __('Manage steps', 'obatala') } 
                                 initialOpen={ true }

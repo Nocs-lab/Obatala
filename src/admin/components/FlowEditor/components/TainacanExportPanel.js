@@ -7,17 +7,12 @@ import { useTainacanExport } from '../context/TainacanExportContext';
 const TainacanExportPanel = () => {
 	const {
 		isLoading,
-		isPanelOpen,
 		enabled,
 		setEnabled,
 		collections,
 		selectedCollectionIds,
 		setSelectedCollections,
 	} = useTainacanExport();
-
-	if (!isPanelOpen) {
-		return null;
-	}
 
 	const options = collections.map((collection) => ({
 		value: collection.id,
