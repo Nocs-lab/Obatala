@@ -447,29 +447,37 @@ form .group-button .components-button {
 }
 .components-input-control__input,
 .components-select-control__input,
-.components-text-control__input {
-  border-radius: var(--border-radius) !important;
+.components-text-control__input,
+.components-combobox-control__suggestions-container {
+  border-radius: 4px !important;
+  border: 2px solid var(--gray-500) !important;
   height: 38px !important;
   min-height: 38px !important;
-  &[required]:valid {
-    border-color: var(--success);
+  &[required] {
+    border-color: var(--danger) !important;
+    &:valid {
+      border-color: var(--success) !important;
+    }
+  }
+  &:focus {
+    border-color: var(--primary-700) !important;
+    box-shadow: 0 0 0 !important;
   }
 }
-.components-input-control__input[required],
-.components-select-control__input[required],
-.components-text-control__input[required] {
-  border-color: var(--primary-700);
-}
-.components-input-control__input[required]:focus,
-.components-select-control__input[required]:focus,
-.components-text-control__input[required]:focus {
-  border-color: var(--primary-700);
-}
+
 .components-text-control__input[disabled] {
   background-color: var(--gray-300);
 }
-.components-combobox-control__suggestions-container > .components-flex {
-  height: 38px;
+.components-combobox-control__suggestions-container {
+  > .components-flex {
+    height: 38px;
+  }
+  &:has(input:not(:placeholder-shown)) {
+    border-color: var(--success) !important;
+  }
+  &:has(input[required]:placeholder-shown) {
+    border-color: var(--danger) !important;
+  }
 }
 .components-base-control__help {
   margin-top: .25rem !important;

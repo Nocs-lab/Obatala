@@ -944,7 +944,7 @@ msgid "Step name"
 msgstr "Nome da etapa"
 
 msgid "Enter the step name"
-msgstr "Digite o nome da etapa"
+msgstr "Informe o nome da etapa"
 
 msgid "Group responsible"
 msgstr "Grupo responsável"

@@ -38,12 +38,13 @@ const IconForType = ( { type } ) => {
 
 	const SelectedIcon = iconMapping[ type ]; // Pega o componente do ícone correspondente
 
-	return SelectedIcon ? <Icon icon={ SelectedIcon } size={ 12 } /> : null; // Retorna null se o type não corresponder a nenhum ícone
+	return SelectedIcon ? <Icon icon={ SelectedIcon } size={ 20 } /> : null;
 };
 
 const LabelWithIcon = ( { label, type } ) => {
 	const normalizedLabel = typeof label === 'string' ? label.trim() : '';
-	const isMissingTitle = normalizedLabel.toLowerCase() === 'campo sem título';
+	const displayLabel = normalizedLabel ? normalizedLabel : 'Sem título';
+	const isMissingTitle = !normalizedLabel;
 
 	return (
 		<>
@@ -51,7 +52,7 @@ const LabelWithIcon = ( { label, type } ) => {
 				<IconForType type={ type } />
 			</span>
 			<span className={ `step-label${ isMissingTitle ? ' false' : '' }` }>
-				{ label }
+				{ displayLabel }
 			</span>
 		</>
 	);

@@ -83,7 +83,7 @@ const NodeContent = ({ id, data = {} }) => {
         const newField = {
             id: newFieldId,
             type: fieldId,
-            title: "Campo sem título",
+            title: "",
         };
         updateFields([...fields, newField]);
         setNewFieldToEdit(newFieldId);
@@ -115,6 +115,7 @@ const NodeContent = ({ id, data = {} }) => {
                 label={__('Step name', 'obatala')}
                 onChange={handleStageNameChange}
                 placeholder={__('Enter the step name', 'obatala')}
+                required
             />
 
             <ComboboxControl
@@ -124,6 +125,7 @@ const NodeContent = ({ id, data = {} }) => {
                     label: sector.name,
                     value: sector.id,
                 }))}
+                placeholder={__('Select a group responsible', 'obatala')}
                 onChange={handleStageSectorChange}
             />
 

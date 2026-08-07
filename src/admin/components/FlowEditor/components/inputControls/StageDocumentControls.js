@@ -62,13 +62,14 @@ export const StageDocumentControls = ( {
 			) }
 
 			<TextControl
-				label={ __( 'Label', 'obatala' ) }
+				label={ __( 'Field name', 'obatala' ) }
 				value={ formValues.label }
 				onChange={ ( value ) => {
 					setFormValues( ( prev ) => ( { ...prev, label: value } ) );
 					setLabel( value );
 				} }
 				placeholder={ __( 'Document title', 'obatala' ) }
+				required
 			/>
 
 			<TextControl
@@ -141,7 +142,7 @@ export const StageDocumentControls = ( {
 
 			{ tainacanMappingControls }
 			<Button variant="primary" onClick={ save }>
-				{ __( 'Save settings', 'obatala' ) }
+				{ __( 'Save', 'obatala' ) }
 			</Button>
 		</form>
 	);

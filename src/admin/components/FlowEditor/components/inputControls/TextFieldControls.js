@@ -4,9 +4,10 @@ import {
     Notice,
     __experimentalNumberControl as NumberControl,
     SelectControl,
-    TextareaControl,
     TextControl,
 } from "@wordpress/components";
+import HelpTextControl from "./HelpTextControl";
+import FieldNameControl from "./FieldNameControl";
 import React, { useState } from "react";
 import { __ } from "@wordpress/i18n";
 import * as Yup from "yup";
@@ -131,14 +132,12 @@ export const TextFieldControls = ({
                 </Notice>
             )}
 
-            <TextControl
-                label="Título do campo"
+            <FieldNameControl
                 value={formValues.label}
                 onChange={(value) => {
-                setFormValues((prev) => ({ ...prev, label: value }));
-                setLabel(value);
+                    setFormValues((prev) => ({ ...prev, label: value }));
+                    setLabel(value);
                 }}
-                placeholder="Informe o título do campo"
                 help={errors.label}
             />
 
@@ -299,13 +298,11 @@ export const TextFieldControls = ({
                 </>
             )}
 
-            <TextareaControl
-                label="Texto de ajuda para preenchimento"
+            <HelpTextControl
                 value={formValues.helpText}
                 onChange={(value) =>
                 setFormValues((prev) => ({ ...prev, helpText: value }))
                 }
-                placeholder="Digite um texto de ajuda"
             />
 
             {tainacanMappingControls}

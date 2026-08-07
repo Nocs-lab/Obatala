@@ -9,11 +9,10 @@ import { StageDocumentControls } from '../inputControls/StageDocumentControls';
 import { SelectRadioControls } from '../inputControls/SelectRadioControls';
 import {
 	Button,
-	Icon,
 	Tooltip,
 	__experimentalConfirmDialog as ConfirmDialog,
 } from '@wordpress/components';
-import { edit, dragHandle, trash } from '@wordpress/icons';
+import { dragHandle, pencil, trash } from '@wordpress/icons';
 import { useDrawer } from '../../context/DrawerContext';
 import LabelWithIcon from '../inputControls/LabelWithIcon';
 import { useFlowContext } from '../../context/FlowContext';
@@ -213,18 +212,20 @@ const SortableField = ( {
 				<div className="group-button">
 					<Tooltip text="Edit">
 						<Button
-							icon={ <Icon icon={ edit } /> }
+							icon={pencil}
 							onClick={ () =>
 								toggleDrawer( renderFieldEditor() )
 							}
+							variant="tertiary"
 							size="small"
 						/>
 					</Tooltip>
 					{ /* Passa o nodeId e o id do campo para remover */ }
 					<Tooltip text="Remove">
 						<Button
-							icon={ <Icon icon={ trash } /> }
+							icon={trash}
 							onClick={ () => handleConfirmDelete( nodeId, id ) } // Aqui você passa o nodeId e o id do campo
+							variant="tertiary"
 							size="small"
 						/>
 					</Tooltip>
@@ -232,8 +233,9 @@ const SortableField = ( {
 					<Tooltip text="Reorder">
 						<Button
 							{ ...listeners } // Listeners aplicados ao ícone de arraste
-							icon={ <Icon icon={ dragHandle } /> }
+							icon={dragHandle}
 							onClick={ ( e ) => e.stopPropagation() } // Evita a expansão ao clicar no drag handle
+							variant="tertiary"
 							size="small"
 						/>
 					</Tooltip>

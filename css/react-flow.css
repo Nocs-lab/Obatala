@@ -126,8 +126,8 @@
   box-shadow: 0 20px 25px -5px #0000001a,0 8px 10px -6px #0000001a;
   cursor: default;
   max-width: 380px;
-  min-width: 300px;
-  padding: 1rem;
+  min-width: 320px;
+  padding: 1.25rem;
 }
 
 .react-flow__node .components-base-control+div {
@@ -912,14 +912,14 @@ svg.react-flow__connectionline {
 }
 
 .flow-fields ul li {
-  border: 1px solid var(--gray-300);
-  border-radius: 3px;
+  border: 2px dotted var(--gray-500);
+  border-radius: 6px 15px 15px 6px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   font-size: .65rem;
   gap: .5rem;
-  padding: .5rem .2rem .5rem .5rem;
+  padding: .35rem;
 }
 
 .flow-fields .step-label {
@@ -928,14 +928,7 @@ svg.react-flow__connectionline {
   margin-right: auto;
 }
 
-.flow-fields .group-button {
-  display: inline-flex;
-  gap: .2rem;
-}
-
 .flow-fields .group-button .components-button.is-small.has-icon:not(.has-text) {
-  box-shadow: 0 0 0;
-  color: var(--primary-700);
   height: 24px;
   min-width: 18px;
   width: 24px;
@@ -943,6 +936,7 @@ svg.react-flow__connectionline {
 
 .flow-fields .step-icon {
   display: flex;
+  fill: var(--gray-700);
 }
 
 /* Add fields */

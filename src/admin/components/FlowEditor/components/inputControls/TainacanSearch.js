@@ -53,16 +53,15 @@ const TainacanSearchDetails = ( {
 			) }
 
 			<TextControl
-				label={ __( 'Label', 'obatala' ) }
+				label={ __( 'Field name', 'obatala' ) }
 				value={ fieldLabel }
 				onChange={ setFieldLabel }
 				placeholder="Busca em Tainacan"
+				required
 			/>
 
 			{ tainacanMappingControls }
-			<Button variant="primary" type="button" onClick={ save }>
-				{ __( 'Save settings', 'obatala' ) }
-			</Button>
+			
 
 			<Notice status="info" isDismissible={ false }>
 				<h4>
@@ -93,6 +92,10 @@ const TainacanSearchDetails = ( {
 					precisa de forma simples e eficiente.
 				</p>
 			</Notice>
+
+			<Button variant="primary" type="button" onClick={ save }>
+				{ __( 'Save', 'obatala' ) }
+			</Button>
 		</form>
 	);
 };
