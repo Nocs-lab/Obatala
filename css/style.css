@@ -986,8 +986,19 @@ form .action-bar {
       margin-bottom: 0;
     }
   }
+  .components-notice__content {
+    > h4:first-child {
+      margin-top: 0;
+    }
+    > p:last-child {
+      margin-bottom: 0;
+    }
+  }
   &.is-error {
     border: 1px solid var(--danger);
+  }
+  &.is-info {
+    background-color: var(--gray-100);
   }
   &.is-success {
     border: 1px solid var(--success);

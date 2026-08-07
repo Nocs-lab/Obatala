@@ -41,13 +41,20 @@ const IconForType = ( { type } ) => {
 	return SelectedIcon ? <Icon icon={ SelectedIcon } size={ 12 } /> : null; // Retorna null se o type não corresponder a nenhum ícone
 };
 
-const LabelWithIcon = ( { label, type } ) => (
-	<>
-		<span className="step-icon">
-			<IconForType type={ type } />
-		</span>
-		<span className="step-label">{ label }</span>
-	</>
-);
+const LabelWithIcon = ( { label, type } ) => {
+	const normalizedLabel = typeof label === 'string' ? label.trim() : '';
+	const isMissingTitle = normalizedLabel.toLowerCase() === 'campo sem título';
+
+	return (
+		<>
+			<span className="step-icon">
+				<IconForType type={ type } />
+			</span>
+			<span className={ `step-label${ isMissingTitle ? ' false' : '' }` }>
+				{ label }
+			</span>
+		</>
+	);
+};
 
 export default LabelWithIcon;

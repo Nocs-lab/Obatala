@@ -105,7 +105,7 @@ export const DatePickerControls = ({
 
       {/* Campo para fornecer texto de ajuda */}
       <TextareaControl
-        label="Texto de Ajuda"
+        label="Texto de ajuda"
         value={formValues.helpText} // Use formValues para sincronizar o valor
         onChange={(value) =>
           setFormValues((prev) => ({ ...prev, helpText: value }))

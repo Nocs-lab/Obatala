@@ -992,7 +992,7 @@ svg.react-flow__connectionline {
   padding: 1rem;
   position: absolute;
   top: 1rem;
-  left: 0;
+  left: 2rem;
   width: 33%;
   z-index: 1100;
 }
