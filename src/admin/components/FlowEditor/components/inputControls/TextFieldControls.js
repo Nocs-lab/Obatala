@@ -114,9 +114,11 @@ export const TextFieldControls = ({
         toggleDrawer()
     };
 
+    const headingLabel = fieldType === 'address' ? __('Edit address field', 'obatala') : __('Edit text field', 'obatala');
+
     return (
         <form>
-            <h3>{__('Edit field', 'obatala')}</h3>
+            <h3>{headingLabel}</h3>
 
             {/* Mensagem de sucesso ou erro */}
             {message && (
@@ -182,50 +184,50 @@ export const TextFieldControls = ({
                     label="Padrões comuns"
                     value=""
                     options={[
-                    { label: "Selecione um padrão", value: "" },
-                    { label: "Telefone", value: "telefone" },
-                    { label: "CEP", value: "cep" },
-                    { label: "Evitar abreviação", value: "EvitarAbreviacao" },
-                    { label: "Capitalizar Inicial de Nome Próprio", value: "CapitalizarInicialNomeProprio",},
-                    { label: "Não Usar Capitalizacao", value: "NaoUsarCapitalizacao",},
-                    { label: "Numeros Inteiros e Fracões Decimais", value: "NumerosInteirosEfracoesDecimais", },
-                    { label: "Não Vazio", value: "NaoVazio" },
-                    { label: "Não utilizar apóstrofo", value: "Naoutilizarapostrofo",},
-                    { label: "Registro de Hora, Minutos e Segundos", value: "registroHoraMinutosSegundos", },
-                    { label: "Registro de Dia, Mês e Ano", value: "registroDiaMêsAno", },
+                        { label: "Selecione um padrão", value: "" },
+                        { label: "Telefone", value: "telefone" },
+                        { label: "CEP", value: "cep" },
+                        { label: "Evitar abreviação", value: "EvitarAbreviacao" },
+                        { label: "Capitalizar Inicial de Nome Próprio", value: "CapitalizarInicialNomeProprio",},
+                        { label: "Não Usar Capitalizacao", value: "NaoUsarCapitalizacao",},
+                        { label: "Numeros Inteiros e Fracões Decimais", value: "NumerosInteirosEfracoesDecimais", },
+                        { label: "Não Vazio", value: "NaoVazio" },
+                        { label: "Não utilizar apóstrofo", value: "Naoutilizarapostrofo",},
+                        { label: "Registro de Hora, Minutos e Segundos", value: "registroHoraMinutosSegundos", },
+                        { label: "Registro de Dia, Mês e Ano", value: "registroDiaMêsAno", },
                     ]}
                     onChange={(value) => {
-                    const pattern = predefinedPatterns[value] || "";
-                    setFormValues((prev) => ({
-                        ...prev,
-                        pattern,
-                        required: !!pattern || prev.required,
-                        helpText: pattern
-                        ? `Formato: ${
-                            value === "telefone"
-                                ? "11987654321"
-                                : value === "cep"
-                                ? "00000-000"
-                                : value === "EvitarAbreviacao"
-                                ? "A entrada deve começar com uma letra maiúscula (incluindo caracteres acentuados), seguida por letras, números ou caracteres acentuados, e terminar com um ponto final. Ex: João Silva."
-                                : value === "CapitalizarInicialNomeProprio"
-                                ? "Capitalize as iniciais de nomes próprios e da primeira palavra, para outros termos use letras minúsculas."
-                                : value === "NaoUsarCapitalizacao"
-                                ? "Não use letras maiúsculas. Ex: Nome, Sobrenome"
-                                : value === "NumerosInteirosEfracoesDecimais"
-                                ? "Utilizar números inteiros ou frações decimais. Ex: 123 ou 123.45"
-                                : value === "NaoVazio"
-                                ? "O campo não pode ser vazio."
-                                : value === "Naoutilizarapostrofo"
-                                ? "Não utilizar apóstrofo. Ex: 'olá'"
-                                : value === "registroHoraMinutosSegundos"
-                                ? "Utilizar o formato HH:MM:SS. Ex: 12:34:56"
-                                : value === "registroDiaMêsAno"
-                                ? "Utilizar o formato DD/MM/YYYY. Ex: 31/12/2021, 9/5/2022"
-                                : ""
-                            }`
-                        : prev.helpText, // Define o texto de ajuda com base no padrão
-                    }));
+                        const pattern = predefinedPatterns[value] || "";
+                        setFormValues((prev) => ({
+                            ...prev,
+                            pattern,
+                            required: !!pattern || prev.required,
+                            helpText: pattern
+                            ? `Formato: ${
+                                value === "telefone"
+                                    ? "11987654321"
+                                    : value === "cep"
+                                    ? "00000-000"
+                                    : value === "EvitarAbreviacao"
+                                    ? "A entrada deve começar com uma letra maiúscula (incluindo caracteres acentuados), seguida por letras, números ou caracteres acentuados, e terminar com um ponto final. Ex: João Silva."
+                                    : value === "CapitalizarInicialNomeProprio"
+                                    ? "Capitalize as iniciais de nomes próprios e da primeira palavra, para outros termos use letras minúsculas."
+                                    : value === "NaoUsarCapitalizacao"
+                                    ? "Não use letras maiúsculas. Ex: Nome, Sobrenome"
+                                    : value === "NumerosInteirosEfracoesDecimais"
+                                    ? "Utilizar números inteiros ou frações decimais. Ex: 123 ou 123.45"
+                                    : value === "NaoVazio"
+                                    ? "O campo não pode ser vazio."
+                                    : value === "Naoutilizarapostrofo"
+                                    ? "Não utilizar apóstrofo. Ex: 'olá'"
+                                    : value === "registroHoraMinutosSegundos"
+                                    ? "Utilizar o formato HH:MM:SS. Ex: 12:34:56"
+                                    : value === "registroDiaMêsAno"
+                                    ? "Utilizar o formato DD/MM/YYYY. Ex: 31/12/2021, 9/5/2022"
+                                    : ""
+                                }`
+                            : prev.helpText, // Define o texto de ajuda com base no padrão
+                        }));
                     }}
                 />
 
@@ -298,7 +300,7 @@ export const TextFieldControls = ({
             )}
 
             <TextareaControl
-                label="Texto de ajuda"
+                label="Texto de ajuda para preenchimento"
                 value={formValues.helpText}
                 onChange={(value) =>
                 setFormValues((prev) => ({ ...prev, helpText: value }))

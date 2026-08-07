@@ -1015,8 +1015,13 @@ svg.react-flow__connectionline {
 }
 
 .wp-drawer form>h3,
-.wp-drawer form>.components-base-control:has(textarea) {
+.wp-drawer form>.components-base-control:has(textarea),
+.wp-drawer form>.components-base-control.components-checkbox-control {
   flex-basis: 100%;
+}
+
+.wp-drawer form>.components-base-control.components-checkbox-control {
+  padding-top: 0;
 }
 
 .wp-drawer form>h3 {

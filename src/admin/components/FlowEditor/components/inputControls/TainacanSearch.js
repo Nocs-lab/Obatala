@@ -40,7 +40,7 @@ const TainacanSearchDetails = ( {
 
 	return (
 		<form>
-			<h3>{ __( 'Edit field', 'obatala' ) }</h3>
+			<h3>{ __( 'Edit Search Tainacan field', 'obatala' ) }</h3>
 
 			{ message && (
 				<Notice
@@ -65,9 +65,9 @@ const TainacanSearchDetails = ( {
 			</Button>
 
 			<Notice status="info" isDismissible={ false }>
-				<h2>
+				<h4>
 					Como funciona a busca de itens e coleções?
-				</h2>
+				</h4>
 				<p>
 					A busca de itens e coleções permite que você encontre
 					facilmente o que procura. Basta digitar pelo menos três

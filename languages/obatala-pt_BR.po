@@ -1190,7 +1190,7 @@ msgid "Opinion, report, order, or term"
 msgstr "Parecer, relatório, despacho ou termo"
 
 msgid "Help text"
-msgstr "Texto de ajuda"
+msgstr "Texto de ajuda para preenchimento"
 
 msgid "Instructions for filling this document"
 msgstr "Instruções para preencher este documento"

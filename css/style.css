@@ -472,6 +472,7 @@ form .group-button .components-button {
   height: 38px;
 }
 .components-base-control__help {
+  margin-top: .25rem !important;
   margin-bottom: 0 !important;
 }
 .inline-edition {

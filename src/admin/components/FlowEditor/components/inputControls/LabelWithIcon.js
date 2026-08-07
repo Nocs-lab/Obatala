@@ -11,10 +11,10 @@ import {
 	commentEditLink,
 	seen,
 	listView,
-	commentContent,
 	mobile,
 	file,
 	mapMarker,
+	envelope,
 } from '@wordpress/icons';
 
 const IconForType = ( { type } ) => {
@@ -26,7 +26,7 @@ const IconForType = ( { type } ) => {
 		select: listView,
 		number: keyboard,
 		datepicker: calendar,
-		email: commentContent,
+		email: envelope,
 		url: link,
 		textarea: commentEditLink,
 		password: seen,

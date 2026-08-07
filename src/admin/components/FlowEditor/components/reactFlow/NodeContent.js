@@ -7,11 +7,11 @@ import { NodeToolbar } from "@xyflow/react";
 import { Button, Icon, TextControl, ComboboxControl } from "@wordpress/components";
 import { useFlowContext } from "../../context/FlowContext";
 import { fetchSectors } from "../../../../api/apiRequests";
-import { close, file, mobile, mapMarker, paragraph, plus, search, calendar, keyboard, commentContent, listView } from '@wordpress/icons';
+import { close, file, mobile, mapMarker, paragraph, plus, search, calendar, keyboard, listView, envelope } from '@wordpress/icons';
 
 const FIELD_OPTIONS = [
     { id: "text", label: "Texto", icon: paragraph },
-    { id: "email", label: "Email", icon: commentContent },
+    { id: "email", label: "Email", icon: envelope },
     { id: "phone", label: "Telefone", icon: mobile },
     { id: "address", label: "Endereço", icon: mapMarker },
     { id: "number", label: "Número", icon: keyboard },
@@ -156,14 +156,9 @@ const NodeContent = ({ id, data = {} }) => {
                         <h3 className="title">{__('Select a field to add:', 'obatala')}</h3>
                         <ul className="node-meta-list-container">
                             {FIELD_OPTIONS.map((option) => (
-                                <li className="node-meta-list" key={option.id}>
-                                    <Icon icon={option.icon} />
-                                    <span
-                                        onClick={() => addFieldToNode(option.id)}
-                                    >
-                                        {option.label}
-                                    </span>
-                                </li>
+                                <Button variant="primary" size="small" icon={<Icon icon={option.icon} />} onClick={() => addFieldToNode(option.id)}>
+                                    {option.label}
+                                </Button>
                             ))}
                         </ul>
                     </div>
