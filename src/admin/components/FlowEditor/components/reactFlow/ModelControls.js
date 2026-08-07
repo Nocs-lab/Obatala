@@ -1,11 +1,11 @@
 import React, { useRef } from "react";
 import { useFlowContext } from "../../context/FlowContext";
 import { Button, DropdownMenu, Icon } from "@wordpress/components";
-import { addCard, check, chevronDown, closeSmall, fullscreen, menu } from "@wordpress/icons";
+import { check, chevronDown, closeSmall, download, upload } from "@wordpress/icons";
 import { __ } from "@wordpress/i18n";
 
-const ProcessControls = ({onSave, onCancel, toggleFullScreen}) => {
-    const { addNewNode, addNewNodeConditional, onExport, onImport, exportFlowImage } = useFlowContext();
+const ModelControls = ({ onSave, onCancel }) => {
+    const { onExport, onImport, exportFlowImage } = useFlowContext();
     const fileInputRef = useRef(null);
 
     const handleImportClick = () => {
@@ -15,11 +15,11 @@ const ProcessControls = ({onSave, onCancel, toggleFullScreen}) => {
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
-        const reader = new FileReader();
+            const reader = new FileReader();
             reader.onload = (e) => {
                 try {
                     const importedData = JSON.parse(e.target.result);
-                    
+
                     if (importedData && importedData.nodes && importedData.edges) {
                         onImport(importedData);
                     } else {
@@ -31,7 +31,7 @@ const ProcessControls = ({onSave, onCancel, toggleFullScreen}) => {
                     alert('Erro ao ler o arquivo. Certifique-se de que é um JSON válido.');
                 }
             };
-        reader.readAsText(file);
+            reader.readAsText(file);
         }
     };
 
@@ -45,72 +45,41 @@ const ProcessControls = ({onSave, onCancel, toggleFullScreen}) => {
         <>
             <div className="group-button">
                 <Button icon={check} variant="primary" size="small" type="submit" onClick={onSave}>
-                    {__('Save', 'obatala')}
+                    {__('Save model', 'obatala')}
                 </Button>
                 <DropdownMenu
-                    icon={addCard}
-                    label={__('Elements', 'obatala')}
+                    icon={download}
+                    label={__('Export', 'obatala')}
                     variant="secondary"
-                    toggleProps={ {
+                    toggleProps={{
                         variant: 'secondary',
                         size: 'small',
                         className: 'has-text',
                         children: (
                             <>
-                                <span>{ __('Elements', 'obatala') }</span>
-                                <Icon icon={ chevronDown } />
+                                <span>{__('Export', 'obatala')}</span>
+                                <Icon icon={chevronDown} />
                             </>
                         ),
-                    } }
-                    controls={ [
+                    }}
+                    controls={[
                         {
-                            title: __('Add step', 'obatala'),
-                            onClick: () => addNewNode(),
-                        },
-                        {
-                            title: __('Add conditional', 'obatala'),
-                            onClick: () => addNewNodeConditional(),
-                        },
-                    ] }
-                />
-                <Button icon={fullscreen} variant="secondary" size="small" onClick={toggleFullScreen}>
-                    {__('Fullscreen', 'obatala')}
-                </Button>
-                <DropdownMenu
-                    icon={menu}
-                    label={__('Actions', 'obatala')}
-                    variant="secondary"
-                    toggleProps={ {
-                        variant: 'secondary',
-                        size: 'small',
-                        className: 'has-text',
-                        children: (
-                            <>
-                                <span>{ __('Actions', 'obatala') }</span>
-                                <Icon icon={ chevronDown } />
-                            </>
-                        ),
-                    } }
-                    controls={ [
-                        {
-                            title: __('Export image', 'obatala'),
+                            title: __('Steps as PNG', 'obatala'),
                             onClick: () => exportFlowImage(),
                         },
                         {
-                            title: __('Export JSON', 'obatala'),
+                            title: __('Steps as JSON', 'obatala'),
                             onClick: () => handleExport(),
                         },
-                        {
-                            title: __('Import JSON', 'obatala'),
-                            onClick: () => handleImportClick(),
-                        },
-                    ] }
+                    ]}
                 />
+                <Button icon={upload} variant="secondary" size="small" onClick={handleImportClick}>
+                    {__('Import steps', 'obatala')}
+                </Button>
                 <Button icon={closeSmall} variant="secondary" size="small" onClick={onCancel}>
                     {__('Cancel changes', 'obatala')}
-                </Button>        
+                </Button>
             </div>
-            {/* Input invisível para carregar o arquivo JSON */}
             <input
                 type="file"
                 accept=".json"
@@ -122,4 +91,4 @@ const ProcessControls = ({onSave, onCancel, toggleFullScreen}) => {
     );
 };
 
-export default ProcessControls;
+export default ModelControls;

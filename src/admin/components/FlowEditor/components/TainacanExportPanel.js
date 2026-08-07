@@ -37,7 +37,7 @@ const TainacanExportPanel = () => {
 									type="checkbox"
 									checked={enabled}
 									onChange={(event) => setEnabled(event.target.checked)}
-								aria-label={ __( 'Enable mapper status', 'obatala' ) }
+									aria-label={ __( 'Enable mapper status', 'obatala' ) }
 								/>
 								<div>
 									<strong>{ __( 'Mapper status', 'obatala' ) }</strong>
@@ -57,7 +57,7 @@ const TainacanExportPanel = () => {
 										options={options}
 										value={selectedOptions}
 										onChange={setSelectedCollections}
-									placeholder={ __( 'Select one or more collections…', 'obatala' ) }
+										placeholder={ __( 'Select one or more collections…', 'obatala' ) }
 										closeMenuOnSelect={false}
 									/>
 									{!selectedCollectionIds.length && (

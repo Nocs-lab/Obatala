@@ -1045,12 +1045,16 @@ form .action-bar {
   .components-panel__arrow {
     right: 0;
   }
+  .badge {
+    font-size: .75rem;
+    margin-left: 1rem;
+  }
 }
 .components-panel__body-toggle.components-button:hover {
   color: var(--primary-900);
 }
 .components-panel__body.is-opened .components-panel__body-toggle.components-button {
-  color: var(--gray);
+  color: var(--black);
 }
 .components-panel__row {
   flex-wrap: wrap;
@@ -1204,6 +1208,9 @@ progress[value="100"]::-moz-progress-bar {
 .flex-basis-100 {
   flex-basis: 100% !important;
 }
+.justify-content-end {
+  justify-content: flex-end !important;
+}
 .mb-0 {
   margin-bottom: 0;
 }
@@ -1252,6 +1259,9 @@ progress[value="100"]::-moz-progress-bar {
   clip: rect(0, 0, 0, 0) !important;
   white-space: nowrap !important;
   border: 0 !important;
+}
+.w-100 {
+  width: 100% !important;
 }
 
 /* Extra */

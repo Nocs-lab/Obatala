@@ -660,7 +660,7 @@ msgid "Select one or more collections…"
 msgstr "Selecione uma ou mais coleções…"
 
 msgid "Select at least one collection to map fields."
-msgstr "Selecione ao menos uma coleção para mapear os fields."
+msgstr "Selecione, no mínimo, uma coleção para mapear os fields."
 
 msgid "Tainacan mapping summary"
 msgstr "Resumo do mapeamento Tainacan"

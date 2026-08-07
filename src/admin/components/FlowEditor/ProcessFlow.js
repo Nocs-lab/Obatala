@@ -10,7 +10,7 @@ import "@xyflow/react/dist/style.css";
 
 import NodeContent from "./components/reactFlow/NodeContent";
 import ButtonEdge from "./components/reactFlow/CustomEdge";
-import ProcessControls from "./components/reactFlow/FlowButtons";
+import FlowControls from "./components/reactFlow/FlowControls";
 import SlidingDrawer from "./components/SlidingDrawer";
 import { DrawerProvider } from "./context/DrawerContext";
 import { useFlowContext } from "./context/FlowContext";
@@ -102,7 +102,7 @@ const ProcessFlow = forwardRef(({
                 </div>
             )}
             {openFullScreen && (
-                <ProcessControls
+                <FlowControls
                     onSave={onSave}
                     onCancel={onCancel}
                     toggleFullScreen={toggleFullScreen}

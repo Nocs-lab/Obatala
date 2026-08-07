@@ -7,7 +7,8 @@ import {
 import apiFetch from "@wordpress/api-fetch";
 import ProcessFlow from "./FlowEditor/ProcessFlow";
 import { FlowProvider } from "./FlowEditor/context/FlowContext";
-import ProcessControls from "./FlowEditor/components/reactFlow/FlowButtons";
+import ModelControls from "./FlowEditor/components/reactFlow/ModelControls";
+import FlowControls from "./FlowEditor/components/reactFlow/FlowControls";
 import { DrawerProvider } from "./FlowEditor/context/DrawerContext";
 import { fetchMapperProcessModel } from "../api/apiRequests";
 
@@ -18,6 +19,7 @@ import BrandHeader from "./BrandHeader";
 import BrandFooter from "./BrandFooter";
 import {
     TainacanExportProvider,
+    useTainacanExport,
 } from "./FlowEditor/context/TainacanExportContext";
 import TainacanExportPanel from "./FlowEditor/components/TainacanExportPanel";
 import TainacanMappingSummary from "./FlowEditor/components/TainacanMappingSummary";
@@ -69,6 +71,19 @@ const getMapperStatusFromSavedData = (savedData) => {
     }
 
     return MAPPER_STATUS_DISABLED;
+};
+
+const TainacanExportPanelTitle = () => {
+    const { enabled } = useTainacanExport();
+    const badgeClassName = enabled ? "success" : "";
+    const badgeLabel = enabled ? __("Active", "obatala") : __("Inactive", "obatala");
+
+    return (
+        <>
+            <span>{__("Tainacan Export", "obatala")}</span>
+            <span className={`badge ${badgeClassName}`}>{badgeLabel}</span>
+        </>
+    );
 };
 
 const processDataEditor = () => {
@@ -288,8 +303,6 @@ const processDataEditor = () => {
         });
     };
 
-
-
     const handleSave = async () => {
         try {
             let flowData = flowRef.current.getFlowData();
@@ -495,11 +508,10 @@ const processDataEditor = () => {
                     onNotice={setNotice}
                 >
                     <div className="title-container">
-                        <h2><small>{__('Edit process model', 'obatala')}</small>{processData.title.rendered}</h2>
-                        <ProcessControls
+                        <h2><small>{__('Process model', 'obatala')}</small>{processData.title.rendered}</h2>
+                        <ModelControls
                             onSave={handleSave}
                             onCancel={handleCancelEditProcessType}
-                            toggleFullScreen={toggleFullScreen}
                         />
                     </div>
                     <main>
@@ -511,7 +523,7 @@ const processDataEditor = () => {
                         <Panel header={ __('Manage process model', 'obatala') }>
                             {canManageMappers && (
                                 <PanelBody 
-                                    title={ __('Tainacan Export', 'obatala') } 
+                                    title={ <TainacanExportPanelTitle /> } 
                                     initialOpen={ shouldOpenExportPanel }
                                 >
                                     <PanelRow>
@@ -525,6 +537,9 @@ const processDataEditor = () => {
                                 initialOpen={ true }
                             >
                                 <PanelRow>
+                                    <FlowControls
+                                        toggleFullScreen={toggleFullScreen}
+                                    />
                                     <ProcessFlow
                                         ref={flowRef}
                                         initialData={flowData}
