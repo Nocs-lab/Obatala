@@ -91,23 +91,4 @@ document.addEventListener( 'DOMContentLoaded', () => {
 	if ( tainacanItemsElement ) {
 		createRoot( tainacanItemsElement ).render( <TainacanItemsPage /> );
 	}
-
-	// Accordion
-	document.querySelectorAll( '.accordion-button' ).forEach( ( button ) => {
-		button.addEventListener( 'click', function () {
-			const content = document.getElementById(
-				this.getAttribute( 'aria-controls' )
-			);
-			const isExpanded = this.getAttribute( 'aria-expanded' ) === 'true';
-			this.setAttribute( 'aria-expanded', ! isExpanded );
-			content.hidden = isExpanded;
-		} );
-
-		button.addEventListener( 'keydown', function ( event ) {
-			if ( event.key === 'Enter' || event.key === ' ' ) {
-				event.preventDefault();
-				this.click();
-			}
-		} );
-	} );
 } );

@@ -5,6 +5,7 @@ import {
     Spinner,
     Notice,
     Panel,
+    PanelBody,
     PanelHeader,
     PanelRow,
     Button,
@@ -568,7 +569,7 @@ const ProcessViewer = () => {
     const [process, setProcess] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [currentStep, setCurrentStep] = useState(0);
+    const [currentStep] = useState(0);
     const [filteredProcessType, setFilteredProcessType] = useState(null);
     const [submittedSteps, setSubmittedSteps] = useState({});
     const [formValues, setFormValues] = useState({});
@@ -584,7 +585,6 @@ const ProcessViewer = () => {
     const [notice, setNotice] = useState(null);
     const [progress, setProgress] = useState(0);
     const [hasComments, setHasComments] = useState(false);
-    const [activeIndex, setActiveIndex] = useState(null);
     const [isItemsMatrixOpen, setIsItemsMatrixOpen] = useState(false);
     const [exportRuntimeConfig, setExportRuntimeConfig] = useState(null);
     const [exportReview, setExportReview] = useState(null);
@@ -727,12 +727,6 @@ const ProcessViewer = () => {
         });
         await loadExportReview();
         await fetchUpdatedProcessNodes();
-    };
-
-
-    const toggleAccordion = (index) => {
-        setActiveIndex(activeIndex === index ? null : index);
-        setCurrentStep(index);
     };
 
     useEffect(() => {
@@ -1692,7 +1686,7 @@ const ProcessViewer = () => {
     useEffect(() => {
         setIsItemsMatrixOpen(false);
         setActiveSpreadsheetField(null);
-    }, [currentStep, activeIndex]);
+    }, [currentStep]);
 
     const canSubmitCurrentStep = useMemo(() => {
         const step = orderedSteps[currentStep];
@@ -2796,7 +2790,8 @@ const ProcessViewer = () => {
                             />
                         )}
                         <div className="panel-container">
-                            <div className="accordion">
+                            <Panel>
+                                <PanelHeader>Etapas</PanelHeader>
                                 {options.map((step, index) => {
                                     const isVirtualExportReview = step.isVirtualExportReview === true;
                                     const baseIsCompleted = isVirtualExportReview
@@ -2817,41 +2812,42 @@ const ProcessViewer = () => {
                                         ? ((progress < 100) || (isAccessRestricted && !isUserAllowed))
                                         : (isAccessRestricted ? !isUserAllowed : (!isCompleted && !isUserAllowed));
                                     return (
-                                        <div key={index} className={`accordion-item ${isDisabled ? 'disabled' : ''}`}>
-                                            <button
-                                                className={`accordion-header ${isCompleted ? 'success' : isDisabled ? 'danger' : 'warning'}`}
-                                                onClick={() => !isDisabled && toggleAccordion(index)}
-                                                aria-expanded={activeIndex === index}
-                                                aria-controls={`accordion-content-${index}`}
-                                                disabled={isDisabled}
-                                            >
-                                                <h2 className="accordion-title me-auto">{step.label}</h2>
-                                                <div className="badge-container">
-                                                    <span
-                                                        className={`badge ${isCompleted ? 'success' : isDisabled ? 'danger' : 'warning'}`}
-                                                        title={isCompleted ? sprintf(__('Completed by %s', 'obatala'), lastUpdateStage(index).user) : ''}
-                                                    >
-                                                        {isVirtualExportReview
-                                                            ? (isCompleted
-                                                                ? sprintf(__('Completed on %s', 'obatala'), lastUpdateStage(index).dateFormat)
-                                                                : progress < 100
-                                                                    ? __('Waiting process completion', 'obatala')
-                                                                    : __('Pending decision', 'obatala'))
-                                                            : (isCompleted
-                                                                ? sprintf(__('Completed on %s', 'obatala'), lastUpdateStage(index).dateFormat)
-                                                                : isDisabled
-                                                                    ? __('Pending', 'obatala')
-                                                                    : __('Pending input', 'obatala'))}
-                                                    </span>
-                                                    {options[index].sector_stage && !isVirtualExportReview && (
-                                                        <span className="badge info" title={sprintf(__('Responsible group: %s', 'obatala'), getSectorName(options[index].sector_stage))}>
-                                                            <Icon icon="groups" /> {getSectorName(options[index].sector_stage)}
+                                        <PanelBody
+                                            title={
+                                                <>
+                                                    <span className="accordion-title me-auto">{step.label}</span>
+                                                    <div className="badge-container">
+                                                        <span
+                                                            className={`badge ${isCompleted ? 'success' : isDisabled ? 'danger' : 'warning'}`}
+                                                            title={isCompleted ? sprintf(__('Completed by %s', 'obatala'), lastUpdateStage(index).user) : ''}
+                                                        >
+                                                            {isVirtualExportReview
+                                                                ? (isCompleted
+                                                                    ? sprintf(__('Completed on %s', 'obatala'), lastUpdateStage(index).dateFormat)
+                                                                    : progress < 100
+                                                                        ? __('Waiting process completion', 'obatala')
+                                                                        : __('Pending decision', 'obatala'))
+                                                                : (isCompleted
+                                                                    ? sprintf(__('Completed on %s', 'obatala'), lastUpdateStage(index).dateFormat)
+                                                                    : isDisabled
+                                                                        ? __('Pending', 'obatala')
+                                                                        : __('Pending input', 'obatala'))}
                                                         </span>
-                                                    )}
-                                                </div>
-                                            </button>
-                                            {activeIndex === index && !isDisabled && (
-                                                <div className="accordion-content">
+                                                        {options[index].sector_stage && !isVirtualExportReview && (
+                                                            <span className="badge info" title={sprintf(__('Responsible group: %s', 'obatala'), getSectorName(options[index].sector_stage))}>
+                                                                <Icon icon="groups" /> {getSectorName(options[index].sector_stage)}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </>
+                                            }
+                                            key={index}
+                                            className={`accordion-item ${isCompleted ? 'success' : isDisabled ? 'danger' : 'warning'} ${isDisabled ? 'disabled' : ''}`}
+                                            initialOpen={ false }
+                                            opened={ isDisabled ? false : undefined }
+                                            >
+                                            {!isDisabled && (
+                                                <PanelRow>
                                                     {isVirtualExportReview ? (
                                                         <>
                                                             {progress < 100 && (
@@ -3190,12 +3186,12 @@ const ProcessViewer = () => {
                                                             {__("No steps found for this process.", "obatala")}
                                                         </Notice>
                                                     )}
-                                                </div>
+                                                </PanelRow>
                                             )}
-                                        </div>
+                                        </PanelBody>
                                     );
                                 })}
-                            </div>
+                            </Panel>
                             <aside>
                                 {processIsComplete && !hasComments ? (null) : (
                                     <Panel>

@@ -1,6 +1,7 @@
 /* global obatalaApp */
 import React, { useMemo } from 'react';
-import { Button, Icon, Notice, Panel, PanelHeader, PanelRow, Spinner } from '@wordpress/components';
+import { Button, Icon, Notice, Panel, PanelBody, PanelHeader, PanelRow, Spinner } from '@wordpress/components';
+import { edit } from '@wordpress/icons';
 import { __, sprintf } from '@wordpress/i18n';
 
 const getLocale = () => document.documentElement.lang || 'pt-BR';
@@ -223,7 +224,7 @@ const TainacanItemTimeline = ( { item, isLoading, notice } ) => {
 						</Button>
 					) }
 					{ tainacanEditUrl && item?.can_edit && (
-						<Button variant="secondary" icon="edit" href={ tainacanEditUrl }>
+						<Button variant="secondary" icon={edit} href={ tainacanEditUrl }>
 							{ __( 'Editar item', 'obatala' ) }
 						</Button>
 					) }
@@ -337,62 +338,55 @@ const TainacanItemTimeline = ( { item, isLoading, notice } ) => {
 							<Panel>
 								<PanelHeader>{ __( 'Informações do item', 'obatala' ) }</PanelHeader>
 								<PanelRow>
-									<div className="tainacan-item-detail-thumbnail">
-										{ item?.thumbnail ? (
-											<img src={ item.thumbnail } alt={ item.thumbnail_alt || '' } />
-										) : (
-											<Icon icon="archive" />
-										) }
-									</div>
-									<dl className="description-list">
-										<InfoRow label={ __( 'Coleção', 'obatala' ) } value={ item?.collection_name } />
-										<InfoRow label={ __( 'Número de registro', 'obatala' ) } value={ item?.registration_number } />
-										<InfoRow label={ __( 'Situação', 'obatala' ) } value={ statusDetails.label } />
-										<InfoRow label={ __( 'Criado em', 'obatala' ) } value={ formatDate( item?.created ) } />
-										<InfoRow label={ __( 'Última atualização', 'obatala' ) } value={ formatDate( item?.modified ) } />
-										<InfoRow label={ __( 'Autor', 'obatala' ) } value={ item?.author_name } />
-									</dl>
-									{ item?.description && (
-										<div className="tainacan-item-description">
-											<strong>{ __( 'Descrição', 'obatala' ) }</strong>
-											<p>{ item.description }</p>
+									<div className="d-flex flex-wrap gap-2">
+										<div className="tainacan-item-detail-thumbnail">
+											{ item?.thumbnail ? (
+												<img src={ item.thumbnail } alt={ item.thumbnail_alt || '' } />
+											) : (
+												<Icon icon="archive" />
+											) }
 										</div>
-									) }
+										<dl className="description-list flex-item my-0">
+											<InfoRow label={ __( 'Coleção', 'obatala' ) } value={ item?.collection_name } />
+											<InfoRow label={ __( 'Número de registro', 'obatala' ) } value={ item?.registration_number } />
+											<InfoRow
+												label={ __( 'Situação', 'obatala' ) }
+												value={
+													<span className={ `badge ${ statusDetails.className }` }>
+														{ statusDetails.label }
+													</span>
+												} />
+											<InfoRow label={ __( 'Criado em', 'obatala' ) } value={ formatDate( item?.created ) } />
+											<InfoRow label={ __( 'Última atualização', 'obatala' ) } value={ formatDate( item?.modified ) } />
+											<InfoRow label={ __( 'Autor', 'obatala' ) } value={ item?.author_name } />
+											{ item?.description && (
+												<InfoRow label={ __( 'Descrição', 'obatala' ) } value={ item.description } />
+											) }
+										</dl>
+									</div>
 								</PanelRow>
+
+								<PanelBody title={ __( 'Processos vinculados', 'obatala' ) }>
+									<PanelRow>
+										<dl className="description-list">
+											<InfoRow label={ __( 'Concluído', 'obatala' ) } value={ formatCount( processSummary.finished ) } />
+											<InfoRow label={ __( 'Em progresso', 'obatala' ) } value={ formatCount( processSummary.in_progress ) } />
+											<InfoRow label={ __( 'Pendente', 'obatala' ) } value={ formatCount( processSummary.pending ) } />
+											<InfoRow label={ __( 'Total de processos', 'obatala' ) } value={ formatCount( processSummary.total ) } />
+										</dl>
+									</PanelRow>
+								</PanelBody>
+
+								{ visibleMetadata.length > 0 && (
+									<PanelBody title={ __( 'Metadados', 'obatala' ) }>
+										<dl className="description-list">
+											{ visibleMetadata.map( ( field ) => (
+												<InfoRow key={ `${ field.id }-${ field.slug }` } label={ field.name } value={ field.value } />
+											) ) }
+										</dl>
+									</PanelBody>
+								) }
 							</Panel>
-
-							<section className="tainacan-item-info-panel">
-								<h3>{ __( 'Processos vinculados', 'obatala' ) }</h3>
-								<ul className="tainacan-process-summary-list">
-									<li>
-										<span>{ __( 'Concluído', 'obatala' ) }</span>
-										<strong>{ formatCount( processSummary.finished ) }</strong>
-									</li>
-									<li>
-										<span>{ __( 'Em progresso', 'obatala' ) }</span>
-										<strong>{ formatCount( processSummary.in_progress ) }</strong>
-									</li>
-									<li>
-										<span>{ __( 'Pendente', 'obatala' ) }</span>
-										<strong>{ formatCount( processSummary.pending ) }</strong>
-									</li>
-									<li>
-										<span>{ __( 'Total de processos', 'obatala' ) }</span>
-										<strong>{ formatCount( processSummary.total ) }</strong>
-									</li>
-								</ul>
-							</section>
-
-							{ visibleMetadata.length > 0 && (
-								<section className="tainacan-item-info-panel">
-									<h3>{ __( 'Metadados', 'obatala' ) }</h3>
-									<dl className="description-list">
-										{ visibleMetadata.map( ( field ) => (
-											<InfoRow key={ `${ field.id }-${ field.slug }` } label={ field.name } value={ field.value } />
-										) ) }
-									</dl>
-								</section>
-							) }
 						</aside>
 					</div>
 				) }
