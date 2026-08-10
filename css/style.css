@@ -2180,17 +2180,6 @@ button .components-spinner {
   color: var(--primary-700);
   font-weight: 500;
 }
-
-.tainacan-item-detail-title {
-  align-items: flex-start;
-  justify-content: space-between;
-}
-.tainacan-item-detail-title > div:first-child {
-  min-width: 0;
-}
-.tainacan-item-detail-title h2 {
-  overflow-wrap: anywhere;
-}
 .tainacan-item-detail-back.components-button {
   background: var(--primary-700);
   color: var(--white);
@@ -2200,16 +2189,6 @@ button .components-spinner {
 .tainacan-item-detail-back.components-button:focus {
   background: var(--primary-900);
   color: var(--white);
-}
-.tainacan-item-detail-title .group-button .components-button.is-tertiary {
-  background: var(--primary-100);
-  box-shadow: inset 0 0 0 1px var(--primary-500);
-  color: var(--primary-900);
-}
-.tainacan-item-detail-title .group-button .components-button.is-tertiary:hover,
-.tainacan-item-detail-title .group-button .components-button.is-tertiary:focus {
-  background: var(--primary-300);
-  color: var(--primary-900);
 }
 .tainacan-item-detail-page {
   padding: 0 var(--gap-external) 3rem;
@@ -2464,12 +2443,6 @@ button .components-spinner {
 }
 
 @media screen and (max-width: 720px) {
-  .tainacan-item-detail-title {
-    flex-direction: column;
-  }
-  .tainacan-item-detail-title .group-button {
-    width: 100%;
-  }
   .tainacan-item-detail-page {
     padding-left: 1rem;
     padding-right: 1rem;

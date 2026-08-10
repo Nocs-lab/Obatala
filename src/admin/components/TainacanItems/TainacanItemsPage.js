@@ -220,15 +220,6 @@ const TainacanItemsPage = () => {
 		window.history.pushState( {}, '', getObatalaItemUrl( nextItemId ) );
 	}, [] );
 
-	const handleBackToList = useCallback( () => {
-		const url = new URL( window.location.href );
-		url.searchParams.delete( 'item_id' );
-		window.history.pushState( {}, '', `${ url.pathname }${ url.search }` );
-		setSelectedItemId( '' );
-		setSelectedItem( null );
-		setDetailNotice( null );
-	}, [] );
-
 	const handleDownload = async ( item ) => {
 		setDownloadingItemId( item.id );
 		setNotice( null );
@@ -325,7 +316,6 @@ const TainacanItemsPage = () => {
 					item={ selectedItem }
 					isLoading={ isDetailLoading }
 					notice={ detailNotice }
-					onBack={ handleBackToList }
 				/>
 				<BrandFooter />
 			</>

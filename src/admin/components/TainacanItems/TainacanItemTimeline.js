@@ -152,7 +152,7 @@ const InfoRow = ( { label, value } ) => {
 	);
 };
 
-const TainacanItemTimeline = ( { item, isLoading, notice, onBack } ) => {
+const TainacanItemTimeline = ( { item, isLoading, notice } ) => {
 	const statusDetails = getItemStatusDetails( item?.status );
 	const processes = Array.isArray( item?.processes ) ? item.processes : [];
 	const metadata = Array.isArray( item?.metadata ) ? item.metadata : [];
@@ -186,54 +186,44 @@ const TainacanItemTimeline = ( { item, isLoading, notice, onBack } ) => {
 
 	return (
 		<>
-			<div className="title-container tainacan-item-detail-title">
-				<div>
-					<Button
-						className="tainacan-item-detail-back"
-						variant="primary"
-						icon="arrow-left-alt2"
-						onClick={ onBack }
-					>
-						{ __( 'Collection items', 'obatala' ) }
-					</Button>
-					<h2>{ title }</h2>
-					<div className="badge-container">
-						{ item?.collection_name && (
-							<span className="badge info">
-								{ item.collection_name }
-							</span>
-						) }
-						{ item?.registration_number && (
-							<span className="badge default">
-								{ sprintf(
-									/* translators: %s: item registration number. */
-									__( 'Record: %s', 'obatala' ),
-									item.registration_number
-								) }
-							</span>
-						) }
-						<span className={ `badge ${ statusDetails.className }` }>
-							{ statusDetails.label }
+			<div className="title-container">
+				<h2><small>{__('Item do acervo', 'obatala')}</small> { title }</h2>
+				<div className="badge-container">
+					{ item?.collection_name && (
+						<span className="badge info">
+							{ item.collection_name }
 						</span>
-						{ item?.created && (
-							<span className="badge default">
-								{ sprintf(
-									/* translators: %s: item creation date. */
-									__( 'Registered on %s', 'obatala' ),
-									formatDate( item.created )
-								) }
-							</span>
-						) }
-					</div>
+					) }
+					{ item?.registration_number && (
+						<span className="badge default">
+							{ sprintf(
+								/* translators: %s: item registration number. */
+								__( 'Record: %s', 'obatala' ),
+								item.registration_number
+							) }
+						</span>
+					) }
+					<span className={ `badge ${ statusDetails.className }` }>
+						{ statusDetails.label }
+					</span>
+					{ item?.created && (
+						<span className="badge default">
+							{ sprintf(
+								/* translators: %s: item creation date. */
+								__( 'Registered on %s', 'obatala' ),
+								formatDate( item.created )
+							) }
+						</span>
+					) }
 				</div>
 				<div className="group-button">
 					{ tainacanUrl && (
-						<Button variant="tertiary" icon="external" href={ tainacanUrl }>
+						<Button variant="primary" icon="external" href={ tainacanUrl }>
 							{ __( 'Open in Tainacan', 'obatala' ) }
 						</Button>
 					) }
 					{ tainacanEditUrl && item?.can_edit && (
-						<Button variant="primary" icon="edit" href={ tainacanEditUrl }>
+						<Button variant="secondary" icon="edit" href={ tainacanEditUrl }>
 							{ __( 'Edit item', 'obatala' ) }
 						</Button>
 					) }
