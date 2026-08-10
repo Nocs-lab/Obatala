@@ -1,4 +1,5 @@
 import React from "react";
+import { __, sprintf } from '@wordpress/i18n';
 
 const CollectionCard = ({ collection, onSelect, isSelected, isEditable }) => {
   return (
@@ -22,7 +23,7 @@ const CollectionCard = ({ collection, onSelect, isSelected, isEditable }) => {
         <div>
           <img
             src={collection.thumbnailUrl}
-            alt={`${collection.title} thumbnail`}
+            alt={sprintf(__('%s thumbnail', 'obatala'), collection.title)}
             style={{
               width: "100%",
               maxWidth: "300px",
@@ -41,16 +42,16 @@ const CollectionCard = ({ collection, onSelect, isSelected, isEditable }) => {
         </h3>
         <ul>
           <li>
-            <strong>Autor:</strong> {collection.author}
+            <strong>{__('Author:', 'obatala')}</strong> {collection.author}
           </li>
           <li>
-            <strong>Data de criação:</strong> {collection.creationDate}
+            <strong>{__('Creation date:', 'obatala')}</strong> {collection.creationDate}
           </li>
           <li>
-            <strong>Última modificação:</strong> {collection.modificationDate}
+            <strong>{__('Last modification:', 'obatala')}</strong> {collection.modificationDate}
           </li>
           <li>
-            <strong>Total de itens publicados:</strong>{" "}
+            <strong>{__('Total published items:', 'obatala')}</strong>{" "}
             {collection.totalPublishedItems}
           </li>
         </ul>

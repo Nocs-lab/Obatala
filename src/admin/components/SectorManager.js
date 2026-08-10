@@ -209,7 +209,7 @@ const SectorManager = () => {
                 {/* Open modal to editing Sector */}
                 {editingSector && (
                     <Modal
-                        title="Edit Group"
+                        title={__('Edit Group', 'obatala')}
                         onRequestClose={handleCancel}
                         isDismissible={true}
                     >
@@ -224,7 +224,7 @@ const SectorManager = () => {
                 {/* Open modal to adding Sector */}
                 {addingSector && (
                     <Modal
-                        title="Add Group"
+                        title={__('Add Group', 'obatala')}
                         onRequestClose={handleCancel}
                         isDismissible={true}
                     >

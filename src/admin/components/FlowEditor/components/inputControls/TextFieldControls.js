@@ -9,7 +9,7 @@ import {
 import HelpTextControl from "./HelpTextControl";
 import FieldNameControl from "./FieldNameControl";
 import React, { useState } from "react";
-import { __ } from "@wordpress/i18n";
+import { __, sprintf } from "@wordpress/i18n";
 import * as Yup from "yup";
 import { useDrawer } from "../../context/DrawerContext";
 import { useFlowContext } from "../../context/FlowContext";
@@ -28,16 +28,34 @@ const predefinedPatterns = {
     registroDiaMêsAno: "^(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[0-2])/[0-9]{4}$",
 };
 
+const getPatternHelpText = (patternKey) => {
+    const formats = {
+        telefone: '11987654321',
+        cep: '00000-000',
+        EvitarAbreviacao: __('The entry must start with an uppercase letter, including accented characters, followed by letters, numbers, or accented characters, and end with a period. Example: João Silva.', 'obatala'),
+        CapitalizarInicialNomeProprio: __('Capitalize the initials of proper names and the first word, and use lowercase letters for other terms.', 'obatala'),
+        NaoUsarCapitalizacao: __('Do not use uppercase letters. Example: first name, last name', 'obatala'),
+        NumerosInteirosEfracoesDecimais: __('Use whole numbers or decimal fractions. Example: 123 or 123.45', 'obatala'),
+        NaoVazio: __('The field cannot be empty.', 'obatala'),
+        Naoutilizarapostrofo: __("Do not use apostrophes. Example: 'hello'", 'obatala'),
+        registroHoraMinutosSegundos: __('Use the HH:MM:SS format. Example: 12:34:56', 'obatala'),
+        registroDiaMêsAno: __('Use the DD/MM/YYYY format. Example: 31/12/2021, 9/5/2022', 'obatala'),
+    };
+    const format = formats[patternKey] || '';
+
+    return format ? sprintf(__('Format: %s', 'obatala'), format) : '';
+};
+
 // Esquema de validação usando Yup
 const validationSchema = Yup.object().shape({
-    label: Yup.string().required("O label é obrigatório"),
+    label: Yup.string().required(__('The label is required', 'obatala')),
     placeholder: Yup.string(),
     required: Yup.boolean(),
     minLength: Yup.number()
-        .min(0, "Tamanho mínimo não pode ser negativo")
+        .min(0, __('Minimum length cannot be negative', 'obatala'))
         .nullable(),
     maxLength: Yup.number()
-        .min(Yup.ref("minLength"), "O tamanho máximo deve ser maior que o mínimo")
+        .min(Yup.ref("minLength"), __('The maximum length must be greater than the minimum length', 'obatala'))
         .nullable(),
     helpText: Yup.string(),
 });
@@ -83,11 +101,11 @@ export const TextFieldControls = ({
         if (formValues.pattern && !isValidRegex(formValues.pattern)) {
         setErrors((prev) => ({
             ...prev,
-            pattern: "O padrão de Regex informado é inválido.",
+            pattern: __('The Regex pattern provided is invalid.', 'obatala'),
         }));
         setMessage({
             type: "error",
-            text: "Erro ao salvar. O padrão de Regex é inválido.",
+            text: __('Error saving. The Regex pattern is invalid.', 'obatala'),
         });
         return;
         }
@@ -97,7 +115,7 @@ export const TextFieldControls = ({
         .then(() => {
             setErrors({});
             updateFieldConfig(nodeId, fieldId, formValues);
-            setMessage({ type: "success", text: "Configurações salvas com sucesso!" });
+            setMessage({ type: "success", text: __('Settings saved successfully!', 'obatala') });
         })
         .catch((validationErrors) => {
             const formattedErrors = {};
@@ -109,7 +127,7 @@ export const TextFieldControls = ({
             setErrors(formattedErrors);
             setMessage({
             type: "error",
-            text: "Erro ao salvar. Por favor, revise os campos.",
+            text: __('Error saving. Please review the fields.', 'obatala'),
             });
         });
         toggleDrawer()
@@ -142,17 +160,17 @@ export const TextFieldControls = ({
             />
 
             <TextControl
-                label="Placeholder"
+                label={__('Placeholder', 'obatala')}
                 value={formValues.placeholder}
                 onChange={(value) =>
                 setFormValues((prev) => ({ ...prev, placeholder: value }))
                 }
-                placeholder="Informe o placeholder"
+                placeholder={__('Enter the placeholder', 'obatala')}
                 help={errors.placeholder}
             />
 
             <CheckboxControl
-                label="Preenchimento obrigatório"
+                label={__('Required field', 'obatala')}
                 checked={formValues.required}
                 onChange={(isChecked) =>
                 setFormValues((prev) => ({ ...prev, required: isChecked }))
@@ -160,7 +178,7 @@ export const TextFieldControls = ({
             />
 
             <NumberControl
-                label="Tamanho mínimo"
+                label={__('Minimum length', 'obatala')}
                 value={formValues.minLength}
                 onChange={(value) =>
                 setFormValues((prev) => ({ ...prev, minLength: value }))
@@ -169,7 +187,7 @@ export const TextFieldControls = ({
             />
 
             <NumberControl
-                label="Tamanho máximo"
+                label={__('Maximum length', 'obatala')}
                 value={formValues.maxLength}
                 onChange={(value) =>
                 setFormValues((prev) => ({ ...prev, maxLength: value }))
@@ -180,20 +198,20 @@ export const TextFieldControls = ({
             {fieldType !== "email" && (
                 <>
                 <SelectControl
-                    label="Padrões comuns"
+                    label={__('Common patterns', 'obatala')}
                     value=""
                     options={[
-                        { label: "Selecione um padrão", value: "" },
-                        { label: "Telefone", value: "telefone" },
-                        { label: "CEP", value: "cep" },
-                        { label: "Evitar abreviação", value: "EvitarAbreviacao" },
-                        { label: "Capitalizar Inicial de Nome Próprio", value: "CapitalizarInicialNomeProprio",},
-                        { label: "Não Usar Capitalizacao", value: "NaoUsarCapitalizacao",},
-                        { label: "Numeros Inteiros e Fracões Decimais", value: "NumerosInteirosEfracoesDecimais", },
-                        { label: "Não Vazio", value: "NaoVazio" },
-                        { label: "Não utilizar apóstrofo", value: "Naoutilizarapostrofo",},
-                        { label: "Registro de Hora, Minutos e Segundos", value: "registroHoraMinutosSegundos", },
-                        { label: "Registro de Dia, Mês e Ano", value: "registroDiaMêsAno", },
+                        { label: __('Select a pattern', 'obatala'), value: "" },
+                        { label: __('Phone', 'obatala'), value: "telefone" },
+                        { label: __('ZIP code', 'obatala'), value: "cep" },
+                        { label: __('Avoid abbreviation', 'obatala'), value: "EvitarAbreviacao" },
+                        { label: __('Capitalize proper name initials', 'obatala'), value: "CapitalizarInicialNomeProprio",},
+                        { label: __('Do not use capitalization', 'obatala'), value: "NaoUsarCapitalizacao",},
+                        { label: __('Whole numbers and decimal fractions', 'obatala'), value: "NumerosInteirosEfracoesDecimais", },
+                        { label: __('Not empty', 'obatala'), value: "NaoVazio" },
+                        { label: __('Do not use apostrophes', 'obatala'), value: "Naoutilizarapostrofo",},
+                        { label: __('Hour, minute, and second record', 'obatala'), value: "registroHoraMinutosSegundos", },
+                        { label: __('Day, month, and year record', 'obatala'), value: "registroDiaMêsAno", },
                     ]}
                     onChange={(value) => {
                         const pattern = predefinedPatterns[value] || "";
@@ -201,75 +219,25 @@ export const TextFieldControls = ({
                             ...prev,
                             pattern,
                             required: !!pattern || prev.required,
-                            helpText: pattern
-                            ? `Formato: ${
-                                value === "telefone"
-                                    ? "11987654321"
-                                    : value === "cep"
-                                    ? "00000-000"
-                                    : value === "EvitarAbreviacao"
-                                    ? "A entrada deve começar com uma letra maiúscula (incluindo caracteres acentuados), seguida por letras, números ou caracteres acentuados, e terminar com um ponto final. Ex: João Silva."
-                                    : value === "CapitalizarInicialNomeProprio"
-                                    ? "Capitalize as iniciais de nomes próprios e da primeira palavra, para outros termos use letras minúsculas."
-                                    : value === "NaoUsarCapitalizacao"
-                                    ? "Não use letras maiúsculas. Ex: Nome, Sobrenome"
-                                    : value === "NumerosInteirosEfracoesDecimais"
-                                    ? "Utilizar números inteiros ou frações decimais. Ex: 123 ou 123.45"
-                                    : value === "NaoVazio"
-                                    ? "O campo não pode ser vazio."
-                                    : value === "Naoutilizarapostrofo"
-                                    ? "Não utilizar apóstrofo. Ex: 'olá'"
-                                    : value === "registroHoraMinutosSegundos"
-                                    ? "Utilizar o formato HH:MM:SS. Ex: 12:34:56"
-                                    : value === "registroDiaMêsAno"
-                                    ? "Utilizar o formato DD/MM/YYYY. Ex: 31/12/2021, 9/5/2022"
-                                    : ""
-                                }`
-                            : prev.helpText, // Define o texto de ajuda com base no padrão
+                            helpText: pattern ? getPatternHelpText(value) : prev.helpText,
                         }));
                     }}
                 />
 
                 <TextControl
-                    label="Padrão de Validação (Regex)"
+                    label={__('Validation pattern (Regex)', 'obatala')}
                     value={formValues.pattern}
                     onChange={(value) => {
                     setFormValues((prev) => {
                         const matchedPattern = Object.entries(predefinedPatterns).find(
                         ([, regex]) => regex === value
                         );
+                        const matchedPatternKey = matchedPattern?.[0];
                         return {
                         ...prev,
                         pattern: value,
                         required: !!value.trim(),
-                        helpText: matchedPattern
-                            ? `Formato: ${
-                                value === predefinedPatterns.telefone
-                                ? "11987654321"
-                                : value === predefinedPatterns.cep
-                                ? "00000-000"
-                                : value === predefinedPatterns.EvitarAbreviacao
-                                ? "A entrada deve começar com uma letra maiúscula (incluindo caracteres acentuados), seguida por letras, números ou caracteres acentuados, e terminar com um ponto final. Ex: João Silva."
-                                : value ===
-                                    predefinedPatterns.CapitalizarInicialNomeProprio
-                                ? "Capitalize as iniciais de nomes próprios e da primeira palavra, para outros termos use letras minúsculas."
-                                : value === predefinedPatterns.NaoUsarCapitalizacao
-                                ? "Não use letras maiúsculas. Ex: Nome, Sobrenome"
-                                : value ===
-                                    predefinedPatterns.NumerosInteirosEfracoesDecimais
-                                ? "Utilizar números inteiros ou frações decimais. Ex: 123 ou 123.45"
-                                : value === predefinedPatterns.NaoVazio
-                                ? "O campo não pode ser vazio."
-                                : value === predefinedPatterns.Naoutilizarapostrofo
-                                ? "Não utilizar apóstrofo. Ex: 'Olá'"
-                                : value ===
-                                    predefinedPatterns.registroHoraMinutosSegundos
-                                ? "Utilizar o formato HH:MM:SS. Ex: 12:34:56"
-                                : value === predefinedPatterns.registroDiaMêsAno
-                                ? "Utilizar o formato DD/MM/YYYY. Ex: 31/12/2021, 9/5/2022"
-                                : ""
-                            }`
-                            : "", // Limpa o texto de ajuda se o campo de regex estiver vazio
+                        helpText: matchedPatternKey ? getPatternHelpText(matchedPatternKey) : "",
                         };
 
                         if (!value.trim()) {
@@ -283,7 +251,7 @@ export const TextFieldControls = ({
                     if (value && !isValidRegex(value)) {
                         setErrors((prev) => ({
                         ...prev,
-                        pattern: "O padrão de Regex informado é inválido.",
+                        pattern: __('The Regex pattern provided is invalid.', 'obatala'),
                         }));
                     } else {
                         setErrors((prev) => {
@@ -292,7 +260,7 @@ export const TextFieldControls = ({
                         });
                     }
                     }}
-                    placeholder="Digite um padrão de validação (Regex)"
+                    placeholder={__('Enter a validation pattern (Regex)', 'obatala')}
                     help={formValues.helpText}
                 />
                 </>

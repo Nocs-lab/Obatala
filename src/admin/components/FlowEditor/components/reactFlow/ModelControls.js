@@ -23,12 +23,12 @@ const ModelControls = ({ onSave, onCancel }) => {
                     if (importedData && importedData.nodes && importedData.edges) {
                         onImport(importedData);
                     } else {
-                        console.error('Formato de arquivo inválido. O JSON deve conter nodes e edges.');
-                        alert('Formato de arquivo inválido. O JSON deve conter nodes e edges.');
+                        console.error(__('Invalid file format. The JSON must contain nodes and edges.', 'obatala'));
+                        alert(__('Invalid file format. The JSON must contain nodes and edges.', 'obatala'));
                     }
                 } catch (error) {
-                    console.error('Erro ao analisar o arquivo JSON:', error);
-                    alert('Erro ao ler o arquivo. Certifique-se de que é um JSON válido.');
+                    console.error(__('Error parsing JSON file:', 'obatala'), error);
+                    alert(__('Error reading the file. Make sure it is a valid JSON file.', 'obatala'));
                 }
             };
             reader.readAsText(file);

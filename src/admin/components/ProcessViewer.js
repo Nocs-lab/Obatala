@@ -652,18 +652,18 @@ const ProcessViewer = () => {
         const warnings = Array.isArray(exportResult?.warnings) ? exportResult.warnings : [];
 
         const exportedLabel = exportedItems.length
-            ? `Itens exportados: ${exportedItems.map((item) => `#${item.item_id}`).join(', ')}.`
+            ? sprintf(__('Exported items: %s.', 'obatala'), exportedItems.map((item) => `#${item.item_id}`).join(', '))
             : '';
         const failedLabel = failedItems.length
-            ? `Falhas: ${failedItems.map((item) => `linha ${item.row}`).join(', ')}.`
+            ? sprintf(__('Failures: %s.', 'obatala'), failedItems.map((item) => sprintf(__('row %s', 'obatala'), item.row)).join(', '))
             : '';
         const warningLabel = warnings.length
-            ? `Avisos: ${warnings.join(' | ')}.`
+            ? sprintf(__('Warnings: %s.', 'obatala'), warnings.join(' | '))
             : '';
 
         return {
             status: status === 'success' ? 'success' : (status === 'partial' || status === 'skipped' || status === 'pending') ? 'warning' : 'error',
-            message: `${exportResult?.message || 'Exportação concluída.'} ${exportedLabel} ${failedLabel} ${warningLabel}`.trim(),
+            message: `${exportResult?.message || __('Export completed.', 'obatala')} ${exportedLabel} ${failedLabel} ${warningLabel}`.trim(),
         };
     };
 
@@ -2332,7 +2332,7 @@ const ProcessViewer = () => {
                 uploadedFiles[stepId]?.[fieldId]?.[0]?.name;
 
             if (!file) {
-                setNotice({ status: 'error', message: 'Arquivo não encontrado para download.' });
+                setNotice({ status: 'error', message: __('File not found for download.', 'obatala') });
                 return;
             }
             const params = new URLSearchParams({
@@ -2366,11 +2366,11 @@ const ProcessViewer = () => {
 
         } catch (error) {
             if (error.status === 403 || error?.error && error?.error === 'Permissao negada') {
-                setNotice({ status: 'error', message: 'Você não tem permissão para baixar este arquivo.' });
+                setNotice({ status: 'error', message: __('You do not have permission to download this file.', 'obatala') });
             } else {
-                setNotice({ status: 'error', message: 'Ocorreu um erro ao tentar baixar o arquivo.' });
+                setNotice({ status: 'error', message: __('An error occurred while trying to download the file.', 'obatala') });
             }
-            console.error('Erro ao tentar baixar o arquivo:', error);
+            console.error(__('Error trying to download the file:', 'obatala'), error);
         }
     };
 
@@ -2712,10 +2712,10 @@ const ProcessViewer = () => {
             };
         }
         const currentStepData = currentStageData[stepValue];
-        const user = currentStepData ? currentStepData[1] : 'Desconhecido';
+        const user = currentStepData ? currentStepData[1] : __('Unknown', 'obatala');
         const dateFormat = currentStepData && currentStepData[0]
             ? format(currentStepData[0], "dd 'de' MMMM 'de' yyyy", { locale: ptBR })
-            : 'Data não disponível';
+            : __('Date not available', 'obatala');
 
         return { user, dateFormat };
     };
@@ -2829,7 +2829,7 @@ const ProcessViewer = () => {
                                                 <div className="badge-container">
                                                     <span
                                                         className={`badge ${isCompleted ? 'success' : isDisabled ? 'danger' : 'warning'}`}
-                                                        title={isCompleted ? `Concluído por ${lastUpdateStage(index).user}` : ''}
+                                                        title={isCompleted ? sprintf(__('Completed by %s', 'obatala'), lastUpdateStage(index).user) : ''}
                                                     >
                                                         {isVirtualExportReview
                                                             ? (isCompleted
@@ -2844,7 +2844,7 @@ const ProcessViewer = () => {
                                                                     : __('Pending input', 'obatala'))}
                                                     </span>
                                                     {options[index].sector_stage && !isVirtualExportReview && (
-                                                        <span className="badge info" title={`Grupo responsável: ${getSectorName(options[index].sector_stage)}`}>
+                                                        <span className="badge info" title={sprintf(__('Responsible group: %s', 'obatala'), getSectorName(options[index].sector_stage))}>
                                                             <Icon icon="groups" /> {getSectorName(options[index].sector_stage)}
                                                         </span>
                                                     )}

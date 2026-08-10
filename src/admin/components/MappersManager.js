@@ -3,7 +3,7 @@ import BrandHeader from "./BrandHeader";
 import BrandFooter from "./BrandFooter";
 import apiFetch from "@wordpress/api-fetch";
 import Select from 'react-select';
-import { __ } from "@wordpress/i18n";
+import { __, sprintf } from "@wordpress/i18n";
 import { BaseControl, Button, CheckboxControl, Icon, Notice, Panel, PanelRow, SelectControl, Spinner, ToggleControl } from '@wordpress/components';
 import { fetchMapperProcessModel, fetchMetadataCollectionsTainacan, fetchProcessModels, fetchFieldsProcessModels, fetchCollectionsTainacan, fetchProcessTypeById, updateProcessTypeMeta } from '../api/apiRequests';
 
@@ -24,7 +24,7 @@ const MAPPER_STATUS_ENABLED = 'enabled';
 const MAPPER_STATUS_DISABLED = 'disabled';
 
 const DECISION_FIELD_TYPES = ['radio'];
-const PROFILE_SELECTOR_HELP_TEXT = 'Selecione a coleção de exportação que será usada neste processo.';
+const PROFILE_SELECTOR_HELP_TEXT = __('Select the export collection that will be used in this process.', 'obatala');
 const FIXED_DECISION_VALUES = {
     multi_items_value: 'Sim',
     single_item_value: 'Não',
@@ -51,101 +51,101 @@ const CONTROL_FIELD_BLUEPRINTS = [
         decisionKey: 'profile_selector_field_id',
         id: CONTROL_FIELD_IDS.profile_selector_field_id,
         type: 'radio',
-        label: 'Coleção de exportação',
-        options: 'Coleção A, Coleção B',
+        label: __('Export collection', 'obatala'),
+        options: __('Collection A, Collection B', 'obatala'),
         helpText: PROFILE_SELECTOR_HELP_TEXT,
     },
     {
         decisionKey: 'multi_or_single_field_id',
         id: CONTROL_FIELD_IDS.multi_or_single_field_id,
         type: 'radio',
-        label: 'Trata vários itens?',
+        label: __('Handle multiple items?', 'obatala'),
         required: true,
         options: 'Sim, Não',
-        helpText: 'Escolha Sim para múltiplos itens ou Não para item único.',
+        helpText: __('Choose Sim for multiple items or Não for a single item.', 'obatala'),
     },
     {
         decisionKey: 'quantity_field_id',
         id: CONTROL_FIELD_IDS.quantity_field_id,
         type: 'number',
-        label: 'Quantidade de itens',
+        label: __('Number of items', 'obatala'),
         required: true,
         conditional: {
             dependsOnFieldId: CONTROL_FIELD_IDS.multi_or_single_field_id,
             operator: 'equals',
             value: 'Sim',
         },
-        helpText: 'Informe a quantidade de itens para exportação.',
+        helpText: __('Enter the number of items to export.', 'obatala'),
     },
     {
         decisionKey: 'data_entry_mode_field_id',
         id: CONTROL_FIELD_IDS.data_entry_mode_field_id,
         type: 'radio',
-        label: 'Origem dos dados',
+        label: __('Data source', 'obatala'),
         conditional: {
             dependsOnFieldId: CONTROL_FIELD_IDS.multi_or_single_field_id,
             operator: 'equals',
             value: 'Sim',
         },
         options: 'Manual, Planilha',
-        helpText: 'Escolha Manual para formulário ou Planilha para upload.',
+        helpText: __('Choose Manual for form entry or Planilha for upload.', 'obatala'),
     },
     {
         decisionKey: 'spreadsheet_upload_field_id',
         id: CONTROL_FIELD_IDS.spreadsheet_upload_field_id,
         type: 'upload',
-        label: 'Upload da planilha',
+        label: __('Spreadsheet upload', 'obatala'),
         conditional: {
             dependsOnFieldId: CONTROL_FIELD_IDS.multi_or_single_field_id,
             operator: 'equals',
             value: 'Sim',
         },
-        helpText: 'Faça upload da planilha quando a origem for Planilha.',
+        helpText: __('Upload the spreadsheet when the source is Planilha.', 'obatala'),
     },
     {
         decisionKey: 'same_values_mode_field_id',
         id: CONTROL_FIELD_IDS.same_values_mode_field_id,
         type: 'radio',
-        label: 'Repetir dados base?',
+        label: __('Repeat base data?', 'obatala'),
         conditional: {
             dependsOnFieldId: CONTROL_FIELD_IDS.multi_or_single_field_id,
             operator: 'equals',
             value: 'Sim',
         },
         options: 'Sim, Não',
-        helpText: 'Use Sim quando vários itens compartilham os mesmos dados base.',
+        helpText: __('Use Sim when multiple items share the same base data.', 'obatala'),
     },
     {
         decisionKey: 'same_values_unique_id_field_id',
         id: CONTROL_FIELD_IDS.same_values_unique_id_field_id,
         type: 'text',
-        label: 'Identificador',
-        helpText: 'Informe o campo que diferencia cada item na repetição.',
+        label: __('Identifier', 'obatala'),
+        helpText: __('Enter the field that differentiates each item in the repetition.', 'obatala'),
     },
     {
         decisionKey: 'same_values_prefix_mode_field_id',
         id: CONTROL_FIELD_IDS.same_values_prefix_mode_field_id,
         type: 'radio',
-        label: 'Usar prefixo base?',
+        label: __('Use base prefix?', 'obatala'),
         options: 'Sim, Não',
         conditional: {
             dependsOnFieldId: CONTROL_FIELD_IDS.same_values_mode_field_id,
             operator: 'equals',
             value: 'Sim',
         },
-        helpText: 'Escolha Sim para preencher automaticamente um prefixo base nos identificadores.',
+        helpText: __('Choose Sim to automatically fill a base prefix in the identifiers.', 'obatala'),
     },
     {
         decisionKey: 'same_values_prefix_text_field_id',
         id: CONTROL_FIELD_IDS.same_values_prefix_text_field_id,
         type: 'text',
-        label: 'Prefixo base',
+        label: __('Base prefix', 'obatala'),
         conditional: {
             dependsOnFieldId: CONTROL_FIELD_IDS.same_values_prefix_mode_field_id,
             operator: 'equals',
             value: 'Sim',
         },
-        helpText: 'Informe o texto base do prefixo (ex.: MOEDA-).',
+        helpText: __('Enter the prefix base text (for example: MOEDA-).', 'obatala'),
     },
 ];
 
@@ -198,7 +198,7 @@ export const buildCollectionSelectorOptionsFromProfiles = (profiles, resolveColl
 
             const fallbackLabel = String(
                 profile?.collection_name
-                || `Coleção ${collectionId || index + 1}`
+                || sprintf(__('Collection %s', 'obatala'), collectionId || index + 1)
             ).trim();
             const resolved = typeof resolveCollectionLabel === 'function'
                 ? String(resolveCollectionLabel(collectionId, fallbackLabel) || '').trim()
@@ -469,7 +469,7 @@ const getProfilesFromSavedData = (savedData) => {
         return [{
             key: 'perfil_padrao',
             collection_id: legacyCollectionId,
-            collection_name: String(savedData?.collection_name || savedData?.label || 'Coleção padrão'),
+            collection_name: String(savedData?.collection_name || savedData?.label || __('Default collection', 'obatala')),
             field_mappings: legacyMappings,
         }];
     }
@@ -1148,7 +1148,7 @@ const MappersManager = ({
             const title = String(collection?.["WP_Post"]?.post_title || '').trim();
 
             if (id) {
-                acc[id] = title || `Coleção ${id}`;
+                acc[id] = title || sprintf(__('Collection %s', 'obatala'), id);
             }
 
             return acc;
@@ -1160,7 +1160,7 @@ const MappersManager = ({
         if (!normalizedId || normalizedId === '0') {
             return String(fallback || '').trim();
         }
-        return collectionLabelById[normalizedId] || String(fallback || `Coleção ${normalizedId}`).trim();
+        return collectionLabelById[normalizedId] || String(fallback || sprintf(__('Collection %s', 'obatala'), normalizedId)).trim();
     };
 
     const configuredCollectionSelectorOptions = useMemo(() => {
@@ -1440,10 +1440,10 @@ const MappersManager = ({
     const profileSelectorFieldOptions = useMemo(() => {
         return buildTypedFieldOptions(
             DECISION_FIELD_TYPES,
-            'Selecione um campo',
+            __('Select a field', 'obatala'),
             profileSelectorFieldId,
             (field) => firstStageFieldIds.includes(String(field.value)),
-            'field fora da etapa inicial ou com tipo incompatível'
+            __('field outside the initial step or with an incompatible type', 'obatala')
         );
     }, [stepsProcessModel, profileSelectorFieldId, firstStageFieldIds, fieldLabelById]);
 
@@ -1538,7 +1538,7 @@ const MappersManager = ({
 
     const getMappingData = async () => {
         if (!selectedProcessModel?.id) {
-            alert("Modelo de processo não encontrado.");
+            alert(__('Process model not found.', 'obatala'));
             return;
         }
 
@@ -1556,7 +1556,7 @@ const MappersManager = ({
                 setSelectedProcessModel(modelForSave);
             } catch (error) {
                 console.error('Erro ao garantir a etapa de controle no modelo de processo:', error);
-                alert('Não foi possível garantir a etapa de controle no modelo de processo.');
+                alert(__('Could not ensure the control step in the process model.', 'obatala'));
                 return;
             }
         }
@@ -1595,25 +1595,25 @@ const MappersManager = ({
 
         if (normalizedMapperStatus === MAPPER_STATUS_ENABLED) {
             if (!normalizedProfiles.length) {
-                alert("Cadastre ao menos uma coleção de exportação.");
+                alert(__('Register at least one export collection.', 'obatala'));
                 return;
             }
 
             const hasMissingCollection = normalizedProfiles.some((profile) => !profile.collection_id || profile.collection_id === '0');
             if (hasMissingCollection) {
-                alert("Todas as configurações precisam ter uma coleção do Tainacan selecionada.");
+                alert(__('All configurations must have a Tainacan collection selected.', 'obatala'));
                 return;
             }
 
             const normalizedCollectionIds = normalizedProfiles.map((profile) => String(profile.collection_id));
             if (new Set(normalizedCollectionIds).size !== normalizedCollectionIds.length) {
-                alert("Cada configuração deve apontar para uma coleção diferente.");
+                alert(__('Each configuration must point to a different collection.', 'obatala'));
                 return;
             }
 
             const normalizedCollectionNames = normalizedProfiles.map((profile) => normalizeOptionLabel(profile.collection_name || ''));
             if (new Set(normalizedCollectionNames).size !== normalizedCollectionNames.length) {
-                alert("As coleções selecionadas precisam ter nomes diferentes para identificação na tramitação.");
+                alert(__('Selected collections must have different names for identification in the workflow.', 'obatala'));
                 return;
             }
 
@@ -1627,7 +1627,7 @@ const MappersManager = ({
             ));
 
             if (hasIncompleteProfileMappings) {
-                alert("Todos os campos de todas as configurações devem estar preenchidos antes de salvar o mapeamento.");
+                alert(__('All fields in all configurations must be filled in before saving the mapping.', 'obatala'));
                 return;
             }
 
@@ -1643,17 +1643,18 @@ const MappersManager = ({
 
             if (invalidMappedFields.length) {
                 alert(
-                    "Existem campos mapeados que não estão mais presentes nas etapas: "
-                    + invalidMappedFields
-                        .map(({ collection, field }) => `${collection}: ${field}`)
-                        .join("; ")
-                    + ". Revise o mapeamento antes de salvar."
+                    sprintf(
+                        __('There are mapped fields that are no longer present in the steps: %s. Review the mapping before saving.', 'obatala'),
+                        invalidMappedFields
+                            .map(({ collection, field }) => `${collection}: ${field}`)
+                            .join("; ")
+                    )
                 );
                 return;
             }
 
             if (normalizedDecisionRules.data_entry_mode_field_id && !normalizedDecisionRules.spreadsheet_upload_field_id) {
-                alert("Selecione o campo de upload que receberá a planilha no passo 3.");
+                alert(__('Select the upload field that will receive the spreadsheet in step 3.', 'obatala'));
                 return;
             }
         }
@@ -1695,8 +1696,8 @@ const MappersManager = ({
                     };
                     setSelectedProcessModel(modelForSave);
                 } catch (error) {
-                    console.error('Erro ao sincronizar opções de coleção no modelo de processo:', error);
-                    alert('Não foi possível atualizar as opções do campo de Coleção de Exportação no modelo de processo.');
+                console.error(__('Error synchronizing collection options in the process model:', 'obatala'), error);
+                    alert(__('Could not update the Export Collection field options in the process model.', 'obatala'));
                     return;
                 }
             }
@@ -1713,13 +1714,13 @@ const MappersManager = ({
                 if (embedded) {
                     if (typeof onMappingSaved === 'function') {
                         onMappingSaved({
-                            message: 'Mapeamento salvo com sucesso!',
+                            message: __('Mapping saved successfully!', 'obatala'),
                             flowData: modelForSave?.meta?.flowData,
                             mapperStatus: normalizedMapperStatus,
                         });
                     }
                 } else {
-                    alert('Mapeamento salvo com sucesso!');
+                    alert(__('Mapping saved successfully!', 'obatala'));
                     window.location.href = '?page=process-type-manager';
                     const defaultProfiles = [];
                     setProfiles(defaultProfiles);
@@ -1729,11 +1730,11 @@ const MappersManager = ({
                     setDecisionConfig(getDefaultControlDecisionConfig());
                 }
             } else {
-                alert('Falha ao salvar: ' + (response.message || 'Erro desconhecido.'));
+                alert(sprintf(__('Failed to save: %s', 'obatala'), response.message || __('Unknown error.', 'obatala')));
             }
         } catch (error) {
-            console.error('Erro ao salvar mapeamento:', error);
-            alert('Erro ao salvar o mapeamento.');
+            console.error(__('Error saving mapping:', 'obatala'), error);
+            alert(__('Error saving the mapping.', 'obatala'));
         }
     };
 
@@ -1775,7 +1776,7 @@ const MappersManager = ({
             {!embedded && (
                 <div className="title-container">
                     <h2>
-                        <small>Edit export data</small>{selectedProcessModel?.title?.rendered}
+                        <small>{__('Edit export data', 'obatala')}</small>{selectedProcessModel?.title?.rendered}
                     </h2>
                 </div>
             )}
@@ -1786,8 +1787,8 @@ const MappersManager = ({
                             <input type="hidden" name="page" value="inbcm-mapping" />
 
                             <ToggleControl
-                                label="Status do Mapeador"
-                                help="Desabilite para impedir a criação automática da etapa de controle e a exportação automática para o Tainacan."
+                                label={__('Mapper status', 'obatala')}
+                                help={__('Disable to prevent automatic creation of the control step and automatic export to Tainacan.', 'obatala')}
                                 checked={ mapperStatus === MAPPER_STATUS_ENABLED }
                                 onChange={ (isChecked) => {
                                     const newValue = isChecked ? MAPPER_STATUS_ENABLED : MAPPER_STATUS_DISABLED;
@@ -1797,33 +1798,32 @@ const MappersManager = ({
 
                             {!isMapperEnabled ? (
                                 <Notice status="warning" isDismissible={false}>
-                                    Com o mapeador desabilitado, o fluxo não gera automaticamente a etapa de controle
-                                    e não executa o envio de itens para o Tainacan ao finalizar o processo.
+                                    {__('With the mapper disabled, the flow does not automatically generate the control step and does not send items to Tainacan when the process is completed.', 'obatala')}
                                 </Notice>
                             ) : (
                                 <div className="counter-container flex-basis-100">
                                     <hr className="mb-2" />
                                     {showProfileSelectorSection && (
                                         <BaseControl
-                                            label="Seleção de Coleção no Início do Processo"
-                                            help="Escolha o field da etapa inicial que receberá automaticamente as opções de coleção."
+                                            label={__('Collection selection at process start', 'obatala')}
+                                            help={__('Choose the field in the initial step that will automatically receive the collection options.', 'obatala')}
                                         >
                                             <SelectControl
-                                                label="Field seletor da coleção"
+                                                label={__('Collection selector field', 'obatala')}
                                                 value={profileSelectorFieldId}
                                                 options={profileSelectorFieldOptions}
                                                 onChange={(value) => setProfileSelectorFieldId(String(value || ''))}
                                             />
                                             <p>
-                                                Esse field será exibido na etapa inicial da tramitação com as coleções disponíveis para escolha.
-                                                Hoje ele aceita fields do tipo <strong>radio</strong> da etapa inicial.
+                                                {__('This field will be displayed in the initial workflow step with the collections available for selection.', 'obatala')}{' '}
+                                                {__('Currently it accepts initial step fields of type', 'obatala')} <strong>radio</strong>.
                                             </p>
                                         </BaseControl>
                                     )}
 
                                     <BaseControl className="counter-item"
-                                        label="Coleções de Exportação"
-                                        help="Cada configuração representa uma coleção de destino com seu próprio mapeamento de metadados."
+                                        label={__('Export collections', 'obatala')}
+                                        help={__('Each configuration represents a target collection with its own metadata mapping.', 'obatala')}
                                     >
                                         <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 14px', alignItems: 'flex-start' }}>
                                             {collectionsTainacan.map((collection) => {
@@ -1836,7 +1836,7 @@ const MappersManager = ({
                                                 return (
                                                     <div key={`checkbox_collection_${collectionId}`} style={{ minWidth: '220px' }}>
                                                         <CheckboxControl
-                                                            label={collectionName || `Coleção ${collectionId}`}
+                                                            label={collectionName || sprintf(__('Collection %s', 'obatala'), collectionId)}
                                                             checked={isChecked}
                                                             onChange={(checked) => handleCollectionCheckboxChange(collectionId, checked)}
                                                             style={{ marginBottom: 0 }}
@@ -1850,8 +1850,8 @@ const MappersManager = ({
                                             {selectedProfiles.map((profile, index) => {
                                                 const displayName = getCollectionLabel(
                                                     profile.collection_id,
-                                                    profile.collection_name || `Coleção ${index + 1}`
-                                                ) || `Coleção ${index + 1}`;
+                                                    profile.collection_name || sprintf(__('Collection %s', 'obatala'), index + 1)
+                                                ) || sprintf(__('Collection %s', 'obatala'), index + 1);
                                                 const isActive = currentProfile?.key === profile.key;
 
                                                 return (
@@ -1883,7 +1883,7 @@ const MappersManager = ({
                                                         <button
                                                             type="button"
                                                             onClick={() => handleRemoveCollectionProfile(profile.collection_id)}
-                                                            aria-label={`Remover coleção ${displayName}`}
+                                                            aria-label={sprintf(__('Remove collection %s', 'obatala'), displayName)}
                                                             style={{
                                                                 border: 'none',
                                                                 borderLeft: `1px solid ${isActive ? '#135e96' : '#dcdcde'}`,
@@ -1905,8 +1905,8 @@ const MappersManager = ({
                                     </BaseControl>
 
                                     <BaseControl className="counter-item"
-                                        label="Escolha os campos do formulário que apresentam os metadados do item:"
-                                        help="A lista abaixo exclui automaticamente os fields usados na configuração geral de decisão. Você pode salvar sem selecionar campos e concluir o mapeamento depois."
+                                        label={__('Choose the form fields that contain the item metadata:', 'obatala')}
+                                        help={__('The list below automatically excludes fields used in the general decision configuration. You can save without selecting fields and complete the mapping later.', 'obatala')}
                                     >
                                         <Select
                                             key={currentProfile?.key || 'profile-empty'}
@@ -1915,32 +1915,32 @@ const MappersManager = ({
                                             value={selectedSteps}
                                             onChange={handleSelectedStepsChange}
                                             isDisabled={!currentProfile}
-                                            placeholder="Selecione os campos..."
+                                            placeholder={__('Select the fields...', 'obatala')}
                                         />
                                     </BaseControl>
 
                                     <BaseControl className="counter-item"
-                                        label="Mapeamento de Metadados"
-                                        help="Relacione os campos do Obatala com os metadados do Tainacan."
+                                        label={__('Metadata mapping', 'obatala')}
+                                        help={__('Relate Obatala fields to Tainacan metadata.', 'obatala')}
                                     >
                                         <table className="wp-list-table widefat fixed striped">
                                             <thead>
                                                 <tr>
-                                                    <th>Field Obatala</th>
-                                                    <th>Tainacan Metadado</th>
+                                                    <th>{__('Obatala field', 'obatala')}</th>
+                                                    <th>{__('Tainacan metadata', 'obatala')}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 {selectedSteps.map((step, index) => {
                                                     const currentValue = selectRows[index]?.tainacanMetadata || '';
                                                     const options = [
-                                                        { label: 'Selecione o metadado', value: '' },
+                                                        { label: __('Select the metadata', 'obatala'), value: '' },
                                                         ...metadataTainacan.map((item) => {
                                                             const post = item["WP_Post"];
                                                             const id = String(post.ID);
                                                             const isUsed = isMetadataSelected(id, index);
                                                             return {
-                                                                label: `${post.post_title}${isUsed ? ' (já usado)' : ''}`,
+                                                                label: `${post.post_title}${isUsed ? ` ${__('(already used)', 'obatala')}` : ''}`,
                                                                 value: id,
                                                                 disabled: isUsed
                                                             };
@@ -1965,7 +1965,7 @@ const MappersManager = ({
                                                 {selectedSteps.length === 0 && (
                                                     <tr>
                                                         <td colSpan="2">
-                                                            Nenhum campo selecionado para mapeamento.
+                                                            {__('No field selected for mapping.', 'obatala')}
                                                         </td>
                                                     </tr>
                                                 )}

@@ -63,10 +63,10 @@ const MetaFieldDisplay = ( {
 					const title =
 						typeof obj.title === 'string'
 							? obj.title
-							: obj.title?.rendered ?? obj.name ?? '(sem título)';
+							: obj.title?.rendered ?? obj.name ?? __('(untitled)', 'obatala');
 
 					const url = typeof obj.url === 'string' ? obj.url : null;
-					const type = obj.type ? String( obj.type ) : 'Item';
+					const type = obj.type ? String( obj.type ) : __('Item', 'obatala');
 
 					return (
 						<li key={ obj.id ?? idx }>

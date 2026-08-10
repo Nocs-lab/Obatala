@@ -1,6 +1,6 @@
 import React from 'react';
 import { Icon } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
 
@@ -48,11 +48,10 @@ const ProcessHeader = ({ process, filteredProcessType, authorsById, isComplete, 
                     </span>
                     <span className={`badge ${isComplete ? 'success' : 'default'}`}>
                         <Icon icon={isComplete ? "yes" : "update"} />
-                        {progress
-                        }% concluído
+                        {sprintf(__('%s%% completed', 'obatala'), progress)}
                     </span>
                     <span className="badge default">
-                        <Icon icon="admin-users" /> Aberto por: {authorsById[process?.author]?.name} em {createAtProcess()}
+                        <Icon icon="admin-users" /> {sprintf(__('Opened by: %1$s on %2$s', 'obatala'), authorsById[process?.author]?.name, createAtProcess())}
                     </span>
                 </div>
             </div>

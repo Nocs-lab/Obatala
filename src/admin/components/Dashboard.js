@@ -397,7 +397,7 @@ const DashboardPage = () => {
 
 						return {
 							id: process.id,
-							title: process.title?.rendered || 'Sem título',
+							title: process.title?.rendered || __( 'Untitled', 'obatala' ),
 							percentage: details.percentage,
 							lastUpdate: details.lastUpdate,
 							currentStage: details.currentStage,
@@ -596,10 +596,10 @@ const DashboardPage = () => {
 								<img
 									src={ currentUser.avatar_urls?.[ 96 ] }
 									className="user-photo"
-									alt={ `Foto de ${ currentUser?.name }` }
+									alt={ sprintf( __( 'Photo of %s', 'obatala' ), currentUser?.name ) }
 								/>
 								<span className="description">
-									Olá, <strong>{ currentUser.name }</strong>!
+									{ sprintf( __( 'Olá, %s!', 'obatala' ), currentUser.name ) }
 								</span>
 								{ matchesSectors.length > 0 && (
 									<div className="badge-container">

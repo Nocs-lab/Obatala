@@ -179,14 +179,14 @@ const processDataEditor = () => {
             const hasOutput = nodeOutputs.get(node.id).length > 0;
 
             if (!isStart && !isEnd && !hasInput && !hasOutput) {
-                disconnectedNodes.push(`Etapa "${node.data?.stageName}" não possui entrada nem saída.`);
+                disconnectedNodes.push(sprintf(__('Step "%s" has no input or output.', 'obatala'), node.data?.stageName));
             } else {
                 if (!isStart && !hasInput) {
-                    disconnectedNodes.push((isEnd || isConditional ? 'Nó ' : 'Etapa ') + `"${node.data?.stageName}" não possui entrada.`);
+                    disconnectedNodes.push(sprintf(__('%1$s "%2$s" has no input.', 'obatala'), isEnd || isConditional ? __('Node', 'obatala') : __('Step', 'obatala'), node.data?.stageName));
                 }
 
                 if (!isEnd && !hasOutput) {
-                    disconnectedNodes.push((isStart || isConditional ? 'Nó ' : 'Etapa ') + `"${node.data?.stageName}" não possui saída.`);
+                    disconnectedNodes.push(sprintf(__('%1$s "%2$s" has no output.', 'obatala'), isStart || isConditional ? __('Node', 'obatala') : __('Step', 'obatala'), node.data?.stageName));
                 }
             }
         });
@@ -329,7 +329,12 @@ const processDataEditor = () => {
 
             if (nodesWithoutSector.length > 0) {
                 errorMessages.push(
-                    (nodesWithoutSector.length > 1 ? 'As etapas:' : 'A etapa: ') + `${nodesWithoutSector.map(node => node.data?.stageName).join(', ')} não têm grupo definido.`
+                    sprintf(
+                        nodesWithoutSector.length > 1
+                            ? __('The steps %s do not have a group defined.', 'obatala')
+                            : __('The step %s does not have a group defined.', 'obatala'),
+                        nodesWithoutSector.map(node => node.data?.stageName).join(', ')
+                    )
                 );
             }
 
@@ -344,8 +349,12 @@ const processDataEditor = () => {
 
             if (nodesWithoutFields.length > 0) {
                 errorMessages.push(
-                    (nodesWithoutFields.length > 1 ? 'As etapas:' : 'A etapa: ') +
-                    `${nodesWithoutFields.map(node => node.data?.stageName).join(', ')} não têm campos definidos.`
+                    sprintf(
+                        nodesWithoutFields.length > 1
+                            ? __('The steps %s do not have fields defined.', 'obatala')
+                            : __('The step %s does not have fields defined.', 'obatala'),
+                        nodesWithoutFields.map(node => node.data?.stageName).join(', ')
+                    )
                 );
             }
 
@@ -389,9 +398,9 @@ const processDataEditor = () => {
 
                     const sourceNode = flowData.nodes.find(node => node.id === incomingEdge?.source);
 
-                    const sourceName = sourceNode?.data?.stageName || sourceNode?.id || "Etapa desconhecida";
+                    const sourceName = sourceNode?.data?.stageName || sourceNode?.id || __('Unknown step', 'obatala');
 
-                    return `A condicional após a etapa "${sourceName}" está incompleta.`;
+                    return sprintf(__('The conditional after step "%s" is incomplete.', 'obatala'), sourceName);
                 });
 
                 errorMessages.push(...conditionalErrors);
@@ -430,7 +439,7 @@ const processDataEditor = () => {
                         await updateNodeSector(node.id, node.tempSector);
 
                     } catch (error) {
-                        console.error(`Erro ao associar setor ao nó ${node.id}:`, error);
+                console.error(sprintf(__('Error associating group to node %s:', 'obatala'), node.id), error);
                     }
                 }
             }
@@ -520,7 +529,7 @@ const processDataEditor = () => {
                                 {notice.message}
                             </Notice>
                         )}
-                        <Panel header={ __('Manage process model', 'obatala') }>
+                        <Panel header={ __('Gerenciar modelo de processo', 'obatala') }>
                             {canManageMappers && (
                                 <PanelBody 
                                     title={ <TainacanExportPanelTitle /> } 

@@ -15,8 +15,8 @@ import { useDrawer } from "../../context/DrawerContext";
 
 // Esquema de validação usando Yup
 const validationSchema = Yup.object().shape({
-    label: Yup.string().required("O label é obrigatório"),
-    options: Yup.string().required("As opções são obrigatórias"),
+    label: Yup.string().required(__('The label is required', 'obatala')),
+    options: Yup.string().required(__('The options are required', 'obatala')),
     required: Yup.boolean(),
     helpText: Yup.string(),
 });
@@ -90,7 +90,7 @@ export const SelectRadioControls = ({
 
             {/* Campo para definir o campo como obrigatório */}
             <CheckboxControl
-                label="Preenchimento brigatório"
+                label={__('Required field', 'obatala')}
                 checked={formValues.required} // Use formValues para sincronizar o valor
                 onChange={(isChecked) =>
                 setFormValues((prev) => ({ ...prev, required: isChecked }))
@@ -99,17 +99,17 @@ export const SelectRadioControls = ({
 
             {/* Campo para definir as opções do Select/Radio */}
             <TextControl
-                label="Opções de resposta (separadas por vírgula)"
+                label={__('Answer options (separated by commas)', 'obatala')}
                 value={formValues.options} // Use formValues para sincronizar o valor
                 onChange={(value) => setFormValues((prev) => ({ ...prev, options: value }))}
-                placeholder="Opções, separadas por vírgula" required
+                placeholder={__('Options, separated by commas', 'obatala')} required
                 help={errors.options} // Exibe a mensagem de erro, se houver
             />
 
             {/* Visualização das opções como Radio e Select */}
             {isSelect ? (
                 <SelectControl
-                    label="Pré-visualização das opções de resposta"
+                    label={__('Answer options preview', 'obatala')}
                     options={optionArray.map((option) => ({
                         label: option,
                         value: option,
@@ -119,7 +119,7 @@ export const SelectRadioControls = ({
                 />
             ) : (
                 <RadioControl
-                    label="Pré-visualização das opções de resposta"
+                    label={__('Answer options preview', 'obatala')}
                     options={optionArray.map((option) => ({
                     label: option,
                     value: option,
