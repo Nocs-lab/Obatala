@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { TextControl } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
 import CollectionCard from './TainacanSearch/CollectionCard';
 import ItemCard from './TainacanSearch/ItemCard';
 
@@ -8,7 +9,7 @@ const TainacanSearchControls = ({
   initialValue = [],
   isEditable,
   noHasPermission,
-  label = 'Search Tainacan'
+  label = __('Search Tainacan', 'obatala')
 }) => {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState([]);
@@ -27,11 +28,11 @@ const TainacanSearchControls = ({
       .filter(Boolean)
       .map((x) => ({
         id: x?.id != null ? String(x.id) : '',
-        type: x?.type ? String(x.type) : 'Item',
+        type: x?.type ? String(x.type) : __('Item', 'obatala'),
         title:
           typeof x?.title === 'string'
             ? x.title
-            : (x?.title?.rendered ?? x?.name ?? '(sem título)'),
+            : (x?.title?.rendered ?? x?.name ?? __('(untitled)', 'obatala')),
         url: typeof x?.url === 'string' ? x.url : '',
         thumbnailUrl: typeof x?.thumbnailUrl === 'string' ? x.thumbnailUrl : null,
         metadata: x?.metadata && typeof x.metadata === 'object' ? x.metadata : {},
@@ -170,7 +171,7 @@ const TainacanSearchControls = ({
           value={query}
           disabled={noHasPermission}
           onChange={handleSearch}
-          placeholder="Search for collections and/or items"
+          placeholder={__('Search for collections and/or items', 'obatala')}
         />
       )}
 
@@ -209,7 +210,7 @@ const TainacanSearchControls = ({
         ))}
       </div>
 
-      {loading && <div>Carregando...</div>}
+      {loading && <div>{__('Loading...', 'obatala')}</div>}
 
       <div style={{ marginTop: '20px' }}>
         {results.map((result) =>

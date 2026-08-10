@@ -10,17 +10,17 @@ import { fetchSectors } from "../../../../api/apiRequests";
 import { close, file, mobile, mapMarker, paragraph, plus, search, calendar, keyboard, listView, envelope } from '@wordpress/icons';
 
 const FIELD_OPTIONS = [
-    { id: "text", label: "Texto", icon: paragraph },
-    { id: "email", label: "Email", icon: envelope },
-    { id: "phone", label: "Telefone", icon: mobile },
-    { id: "address", label: "Endereço", icon: mapMarker },
-    { id: "number", label: "Número", icon: keyboard },
-    { id: "datepicker", label: "Date Picker", icon: calendar },
-    { id: "upload", label: "Upload de Arquivo", icon: file },
+    { id: "text", label: __("Text", "obatala"), icon: paragraph },
+    { id: "email", label: __("Email", "obatala"), icon: envelope },
+    { id: "phone", label: __("Phone", "obatala"), icon: mobile },
+    { id: "address", label: __("Address", "obatala"), icon: mapMarker },
+    { id: "number", label: __("Number", "obatala"), icon: keyboard },
+    { id: "datepicker", label: __("Date Picker", "obatala"), icon: calendar },
+    { id: "upload", label: __("File upload", "obatala"), icon: file },
     { id: "stage_document", label: __("Stage document", "obatala"), icon: file },
-    { id: "select", label: "Select (Múltiplas Opções)", icon: listView },
-    { id: "radio", label: "Radio (Opções de Seleção)", icon: listView },
-    { id: "search", label: "Busca em Tainacan", icon: search },
+    { id: "select", label: __("Select (Multiple Options)", "obatala"), icon: listView },
+    { id: "radio", label: __("Radio (Selection Options)", "obatala"), icon: listView },
+    { id: "search", label: __("Search in Tainacan", "obatala"), icon: search },
 ];
 
 const NodeContent = ({ id, data = {} }) => {

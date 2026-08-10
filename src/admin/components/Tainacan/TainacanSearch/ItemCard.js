@@ -1,11 +1,12 @@
 import React from 'react';
+import { __, sprintf } from '@wordpress/i18n';
 
 const ItemCard = ({ item, onSelect, isSelected, isEditable }) => {
   const safe = item && typeof item === 'object' ? item : {};
 
   const title = typeof safe.title === 'string'
     ? safe.title
-    : (safe.title?.rendered ?? safe.name ?? '(sem título)');
+    : (safe.title?.rendered ?? safe.name ?? __('(untitled)', 'obatala'));
 
   const description = typeof safe.description === 'string'
     ? safe.description
@@ -31,7 +32,7 @@ const ItemCard = ({ item, onSelect, isSelected, isEditable }) => {
       {thumb && (
         <img
           src={thumb}
-          alt={`${title} thumbnail`}
+          alt={sprintf(__('%s thumbnail', 'obatala'), title)}
           style={{
             width: '150px',
             height: '150px',
@@ -45,18 +46,18 @@ const ItemCard = ({ item, onSelect, isSelected, isEditable }) => {
       <div style={{ flex: 1 }}>
         <h3 style={{ margin: '0 0 8px' }}>{title}</h3>
         {description ? <p style={{ color: '#555' }}>{description}</p> : null}
-        <p><strong>Tipo:</strong> {safe.type ?? 'Item'}</p>
+        <p><strong>{__('Type:', 'obatala')}</strong> {safe.type ?? __('Item', 'obatala')}</p>
 
         {safe.metadata && typeof safe.metadata === 'object' && !Array.isArray(safe.metadata) && (
           <details style={{ marginTop: '12px' }} onClick={(e) => e.stopPropagation()}>
-            <summary style={{ cursor: 'pointer', fontWeight: 'bold' }}>Metadata</summary>
+            <summary style={{ cursor: 'pointer', fontWeight: 'bold' }}>{__('Metadata', 'obatala')}</summary>
             <ul style={{ paddingLeft: '20px', margin: '8px 0 0' }}>
               {Object.entries(safe.metadata).map(([key, meta]) => {
                 const name = meta?.name ?? key;
                 const value =
                   meta?.value_as_string ??
                   meta?.value ??
-                  (typeof meta === 'string' ? meta : 'N/A');
+                  (typeof meta === 'string' ? meta : __('N/A', 'obatala'));
 
                 return (
                   <li key={key} style={{ marginBottom: '4px' }}>

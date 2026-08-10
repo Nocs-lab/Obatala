@@ -23,12 +23,12 @@ const TainacanItemsFilters = ( {
 		<div className="search-filter-controls">
 			<DropdownMenu
 				icon={ settings }
-				label={ __( 'Filter', 'obatala' ) }
-				text={ __( 'Filters', 'obatala' ) }
+				label={ __( 'Filtrar', 'obatala' ) }
+				text={ __( 'Filtros', 'obatala' ) }
 			>
 				{ ( { onClose } ) => (
 					<div className="search-filter-controls-popover">
-						<MenuGroup label={ __( 'Collection', 'obatala' ) }>
+						<MenuGroup label={ __( 'Coleção', 'obatala' ) }>
 								<MenuItem
 									className={ collectionId === '' ? 'active' : undefined }
 									onClick={ () => {
@@ -37,7 +37,7 @@ const TainacanItemsFilters = ( {
 										onClose();
 									} }
 								>
-									{ __( 'All collections', 'obatala' ) }
+									{ __( 'Todas as coleções', 'obatala' ) }
 								</MenuItem>
 							{ collections.map( ( collection ) => (
 								<MenuItem
@@ -56,7 +56,7 @@ const TainacanItemsFilters = ( {
 							) ) }
 						</MenuGroup>
 
-						<MenuGroup label={ __( 'Situation', 'obatala' ) }>
+						<MenuGroup label={ __( 'Situação', 'obatala' ) }>
 							<MenuItem
 								className={ status === '' ? 'active' : undefined }
 								onClick={ () => {
@@ -65,7 +65,7 @@ const TainacanItemsFilters = ( {
 									onClose();
 								} }
 							>
-								{ __( 'All situations', 'obatala' ) }
+								{ __( 'Todas as situações', 'obatala' ) }
 							</MenuItem>
 							{ statusOptions
 								.filter( ( option ) => option.value !== '' )
@@ -91,7 +91,7 @@ const TainacanItemsFilters = ( {
 				<Button
 					icon={ close }
 					onClick={ handleClearFilters }
-					label={ __( 'Clear', 'obatala' ) }
+					label={ __( 'Limpar', 'obatala' ) }
 				/>
 			) }
 		</div>

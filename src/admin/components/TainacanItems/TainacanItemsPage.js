@@ -52,13 +52,13 @@ const formatDate = ( value ) => {
 
 const getStatusDetails = ( status ) => {
 	const statuses = {
-		publish: { label: __( 'Published', 'obatala' ), className: 'success' },
+		publish: { label: __( 'Publicado', 'obatala' ), className: 'success' },
 		pending: {
-			label: __( 'Under review', 'obatala' ),
+			label: __( 'Em revisão', 'obatala' ),
 			className: 'warning',
 		},
-		draft: { label: __( 'Draft', 'obatala' ), className: '' },
-		private: { label: __( 'Private', 'obatala' ), className: 'info' },
+		draft: { label: __( 'Rascunho', 'obatala' ), className: '' },
+		private: { label: __( 'Privado', 'obatala' ), className: 'info' },
 	};
 
 	return statuses[ status ] || { label: status || '-', className: '' };
@@ -196,11 +196,11 @@ const TainacanItemsPage = () => {
 
 	const statusOptions = useMemo(
 		() => [
-			{ label: __( 'All situations', 'obatala' ), value: '' },
-			{ label: __( 'Published', 'obatala' ), value: 'publish' },
-			{ label: __( 'Under review', 'obatala' ), value: 'pending' },
-			{ label: __( 'Draft', 'obatala' ), value: 'draft' },
-			{ label: __( 'Private', 'obatala' ), value: 'private' },
+			{ label: __( 'Todas as situações', 'obatala' ), value: '' },
+			{ label: __( 'Publicado', 'obatala' ), value: 'publish' },
+			{ label: __( 'Em revisão', 'obatala' ), value: 'pending' },
+			{ label: __( 'Rascunho', 'obatala' ), value: 'draft' },
+			{ label: __( 'Privado', 'obatala' ), value: 'private' },
 		],
 		[]
 	);
@@ -239,7 +239,7 @@ const TainacanItemsPage = () => {
 		} catch {
 			setNotice( {
 				status: 'error',
-				message: __( 'Error downloading item data.', 'obatala' ),
+				message: __( 'Erro ao baixar os dados do item.', 'obatala' ),
 			} );
 		} finally {
 			setDownloadingItemId( null );
@@ -258,7 +258,7 @@ const TainacanItemsPage = () => {
 			const shouldReturnToPreviousPage = items.length === 1 && page > 1;
 			setNotice( {
 				status: 'success',
-				message: __( 'Item deleted successfully.', 'obatala' ),
+				message: __( 'Item excluído com sucesso.', 'obatala' ),
 			} );
 			setItemToDelete( null );
 			if ( shouldReturnToPreviousPage ) {
@@ -269,7 +269,7 @@ const TainacanItemsPage = () => {
 		} catch {
 			setNotice( {
 				status: 'error',
-				message: __( 'Error deleting item.', 'obatala' ),
+				message: __( 'Erro ao excluir o item.', 'obatala' ),
 			} );
 		} finally {
 			setIsDeleting( false );
@@ -284,12 +284,12 @@ const TainacanItemsPage = () => {
 			processCount === 1
 				? sprintf(
 						/* translators: %s: number of linked processes. */
-						__( '%s process', 'obatala' ),
+						__( '%s processo', 'obatala' ),
 						formatCount( processCount )
 				  )
 				: sprintf(
 						/* translators: %s: number of linked processes. */
-						__( '%s processes', 'obatala' ),
+						__( '%s processos', 'obatala' ),
 						formatCount( processCount )
 				  );
 
@@ -326,7 +326,7 @@ const TainacanItemsPage = () => {
 		<>
 			<BrandHeader />
 			<div className="title-container">
-				<h2>{ __( 'Collection items', 'obatala' ) }</h2>
+				<h2>{ __( 'Itens da coleção', 'obatala' ) }</h2>
 				<span className="badge default">{ formatCount( total ) }</span>
 			</div>
 			<main className="tainacan-items-page">
@@ -346,14 +346,14 @@ const TainacanItemsPage = () => {
 							<TextControl
 								className="mb-1"
 								label={ __(
-									'Search collection items',
+									'Buscar itens da coleção',
 									'obatala'
 								) }
 								hideLabelFromVision
 								value={ searchInput }
 								onChange={ setSearchInput }
 								placeholder={ __(
-									'Search by title, registration number, or keyword',
+									'Buscar por título, número de registro ou palavra-chave',
 									'obatala'
 								) }
 								type="search"
@@ -387,31 +387,31 @@ const TainacanItemsPage = () => {
 												</th>
 												<th>
 													{ __(
-														'Collection',
+														'Coleção',
 														'obatala'
 													) }
 												</th>
 												<th>
 													{ __(
-														'Situation',
+														'Situação',
 														'obatala'
 													) }
 												</th>
 												<th>
 													{ __(
-														'Linked processes',
+														'Processos vinculados',
 														'obatala'
 													) }
 												</th>
 												<th>
 													{ __(
-														'Last update',
+														'Última atualização',
 														'obatala'
 													) }
 												</th>
 												<th>
 													{ __(
-														'Actions',
+														'Ações',
 														'obatala'
 													) }
 												</th>
@@ -493,7 +493,7 @@ const TainacanItemsPage = () => {
 																		{ sprintf(
 																			/* translators: %s: user display name. */
 																			__(
-																				'by %s',
+																				'por %s',
 																				'obatala'
 																			),
 																			item.modified_by
@@ -511,10 +511,10 @@ const TainacanItemsPage = () => {
 																		handleOpenItemDetail( item )
 																	}
 																>
-																	{ __( 'View item', 'obatala' ) }
+																	{ __( 'Ver item', 'obatala' ) }
 																</Button>
 																<Tooltip
-																	text={ __( 'Open in Tainacan', 'obatala' ) }
+																	text={ __( 'Abrir no Tainacan', 'obatala' ) }
 																>
 																	<Button
 																		variant="tertiary"
@@ -524,7 +524,7 @@ const TainacanItemsPage = () => {
 																</Tooltip>
 																<Tooltip
 																	text={ __(
-																		'Download item data',
+																		'Baixar dados do item',
 																		'obatala'
 																	) }
 																>
@@ -609,14 +609,14 @@ const TainacanItemsPage = () => {
 					isOpen={ !! itemToDelete }
 					onConfirm={ handleDelete }
 					onCancel={ () => setItemToDelete( null ) }
-					confirmButtonText={ __( 'Delete', 'obatala' ) }
-					cancelButtonText={ __( 'Cancel', 'obatala' ) }
+					confirmButtonText={ __( 'Excluir', 'obatala' ) }
+					cancelButtonText={ __( 'Cancelar', 'obatala' ) }
 					isBusy={ isDeleting }
 				>
 					{ sprintf(
 						/* translators: %s: item title. */
 						__(
-							'Are you sure you want to delete item %s?',
+							'Tem certeza de que deseja excluir o item %s?',
 							'obatala'
 						),
 						itemToDelete?.title || ''

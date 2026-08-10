@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import { BaseControl, Button, Notice, SelectControl, TextControl } from '@wordpress/components';
 
 const parseOptions = (config = {}) => {
@@ -109,8 +109,8 @@ const TainacanDynamicItemsEditor = ({ runtimeConfig, onSave }) => {
     return (
         <div className="flex-basis-100" style={{ marginTop: '1rem' }}>
             <BaseControl
-                label="Preenchimento Dinâmico de Itens para Exportação"
-                help="Quando a regra indicar vários itens com preenchimento manual, preencha os dados de cada item nesta grade e salve antes da conclusão da tramitação."
+                label={__('Dynamic item filling for export', 'obatala')}
+                help={__('When the rule indicates multiple items with manual filling, fill in each item data in this grid and save before completing the workflow.', 'obatala')}
             >
                 {notice && (
                     <Notice
@@ -123,14 +123,14 @@ const TainacanDynamicItemsEditor = ({ runtimeConfig, onSave }) => {
                 )}
 
                 <p style={{ marginTop: 0, marginBottom: '8px', color: '#50575e' }}>
-                    {`Quantidade prevista para exportação: ${quantity} item(ns)`}
+                    {sprintf(__('Expected export quantity: %s item(s)', 'obatala'), quantity)}
                 </p>
 
                 <div style={{ overflowX: 'auto', border: '1px solid #dcdcde', borderRadius: '6px' }}>
                     <table className="wp-list-table widefat fixed striped" style={{ minWidth: '960px' }}>
                         <thead>
                             <tr>
-                                <th style={{ width: '80px' }}>Item</th>
+                                <th style={{ width: '80px' }}>{__('Item', 'obatala')}</th>
                                 {mappedFields.map((field) => (
                                     <th key={field.obatala_field_id}>
                                         {field.obatala_field_label}

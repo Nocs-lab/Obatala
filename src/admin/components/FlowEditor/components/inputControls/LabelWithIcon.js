@@ -1,5 +1,6 @@
 import React from 'react';
 import { Icon } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
 import {
 	edit,
 	trash,
@@ -43,7 +44,7 @@ const IconForType = ( { type } ) => {
 
 const LabelWithIcon = ( { label, type } ) => {
 	const normalizedLabel = typeof label === 'string' ? label.trim() : '';
-	const displayLabel = normalizedLabel ? normalizedLabel : 'Sem título';
+	const displayLabel = normalizedLabel ? normalizedLabel : __( 'Untitled', 'obatala' );
 	const isMissingTitle = !normalizedLabel;
 
 	return (

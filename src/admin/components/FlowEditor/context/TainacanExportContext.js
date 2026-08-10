@@ -8,7 +8,7 @@ import React, {
 	useState,
 } from 'react';
 import apiFetch from '@wordpress/api-fetch';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import {
 	fetchCollectionsTainacan,
 	fetchMapperProcessModel,
@@ -201,7 +201,7 @@ export const TainacanExportProvider = forwardRef(
 							collection_id: collectionId,
 							collection_name:
 								collectionById[collectionId]?.name ||
-								`Coleção ${collectionId}`,
+								sprintf(__('Collection %s', 'obatala'), collectionId),
 							field_mappings: [],
 						}
 					);

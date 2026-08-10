@@ -13,7 +13,7 @@ import { useDrawer } from "../../context/DrawerContext";
 
 // Esquema de validação usando Yup
 const validationSchema = Yup.object().shape({
-    label: Yup.string().required("O label é obrigatório"),
+    label: Yup.string().required(__('The label is required', 'obatala')),
     required: Yup.boolean(),
     helpText: Yup.string(),
 });
@@ -78,7 +78,7 @@ export const FileUploadControls = ({
 
             {/* Campo para definir o campo como obrigatório */}
             <CheckboxControl
-                label="Preenchimento obrigatório"
+                label={__('Required field', 'obatala')}
                 checked={formValues.required} // Use formValues para sincronizar o valor
                 onChange={(isChecked) =>
                 setFormValues((prev) => ({ ...prev, required: isChecked }))

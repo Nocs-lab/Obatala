@@ -1,12 +1,13 @@
 import React from 'react';
 import { TextareaControl } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
 
 const HelpTextControl = ({ value, onChange }) => (
 	<TextareaControl
-		label="Texto de ajuda para preenchimento"
+		label={__('Help text for filling in', 'obatala')}
 		value={value}
 		onChange={onChange}
-		placeholder="Informe um texto de ajuda para auxiliar no preenchimento do campo"
+		placeholder={__('Enter help text to assist with filling in the field', 'obatala')}
 	/>
 );
 

@@ -88,7 +88,7 @@ const NodeConditional = ({ id, data }) => {
     const handleValueChange = (fieldIndex, value) => {
         // Verifica se o valor já foi selecionado
         if (isValueSelected(value)) {
-            alert("This value has already been selected for another field.");
+            alert(__('This value has already been selected for another field.', 'obatala'));
             return; // Não permite selecionar o valor
         }
 
@@ -131,12 +131,12 @@ const NodeConditional = ({ id, data }) => {
         );
 
         if (!selectedField) {
-            alert("Please select a field for the first line.");
+            alert(__('Please select a field for the first line.', 'obatala'));
             return;
         }
 
         if (!areAllFieldsFilled) {
-            alert("Please fill out all select fields before saving.");
+            alert(__('Please fill out all select fields before saving.', 'obatala'));
             return;
         }
 
@@ -163,7 +163,7 @@ const NodeConditional = ({ id, data }) => {
 
         updateNodeCondition(id, updatedCondition);
 
-        alert("Changes applied successfully.");
+        alert(__('Changes applied successfully.', 'obatala'));
     };
 
     return (
@@ -177,7 +177,7 @@ const NodeConditional = ({ id, data }) => {
                         <span role="img" aria-label="drag">⠿</span>
                     </div>
                 </Tooltip>
-                <h3 className="title my-0">Conditional</h3>
+                <h3 className="title my-0">{__('Condicional', 'obatala')}</h3>
                 <Tooltip text={__('Remove step', 'obatala')}>
                     <Button variant="link" icon={close} onClick={() => removeNode(id)} />
                 </Tooltip>
@@ -186,9 +186,9 @@ const NodeConditional = ({ id, data }) => {
             <Handle type="target" position={Position.Left} />
             <Handle type="source" position={Position.Right} />
             <dl>
-                <dt>{__('Input stage:', 'obatala')}</dt>
-                <dd>{matchedEdgeInput?.source ? getNodeLabel(matchedEdgeInput.source) : <span className="false">{__('No input stage', 'obatala')}</span>}</dd>
-                <dt>{__('Output stages:', 'obatala')}</dt>
+                <dt>{__('Etapa de entrada:', 'obatala')}</dt>
+                <dd>{matchedEdgeInput?.source ? getNodeLabel(matchedEdgeInput.source) : <span className="false">{__('Nenhuma etapa de entrada', 'obatala')}</span>}</dd>
+                <dt>{__('Etapas de saída:', 'obatala')}</dt>
                 {matchedEdgeOutput?.length > 0 ? (
                     <>
                         <dd>
@@ -236,7 +236,7 @@ const NodeConditional = ({ id, data }) => {
                         ))}
                     </>
                 ) : (
-                    <dd className="false">{__('No output stages', 'obatala')}</dd>
+                    <dd className="false">{__('Nenhuma etapa de saída', 'obatala')}</dd>
                 )}
             </dl>
 

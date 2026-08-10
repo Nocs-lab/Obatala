@@ -14,11 +14,11 @@ import { useDrawer } from "../../context/DrawerContext";
 
 // Esquema de validação usando Yup
 const validationSchema = Yup.object().shape({
-    label: Yup.string().required("O label é obrigatório"),
+    label: Yup.string().required(__('The label is required', 'obatala')),
     min: Yup.number().nullable(),
     max: Yup.number()
         .nullable()
-        .test("is-greater", "O valor máximo deve ser maior que o valor mínimo", function (value) {
+        .test("is-greater", __('The maximum value must be greater than the minimum value', 'obatala'), function (value) {
         const { min } = this.parent;
         return value === undefined || min === undefined || value >= min;
         }),
@@ -91,34 +91,34 @@ export const NumberFieldControls = ({
 
             {/* Campo para definir o valor mínimo */}
             <NumberControl
-                label="Valor mínimo"
+                label={__('Minimum value', 'obatala')}
                 value={formValues.min} // Use formValues para sincronizar o valor
                 onChange={(value) => setFormValues((prev) => ({ ...prev, min: value }))}
-                placeholder="Digite o valor mínimo"
+                placeholder={__('Enter the minimum value', 'obatala')}
                 help={errors.min} // Exibe a mensagem de erro, se houver
             />
 
             {/* Campo para definir o valor máximo */}
             <NumberControl
-                label="Valor máximo"
+                label={__('Maximum value', 'obatala')}
                 value={formValues.max} // Use formValues para sincronizar o valor
                 onChange={(value) => setFormValues((prev) => ({ ...prev, max: value }))}
-                placeholder="Digite o valor máximo"
+                placeholder={__('Enter the maximum value', 'obatala')}
                 help={errors.max} // Exibe a mensagem de erro, se houver
             />
 
             {/* Campo para definir o step */}
             <NumberControl
-                label="Step (Incremento)"
+                label={__('Step (Increment)', 'obatala')}
                 value={formValues.step} // Use formValues para sincronizar o valor
                 onChange={(value) => setFormValues((prev) => ({ ...prev, step: value }))}
-                placeholder="Digite o incremento"
+                placeholder={__('Enter the increment', 'obatala')}
                 help={errors.step} // Exibe a mensagem de erro, se houver
             />
 
             {/* Campo para definir o campo como obrigatório */}
             <CheckboxControl
-                label="Preenchimento obrigatório"
+                label={__('Required field', 'obatala')}
                 checked={formValues.required} // Use formValues para sincronizar o valor
                 onChange={(isChecked) =>
                 setFormValues((prev) => ({ ...prev, required: isChecked }))

@@ -23,12 +23,12 @@ const ModelControls = ({ onSave, onCancel }) => {
                     if (importedData && importedData.nodes && importedData.edges) {
                         onImport(importedData);
                     } else {
-                        console.error('Formato de arquivo inválido. O JSON deve conter nodes e edges.');
-                        alert('Formato de arquivo inválido. O JSON deve conter nodes e edges.');
+                        console.error(__('Invalid file format. The JSON must contain nodes and edges.', 'obatala'));
+                        alert(__('Invalid file format. The JSON must contain nodes and edges.', 'obatala'));
                     }
                 } catch (error) {
-                    console.error('Erro ao analisar o arquivo JSON:', error);
-                    alert('Erro ao ler o arquivo. Certifique-se de que é um JSON válido.');
+                    console.error(__('Error parsing JSON file:', 'obatala'), error);
+                    alert(__('Error reading the file. Make sure it is a valid JSON file.', 'obatala'));
                 }
             };
             reader.readAsText(file);
@@ -45,11 +45,11 @@ const ModelControls = ({ onSave, onCancel }) => {
         <>
             <div className="group-button">
                 <Button icon={check} variant="primary" size="small" type="submit" onClick={onSave}>
-                    {__('Save model', 'obatala')}
+                    {__('Salvar modelo', 'obatala')}
                 </Button>
                 <DropdownMenu
                     icon={download}
-                    label={__('Export', 'obatala')}
+                    label={__('Exportar', 'obatala')}
                     variant="secondary"
                     toggleProps={{
                         variant: 'secondary',
@@ -57,27 +57,27 @@ const ModelControls = ({ onSave, onCancel }) => {
                         className: 'has-text',
                         children: (
                             <>
-                                <span>{__('Export', 'obatala')}</span>
+                                <span>{__('Exportar', 'obatala')}</span>
                                 <Icon icon={chevronDown} />
                             </>
                         ),
                     }}
                     controls={[
                         {
-                            title: __('Steps as PNG', 'obatala'),
+                            title: __('Etapas como PNG', 'obatala'),
                             onClick: () => exportFlowImage(),
                         },
                         {
-                            title: __('Steps as JSON', 'obatala'),
+                            title: __('Etapas como JSON', 'obatala'),
                             onClick: () => handleExport(),
                         },
                     ]}
                 />
                 <Button icon={upload} variant="secondary" size="small" onClick={handleImportClick}>
-                    {__('Import steps', 'obatala')}
+                    {__('Importar etapas', 'obatala')}
                 </Button>
                 <Button icon={closeSmall} variant="secondary" size="small" onClick={onCancel}>
-                    {__('Cancel changes', 'obatala')}
+                    {__('Cancelar alterações', 'obatala')}
                 </Button>
             </div>
             <input

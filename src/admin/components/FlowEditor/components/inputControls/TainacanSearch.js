@@ -56,7 +56,7 @@ const TainacanSearchDetails = ( {
 				label={ __( 'Field name', 'obatala' ) }
 				value={ fieldLabel }
 				onChange={ setFieldLabel }
-				placeholder="Busca em Tainacan"
+				placeholder={ __( 'Search in Tainacan', 'obatala' ) }
 				required
 			/>
 
@@ -65,31 +65,19 @@ const TainacanSearchDetails = ( {
 
 			<Notice status="info" isDismissible={ false }>
 				<h4>
-					Como funciona a busca de itens e coleções?
+					{ __( 'How does the item and collection search work?', 'obatala' ) }
 				</h4>
 				<p>
-					A busca de itens e coleções permite que você encontre
-					facilmente o que procura. Basta digitar pelo menos três
-					caracteres na barra de pesquisa para começar a ver sugestões
-					de itens e coleções que correspondem ao que você digitou.
+					{ __( 'The item and collection search helps you easily find what you need. Type at least three characters in the search bar to start seeing item and collection suggestions that match what you entered.', 'obatala' ) }
 				</p>
 				<p>
-					À medida que você digita, a busca retorna coleções e itens
-					que correspondem ao termo pesquisado, permitindo que você
-					visualize informações básicas sobre cada resultado. Para ver
-					mais detalhes de um item ou coleção, basta clicar em um dos
-					resultados.
+					{ __( 'As you type, the search returns collections and items that match the searched term, allowing you to view basic information about each result. To see more details for an item or collection, click one of the results.', 'obatala' ) }
 				</p>
 				<p>
-					Além disso, você pode selecionar múltiplos itens e coleções
-					clicando sobre eles, e eles serão adicionados a uma lista
-					abaixo da barra de pesquisa. Caso queira remover algum item
-					da seleção, clique no &quot;X&quot; ao lado do nome do item.
+					{ __( 'You can also select multiple items and collections by clicking them, and they will be added to a list below the search bar. To remove an item from the selection, click the X next to the item name.', 'obatala' ) }
 				</p>
 				<p>
-					Esta busca é uma maneira prática e rápida de navegar pelos
-					itens e coleções, ajudando você a encontrar o conteúdo que
-					precisa de forma simples e eficiente.
+					{ __( 'This search is a practical and quick way to browse items and collections, helping you find the content you need simply and efficiently.', 'obatala' ) }
 				</p>
 			</Notice>
 
