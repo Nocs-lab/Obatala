@@ -164,13 +164,82 @@ const maybeUnserialize = ( data ) => {
 	}
 };
 
+const debugApiRequest = async ( { path, method = 'GET', data } ) => {
+	/* eslint-disable no-console, @wordpress/no-unused-vars-before-return --
+	 * This temporary diagnostic intentionally logs malformed REST responses,
+	 * including timing information collected before the request starts.
+	 */
+	const startedAt = performance.now();
+
+	try {
+		const response = await apiFetch( {
+			path,
+			method,
+			data,
+			parse: false,
+		} );
+		const rawBody = await response.text();
+
+		if ( ! rawBody ) {
+			return null;
+		}
+
+		try {
+			return JSON.parse( rawBody );
+		} catch ( parseError ) {
+			console.group( 'Obatalá: resposta REST inválida' );
+			console.error( 'A resposta não é um JSON válido.', parseError );
+			console.log( 'URL:', response.url || path );
+			console.log( 'Método:', method );
+			console.log( 'Status:', response.status, response.statusText );
+			console.log(
+				'Content-Type:',
+				response.headers.get( 'content-type' )
+			);
+			console.log(
+				'Duração:',
+				`${ Math.round( performance.now() - startedAt ) }ms`
+			);
+			console.log( 'Corpo bruto:', rawBody );
+			console.groupEnd();
+
+			throw new Error(
+				`Resposta inválida em ${ method } ${ path }. HTTP ${ response.status }. Consulte o console.`
+			);
+		}
+	} catch ( error ) {
+		if ( error instanceof Response ) {
+			const rawBody = await error.text();
+
+			console.group( 'Obatalá: erro na requisição REST' );
+			console.error( 'URL:', error.url || path );
+			console.log( 'Método:', method );
+			console.log( 'Status:', error.status, error.statusText );
+			console.log( 'Content-Type:', error.headers.get( 'content-type' ) );
+			console.log(
+				'Duração:',
+				`${ Math.round( performance.now() - startedAt ) }ms`
+			);
+			console.log( 'Corpo bruto:', rawBody );
+			console.groupEnd();
+
+			throw new Error(
+				`Erro HTTP ${ error.status } em ${ method } ${ path }. Consulte o console.`
+			);
+		}
+
+		throw error;
+	}
+	/* eslint-enable no-console, @wordpress/no-unused-vars-before-return */
+};
+
 export const saveProcessType = async ( processType, editingProcessType ) => {
 	const path = editingProcessType
 		? `/obatala/v1/process_type/${ editingProcessType.id }`
 		: `/obatala/v1/process_type`;
 	const method = editingProcessType ? 'PUT' : 'POST';
 	const { meta = {}, ...postData } = processType || {};
-	const savedProcessType = await apiFetch( {
+	const savedProcessType = await debugApiRequest( {
 		path,
 		method,
 		data: postData,
@@ -182,17 +251,26 @@ export const saveProcessType = async ( processType, editingProcessType ) => {
 	}
 
 	if ( Object.keys( meta ).length > 0 ) {
-		await updateProcessTypeMeta( processTypeId, meta );
+		await debugApiRequest( {
+			path: `/obatala/v1/process_type/${ processTypeId }/meta`,
+			method: 'PUT',
+			data: meta,
+		} );
 	}
 
-	const persistedProcessType = await fetchProcessTypeById( processTypeId );
+	const persistedProcessType = await debugApiRequest( {
+		path: `/obatala/v1/process_type/${ processTypeId }`,
+	} );
 	if ( Object.prototype.hasOwnProperty.call( meta, 'description' ) ) {
 		const persistedDescription = Array.isArray(
 			persistedProcessType?.meta?.description
 		)
 			? persistedProcessType.meta.description[ 0 ]
 			: persistedProcessType?.meta?.description;
-		if ( String( persistedDescription || '' ) !== String( meta.description || '' ) ) {
+		if (
+			String( persistedDescription || '' ) !==
+			String( meta.description || '' )
+		) {
 			throw new Error( __( 'Error saving process model.', 'obatala' ) );
 		}
 	}
