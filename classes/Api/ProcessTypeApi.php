@@ -364,7 +364,9 @@ class ProcessTypeApi extends ObatalaAPI {
             }
         }
 
-        return rest_ensure_response('Meta updated successfully.');
+        return rest_ensure_response([
+            'success' => true,
+        ]);
     }
 
     public function assosiate_sector($request) {
