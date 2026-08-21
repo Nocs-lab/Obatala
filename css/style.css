@@ -513,6 +513,7 @@ form .group-button .components-button {
     padding: 0 8px !important;
   }
   input[type="text"] {
+    min-height: 24px;
     min-width: 100px !important;
     padding: 0 4px !important;
   }
@@ -650,6 +651,16 @@ th[role="columnheader"][title="Toggle SortBy"] {
   align-items: center;
   flex-wrap: wrap;
   gap: .5rem;
+}
+
+/* Control Container */
+.control-container {
+  display: flex;
+  flex-basis: 100%;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 2rem;
+  width: 100%;
 }
 
 /* Modal */
@@ -973,6 +984,7 @@ form .action-bar {
 }
 .components-notice {
   border-radius: var(--border-radius);
+  align-items: center;
   gap: 1rem;
   margin-top: 1rem;
   margin-bottom: 1rem;
@@ -993,6 +1005,9 @@ form .action-bar {
     > p:last-child {
       margin-bottom: 0;
     }
+  }
+  &:has(+ .components-panel) {
+    margin-bottom: 2rem;
   }
   &.is-error {
     border: 1px solid var(--danger);
@@ -1664,19 +1679,6 @@ button .components-spinner {
   }
 }
 
-.obatala-tainacan-export-panel {
-  width: min(100%, 960px);
-  margin: 0 auto 1.5rem;
-}
-
-.obatala-tainacan-export-panel .components-panel__row {
-  padding: 1.5rem 2rem;
-}
-
-.obatala-tainacan-collections-select {
-  max-width: 720px;
-}
-
 .obatala-export-toggle-icon {
   margin-left: 0.35rem;
   transition: transform 160ms ease;
@@ -1684,34 +1686,6 @@ button .components-spinner {
 
 .obatala-export-toggle-icon.is-open {
   transform: rotate(180deg);
-}
-
-.obatala-tainacan-export-panel .components-notice {
-  margin: 1rem 0 0;
-}
-
-.obatala-mapper-status-control {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-.obatala-mapper-status-control input[type="checkbox"] {
-  flex: 0 0 auto;
-  margin: 0.15rem 0 0;
-  cursor: pointer;
-}
-
-.obatala-mapper-status-control strong {
-  display: block;
-  font-size: 0.9rem;
-}
-
-.obatala-mapper-status-control p {
-  margin: 0.25rem 0 0;
-  color: #646970;
-  font-size: 0.85rem;
 }
 
 .obatala-tainacan-field-mapping {
@@ -1726,11 +1700,6 @@ button .components-spinner {
   padding: 0 0.35rem;
   color: #1d2327;
   font-weight: 600;
-}
-
-.obatala-tainacan-mapping-summary {
-  width: min(100%, 960px);
-  margin: 1.5rem auto 0;
 }
 
 .obatala-export-preparation {
@@ -1754,40 +1723,7 @@ button .components-spinner {
   margin-bottom: 1rem;
 }
 
-.obatala-tainacan-mapping-summary .components-panel__row {
-  padding: 1.5rem 2rem 2rem;
-}
-
-.obatala-tainacan-summary-header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 1rem;
-}
-
-.obatala-tainacan-summary-header h3 {
-  margin-top: 0.5rem;
-}
-
-.obatala-tainacan-summary-header .components-base-control {
-  min-width: 260px;
-}
-
 @media (max-width: 782px) {
-  .obatala-tainacan-export-panel .components-panel__row,
-  .obatala-tainacan-mapping-summary .components-panel__row {
-    padding: 1rem;
-  }
-
-  .obatala-tainacan-summary-header {
-    flex-direction: column;
-  }
-
-  .obatala-tainacan-summary-header .components-base-control {
-    width: 100%;
-    min-width: 0;
-  }
-
   .obatala-export-preparation {
     padding: 1rem;
   }

@@ -373,7 +373,7 @@ const processDataEditor = () => {
                 errorMessages.push(
                     sprintf(
                         /* translators: %s: semicolon-separated list, e.g. "Step A (field 1); Step B (field 2)" */
-                        __("Some fields have an empty or default name. Check: %s", "obatala"),
+                        __("Some fields have an empty or default name. Check step: %s", "obatala"),
                         detailList
                     )
                 );
@@ -383,7 +383,7 @@ const processDataEditor = () => {
             if (duplicateFieldTitles.length > 0) {
                 errorMessages.push(
                     sprintf(
-                        __("Field names must be unique within each step. Check: %s", "obatala"),
+                        __("Field names must be unique within each step. Check step: %s", "obatala"),
                         duplicateFieldTitles
                             .map(({ stageName, title }) => `${stageName}: ${title}`)
                             .join("; ")
@@ -536,8 +536,10 @@ const processDataEditor = () => {
                                     initialOpen={ shouldOpenExportPanel }
                                 >
                                     <PanelRow>
-                                        <TainacanExportPanel />
-                                        <TainacanMappingSummary />
+                                        <form className="control-container">
+                                            <TainacanExportPanel />
+                                            <TainacanMappingSummary />
+                                        </form>
                                     </PanelRow>
                                 </PanelBody>
                             )}

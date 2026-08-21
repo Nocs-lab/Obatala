@@ -650,8 +650,8 @@ msgstr "Exportación a Tainacan"
 msgid "Enable mapper status"
 msgstr "Activar el estado del mapeador"
 
-msgid "Mapper status"
-msgstr "Estado del mapeador"
+msgid "Exporter status"
+msgstr "Estado de exportador"
 
 msgid "Enable to configure field export to Tainacan."
 msgstr "Active para configurar la exportación de fields a Tainacan."

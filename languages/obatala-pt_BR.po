@@ -382,11 +382,11 @@ msgstr ""
 "O modelo de processo selecionado está incompleto. Conecte todas as etapas e "
 "defina pelo menos um campo e um grupo válido para cada etapa."
 
-msgid "Field names must be unique within each step. Check: %s"
-msgstr "Os nomes dos campos devem ser únicos dentro de cada etapa. Verifique: %s"
+msgid "Field names must be unique within each step. Check step: %s"
+msgstr "Os nomes dos campos devem ser únicos dentro de cada etapa. Verifique a etapa: %s"
 
-msgid "Some fields have an empty or default name. Check: %s"
-msgstr "Alguns campos estão sem nome ou mantêm o nome padrão. Verifique: %s"
+msgid "Some fields have an empty or default name. Check step: %s"
+msgstr "Alguns campos estão sem nome ou mantêm o nome padrão. Verifique etapa: %s"
 
 msgid "%1$s (field %2$d)"
 msgstr "%1$s (campo %2$d)"
@@ -639,7 +639,7 @@ msgid "Manage steps"
 msgstr "Gerenciar etapas"
 
 msgid "Manage model"
-msgstr "Gerenciar Modelo"
+msgstr "Gerenciar modelo"
 
 msgid "Tainacan Export"
 msgstr "Exportação para o Tainacan"
@@ -647,8 +647,8 @@ msgstr "Exportação para o Tainacan"
 msgid "Enable mapper status"
 msgstr "Ativar status do mapeador"
 
-msgid "Mapper status"
-msgstr "Status do mapeador"
+msgid "Exporter status"
+msgstr "Situação do exportador"
 
 msgid "Enable to configure field export to Tainacan."
 msgstr "Ative para configurar a exportação dos fields para o Tainacan."

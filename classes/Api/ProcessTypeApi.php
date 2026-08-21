@@ -298,7 +298,7 @@ class ProcessTypeApi extends ObatalaAPI {
             }
             return sprintf(
                 /* translators: %s: semicolon-separated list, e.g. "Step A (field 1); Step B (field 2)" */
-                __('Some fields have an empty or default name. Check: %s', 'obatala'),
+                __('Some fields have an empty or default name. Check step: %s', 'obatala'),
                 implode('; ', $parts)
             );
         }
@@ -309,7 +309,7 @@ class ProcessTypeApi extends ObatalaAPI {
             }, array_values($duplicates));
 
             return sprintf(
-                __('Field names must be unique within each step. Check: %s', 'obatala'),
+                __('Field names must be unique within each step. Check step: %s', 'obatala'),
                 implode('; ', $parts)
             );
         }

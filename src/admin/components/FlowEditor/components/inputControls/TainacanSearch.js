@@ -62,7 +62,6 @@ const TainacanSearchDetails = ( {
 
 			{ tainacanMappingControls }
 			
-
 			<Notice status="info" isDismissible={ false }>
 				<h4>
 					{ __( 'How does the item and collection search work?', 'obatala' ) }

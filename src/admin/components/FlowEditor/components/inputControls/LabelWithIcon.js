@@ -16,6 +16,7 @@ import {
 	file,
 	mapMarker,
 	envelope,
+	search,
 } from '@wordpress/icons';
 
 const IconForType = ( { type } ) => {
@@ -35,6 +36,7 @@ const IconForType = ( { type } ) => {
 		upload: file,
 		stage_document: file,
 		address: mapMarker,
+		search: search,
 	};
 
 	const SelectedIcon = iconMapping[ type ]; // Pega o componente do ícone correspondente
