@@ -79,7 +79,7 @@ export const NumberFieldControls = ({
     };
 
     return (
-        <form>
+        <form className="flex-form">
             <h3>{__('Edit number field', 'obatala')}</h3>
 
             {/* Campo para definir o Label */}

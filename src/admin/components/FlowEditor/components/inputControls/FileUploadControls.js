@@ -64,7 +64,7 @@ export const FileUploadControls = ({
     };
 
     return (
-        <form>
+        <form className="flex-form">
             <h3>{__('Edit file upload field', 'obatala')}</h3>
 
             {/* Campo para definir o Label */}

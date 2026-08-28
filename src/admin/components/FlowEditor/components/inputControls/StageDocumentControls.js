@@ -48,7 +48,7 @@ export const StageDocumentControls = ( {
 	};
 
 	return (
-		<form>
+		<form className="flex-form">
 			<h3>{ __( 'Edit stage document', 'obatala' ) }</h3>
 
 			{ message && (

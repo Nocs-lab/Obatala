@@ -39,7 +39,7 @@ const TainacanSearchDetails = ( {
 	};
 
 	return (
-		<form>
+		<form className="flex-form">
 			<h3>{ __( 'Edit Search Tainacan field', 'obatala' ) }</h3>
 
 			{ message && (

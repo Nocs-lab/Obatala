@@ -71,7 +71,7 @@ export const DatePickerControls = ({
     };
 
     return (
-        <form>
+        <form className="flex-form">
             <h3>{__('Edit date picker field', 'obatala')}</h3>
             {/* Campo para definir o Label */}
             <FieldNameControl

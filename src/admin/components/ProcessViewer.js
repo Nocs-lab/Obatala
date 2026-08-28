@@ -2781,17 +2781,17 @@ const ProcessViewer = () => {
                                 {__("You do not have permission to access this process.", "obatala")}
                             </Notice>
                         )}
-                        {exportRuntimeConfig?.configured && !isExportReviewCompleted && (
-                            <TainacanExportPreparation
-                                processId={processId}
-                                runtime={exportRuntimeConfig}
-                                canEdit={hasPermission || isPublic}
-                                onSaved={handleExportPreparationSaved}
-                            />
-                        )}
                         <div className="panel-container">
                             <Panel>
                                 <PanelHeader>Etapas</PanelHeader>
+                                {exportRuntimeConfig?.configured && !isExportReviewCompleted && (
+                                    <TainacanExportPreparation
+                                        processId={processId}
+                                        runtime={exportRuntimeConfig}
+                                        canEdit={hasPermission || isPublic}
+                                        onSaved={handleExportPreparationSaved}
+                                    />
+                                )}
                                 {options.map((step, index) => {
                                     const isVirtualExportReview = step.isVirtualExportReview === true;
                                     const baseIsCompleted = isVirtualExportReview
@@ -2834,7 +2834,7 @@ const ProcessViewer = () => {
                                                                         : __('Pending input', 'obatala'))}
                                                         </span>
                                                         {options[index].sector_stage && !isVirtualExportReview && (
-                                                            <span className="badge info" title={sprintf(__('Responsible group: %s', 'obatala'), getSectorName(options[index].sector_stage))}>
+                                                            <span className="badge default" title={sprintf(__('Responsible group: %s', 'obatala'), getSectorName(options[index].sector_stage))}>
                                                                 <Icon icon="groups" /> {getSectorName(options[index].sector_stage)}
                                                             </span>
                                                         )}
@@ -2947,8 +2947,8 @@ const ProcessViewer = () => {
                                                             )}
                                                             {currentStepVisibleFields.length > 0 ? (
                                                                 (!submittedSteps[currentStep] || shouldKeepCurrentStepOpenForSpreadsheet) ? (
-                                                                    <form onSubmit={handleSubmit}>
-                                                                        <div className="meta-field-wrapper">
+                                                                    <form onSubmit={handleSubmit} className="flex-form">
+                                                                        <>
                                                                             {Array.isArray(currentStepSingleFields) ? currentStepSingleFields.map((field, idx) => {
                                                                                 const stepId = orderedSteps[currentStep].id;
                                                                                 const isSpreadsheetUploadField = String(field?.type || '') === 'upload'
@@ -2963,7 +2963,6 @@ const ProcessViewer = () => {
                                                                                         label: __('Download spreadsheet example', 'obatala'),
                                                                                     }
                                                                                     : null;
-
                                                                                 const spreadsheetUploadNoticeMessage = isSpreadsheetUploadField
                                                                                     ? currentSpreadsheetUploadValidationMessage
                                                                                     : '';
@@ -3080,12 +3079,12 @@ const ProcessViewer = () => {
                                                                                     )}
                                                                                 </div>
                                                                             )}
-                                                                        </div>
+                                                                        </>
                                                                         {(!submittedSteps[currentStep] || shouldKeepCurrentStepOpenForSpreadsheet) && (
                                                                             <div className="action-bar">
                                                                                 {currentStepCanSaveDraft && (
                                                                                     <Button
-                                                                                        variant="secondary"
+                                                                                        variant="tertiary"
                                                                                         type="button"
                                                                                         onClick={handleSaveDraft}
                                                                                         disabled={isSavingDraft || isSpreadsheetFileStructureValidationPending || hasBlockingSpreadsheetValidationError || (submittedSteps[currentStep] && !shouldKeepCurrentStepOpenForSpreadsheet) || !isUserAllowed}
@@ -3106,7 +3105,7 @@ const ProcessViewer = () => {
                                                                         )}
                                                                     </form>
                                                                 ) : (
-                                                                    <>
+                                                                    <form className="flex-form">
                                                                         <dl className="description-list my-0">
                                                                             {Array.isArray(currentStepDisplayFields) ? currentStepDisplayFields.map((field, idx) => (
                                                                                 <MetaFieldDisplay
@@ -3126,7 +3125,7 @@ const ProcessViewer = () => {
                                                                         </dl>
 
                                                                         {shouldShowCorrectedSpreadsheetUpload && (
-                                                                            <div className="meta-field-wrapper obatala-spreadsheet-correction">
+                                                                            <>
                                                                                 <Notice status="error" isDismissible={false}>
                                                                                     {exportRuntimeConfig?.spreadsheet_rows_message || __('The uploaded spreadsheet could not be validated. Upload a corrected file to continue.', 'obatala')}
                                                                                 </Notice>
@@ -3148,7 +3147,7 @@ const ProcessViewer = () => {
                                                                                     }}
                                                                                     stepId={orderedSteps[currentStep].id}
                                                                                 />
-                                                                                <div className="action-bar obatala-spreadsheet-correction__actions">
+                                                                                <div className="action-bar">
                                                                                     <Button
                                                                                         variant="primary"
                                                                                         onClick={handleCorrectedSpreadsheetUpload}
@@ -3160,7 +3159,7 @@ const ProcessViewer = () => {
                                                                                             : __('Upload corrected spreadsheet', 'obatala')}
                                                                                     </Button>
                                                                                 </div>
-                                                                            </div>
+                                                                            </>
                                                                         )}
 
                                                                         {currentStepSpreadsheetMappedFields.length > 0 && (
@@ -3173,7 +3172,7 @@ const ProcessViewer = () => {
                                                                                 isSaving={isSpreadsheetRowsSaving}
                                                                             />
                                                                         )}
-                                                                    </>
+                                                                    </form>
                                                                 )
                                                             ) : (
                                                                 <Notice status="warning" isDismissible={false}>

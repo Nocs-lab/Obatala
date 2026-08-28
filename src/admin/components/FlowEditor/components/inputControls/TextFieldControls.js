@@ -136,7 +136,7 @@ export const TextFieldControls = ({
     const headingLabel = fieldType === 'address' ? __('Edit address field', 'obatala') : __('Edit text field', 'obatala');
 
     return (
-        <form>
+        <form className="flex-form">
             <h3>{headingLabel}</h3>
 
             {/* Mensagem de sucesso ou erro */}

@@ -293,6 +293,43 @@ aside {
 }
 
 /* Forms */
+form.flex-form {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  width: 100%;
+  > .components-base-control {
+    flex-basis: 200px;
+    flex-grow: 1;
+    margin-top: 0 !important;
+  }
+  > .meta-field {
+    flex-basis: 500px;
+    flex-grow: 1;
+    &.required::after {
+      color: var(--primary-500);
+      content: "Preenchimento obrigatório.";
+      font-size: .75rem;
+      position: relative;
+      top: .25rem;
+      left: .5rem;
+    }
+    &.md {
+      flex-basis: 200px;
+    }
+    &.sm {
+      flex-basis: 100px;
+    }
+  }
+  .action-bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: .75rem;
+    margin-top: 1rem;
+    width: 100%;
+  }
+}
 .combobox-selection {
   display: flex;
   align-items: center;
@@ -478,7 +515,6 @@ form .group-button .components-button {
     box-shadow: 0 0 0 !important;
   }
 }
-
 .components-text-control__input[disabled] {
   background-color: var(--gray-300);
 }
@@ -507,6 +543,42 @@ form .group-button .components-button {
 .inline-edition .components-base-control {
   flex-basis: 200px;
   flex-grow: 1;
+}
+.components-form-token-field__suggestions-list {
+  background-color: var(--white);
+  border: 1px solid var(--gray-500);
+}
+.collections-container {
+  background-color: var(--gray-100);
+  border: 1px solid var(--gray-300);
+  border-radius: var(--border-radius);
+  flex-basis: 100%;
+  padding: 1rem;
+  .collections-badges {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .75rem;
+    .collection-badge {
+      background-color: var(--primary);
+      border-radius: 12px;
+      color: var(--white);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-size: .75rem;
+      padding: .4rem .8rem;
+      button {
+        background: none;
+        border: none;
+        color: var(--white);
+        cursor: pointer;
+        font-weight: 600;
+      }
+    }
+    &:not(:empty) {
+      margin: 1rem 0;
+    }
+  }
 }
 #react-select-2-live-region ~ div {
   > div:first-of-type {
@@ -548,34 +620,48 @@ th[role="columnheader"][title="Toggle SortBy"] {
 
 /* Accordion */
 .accordion-item.components-panel__body {
-  --accordion-bg: var(--primary-100);
-  --accordion-border: var(--primary);
-  --accordion-border-thin: var(--primary-300);
+  --accordion-bg: var(--gray-100);
+  --accordion-border: var(--gray-300);
+  --accordion-icon: "\f160";
+
   border-top: 0 none;
   margin-top: .5rem !important;
+  position: relative;
   .components-panel__body-toggle {
     background-color: var(--accordion-bg);
-    border: 1px solid var(--accordion-border-thin);
-    border-left: 4px solid var(--accordion-border);
-    padding: .6rem 2rem;
-    &:not([disabled]):hover .accordion-title {
-      color: var(--primary-700);
-    }
+    border: 1px solid var(--accordion-border);
+    padding: .6rem 2rem .6rem .75rem;
     .accordion-title {
       color: var(--primary);
       flex-basis: 300px;
       flex-grow: 1;
-      font-size: 1.1rem;
+      font-size: 1rem;
       margin: 0;
+    }
+    &::before {
+      content: var(--accordion-icon);
+      color: var(--accordion-border);
+      font-family: "Dashicons";
+      font-size: 1.1rem;
+      margin-right: .5rem;
+    }
+    &:not([disabled]):hover .accordion-title {
+      color: var(--primary-700);
+    }
+    &.components-button {
+      .components-panel__arrow {
+        right: .25rem;
+      }
     }
   }
   .components-panel__row {
-    border: 1px solid var(--accordion-border-thin);
+    background-color: var(--white);
+    border: 1px solid var(--accordion-border);
     border-top: 0 none;
     border-radius: 0 0 var(--border-radius) var(--border-radius);
-    margin-top: -6px;
     margin-bottom: 1rem;
     padding: 2rem;
+    position: relative;
     > .badge-container {
       justify-content: flex-end;
     }
@@ -583,6 +669,22 @@ th[role="columnheader"][title="Toggle SortBy"] {
   &.is-opened .components-panel__body-toggle {
     border-radius: var(--border-radius) var(--border-radius) 0 0;
     border-bottom: 0 none;
+  }
+  &::before {
+    content: "";
+    background-color: var(--gray-300);
+    height: 100%;
+    position: absolute;
+    top: 1rem;
+    left: 1.3rem;
+    width: 2px;
+    z-index: 0;
+  }
+  &:last-of-type::before {
+    display: none;
+  }
+  &.configuration-item {
+    --accordion-icon: "\f111";
   }
   &.disabled {
     cursor: not-allowed;
@@ -594,18 +696,17 @@ th[role="columnheader"][title="Toggle SortBy"] {
   }
   &.danger {
     --accordion-bg: var(--danger-100);
-    --accordion-border: var(--danger);
-    --accordion-border-thin: var(--danger-300);
+    --accordion-border: var(--danger-300);
+    --accordion-icon: "\f148";
   }
   &.success {
     --accordion-bg: var(--success-100);
-    --accordion-border: var(--success);
-    --accordion-border-thin: var(--success-300);
+    --accordion-border: var(--success-300);
+    --accordion-icon: "\f147";
   }
   &.warning {
     --accordion-bg: var(--warning-100);
-    --accordion-border: var(--warning);
-    --accordion-border-thin: var(--warning-300);
+    --accordion-border: var(--warning-300);
   }
 
   @media screen and (max-width: 580px) {
@@ -787,10 +888,6 @@ div.timeline-content {
 /* #endregion */
 
 /* Components */
-form .action-bar {
-  display: flex;
-  width: 100%;
-}
 .card-container {
   display: flex;
   flex-wrap: wrap;
@@ -1702,32 +1799,6 @@ button .components-spinner {
   font-weight: 600;
 }
 
-.obatala-export-preparation {
-  width: min(100%, 960px);
-  margin: 0 auto 1.5rem;
-  padding: 1.5rem 2rem;
-  border: 1px solid #c3c4c7;
-  border-left: 4px solid #2271b1;
-  background: #fff;
-  box-sizing: border-box;
-}
-
-.obatala-export-preparation > h3 {
-  margin-top: 0;
-}
-
-.obatala-export-preparation__file {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1rem;
-}
-
-@media (max-width: 782px) {
-  .obatala-export-preparation {
-    padding: 1rem;
-  }
-}
 .title-container p {
   font-size: 1rem;
   margin: 0;
@@ -1771,34 +1842,6 @@ button .components-spinner {
 .pagination .components-button[disabled] {
   color: var(--gray-500);
 }
-.meta-field-wrapper {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 2rem;
-  width: 100%;
-}
-.meta-field-wrapper > .meta-field {
-  flex-basis: 500px;
-  flex-grow: 1;
-  &.required::after {
-    color: var(--primary-500);
-    content: "Preenchimento obrigatório.";
-    font-size: .75rem;
-    position: relative;
-    top: .25rem;
-    left: .5rem;
-  }
-}
-.meta-field-wrapper > .meta-field.md {
-  flex-basis: 200px;
-}
-.meta-field-wrapper > .meta-field.sm {
-  flex-basis: 100px;
-}
-.meta-field-wrapper + .action-bar {
-  margin-top: var(--gap);
-  gap: .75rem;
-}
 .obatala-inline-loading {
   align-items: center;
   background: var(--white);
@@ -1808,10 +1851,6 @@ button .components-spinner {
   gap: .5rem;
   margin-bottom: 1rem;
   padding: .75rem 1rem;
-}
-.meta-field-wrapper .components-base-control__field > label,
-.meta-field-wrapper .components-input-control__label {
-  font-size: .85rem;
 }
 
 .obatala-items-matrix .meta-field {
@@ -1859,23 +1898,6 @@ button .components-spinner {
 
 .obatala-spreadsheet-summary__field .components-base-control {
   margin-bottom: .5rem;
-}
-
-.obatala-spreadsheet-correction {
-  border: 1px solid var(--gray-200);
-  border-radius: var(--border-radius);
-  margin: 1rem 0;
-  padding: 1rem;
-}
-
-.obatala-spreadsheet-correction .components-notice {
-  flex-basis: 100%;
-  margin: 0;
-}
-
-.obatala-spreadsheet-correction__actions {
-  align-items: flex-end;
-  margin-top: 0;
 }
 
 .obatala-spreadsheet-modal {
