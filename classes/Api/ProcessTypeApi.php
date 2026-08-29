@@ -378,7 +378,11 @@ class ProcessTypeApi extends ObatalaAPI {
         // Verificar se o processo existe
         $process = get_post($process_id);
         if (!$process || $process->post_type !== 'process_type') {
-            return new WP_REST_Response('Processo não encontrado ou tipo de processo inválido', 404);
+            return new WP_Error(
+                'obatala_invalid_process_type',
+                __('Process not found.', 'obatala'),
+                ['status' => 404]
+            );
         }
 
         // Obter os dados do flowData do processo
@@ -386,13 +390,21 @@ class ProcessTypeApi extends ObatalaAPI {
 
         // Verificar se o flowData está configurado corretamente
         if (!isset($flow_data['nodes']) || !is_array($flow_data['nodes'])) {
-            return new WP_REST_Response('Os dados do fluxo não estão configurados corretamente', 400);
+            return new WP_Error(
+                'obatala_invalid_flow_data',
+                __('Error saving process model.', 'obatala'),
+                ['status' => 400]
+            );
         }
 
         // Procurar o nó correspondente ao node_id fornecido
         $node_key = array_search($node_id, array_column($flow_data['nodes'], 'id'));
         if ($node_key === false) {
-            return new WP_REST_Response('Nó não encontrado nos dados do fluxo', 404);
+            return new WP_Error(
+                'obatala_node_not_found',
+                __('Step not found.', 'obatala'),
+                ['status' => 404]
+            );
         }
 
         // Adicionar o setor ao histórico da etapa (node)
@@ -411,12 +423,20 @@ class ProcessTypeApi extends ObatalaAPI {
         // Atualizar o flowData com o novo histórico
         $updated = update_post_meta($process_id, 'flowData', $flow_data);
 
-        // Verificar se a atualização foi bem-sucedida
-        if ($updated) {
-            return new WP_REST_Response('Setor associado com sucesso', 200);
-        } else {
-            return new WP_REST_Response('Erro ao associar o setor', 500);
+        // update_post_meta() also returns false when the stored value is unchanged.
+        if (!$updated && get_post_meta($process_id, 'flowData', true) !== $flow_data) {
+            return new WP_Error(
+                'obatala_sector_association_failed',
+                __('Error saving process model.', 'obatala'),
+                ['status' => 500]
+            );
         }
+
+        return rest_ensure_response([
+            'success' => true,
+            'node_id' => $node_id,
+            'sector_id' => $sector_id,
+        ]);
     }
 
     public function get_node($request) {
