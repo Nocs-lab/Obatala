@@ -126,7 +126,7 @@ header {
     gap: 2rem;
     margin: 0 6rem 0 0;
     & strong {
-      background-image: url(../images/logo-tainacan-gestao.svg);
+      background-image: url(../images/logo-tainacan-processos.svg);
       background-position: 0 0;
       background-repeat: no-repeat;
       background-size: auto 26px;
@@ -221,7 +221,7 @@ header {
       .menu-brand {
         margin-bottom: 2rem;
         strong {
-          background-image: url(../images/logo-tainacan-gestao-white.svg);
+          background-image: url(../images/logo-tainacan-processos-white.svg);
         }
       }
       .menu-link {
@@ -697,7 +697,7 @@ th[role="columnheader"][title="Toggle SortBy"] {
   &.danger {
     --accordion-bg: var(--danger-100);
     --accordion-border: var(--danger-300);
-    --accordion-icon: "\f148";
+    --accordion-icon: "\f158";
   }
   &.success {
     --accordion-bg: var(--success-100);
