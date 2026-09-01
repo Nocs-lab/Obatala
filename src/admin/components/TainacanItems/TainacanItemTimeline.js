@@ -1,7 +1,7 @@
 /* global obatalaApp */
 import React, { useMemo } from 'react';
-import { Button, Icon, Notice, Panel, PanelBody, PanelHeader, PanelRow, Spinner } from '@wordpress/components';
-import { edit } from '@wordpress/icons';
+import { Button, DropdownMenu, Icon, Notice, Panel, PanelBody, PanelHeader, PanelRow, Spinner } from '@wordpress/components';
+import { edit, info, moreHorizontal } from '@wordpress/icons';
 import { __, sprintf } from '@wordpress/i18n';
 
 const getLocale = () => document.documentElement.lang || 'pt-BR';
@@ -257,7 +257,7 @@ const TainacanItemTimeline = ( { item, isLoading, notice } ) => {
 							</PanelHeader>
 							<PanelRow>
 								{ sortedProcesses.length > 0 ? (
-									<ol className="tainacan-item-process-timeline">
+									<ol className="timeline">
 										{ sortedProcesses.map( ( process, index ) => {
 											const processStatus = getProcessStatusDetails( process );
 											const parts = formatDateParts(
@@ -266,34 +266,32 @@ const TainacanItemTimeline = ( { item, isLoading, notice } ) => {
 
 											return (
 												<li
-													className={ `tainacan-item-process-entry ${ process.status_group || 'pending' }` }
+													className={ `timeline-item ${ process.status_group || 'pending' }` }
 													key={ `${ process.id || process.url }-${ index }` }
 												>
-													<div className="tainacan-item-process-date">
-														<strong>{ parts.date }</strong>
-														{ parts.time && <span>{ parts.time }</span> }
-													</div>
-													<div className="tainacan-item-process-marker">
+													<div className={ `timeline-badge ${ processStatus.className }` }>
 														<Icon icon={ getProcessMarkerIcon( process ) } />
 													</div>
-													<article className="tainacan-item-process-card">
-														<header>
-															<div>
-																<h4>{ getProcessTitle( process ) }</h4>
-																{ process.process_type && (
-																	<p>{ process.process_type }</p>
-																) }
-															</div>
-															<span className={ `badge ${ processStatus.className }` }>
-																{ processStatus.label }
-															</span>
-														</header>
-
-														<p className="tainacan-item-process-summary">
-															{ process.summary || __( 'Processo vinculado a este item.', 'obatala' ) }
-														</p>
-
-														<dl className="tainacan-item-process-meta">
+													<p className="timeline-title">
+														<strong>{ getProcessTitle( process ) }</strong>
+														<time>em { parts.date } { parts.time && <span>{ parts.time }</span> }</time>
+													</p>
+													<div className="timeline-content">
+														<dl className="description-list">
+															<InfoRow
+																label="Summary"
+																value={ process.summary || __( 'Processo vinculado a este item.', 'obatala' ) }
+															/>
+															{ process.process_type && (
+																<InfoRow
+																	label="Model"
+																	value={ process.process_type }
+																/>
+															) }
+															<InfoRow
+																label={ __( 'Situação', 'obatala' ) }
+																value={ processStatus.label }
+															/>
 															<InfoRow
 																label={ __( 'Responsável', 'obatala' ) }
 																value={ process.responsible }
@@ -313,16 +311,21 @@ const TainacanItemTimeline = ( { item, isLoading, notice } ) => {
 														</dl>
 
 														{ process.url && (
-															<Button
-																className="tainacan-item-view-process"
-																variant="primary"
-																icon="arrow-right-alt2"
-																href={ process.url }
-															>
-																{ __( 'Ver processo', 'obatala' ) }
-															</Button>
+															<DropdownMenu
+																icon={moreHorizontal}
+																className="timeline-actions"
+																label={__('Select an action', 'obatala')}
+																size="small"
+																controls={[
+																	{
+																		title: __('Ver processo', 'obatala'),
+																		icon: info,
+																		href: process.url,
+																	},
+																]}
+															/>
 														) }
-													</article>
+													</div>
 												</li>
 											);
 										} ) }
