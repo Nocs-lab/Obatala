@@ -971,10 +971,10 @@ div.timeline-content {
   flex-wrap: wrap;
   gap: 2rem 4rem;
   width: 100%;
-}
-.description-list .list-item {
-  flex-basis: 200px;
-  flex-grow: 1;
+  .list-item {
+    flex-basis: 200px;
+    flex-grow: 1;
+  }
 }
 .description-list dt {
   color: var(--gray-900);
@@ -1108,9 +1108,6 @@ div.timeline-content {
   }
   &.is-error {
     border: 1px solid var(--danger);
-  }
-  &.is-info {
-    background-color: var(--gray-100);
   }
   &.is-success {
     border: 1px solid var(--success);

@@ -2857,7 +2857,7 @@ const ProcessViewer = () => {
                                                             )}
 
                                                             {!!exportReview?.message && (
-                                                                <Notice status={exportReview?.success ? 'info' : 'warning'} isDismissible={false}>
+                                                                <Notice status={exportReview?.success ? 'success' : 'warning'} isDismissible={false}>
                                                                     {exportReview.message}
                                                                 </Notice>
                                                             )}
@@ -2868,24 +2868,27 @@ const ProcessViewer = () => {
                                                                 </Notice>
                                                             )}
 
-                                                            <div style={{ marginBottom: '12px' }}>
-                                                                <p style={{ margin: '0 0 6px' }}>
-                                                                    <strong>{__('Collection', 'obatala')}:</strong> {exportReview?.runtime?.selected_profile?.label || __('Not defined', 'obatala')}
-                                                                </p>
-                                                                <p style={{ margin: '0 0 6px' }}>
-                                                                    <strong>{__('Expected items', 'obatala')}:</strong> {Number(exportReview?.total_rows || 0)}
-                                                                </p>
-                                                                <p style={{ margin: '0' }}>
-                                                                    <strong>{__('Decision status', 'obatala')}:</strong> {exportReview?.decision?.status || 'pending'}
-                                                                </p>
-                                                            </div>
+                                                            <dl className="description-list">
+                                                                <div className="list-item">
+                                                                    <dt>{__('Collection', 'obatala')}</dt>
+                                                                    <dd>{exportReview?.runtime?.selected_profile?.label || __('Not defined', 'obatala')}</dd>
+                                                                </div>
+                                                                <div className="list-item">
+                                                                    <dt>{__('Expected items', 'obatala')}</dt>
+                                                                    <dd>{Number(exportReview?.total_rows || 0)}</dd>
+                                                                </div>
+                                                                <div className="list-item">
+                                                                    <dt>{__('Decision status', 'obatala')}</dt>
+                                                                    <dd>{exportReview?.decision?.status || 'pending'}</dd>
+                                                                </div>
+                                                            </dl>
 
                                                             {Array.isArray(exportReview?.rows_preview) && exportReview.rows_preview.length > 0 ? (
-                                                                <div style={{ overflowX: 'auto', border: '1px solid #dcdcde', borderRadius: '6px' }}>
-                                                                    <table className="wp-list-table widefat fixed striped" style={{ minWidth: '960px' }}>
+                                                                <div>
+                                                                    <table className="wp-list-table widefat fixed striped">
                                                                         <thead>
                                                                             <tr>
-                                                                                <th style={{ width: '80px' }}>{__('Item', 'obatala')}</th>
+                                                                                <th>{__('Item', 'obatala')}</th>
                                                                                 {(exportReview?.runtime?.mapped_fields || []).map((field) => (
                                                                                     <th key={field.obatala_field_id}>
                                                                                         {field.obatala_field_label}

@@ -122,7 +122,7 @@ const TainacanExportPreparation = ( { processId, runtime, canEdit, onSaved } ) =
 			className={`accordion-item configuration-item`}
 		>
 			<PanelRow>
-				<Notice isDismissible={ false }>
+				<Notice status="info" isDismissible={ false }>
 					{ __(
 						'Define how this process will generate items without adding technical fields to its steps.',
 						'obatala'
