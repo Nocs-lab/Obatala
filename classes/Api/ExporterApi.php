@@ -402,22 +402,46 @@ class ExporterApi extends ObatalaAPI {
         ];
 
         $encoded_data = wp_json_encode($data_to_save, JSON_UNESCAPED_UNICODE);
-        $saved = update_post_meta((int) $process_model_id, TainacanMappingService::MAPPING_META_KEY, $encoded_data);
+        if ($encoded_data === false) {
+            return new \WP_REST_Response([
+                'success' => false,
+                'message' => __('Could not save the mapping.', 'obatala'),
+                'details' => json_last_error_msg(),
+            ], 500);
+        }
+
+        // update_post_meta() removes slashes before persisting. Protect the
+        // escaped characters in the JSON so the stored value remains valid.
+        $saved = update_post_meta(
+            (int) $process_model_id,
+            TainacanMappingService::MAPPING_META_KEY,
+            wp_slash($encoded_data)
+        );
 
         if ($saved === false) {
-            // Verifica se os dados enviados já são os mesmos salvos
+            // update_post_meta() also returns false when the value is unchanged.
             $current_data = get_post_meta((int) $process_model_id, TainacanMappingService::MAPPING_META_KEY, true);
             if ($current_data === $encoded_data) {
                 return new \WP_REST_Response([
                     'success' => true,
                     'message' => 'Dados já estavam salvos.',
                     'saved_data' => $data_to_save,
+                    'mapper_status' => $mapper_status,
                 ], 200);
+            }
+
+            global $wpdb;
+            if (!empty($wpdb->last_error)) {
+                error_log(sprintf(
+                    'Obatala: failed to save mapping for process model %d: %s',
+                    (int) $process_model_id,
+                    $wpdb->last_error
+                ));
             }
 
             return new \WP_REST_Response([
                 'success' => false,
-                'message' => 'Erro ao salvar no banco de dados.',
+                'message' => __('Could not save the mapping.', 'obatala'),
             ], 500);
         }
 
