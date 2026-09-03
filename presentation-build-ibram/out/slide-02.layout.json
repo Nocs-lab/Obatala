@@ -1,0 +1,664 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/7qp6su",
+    "id": "7qp6su",
+    "slide": 2,
+    "layoutId": "2729fe3f-997b-4661-8f21-217c5e421cc4",
+    "layoutName": "Title Slide",
+    "layoutType": "title",
+    "masterLayoutId": "19cbfcac-b723-470b-8907-c3315c3ca042",
+    "masterLayoutName": "Master",
+    "backgroundColor": "#FFFFFF",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "theme": {
+    "colorSchemeName": "ChatGPT",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "bg1": "#FFFFFF",
+      "bg2": "#000000",
+      "tx1": "#1F1F1F",
+      "tx2": "#FFFFFF",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "typefaces": [
+      "Arial"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "2729fe3f-997b-4661-8f21-217c5e421cc4",
+      "name": "Title Slide",
+      "type": "title",
+      "parentLayoutId": "19cbfcac-b723-470b-8907-c3315c3ca042",
+      "elements": []
+    },
+    {
+      "scope": "master",
+      "id": "19cbfcac-b723-470b-8907-c3315c3ca042",
+      "name": "Master",
+      "type": "master",
+      "elements": []
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/g76tgra9",
+      "id": "1",
+      "bbox": [
+        52,
+        38,
+        930,
+        94
+      ],
+      "geometry": "rect",
+      "text": "Obatalá já opera a rotina curatorial",
+      "textPreview": "Obatalá já opera a rotina curatorial",
+      "resolvedFontSize": 38,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 38,
+        "typeface": "Arial",
+        "color": "#111111",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Obatalá já opera a rotina curatorial"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Obatalá já opera a rotina curatorial",
+          "resolvedTextStyle": {
+            "fontSize": 38,
+            "typeface": "Arial",
+            "color": "#111111",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Obatalá já opera a rotina curatorial",
+              "fontSize": 38,
+              "typeface": "Arial",
+              "color": "#111111",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/fmxc7m9o",
+      "id": "2",
+      "bbox": [
+        52,
+        132,
+        1176,
+        0
+      ],
+      "geometry": "line",
+      "lineColor": "#B8BCC4",
+      "lineWidth": 1
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/elobehsj",
+      "id": "3",
+      "bbox": [
+        1186,
+        652,
+        52,
+        28
+      ],
+      "geometry": "rect",
+      "text": "02",
+      "textPreview": "02",
+      "resolvedFontSize": 13,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 13,
+        "typeface": "Arial",
+        "color": "#5B616E",
+        "alignment": "right",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "02"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "02",
+          "resolvedTextStyle": {
+            "fontSize": 13,
+            "typeface": "Arial",
+            "color": "#5B616E",
+            "alignment": "right"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "02",
+              "fontSize": 13,
+              "typeface": "Arial",
+              "color": "#5B616E",
+              "alignment": "right"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 4,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/pczudwr6",
+      "id": "4",
+      "bbox": [
+        52,
+        166,
+        650,
+        102
+      ],
+      "geometry": "rect",
+      "text": "A plataforma concentra modelos, processos, itens de acervo, grupos e documentos em uma interface administrativa integrada ao Tainacan.",
+      "textPreview": "A plataforma concentra modelos, processos, itens de acervo, grupos e documentos em uma interface administrativa integrada ao Tainacan.",
+      "resolvedFontSize": 26,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 26,
+        "typeface": "Arial",
+        "color": "#5B616E",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 3,
+        "lines": [
+          {
+            "index": 1,
+            "text": "A plataforma concentra modelos, processos, itens de"
+          },
+          {
+            "index": 2,
+            "text": "acervo, grupos e documentos em uma interface"
+          },
+          {
+            "index": 3,
+            "text": "administrativa integrada ao Tainacan."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "A plataforma concentra modelos, processos, itens de acervo, grupos e documentos em uma interface administrativa integrada ao Tainacan.",
+          "resolvedTextStyle": {
+            "fontSize": 26,
+            "typeface": "Arial",
+            "color": "#5B616E",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "A plataforma concentra modelos, processos, itens de acervo, grupos e documentos em uma interface administrativa integrada ao Tainacan.",
+              "fontSize": 26,
+              "typeface": "Arial",
+              "color": "#5B616E",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 5,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/obqtkral",
+      "id": "5",
+      "bbox": [
+        74,
+        314,
+        13,
+        13
+      ],
+      "geometry": "ellipse",
+      "fillColor": "#2F8DCC",
+      "lineColor": "#2F8DCC",
+      "lineWidth": 0
+    },
+    {
+      "order": 6,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/3ahcbm90",
+      "id": "6",
+      "bbox": [
+        102,
+        306,
+        610,
+        54
+      ],
+      "geometry": "rect",
+      "text": "Modelos definem etapas e campos de cada fluxo curatorial.",
+      "textPreview": "Modelos definem etapas e campos de cada fluxo curatorial.",
+      "resolvedFontSize": 24,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 24,
+        "typeface": "Arial",
+        "color": "#111111",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Modelos definem etapas e campos de cada fluxo"
+          },
+          {
+            "index": 2,
+            "text": "curatorial."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Modelos definem etapas e campos de cada fluxo curatorial.",
+          "resolvedTextStyle": {
+            "fontSize": 24,
+            "typeface": "Arial",
+            "color": "#111111",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Modelos definem etapas e campos de cada fluxo curatorial.",
+              "fontSize": 24,
+              "typeface": "Arial",
+              "color": "#111111",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 7,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/29obi1sf",
+      "id": "7",
+      "bbox": [
+        74,
+        384,
+        13,
+        13
+      ],
+      "geometry": "ellipse",
+      "fillColor": "#2F8DCC",
+      "lineColor": "#2F8DCC",
+      "lineWidth": 0
+    },
+    {
+      "order": 8,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/5gvu1crm",
+      "id": "8",
+      "bbox": [
+        102,
+        376,
+        610,
+        54
+      ],
+      "geometry": "rect",
+      "text": "Processos registram a execução, histórico, responsáveis e documentos.",
+      "textPreview": "Processos registram a execução, histórico, responsáveis e documentos.",
+      "resolvedFontSize": 24,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 24,
+        "typeface": "Arial",
+        "color": "#111111",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Processos registram a execução, histórico,"
+          },
+          {
+            "index": 2,
+            "text": "responsáveis e documentos."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Processos registram a execução, histórico, responsáveis e documentos.",
+          "resolvedTextStyle": {
+            "fontSize": 24,
+            "typeface": "Arial",
+            "color": "#111111",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Processos registram a execução, histórico, responsáveis e documentos.",
+              "fontSize": 24,
+              "typeface": "Arial",
+              "color": "#111111",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 9,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/4fmt87a1",
+      "id": "9",
+      "bbox": [
+        74,
+        454,
+        13,
+        13
+      ],
+      "geometry": "ellipse",
+      "fillColor": "#2F8DCC",
+      "lineColor": "#2F8DCC",
+      "lineWidth": 0
+    },
+    {
+      "order": 10,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/mx8rqxcv",
+      "id": "10",
+      "bbox": [
+        102,
+        446,
+        610,
+        54
+      ],
+      "geometry": "rect",
+      "text": "Itens do acervo mostram a relação entre Tainacan e processos vinculados.",
+      "textPreview": "Itens do acervo mostram a relação entre Tainacan e processos vinculados.",
+      "resolvedFontSize": 24,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 24,
+        "typeface": "Arial",
+        "color": "#111111",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Itens do acervo mostram a relação entre Tainacan e"
+          },
+          {
+            "index": 2,
+            "text": "processos vinculados."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Itens do acervo mostram a relação entre Tainacan e processos vinculados.",
+          "resolvedTextStyle": {
+            "fontSize": 24,
+            "typeface": "Arial",
+            "color": "#111111",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Itens do acervo mostram a relação entre Tainacan e processos vinculados.",
+              "fontSize": 24,
+              "typeface": "Arial",
+              "color": "#111111",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 11,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/7yh8j2dg",
+      "id": "11",
+      "bbox": [
+        74,
+        524,
+        13,
+        13
+      ],
+      "geometry": "ellipse",
+      "fillColor": "#2F8DCC",
+      "lineColor": "#2F8DCC",
+      "lineWidth": 0
+    },
+    {
+      "order": 12,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/8zq9s7u1",
+      "id": "12",
+      "bbox": [
+        102,
+        516,
+        610,
+        54
+      ],
+      "geometry": "rect",
+      "text": "Permissões organizam quem modela, executa e acompanha cada rotina.",
+      "textPreview": "Permissões organizam quem modela, executa e acompanha cada rotina.",
+      "resolvedFontSize": 24,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 24,
+        "typeface": "Arial",
+        "color": "#111111",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Permissões organizam quem modela, executa e"
+          },
+          {
+            "index": 2,
+            "text": "acompanha cada rotina."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Permissões organizam quem modela, executa e acompanha cada rotina.",
+          "resolvedTextStyle": {
+            "fontSize": 24,
+            "typeface": "Arial",
+            "color": "#111111",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Permissões organizam quem modela, executa e acompanha cada rotina.",
+              "fontSize": 24,
+              "typeface": "Arial",
+              "color": "#111111",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 13,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/90jqlcvm",
+      "id": "13",
+      "bbox": [
+        735,
+        229,
+        452,
+        198
+      ],
+      "geometry": "rect",
+      "fillColor": "#F0F2F4",
+      "lineColor": "#B8BCC4",
+      "lineWidth": 1
+    },
+    {
+      "order": 14,
+      "kind": "image",
+      "scope": "slide",
+      "aid": "im/9onahoj6",
+      "id": "14",
+      "bbox": [
+        742,
+        236,
+        438,
+        184
+      ],
+      "alt": "Tela de processos do Obatalá",
+      "contentType": "image/png",
+      "imageFit": "cover",
+      "prompt": "Captura local incorporada de C:\\xampp\\htdocs\\wordpress\\wp-content\\plugins\\Obatala\\presentation-build-ibram\\assets\\processos-crop.png",
+      "asset": {
+        "assetId": "9e648760-a0ed-4277-b642-09fb3d3275f5",
+        "contentType": "image/png",
+        "prompt": "Captura local incorporada de C:\\xampp\\htdocs\\wordpress\\wp-content\\plugins\\Obatala\\presentation-build-ibram\\assets\\processos-crop.png",
+        "byteLength": 29038
+      }
+    }
+  ],
+  "composeRuns": []
+}

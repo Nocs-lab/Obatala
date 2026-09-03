@@ -1,0 +1,128 @@
+{"kind":"slide","id":"sl/xz8tv6","slide":1,"title":"Obatalá","textShapes":5}
+{"kind":"textbox","id":"sh/8rih87q9","slide":1,"textChars":7,"textLines":1}
+{"kind":"textbox","id":"sh/7q9gf29o","slide":1,"textChars":23,"textLines":1}
+{"kind":"textbox","id":"sh/mp0z6x83","slide":1,"textChars":57,"textLines":1}
+{"kind":"textbox","id":"sh/hwbylc7q","slide":1,"textChars":24,"textLines":1}
+{"kind":"shape","id":"sh/wvihc7q5","slide":1,"bbox":[655,119,552,432]}
+{"kind":"textbox","id":"sh/ut0zah8z","slide":1,"textChars":2,"textLines":1}
+{"kind":"image","id":"im/ahgbidof","slide":1,"name":"","alt":"Painel administrativo do Obatalá","prompt":"Captura local incorporada de C:\\xampp\\htdocs\\wordpress\\wp-content\\plugins\\Obatala\\presentation-build-ibram\\assets\\dashboard-crop.png","bbox":[662,126,538,418]}
+{"kind":"notes","id":"nt/xz8tv6","slide":1,"text":"[Sources] | - Captura local da interface administrativa do Obatalá: manual-up..."}
+{"kind":"slide","id":"sl/7qp6su","slide":2,"title":"Obatalá já opera a rotina curatorial","textShapes":7}
+{"kind":"textbox","id":"sh/g76tgra9","slide":2,"textChars":36,"textLines":1}
+{"kind":"shape","id":"sh/fmxc7m9o","slide":2,"bbox":[52,132,1176,0]}
+{"kind":"textbox","id":"sh/elobehsj","slide":2,"textChars":2,"textLines":1}
+{"kind":"textbox","id":"sh/pczudwr6","slide":2,"textChars":134,"textLines":1}
+{"kind":"shape","id":"sh/obqtkral","slide":2,"bbox":[74,314,13,13]}
+{"kind":"textbox","id":"sh/3ahcbm90","slide":2,"textChars":57,"textLines":1}
+{"kind":"shape","id":"sh/29obi1sf","slide":2,"bbox":[74,384,13,13]}
+{"kind":"textbox","id":"sh/5gvu1crm","slide":2,"textChars":69,"textLines":1}
+{"kind":"shape","id":"sh/4fmt87a1","slide":2,"bbox":[74,454,13,13]}
+{"kind":"textbox","id":"sh/mx8rqxcv","slide":2,"textChars":72,"textLines":1}
+{"kind":"shape","id":"sh/7yh8j2dg","slide":2,"bbox":[74,524,13,13]}
+{"kind":"textbox","id":"sh/8zq9s7u1","slide":2,"textChars":66,"textLines":1}
+{"kind":"shape","id":"sh/90jqlcvm","slide":2,"bbox":[735,229,452,198]}
+{"kind":"image","id":"im/9onahoj6","slide":2,"name":"","alt":"Tela de processos do Obatalá","prompt":"Captura local incorporada de C:\\xampp\\htdocs\\wordpress\\wp-content\\plugins\\Obatala\\presentation-build-ibram\\assets\\processos-crop.png","bbox":[742,236,438,184]}
+{"kind":"notes","id":"nt/7qp6su","slide":2,"text":"[Sources] | - Captura local da interface administrativa do Obatalá: manual-up..."}
+{"kind":"slide","id":"sl/05bdx1","slide":3,"title":"Exportação Tainacan fica no modelo","textShapes":7}
+{"kind":"textbox","id":"sh/cvqdkfy1","slide":3,"textChars":34,"textLines":1}
+{"kind":"shape","id":"sh/ruhwbahg","slide":3,"bbox":[52,132,1176,0]}
+{"kind":"textbox","id":"sh/qt8vi5gv","slide":3,"textChars":2,"textLines":1}
+{"kind":"textbox","id":"sh/10jehkzi","slide":3,"textChars":106,"textLines":1}
+{"kind":"shape","id":"sh/0zaxozyx","slide":3,"bbox":[74,310,13,13]}
+{"kind":"textbox","id":"sh/zy1wfuhc","slide":3,"textChars":68,"textLines":1}
+{"kind":"shape","id":"sh/ex8vmpg7","slide":3,"bbox":[74,378,13,13]}
+{"kind":"textbox","id":"sh/h4fe50ze","slide":3,"textChars":68,"textLines":1}
+{"kind":"shape","id":"sh/g36dcvyt","slide":3,"bbox":[74,446,13,13]}
+{"kind":"textbox","id":"sh/e98jedcz","slide":3,"textChars":65,"textLines":1}
+{"kind":"shape","id":"sh/zahknidk","slide":3,"bbox":[74,514,13,13]}
+{"kind":"textbox","id":"sh/0bq1gnu5","slide":3,"textChars":74,"textLines":1}
+{"kind":"shape","id":"sh/1cz2psvq","slide":3,"bbox":[721,147,492,428]}
+{"kind":"image","id":"im/t03ydgjq","slide":3,"name":"","alt":"Acordeon de exportação Tainacan habilitado no editor de modelo","prompt":"Captura local incorporada de C:\\xampp\\htdocs\\wordpress\\wp-content\\plugins\\Obatala\\manual-update-screenshots\\tainacan-export-accordion-enabled.png","bbox":[728,154,478,414]}
+{"kind":"notes","id":"nt/05bdx1","slide":3,"text":"[Sources] | - Spec local: specs/unificar-editor-modelo-exportacao-tainacan.md..."}
+{"kind":"slide","id":"sl/5prbyu","slide":4,"title":"A exportação já tem uma cadeia operacional definida","textShapes":18}
+{"kind":"textbox","id":"sh/rqxgvqpc","slide":4,"textChars":51,"textLines":1}
+{"kind":"shape","id":"sh/sr6x4vqx","slide":4,"bbox":[52,132,1176,0]}
+{"kind":"textbox","id":"sh/tszyx07i","slide":4,"textChars":2,"textLines":1}
+{"kind":"shape","id":"sh/i1ofyl8v","slide":4,"bbox":[62,210,214,280]}
+{"kind":"textbox","id":"sh/j2xgrqpg","slide":4,"textChars":1,"textLines":1}
+{"kind":"textbox","id":"sh/436x0vq1","slide":4,"textChars":7,"textLines":1}
+{"kind":"textbox","id":"sh/5ofyt07m","slide":4,"textChars":36,"textLines":1}
+{"kind":"shape","id":"sh/2x8za58z","slide":4,"bbox":[289,350,22,0]}
+{"kind":"shape","id":"sh/3yhg3apk","slide":4,"bbox":[300,210,214,280]}
+{"kind":"textbox","id":"sh/zq9knytc","slide":4,"textChars":1,"textLines":1}
+{"kind":"textbox","id":"sh/ep0jedc7","slide":4,"textChars":6,"textLines":1}
+{"kind":"textbox","id":"sh/1sb2p8bi","slide":4,"textChars":48,"textLines":1}
+{"kind":"shape","id":"sh/0r21g3ux","slide":4,"bbox":[527,350,22,0]}
+{"kind":"shape","id":"sh/nutkrito","slide":4,"bbox":[538,210,214,280]}
+{"kind":"textbox","id":"sh/mtkjidc3","slide":4,"textChars":1,"textLines":1}
+{"kind":"textbox","id":"sh/9gb2tsbu","slide":4,"textChars":8,"textLines":1}
+{"kind":"textbox","id":"sh/of2lknu9","slide":4,"textChars":43,"textLines":1}
+{"kind":"shape","id":"sh/bidkvitk","slide":4,"bbox":[765,350,22,0]}
+{"kind":"shape","id":"sh/ahk3mxcz","slide":4,"bbox":[776,210,214,280]}
+{"kind":"textbox","id":"sh/6donuhw7","slide":4,"textChars":1,"textLines":1}
+{"kind":"textbox","id":"sh/7ex4nmds","slide":4,"textChars":9,"textLines":1}
+{"kind":"textbox","id":"sh/8f65wred","slide":4,"textChars":40,"textLines":1}
+{"kind":"shape","id":"sh/tgfmpwvy","slide":4,"bbox":[1003,350,22,0]}
+{"kind":"shape","id":"sh/y94nqhwb","slide":4,"bbox":[1014,210,214,280]}
+{"kind":"textbox","id":"sh/jax4jmdw","slide":4,"textChars":1,"textLines":1}
+{"kind":"textbox","id":"sh/kb65sreh","slide":4,"textChars":8,"textLines":1}
+{"kind":"textbox","id":"sh/lcfmlwv2","slide":4,"textChars":47,"textLines":1}
+{"kind":"textbox","id":"sh/i58n21wf","slide":4,"textChars":107,"textLines":1}
+{"kind":"notes","id":"nt/5prbyu","slide":4,"text":"[Sources] | - Spec local: specs/unificar-editor-modelo-exportacao-tainacan.md..."}
+{"kind":"slide","id":"sl/95t2tl","slide":5,"title":"Implementado: interface, persistência e execução","textShapes":12}
+{"kind":"textbox","id":"sh/u14vqdsn","slide":5,"textChars":48,"textLines":1}
+{"kind":"shape","id":"sh/h4fe1sre","slide":5,"bbox":[52,132,1176,0]}
+{"kind":"textbox","id":"sh/g3mdsnat","slide":5,"textChars":2,"textLines":1}
+{"kind":"shape","id":"sh/36xw3294","slide":5,"bbox":[70,170,1080,1]}
+{"kind":"textbox","id":"sh/i5ovux8z","slide":5,"textChars":16,"textLines":1}
+{"kind":"textbox","id":"sh/58fe5cra","slide":5,"textChars":47,"textLines":1}
+{"kind":"shape","id":"sh/476dw7qp","slide":5,"bbox":[70,252,1080,1]}
+{"kind":"textbox","id":"sh/ruxwr29g","slide":5,"textChars":20,"textLines":1}
+{"kind":"textbox","id":"sh/q9ovyx8v","slide":5,"textChars":56,"textLines":1}
+{"kind":"shape","id":"sh/sj65szax","slide":5,"bbox":[70,334,1080,1]}
+{"kind":"textbox","id":"sh/dkf61kb2","slide":5,"textChars":22,"textLines":1}
+{"kind":"textbox","id":"sh/qh4nqpcr","slide":5,"textChars":60,"textLines":1}
+{"kind":"shape","id":"sh/rixozutc","slide":5,"bbox":[70,416,1080,1]}
+{"kind":"textbox","id":"sh/0n65wzat","slide":5,"textChars":20,"textLines":1}
+{"kind":"textbox","id":"sh/1of654be","slide":5,"textChars":66,"textLines":1}
+{"kind":"shape","id":"sh/elonupsn","slide":5,"bbox":[70,498,1080,1]}
+{"kind":"textbox","id":"sh/fmxo3ut8","slide":5,"textChars":15,"textLines":1}
+{"kind":"textbox","id":"sh/orq50jap","slide":5,"textChars":56,"textLines":1}
+{"kind":"shape","id":"sh/pcz694ba","slide":5,"bbox":[70,580,1080,1]}
+{"kind":"notes","id":"nt/95t2tl","slide":5,"text":"[Sources] | - Spec local: specs/unificar-editor-modelo-exportacao-tainacan.md..."}
+{"kind":"slide","id":"sl/k68oqa","slide":6,"title":"Funcionalidade em validação","textShapes":9}
+{"kind":"textbox","id":"sh/k3mlgfax","slide":6,"textChars":27,"textLines":1}
+{"kind":"shape","id":"sh/j2d4natc","slide":6,"bbox":[52,132,1176,0]}
+{"kind":"textbox","id":"sh/i143e5sr","slide":6,"textChars":2,"textLines":1}
+{"kind":"textbox","id":"sh/t8fmtkbe","slide":6,"textChars":12,"textLines":1}
+{"kind":"textbox","id":"sh/s76lkfat","slide":6,"textChars":159,"textLines":1}
+{"kind":"textbox","id":"sh/76d4rut8","slide":6,"textChars":17,"textLines":1}
+{"kind":"shape","id":"sh/6543ips3","slide":6,"bbox":[690,240,13,13]}
+{"kind":"textbox","id":"sh/hwfmx4bq","slide":6,"textChars":47,"textLines":1}
+{"kind":"shape","id":"sh/gv65oza5","slide":6,"bbox":[690,306,13,13]}
+{"kind":"textbox","id":"sh/itgfytgr","slide":6,"textChars":53,"textLines":1}
+{"kind":"shape","id":"sh/3upw7yhc","slide":6,"bbox":[690,372,13,13]}
+{"kind":"textbox","id":"sh/4vyx03yx","slide":6,"textChars":55,"textLines":1}
+{"kind":"shape","id":"sh/5w7y98zi","slide":6,"bbox":[690,438,13,13]}
+{"kind":"textbox","id":"sh/qx0f2dgn","slide":6,"textChars":58,"textLines":1}
+{"kind":"notes","id":"nt/k68oqa","slide":6,"text":"[Sources] | - Status da spec local: specs/unificar-editor-modelo-exportacao-t..."}
+{"kind":"slide","id":"sl/ai0urc","slide":7,"title":"Próximo passo: piloto com a equipe do IBRAM","textShapes":12}
+{"kind":"textbox","id":"sh/kfu1gbep","slide":7,"textChars":43,"textLines":1}
+{"kind":"shape","id":"sh/je10n6d4","slide":7,"bbox":[52,132,1176,0]}
+{"kind":"textbox","id":"sh/idsze1wj","slide":7,"textChars":2,"textLines":1}
+{"kind":"textbox","id":"sh/xcjilwvy","slide":7,"textChars":101,"textLines":1}
+{"kind":"textbox","id":"sh/wbahcred","slide":7,"textChars":8,"textLines":1}
+{"kind":"shape","id":"sh/va10j6ds","slide":7,"bbox":[74,382,190,0]}
+{"kind":"textbox","id":"sh/a9sza1w7","slide":7,"textChars":43,"textLines":1}
+{"kind":"textbox","id":"sh/9ojihwv2","slide":7,"textChars":6,"textLines":1}
+{"kind":"shape","id":"sh/8nah8reh","slide":7,"bbox":[366,382,190,0]}
+{"kind":"textbox","id":"sh/u90vmhgj","slide":7,"textChars":44,"textLines":1}
+{"kind":"textbox","id":"sh/fa9cfmx4","slide":7,"textChars":8,"textLines":1}
+{"kind":"shape","id":"sh/gbidoryp","slide":7,"bbox":[658,382,190,0]}
+{"kind":"textbox","id":"sh/hcruhwfa","slide":7,"textChars":31,"textLines":1}
+{"kind":"textbox","id":"sh/6l0vihgn","slide":7,"textChars":7,"textLines":1}
+{"kind":"shape","id":"sh/7m9cb2x8","slide":7,"bbox":[950,382,190,0]}
+{"kind":"textbox","id":"sh/snidk7yt","slide":7,"textChars":35,"textLines":1}
+{"kind":"textbox","id":"sh/t8rudcfy","slide":7,"textChars":104,"textLines":1}
+{"kind":"notes","id":"nt/ai0urc","slide":7,"text":"[Sources] | - Próximos passos sintetizados a partir do foco informado pelo us..."}
+{"kind":"notice","message":"Truncated: omitted 0 lines. Increase maxChars or narrow target."}

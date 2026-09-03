@@ -115,12 +115,14 @@ const SectorDetailsPage = () => {
             <BrandHeader />
             <div className="title-container">
                 <h2>
-                    <small>{__('Group', 'obatala')}</small>
+                    <small>{__('Grupo', 'obatala')}</small>
                     {sector.nome}
                 </h2>
                 <div className="badge-container">
                     <span className={`badge ${sector.status === 'Active' ? 'success' : 'danger'}`}>
-                        {sector.status}
+                        {sector.status === 'Active'
+                            ? __('Ativo', 'obatala')
+                            : __('Inativo', 'obatala')}
                     </span>
                 </div>
             </div>

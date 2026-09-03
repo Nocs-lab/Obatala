@@ -49,7 +49,7 @@ const ProcessStage = ({ process, onCancelEdit }) => {
             .then(data => {
                 const stages = data.map((stage, index) => ({
                     id: stage.id,
-                    title: stage.title ? stage.title.rendered : 'Untitled',
+                    title: stage.title ? stage.title.rendered : __('Sem título', 'obatala'),
                     content: stage.content ? stage.content.rendered : '',
                 }));
                 stages.sort((a, b) => a.id - b.id); // Ordenar as etapas pelo ID

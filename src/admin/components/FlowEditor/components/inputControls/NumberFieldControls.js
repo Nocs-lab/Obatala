@@ -80,7 +80,7 @@ export const NumberFieldControls = ({
 
     return (
         <form className="flex-form">
-            <h3>{__('Edit number field', 'obatala')}</h3>
+            <h3>{__('Editar campo numérico', 'obatala')}</h3>
 
             {/* Campo para definir o Label */}
             <FieldNameControl
@@ -91,34 +91,34 @@ export const NumberFieldControls = ({
 
             {/* Campo para definir o valor mínimo */}
             <NumberControl
-                label={__('Minimum value', 'obatala')}
+                label={__('Valor mínimo', 'obatala')}
                 value={formValues.min} // Use formValues para sincronizar o valor
                 onChange={(value) => setFormValues((prev) => ({ ...prev, min: value }))}
-                placeholder={__('Enter the minimum value', 'obatala')}
+                placeholder={__('Digite o valor mínimo', 'obatala')}
                 help={errors.min} // Exibe a mensagem de erro, se houver
             />
 
             {/* Campo para definir o valor máximo */}
             <NumberControl
-                label={__('Maximum value', 'obatala')}
+                label={__('Valor máximo', 'obatala')}
                 value={formValues.max} // Use formValues para sincronizar o valor
                 onChange={(value) => setFormValues((prev) => ({ ...prev, max: value }))}
-                placeholder={__('Enter the maximum value', 'obatala')}
+                placeholder={__('Digite o valor máximo', 'obatala')}
                 help={errors.max} // Exibe a mensagem de erro, se houver
             />
 
             {/* Campo para definir o step */}
             <NumberControl
-                label={__('Step (Increment)', 'obatala')}
+                label={__('Passo (incremento)', 'obatala')}
                 value={formValues.step} // Use formValues para sincronizar o valor
                 onChange={(value) => setFormValues((prev) => ({ ...prev, step: value }))}
-                placeholder={__('Enter the increment', 'obatala')}
+                placeholder={__('Digite o incremento', 'obatala')}
                 help={errors.step} // Exibe a mensagem de erro, se houver
             />
 
             {/* Campo para definir o campo como obrigatório */}
             <CheckboxControl
-                label={__('Required field', 'obatala')}
+                label={__('Campo obrigatório', 'obatala')}
                 checked={formValues.required} // Use formValues para sincronizar o valor
                 onChange={(isChecked) =>
                 setFormValues((prev) => ({ ...prev, required: isChecked }))

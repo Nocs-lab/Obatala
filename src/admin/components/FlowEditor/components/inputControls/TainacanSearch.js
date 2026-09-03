@@ -40,7 +40,7 @@ const TainacanSearchDetails = ( {
 
 	return (
 		<form className="flex-form">
-			<h3>{ __( 'Edit Search Tainacan field', 'obatala' ) }</h3>
+			<h3>{ __( 'Editar campo de busca Tainacan', 'obatala' ) }</h3>
 
 			{ message && (
 				<Notice
@@ -53,10 +53,10 @@ const TainacanSearchDetails = ( {
 			) }
 
 			<TextControl
-				label={ __( 'Field name', 'obatala' ) }
+				label={ __( 'Nome do campo', 'obatala' ) }
 				value={ fieldLabel }
 				onChange={ setFieldLabel }
-				placeholder={ __( 'Search in Tainacan', 'obatala' ) }
+				placeholder={ __( 'Buscar no Tainacan', 'obatala' ) }
 				required
 			/>
 
@@ -64,19 +64,19 @@ const TainacanSearchDetails = ( {
 			
 			<Notice status="info" isDismissible={ false }>
 				<h4>
-					{ __( 'How does the item and collection search work?', 'obatala' ) }
+					{ __( 'Como funciona a busca de itens e coleções?', 'obatala' ) }
 				</h4>
 				<p>
-					{ __( 'The item and collection search helps you easily find what you need. Type at least three characters in the search bar to start seeing item and collection suggestions that match what you entered.', 'obatala' ) }
+					{ __( 'A busca de itens e coleções ajuda você a encontrar o que precisa com facilidade. Digite ao menos três caracteres na barra de busca para ver sugestões de itens e coleções compatíveis com o termo informado.', 'obatala' ) }
 				</p>
 				<p>
-					{ __( 'As you type, the search returns collections and items that match the searched term, allowing you to view basic information about each result. To see more details for an item or collection, click one of the results.', 'obatala' ) }
+					{ __( 'Conforme você digita, a busca retorna coleções e itens correspondentes ao termo pesquisado, permitindo visualizar informações básicas sobre cada resultado. Para ver mais detalhes de um item ou coleção, clique em um dos resultados.', 'obatala' ) }
 				</p>
 				<p>
-					{ __( 'You can also select multiple items and collections by clicking them, and they will be added to a list below the search bar. To remove an item from the selection, click the X next to the item name.', 'obatala' ) }
+					{ __( 'Você também pode selecionar múltiplos itens e coleções clicando neles, e eles serão adicionados a uma lista abaixo da barra de busca. Para remover um item da seleção, clique no X ao lado do nome do item.', 'obatala' ) }
 				</p>
 				<p>
-					{ __( 'This search is a practical and quick way to browse items and collections, helping you find the content you need simply and efficiently.', 'obatala' ) }
+					{ __( 'Essa busca é uma forma prática e rápida de navegar por itens e coleções, ajudando você a encontrar o conteúdo necessário de maneira simples e eficiente.', 'obatala' ) }
 				</p>
 			</Notice>
 

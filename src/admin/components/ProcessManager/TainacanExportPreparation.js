@@ -131,7 +131,7 @@ const TainacanExportPreparation = ( { processId, runtime, canEdit, onSaved } ) =
 				<form className="flex-form">
 					{ error && <Notice status="error" isDismissible={ false }>{ error }</Notice> }
 					<SelectControl
-						label={ __( 'Target collection', 'obatala' ) }
+						label={ __( 'Coleção de destino', 'obatala' ) }
 						value={ profileKey }
 						options={ profileOptions }
 						onChange={ setProfileKey }

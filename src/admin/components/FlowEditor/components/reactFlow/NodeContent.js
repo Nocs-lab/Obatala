@@ -20,7 +20,7 @@ const FIELD_OPTIONS = [
     { id: "stage_document", label: __("Stage document", "obatala"), icon: file },
     { id: "select", label: __("Select (Multiple Options)", "obatala"), icon: listView },
     { id: "radio", label: __("Radio (Selection Options)", "obatala"), icon: listView },
-    { id: "search", label: __("Search in Tainacan", "obatala"), icon: search },
+    { id: "search", label: __("Busca no Tainacan", "obatala"), icon: search },
 ];
 
 const NodeContent = ({ id, data = {} }) => {

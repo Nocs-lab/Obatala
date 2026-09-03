@@ -48,10 +48,10 @@ const ProcessHeader = ({ process, filteredProcessType, authorsById, isComplete, 
                     </span>
                     <span className={`badge ${isComplete ? 'success' : 'default'}`}>
                         <Icon icon={isComplete ? "yes" : "update"} />
-                        {sprintf(__('%s%% completed', 'obatala'), progress)}
+                        {sprintf(__('%s%% concluído', 'obatala'), progress)}
                     </span>
                     <span className="badge default">
-                        <Icon icon="admin-users" /> {sprintf(__('Opened by: %1$s on %2$s', 'obatala'), authorsById[process?.author]?.name, createAtProcess())}
+                        <Icon icon="admin-users" /> {sprintf(__('Aberto por: %1$s em %2$s', 'obatala'), authorsById[process?.author]?.name, createAtProcess())}
                     </span>
                 </div>
             </div>

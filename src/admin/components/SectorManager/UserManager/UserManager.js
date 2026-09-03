@@ -56,7 +56,7 @@ const UserManager = ({sector,loadSectorsUsers}) => {
                 const data = { user_id: userId, sector_id: sector.id };
                 return assignUserToSector(data);
             }));
-            setNotice({ status: 'success', message: 'Users successfully added.' });
+            setNotice({ status: 'success', message: __('Users successfully added.', 'obatala') });
             setTimeout(() => {
                 loadSectorUsers(sector.id);
                 loadSectorsUsers();
@@ -149,7 +149,7 @@ const UserManager = ({sector,loadSectorsUsers}) => {
                                     <td>{user.email}</td>
                                     <td>
                                         <div className="group-button">
-                                            <Tooltip text="Remove user from sector">
+                                            <Tooltip text={__('Remove user from sector', 'obatala')}>
                                                 <Button
                                                     isDestructive
                                                     icon={trash}

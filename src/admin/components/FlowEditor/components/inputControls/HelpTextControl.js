@@ -4,10 +4,10 @@ import { __ } from '@wordpress/i18n';
 
 const HelpTextControl = ({ value, onChange }) => (
 	<TextareaControl
-		label={__('Help text for filling in', 'obatala')}
+		label={__('Texto de ajuda para preenchimento', 'obatala')}
 		value={value}
 		onChange={onChange}
-		placeholder={__('Enter help text to assist with filling in the field', 'obatala')}
+		placeholder={__('Digite um texto de ajuda para auxiliar no preenchimento do campo', 'obatala')}
 	/>
 );
 

@@ -1,0 +1,171 @@
+007: Guia do usuário: Obatalá – Um sistema de gestão
+008: curatorial de museus
+009: Histórico de revisões
+011: Importante
+012: Este manual foi desenvolvido com o objetivo de orientar os usuários sobre a utilização do sistema Obatalá, apresentando informações, procedimentos e exemplos para facilitar sua implementação e operação. 
+013: A responsabilidade pelo uso das informações aqui contidas é exclusivamente do usuário. O manual não se responsabiliza por eventuais erros, omissões, interpretações equivocadas ou resultados decorrentes da aplicação das orientações apresentadas. Recomendamos que, em caso de dúvidas ou situações específicas, os usuários consultem o suporte técnico ou especialistas qualificados.
+014: O conteúdo deste manual está sujeito a alterações sem aviso prévio, com o objetivo de acompanhar atualizações no sistema ou aperfeiçoar sua usabilidade. 
+015: Sumário
+017: Introdução
+018: O Obatalá é um sistema de gestão curatorial desenvolvido como um plugin para o Tainacan, uma plataforma digital de código aberto voltada para a gestão e publicação de acervos culturais e científicos, projetada especialmente para instituições como museus, bibliotecas, arquivos e centros de documentação. O Obatalá foi concebido para atender às demandas específicas do ciclo curatorial de museus, oferecendo funcionalidades robustas para gestão de patrimoniação, empréstimos, movimentação de itens de acervo e integração com tecnologias emergentes, promovendo eficiência e inovação no gerenciamento de coleções.
+019: Financiado pelo Instituto Brasileiro de Museus (IBRAM) e desenvolvido pelo NOCS-Lab (Laboratório Multiusuário de Pesquisa em Redes e Sistemas Computacionais) do IFRN Parnamirim, o Obatalá se inspira nas práticas do Museu Paulista da USP. Sua implementação como um plugin do WordPress visa integrar e otimizar todas as etapas do ciclo curatorial, garantindo conformidade com os padrões museológicos estabelecidos
+020: O sistema abrange desde a patrimoniação e conservação até o empréstimo e circulação de itens de acervo, com o objetivo de oferecer uma plataforma moderna e eficiente que transforma a gestão curatorial em um processo integrado e estratégico para instituições museológicas.
+021: Como o Obatalá ainda está em desenvolvimento, o feedback dos futuros usuários é essencial para aperfeiçoar suas funcionalidades e assegurar que ele atenda plenamente às necessidades do ciclo curatorial. Para isso, foi disponibilizado um ambiente de testes, onde os usuários podem explorar as principais funcionalidades do sistema, como cadastro de itens, gestão de empréstimos e movimentação de acervo. Esse ambiente permite que os participantes experimentem o sistema, identifiquem pontos de melhoria e compartilhem sugestões, contribuindo diretamente para o aprimoramento e a usabilidade do Obatalá.
+022: https://obatala.nocs.ifrn.edu.br/wp-admin
+023: Plugin do Wordpress
+024: O Obatalá, por ser implementado como um plugin do WordPress, requer que o WordPress esteja instalado em uma máquina local ou servidor do museu. Essa instalação é essencial para garantir que o sistema funcione adequadamente, aproveitando toda a infraestrutura e as vantagens oferecidas pelo WordPress. Além disso, o Obatalá é projetado para operar em conjunto com o Tainacan, um plugin do WordPress dedicado à gestão e publicação de acervos culturais. Portanto, a instalação prévia do Tainacan também é indispensável. Para mais detalhes sobre a instalação do Tainacan, acesse os vídeos oficiais do canal do Tainacan no YouTube: https://www.youtube.com/watch?v=7v6qNHmqm0I e  https://www.youtube.com/watch?v=qRtoNRUlVkk&t=15s. 
+025: Após configurar o WordPress e o Tainacan, o plugin Obatalá pode ser instalado e habilitado, possibilitando a utilização de suas funcionalidades voltadas ao ciclo curatorial. É recomendável que a equipe técnica responsável pelo ambiente do museu realize a instalação e a configuração seguindo as boas práticas indicadas na documentação, garantindo a segurança e o desempenho do sistema.
+026: Login no Wordpress
+027: Durante a instalação do WordPress, o usuário responsável pelo sistema definiu um nome de usuário e uma senha que são utilizados para acessar o painel administrativo do WordPress. Esses mesmos dados de login são necessários para acessar as funcionalidades do Obatalá, uma vez que ele está integrado ao ambiente do WordPress.
+028: Ao acessar a interface de login, insira o nome de usuário e a senha cadastrados durante a configuração inicial do WordPress. Caso você não tenha essas informações, entre em contato com o administrador responsável pelo sistema no museu. Veja o exemplo abaixo.
+030: Figura 1 - Login do WordPress.
+031: Nota: É fundamental manter o nome de usuário e a senha seguros para evitar acessos não autorizados ao sistema. Se houver dúvidas ou dificuldades no acesso, consulte o guia de suporte ou siga os procedimentos para redefinição de senha disponíveis na própria tela de login.
+033: Menu administrativo do Wordpress
+034: Após a instalação bem-sucedida do Obatalá no WordPress, ele estará acessível diretamente no menu lateral do ambiente administrativo do WordPress. Uma nova opção chamada "Obatalá" será adicionada automaticamente ao menu, permitindo que os usuários naveguem para as funcionalidades específicas do sistema de gestão curatorial.
+036: Figura 2 - Menu do Obatalá no WordPress.
+037: Ao clicar no menu Obatalá, será exibido o painel do sistema. A tela inicial apresenta indicadores de processos concluídos, saudação ao usuário, grupo associado, quantidade de itens do acervo, processos, modelos e grupos, além de áreas para modelos mais usados e notificações. O painel funciona como ponto de entrada para as rotinas de gestão curatorial.
+039: Figura 3 - Janela de dashboard do Obatalá.
+040: O menu superior do Obatalá permanece visível nas telas administrativas do plugin. Ele reúne atalhos para Dashboard, Processos, Modelos, Itens do acervo, Tainacan, Configurações e WordPress. Em Configurações, o usuário acessa Grupos e Usuários, conforme as permissões disponíveis para sua conta.
+042: Dashboard: apresenta a visão geral do ambiente, com contadores, progresso dos processos, modelos mais usados e notificações.
+043: Modelos: permite criar e gerenciar modelos de processo, configurar etapas, campos, condicionais e o mapeamento de exportação para o Tainacan.
+044: Processos: permite criar, acompanhar, preencher, comentar, gerar relatórios e concluir processos curatoriais baseados nos modelos cadastrados.
+045: Cada uma dessas funcionalidades será detalhada nas próximas seções, com orientações específicas sobre como utilizá-las e integrá-las à rotina de gestão do acervo. Para facilitar a navegação entre os recursos do sistema, um menu superior sempre estará visível, veja Figura abaixo.
+047: Figura 4 - Menu Obatalá.
+048: Gerência de grupos
+049: A funcionalidade Gerência de Grupos do Obatalá (Groups) permite organizar e estruturar grupos de usuários do museu de forma eficiente. Essa ferramenta é fundamental para definir as responsabilidades na execução dos processos, garantindo uma gestão clara e bem distribuída das atividades curatoriais.
+050: Com a Gerência de Grupos, os usuários podem criar grupos. Também é possível editar e personalizar grupos já existentes, ajustando informações como descrição.
+051: Para inserir um novo grupo, o usuário deve clicar no botão Adicionar novo. Em seguida, uma janela suspensa solicita o título e a descrição do grupo. Depois de salvo, o grupo passa a aparecer na listagem com status, quantidade de usuários e ações de visualização ou gerenciamento de usuários.
+054: Figura 5 - Cadastro de grupos.
+055: Após o cadastro de um grupo, ele será exibido na lista de grupos cadastrados, conforme ilustrado na imagem a seguir. 
+057: Figura 6 - Lista de grupos cadastrados.
+058: Na lista de grupos, é possível realizar diversas ações para cada grupo, como excluir o grupo, editar informações como o nome ou a descrição, e inserir usuários associados. Veja o significado das ações na próxima imagem.
+064: Figura 7 - Ações para um grupo.
+065: Ao clicar na opção Gerenciar usuários ou Ver grupo, o usuário acessa os detalhes do grupo e a lista de usuários associados. Nessa área é possível conferir nome, nome de usuário, e-mail e remover usuários do grupo quando a conta possuir permissão para essa operação.
+067: Figura 8 - Inserção de usuários no grupo.
+068: Um detalhe importante a ser destacado é que os usuários disponíveis para adição em um grupo são aqueles previamente cadastrados no WordPress. Portanto, antes de adicionar um usuário a um grupo, é necessário realizar o cadastro desse usuário no WordPress. Para isso, utilize o menu lateral do painel de administração do WordPress, acesse a opção Users e clique em Add New User. Em seguida, preencha os campos necessários com as informações do usuário, conforme ilustrado na imagem abaixo.
+070: Figura 9 - Cadastro de novos usuários no WordPress.
+071: Para excluir usuários de um grupo, clique novamente no botão "Manage users". Na janela que será exibida, localize o usuário que deseja remover e clique no ícone de lixeira correspondente. Isso excluirá o usuário do grupo selecionado. Confira o exemplo abaixo para visualizar o processo.
+073: Figura 10 - Retirar usuários do grupo.
+074: Modelagem de processos
+075: A funcionalidade Models (presente no menu superior) do Obatalá é projetada para auxiliar na criação, visualização e configuração de modelos de processos que compõem o ciclo curatorial. Esses modelos representam as etapas e fluxos necessários para gerenciar atividades como patrimoniação, conservação, empréstimos e circulação de itens de acervo, garantindo que todas as ações sigam um padrão definido e alinhado às práticas museológicas.
+076: Nesta seção, você aprenderá como configurar e personalizar os modelos de processos para atender às necessidades específicas de sua instituição. Além disso, exploraremos como esses modelos podem ser utilizados para automatizar e monitorar atividades, promovendo maior eficiência e controle no gerenciamento do acervo.
+077: Atualmente, a equipe está dedicada a estudar a adaptação da notação BPMN (Business Process Model and Notation) para o desenho de fluxos de processos no Obatalá. Este é um passo fundamental para assegurar que a modelagem atenda aos requisitos curatoriais específicos, consolidando o uso da ferramenta BPMN a partir de conceitos consagrados. O desafio está em utilizar ao máximo os elementos que o BPMN oferece, de modo a construir uma base sólida que facilite a comunicação entre todos os envolvidos e garanta o acompanhamento preciso de cada processo curatorial.
+078: Para adicionar novos modelos de processos, o usuário deve clicar no botão Adicionar modelo de processo. O cadastro inicial solicita título e descrição. Depois de salvo, o modelo pode ser aberto pela ação Gerenciar modelo, que concentra a edição das etapas, dos campos, das condicionais e das configurações de exportação para o Tainacan.
+082: Figura 11 - Janela de modelos de processos.
+083: Após o cadastro de um modelo de processo, é possível editá-lo ou excluí-lo conforme necessário. Para realizar essas ações, o usuário deve acessar as opções de ações (Actions) disponíveis na linha correspondente ao modelo de processo desejado. Essas opções permitem gerenciar os modelos de forma prática e eficiente, garantindo que estejam sempre atualizados e adequados às necessidades do sistema. Veja os botões de ação abaixo.
+085: Figura 12 - Botões de ação para modelos de processos.
+087: No que diz respeito à edição de um modelo de processo, a ação principal da listagem é Gerenciar modelo. Essa tela reúne o editor visual do fluxo e o acordeon Exportação para o Tainacan. O usuário pode configurar etapas, campos, conexões, condicionais e, quando autorizado, definir como os campos do Obatalá serão relacionados aos metadados das coleções do Tainacan.
+089: Figura 13 - Janela de edição de modelos de processos.
+090: A interface de edição conta com controles para salvar alterações, cancelar mudanças, adicionar etapa, adicionar condicional, alternar tela cheia, importar/exportar JSON e abrir o acordeon Exportação para o Tainacan. Esse acordeon fica acima de Gerenciar etapas, indica se o mapeador está Ativo ou Inativo e concentra a habilitação da exportação e a seleção das coleções de destino.
+092: Figura 14 - Botões de funcionalidades na janela de edição de modelos de processos.
+093: Salvar alterações: grava o fluxo do modelo e, quando configurado, as informações de mapeamento da exportação para o Tainacan.
+094: Cancelar alterações: descarta mudanças feitas desde a última gravação.
+095: Adicionar etapa: cria uma nova atividade do processo e abre a configuração de campos da etapa.
+096: Adicionar condicional: cria uma ramificação do fluxo com base no valor informado em um campo da etapa.
+097: Tela cheia: amplia a área de edição visual do fluxo.
+098: Botão Hambúrguer:
+099: Exportar JSON: Permite exportar o modelo de processo em formato JSON para armazenamento ou compartilhamento. A função “Exportar json” pode ser útil no compartilhamento de modelos de processos de um museu para outro(s).
+100: Importar JSON: Possibilita importar um modelo previamente exportado para edição ou reutilização.
+101: Essa área de edição foi projetada para oferecer flexibilidade e eficiência, permitindo que os usuários personalizem os processos de forma clara e alinhada às necessidades do museu. O fluxo interativo e as ferramentas disponíveis garantem que o modelo de processo seja configurado de maneira prática e precisa.
+102: Para iniciar a edição de um modelo de processo, o usuário deve clicar no botão “Add step”. Assim que acionado, uma nova etapa será criada e representada por um retângulo na área de edição. Esse retângulo conterá um nome padrão (step name) e botões de edição que permitem personalizar suas informações.
+103: Por exemplo, em um modelo de processo para Restauração, a primeira atividade pode ser definida como Avaliação do item a ser restaurado. Essa etapa inicial poderia incluir informações como critérios de avaliação, responsáveis e prazos, estabelecendo uma base sólida para o restante do processo. Veja o exemplo abaixo.
+105: Para esclarecer melhor o significado dos recursos disponíveis em uma etapa, observe a imagem abaixo. Ela destaca os seguintes elementos: o botão de exclusão da etapa (indicado pelo círculo vermelho), o botão para criação de campos no formulário da etapa (marcado pelo círculo verde) e os botões azuis, utilizados para a geração e configuração dos fluxos entre as etapas. Veja o exemplo abaixo.
+113: Figura 15 - Elementos de uma etapa.
+114: O botão para adição de campos permite selecionar tipos como Texto, Email, Número, Seletor de data, Upload de arquivo, Documento de etapa, Select, Radio e Busca no Tainacan. Quando a exportação para o Tainacan está ativa, os formulários de campo também podem exibir os controles Coleção de destino e Metadado de destino, usados para mapear o dado do Obatalá ao metadado correspondente no Tainacan.
+118: Figura 16 - Exemplo de inserção de campo em uma etapa.
+119: Importante: Cada campo inserido inclui dicas de utilização ou propriedades. No exemplo acima, é possível visualizar, no lado esquerdo da tela, uma caixa que exibe informações específicas sobre o tipo de campo selecionado, facilitando sua configuração e uso.
+120: Para exemplificar melhor a adição de campos, considere o exemplo de inserção de um campo Texto na etapa de Testes Preliminares. Esse tipo de campo é útil para capturar informações textuais específicas e possui as seguintes propriedades configuráveis:
+121: Label: Nome ou título que será exibido para identificar o campo ao usuário.
+122: Placeholder: Texto exibido dentro do campo enquanto o usuário não preenche, servindo como orientação ou exemplo.
+123: Obrigatório: Define se o preenchimento do campo é obrigatório para prosseguir com a etapa.
+124: Tamanho mínimo e máximo: Permite estabelecer limites para a quantidade de caracteres que o usuário pode inserir no campo.
+125: Padrão de avaliação: Especifica critérios ou validações, como formato ou conteúdo esperado (exemplo: texto sem caracteres especiais).
+126: Texto de ajuda: Informação adicional exibida ao usuário, geralmente em forma de dica, para orientar o preenchimento correto.
+128: Figura 17 - Propriedades do campo de texto.
+129: Essas propriedades tornam o campo Texto flexível e adaptável a diversas necessidades, garantindo que os dados sejam capturados de forma consistente e organizada. No exemplo acima, o campo pode ser usado para descrever observações iniciais realizadas durante os testes preliminares. Em seguida, o usuário pode adicionar um campo para especificar a data do teste. Nesse caso, as propriedades disponíveis são diferentes e incluem:
+130: Label: Nome ou título que identifica o campo para o usuário.
+131: Obrigatório: Define se o preenchimento do campo é indispensável para prosseguir com a etapa.
+132: Texto de ajuda: Informação adicional para orientar o usuário sobre o preenchimento correto do campo.
+134: Figura 18 - Propriedades de uma data.
+136: De modo geral, com exceção do campo de Busca no Tainacan, todos os outros campos possuem propriedades que podem ser configuradas para uma melhor personalização e exibição no formulário. A seguir, veja um exemplo de propriedades específicas para o campo do tipo Upload de Arquivo.
+138: Figura 19 - Propriedades de um campo do tipo upload de arquivo.
+139: Por fim, cada etapa criada pode ser conectada a outras etapas para formar o fluxo completo do processo, refletindo a sequência lógica das atividades. A interface oferece flexibilidade para ajustar e organizar o modelo conforme necessário, garantindo que ele atenda às especificidades do processo curatorial. Confira o exemplo ilustrado abaixo para entender como as etapas são exibidas na prática. Veja um exemplo de etapas para o modelo de processo de Restauração.
+141: Figura 20 - Sequência de etapas de um modelo de restauração.
+142: Importante: Observe que as etapas (atividades) estão conectadas por fluxos, criados ao clicar no botão azul, que permite desenhar uma seta (fluxo) ligando a etapa atual à próxima. É fundamental que todas as etapas estejam interligadas por meio desses fluxos e que o usuário siga uma sequência lógica, preferencialmente organizada da esquerda para a direita, garantindo clareza e coerência no modelo de processo.
+144: Importante: Não esqueça de clicar em “Save” para salvar a edição do modelo de processos.
+146: O elemento condicional permite criar ramificações no fluxo do processo, tornando a execução mais dinâmica e adaptável. Ao configurar uma condicional, o usuário seleciona um campo do formulário e define um valor de referência. Com base na resposta fornecida durante a execução, o sistema direciona o processo para etapas diferentes, de acordo com a lógica definida. Veja o exemplo de utilização abaixo.
+149: Figura 21 - Configuração do elemento condicional.
+150: Por fim, a modelagem de processos é uma etapa crucial na configuração do sistema, pois define a estrutura e o fluxo de trabalho que será seguido nas atividades curatoriais. Esses modelos são criados apenas uma vez, servindo como base para a execução dos processos de forma consistente e padronizada. Cada etapa modelada se transforma em um formulário no sistema, projetado para registrar e organizar as informações necessárias durante a execução das atividades. Isso garante que os dados sejam coletados de maneira sistemática, facilitando o acompanhamento, a análise e a tomada de decisões ao longo do ciclo curatorial.
+151: Gerência de processos
+152: Após a criação de um modelo de processo no Obatalá, o próximo passo é utilizá-lo para criar um processo propriamente dito. Um processo corresponde a um conjunto de atividades organizadas em etapas, cada uma representada por formulários configurados no modelo. Essas etapas guiam a execução de tarefas de maneira lógica e estruturada, garantindo que todas as informações necessárias sejam registradas e que o fluxo de trabalho siga os padrões definidos.
+153: Em Processos, é possível criar processos a partir dos modelos previamente configurados. A listagem oferece abas para Todos os processos e Meus processos, filtros por nível de acesso, modelo e progresso, além de ações para visualizar, editar, consultar histórico, excluir e gerar relatório PDF quando disponível.
+154: Essa funcionalidade permite que os processos sejam monitorados em tempo real, assegurando que todas as atividades sejam concluídas dentro dos prazos e requisitos estabelecidos. A flexibilidade do Process Manager possibilita que os gestores adaptem os processos às necessidades do museu, promovendo maior eficiência e controle operacional.
+155: Para criar um novo processo, acesse Processos no menu superior do Obatalá e clique em Adicionar novo. Informe o título do processo, selecione o modelo de processo e defina o nível de acesso: Não restrito ou Restrito. Após salvar, o processo passa a ser acompanhado pela listagem e pela tela de execução das etapas.
+159: Figura 22 - Criação de processos.
+160: Após a criação do processo, o usuário pode clicar no botão View (representado pelo ícone de um olho) para acessar e iniciar o preenchimento dos formulários associados a cada etapa do processo. Esse botão permite visualizar o progresso do processo em tempo real e interagir com os formulários configurados no modelo. Veja o exemplo abaixo.
+164: Figura 23 - Ação de visualização do processo.
+165: Cada formulário exibido corresponde a uma etapa do processo. O usuário registra informações, salva rascunhos, submete etapas, adiciona comentários e acompanha o histórico. Quando o modelo possui exportação Tainacan ativa, o processo pode exibir uma etapa virtual de Preparação da exportação para definir coleção de destino, quantidade de itens, entrada manual ou por planilha e regras para repetição de valores.
+167: Figura 24 - Exemplo de etapa (formulário).
+168: Após a submissão do formulário, o usuário pode prosseguir para a próxima etapa do processo. Quando uma etapa é concluída, ela é destacada com a cor verde, indicando visualmente que foi finalizada com sucesso. Essa sinalização facilita o acompanhamento do progresso do processo e garante que o usuário avance de forma organizada para as etapas subsequentes, mantendo o fluxo contínuo e eficiente. Veja o exemplo abaixo.
+170: Figura 25 - Exemplo de etapa concluída e navegação para próxima etapa.
+171: Por fim, a funcionalidade Processes é fundamental para a execução dos processos no Obatalá, transformando os modelos previamente configurados em fluxos operacionais claros e eficientes. Com ela, os usuários podem iniciar, monitorar e concluir processos, registrando informações em formulários estruturados e avançando pelas etapas de forma organizada. Além de oferecer uma visão geral do progresso de cada processo, o sistema garante a rastreabilidade das atividades e facilita ajustes conforme necessário.
+173: Atualização da interface do Obatalá
+174: Esta seção complementa as orientações anteriores com base na interface administrativa atual do Obatalá. As telas foram verificadas no ambiente WordPress local em 31/08/2026 e refletem a organização recente do menu superior e dos recursos integrados ao Tainacan.
+175: Menu superior e painel
+176: O menu superior organiza o uso diário do sistema em Dashboard, Processos, Modelos, Itens do acervo, Tainacan, Configurações e WordPress. O Dashboard apresenta indicadores gerais e serve como ponto de partida para acompanhar a atividade do ambiente.
+177: - Dashboard: resumo do ambiente, indicadores e notificações.
+178: - Processos: criação, acompanhamento, histórico, comentários e relatórios.
+179: - Modelos: criação de modelos, edição de etapas e configuração de exportação.
+180: - Itens do acervo: consulta aos itens do Tainacan e processos vinculados.
+181: - Tainacan: acesso direto à administração do acervo.
+182: - Configurações: acesso a Grupos e Usuários.
+183: - WordPress: retorno ao painel administrativo geral.
+185: Figura 26 - Dashboard atual do Obatalá.
+186: Processos
+187: A tela Processos mostra o total de processos, as abas Todos os processos e Meus processos, filtros e a ação Adicionar novo. Em ambientes sem processos cadastrados, o sistema apresenta a mensagem de estado vazio, orientando que ainda não há registros.
+189: Figura 27 - Listagem atual de processos.
+190: Ao adicionar um processo, o usuário deve informar o título, escolher o modelo de processo e selecionar o nível de acesso. O nível Não restrito permite acesso mais amplo conforme as permissões do usuário; o nível Restrito limita a operação aos usuários autorizados pelo fluxo e pelos grupos associados.
+192: Figura 28 - Formulário atual para criação de processo.
+193: Modelos de processo e exportação Tainacan
+194: A listagem de Modelos permite criar um novo modelo com título e descrição. Depois do cadastro, a ação principal para configuração é Gerenciar modelo. A antiga separação entre edição de etapas e edição dos dados de exportação foi unificada: o editor do modelo agora concentra o fluxo, os campos das etapas e o acordeon Exportação para o Tainacan.
+196: Figura 29 - Listagem atual de modelos.
+198: Figura 30 - Cadastro atual de modelo de processo.
+199: No editor do modelo, a configuração de exportação aparece no acordeon Exportação para o Tainacan, posicionado acima do acordeon Gerenciar etapas. Quando recolhido, ele exibe o estado atual do recurso, como Ativo ou Inativo. Ao expandi-lo, o usuário encontra o controle Exporter status. Depois de ativar esse controle, o sistema revela a área Coleções de destino e o seletor Selecione uma ou mais coleções.
+200: Com a exportação habilitada e ao menos uma coleção selecionada, os componentes configurados dentro de cada etapa passam a exibir uma propriedade adicional de mapeamento. Essa propriedade aparece no bloco Tainacan Export das configurações do campo e permite ligar o campo do Obatalá a um metadado do Tainacan. Dessa forma, o dado preenchido durante o processo já fica preparado para compor o item exportado para a coleção escolhida.
+201: - Exporter status: ativa ou desativa o mapeamento para exportação.
+202: - Coleções de destino: define as coleções do Tainacan que podem receber itens gerados pelo processo.
+203: - Aviso de alerta: aparece quando a exportação está ativa, mas nenhuma coleção foi selecionada.
+204: - Target collection: informa para qual coleção selecionada aquele campo será mapeado.
+205: - Target metadata: informa qual metadado do Tainacan receberá o valor daquele campo.
+206: - Do not map this field: mantém o campo apenas no formulário do Obatalá, sem envio para metadado do Tainacan.
+207: - Resumo do mapeamento: mostra a relação Campo Obatalá x Metadado Tainacan por coleção.
+209: Figura 31 - Acordeon Exportação para o Tainacan com o recurso ativado.
+210: Itens do acervo
+211: A nova área Itens do acervo aproxima a gestão dos processos curatoriais dos registros mantidos no Tainacan. A listagem permite buscar e filtrar itens, visualizar coleção, situação, número de processos vinculados, última atualização e ações de consulta.
+213: Figura 32 - Listagem de itens do acervo integrados ao Tainacan.
+214: Ao abrir um item, a tela apresenta informações do registro, metadados, botões para abrir ou editar o item no Tainacan e a linha do tempo de processos vinculados. Essa visão ajuda a identificar rapidamente se um item já participou de processos curatoriais, se há processos concluídos, em progresso ou pendentes, e qual foi a última atualização.
+216: Figura 33 - Detalhe de item do acervo e linha do tempo de processos.
+217: Grupos e usuários
+218: A área Grupos lista os grupos cadastrados, seu status, descrição, quantidade de usuários e ações disponíveis. O detalhe do grupo mostra os usuários associados e permite administrar a composição do grupo de acordo com as permissões do usuário logado.
+220: Figura 34 - Listagem atual de grupos.
+222: Figura 35 - Detalhe de grupo e usuários associados.
+223: Preparação e execução da exportação
+224: Quando um modelo possui mapeamento Tainacan ativo, cada processo criado a partir dele apresenta uma etapa de controle chamada Preparação da exportação para o Tainacan. Nessa etapa, o usuário informa como os itens serão gerados: manualmente, preenchendo os dados no próprio processo, ou via planilha, enviando um arquivo estruturado com os valores que alimentarão os metadados mapeados.
+225: 1. Selecionar a coleção de destino quando houver mais de uma coleção mapeada.
+226: 2. Definir se o processo gerará um item ou múltiplos itens no Tainacan.
+227: 3. Para múltiplos itens, informar a quantidade e escolher a fonte dos dados: entrada manual ou planilha.
+228: 4. Na entrada manual, preencher os valores diretamente nos campos exibidos nas etapas do processo.
+229: 5. Na entrada por planilha, enviar arquivo CSV, XLS ou XLSX compatível com os campos mapeados.
+230: 6. Opcionalmente repetir valores base entre itens e definir um campo identificador único com prefixo.
+231: 7. Salvar a preparação da exportação antes de concluir a etapa de exportação.
+232: A exportação cria ou atualiza itens no Tainacan com base nos metadados mapeados. O sistema também registra a referência do processo nos itens vinculados, facilitando a rastreabilidade entre o processo curatorial e o acervo.
+233: Relatórios e documentos
+234: A listagem de processos pode exibir a ação Gerar relatório PDF. O relatório reúne dados do processo, número do processo, etapa atual, nível de acesso e informações registradas ao longo do fluxo. Campos do tipo Documento de etapa também podem gerar PDF e exigir anexação de PDF assinado quando essa opção estiver configurada no modelo.
+235: Permissões
+236: A interface exibe menus e controles conforme as permissões da conta conectada. Administradores possuem acesso amplo; gestores de modelos podem configurar modelos; gestores de grupos administram grupos e usuários; gestores de mapeadores acessam os controles Tainacan Export; usuários de setor interagem com processos e etapas aos quais têm acesso. Em caso de ausência de permissão, a ação pode não aparecer ou retornar uma mensagem de acesso negado.
+-- TABLE 0 --
+0.0: Versão | Data | Responsável | Detalhes
+0.1: 1.0 | 18/11/2024 | Nocs lab | Criação do documento
+0.2: 2.0 | 19/11/2024 | Nocs lab | Atualização de imagens
+0.3: 3.0 | 02/06/2025 | Nocs lab | Atualização do documento
+0.4: 3.1 | 31/08/2026 | Nocs lab | Atualização da interface, integração com itens do acervo, exportação Tainacan, relatórios e permissões.

@@ -153,7 +153,7 @@ const TainacanDynamicItemsEditor = ({ runtimeConfig, onSave }) => {
                                                     <SelectControl
                                                         value={String(value || '')}
                                                         options={[
-                                                            { label: 'Selecione...', value: '' },
+                                                            { label: __('Selecione...', 'obatala'), value: '' },
                                                             ...fieldOptions,
                                                         ]}
                                                         onChange={(selectedValue) => updateFieldValue(rowIndex, field.obatala_field_id, selectedValue)}

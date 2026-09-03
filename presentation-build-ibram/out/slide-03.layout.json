@@ -1,0 +1,664 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/05bdx1",
+    "id": "05bdx1",
+    "slide": 3,
+    "layoutId": "2729fe3f-997b-4661-8f21-217c5e421cc4",
+    "layoutName": "Title Slide",
+    "layoutType": "title",
+    "masterLayoutId": "19cbfcac-b723-470b-8907-c3315c3ca042",
+    "masterLayoutName": "Master",
+    "backgroundColor": "#FFFFFF",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "theme": {
+    "colorSchemeName": "ChatGPT",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "bg1": "#FFFFFF",
+      "bg2": "#000000",
+      "tx1": "#1F1F1F",
+      "tx2": "#FFFFFF",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "typefaces": [
+      "Arial"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "2729fe3f-997b-4661-8f21-217c5e421cc4",
+      "name": "Title Slide",
+      "type": "title",
+      "parentLayoutId": "19cbfcac-b723-470b-8907-c3315c3ca042",
+      "elements": []
+    },
+    {
+      "scope": "master",
+      "id": "19cbfcac-b723-470b-8907-c3315c3ca042",
+      "name": "Master",
+      "type": "master",
+      "elements": []
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/cvqdkfy1",
+      "id": "1",
+      "bbox": [
+        52,
+        38,
+        930,
+        94
+      ],
+      "geometry": "rect",
+      "text": "Exportação Tainacan fica no modelo",
+      "textPreview": "Exportação Tainacan fica no modelo",
+      "resolvedFontSize": 38,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 38,
+        "typeface": "Arial",
+        "color": "#111111",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Exportação Tainacan fica no modelo"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Exportação Tainacan fica no modelo",
+          "resolvedTextStyle": {
+            "fontSize": 38,
+            "typeface": "Arial",
+            "color": "#111111",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Exportação Tainacan fica no modelo",
+              "fontSize": 38,
+              "typeface": "Arial",
+              "color": "#111111",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/ruhwbahg",
+      "id": "2",
+      "bbox": [
+        52,
+        132,
+        1176,
+        0
+      ],
+      "geometry": "line",
+      "lineColor": "#B8BCC4",
+      "lineWidth": 1
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/qt8vi5gv",
+      "id": "3",
+      "bbox": [
+        1186,
+        652,
+        52,
+        28
+      ],
+      "geometry": "rect",
+      "text": "03",
+      "textPreview": "03",
+      "resolvedFontSize": 13,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 13,
+        "typeface": "Arial",
+        "color": "#5B616E",
+        "alignment": "right",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "03"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "03",
+          "resolvedTextStyle": {
+            "fontSize": 13,
+            "typeface": "Arial",
+            "color": "#5B616E",
+            "alignment": "right"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "03",
+              "fontSize": 13,
+              "typeface": "Arial",
+              "color": "#5B616E",
+              "alignment": "right"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 4,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/10jehkzi",
+      "id": "4",
+      "bbox": [
+        52,
+        162,
+        600,
+        96
+      ],
+      "geometry": "rect",
+      "text": "O mapeamento deixa de ser uma configuração isolada: ele passa a fazer parte do próprio modelo de processo.",
+      "textPreview": "O mapeamento deixa de ser uma configuração isolada: ele passa a fazer parte do próprio modelo de processo.",
+      "resolvedFontSize": 28,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 28,
+        "typeface": "Arial",
+        "color": "#5B616E",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 3,
+        "lines": [
+          {
+            "index": 1,
+            "text": "O mapeamento deixa de ser uma"
+          },
+          {
+            "index": 2,
+            "text": "configuração isolada: ele passa a fazer parte"
+          },
+          {
+            "index": 3,
+            "text": "do próprio modelo de processo."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "O mapeamento deixa de ser uma configuração isolada: ele passa a fazer parte do próprio modelo de processo.",
+          "resolvedTextStyle": {
+            "fontSize": 28,
+            "typeface": "Arial",
+            "color": "#5B616E",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "O mapeamento deixa de ser uma configuração isolada: ele passa a fazer parte do próprio modelo de processo.",
+              "fontSize": 28,
+              "typeface": "Arial",
+              "color": "#5B616E",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 5,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/0zaxozyx",
+      "id": "5",
+      "bbox": [
+        74,
+        310,
+        13,
+        13
+      ],
+      "geometry": "ellipse",
+      "fillColor": "#38A169",
+      "lineColor": "#38A169",
+      "lineWidth": 0
+    },
+    {
+      "order": 6,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/zy1wfuhc",
+      "id": "6",
+      "bbox": [
+        102,
+        302,
+        595,
+        54
+      ],
+      "geometry": "rect",
+      "text": "Um acordeon habilita ou desabilita a exportação no editor do modelo.",
+      "textPreview": "Um acordeon habilita ou desabilita a exportação no editor do modelo.",
+      "resolvedFontSize": 24,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 24,
+        "typeface": "Arial",
+        "color": "#111111",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Um acordeon habilita ou desabilita a exportação no"
+          },
+          {
+            "index": 2,
+            "text": "editor do modelo."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Um acordeon habilita ou desabilita a exportação no editor do modelo.",
+          "resolvedTextStyle": {
+            "fontSize": 24,
+            "typeface": "Arial",
+            "color": "#111111",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Um acordeon habilita ou desabilita a exportação no editor do modelo.",
+              "fontSize": 24,
+              "typeface": "Arial",
+              "color": "#111111",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 7,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/ex8vmpg7",
+      "id": "7",
+      "bbox": [
+        74,
+        378,
+        13,
+        13
+      ],
+      "geometry": "ellipse",
+      "fillColor": "#38A169",
+      "lineColor": "#38A169",
+      "lineWidth": 0
+    },
+    {
+      "order": 8,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/h4fe50ze",
+      "id": "8",
+      "bbox": [
+        102,
+        370,
+        595,
+        54
+      ],
+      "geometry": "rect",
+      "text": "Coleções de destino são selecionadas antes do mapeamento dos campos.",
+      "textPreview": "Coleções de destino são selecionadas antes do mapeamento dos campos.",
+      "resolvedFontSize": 24,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 24,
+        "typeface": "Arial",
+        "color": "#111111",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Coleções de destino são selecionadas antes do"
+          },
+          {
+            "index": 2,
+            "text": "mapeamento dos campos."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Coleções de destino são selecionadas antes do mapeamento dos campos.",
+          "resolvedTextStyle": {
+            "fontSize": 24,
+            "typeface": "Arial",
+            "color": "#111111",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Coleções de destino são selecionadas antes do mapeamento dos campos.",
+              "fontSize": 24,
+              "typeface": "Arial",
+              "color": "#111111",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 9,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/g36dcvyt",
+      "id": "9",
+      "bbox": [
+        74,
+        446,
+        13,
+        13
+      ],
+      "geometry": "ellipse",
+      "fillColor": "#38A169",
+      "lineColor": "#38A169",
+      "lineWidth": 0
+    },
+    {
+      "order": 10,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/e98jedcz",
+      "id": "10",
+      "bbox": [
+        102,
+        438,
+        595,
+        54
+      ],
+      "geometry": "rect",
+      "text": "Cada componente de etapa pode apontar para metadados do Tainacan.",
+      "textPreview": "Cada componente de etapa pode apontar para metadados do Tainacan.",
+      "resolvedFontSize": 24,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 24,
+        "typeface": "Arial",
+        "color": "#111111",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Cada componente de etapa pode apontar para"
+          },
+          {
+            "index": 2,
+            "text": "metadados do Tainacan."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Cada componente de etapa pode apontar para metadados do Tainacan.",
+          "resolvedTextStyle": {
+            "fontSize": 24,
+            "typeface": "Arial",
+            "color": "#111111",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Cada componente de etapa pode apontar para metadados do Tainacan.",
+              "fontSize": 24,
+              "typeface": "Arial",
+              "color": "#111111",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 11,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/zahknidk",
+      "id": "11",
+      "bbox": [
+        74,
+        514,
+        13,
+        13
+      ],
+      "geometry": "ellipse",
+      "fillColor": "#38A169",
+      "lineColor": "#38A169",
+      "lineWidth": 0
+    },
+    {
+      "order": 12,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/0bq1gnu5",
+      "id": "12",
+      "bbox": [
+        102,
+        506,
+        595,
+        54
+      ],
+      "geometry": "rect",
+      "text": "Ao salvar, fluxo do processo e configuração de exportação ficam alinhados.",
+      "textPreview": "Ao salvar, fluxo do processo e configuração de exportação ficam alinhados.",
+      "resolvedFontSize": 24,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 24,
+        "typeface": "Arial",
+        "color": "#111111",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Ao salvar, fluxo do processo e configuração de"
+          },
+          {
+            "index": 2,
+            "text": "exportação ficam alinhados."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Ao salvar, fluxo do processo e configuração de exportação ficam alinhados.",
+          "resolvedTextStyle": {
+            "fontSize": 24,
+            "typeface": "Arial",
+            "color": "#111111",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Ao salvar, fluxo do processo e configuração de exportação ficam alinhados.",
+              "fontSize": 24,
+              "typeface": "Arial",
+              "color": "#111111",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 13,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/1cz2psvq",
+      "id": "13",
+      "bbox": [
+        721,
+        147,
+        492,
+        428
+      ],
+      "geometry": "rect",
+      "fillColor": "#F0F2F4",
+      "lineColor": "#B8BCC4",
+      "lineWidth": 1
+    },
+    {
+      "order": 14,
+      "kind": "image",
+      "scope": "slide",
+      "aid": "im/t03ydgjq",
+      "id": "14",
+      "bbox": [
+        728,
+        154,
+        478,
+        414
+      ],
+      "alt": "Acordeon de exportação Tainacan habilitado no editor de modelo",
+      "contentType": "image/jpeg",
+      "imageFit": "cover",
+      "prompt": "Captura local incorporada de C:\\xampp\\htdocs\\wordpress\\wp-content\\plugins\\Obatala\\manual-update-screenshots\\tainacan-export-accordion-enabled.png",
+      "asset": {
+        "assetId": "9c0780e5-2a70-408f-bd27-533a8eeb7a9d",
+        "contentType": "image/jpeg",
+        "prompt": "Captura local incorporada de C:\\xampp\\htdocs\\wordpress\\wp-content\\plugins\\Obatala\\manual-update-screenshots\\tainacan-export-accordion-enabled.png",
+        "byteLength": 32091
+      }
+    }
+  ],
+  "composeRuns": []
+}

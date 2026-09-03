@@ -4,19 +4,19 @@ import { __ } from "@wordpress/i18n";
 // Componente para renderizar os controles de Texto, Email, Telefone, Endereço
 export const TextFieldControls = ({ label, placeholder, onChange }) => (
   <div>
-    <label>{__('Label:', 'obatala')}</label>
+    <label>{__('Rótulo:', 'obatala')}</label>
     <input
       type="text"
       value={label}
       onChange={(e) => onChange("label", e.target.value)}
-      placeholder={__('Enter the label', 'obatala')}
+      placeholder={__('Digite o rótulo', 'obatala')}
     />
-    <label>{__('Placeholder:', 'obatala')}</label>
+    <label>{__('Texto de exemplo:', 'obatala')}</label>
     <input
       type="text"
       value={placeholder}
       onChange={(e) => onChange("placeholder", e.target.value)}
-      placeholder={__('Enter the placeholder', 'obatala')}
+      placeholder={__('Digite o texto de exemplo', 'obatala')}
     />
   </div>
 );
@@ -24,26 +24,26 @@ export const TextFieldControls = ({ label, placeholder, onChange }) => (
 // Componente para renderizar os controles de Número
 export const NumberFieldControls = ({ label, min, max, onChange }) => (
   <div>
-    <label>{__('Label:', 'obatala')}</label>
+    <label>{__('Rótulo:', 'obatala')}</label>
     <input
       type="text"
       value={label}
       onChange={(e) => onChange("label", e.target.value)}
-      placeholder={__('Enter the label', 'obatala')}
+      placeholder={__('Digite o rótulo', 'obatala')}
     />
-    <label>{__('Minimum value:', 'obatala')}</label>
+    <label>{__('Valor mínimo:', 'obatala')}</label>
     <input
       type="number"
       value={min}
       onChange={(e) => onChange("min", e.target.value)}
-      placeholder={__('Enter the minimum value', 'obatala')}
+      placeholder={__('Digite o valor mínimo', 'obatala')}
     />
-    <label>{__('Maximum value:', 'obatala')}</label>
+    <label>{__('Valor máximo:', 'obatala')}</label>
     <input
       type="number"
       value={max}
       onChange={(e) => onChange("max", e.target.value)}
-      placeholder={__('Enter the maximum value', 'obatala')}
+      placeholder={__('Digite o valor máximo', 'obatala')}
     />
   </div>
 );
@@ -51,14 +51,14 @@ export const NumberFieldControls = ({ label, min, max, onChange }) => (
 // Componente para renderizar os controles de DatePicker
 export const DatePickerControls = ({ label, onChange }) => (
   <div>
-    <label>{__('Label:', 'obatala')}</label>
+    <label>{__('Rótulo:', 'obatala')}</label>
     <input
       type="text"
       value={label}
       onChange={(e) => onChange("label", e.target.value)}
-      placeholder={__('Enter the label', 'obatala')}
+      placeholder={__('Digite o rótulo', 'obatala')}
     />
-    <label>{__('Select date:', 'obatala')}</label>
+    <label>{__('Selecionar data:', 'obatala')}</label>
     <input
       type="date"
       onChange={(e) => onChange("value", e.target.value)}
@@ -69,14 +69,14 @@ export const DatePickerControls = ({ label, onChange }) => (
 // Componente para renderizar os controles de Upload de Arquivo
 export const FileUploadControls = ({ label, onChange }) => (
   <div>
-    <label>{__('Label:', 'obatala')}</label>
+    <label>{__('Rótulo:', 'obatala')}</label>
     <input
       type="text"
       value={label}
       onChange={(e) => onChange("label", e.target.value)}
-      placeholder={__('Enter the label', 'obatala')}
+      placeholder={__('Digite o rótulo', 'obatala')}
     />
-    <label>{__('File upload:', 'obatala')}</label>
+    <label>{__('Upload de arquivo:', 'obatala')}</label>
     <input
       type="file"
       onChange={(e) => onChange("value", e.target.files[0]?.name)}
@@ -87,19 +87,19 @@ export const FileUploadControls = ({ label, onChange }) => (
 // Componente para renderizar os controles de Select e Radio
 export const SelectRadioControls = ({ label, options, onChange }) => (
   <div>
-    <label>{__('Label:', 'obatala')}</label>
+    <label>{__('Rótulo:', 'obatala')}</label>
     <input
       type="text"
       value={label}
       onChange={(e) => onChange("label", e.target.value)}
-      placeholder={__('Enter the label', 'obatala')}
+      placeholder={__('Digite o rótulo', 'obatala')}
     />
-    <label>{__('Options (separated by commas):', 'obatala')}</label>
+    <label>{__('Opções (separadas por vírgulas):', 'obatala')}</label>
     <input
       type="text"
       value={options}
       onChange={(e) => onChange("options", e.target.value)}
-      placeholder={__('Options, separated by commas', 'obatala')}
+      placeholder={__('Opções separadas por vírgulas', 'obatala')}
     />
   </div>
 );

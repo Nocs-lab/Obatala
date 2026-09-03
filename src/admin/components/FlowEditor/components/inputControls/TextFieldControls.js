@@ -133,7 +133,7 @@ export const TextFieldControls = ({
         toggleDrawer()
     };
 
-    const headingLabel = fieldType === 'address' ? __('Edit address field', 'obatala') : __('Edit text field', 'obatala');
+    const headingLabel = fieldType === 'address' ? __('Editar campo de endereço', 'obatala') : __('Editar campo de texto', 'obatala');
 
     return (
         <form className="flex-form">
@@ -160,17 +160,17 @@ export const TextFieldControls = ({
             />
 
             <TextControl
-                label={__('Placeholder', 'obatala')}
+                label={__('Texto de exemplo', 'obatala')}
                 value={formValues.placeholder}
                 onChange={(value) =>
                 setFormValues((prev) => ({ ...prev, placeholder: value }))
                 }
-                placeholder={__('Enter the placeholder', 'obatala')}
+                placeholder={__('Digite o placeholder', 'obatala')}
                 help={errors.placeholder}
             />
 
             <CheckboxControl
-                label={__('Required field', 'obatala')}
+                label={__('Campo obrigatório', 'obatala')}
                 checked={formValues.required}
                 onChange={(isChecked) =>
                 setFormValues((prev) => ({ ...prev, required: isChecked }))
@@ -178,7 +178,7 @@ export const TextFieldControls = ({
             />
 
             <NumberControl
-                label={__('Minimum length', 'obatala')}
+                label={__('Comprimento mínimo', 'obatala')}
                 value={formValues.minLength}
                 onChange={(value) =>
                 setFormValues((prev) => ({ ...prev, minLength: value }))
@@ -187,7 +187,7 @@ export const TextFieldControls = ({
             />
 
             <NumberControl
-                label={__('Maximum length', 'obatala')}
+                label={__('Comprimento máximo', 'obatala')}
                 value={formValues.maxLength}
                 onChange={(value) =>
                 setFormValues((prev) => ({ ...prev, maxLength: value }))
@@ -198,10 +198,10 @@ export const TextFieldControls = ({
             {fieldType !== "email" && (
                 <>
                 <SelectControl
-                    label={__('Common patterns', 'obatala')}
+                    label={__('Padrões comuns', 'obatala')}
                     value=""
                     options={[
-                        { label: __('Select a pattern', 'obatala'), value: "" },
+                        { label: __('Selecione um padrão', 'obatala'), value: "" },
                         { label: __('Phone', 'obatala'), value: "telefone" },
                         { label: __('ZIP code', 'obatala'), value: "cep" },
                         { label: __('Avoid abbreviation', 'obatala'), value: "EvitarAbreviacao" },
@@ -225,7 +225,7 @@ export const TextFieldControls = ({
                 />
 
                 <TextControl
-                    label={__('Validation pattern (Regex)', 'obatala')}
+                    label={__('Padrão de validação (Regex)', 'obatala')}
                     value={formValues.pattern}
                     onChange={(value) => {
                     setFormValues((prev) => {
@@ -260,7 +260,7 @@ export const TextFieldControls = ({
                         });
                     }
                     }}
-                    placeholder={__('Enter a validation pattern (Regex)', 'obatala')}
+                    placeholder={__('Digite um padrão de validação (Regex)', 'obatala')}
                     help={formValues.helpText}
                 />
                 </>

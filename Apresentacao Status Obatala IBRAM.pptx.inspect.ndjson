@@ -1,0 +1,130 @@
+{"kind":"deck","id":"pr/axts57","name":"Deck"}
+{"kind":"layout","layoutId":"19cbfcac-b723-470b-8907-c3315c3ca042","name":"Master","type":"master"}
+{"kind":"layout","layoutId":"2729fe3f-997b-4661-8f21-217c5e421cc4","name":"Title Slide","type":"title"}
+{"kind":"slide","id":"sl/xz8tv6","slide":1,"title":"Obatalá","textShapes":5}
+{"kind":"textbox","id":"sh/8rih87q9","slide":1,"text":"Obatalá","textPreview":"Obatalá","textChars":7,"textLines":1,"bbox":[52,48,240,40]}
+{"kind":"textbox","id":"sh/7q9gf29o","slide":1,"text":"Status atual do projeto","textPreview":"Status atual do projeto","textChars":23,"textLines":1,"bbox":[52,172,560,150]}
+{"kind":"textbox","id":"sh/mp0z6x83","slide":1,"text":"Exportação de itens para o Tainacan por meio de processos","textPreview":"Exportação de itens para o Tainacan por meio de processos","textChars":57,"textLines":1,"bbox":[52,360,540,105]}
+{"kind":"textbox","id":"sh/hwbylc7q","slide":1,"text":"IBRAM | Setembro de 2026","textPreview":"IBRAM | Setembro de 2026","textChars":24,"textLines":1,"bbox":[52,586,460,34]}
+{"kind":"shape","id":"sh/wvihc7q5","slide":1,"bbox":[655,119,552,432]}
+{"kind":"textbox","id":"sh/ut0zah8z","slide":1,"text":"01","textPreview":"01","textChars":2,"textLines":1,"bbox":[1186,652,52,28]}
+{"kind":"image","id":"im/ahgbidof","slide":1,"name":"","alt":"Painel administrativo do Obatalá","prompt":"Captura local incorporada de C:\\xampp\\htdocs\\wordpress\\wp-content\\plugins\\Obatala\\presentation-build-ibram\\assets\\dashboard-crop.png","bbox":[662,126,538,418]}
+{"kind":"notes","id":"nt/xz8tv6","slide":1,"text":"[Sources]\n- Captura local da interface administrativa do Obatalá: manual-update-screenshots/dashboard.png.\n- Contexto solicitado pelo usuário: apresentação curta para nova equipe do IBRAM sobre o status atual do projeto."}
+{"kind":"slide","id":"sl/7qp6su","slide":2,"title":"Obatalá já opera a rotina curatorial","textShapes":7}
+{"kind":"textbox","id":"sh/g76tgra9","slide":2,"text":"Obatalá já opera a rotina curatorial","textPreview":"Obatalá já opera a rotina curatorial","textChars":36,"textLines":1,"bbox":[52,38,930,94]}
+{"kind":"shape","id":"sh/fmxc7m9o","slide":2,"bbox":[52,132,1176,0]}
+{"kind":"textbox","id":"sh/elobehsj","slide":2,"text":"02","textPreview":"02","textChars":2,"textLines":1,"bbox":[1186,652,52,28]}
+{"kind":"textbox","id":"sh/pczudwr6","slide":2,"text":"A plataforma concentra modelos, processos, itens de acervo, grupos e documentos em uma interface administrativa integrada ao Tainacan.","textPreview":"A plataforma concentra modelos, processos, itens de acervo, grupos e documentos em uma interface administrativa integrada ao Tainacan.","textChars":134,"textLines":1,"bbox":[52,166,650,102]}
+{"kind":"shape","id":"sh/obqtkral","slide":2,"bbox":[74,314,13,13]}
+{"kind":"textbox","id":"sh/3ahcbm90","slide":2,"text":"Modelos definem etapas e campos de cada fluxo curatorial.","textPreview":"Modelos definem etapas e campos de cada fluxo curatorial.","textChars":57,"textLines":1,"bbox":[102,306,610,54]}
+{"kind":"shape","id":"sh/29obi1sf","slide":2,"bbox":[74,384,13,13]}
+{"kind":"textbox","id":"sh/5gvu1crm","slide":2,"text":"Processos registram a execução, histórico, responsáveis e documentos.","textPreview":"Processos registram a execução, histórico, responsáveis e documentos.","textChars":69,"textLines":1,"bbox":[102,376,610,54]}
+{"kind":"shape","id":"sh/4fmt87a1","slide":2,"bbox":[74,454,13,13]}
+{"kind":"textbox","id":"sh/mx8rqxcv","slide":2,"text":"Itens do acervo mostram a relação entre Tainacan e processos vinculados.","textPreview":"Itens do acervo mostram a relação entre Tainacan e processos vinculados.","textChars":72,"textLines":1,"bbox":[102,446,610,54]}
+{"kind":"shape","id":"sh/7yh8j2dg","slide":2,"bbox":[74,524,13,13]}
+{"kind":"textbox","id":"sh/8zq9s7u1","slide":2,"text":"Permissões organizam quem modela, executa e acompanha cada rotina.","textPreview":"Permissões organizam quem modela, executa e acompanha cada rotina.","textChars":66,"textLines":1,"bbox":[102,516,610,54]}
+{"kind":"shape","id":"sh/90jqlcvm","slide":2,"bbox":[735,229,452,198]}
+{"kind":"image","id":"im/9onahoj6","slide":2,"name":"","alt":"Tela de processos do Obatalá","prompt":"Captura local incorporada de C:\\xampp\\htdocs\\wordpress\\wp-content\\plugins\\Obatala\\presentation-build-ibram\\assets\\processos-crop.png","bbox":[742,236,438,184]}
+{"kind":"notes","id":"nt/7qp6su","slide":2,"text":"[Sources]\n- Captura local da interface administrativa do Obatalá: manual-update-screenshots/processos.png.\n- Manual de Curadoria 3.1 atualizado pelo usuario e pela conversa anterior."}
+{"kind":"slide","id":"sl/05bdx1","slide":3,"title":"Exportação Tainacan fica no modelo","textShapes":7}
+{"kind":"textbox","id":"sh/cvqdkfy1","slide":3,"text":"Exportação Tainacan fica no modelo","textPreview":"Exportação Tainacan fica no modelo","textChars":34,"textLines":1,"bbox":[52,38,930,94]}
+{"kind":"shape","id":"sh/ruhwbahg","slide":3,"bbox":[52,132,1176,0]}
+{"kind":"textbox","id":"sh/qt8vi5gv","slide":3,"text":"03","textPreview":"03","textChars":2,"textLines":1,"bbox":[1186,652,52,28]}
+{"kind":"textbox","id":"sh/10jehkzi","slide":3,"text":"O mapeamento deixa de ser uma configuração isolada: ele passa a fazer parte do próprio modelo de processo.","textPreview":"O mapeamento deixa de ser uma configuração isolada: ele passa a fazer parte do próprio modelo de processo.","textChars":106,"textLines":1,"bbox":[52,162,600,96]}
+{"kind":"shape","id":"sh/0zaxozyx","slide":3,"bbox":[74,310,13,13]}
+{"kind":"textbox","id":"sh/zy1wfuhc","slide":3,"text":"Um acordeon habilita ou desabilita a exportação no editor do modelo.","textPreview":"Um acordeon habilita ou desabilita a exportação no editor do modelo.","textChars":68,"textLines":1,"bbox":[102,302,595,54]}
+{"kind":"shape","id":"sh/ex8vmpg7","slide":3,"bbox":[74,378,13,13]}
+{"kind":"textbox","id":"sh/h4fe50ze","slide":3,"text":"Coleções de destino são selecionadas antes do mapeamento dos campos.","textPreview":"Coleções de destino são selecionadas antes do mapeamento dos campos.","textChars":68,"textLines":1,"bbox":[102,370,595,54]}
+{"kind":"shape","id":"sh/g36dcvyt","slide":3,"bbox":[74,446,13,13]}
+{"kind":"textbox","id":"sh/e98jedcz","slide":3,"text":"Cada componente de etapa pode apontar para metadados do Tainacan.","textPreview":"Cada componente de etapa pode apontar para metadados do Tainacan.","textChars":65,"textLines":1,"bbox":[102,438,595,54]}
+{"kind":"shape","id":"sh/zahknidk","slide":3,"bbox":[74,514,13,13]}
+{"kind":"textbox","id":"sh/0bq1gnu5","slide":3,"text":"Ao salvar, fluxo do processo e configuração de exportação ficam alinhados.","textPreview":"Ao salvar, fluxo do processo e configuração de exportação ficam alinhados.","textChars":74,"textLines":1,"bbox":[102,506,595,54]}
+{"kind":"shape","id":"sh/1cz2psvq","slide":3,"bbox":[721,147,492,428]}
+{"kind":"image","id":"im/t03ydgjq","slide":3,"name":"","alt":"Acordeon de exportação Tainacan habilitado no editor de modelo","prompt":"Captura local incorporada de C:\\xampp\\htdocs\\wordpress\\wp-content\\plugins\\Obatala\\manual-update-screenshots\\tainacan-export-accordion-enabled.png","bbox":[728,154,478,414]}
+{"kind":"notes","id":"nt/05bdx1","slide":3,"text":"[Sources]\n- Spec local: specs/unificar-editor-modelo-exportacao-tainacan.md.\n- Captura local: manual-update-screenshots/tainacan-export-accordion-enabled.png.\n- Componente de mapeamento: src/admin/components/FlowEditor/components/inputControls/TainacanFieldMappingControls.js."}
+{"kind":"slide","id":"sl/5prbyu","slide":4,"title":"A exportação já tem uma cadeia operacional definida","textShapes":18}
+{"kind":"textbox","id":"sh/rqxgvqpc","slide":4,"text":"A exportação já tem uma cadeia operacional definida","textPreview":"A exportação já tem uma cadeia operacional definida","textChars":51,"textLines":1,"bbox":[52,38,930,94]}
+{"kind":"shape","id":"sh/sr6x4vqx","slide":4,"bbox":[52,132,1176,0]}
+{"kind":"textbox","id":"sh/tszyx07i","slide":4,"text":"04","textPreview":"04","textChars":2,"textLines":1,"bbox":[1186,652,52,28]}
+{"kind":"shape","id":"sh/i1ofyl8v","slide":4,"bbox":[62,210,214,280]}
+{"kind":"textbox","id":"sh/j2xgrqpg","slide":4,"text":"1","textPreview":"1","textChars":1,"textLines":1,"bbox":[86,234,50,42]}
+{"kind":"textbox","id":"sh/436x0vq1","slide":4,"text":"Modelar","textPreview":"Modelar","textChars":7,"textLines":1,"bbox":[86,300,166,40]}
+{"kind":"textbox","id":"sh/5ofyt07m","slide":4,"text":"Definir etapas e campos do processo.","textPreview":"Definir etapas e campos do processo.","textChars":36,"textLines":1,"bbox":[86,358,166,88]}
+{"kind":"shape","id":"sh/2x8za58z","slide":4,"bbox":[289,350,22,0]}
+{"kind":"shape","id":"sh/3yhg3apk","slide":4,"bbox":[300,210,214,280]}
+{"kind":"textbox","id":"sh/zq9knytc","slide":4,"text":"2","textPreview":"2","textChars":1,"textLines":1,"bbox":[324,234,50,42]}
+{"kind":"textbox","id":"sh/ep0jedc7","slide":4,"text":"Mapear","textPreview":"Mapear","textChars":6,"textLines":1,"bbox":[324,300,166,40]}
+{"kind":"textbox","id":"sh/1sb2p8bi","slide":4,"text":"Ligar campos do Obatalá a metadados do Tainacan.","textPreview":"Ligar campos do Obatalá a metadados do Tainacan.","textChars":48,"textLines":1,"bbox":[324,358,166,88]}
+{"kind":"shape","id":"sh/0r21g3ux","slide":4,"bbox":[527,350,22,0]}
+{"kind":"shape","id":"sh/nutkrito","slide":4,"bbox":[538,210,214,280]}
+{"kind":"textbox","id":"sh/mtkjidc3","slide":4,"text":"3","textPreview":"3","textChars":1,"textLines":1,"bbox":[562,234,50,42]}
+{"kind":"textbox","id":"sh/9gb2tsbu","slide":4,"text":"Preparar","textPreview":"Preparar","textChars":8,"textLines":1,"bbox":[562,300,166,40]}
+{"kind":"textbox","id":"sh/of2lknu9","slide":4,"text":"Escolher exportação manual ou via planilha.","textPreview":"Escolher exportação manual ou via planilha.","textChars":43,"textLines":1,"bbox":[562,358,166,88]}
+{"kind":"shape","id":"sh/bidkvitk","slide":4,"bbox":[765,350,22,0]}
+{"kind":"shape","id":"sh/ahk3mxcz","slide":4,"bbox":[776,210,214,280]}
+{"kind":"textbox","id":"sh/6donuhw7","slide":4,"text":"4","textPreview":"4","textChars":1,"textLines":1,"bbox":[800,234,50,42]}
+{"kind":"textbox","id":"sh/7ex4nmds","slide":4,"text":"Confirmar","textPreview":"Confirmar","textChars":9,"textLines":1,"bbox":[800,300,166,40]}
+{"kind":"textbox","id":"sh/8f65wred","slide":4,"text":"Gerar ou atualizar os itens no Tainacan.","textPreview":"Gerar ou atualizar os itens no Tainacan.","textChars":40,"textLines":1,"bbox":[800,358,166,88]}
+{"kind":"shape","id":"sh/tgfmpwvy","slide":4,"bbox":[1003,350,22,0]}
+{"kind":"shape","id":"sh/y94nqhwb","slide":4,"bbox":[1014,210,214,280]}
+{"kind":"textbox","id":"sh/jax4jmdw","slide":4,"text":"5","textPreview":"5","textChars":1,"textLines":1,"bbox":[1038,234,50,42]}
+{"kind":"textbox","id":"sh/kb65sreh","slide":4,"text":"Rastrear","textPreview":"Rastrear","textChars":8,"textLines":1,"bbox":[1038,300,166,40]}
+{"kind":"textbox","id":"sh/lcfmlwv2","slide":4,"text":"Manter vínculo entre item exportado e processo.","textPreview":"Manter vínculo entre item exportado e processo.","textChars":47,"textLines":1,"bbox":[1038,358,166,88]}
+{"kind":"textbox","id":"sh/i58n21wf","slide":4,"text":"A etapa de preparação é o ponto de decisão do usuário: exportar manualmente ou importar dados por planilha.","textPreview":"A etapa de preparação é o ponto de decisão do usuário: exportar manualmente ou importar dados por planilha.","textChars":107,"textLines":1,"bbox":[110,552,1050,54]}
+{"kind":"notes","id":"nt/5prbyu","slide":4,"text":"[Sources]\n- Spec local: specs/unificar-editor-modelo-exportacao-tainacan.md.\n- Componente de preparação: src/admin/components/ProcessManager/TainacanExportPreparation.js.\n- Serviço backend de exportação: classes/Services/TainacanExportService.php."}
+{"kind":"slide","id":"sl/95t2tl","slide":5,"title":"Implementado: interface, persistência e execução","textShapes":12}
+{"kind":"textbox","id":"sh/u14vqdsn","slide":5,"text":"Implementado: interface, persistência e execução","textPreview":"Implementado: interface, persistência e execução","textChars":48,"textLines":1,"bbox":[52,38,930,94]}
+{"kind":"shape","id":"sh/h4fe1sre","slide":5,"bbox":[52,132,1176,0]}
+{"kind":"textbox","id":"sh/g3mdsnat","slide":5,"text":"05","textPreview":"05","textChars":2,"textLines":1,"bbox":[1186,652,52,28]}
+{"kind":"shape","id":"sh/36xw3294","slide":5,"bbox":[70,170,1080,1]}
+{"kind":"textbox","id":"sh/i5ovux8z","slide":5,"text":"Editor unificado","textPreview":"Editor unificado","textChars":16,"textLines":1,"bbox":[86,188,305,38]}
+{"kind":"textbox","id":"sh/58fe5cra","slide":5,"text":"Acordeon Tainacan Export no modelo de processo.","textPreview":"Acordeon Tainacan Export no modelo de processo.","textChars":47,"textLines":1,"bbox":[420,188,715,38]}
+{"kind":"shape","id":"sh/476dw7qp","slide":5,"bbox":[70,252,1080,1]}
+{"kind":"textbox","id":"sh/ruxwr29g","slide":5,"text":"Mapeamento por campo","textPreview":"Mapeamento por campo","textChars":20,"textLines":1,"bbox":[86,270,305,38]}
+{"kind":"textbox","id":"sh/q9ovyx8v","slide":5,"text":"Cada componente pode ser associado a coleção e metadado.","textPreview":"Cada componente pode ser associado a coleção e metadado.","textChars":56,"textLines":1,"bbox":[420,270,715,38]}
+{"kind":"shape","id":"sh/sj65szax","slide":5,"bbox":[70,334,1080,1]}
+{"kind":"textbox","id":"sh/dkf61kb2","slide":5,"text":"Preparação do processo","textPreview":"Preparação do processo","textChars":22,"textLines":1,"bbox":[86,352,305,38]}
+{"kind":"textbox","id":"sh/qh4nqpcr","slide":5,"text":"Usuário decide entre entrada manual e planilha CSV/XLS/XLSX.","textPreview":"Usuário decide entre entrada manual e planilha CSV/XLS/XLSX.","textChars":60,"textLines":1,"bbox":[420,352,715,38]}
+{"kind":"shape","id":"sh/rixozutc","slide":5,"bbox":[70,416,1080,1]}
+{"kind":"textbox","id":"sh/0n65wzat","slide":5,"text":"Execução no Tainacan","textPreview":"Execução no Tainacan","textChars":20,"textLines":1,"bbox":[86,434,305,38]}
+{"kind":"textbox","id":"sh/1of654be","slide":5,"text":"Serviço cria ou atualiza itens e guarda o resultado da exportação.","textPreview":"Serviço cria ou atualiza itens e guarda o resultado da exportação.","textChars":66,"textLines":1,"bbox":[420,434,715,38]}
+{"kind":"shape","id":"sh/elonupsn","slide":5,"bbox":[70,498,1080,1]}
+{"kind":"textbox","id":"sh/fmxo3ut8","slide":5,"text":"Rastreabilidade","textPreview":"Rastreabilidade","textChars":15,"textLines":1,"bbox":[86,516,305,38]}
+{"kind":"textbox","id":"sh/orq50jap","slide":5,"text":"Itens do acervo exibem processos vinculados e histórico.","textPreview":"Itens do acervo exibem processos vinculados e histórico.","textChars":56,"textLines":1,"bbox":[420,516,715,38]}
+{"kind":"shape","id":"sh/pcz694ba","slide":5,"bbox":[70,580,1080,1]}
+{"kind":"notes","id":"nt/95t2tl","slide":5,"text":"[Sources]\n- Spec local: specs/unificar-editor-modelo-exportacao-tainacan.md.\n- Mapeamento por campo: src/admin/components/FlowEditor/components/inputControls/TainacanFieldMappingControls.js.\n- Preparacao: src/admin/components/ProcessManager/TainacanExportPreparation.js.\n- Execução: classes/Services/TainacanExportService.php.\n- Rastreabilidade: src/admin/components/TainacanItems/TainacanItemsPage.js e TainacanItemTimeline.js."}
+{"kind":"slide","id":"sl/k68oqa","slide":6,"title":"Funcionalidade em validação","textShapes":9}
+{"kind":"textbox","id":"sh/k3mlgfax","slide":6,"text":"Funcionalidade em validação","textPreview":"Funcionalidade em validação","textChars":27,"textLines":1,"bbox":[52,38,930,94]}
+{"kind":"shape","id":"sh/j2d4natc","slide":6,"bbox":[52,132,1176,0]}
+{"kind":"textbox","id":"sh/i143e5sr","slide":6,"text":"06","textPreview":"06","textChars":2,"textLines":1,"bbox":[1186,652,52,28]}
+{"kind":"textbox","id":"sh/t8fmtkbe","slide":6,"text":"Estado atual","textPreview":"Estado atual","textChars":12,"textLines":1,"bbox":[72,178,460,36]}
+{"kind":"textbox","id":"sh/s76lkfat","slide":6,"text":"A especificação está marcada como em validação. A base de interface e serviços existe; o próximo valor vem de testes orientados por coleções e processos reais.","textPreview":"A especificação está marcada como em validação. A base de interface e serviços existe; o próximo valor vem de testes orientados por coleç...","textChars":159,"textLines":1,"bbox":[72,228,470,160]}
+{"kind":"textbox","id":"sh/76d4rut8","slide":6,"text":"Pontos de atenção","textPreview":"Pontos de atenção","textChars":17,"textLines":1,"bbox":[674,178,460,36]}
+{"kind":"shape","id":"sh/6543ips3","slide":6,"bbox":[690,240,13,13]}
+{"kind":"textbox","id":"sh/hwfmx4bq","slide":6,"text":"Validar fim a fim com coleções piloto do IBRAM.","textPreview":"Validar fim a fim com coleções piloto do IBRAM.","textChars":47,"textLines":1,"bbox":[718,232,500,54]}
+{"kind":"shape","id":"sh/gv65oza5","slide":6,"bbox":[690,306,13,13]}
+{"kind":"textbox","id":"sh/itgfytgr","slide":6,"text":"Conferir permissões e contratos REST em perfis reais.","textPreview":"Conferir permissões e contratos REST em perfis reais.","textChars":53,"textLines":1,"bbox":[718,298,500,54]}
+{"kind":"shape","id":"sh/3upw7yhc","slide":6,"bbox":[690,372,13,13]}
+{"kind":"textbox","id":"sh/4vyx03yx","slide":6,"text":"Refinar mensagens de erro para importação por planilha.","textPreview":"Refinar mensagens de erro para importação por planilha.","textChars":55,"textLines":1,"bbox":[718,364,500,54]}
+{"kind":"shape","id":"sh/5w7y98zi","slide":6,"bbox":[690,438,13,13]}
+{"kind":"textbox","id":"sh/qx0f2dgn","slide":6,"text":"Fechar critérios de aceite antes da implantação assistida.","textPreview":"Fechar critérios de aceite antes da implantação assistida.","textChars":58,"textLines":1,"bbox":[718,430,500,54]}
+{"kind":"notes","id":"nt/k68oqa","slide":6,"text":"[Sources]\n- Status da spec local: specs/unificar-editor-modelo-exportacao-tainacan.md.\n- Pontos inferidos a partir dos critérios de aceite da própria especificação e da conversa com o usuário."}
+{"kind":"slide","id":"sl/ai0urc","slide":7,"title":"Próximo passo: piloto com a equipe do IBRAM","textShapes":12}
+{"kind":"textbox","id":"sh/kfu1gbep","slide":7,"text":"Próximo passo: piloto com a equipe do IBRAM","textPreview":"Próximo passo: piloto com a equipe do IBRAM","textChars":43,"textLines":1,"bbox":[52,38,930,94]}
+{"kind":"shape","id":"sh/je10n6d4","slide":7,"bbox":[52,132,1176,0]}
+{"kind":"textbox","id":"sh/idsze1wj","slide":7,"text":"07","textPreview":"07","textChars":2,"textLines":1,"bbox":[1186,652,52,28]}
+{"kind":"textbox","id":"sh/xcjilwvy","slide":7,"text":"O objetivo da próxima rodada é transformar a funcionalidade em um fluxo confiável para acervos reais.","textPreview":"O objetivo da próxima rodada é transformar a funcionalidade em um fluxo confiável para acervos reais.","textChars":101,"textLines":1,"bbox":[64,168,1010,76]}
+{"kind":"textbox","id":"sh/wbahcred","slide":7,"text":"Escolher","textPreview":"Escolher","textChars":8,"textLines":1,"bbox":[74,322,230,42]}
+{"kind":"shape","id":"sh/va10j6ds","slide":7,"bbox":[74,382,190,0]}
+{"kind":"textbox","id":"sh/a9sza1w7","slide":7,"text":"um modelo de processo e uma coleção piloto.","textPreview":"um modelo de processo e uma coleção piloto.","textChars":43,"textLines":1,"bbox":[74,416,230,90]}
+{"kind":"textbox","id":"sh/9ojihwv2","slide":7,"text":"Mapear","textPreview":"Mapear","textChars":6,"textLines":1,"bbox":[366,322,230,42]}
+{"kind":"shape","id":"sh/8nah8reh","slide":7,"bbox":[366,382,190,0]}
+{"kind":"textbox","id":"sh/u90vmhgj","slide":7,"text":"campos essenciais aos metadados do Tainacan.","textPreview":"campos essenciais aos metadados do Tainacan.","textChars":44,"textLines":1,"bbox":[366,416,230,90]}
+{"kind":"textbox","id":"sh/fa9cfmx4","slide":7,"text":"Executar","textPreview":"Executar","textChars":8,"textLines":1,"bbox":[658,322,230,42]}
+{"kind":"shape","id":"sh/gbidoryp","slide":7,"bbox":[658,382,190,0]}
+{"kind":"textbox","id":"sh/hcruhwfa","slide":7,"text":"cenarios manual e via planilha.","textPreview":"cenarios manual e via planilha.","textChars":31,"textLines":1,"bbox":[658,416,230,90]}
+{"kind":"textbox","id":"sh/6l0vihgn","slide":7,"text":"Ajustar","textPreview":"Ajustar","textChars":7,"textLines":1,"bbox":[950,322,230,42]}
+{"kind":"shape","id":"sh/7m9cb2x8","slide":7,"bbox":[950,382,190,0]}
+{"kind":"textbox","id":"sh/snidk7yt","slide":7,"text":"rótulos, validações e documentação.","textPreview":"rótulos, validações e documentação.","textChars":35,"textLines":1,"bbox":[950,416,230,90]}
+{"kind":"textbox","id":"sh/t8rudcfy","slide":7,"text":"Resultado esperado: exportação rastreável, repetível e compreensível pela equipe que opera os processos.","textPreview":"Resultado esperado: exportação rastreável, repetível e compreensível pela equipe que opera os processos.","textChars":104,"textLines":1,"bbox":[128,588,1020,50]}
+{"kind":"notes","id":"nt/ai0urc","slide":7,"text":"[Sources]\n- Próximos passos sintetizados a partir do foco informado pelo usuário e dos critérios de validação da spec local.\n- Spec local: specs/unificar-editor-modelo-exportacao-tainacan.md."}

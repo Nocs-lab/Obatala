@@ -79,7 +79,7 @@ export const SelectRadioControls = ({
                 validateFields(); // Chama a função de validação
             }}
             >
-            <h3>{__('Edit select field', 'obatala')}</h3>
+            <h3>{__('Editar campo de seleção', 'obatala')}</h3>
 
             {/* Campo para definir o Label */}
             <FieldNameControl
@@ -90,7 +90,7 @@ export const SelectRadioControls = ({
 
             {/* Campo para definir o campo como obrigatório */}
             <CheckboxControl
-                label={__('Required field', 'obatala')}
+                label={__('Campo obrigatório', 'obatala')}
                 checked={formValues.required} // Use formValues para sincronizar o valor
                 onChange={(isChecked) =>
                 setFormValues((prev) => ({ ...prev, required: isChecked }))
@@ -99,17 +99,17 @@ export const SelectRadioControls = ({
 
             {/* Campo para definir as opções do Select/Radio */}
             <TextControl
-                label={__('Answer options (separated by commas)', 'obatala')}
+                label={__('Opções de resposta (separadas por vírgulas)', 'obatala')}
                 value={formValues.options} // Use formValues para sincronizar o valor
                 onChange={(value) => setFormValues((prev) => ({ ...prev, options: value }))}
-                placeholder={__('Options, separated by commas', 'obatala')} required
+                placeholder={__('Opções separadas por vírgulas', 'obatala')} required
                 help={errors.options} // Exibe a mensagem de erro, se houver
             />
 
             {/* Visualização das opções como Radio e Select */}
             {isSelect ? (
                 <SelectControl
-                    label={__('Answer options preview', 'obatala')}
+                    label={__('Prévia das opções de resposta', 'obatala')}
                     options={optionArray.map((option) => ({
                         label: option,
                         value: option,
@@ -119,7 +119,7 @@ export const SelectRadioControls = ({
                 />
             ) : (
                 <RadioControl
-                    label={__('Answer options preview', 'obatala')}
+                    label={__('Prévia das opções de resposta', 'obatala')}
                     options={optionArray.map((option) => ({
                     label: option,
                     value: option,

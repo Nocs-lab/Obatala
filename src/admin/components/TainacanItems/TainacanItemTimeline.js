@@ -140,6 +140,16 @@ const getCurrentStageLabel = ( value ) => {
 	return value;
 };
 
+const getProcessSummaryLabel = ( value ) => {
+	const normalizedValue = String( value || '' ).trim().toLowerCase();
+
+	if ( normalizedValue === 'process completed.' || normalizedValue === 'process completed' ) {
+		return __( 'Processo concluído.', 'obatala' );
+	}
+
+	return value;
+};
+
 const InfoRow = ( { label, value } ) => {
 	if ( value === undefined || value === null || String( value ).trim() === '' ) {
 		return null;
@@ -279,12 +289,12 @@ const TainacanItemTimeline = ( { item, isLoading, notice } ) => {
 													<div className="timeline-content">
 														<dl className="description-list">
 															<InfoRow
-																label="Summary"
-																value={ process.summary || __( 'Processo vinculado a este item.', 'obatala' ) }
+																label={ __( 'Resumo', 'obatala' ) }
+																value={ getProcessSummaryLabel( process.summary ) || __( 'Processo vinculado a este item.', 'obatala' ) }
 															/>
 															{ process.process_type && (
 																<InfoRow
-																	label="Model"
+																	label={ __( 'Modelo', 'obatala' ) }
 																	value={ process.process_type }
 																/>
 															) }

@@ -1,0 +1,766 @@
+{
+  "schema": "openai.presentation.layout/v4",
+  "unit": "px",
+  "slide": {
+    "aid": "sl/k68oqa",
+    "id": "k68oqa",
+    "slide": 6,
+    "layoutId": "2729fe3f-997b-4661-8f21-217c5e421cc4",
+    "layoutName": "Title Slide",
+    "layoutType": "title",
+    "masterLayoutId": "19cbfcac-b723-470b-8907-c3315c3ca042",
+    "masterLayoutName": "Master",
+    "backgroundColor": "#FFFFFF",
+    "frame": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 720
+    }
+  },
+  "theme": {
+    "colorSchemeName": "ChatGPT",
+    "colors": {
+      "accent1": "#156082",
+      "accent2": "#E97132",
+      "accent3": "#196B24",
+      "accent4": "#0F9ED5",
+      "accent5": "#A02B93",
+      "accent6": "#4EA72E",
+      "bg1": "#FFFFFF",
+      "bg2": "#000000",
+      "tx1": "#1F1F1F",
+      "tx2": "#FFFFFF",
+      "dk1": "#000000",
+      "lt1": "#FFFFFF",
+      "dk2": "#0E2841",
+      "lt2": "#E8E8E8",
+      "hlink": "#467886",
+      "folHlink": "#96607D"
+    },
+    "typefaces": [
+      "Arial"
+    ]
+  },
+  "inheritedLayers": [
+    {
+      "scope": "layout",
+      "id": "2729fe3f-997b-4661-8f21-217c5e421cc4",
+      "name": "Title Slide",
+      "type": "title",
+      "parentLayoutId": "19cbfcac-b723-470b-8907-c3315c3ca042",
+      "elements": []
+    },
+    {
+      "scope": "master",
+      "id": "19cbfcac-b723-470b-8907-c3315c3ca042",
+      "name": "Master",
+      "type": "master",
+      "elements": []
+    }
+  ],
+  "elements": [
+    {
+      "order": 1,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/k3mlgfax",
+      "id": "1",
+      "bbox": [
+        52,
+        38,
+        930,
+        94
+      ],
+      "geometry": "rect",
+      "text": "Funcionalidade em validação",
+      "textPreview": "Funcionalidade em validação",
+      "resolvedFontSize": 38,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 38,
+        "typeface": "Arial",
+        "color": "#111111",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Funcionalidade em validação"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Funcionalidade em validação",
+          "resolvedTextStyle": {
+            "fontSize": 38,
+            "typeface": "Arial",
+            "color": "#111111",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Funcionalidade em validação",
+              "fontSize": 38,
+              "typeface": "Arial",
+              "color": "#111111",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 2,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/j2d4natc",
+      "id": "2",
+      "bbox": [
+        52,
+        132,
+        1176,
+        0
+      ],
+      "geometry": "line",
+      "lineColor": "#B8BCC4",
+      "lineWidth": 1
+    },
+    {
+      "order": 3,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/i143e5sr",
+      "id": "3",
+      "bbox": [
+        1186,
+        652,
+        52,
+        28
+      ],
+      "geometry": "rect",
+      "text": "06",
+      "textPreview": "06",
+      "resolvedFontSize": 13,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 13,
+        "typeface": "Arial",
+        "color": "#5B616E",
+        "alignment": "right",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "06"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "06",
+          "resolvedTextStyle": {
+            "fontSize": 13,
+            "typeface": "Arial",
+            "color": "#5B616E",
+            "alignment": "right"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "06",
+              "fontSize": 13,
+              "typeface": "Arial",
+              "color": "#5B616E",
+              "alignment": "right"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 4,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/t8fmtkbe",
+      "id": "4",
+      "bbox": [
+        72,
+        178,
+        460,
+        36
+      ],
+      "geometry": "rect",
+      "text": "Estado atual",
+      "textPreview": "Estado atual",
+      "resolvedFontSize": 26,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 26,
+        "typeface": "Arial",
+        "color": "#2F8DCC",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Estado atual"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Estado atual",
+          "resolvedTextStyle": {
+            "fontSize": 26,
+            "typeface": "Arial",
+            "color": "#2F8DCC",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Estado atual",
+              "fontSize": 26,
+              "typeface": "Arial",
+              "color": "#2F8DCC",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 5,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/s76lkfat",
+      "id": "5",
+      "bbox": [
+        72,
+        228,
+        470,
+        160
+      ],
+      "geometry": "rect",
+      "text": "A especificação está marcada como em validação. A base de interface e serviços existe; o próximo valor vem de testes orientados por coleções e processos reais.",
+      "textPreview": "A especificação está marcada como em validação. A base de interface e serviços existe; o próximo valor vem de testes orientados por coleç...",
+      "resolvedFontSize": 25,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 25,
+        "typeface": "Arial",
+        "color": "#5B616E",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 5,
+        "lines": [
+          {
+            "index": 1,
+            "text": "A especificação está marcada como em"
+          },
+          {
+            "index": 2,
+            "text": "validação. A base de interface e"
+          },
+          {
+            "index": 3,
+            "text": "serviços existe; o próximo valor vem de"
+          },
+          {
+            "index": 4,
+            "text": "testes orientados por coleções e"
+          },
+          {
+            "index": 5,
+            "text": "processos reais."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "A especificação está marcada como em validação. A base de interface e serviços existe; o próximo valor vem de testes orientados por coleções e processos reais.",
+          "resolvedTextStyle": {
+            "fontSize": 25,
+            "typeface": "Arial",
+            "color": "#5B616E",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "A especificação está marcada como em validação. A base de interface e serviços existe; o próximo valor vem de testes orientados por coleções e processos reais.",
+              "fontSize": 25,
+              "typeface": "Arial",
+              "color": "#5B616E",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 6,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/76d4rut8",
+      "id": "6",
+      "bbox": [
+        674,
+        178,
+        460,
+        36
+      ],
+      "geometry": "rect",
+      "text": "Pontos de atenção",
+      "textPreview": "Pontos de atenção",
+      "resolvedFontSize": 26,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 26,
+        "typeface": "Arial",
+        "color": "#38A169",
+        "bold": true,
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 1,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Pontos de atenção"
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Pontos de atenção",
+          "resolvedTextStyle": {
+            "fontSize": 26,
+            "typeface": "Arial",
+            "color": "#38A169",
+            "bold": true,
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Pontos de atenção",
+              "fontSize": 26,
+              "typeface": "Arial",
+              "color": "#38A169",
+              "bold": true,
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 7,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/6543ips3",
+      "id": "7",
+      "bbox": [
+        690,
+        240,
+        13,
+        13
+      ],
+      "geometry": "ellipse",
+      "fillColor": "#38A169",
+      "lineColor": "#38A169",
+      "lineWidth": 0
+    },
+    {
+      "order": 8,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/hwfmx4bq",
+      "id": "8",
+      "bbox": [
+        718,
+        232,
+        500,
+        54
+      ],
+      "geometry": "rect",
+      "text": "Validar fim a fim com coleções piloto do IBRAM.",
+      "textPreview": "Validar fim a fim com coleções piloto do IBRAM.",
+      "resolvedFontSize": 23,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 23,
+        "typeface": "Arial",
+        "color": "#111111",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Validar fim a fim com coleções piloto do"
+          },
+          {
+            "index": 2,
+            "text": "IBRAM."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Validar fim a fim com coleções piloto do IBRAM.",
+          "resolvedTextStyle": {
+            "fontSize": 23,
+            "typeface": "Arial",
+            "color": "#111111",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Validar fim a fim com coleções piloto do IBRAM.",
+              "fontSize": 23,
+              "typeface": "Arial",
+              "color": "#111111",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 9,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/gv65oza5",
+      "id": "9",
+      "bbox": [
+        690,
+        306,
+        13,
+        13
+      ],
+      "geometry": "ellipse",
+      "fillColor": "#38A169",
+      "lineColor": "#38A169",
+      "lineWidth": 0
+    },
+    {
+      "order": 10,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/itgfytgr",
+      "id": "10",
+      "bbox": [
+        718,
+        298,
+        500,
+        54
+      ],
+      "geometry": "rect",
+      "text": "Conferir permissões e contratos REST em perfis reais.",
+      "textPreview": "Conferir permissões e contratos REST em perfis reais.",
+      "resolvedFontSize": 23,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 23,
+        "typeface": "Arial",
+        "color": "#111111",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Conferir permissões e contratos REST em"
+          },
+          {
+            "index": 2,
+            "text": "perfis reais."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Conferir permissões e contratos REST em perfis reais.",
+          "resolvedTextStyle": {
+            "fontSize": 23,
+            "typeface": "Arial",
+            "color": "#111111",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Conferir permissões e contratos REST em perfis reais.",
+              "fontSize": 23,
+              "typeface": "Arial",
+              "color": "#111111",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 11,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/3upw7yhc",
+      "id": "11",
+      "bbox": [
+        690,
+        372,
+        13,
+        13
+      ],
+      "geometry": "ellipse",
+      "fillColor": "#38A169",
+      "lineColor": "#38A169",
+      "lineWidth": 0
+    },
+    {
+      "order": 12,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/4vyx03yx",
+      "id": "12",
+      "bbox": [
+        718,
+        364,
+        500,
+        54
+      ],
+      "geometry": "rect",
+      "text": "Refinar mensagens de erro para importação por planilha.",
+      "textPreview": "Refinar mensagens de erro para importação por planilha.",
+      "resolvedFontSize": 23,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 23,
+        "typeface": "Arial",
+        "color": "#111111",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Refinar mensagens de erro para importação"
+          },
+          {
+            "index": 2,
+            "text": "por planilha."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Refinar mensagens de erro para importação por planilha.",
+          "resolvedTextStyle": {
+            "fontSize": 23,
+            "typeface": "Arial",
+            "color": "#111111",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Refinar mensagens de erro para importação por planilha.",
+              "fontSize": 23,
+              "typeface": "Arial",
+              "color": "#111111",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    },
+    {
+      "order": 13,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/5w7y98zi",
+      "id": "13",
+      "bbox": [
+        690,
+        438,
+        13,
+        13
+      ],
+      "geometry": "ellipse",
+      "fillColor": "#38A169",
+      "lineColor": "#38A169",
+      "lineWidth": 0
+    },
+    {
+      "order": 14,
+      "kind": "shape",
+      "scope": "slide",
+      "aid": "sh/qx0f2dgn",
+      "id": "14",
+      "bbox": [
+        718,
+        430,
+        500,
+        54
+      ],
+      "geometry": "rect",
+      "text": "Fechar critérios de aceite antes da implantação assistida.",
+      "textPreview": "Fechar critérios de aceite antes da implantação assistida.",
+      "resolvedFontSize": 23,
+      "resolvedTextStyle": {
+        "anchor": 1,
+        "fontSize": 23,
+        "typeface": "Arial",
+        "color": "#111111",
+        "alignment": "left",
+        "verticalAlignment": "top",
+        "insets": {
+          "top": 4.8,
+          "right": 9.6,
+          "bottom": 4.8,
+          "left": 9.6
+        }
+      },
+      "textLayout": {
+        "lineCount": 2,
+        "lines": [
+          {
+            "index": 1,
+            "text": "Fechar critérios de aceite antes da"
+          },
+          {
+            "index": 2,
+            "text": "implantação assistida."
+          }
+        ]
+      },
+      "paragraphs": [
+        {
+          "index": 1,
+          "text": "Fechar critérios de aceite antes da implantação assistida.",
+          "resolvedTextStyle": {
+            "fontSize": 23,
+            "typeface": "Arial",
+            "color": "#111111",
+            "alignment": "left"
+          },
+          "runs": [
+            {
+              "index": 1,
+              "text": "Fechar critérios de aceite antes da implantação assistida.",
+              "fontSize": 23,
+              "typeface": "Arial",
+              "color": "#111111",
+              "alignment": "left"
+            }
+          ],
+          "marginLeft": 0
+        }
+      ],
+      "lineWidth": 0
+    }
+  ],
+  "composeRuns": []
+}

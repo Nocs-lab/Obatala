@@ -36,7 +36,7 @@ const TainacanExportPanel = () => {
 					/>
 					{enabled && (
 						<BaseControl
-							label={ __( 'Target collections', 'obatala' ) }>
+							label={ __( 'Coleções de destino', 'obatala' ) }>
 							{!selectedCollectionIds.length && (
 								<Notice status="warning" isDismissible={false}>
 								{ __( 'Select at least one collection to map fields.', 'obatala' ) }

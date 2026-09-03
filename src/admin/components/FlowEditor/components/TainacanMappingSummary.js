@@ -48,7 +48,7 @@ const TainacanMappingSummary = () => {
 	return (
 		<BaseControl label={ __( 'Tainacan mapping summary', 'obatala' ) }>
 			<SelectControl
-				label={ __( 'Collection', 'obatala' ) }
+				label={ __( 'Coleção', 'obatala' ) }
 				value={activeCollectionId}
 				options={collections
 					.filter((collection) =>

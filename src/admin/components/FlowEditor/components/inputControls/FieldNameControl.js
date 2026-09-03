@@ -7,10 +7,10 @@ const FieldNameControl = ({
     onChange,
     help,
     required = true,
-    placeholder = __("Enter the field name", "obatala"),
+    placeholder = __("Digite o nome do campo", "obatala"),
 }) => (
     <TextControl
-        label={__("Field name", "obatala")}
+        label={__("Nome do campo", "obatala")}
         value={value}
         onChange={onChange}
         placeholder={placeholder}

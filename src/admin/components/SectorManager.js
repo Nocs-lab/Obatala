@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useReducer, useMemo } from 'react';
-import { __ } from '@wordpress/i18n';
+import { __, sprintf } from '@wordpress/i18n';
 import {
     Spinner,
     Button,
@@ -181,7 +181,10 @@ const SectorManager = () => {
                     }}
                     onCancel={handleCancel}
                 >
-                    Are you sure you want to delete group {state.sector?.name}?
+                    {sprintf(
+                        __('Are you sure you want to delete group %s?', 'obatala'),
+                        state.sector?.name || ''
+                    )}
                 </ConfirmDialog>
 
                 <TabPanel

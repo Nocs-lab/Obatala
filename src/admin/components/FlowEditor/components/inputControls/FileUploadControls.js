@@ -65,7 +65,7 @@ export const FileUploadControls = ({
 
     return (
         <form className="flex-form">
-            <h3>{__('Edit file upload field', 'obatala')}</h3>
+            <h3>{__('Editar campo de upload de arquivo', 'obatala')}</h3>
 
             {/* Campo para definir o Label */}
             <FieldNameControl
@@ -78,7 +78,7 @@ export const FileUploadControls = ({
 
             {/* Campo para definir o campo como obrigatório */}
             <CheckboxControl
-                label={__('Required field', 'obatala')}
+                label={__('Campo obrigatório', 'obatala')}
                 checked={formValues.required} // Use formValues para sincronizar o valor
                 onChange={(isChecked) =>
                 setFormValues((prev) => ({ ...prev, required: isChecked }))

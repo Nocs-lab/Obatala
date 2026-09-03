@@ -38,7 +38,7 @@ const TainacanFieldMappingControls = ({
 	}
 
 	const collectionOptions = [
-		{ label: __( 'Do not map this field', 'obatala' ), value: '' },
+		{ label: __( 'Não mapear este campo', 'obatala' ), value: '' },
 		...collections
 			.filter((collection) => selectedCollectionIds.includes(collection.id))
 			.map((collection) => ({
@@ -47,7 +47,7 @@ const TainacanFieldMappingControls = ({
 			})),
 	];
 	const metadataOptions = [
-		{ label: __( 'Select metadata', 'obatala' ), value: '' },
+		{ label: __( 'Selecione o metadado', 'obatala' ), value: '' },
 		...(metadataByCollection[collectionId] || []).map((metadata) => ({
 			label: metadata.name,
 			value: metadata.id,
@@ -78,7 +78,7 @@ const TainacanFieldMappingControls = ({
 		<fieldset className="obatala-tainacan-field-mapping">
 			<legend>{ __( 'Tainacan Export', 'obatala' ) }</legend>
 			<SelectControl
-				label={ __( 'Target collection', 'obatala' ) }
+				label={ __( 'Coleção de destino', 'obatala' ) }
 				value={collectionId}
 				options={collectionOptions}
 				onChange={(value) => {
@@ -93,7 +93,7 @@ const TainacanFieldMappingControls = ({
 				}}
 			/>
 			<SelectControl
-				label={ __( 'Target metadata', 'obatala' ) }
+				label={ __( 'Metadado de destino', 'obatala' ) }
 				value={metadataId}
 				options={metadataOptions}
 				disabled={!collectionId}

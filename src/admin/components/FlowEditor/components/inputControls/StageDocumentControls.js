@@ -62,7 +62,7 @@ export const StageDocumentControls = ( {
 			) }
 
 			<TextControl
-				label={ __( 'Field name', 'obatala' ) }
+				label={ __( 'Nome do campo', 'obatala' ) }
 				value={ formValues.label }
 				onChange={ ( value ) => {
 					setFormValues( ( prev ) => ( { ...prev, label: value } ) );

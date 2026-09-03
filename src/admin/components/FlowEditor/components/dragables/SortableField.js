@@ -20,6 +20,7 @@ import TainacanSearchDetails from '../inputControls/TainacanSearch';
 import Reducer, { initialState } from '../../../../redux/reducer';
 import TainacanFieldMappingControls from '../inputControls/TainacanFieldMappingControls';
 import { useTainacanExport } from '../../context/TainacanExportContext';
+import { __, sprintf } from '@wordpress/i18n';
 
 const SortableField = ( {
 	id,
@@ -202,7 +203,10 @@ const SortableField = ( {
 				} }
 				onCancel={ handleCancel }
 			>
-				Are you sure you want to delete field { label }?
+				{ sprintf(
+					__( 'Are you sure you want to delete field %s?', 'obatala' ),
+					label
+				) }
 			</ConfirmDialog>
 			<li ref={ setNodeRef } style={ style } { ...attributes }>
 				<LabelWithIcon
@@ -210,7 +214,7 @@ const SortableField = ( {
 					type={ type }
 				/>
 				<div className="group-button">
-					<Tooltip text="Edit">
+					<Tooltip text={ __( 'Edit', 'obatala' ) }>
 						<Button
 							icon={pencil}
 							onClick={ () =>
@@ -221,7 +225,7 @@ const SortableField = ( {
 						/>
 					</Tooltip>
 					{ /* Passa o nodeId e o id do campo para remover */ }
-					<Tooltip text="Remove">
+					<Tooltip text={ __( 'Remove', 'obatala' ) }>
 						<Button
 							icon={trash}
 							onClick={ () => handleConfirmDelete( nodeId, id ) } // Aqui você passa o nodeId e o id do campo
@@ -230,7 +234,7 @@ const SortableField = ( {
 						/>
 					</Tooltip>
 					{ /* Drag handle */ }
-					<Tooltip text="Reorder">
+					<Tooltip text={ __( 'Reorder', 'obatala' ) }>
 						<Button
 							{ ...listeners } // Listeners aplicados ao ícone de arraste
 							icon={dragHandle}

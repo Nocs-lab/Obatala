@@ -51,6 +51,18 @@ const CONTROL_FIELD_IDS = {
 const CONTROL_FIELD_ID_SET = new Set(Object.values(CONTROL_FIELD_IDS));
 const EXPORT_REVIEW_STEP_ID = '__obatala_export_review__';
 
+const getExportDecisionStatusLabel = (status) => {
+    const normalizedStatus = String(status || 'pending').toLowerCase();
+    const labels = {
+        confirmed: __('Confirmada', 'obatala'),
+        refused: __('Recusada', 'obatala'),
+        pending: __('Pendente', 'obatala'),
+        not_required: __('Não necessária', 'obatala'),
+    };
+
+    return labels[normalizedStatus] || status || labels.pending;
+};
+
 const spreadsheetCellHasValue = (value) => {
     if (Array.isArray(value)) {
         return value.some((entry) => spreadsheetCellHasValue(entry));
@@ -2670,7 +2682,7 @@ const ProcessViewer = () => {
         ? [
             ...baseOptions,
             {
-                label: __('Export confirmation', 'obatala'),
+                label: __('Confirmação de exportação', 'obatala'),
                 value: EXPORT_REVIEW_STEP_ID,
                 fields: [],
                 sector_stage: '',
@@ -2783,7 +2795,7 @@ const ProcessViewer = () => {
                         )}
                         <div className="panel-container">
                             <Panel>
-                                <PanelHeader>Etapas</PanelHeader>
+                                <PanelHeader>{__('Etapas', 'obatala')}</PanelHeader>
                                 {exportRuntimeConfig?.configured && !isExportReviewCompleted && (
                                     <TainacanExportPreparation
                                         processId={processId}
@@ -2870,16 +2882,16 @@ const ProcessViewer = () => {
 
                                                             <dl className="description-list">
                                                                 <div className="list-item">
-                                                                    <dt>{__('Collection', 'obatala')}</dt>
+                                                                    <dt>{__('Coleção', 'obatala')}</dt>
                                                                     <dd>{exportReview?.runtime?.selected_profile?.label || __('Not defined', 'obatala')}</dd>
                                                                 </div>
                                                                 <div className="list-item">
-                                                                    <dt>{__('Expected items', 'obatala')}</dt>
+                                                                    <dt>{__('Itens esperados', 'obatala')}</dt>
                                                                     <dd>{Number(exportReview?.total_rows || 0)}</dd>
                                                                 </div>
                                                                 <div className="list-item">
-                                                                    <dt>{__('Decision status', 'obatala')}</dt>
-                                                                    <dd>{exportReview?.decision?.status || 'pending'}</dd>
+                                                                    <dt>{__('Status da decisão', 'obatala')}</dt>
+                                                                    <dd>{getExportDecisionStatusLabel(exportReview?.decision?.status)}</dd>
                                                                 </div>
                                                             </dl>
 

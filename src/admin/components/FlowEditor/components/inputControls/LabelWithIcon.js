@@ -46,7 +46,7 @@ const IconForType = ( { type } ) => {
 
 const LabelWithIcon = ( { label, type } ) => {
 	const normalizedLabel = typeof label === 'string' ? label.trim() : '';
-	const displayLabel = normalizedLabel ? normalizedLabel : __( 'Untitled', 'obatala' );
+	const displayLabel = normalizedLabel ? normalizedLabel : __( 'Sem título', 'obatala' );
 	const isMissingTitle = !normalizedLabel;
 
 	return (

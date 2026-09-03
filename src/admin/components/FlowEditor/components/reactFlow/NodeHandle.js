@@ -38,7 +38,7 @@ const NodeHandle = (props) => {
             <div className="step-header">
                 <Tooltip text={__('Move step', 'obatala')}>
                     <div className="custom-drag-handle">
-                        <span role="img" aria-label="drag">⠿</span>
+                        <span role="img" aria-label={__('Drag', 'obatala')}>⠿</span>
                     </div>
                 </Tooltip>
                 <h3 className="title my-0">{props?.stageName || props?.nodeId}</h3>

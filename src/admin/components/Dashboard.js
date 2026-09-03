@@ -397,7 +397,7 @@ const DashboardPage = () => {
 
 						return {
 							id: process.id,
-							title: process.title?.rendered || __( 'Untitled', 'obatala' ),
+							title: process.title?.rendered || __( 'Sem título', 'obatala' ),
 							percentage: details.percentage,
 							lastUpdate: details.lastUpdate,
 							currentStage: details.currentStage,
