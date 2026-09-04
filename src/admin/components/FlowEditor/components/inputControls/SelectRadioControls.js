@@ -74,6 +74,7 @@ export const SelectRadioControls = ({
 
     return (
         <form
+            className="flex-form"
             onSubmit={(event) => {
                 event.preventDefault(); // Evita o recarregamento da página
                 validateFields(); // Chama a função de validação
@@ -135,14 +136,17 @@ export const SelectRadioControls = ({
                 onChange={(value) => setFormValues((prev) => ({ ...prev, helpText: value }))}
             />
 
-            {/* Botão Salvar */}
             {tainacanMappingControls}
-            <Button variant="primary"
-                type="submit"
-                //onClick={} // Valida os campos ao clicar em salvar
-            >
-                {__('Save', 'obatala')}
-            </Button>
+
+            {/* Botão Salvar */}
+            <div className="action-bar">
+                <Button variant="primary"
+                    type="submit"
+                    //onClick={} // Valida os campos ao clicar em salvar
+                >
+                    {__('Save', 'obatala')}
+                </Button>
+            </div>
         </form>
     );
 };

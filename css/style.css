@@ -1785,20 +1785,6 @@ button .components-spinner {
   transform: rotate(180deg);
 }
 
-.obatala-tainacan-field-mapping {
-  margin: 1.5rem 0 0;
-  padding: 1rem;
-  border: 1px solid #c3c4c7;
-  border-radius: 2px;
-  background: #f6f7f7;
-}
-
-.obatala-tainacan-field-mapping legend {
-  padding: 0 0.35rem;
-  color: #1d2327;
-  font-weight: 600;
-}
-
 .title-container p {
   font-size: 1rem;
   margin: 0;

@@ -75,7 +75,7 @@ const TainacanFieldMappingControls = ({
 	};
 
 	return (
-		<fieldset className="obatala-tainacan-field-mapping">
+		<fieldset>
 			<legend>{ __( 'Tainacan Export', 'obatala' ) }</legend>
 			<SelectControl
 				label={ __( 'Coleção de destino', 'obatala' ) }
