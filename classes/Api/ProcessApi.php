@@ -1016,8 +1016,8 @@ class ProcessApi extends ObatalaAPI {
                             ];
                         }
                         $runtime = $export_service->get_runtime_config($post_id);
-                        $has_enabled_mapper = ($runtime['mapper_status'] ?? 'disabled') === 'enabled'
-                            && !empty($runtime['enabled']);
+                        $has_configured_mapper = !empty($runtime['configured']);
+                        $has_enabled_mapper = $has_configured_mapper && !empty($runtime['enabled']);
 
                         if ($has_enabled_mapper) {
                             $export_service->mark_export_pending_confirmation($post_id);
@@ -1027,6 +1027,18 @@ class ProcessApi extends ObatalaAPI {
                                 'message' => 'Processo concluído. Aguardando confirmação para exportação ao Tainacan.',
                                 'process_id' => $post_id,
                                 'collection_id' => (int) ($runtime['collection_id'] ?? 0),
+                                'exported_items' => [],
+                                'failed_items' => [],
+                                'warnings' => [],
+                                'created_at' => current_time('mysql'),
+                            ];
+                        } elseif ($has_configured_mapper) {
+                            $process_status = TainacanExportService::PROCESS_STATUS_AWAITING_EXPORT_PREPARATION;
+                            $export_result = [
+                                'status' => 'pending',
+                                'message' => 'Processo concluído. Prepare a exportação para continuar.',
+                                'process_id' => $post_id,
+                                'collection_id' => 0,
                                 'exported_items' => [],
                                 'failed_items' => [],
                                 'warnings' => [],

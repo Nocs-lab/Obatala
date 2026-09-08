@@ -680,6 +680,114 @@ msgstr ""
 msgid "In progress"
 msgstr ""
 
+msgid "Tainacan Export"
+msgstr ""
+
+msgid "Enable mapper status"
+msgstr ""
+
+msgid "Mapper status"
+msgstr ""
+
+msgid "Enable to configure field export to Tainacan."
+msgstr ""
+
+msgid "Target collections"
+msgstr ""
+
+msgid "Select one or more collections…"
+msgstr ""
+
+msgid "Select at least one collection to map fields."
+msgstr ""
+
+msgid "Tainacan mapping summary"
+msgstr ""
+
+msgid "Obatala field"
+msgstr ""
+
+msgid "Tainacan metadata"
+msgstr ""
+
+msgid "No fields mapped in this collection."
+msgstr ""
+
+msgid "Do not map this field"
+msgstr ""
+
+msgid "Select metadata"
+msgstr ""
+
+msgid "Target collection"
+msgstr ""
+
+msgid "Target metadata"
+msgstr ""
+
+msgid "Could not load the Tainacan configuration."
+msgstr ""
+
+msgid "Could not save the mapping."
+msgstr ""
+
+msgid "Select at least one target collection to configure the mapper."
+msgstr ""
+
+msgid "Tainacan export preparation"
+msgstr ""
+
+msgid "Define how this process will generate items without adding technical fields to its steps."
+msgstr ""
+
+msgid "Number of items"
+msgstr ""
+
+msgid "One item"
+msgstr ""
+
+msgid "Multiple items"
+msgstr ""
+
+msgid "Quantity of items"
+msgstr ""
+
+msgid "Data source"
+msgstr ""
+
+msgid "Manual entry"
+msgstr ""
+
+msgid "Spreadsheet"
+msgstr ""
+
+msgid "Select spreadsheet"
+msgstr ""
+
+msgid "Repeat base values between items"
+msgstr ""
+
+msgid "Unique identifier field"
+msgstr ""
+
+msgid "Select a field…"
+msgstr ""
+
+msgid "Use an identifier prefix"
+msgstr ""
+
+msgid "Identifier prefix"
+msgstr ""
+
+msgid "Save export preparation"
+msgstr ""
+
+msgid "Could not save the export preparation."
+msgstr ""
+
+msgid "Export preparation saved successfully."
+msgstr ""
+
 msgid ""
 "The selected process model is incomplete. Connect all steps and define at "
 "least one field and a valid group for each step."

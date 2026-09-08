@@ -10,6 +10,7 @@ const TainacanSearchDetails = ( {
 	label,
 	setLabel,
 	config,
+	tainacanMappingControls,
 } ) => {
 	const { updateFieldConfig } = useFlowContext();
 	const { toggleDrawer } = useDrawer();
@@ -38,8 +39,8 @@ const TainacanSearchDetails = ( {
 	};
 
 	return (
-		<form>
-			<h3>{ __( 'Edit field', 'obatala' ) }</h3>
+		<form className="flex-form">
+			<h3>{ __( 'Editar campo de busca Tainacan', 'obatala' ) }</h3>
 
 			{ message && (
 				<Notice
@@ -52,63 +53,36 @@ const TainacanSearchDetails = ( {
 			) }
 
 			<TextControl
-				label={ __( 'Label', 'obatala' ) }
+				label={ __( 'Nome do campo', 'obatala' ) }
 				value={ fieldLabel }
 				onChange={ setFieldLabel }
-				placeholder="Busca em Tainacan"
+				placeholder={ __( 'Buscar no Tainacan', 'obatala' ) }
+				required
 			/>
 
-			<Button variant="primary" type="button" onClick={ save }>
-				{ __( 'Save settings', 'obatala' ) }
-			</Button>
+			{ tainacanMappingControls }
+			
+			<Notice status="info" isDismissible={ false }>
+				<h4>
+					{ __( 'Como funciona a busca de itens e coleções?', 'obatala' ) }
+				</h4>
+				<p>
+					{ __( 'A busca de itens e coleções ajuda você a encontrar o que precisa com facilidade. Digite ao menos três caracteres na barra de busca para ver sugestões de itens e coleções compatíveis com o termo informado.', 'obatala' ) }
+				</p>
+				<p>
+					{ __( 'Conforme você digita, a busca retorna coleções e itens correspondentes ao termo pesquisado, permitindo visualizar informações básicas sobre cada resultado. Para ver mais detalhes de um item ou coleção, clique em um dos resultados.', 'obatala' ) }
+				</p>
+				<p>
+					{ __( 'Você também pode selecionar múltiplos itens e coleções clicando neles, e eles serão adicionados a uma lista abaixo da barra de busca. Para remover um item da seleção, clique no X ao lado do nome do item.', 'obatala' ) }
+				</p>
+				<p>
+					{ __( 'Essa busca é uma forma prática e rápida de navegar por itens e coleções, ajudando você a encontrar o conteúdo necessário de maneira simples e eficiente.', 'obatala' ) }
+				</p>
+			</Notice>
 
-			<div
-				style={ {
-					maxWidth: '800px',
-					margin: '20px auto',
-					padding: '16px',
-					borderRadius: '8px',
-					backgroundColor: '#f9f9f9',
-					boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
-					fontSize: '1rem',
-					lineHeight: '1.6',
-					color: '#333',
-				} }
-			>
-				<h2
-					style={ {
-						marginBottom: '12px',
-						fontSize: '1.4rem',
-						color: '#007bff',
-					} }
-				>
-					Como funciona a busca de itens e coleções?
-				</h2>
-				<p>
-					A busca de itens e coleções permite que você encontre
-					facilmente o que procura. Basta digitar pelo menos três
-					caracteres na barra de pesquisa para começar a ver sugestões
-					de itens e coleções que correspondem ao que você digitou.
-				</p>
-				<p>
-					À medida que você digita, a busca retorna coleções e itens
-					que correspondem ao termo pesquisado, permitindo que você
-					visualize informações básicas sobre cada resultado. Para ver
-					mais detalhes de um item ou coleção, basta clicar em um dos
-					resultados.
-				</p>
-				<p>
-					Além disso, você pode selecionar múltiplos itens e coleções
-					clicando sobre eles, e eles serão adicionados a uma lista
-					abaixo da barra de pesquisa. Caso queira remover algum item
-					da seleção, clique no &quot;X&quot; ao lado do nome do item.
-				</p>
-				<p>
-					Esta busca é uma maneira prática e rápida de navegar pelos
-					itens e coleções, ajudando você a encontrar o conteúdo que
-					precisa de forma simples e eficiente.
-				</p>
-			</div>
+			<Button variant="primary" type="button" onClick={ save }>
+				{ __( 'Save', 'obatala' ) }
+			</Button>
 		</form>
 	);
 };

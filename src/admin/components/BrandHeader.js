@@ -11,7 +11,7 @@ const BrandHeader = () => {
             <nav id="mainNav" className={menuOpen ? 'active' : ''}>
                 <a href={obatalaApp.admin_url + "admin.php?page=obatala-main"}  className="menu-brand">
                     <h1>
-                        <strong>Tainacan Gestão</strong>
+                        <strong>{__('Tainacan Gestão', 'obatala')}</strong>
                     </h1>
                 </a>
                 <a href={obatalaApp.admin_url + "admin.php?page=obatala-main"} className="menu-link"><Icon icon="admin-home" /> {__('Dashboard', 'obatala')}</a>

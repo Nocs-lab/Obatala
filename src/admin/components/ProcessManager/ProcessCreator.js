@@ -64,6 +64,16 @@ const isProcessModelComplete = (flowData) => {
     return visited.size === nodesById.size && visited.has('End');
 };
 
+const getProcessModelStatus = (processModel) => {
+    const status = processModel?.meta?.status;
+
+    if (Array.isArray(status)) {
+        return status[0] || '';
+    }
+
+    return typeof status === 'string' ? status : '';
+};
+
 const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel }) => {
     const [newProcessTitle, setNewProcessTitle] = useState('');
     const [newProcessType, setNewProcessType] = useState('');
@@ -199,7 +209,9 @@ const ProcessCreator = ({ processTypes, onProcessSaved, editingProcess, onCancel
         setAccessLevel('Not restricted');
     };
 
-    const modelsActives = processTypes.filter((process) => process?.meta?.status[0] === 'Active');
+    const modelsActives = processTypes.filter(
+        (process) => getProcessModelStatus(process) === 'Active'
+    );
 
     return (
         <form onSubmit={handleSaveProcess}>

@@ -92,6 +92,7 @@ class Enqueuer {
                 'plugin_url' => OBATALA_PLUGIN_URL,
                 // Dompdf (composer): if false, ProcessList hides the PDF report button.
                 'pdf_report_available' => class_exists('\Dompdf\Dompdf'),
+                'can_manage_mappers' => current_user_can('obatala_manage_mappers'),
             ]);
 
         }

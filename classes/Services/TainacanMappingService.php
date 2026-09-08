@@ -9,6 +9,7 @@ class TainacanMappingService {
     const PROCESS_MAPPING_SNAPSHOT_META_KEY = '_obatala_tainacan_mapping_snapshot';
     const DEFAULT_PROFILE_SELECTOR_FIELD_ID = 'obatala_ctrl_collection_selector';
     const MAPPER_STATUS_ENABLED = 'enabled';
+    const MAPPER_STATUS_DRAFT = 'draft';
     const MAPPER_STATUS_DISABLED = 'disabled';
 
     private const DEFAULT_DECISION_RULES = [
@@ -129,7 +130,7 @@ class TainacanMappingService {
         $config = $this->get_mapping_config_for_process_type($process_type_id);
         $status = $this->normalize_mapper_status($config['status'] ?? self::MAPPER_STATUS_DISABLED);
 
-        if (empty($config['profiles']) && $status !== self::MAPPER_STATUS_DISABLED) {
+        if (empty($config['profiles']) && $status === self::MAPPER_STATUS_ENABLED) {
             return [];
         }
 
@@ -151,7 +152,7 @@ class TainacanMappingService {
     }
 
     public function apply_profile_options_to_flow_data_from_config(array $flow_data, array $mapping_config) {
-        if ($this->normalize_mapper_status($mapping_config['status'] ?? self::MAPPER_STATUS_DISABLED) === self::MAPPER_STATUS_DISABLED) {
+        if ($this->normalize_mapper_status($mapping_config['status'] ?? self::MAPPER_STATUS_DISABLED) !== self::MAPPER_STATUS_ENABLED) {
             return $flow_data;
         }
 
@@ -424,6 +425,9 @@ class TainacanMappingService {
         $normalized = strtolower(trim((string) $status));
         if ($normalized === self::MAPPER_STATUS_ENABLED || $normalized === 'habilitado') {
             return self::MAPPER_STATUS_ENABLED;
+        }
+        if ($normalized === self::MAPPER_STATUS_DRAFT || $normalized === 'rascunho') {
+            return self::MAPPER_STATUS_DRAFT;
         }
         return self::MAPPER_STATUS_DISABLED;
     }

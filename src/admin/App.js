@@ -75,29 +75,20 @@ document.addEventListener( 'DOMContentLoaded', () => {
 	}
 
 	if ( mappersManagerElement ) {
-		createRoot( mappersManagerElement ).render( <MappersManager /> );
+		const params = new URLSearchParams( window.location.search );
+		const processTypeId = params.get( 'process_type_id' );
+		if ( processTypeId ) {
+			window.location.replace(
+				`?page=process-type-editor&process_type_id=${ encodeURIComponent(
+					processTypeId
+				) }&section=export`
+			);
+		} else {
+			createRoot( mappersManagerElement ).render( <MappersManager /> );
+		}
 	}
 
 	if ( tainacanItemsElement ) {
 		createRoot( tainacanItemsElement ).render( <TainacanItemsPage /> );
 	}
-
-	// Accordion
-	document.querySelectorAll( '.accordion-button' ).forEach( ( button ) => {
-		button.addEventListener( 'click', function () {
-			const content = document.getElementById(
-				this.getAttribute( 'aria-controls' )
-			);
-			const isExpanded = this.getAttribute( 'aria-expanded' ) === 'true';
-			this.setAttribute( 'aria-expanded', ! isExpanded );
-			content.hidden = isExpanded;
-		} );
-
-		button.addEventListener( 'keydown', function ( event ) {
-			if ( event.key === 'Enter' || event.key === ' ' ) {
-				event.preventDefault();
-				this.click();
-			}
-		} );
-	} );
 } );

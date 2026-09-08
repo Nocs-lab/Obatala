@@ -2,12 +2,12 @@ import React, { useState, useMemo } from 'react';
 import { __, sprintf } from '@wordpress/i18n';
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
 import { Button, Tooltip, Panel, PanelRow, Notice, TextControl } from '@wordpress/components';
-import { edit, trash, layout, external } from '@wordpress/icons';
+import { edit, trash, layout } from '@wordpress/icons';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import ProcessTypeFilter from './ProcessTypeFilters';
 
-const ProcessTypeList = ({ processTypes, onExport, onEdit, onDelete, onManager, status, setStatus, authorsById }) => {
+const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager, status, setStatus, authorsById }) => {
     const columns = useMemo(() => [
         {
             Header: __('Title', 'obatala'),
@@ -67,15 +67,8 @@ const ProcessTypeList = ({ processTypes, onExport, onEdit, onDelete, onManager, 
                         icon={layout}
                         onClick={() => onManager(row.original.id)}
                     >
-                        {__('Manage steps', 'obatala')}
+                        {__('Manage model', 'obatala')}
                     </Button>
-                    <Tooltip text={__('Edit export data', 'obatala')}>
-                        <Button
-                            variant="tertiary"
-                            icon={external}
-                            onClick={() => onExport(row.original)}
-                        />
-                    </Tooltip>
                     <Tooltip text={__('Edit general data', 'obatala')}>
                         <Button
                             variant="tertiary"
@@ -93,7 +86,7 @@ const ProcessTypeList = ({ processTypes, onExport, onEdit, onDelete, onManager, 
                 </div>
             ),
         },
-    ], [onExport, onEdit, onDelete, onManager]);
+    ], [onEdit, onDelete, onManager]);
 
     const data = useMemo(() => processTypes, [processTypes]);
 

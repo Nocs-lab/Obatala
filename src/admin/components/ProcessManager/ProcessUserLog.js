@@ -23,7 +23,7 @@ const ProcessUserLog = ({ stages, process, currentStageData, authorsById, sector
                     <div className="timeline-badge primary"><Icon icon={plus} /></div>
                     <p className="timeline-title"><strong>{__("Process created", "obatala")}</strong> <time>{formatDate(process?.date)}</time></p>
                     <dl className="timeline-content">
-                        <dt>Responsável:</dt>
+                        <dt>{__("Responsible", "obatala")}:</dt>
                         <dd>{authorsById[process?.author]?.name}</dd>
                     </dl>
                 </li>

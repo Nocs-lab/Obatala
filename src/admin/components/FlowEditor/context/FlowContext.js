@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useCallback, useEffect, useRef } from "react";
 import { addEdge, useNodesState, useEdgesState } from "@xyflow/react";
+import { __, sprintf } from "@wordpress/i18n";
 import validateInitialData from "../helpers/dataValidator";
 import { fetchSectors } from "../../../api/apiRequests";
 
@@ -358,8 +359,8 @@ export const FlowProvider = ({ children }) => {
                 URL.revokeObjectURL(url);
             }, 100);
         } catch (error) {
-            console.error('Erro ao exportar dados:', error);
-            setErrors([{ message: 'Erro ao exportar dados do fluxo' }]);
+            console.error(__('Error exporting data:', 'obatala'), error);
+            setErrors([{ message: __('Error exporting flow data', 'obatala') }]);
         }
     }, [nodes, edges]);
 
@@ -372,17 +373,17 @@ export const FlowProvider = ({ children }) => {
             const validationErrors = [];
 
             if (!flowData.nodes || !Array.isArray(flowData.nodes)) {
-                validationErrors.push("Estrutura inválida: nodes deve existir e ser um array");
+                validationErrors.push(__('Invalid structure: nodes must exist and be an array', 'obatala'));
             } else {
                 flowData.nodes.forEach((node, index) => {
                     if (!Array.isArray(node.data?.fields)) {
-                        validationErrors.push(`Node ${node.id} tem fields inválido (deveria ser array)`);
+                        validationErrors.push(sprintf(__('Node %s has invalid fields (should be an array)', 'obatala'), node.id));
                     }
                 });
             }
 
             if (validationErrors.length > 0) {
-                console.error('Erros de validação:', validationErrors);
+                console.error(__('Validation errors:', 'obatala'), validationErrors);
                 setErrors(validationErrors);
                 return false;
             }
@@ -409,7 +410,7 @@ export const FlowProvider = ({ children }) => {
                     data: {
                         ...node.data,
                         fields: node.data?.fields || [],
-                        stageName: node.data?.stageName || node.id || "Sem nome",
+                        stageName: node.data?.stageName || node.id || __('Unnamed', 'obatala'),
                         condition: node.data?.condition || {},
                         updateFields: (newFields) => updateFieldsForNode(node.id, newFields),
                         updateNodeName: (newName) => updateNodeName(node.id, newName),
@@ -429,8 +430,8 @@ export const FlowProvider = ({ children }) => {
             return true;
 
         } catch (error) {
-            console.error('Erro na importação:', error);
-            setErrors([`Erro ao importar: ${error.message}`]);
+            console.error(__('Import error:', 'obatala'), error);
+            setErrors([sprintf(__('Error importing: %s', 'obatala'), error.message)]);
 
             if (nodes.length === 0) {
                 addStartNode();

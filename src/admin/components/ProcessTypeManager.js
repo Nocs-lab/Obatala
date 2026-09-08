@@ -22,7 +22,6 @@ const ProcessTypeManager = () => {
     const [processTypes, setProcessTypes] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [editingProcessType, setEditingProcessType] = useState(null);
-    const [exportDataProcessType, setExportDataProcessType] = useState(null);
     const [addingProcessType, setAddingProcessType] = useState(null);
     const [status, setStatus] = useState(null);
     const [notice, setNotice] = useState(null);
@@ -60,7 +59,6 @@ const ProcessTypeManager = () => {
 
             setNotice({ status: 'success', message: __('Process model saved successfully.', 'obatala') });
             setEditingProcessType(null);
-            setExportDataProcessType(null);
             setAddingProcessType(null);
             loadProcessTypes();
         } catch (error) {
@@ -93,18 +91,12 @@ const ProcessTypeManager = () => {
         setEditingProcessType(model);
     };
 
-     const handleExportData = (model) => {
-        setExportDataProcessType(model);
-        window.location.href = `?page=mappers&process_type_id=${model.id}`;
-    };
-
     const handleAdd = () => {
         setAddingProcessType(true);
     }
 
     const handleCancel = () => {
         setEditingProcessType(null);
-        setExportDataProcessType(null);
         setAddingProcessType(null);
         dispatch({ type: 'CLOSE_MODAL' });
     };
@@ -169,7 +161,6 @@ const ProcessTypeManager = () => {
                 <div className="panel-container">
                     <ProcessTypeList
                         processTypes={filteredModels}
-                        onExport={handleExportData}
                         onEdit={handleEditModel}
                         onManager={handleManageProcessModel}
                         onDelete={handleConfirmDelete}

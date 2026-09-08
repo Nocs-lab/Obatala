@@ -16,6 +16,7 @@ export const StageDocumentControls = ( {
 	label,
 	setLabel,
 	config,
+	tainacanMappingControls,
 } ) => {
 	const { updateFieldConfig } = useFlowContext();
 	const { toggleDrawer } = useDrawer();
@@ -47,7 +48,7 @@ export const StageDocumentControls = ( {
 	};
 
 	return (
-		<form>
+		<form className="flex-form">
 			<h3>{ __( 'Edit stage document', 'obatala' ) }</h3>
 
 			{ message && (
@@ -61,13 +62,14 @@ export const StageDocumentControls = ( {
 			) }
 
 			<TextControl
-				label={ __( 'Label', 'obatala' ) }
+				label={ __( 'Nome do campo', 'obatala' ) }
 				value={ formValues.label }
 				onChange={ ( value ) => {
 					setFormValues( ( prev ) => ( { ...prev, label: value } ) );
 					setLabel( value );
 				} }
 				placeholder={ __( 'Document title', 'obatala' ) }
+				required
 			/>
 
 			<TextControl
@@ -138,8 +140,9 @@ export const StageDocumentControls = ( {
 				rows={ 8 }
 			/>
 
+			{ tainacanMappingControls }
 			<Button variant="primary" onClick={ save }>
-				{ __( 'Save settings', 'obatala' ) }
+				{ __( 'Save', 'obatala' ) }
 			</Button>
 		</form>
 	);

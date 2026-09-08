@@ -5,6 +5,7 @@ import {
     Spinner,
     Notice,
     Panel,
+    PanelBody,
     PanelHeader,
     PanelRow,
     Button,
@@ -33,6 +34,7 @@ import { format } from "date-fns";
 import { ptBR } from "date-fns/locale/pt-BR";
 import MetaFieldDisplay from "./ProcessManager/MetaFieldDisplay";
 import ProcessHeader from './ProcessManager/ProcessHeader';
+import TainacanExportPreparation from './ProcessManager/TainacanExportPreparation';
 import HistoryViewer from './ProcessManager/HistoryViewer';
 import BrandHeader from './BrandHeader';
 import BrandFooter from './BrandFooter';
@@ -48,6 +50,18 @@ const CONTROL_FIELD_IDS = {
 };
 const CONTROL_FIELD_ID_SET = new Set(Object.values(CONTROL_FIELD_IDS));
 const EXPORT_REVIEW_STEP_ID = '__obatala_export_review__';
+
+const getExportDecisionStatusLabel = (status) => {
+    const normalizedStatus = String(status || 'pending').toLowerCase();
+    const labels = {
+        confirmed: __('Confirmada', 'obatala'),
+        refused: __('Recusada', 'obatala'),
+        pending: __('Pendente', 'obatala'),
+        not_required: __('Não necessária', 'obatala'),
+    };
+
+    return labels[normalizedStatus] || status || labels.pending;
+};
 
 const spreadsheetCellHasValue = (value) => {
     if (Array.isArray(value)) {
@@ -567,7 +581,7 @@ const ProcessViewer = () => {
     const [process, setProcess] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [currentStep, setCurrentStep] = useState(0);
+    const [currentStep] = useState(0);
     const [filteredProcessType, setFilteredProcessType] = useState(null);
     const [submittedSteps, setSubmittedSteps] = useState({});
     const [formValues, setFormValues] = useState({});
@@ -583,7 +597,6 @@ const ProcessViewer = () => {
     const [notice, setNotice] = useState(null);
     const [progress, setProgress] = useState(0);
     const [hasComments, setHasComments] = useState(false);
-    const [activeIndex, setActiveIndex] = useState(null);
     const [isItemsMatrixOpen, setIsItemsMatrixOpen] = useState(false);
     const [exportRuntimeConfig, setExportRuntimeConfig] = useState(null);
     const [exportReview, setExportReview] = useState(null);
@@ -651,18 +664,18 @@ const ProcessViewer = () => {
         const warnings = Array.isArray(exportResult?.warnings) ? exportResult.warnings : [];
 
         const exportedLabel = exportedItems.length
-            ? `Itens exportados: ${exportedItems.map((item) => `#${item.item_id}`).join(', ')}.`
+            ? sprintf(__('Exported items: %s.', 'obatala'), exportedItems.map((item) => `#${item.item_id}`).join(', '))
             : '';
         const failedLabel = failedItems.length
-            ? `Falhas: ${failedItems.map((item) => `linha ${item.row}`).join(', ')}.`
+            ? sprintf(__('Failures: %s.', 'obatala'), failedItems.map((item) => sprintf(__('row %s', 'obatala'), item.row)).join(', '))
             : '';
         const warningLabel = warnings.length
-            ? `Avisos: ${warnings.join(' | ')}.`
+            ? sprintf(__('Warnings: %s.', 'obatala'), warnings.join(' | '))
             : '';
 
         return {
             status: status === 'success' ? 'success' : (status === 'partial' || status === 'skipped' || status === 'pending') ? 'warning' : 'error',
-            message: `${exportResult?.message || 'Exportação concluída.'} ${exportedLabel} ${failedLabel} ${warningLabel}`.trim(),
+            message: `${exportResult?.message || __('Export completed.', 'obatala')} ${exportedLabel} ${failedLabel} ${warningLabel}`.trim(),
         };
     };
 
@@ -714,10 +727,18 @@ const ProcessViewer = () => {
         }
     }, [processId]);
 
-
-    const toggleAccordion = (index) => {
-        setActiveIndex(activeIndex === index ? null : index);
-        setCurrentStep(index);
+    const handleExportPreparationSaved = async (response) => {
+        if (response?.runtime) {
+            setExportRuntimeConfig(response.runtime);
+        } else {
+            await loadExportRuntime();
+        }
+        setNotice({
+            status: 'success',
+            message: response?.message || __('Export preparation saved successfully.', 'obatala'),
+        });
+        await loadExportReview();
+        await fetchUpdatedProcessNodes();
     };
 
     useEffect(() => {
@@ -1677,7 +1698,7 @@ const ProcessViewer = () => {
     useEffect(() => {
         setIsItemsMatrixOpen(false);
         setActiveSpreadsheetField(null);
-    }, [currentStep, activeIndex]);
+    }, [currentStep]);
 
     const canSubmitCurrentStep = useMemo(() => {
         const step = orderedSteps[currentStep];
@@ -2317,7 +2338,7 @@ const ProcessViewer = () => {
                 uploadedFiles[stepId]?.[fieldId]?.[0]?.name;
 
             if (!file) {
-                setNotice({ status: 'error', message: 'Arquivo não encontrado para download.' });
+                setNotice({ status: 'error', message: __('File not found for download.', 'obatala') });
                 return;
             }
             const params = new URLSearchParams({
@@ -2351,11 +2372,11 @@ const ProcessViewer = () => {
 
         } catch (error) {
             if (error.status === 403 || error?.error && error?.error === 'Permissao negada') {
-                setNotice({ status: 'error', message: 'Você não tem permissão para baixar este arquivo.' });
+                setNotice({ status: 'error', message: __('You do not have permission to download this file.', 'obatala') });
             } else {
-                setNotice({ status: 'error', message: 'Ocorreu um erro ao tentar baixar o arquivo.' });
+                setNotice({ status: 'error', message: __('An error occurred while trying to download the file.', 'obatala') });
             }
-            console.error('Erro ao tentar baixar o arquivo:', error);
+            console.error(__('Error trying to download the file:', 'obatala'), error);
         }
     };
 
@@ -2645,6 +2666,9 @@ const ProcessViewer = () => {
     }));
 
     const isTramitationFinished = progress === 100;
+    const requiresExportPreparation = Boolean(
+        exportRuntimeConfig?.configured && !exportRuntimeConfig?.prepared
+    );
     const shouldShowExportReviewStep = Boolean(
         isTramitationFinished
         && exportReview?.runtime?.enabled
@@ -2658,7 +2682,7 @@ const ProcessViewer = () => {
         ? [
             ...baseOptions,
             {
-                label: __('Export confirmation', 'obatala'),
+                label: __('Confirmação de exportação', 'obatala'),
                 value: EXPORT_REVIEW_STEP_ID,
                 fields: [],
                 sector_stage: '',
@@ -2666,7 +2690,9 @@ const ProcessViewer = () => {
             },
         ]
         : baseOptions;
-    const processIsComplete = progress === 100 && (!shouldShowExportReviewStep || isExportReviewCompleted);
+    const processIsComplete = progress === 100
+        && !requiresExportPreparation
+        && (!shouldShowExportReviewStep || isExportReviewCompleted);
     const activeOption = options[currentStep];
     const activeSpreadsheetStepUserAllowed = activeOption?.isVirtualExportReview
         ? (hasPermission || isPublic)
@@ -2692,10 +2718,10 @@ const ProcessViewer = () => {
             };
         }
         const currentStepData = currentStageData[stepValue];
-        const user = currentStepData ? currentStepData[1] : 'Desconhecido';
+        const user = currentStepData ? currentStepData[1] : __('Unknown', 'obatala');
         const dateFormat = currentStepData && currentStepData[0]
             ? format(currentStepData[0], "dd 'de' MMMM 'de' yyyy", { locale: ptBR })
-            : 'Data não disponível';
+            : __('Date not available', 'obatala');
 
         return { user, dateFormat };
     };
@@ -2719,7 +2745,7 @@ const ProcessViewer = () => {
                 process={process}
                 filteredProcessType={filteredProcessType}
                 authorsById={authorsById}
-                isComplete={progress && progress === 100} // Adicionado para controle do badge
+                isComplete={processIsComplete}
                 progress={progress}
             />
             <main>
@@ -2768,7 +2794,16 @@ const ProcessViewer = () => {
                             </Notice>
                         )}
                         <div className="panel-container">
-                            <div className="accordion">
+                            <Panel>
+                                <PanelHeader>{__('Etapas', 'obatala')}</PanelHeader>
+                                {exportRuntimeConfig?.configured && (
+                                    <TainacanExportPreparation
+                                        processId={processId}
+                                        runtime={exportRuntimeConfig}
+                                        canEdit={(hasPermission || isPublic) && !isExportReviewCompleted}
+                                        onSaved={handleExportPreparationSaved}
+                                    />
+                                )}
                                 {options.map((step, index) => {
                                     const isVirtualExportReview = step.isVirtualExportReview === true;
                                     const baseIsCompleted = isVirtualExportReview
@@ -2789,41 +2824,42 @@ const ProcessViewer = () => {
                                         ? ((progress < 100) || (isAccessRestricted && !isUserAllowed))
                                         : (isAccessRestricted ? !isUserAllowed : (!isCompleted && !isUserAllowed));
                                     return (
-                                        <div key={index} className={`accordion-item ${isDisabled ? 'disabled' : ''}`}>
-                                            <button
-                                                className={`accordion-header ${isCompleted ? 'success' : isDisabled ? 'danger' : 'warning'}`}
-                                                onClick={() => !isDisabled && toggleAccordion(index)}
-                                                aria-expanded={activeIndex === index}
-                                                aria-controls={`accordion-content-${index}`}
-                                                disabled={isDisabled}
-                                            >
-                                                <h2 className="accordion-title me-auto">{step.label}</h2>
-                                                <div className="badge-container">
-                                                    <span
-                                                        className={`badge ${isCompleted ? 'success' : isDisabled ? 'danger' : 'warning'}`}
-                                                        title={isCompleted ? `Concluído por ${lastUpdateStage(index).user}` : ''}
-                                                    >
-                                                        {isVirtualExportReview
-                                                            ? (isCompleted
-                                                                ? sprintf(__('Completed on %s', 'obatala'), lastUpdateStage(index).dateFormat)
-                                                                : progress < 100
-                                                                    ? __('Waiting process completion', 'obatala')
-                                                                    : __('Pending decision', 'obatala'))
-                                                            : (isCompleted
-                                                                ? sprintf(__('Completed on %s', 'obatala'), lastUpdateStage(index).dateFormat)
-                                                                : isDisabled
-                                                                    ? __('Pending', 'obatala')
-                                                                    : __('Pending input', 'obatala'))}
-                                                    </span>
-                                                    {options[index].sector_stage && !isVirtualExportReview && (
-                                                        <span className="badge info" title={`Grupo responsável: ${getSectorName(options[index].sector_stage)}`}>
-                                                            <Icon icon="groups" /> {getSectorName(options[index].sector_stage)}
+                                        <PanelBody
+                                            title={
+                                                <>
+                                                    <span className="accordion-title me-auto">{step.label}</span>
+                                                    <div className="badge-container">
+                                                        <span
+                                                            className={`badge ${isCompleted ? 'success' : isDisabled ? 'danger' : 'warning'}`}
+                                                            title={isCompleted ? sprintf(__('Completed by %s', 'obatala'), lastUpdateStage(index).user) : ''}
+                                                        >
+                                                            {isVirtualExportReview
+                                                                ? (isCompleted
+                                                                    ? sprintf(__('Completed on %s', 'obatala'), lastUpdateStage(index).dateFormat)
+                                                                    : progress < 100
+                                                                        ? __('Waiting process completion', 'obatala')
+                                                                        : __('Pending decision', 'obatala'))
+                                                                : (isCompleted
+                                                                    ? sprintf(__('Completed on %s', 'obatala'), lastUpdateStage(index).dateFormat)
+                                                                    : isDisabled
+                                                                        ? __('Pending', 'obatala')
+                                                                        : __('Pending input', 'obatala'))}
                                                         </span>
-                                                    )}
-                                                </div>
-                                            </button>
-                                            {activeIndex === index && !isDisabled && (
-                                                <div className="accordion-content">
+                                                        {options[index].sector_stage && !isVirtualExportReview && (
+                                                            <span className="badge default" title={sprintf(__('Responsible group: %s', 'obatala'), getSectorName(options[index].sector_stage))}>
+                                                                <Icon icon="groups" /> {getSectorName(options[index].sector_stage)}
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </>
+                                            }
+                                            key={index}
+                                            className={`accordion-item ${isCompleted ? 'success' : isDisabled ? 'danger' : 'warning'} ${isDisabled ? 'disabled' : ''}`}
+                                            initialOpen={ false }
+                                            opened={ isDisabled ? false : undefined }
+                                            >
+                                            {!isDisabled && (
+                                                <PanelRow>
                                                     {isVirtualExportReview ? (
                                                         <>
                                                             {progress < 100 && (
@@ -2833,7 +2869,7 @@ const ProcessViewer = () => {
                                                             )}
 
                                                             {!!exportReview?.message && (
-                                                                <Notice status={exportReview?.success ? 'info' : 'warning'} isDismissible={false}>
+                                                                <Notice status={exportReview?.success ? 'success' : 'warning'} isDismissible={false}>
                                                                     {exportReview.message}
                                                                 </Notice>
                                                             )}
@@ -2844,24 +2880,27 @@ const ProcessViewer = () => {
                                                                 </Notice>
                                                             )}
 
-                                                            <div style={{ marginBottom: '12px' }}>
-                                                                <p style={{ margin: '0 0 6px' }}>
-                                                                    <strong>{__('Collection', 'obatala')}:</strong> {exportReview?.runtime?.selected_profile?.label || __('Not defined', 'obatala')}
-                                                                </p>
-                                                                <p style={{ margin: '0 0 6px' }}>
-                                                                    <strong>{__('Expected items', 'obatala')}:</strong> {Number(exportReview?.total_rows || 0)}
-                                                                </p>
-                                                                <p style={{ margin: '0' }}>
-                                                                    <strong>{__('Decision status', 'obatala')}:</strong> {exportReview?.decision?.status || 'pending'}
-                                                                </p>
-                                                            </div>
+                                                            <dl className="description-list">
+                                                                <div className="list-item">
+                                                                    <dt>{__('Coleção', 'obatala')}</dt>
+                                                                    <dd>{exportReview?.runtime?.selected_profile?.label || __('Not defined', 'obatala')}</dd>
+                                                                </div>
+                                                                <div className="list-item">
+                                                                    <dt>{__('Itens esperados', 'obatala')}</dt>
+                                                                    <dd>{Number(exportReview?.total_rows || 0)}</dd>
+                                                                </div>
+                                                                <div className="list-item">
+                                                                    <dt>{__('Status da decisão', 'obatala')}</dt>
+                                                                    <dd>{getExportDecisionStatusLabel(exportReview?.decision?.status)}</dd>
+                                                                </div>
+                                                            </dl>
 
                                                             {Array.isArray(exportReview?.rows_preview) && exportReview.rows_preview.length > 0 ? (
-                                                                <div style={{ overflowX: 'auto', border: '1px solid #dcdcde', borderRadius: '6px' }}>
-                                                                    <table className="wp-list-table widefat fixed striped" style={{ minWidth: '960px' }}>
+                                                                <div>
+                                                                    <table className="wp-list-table widefat fixed striped">
                                                                         <thead>
                                                                             <tr>
-                                                                                <th style={{ width: '80px' }}>{__('Item', 'obatala')}</th>
+                                                                                <th>{__('Item', 'obatala')}</th>
                                                                                 {(exportReview?.runtime?.mapped_fields || []).map((field) => (
                                                                                     <th key={field.obatala_field_id}>
                                                                                         {field.obatala_field_label}
@@ -2923,8 +2962,8 @@ const ProcessViewer = () => {
                                                             )}
                                                             {currentStepVisibleFields.length > 0 ? (
                                                                 (!submittedSteps[currentStep] || shouldKeepCurrentStepOpenForSpreadsheet) ? (
-                                                                    <form onSubmit={handleSubmit}>
-                                                                        <div className="meta-field-wrapper">
+                                                                    <form onSubmit={handleSubmit} className="flex-form">
+                                                                        <>
                                                                             {Array.isArray(currentStepSingleFields) ? currentStepSingleFields.map((field, idx) => {
                                                                                 const stepId = orderedSteps[currentStep].id;
                                                                                 const isSpreadsheetUploadField = String(field?.type || '') === 'upload'
@@ -2939,7 +2978,6 @@ const ProcessViewer = () => {
                                                                                         label: __('Download spreadsheet example', 'obatala'),
                                                                                     }
                                                                                     : null;
-
                                                                                 const spreadsheetUploadNoticeMessage = isSpreadsheetUploadField
                                                                                     ? currentSpreadsheetUploadValidationMessage
                                                                                     : '';
@@ -3056,12 +3094,12 @@ const ProcessViewer = () => {
                                                                                     )}
                                                                                 </div>
                                                                             )}
-                                                                        </div>
+                                                                        </>
                                                                         {(!submittedSteps[currentStep] || shouldKeepCurrentStepOpenForSpreadsheet) && (
                                                                             <div className="action-bar">
                                                                                 {currentStepCanSaveDraft && (
                                                                                     <Button
-                                                                                        variant="secondary"
+                                                                                        variant="tertiary"
                                                                                         type="button"
                                                                                         onClick={handleSaveDraft}
                                                                                         disabled={isSavingDraft || isSpreadsheetFileStructureValidationPending || hasBlockingSpreadsheetValidationError || (submittedSteps[currentStep] && !shouldKeepCurrentStepOpenForSpreadsheet) || !isUserAllowed}
@@ -3082,7 +3120,7 @@ const ProcessViewer = () => {
                                                                         )}
                                                                     </form>
                                                                 ) : (
-                                                                    <>
+                                                                    <form className="flex-form">
                                                                         <dl className="description-list my-0">
                                                                             {Array.isArray(currentStepDisplayFields) ? currentStepDisplayFields.map((field, idx) => (
                                                                                 <MetaFieldDisplay
@@ -3102,7 +3140,7 @@ const ProcessViewer = () => {
                                                                         </dl>
 
                                                                         {shouldShowCorrectedSpreadsheetUpload && (
-                                                                            <div className="meta-field-wrapper obatala-spreadsheet-correction">
+                                                                            <>
                                                                                 <Notice status="error" isDismissible={false}>
                                                                                     {exportRuntimeConfig?.spreadsheet_rows_message || __('The uploaded spreadsheet could not be validated. Upload a corrected file to continue.', 'obatala')}
                                                                                 </Notice>
@@ -3124,7 +3162,7 @@ const ProcessViewer = () => {
                                                                                     }}
                                                                                     stepId={orderedSteps[currentStep].id}
                                                                                 />
-                                                                                <div className="action-bar obatala-spreadsheet-correction__actions">
+                                                                                <div className="action-bar">
                                                                                     <Button
                                                                                         variant="primary"
                                                                                         onClick={handleCorrectedSpreadsheetUpload}
@@ -3136,7 +3174,7 @@ const ProcessViewer = () => {
                                                                                             : __('Upload corrected spreadsheet', 'obatala')}
                                                                                     </Button>
                                                                                 </div>
-                                                                            </div>
+                                                                            </>
                                                                         )}
 
                                                                         {currentStepSpreadsheetMappedFields.length > 0 && (
@@ -3149,7 +3187,7 @@ const ProcessViewer = () => {
                                                                                 isSaving={isSpreadsheetRowsSaving}
                                                                             />
                                                                         )}
-                                                                    </>
+                                                                    </form>
                                                                 )
                                                             ) : (
                                                                 <Notice status="warning" isDismissible={false}>
@@ -3162,12 +3200,12 @@ const ProcessViewer = () => {
                                                             {__("No steps found for this process.", "obatala")}
                                                         </Notice>
                                                     )}
-                                                </div>
+                                                </PanelRow>
                                             )}
-                                        </div>
+                                        </PanelBody>
                                     );
                                 })}
-                            </div>
+                            </Panel>
                             <aside>
                                 {processIsComplete && !hasComments ? (null) : (
                                     <Panel>

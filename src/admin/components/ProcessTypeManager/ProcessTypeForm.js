@@ -41,8 +41,8 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
             meta: {
                 description,
                 status: editingProcessType ? status : "Active" ,
-                updateAt: new Date(),
-                user: currentUser.name
+                updateAt: new Date().toISOString(),
+                user: currentUser?.name || ""
             },
         };
 
@@ -72,11 +72,13 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
                 label={__("Title", "obatala")}
                 value={title}
                 onChange={(value) => setTitle(value)}
+                required
             />
             <TextControl
                 label={__("Description", "obatala")}
                 value={description}
                 onChange={(value) => setDescription(value)}
+                required
             />
 
             {editingProcessType && (

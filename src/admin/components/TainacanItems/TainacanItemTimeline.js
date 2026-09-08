@@ -1,6 +1,7 @@
 /* global obatalaApp */
 import React, { useMemo } from 'react';
-import { Button, Icon, Notice, Spinner } from '@wordpress/components';
+import { Button, DropdownMenu, Icon, Notice, Panel, PanelBody, PanelHeader, PanelRow, Spinner } from '@wordpress/components';
+import { edit, info, moreHorizontal } from '@wordpress/icons';
 import { __, sprintf } from '@wordpress/i18n';
 
 const getLocale = () => document.documentElement.lang || 'pt-BR';
@@ -52,10 +53,10 @@ const formatDateParts = ( value ) => {
 
 const getItemStatusDetails = ( status ) => {
 	const statuses = {
-		publish: { label: __( 'Published', 'obatala' ), className: 'success' },
-		pending: { label: __( 'Under review', 'obatala' ), className: 'warning' },
-		draft: { label: __( 'Draft', 'obatala' ), className: 'default' },
-		private: { label: __( 'Private', 'obatala' ), className: 'info' },
+		publish: { label: __( 'Publicado', 'obatala' ), className: 'success' },
+		pending: { label: __( 'Em revisão', 'obatala' ), className: 'warning' },
+		draft: { label: __( 'Rascunho', 'obatala' ), className: 'default' },
+		private: { label: __( 'Privado', 'obatala' ), className: 'info' },
 	};
 
 	return statuses[ status ] || { label: status || '-', className: 'default' };
@@ -63,14 +64,14 @@ const getItemStatusDetails = ( status ) => {
 
 const getProcessStatusDetails = ( process ) => {
 	if ( process?.is_deleted ) {
-		return { label: __( 'Deleted', 'obatala' ), className: 'danger' };
+		return { label: __( 'Excluído', 'obatala' ), className: 'danger' };
 	}
 
 	const group = process?.status_group || 'pending';
 	const byGroup = {
-		finished: { label: __( 'Completed', 'obatala' ), className: 'success' },
-		in_progress: { label: __( 'In progress', 'obatala' ), className: 'info' },
-		pending: { label: __( 'Pending', 'obatala' ), className: 'default' },
+		finished: { label: __( 'Concluído', 'obatala' ), className: 'success' },
+		in_progress: { label: __( 'Em progresso', 'obatala' ), className: 'info' },
+		pending: { label: __( 'Pendente', 'obatala' ), className: 'default' },
 	};
 
 	return byGroup[ group ] || byGroup.pending;
@@ -114,7 +115,7 @@ const getProcessTitle = ( process ) =>
 	[ process?.number, process?.title ].filter( Boolean ).join( ' - ' ) ||
 	sprintf(
 		/* translators: %d: Obatala process ID. */
-		__( 'Process #%d', 'obatala' ),
+		__( 'Processo #%d', 'obatala' ),
 		Number( process?.id ) || 0
 	);
 
@@ -129,11 +130,21 @@ const getCurrentStageLabel = ( value ) => {
 	const normalizedValue = String( value || '' ).trim().toLowerCase();
 
 	if ( normalizedValue === 'end' ) {
-		return __( 'Finished', 'obatala' );
+		return __( 'Finalizado', 'obatala' );
 	}
 
 	if ( normalizedValue === 'start' ) {
-		return __( 'Not started', 'obatala' );
+		return __( 'Não iniciado', 'obatala' );
+	}
+
+	return value;
+};
+
+const getProcessSummaryLabel = ( value ) => {
+	const normalizedValue = String( value || '' ).trim().toLowerCase();
+
+	if ( normalizedValue === 'process completed.' || normalizedValue === 'process completed' ) {
+		return __( 'Processo concluído.', 'obatala' );
 	}
 
 	return value;
@@ -145,14 +156,14 @@ const InfoRow = ( { label, value } ) => {
 	}
 
 	return (
-		<div className="tainacan-item-info-row">
+		<div className="list-item">
 			<dt>{ label }</dt>
 			<dd>{ value }</dd>
 		</div>
 	);
 };
 
-const TainacanItemTimeline = ( { item, isLoading, notice, onBack } ) => {
+const TainacanItemTimeline = ( { item, isLoading, notice } ) => {
 	const statusDetails = getItemStatusDetails( item?.status );
 	const processes = Array.isArray( item?.processes ) ? item.processes : [];
 	const metadata = Array.isArray( item?.metadata ) ? item.metadata : [];
@@ -186,55 +197,45 @@ const TainacanItemTimeline = ( { item, isLoading, notice, onBack } ) => {
 
 	return (
 		<>
-			<div className="title-container tainacan-item-detail-title">
-				<div>
-					<Button
-						className="tainacan-item-detail-back"
-						variant="primary"
-						icon="arrow-left-alt2"
-						onClick={ onBack }
-					>
-						{ __( 'Collection items', 'obatala' ) }
-					</Button>
-					<h2>{ title }</h2>
-					<div className="badge-container">
-						{ item?.collection_name && (
-							<span className="badge info">
-								{ item.collection_name }
-							</span>
-						) }
-						{ item?.registration_number && (
-							<span className="badge default">
-								{ sprintf(
-									/* translators: %s: item registration number. */
-									__( 'Record: %s', 'obatala' ),
-									item.registration_number
-								) }
-							</span>
-						) }
-						<span className={ `badge ${ statusDetails.className }` }>
-							{ statusDetails.label }
+			<div className="title-container">
+				<h2><small>{__('Item do acervo', 'obatala')}</small> { title }</h2>
+				<div className="badge-container">
+					{ item?.collection_name && (
+						<span className="badge info">
+							{ item.collection_name }
 						</span>
-						{ item?.created && (
-							<span className="badge default">
-								{ sprintf(
-									/* translators: %s: item creation date. */
-									__( 'Registered on %s', 'obatala' ),
-									formatDate( item.created )
-								) }
-							</span>
-						) }
-					</div>
+					) }
+					{ item?.registration_number && (
+						<span className="badge default">
+							{ sprintf(
+								/* translators: %s: item registration number. */
+								__( 'Registro: %s', 'obatala' ),
+								item.registration_number
+							) }
+						</span>
+					) }
+					<span className={ `badge ${ statusDetails.className }` }>
+						{ statusDetails.label }
+					</span>
+					{ item?.created && (
+						<span className="badge default">
+							{ sprintf(
+								/* translators: %s: item creation date. */
+								__( 'Registrado em %s', 'obatala' ),
+								formatDate( item.created )
+							) }
+						</span>
+					) }
 				</div>
 				<div className="group-button">
 					{ tainacanUrl && (
-						<Button variant="tertiary" icon="external" href={ tainacanUrl }>
-							{ __( 'Open in Tainacan', 'obatala' ) }
+						<Button variant="primary" icon="external" href={ tainacanUrl }>
+							{ __( 'Abrir no Tainacan', 'obatala' ) }
 						</Button>
 					) }
 					{ tainacanEditUrl && item?.can_edit && (
-						<Button variant="primary" icon="edit" href={ tainacanEditUrl }>
-							{ __( 'Edit item', 'obatala' ) }
+						<Button variant="secondary" icon={edit} href={ tainacanEditUrl }>
+							{ __( 'Editar item', 'obatala' ) }
 						</Button>
 					) }
 				</div>
@@ -252,157 +253,153 @@ const TainacanItemTimeline = ( { item, isLoading, notice, onBack } ) => {
 						<Spinner />
 					</div>
 				) : ! item ? null : (
-					<div className="tainacan-item-detail-grid">
-						<section className="tainacan-item-timeline-section">
-							<div className="tainacan-item-section-heading">
-								<h3>{ __( 'Process timeline', 'obatala' ) }</h3>
-								<span>
+					<div className="panel-container">
+						<Panel>
+							<PanelHeader>
+								{ __( 'Linha do tempo do processo', 'obatala' ) }
+								<span className="badge">
 									{ sprintf(
 										/* translators: %s: total linked processes. */
-										__( '%s linked processes', 'obatala' ),
+										__( '%s processos vinculados', 'obatala' ),
 										formatCount( processes.length )
 									) }
 								</span>
-							</div>
+							</PanelHeader>
+							<PanelRow>
+								{ sortedProcesses.length > 0 ? (
+									<ol className="timeline">
+										{ sortedProcesses.map( ( process, index ) => {
+											const processStatus = getProcessStatusDetails( process );
+											const parts = formatDateParts(
+												process.date || process.modified_at || process.created_at
+											);
 
-							{ sortedProcesses.length > 0 ? (
-								<ol className="tainacan-item-process-timeline">
-									{ sortedProcesses.map( ( process, index ) => {
-										const processStatus = getProcessStatusDetails( process );
-										const parts = formatDateParts(
-											process.date || process.modified_at || process.created_at
-										);
-
-										return (
-											<li
-												className={ `tainacan-item-process-entry ${ process.status_group || 'pending' }` }
-												key={ `${ process.id || process.url }-${ index }` }
-											>
-												<div className="tainacan-item-process-date">
-													<strong>{ parts.date }</strong>
-													{ parts.time && <span>{ parts.time }</span> }
-												</div>
-												<div className="tainacan-item-process-marker">
-													<Icon icon={ getProcessMarkerIcon( process ) } />
-												</div>
-												<article className="tainacan-item-process-card">
-													<header>
-														<div>
-															<h4>{ getProcessTitle( process ) }</h4>
-															{ process.process_type && (
-																<p>{ process.process_type }</p>
-															) }
-														</div>
-														<span className={ `badge ${ processStatus.className }` }>
-															{ processStatus.label }
-														</span>
-													</header>
-
-													<p className="tainacan-item-process-summary">
-														{ process.summary || __( 'Process linked to this item.', 'obatala' ) }
+											return (
+												<li
+													className={ `timeline-item ${ process.status_group || 'pending' }` }
+													key={ `${ process.id || process.url }-${ index }` }
+												>
+													<div className={ `timeline-badge ${ processStatus.className }` }>
+														<Icon icon={ getProcessMarkerIcon( process ) } />
+													</div>
+													<p className="timeline-title">
+														<strong>{ getProcessTitle( process ) }</strong>
+														<time>em { parts.date } { parts.time && <span>{ parts.time }</span> }</time>
 													</p>
+													<div className="timeline-content">
+														<dl className="description-list">
+															<InfoRow
+																label={ __( 'Resumo', 'obatala' ) }
+																value={ getProcessSummaryLabel( process.summary ) || __( 'Processo vinculado a este item.', 'obatala' ) }
+															/>
+															{ process.process_type && (
+																<InfoRow
+																	label={ __( 'Modelo', 'obatala' ) }
+																	value={ process.process_type }
+																/>
+															) }
+															<InfoRow
+																label={ __( 'Situação', 'obatala' ) }
+																value={ processStatus.label }
+															/>
+															<InfoRow
+																label={ __( 'Responsável', 'obatala' ) }
+																value={ process.responsible }
+															/>
+															<InfoRow
+																label={ __( 'Etapa atual', 'obatala' ) }
+																value={ getCurrentStageLabel( process.current_stage_label ) }
+															/>
+															<InfoRow
+																label={ __( 'Progresso', 'obatala' ) }
+																value={
+																	process.progress !== null && process.progress !== undefined
+																		? `${ process.progress }%`
+																		: ''
+																}
+															/>
+														</dl>
 
-													<dl className="tainacan-item-process-meta">
-														<InfoRow
-															label={ __( 'Responsible', 'obatala' ) }
-															value={ process.responsible }
-														/>
-														<InfoRow
-															label={ __( 'Current step', 'obatala' ) }
-															value={ getCurrentStageLabel( process.current_stage_label ) }
-														/>
-														<InfoRow
-															label={ __( 'Progress', 'obatala' ) }
-															value={
-																process.progress !== null && process.progress !== undefined
-																	? `${ process.progress }%`
-																	: ''
-															}
-														/>
-													</dl>
-
-													{ process.url && (
-														<Button
-															className="tainacan-item-view-process"
-															variant="primary"
-															icon="arrow-right-alt2"
-															href={ process.url }
-														>
-															{ __( 'View process', 'obatala' ) }
-														</Button>
-													) }
-												</article>
-											</li>
-										);
-									} ) }
-								</ol>
-							) : (
-								<Notice status="warning" isDismissible={ false }>
-									{ __( 'No linked processes were found for this item.', 'obatala' ) }
-								</Notice>
-							) }
-						</section>
-
-						<aside className="tainacan-item-detail-sidebar">
-							<section className="tainacan-item-info-panel">
-								<h3>{ __( 'Item information', 'obatala' ) }</h3>
-								<div className="tainacan-item-info-main">
-									<div className="tainacan-item-detail-thumbnail">
-										{ item?.thumbnail ? (
-											<img src={ item.thumbnail } alt={ item.thumbnail_alt || '' } />
-										) : (
-											<Icon icon="archive" />
-										) }
-									</div>
-									<dl>
-										<InfoRow label={ __( 'Collection', 'obatala' ) } value={ item?.collection_name } />
-										<InfoRow label={ __( 'Record number', 'obatala' ) } value={ item?.registration_number } />
-										<InfoRow label={ __( 'Situation', 'obatala' ) } value={ statusDetails.label } />
-										<InfoRow label={ __( 'Created at', 'obatala' ) } value={ formatDate( item?.created ) } />
-										<InfoRow label={ __( 'Last update', 'obatala' ) } value={ formatDate( item?.modified ) } />
-										<InfoRow label={ __( 'Author', 'obatala' ) } value={ item?.author_name } />
-									</dl>
-								</div>
-								{ item?.description && (
-									<div className="tainacan-item-description">
-										<strong>{ __( 'Description', 'obatala' ) }</strong>
-										<p>{ item.description }</p>
-									</div>
+														{ process.url && (
+															<DropdownMenu
+																icon={moreHorizontal}
+																className="timeline-actions"
+																label={__('Select an action', 'obatala')}
+																size="small"
+																controls={[
+																	{
+																		title: __('Ver processo', 'obatala'),
+																		icon: info,
+																		href: process.url,
+																	},
+																]}
+															/>
+														) }
+													</div>
+												</li>
+											);
+										} ) }
+									</ol>
+								) : (
+									<Notice status="warning" isDismissible={ false }>
+										{ __( 'Nenhum processo vinculado foi encontrado para este item.', 'obatala' ) }
+									</Notice>
 								) }
-							</section>
+							</PanelRow>
+						</Panel>
+						<aside>
+							<Panel>
+								<PanelHeader>{ __( 'Informações do item', 'obatala' ) }</PanelHeader>
+								<PanelRow>
+									<div className="d-flex flex-wrap gap-2">
+										<div className="tainacan-item-detail-thumbnail">
+											{ item?.thumbnail ? (
+												<img src={ item.thumbnail } alt={ item.thumbnail_alt || '' } />
+											) : (
+												<Icon icon="archive" />
+											) }
+										</div>
+										<dl className="description-list flex-item my-0">
+											<InfoRow label={ __( 'Coleção', 'obatala' ) } value={ item?.collection_name } />
+											<InfoRow label={ __( 'Número de registro', 'obatala' ) } value={ item?.registration_number } />
+											<InfoRow
+												label={ __( 'Situação', 'obatala' ) }
+												value={
+													<span className={ `badge ${ statusDetails.className }` }>
+														{ statusDetails.label }
+													</span>
+												} />
+											<InfoRow label={ __( 'Criado em', 'obatala' ) } value={ formatDate( item?.created ) } />
+											<InfoRow label={ __( 'Última atualização', 'obatala' ) } value={ formatDate( item?.modified ) } />
+											<InfoRow label={ __( 'Autor', 'obatala' ) } value={ item?.author_name } />
+											{ item?.description && (
+												<InfoRow label={ __( 'Descrição', 'obatala' ) } value={ item.description } />
+											) }
+										</dl>
+									</div>
+								</PanelRow>
 
-							<section className="tainacan-item-info-panel">
-								<h3>{ __( 'Linked processes', 'obatala' ) }</h3>
-								<ul className="tainacan-process-summary-list">
-									<li>
-										<span>{ __( 'Completed', 'obatala' ) }</span>
-										<strong>{ formatCount( processSummary.finished ) }</strong>
-									</li>
-									<li>
-										<span>{ __( 'In progress', 'obatala' ) }</span>
-										<strong>{ formatCount( processSummary.in_progress ) }</strong>
-									</li>
-									<li>
-										<span>{ __( 'Pending', 'obatala' ) }</span>
-										<strong>{ formatCount( processSummary.pending ) }</strong>
-									</li>
-									<li>
-										<span>{ __( 'Total processes', 'obatala' ) }</span>
-										<strong>{ formatCount( processSummary.total ) }</strong>
-									</li>
-								</ul>
-							</section>
+								<PanelBody title={ __( 'Processos vinculados', 'obatala' ) }>
+									<PanelRow>
+										<dl className="description-list">
+											<InfoRow label={ __( 'Concluído', 'obatala' ) } value={ formatCount( processSummary.finished ) } />
+											<InfoRow label={ __( 'Em progresso', 'obatala' ) } value={ formatCount( processSummary.in_progress ) } />
+											<InfoRow label={ __( 'Pendente', 'obatala' ) } value={ formatCount( processSummary.pending ) } />
+											<InfoRow label={ __( 'Total de processos', 'obatala' ) } value={ formatCount( processSummary.total ) } />
+										</dl>
+									</PanelRow>
+								</PanelBody>
 
-							{ visibleMetadata.length > 0 && (
-								<section className="tainacan-item-info-panel">
-									<h3>{ __( 'Metadata', 'obatala' ) }</h3>
-									<dl className="tainacan-item-metadata-list">
-										{ visibleMetadata.map( ( field ) => (
-											<InfoRow key={ `${ field.id }-${ field.slug }` } label={ field.name } value={ field.value } />
-										) ) }
-									</dl>
-								</section>
-							) }
+								{ visibleMetadata.length > 0 && (
+									<PanelBody title={ __( 'Metadados', 'obatala' ) }>
+										<dl className="description-list">
+											{ visibleMetadata.map( ( field ) => (
+												<InfoRow key={ `${ field.id }-${ field.slug }` } label={ field.name } value={ field.value } />
+											) ) }
+										</dl>
+									</PanelBody>
+								) }
+							</Panel>
 						</aside>
 					</div>
 				) }

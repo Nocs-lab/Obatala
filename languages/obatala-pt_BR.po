@@ -382,11 +382,11 @@ msgstr ""
 "O modelo de processo selecionado está incompleto. Conecte todas as etapas e "
 "defina pelo menos um campo e um grupo válido para cada etapa."
 
-msgid "Field names must be unique within each step. Check: %s"
-msgstr "Os nomes dos campos devem ser únicos dentro de cada etapa. Verifique: %s"
+msgid "Field names must be unique within each step. Check step: %s"
+msgstr "Os nomes dos campos devem ser únicos dentro de cada etapa. Verifique a etapa: %s"
 
-msgid "Some fields have an empty or default name. Check: %s"
-msgstr "Alguns campos estão sem nome ou mantêm o nome padrão. Verifique: %s"
+msgid "Some fields have an empty or default name. Check step: %s"
+msgstr "Alguns campos estão sem nome ou mantêm o nome padrão. Verifique etapa: %s"
 
 msgid "%1$s (field %2$d)"
 msgstr "%1$s (campo %2$d)"
@@ -430,8 +430,8 @@ msgstr "Adicionar modelo de processo"
 msgid "Are you sure you want to delete process model %s?"
 msgstr "Tem certeza que deseja excluir o modelo de processo %s?"
 
-msgid "Edit process model"
-msgstr "Editar modelo de processo"
+msgid "Manage process model"
+msgstr "Gerenciar modelo de processo"
 
 # Additional frontend strings
 msgid "Model"
@@ -638,6 +638,117 @@ msgstr "Última atualização"
 msgid "Manage steps"
 msgstr "Gerenciar etapas"
 
+msgid "Manage model"
+msgstr "Gerenciar modelo"
+
+msgid "Tainacan Export"
+msgstr "Exportação para o Tainacan"
+
+msgid "Enable mapper status"
+msgstr "Ativar status do mapeador"
+
+msgid "Exporter status"
+msgstr "Situação do exportador"
+
+msgid "Enable to configure field export to Tainacan."
+msgstr "Ative para configurar a exportação dos fields para o Tainacan."
+
+msgid "Target collections"
+msgstr "Coleções de destino"
+
+msgid "Select one or more collections…"
+msgstr "Selecione uma ou mais coleções…"
+
+msgid "Select at least one collection to map fields."
+msgstr "Selecione, no mínimo, uma coleção para mapear os fields."
+
+msgid "Tainacan mapping summary"
+msgstr "Resumo do mapeamento Tainacan"
+
+msgid "Obatala field"
+msgstr "Field do Obatalá"
+
+msgid "Tainacan metadata"
+msgstr "Metadado Tainacan"
+
+msgid "No fields mapped in this collection."
+msgstr "Nenhum field mapeado nesta coleção."
+
+msgid "Do not map this field"
+msgstr "Não mapear este field"
+
+msgid "Select metadata"
+msgstr "Selecione o metadado"
+
+msgid "Target collection"
+msgstr "Coleção de destino"
+
+msgid "Target metadata"
+msgstr "Metadado de destino"
+
+msgid "Could not load the Tainacan configuration."
+msgstr "Não foi possível carregar a configuração do Tainacan."
+
+msgid "Could not save the mapping."
+msgstr "Não foi possível salvar o mapeamento."
+
+msgid "Select at least one target collection to configure the mapper."
+msgstr "Selecione ao menos uma coleção de destino para configurar o mapeador."
+
+msgid "Tainacan export preparation"
+msgstr "Preparação da exportação para o Tainacan"
+
+msgid "Define how this process will generate items without adding technical fields to its steps."
+msgstr "Defina como este processo gerará itens sem adicionar fields técnicos às etapas."
+
+msgid "Number of items"
+msgstr "Número de itens"
+
+msgid "One item"
+msgstr "Um item"
+
+msgid "Multiple items"
+msgstr "Vários itens"
+
+msgid "Quantity of items"
+msgstr "Quantidade de itens"
+
+msgid "Data source"
+msgstr "Origem dos dados"
+
+msgid "Manual entry"
+msgstr "Preenchimento manual"
+
+msgid "Spreadsheet"
+msgstr "Planilha"
+
+msgid "Select spreadsheet"
+msgstr "Selecionar planilha"
+
+msgid "Repeat base values between items"
+msgstr "Repetir valores-base entre os itens"
+
+msgid "Unique identifier field"
+msgstr "Field identificador único"
+
+msgid "Select a field…"
+msgstr "Selecione um field…"
+
+msgid "Use an identifier prefix"
+msgstr "Usar prefixo no identificador"
+
+msgid "Identifier prefix"
+msgstr "Prefixo do identificador"
+
+msgid "Save export preparation"
+msgstr "Salvar preparação da exportação"
+
+msgid "Could not save the export preparation."
+msgstr "Não foi possível salvar a preparação da exportação."
+
+msgid "Export preparation saved successfully."
+msgstr "Preparação da exportação salva com sucesso."
+
 msgid "Edit export data"
 msgstr "Editar dados de exportação"
 
@@ -802,6 +913,9 @@ msgstr "Erro ao salvar tipo de processo."
 msgid "Cancel changes"
 msgstr "Cancelar alterações"
 
+msgid "Elements"
+msgstr "Elementos"
+
 msgid "Add step"
 msgstr "Adicionar etapa"
 
@@ -830,7 +944,7 @@ msgid "Step name"
 msgstr "Nome da etapa"
 
 msgid "Enter the step name"
-msgstr "Digite o nome da etapa"
+msgstr "Informe o nome da etapa"
 
 msgid "Group responsible"
 msgstr "Grupo responsável"
@@ -1076,7 +1190,7 @@ msgid "Opinion, report, order, or term"
 msgstr "Parecer, relatório, despacho ou termo"
 
 msgid "Help text"
-msgstr "Texto de ajuda"
+msgstr "Texto de ajuda para preenchimento"
 
 msgid "Instructions for filling this document"
 msgstr "Instruções para preencher este documento"

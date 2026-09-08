@@ -117,8 +117,8 @@ namespace Obatala\Admin {
         {
             $main = self::$pages['main'];
             add_menu_page(
-                $main['title'],
-                $main['menu_title'],
+                self::translate_menu_label($main['title']),
+                self::translate_menu_label($main['menu_title']),
                 $main['capability'],
                 $main['slug'],
                 [self::class, $main['callback']],
@@ -127,8 +127,8 @@ namespace Obatala\Admin {
             );
 
             foreach (self::$pages['submenus'] as $submenu) {
-                $title = $submenu['title'];
-                $menu_title = $submenu['menu_title'];
+                $title = self::translate_menu_label($submenu['title']);
+                $menu_title = self::translate_menu_label($submenu['menu_title']);
                 if ($submenu['show_in_menu']) {
                     add_submenu_page(
                         $submenu['parent_slug'],
@@ -148,6 +148,32 @@ namespace Obatala\Admin {
                         [self::class, $submenu['callback']]
                     );
                 }
+            }
+        }
+
+        private static function translate_menu_label($label)
+        {
+            switch ($label) {
+                case 'Dashboard':
+                    return __('Dashboard', 'obatala');
+                case 'Processes':
+                    return __('Processes', 'obatala');
+                case 'Models':
+                    return __('Models', 'obatala');
+                case 'Process type editor':
+                    return __('Process type editor', 'obatala');
+                case 'Groups':
+                    return __('Groups', 'obatala');
+                case 'Collection items':
+                    return __('Collection items', 'obatala');
+                case 'Process viewer':
+                    return __('Process viewer', 'obatala');
+                case 'Group details':
+                    return __('Group details', 'obatala');
+                case 'Mappers':
+                    return __('Mappers', 'obatala');
+                default:
+                    return $label;
             }
         }
 
@@ -171,7 +197,7 @@ namespace Obatala\Admin {
             $screen = get_current_screen();
 
             if (!$screen || empty($screen->id)) {
-                echo '<h1>Página não encontrada</h1>';
+                echo '<h1>' . esc_html__('Página não encontrada', 'obatala') . '</h1>';
                 return;
             }
 
@@ -186,7 +212,7 @@ namespace Obatala\Admin {
                 }
             }
 
-            echo '<h1>Página não encontrada</h1>';
+            echo '<h1>' . esc_html__('Página não encontrada', 'obatala') . '</h1>';
         }
 
         public static function enqueue_scripts($hook)

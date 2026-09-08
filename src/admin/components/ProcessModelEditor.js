@@ -7,7 +7,8 @@ import {
 import apiFetch from "@wordpress/api-fetch";
 import ProcessFlow from "./FlowEditor/ProcessFlow";
 import { FlowProvider } from "./FlowEditor/context/FlowContext";
-import ProcessControls from "./FlowEditor/components/reactFlow/FlowButtons";
+import ModelControls from "./FlowEditor/components/reactFlow/ModelControls";
+import FlowControls from "./FlowEditor/components/reactFlow/FlowControls";
 import { DrawerProvider } from "./FlowEditor/context/DrawerContext";
 import { fetchMapperProcessModel } from "../api/apiRequests";
 
@@ -16,12 +17,24 @@ import { store as coreStore } from '@wordpress/core-data';
 import { update } from "@wordpress/icons";
 import BrandHeader from "./BrandHeader";
 import BrandFooter from "./BrandFooter";
+import {
+    TainacanExportProvider,
+    useTainacanExport,
+} from "./FlowEditor/context/TainacanExportContext";
+import TainacanExportPanel from "./FlowEditor/components/TainacanExportPanel";
+import TainacanMappingSummary from "./FlowEditor/components/TainacanMappingSummary";
+import { Panel, PanelBody, PanelRow } from "@wordpress/components";
+
 
 const MAPPER_STATUS_ENABLED = "enabled";
 const MAPPER_STATUS_DISABLED = "disabled";
+const MAPPER_STATUS_DRAFT = "draft";
 
 const normalizeMapperStatus = (status) => {
     const normalized = String(status || "").trim().toLowerCase();
+    if (normalized === MAPPER_STATUS_DRAFT || normalized === "rascunho") {
+        return MAPPER_STATUS_DRAFT;
+    }
     return normalized === MAPPER_STATUS_ENABLED || normalized === "habilitado"
         ? MAPPER_STATUS_ENABLED
         : MAPPER_STATUS_DISABLED;
@@ -60,6 +73,19 @@ const getMapperStatusFromSavedData = (savedData) => {
     return MAPPER_STATUS_DISABLED;
 };
 
+const TainacanExportPanelTitle = () => {
+    const { enabled } = useTainacanExport();
+    const badgeClassName = enabled ? "success" : "";
+    const badgeLabel = enabled ? __("Active", "obatala") : __("Inactive", "obatala");
+
+    return (
+        <>
+            <span>{__("Tainacan Export", "obatala")}</span>
+            <span className={`badge ${badgeClassName}`}>{badgeLabel}</span>
+        </>
+    );
+};
+
 const processDataEditor = () => {
     const params = new URLSearchParams(window.location.search);
     const id = params.get("process_type_id");
@@ -69,8 +95,11 @@ const processDataEditor = () => {
     const [mapperStatus, setMapperStatus] = useState(MAPPER_STATUS_DISABLED);
     const flowRef = useRef(null); 
     const [flowData, setFlowData] = useState({ nodes: [], edges: [] }); 
+    const canManageMappers = window.obatalaApp?.can_manage_mappers !== false;
+    const exportConfigRef = useRef(null);
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
-    const isTainacanMapperEnabled = mapperStatus === MAPPER_STATUS_ENABLED;
+    const isTainacanMapperEnabled = mapperStatus !== MAPPER_STATUS_DISABLED;
+    const shouldOpenExportPanel = params.get("section") === "export";
 
     const getProcessIdFromUrl = () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -80,14 +109,14 @@ const processDataEditor = () => {
     useEffect(() => {
         setIsLoading(true);
 
-        const mapperStatusRequest = fetchMapperProcessModel(id)
+        const mapperStatusRequest = canManageMappers ? fetchMapperProcessModel(id)
             .then((mapperResponse) => {
                 return getMapperStatusFromSavedData(parseMappingData(mapperResponse?.mapping_data));
             })
             .catch((error) => {
                 console.error("Error fetching mapper status:", error);
                 return MAPPER_STATUS_DISABLED;
-            });
+            }) : Promise.resolve(MAPPER_STATUS_DISABLED);
 
         Promise.all([
             apiFetch({ path: `/obatala/v1/process_type/${id}` }),
@@ -150,14 +179,14 @@ const processDataEditor = () => {
             const hasOutput = nodeOutputs.get(node.id).length > 0;
 
             if (!isStart && !isEnd && !hasInput && !hasOutput) {
-                disconnectedNodes.push(`Etapa "${node.data?.stageName}" não possui entrada nem saída.`);
+                disconnectedNodes.push(sprintf(__('Step "%s" has no input or output.', 'obatala'), node.data?.stageName));
             } else {
                 if (!isStart && !hasInput) {
-                    disconnectedNodes.push((isEnd || isConditional ? 'Nó ' : 'Etapa ') + `"${node.data?.stageName}" não possui entrada.`);
+                    disconnectedNodes.push(sprintf(__('%1$s "%2$s" has no input.', 'obatala'), isEnd || isConditional ? __('Node', 'obatala') : __('Step', 'obatala'), node.data?.stageName));
                 }
 
                 if (!isEnd && !hasOutput) {
-                    disconnectedNodes.push((isStart || isConditional ? 'Nó ' : 'Etapa ') + `"${node.data?.stageName}" não possui saída.`);
+                    disconnectedNodes.push(sprintf(__('%1$s "%2$s" has no output.', 'obatala'), isStart || isConditional ? __('Node', 'obatala') : __('Step', 'obatala'), node.data?.stageName));
                 }
             }
         });
@@ -274,11 +303,13 @@ const processDataEditor = () => {
         });
     };
 
-
-
     const handleSave = async () => {
         try {
-            const flowData = flowRef.current.getFlowData(); 
+            let flowData = flowRef.current.getFlowData();
+            if (canManageMappers && exportConfigRef.current?.prepareFlowData) {
+                flowData = exportConfigRef.current.prepareFlowData(flowData);
+                setFlowData(flowData);
+            }
             
             const errorMessages = [];
 
@@ -298,7 +329,12 @@ const processDataEditor = () => {
 
             if (nodesWithoutSector.length > 0) {
                 errorMessages.push(
-                    (nodesWithoutSector.length > 1 ? 'As etapas:' : 'A etapa: ') + `${nodesWithoutSector.map(node => node.data?.stageName).join(', ')} não têm grupo definido.`
+                    sprintf(
+                        nodesWithoutSector.length > 1
+                            ? __('The steps %s do not have a group defined.', 'obatala')
+                            : __('The step %s does not have a group defined.', 'obatala'),
+                        nodesWithoutSector.map(node => node.data?.stageName).join(', ')
+                    )
                 );
             }
 
@@ -313,8 +349,12 @@ const processDataEditor = () => {
 
             if (nodesWithoutFields.length > 0) {
                 errorMessages.push(
-                    (nodesWithoutFields.length > 1 ? 'As etapas:' : 'A etapa: ') +
-                    `${nodesWithoutFields.map(node => node.data?.stageName).join(', ')} não têm campos definidos.`
+                    sprintf(
+                        nodesWithoutFields.length > 1
+                            ? __('The steps %s do not have fields defined.', 'obatala')
+                            : __('The step %s does not have fields defined.', 'obatala'),
+                        nodesWithoutFields.map(node => node.data?.stageName).join(', ')
+                    )
                 );
             }
 
@@ -333,7 +373,7 @@ const processDataEditor = () => {
                 errorMessages.push(
                     sprintf(
                         /* translators: %s: semicolon-separated list, e.g. "Step A (field 1); Step B (field 2)" */
-                        __("Some fields have an empty or default name. Check: %s", "obatala"),
+                        __("Some fields have an empty or default name. Check step: %s", "obatala"),
                         detailList
                     )
                 );
@@ -343,7 +383,7 @@ const processDataEditor = () => {
             if (duplicateFieldTitles.length > 0) {
                 errorMessages.push(
                     sprintf(
-                        __("Field names must be unique within each step. Check: %s", "obatala"),
+                        __("Field names must be unique within each step. Check step: %s", "obatala"),
                         duplicateFieldTitles
                             .map(({ stageName, title }) => `${stageName}: ${title}`)
                             .join("; ")
@@ -358,13 +398,12 @@ const processDataEditor = () => {
 
                     const sourceNode = flowData.nodes.find(node => node.id === incomingEdge?.source);
 
-                    const sourceName = sourceNode?.data?.stageName || sourceNode?.id || "Etapa desconhecida";
+                    const sourceName = sourceNode?.data?.stageName || sourceNode?.id || __('Unknown step', 'obatala');
 
-                    return `A condicional após a etapa "${sourceName}" está incompleta.`;
+                    return sprintf(__('The conditional after step "%s" is incomplete.', 'obatala'), sourceName);
                 });
 
                 errorMessages.push(...conditionalErrors);
-
             }
 
             if (errorMessages.length > 0) {
@@ -380,26 +419,19 @@ const processDataEditor = () => {
                 });
                 return;
             }
-            const updatedData = {
-                ...processData,
-                meta: {
-                    flowData, 
-                    updateAt: new Date(),
-                    user: currentUser?.name
-                },
-            };
-
-            await apiFetch({
-                path: `/obatala/v1/process_type/${id}`,
-                method: "PUT",
-                data: updatedData,
-            });
-
             await apiFetch({
                 path: `/obatala/v1/process_type/${id}/meta`,
                 method: "PUT",
-                data: updatedData.meta,
+                data: {
+                    flowData,
+                    updateAt: new Date().toISOString(),
+                    user: currentUser?.name || "",
+                },
             });
+
+            if (canManageMappers && exportConfigRef.current?.save) {
+                await exportConfigRef.current.save();
+            }
 
             for (const node of flowData.nodes) {
                 if (node.tempSector) {
@@ -407,14 +439,33 @@ const processDataEditor = () => {
                         await updateNodeSector(node.id, node.tempSector);
 
                     } catch (error) {
-                        console.error(`Erro ao associar setor ao nó ${node.id}:`, error);
+                console.error(sprintf(__('Error associating group to node %s:', 'obatala'), node.id), error);
                     }
                 }
             }
 
+            const savedMeta = await apiFetch({
+                path: `/obatala/v1/process_type/${id}/meta`,
+            });
+            const savedFlowData = savedMeta?.flowData;
+            if (
+                !savedFlowData
+                || !Array.isArray(savedFlowData.nodes)
+                || !Array.isArray(savedFlowData.edges)
+            ) {
+                throw new Error(
+                    __("Error updating process type and meta.", "obatala")
+                );
+            }
+
+            setFlowData(savedFlowData);
             setProcessData({
                 ...processData,
-                meta: updatedData.meta,
+                meta: {
+                    ...processData.meta,
+                    ...savedMeta,
+                    flowData: savedFlowData,
+                },
             });
 
             setNotice({
@@ -458,29 +509,61 @@ const processDataEditor = () => {
         <>
             <BrandHeader />
             <FlowProvider>
-                <div className="title-container">
-                    <h2><small>{__('Manage steps', 'obatala')}</small>{processData.title.rendered}</h2>
-                    <ProcessControls
-                        onSave={handleSave}
-                        onCancel={handleCancelEditProcessType}
-                        toggleFullScreen={toggleFullScreen}
-                    />
-                </div>
-                <main>
-                    {notice && (
-                        <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                            {notice.message}
-                        </Notice>
-                    )}
-                    <ProcessFlow
-                        ref={flowRef}
-                        initialData={flowData}
-                        isTainacanMapperEnabled={isTainacanMapperEnabled}
-                        onSave={handleSave}
-                        onCancel={handleCancelEditProcessType}
-                        toggleFullScreen={toggleFullScreen}
-                    />
-                </main>
+                <TainacanExportProvider
+                    ref={exportConfigRef}
+                    processTypeId={id}
+                    available={canManageMappers}
+                    onStatusChange={(status) => setMapperStatus(normalizeMapperStatus(status))}
+                    onNotice={setNotice}
+                >
+                    <div className="title-container">
+                        <h2><small>{__('Process model', 'obatala')}</small>{processData.title.rendered}</h2>
+                        <ModelControls
+                            onSave={handleSave}
+                            onCancel={handleCancelEditProcessType}
+                        />
+                    </div>
+                    <main>
+                        {notice && (
+                            <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                                {notice.message}
+                            </Notice>
+                        )}
+                        <Panel header={ __('Gerenciar modelo de processo', 'obatala') }>
+                            {canManageMappers && (
+                                <PanelBody 
+                                    title={ <TainacanExportPanelTitle /> } 
+                                    initialOpen={ shouldOpenExportPanel }
+                                >
+                                    <PanelRow>
+                                        <form className="control-container">
+                                            <TainacanExportPanel />
+                                            <TainacanMappingSummary />
+                                        </form>
+                                    </PanelRow>
+                                </PanelBody>
+                            )}
+                            <PanelBody 
+                                title={ __('Manage steps', 'obatala') } 
+                                initialOpen={ true }
+                            >
+                                <PanelRow>
+                                    <FlowControls
+                                        toggleFullScreen={toggleFullScreen}
+                                    />
+                                    <ProcessFlow
+                                        ref={flowRef}
+                                        initialData={flowData}
+                                        isTainacanMapperEnabled={isTainacanMapperEnabled}
+                                        onSave={handleSave}
+                                        onCancel={handleCancelEditProcessType}
+                                        toggleFullScreen={toggleFullScreen}
+                                    />
+                                </PanelRow>
+                            </PanelBody>
+                        </Panel>
+                    </main>
+                </TainacanExportProvider>
             </FlowProvider>
             <BrandFooter />
         </>
