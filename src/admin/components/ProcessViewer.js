@@ -2796,11 +2796,11 @@ const ProcessViewer = () => {
                         <div className="panel-container">
                             <Panel>
                                 <PanelHeader>{__('Etapas', 'obatala')}</PanelHeader>
-                                {exportRuntimeConfig?.configured && !isExportReviewCompleted && (
+                                {exportRuntimeConfig?.configured && (
                                     <TainacanExportPreparation
                                         processId={processId}
                                         runtime={exportRuntimeConfig}
-                                        canEdit={hasPermission || isPublic}
+                                        canEdit={(hasPermission || isPublic) && !isExportReviewCompleted}
                                         onSaved={handleExportPreparationSaved}
                                     />
                                 )}
