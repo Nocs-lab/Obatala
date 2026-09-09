@@ -581,7 +581,8 @@ const ProcessViewer = () => {
     const [process, setProcess] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [currentStep] = useState(0);
+    const [currentStep, setCurrentStep] = useState(0);
+    const [activeStep, setActiveStep] = useState(null);
     const [filteredProcessType, setFilteredProcessType] = useState(null);
     const [submittedSteps, setSubmittedSteps] = useState({});
     const [formValues, setFormValues] = useState({});
@@ -2853,10 +2854,21 @@ const ProcessViewer = () => {
                                                     </div>
                                                 </>
                                             }
-                                            key={index}
+                                            key={step.value || index}
                                             className={`accordion-item ${isCompleted ? 'success' : isDisabled ? 'danger' : 'warning'} ${isDisabled ? 'disabled' : ''}`}
-                                            initialOpen={ false }
-                                            opened={ isDisabled ? false : undefined }
+                                            opened={!isDisabled && activeStep === index}
+                                            onToggle={(isOpen) => {
+                                                if (isDisabled) {
+                                                    return;
+                                                }
+
+                                                if (isOpen) {
+                                                    setCurrentStep(index);
+                                                    setActiveStep(index);
+                                                } else if (activeStep === index) {
+                                                    setActiveStep(null);
+                                                }
+                                            }}
                                             >
                                             {!isDisabled && (
                                                 <PanelRow>
