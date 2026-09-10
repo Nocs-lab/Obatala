@@ -46,7 +46,6 @@ const sortProcessesNewestFirst = (processList) => {
 const ProcessManager = ({ onSelectProcess }) => {
     const [processTypes, setProcessTypes] = useState([]);
     const [processes, setProcesses] = useState([]);
-    const [processTypeMappings, setProcessTypeMappings] = useState([]);
     const [isLoadingProcesses, setIsLoadingProcesses] = useState(true);
     const [isLoadingUserProcesses, setIsLoadingUserProcesses] = useState(false);
     const [processUser, setProcessUser] = useState([]);
@@ -60,7 +59,6 @@ const ProcessManager = ({ onSelectProcess }) => {
     const [processToDelete, setProcessToDelete] = useState(null);
     const [isDeletingProcess, setIsDeletingProcess] = useState(false);
     const [progressMap, setProgressMap] = useState({});
-    const [fetchedProcessIds, setFetchedProcessIds] = useState(new Set());
     const [progressFilter, setProgressFilter] = useState('');
 
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
@@ -75,34 +73,34 @@ const ProcessManager = ({ onSelectProcess }) => {
     }, [currentUser])
 
     useEffect(() => {
-        processes.forEach((process) => {
-            const processId = process.id;
-            if (!fetchedProcessIds.has(processId)) {
-                setFetchedProcessIds((prev) => {
-                    const newSet = new Set(prev);
-                    newSet.add(processId);
-                    return newSet;
-                });
-                apiFetch({
-                    path: `/obatala/v1/process_obatala/${processId}/node`,
-                    method: 'GET',
-                })
-                .then((response) => {
-                    setProgressMap((prev) => ({
-                        ...prev,
-                        [processId]: response.progress,
-                    }));
-                })
-                .catch((error) => {
-                    console.error('Erro ao buscar progresso do processo:', error);
-                    setProgressMap((prev) => ({
-                        ...prev,
-                        [processId]: 0,
-                    }));
-                });
+        if (processes.length === 0) {
+            setProgressMap({});
+            return;
+        }
+
+        let isCurrent = true;
+        const ids = processes.map((process) => process.id).join(',');
+
+        apiFetch({
+            path: `/obatala/v1/process_obatala/progress?ids=${ids}`,
+            method: 'GET',
+        })
+        .then((response) => {
+            if (isCurrent) {
+                setProgressMap(response || {});
+            }
+        })
+        .catch((error) => {
+            console.error('Erro ao buscar progresso dos processos:', error);
+            if (isCurrent) {
+                setProgressMap({});
             }
         });
-    }, [processes, fetchedProcessIds]);
+
+        return () => {
+            isCurrent = false;
+        };
+    }, [processes]);
 
 
     const fetchProcessModels = () => {
@@ -147,7 +145,6 @@ const ProcessManager = ({ onSelectProcess }) => {
             });
             if (data && Array.isArray(data)) {
                 setProcesses(sortProcessesNewestFirst(data));
-                await fetchProcessModelsForProcesses(data);
             } else {
                 console.error("No processes data returned.");
                 setProcesses([]);
@@ -157,31 +154,6 @@ const ProcessManager = ({ onSelectProcess }) => {
         } finally {
             setIsLoadingProcesses(false);
         }
-    };
-
-    const fetchProcessModelsForProcesses = async (processes) => {
-        if (!processes || processes.length === 0) {
-            console.error("No processes available for fetching process types.");
-            return;
-        }
-
-        const promises = processes.map(async (process) => {
-        try {
-            const processTypeId = await apiFetch({
-            path: `/obatala/v1/process_obatala/${process.id}/process_type`,
-            });
-            return { processId: process.id, processTypeId };
-        } catch (error) {
-            console.error(
-            `Error fetching process type for process ${process.id}:`,
-            error
-            );
-            return { processId: process.id, processTypeId: null };
-        }
-    });
-
-    const results = await Promise.all(promises);
-        setProcessTypeMappings(results);
     };
 
     const handleProcessSaved = async (newProcess) => {
@@ -199,22 +171,7 @@ const ProcessManager = ({ onSelectProcess }) => {
             setAddingProcess(null);
         }
 
-        setFetchedProcessIds((prev) => {
-            const newSet = new Set(prev);
-            newSet.delete(newProcess.id);
-            return newSet;
-        });
-
         setNotice({ status: 'success', message: __('Process saved successfully.', 'obatala') });
-
-        setProcessTypeMappings((prev) => {
-            const processTypeId = newProcess.meta?.process_type?.[0] ?? newProcess.meta?.process_type;
-            const withoutCurrent = prev.filter((m) => m.processId !== newProcess.id);
-            return [
-                ...withoutCurrent,
-                { processId: newProcess.id, processTypeId: processTypeId ?? null },
-            ];
-        });
 
         await fetchProcessesUser();
     };
@@ -375,7 +332,6 @@ const ProcessManager = ({ onSelectProcess }) => {
                                 onEdit={handleEditProcess}
                                 onViewProcess={handleSelectProcess}
                                 onDelete={handleConfirmDelete}
-                                processTypeMappings={processTypeMappings}
                                 processTypes={processTypes}
                                 accessLevel={accessLevel}
                                 setAccessLevel={setAccessLevel}
