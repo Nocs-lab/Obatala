@@ -121,6 +121,23 @@ class ProcessApi extends ObatalaAPI {
             'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
         ]);
 
+        // Rota para retornar o progresso de varios processos numa unica requisicao.
+        // Evita uma requisicao REST por processo na listagem (cada uma custa um
+        // bootstrap completo do WordPress).
+        $this->add_route('/process_obatala/progress', [
+            'methods' => 'GET',
+            'callback' => [$this, 'get_processes_progress'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'args' => [
+                'ids' => [
+                    'required' => true,
+                    'validate_callback' => function ($param) {
+                        return is_string($param) || is_array($param);
+                    },
+                ],
+            ],
+        ]);
+
         // Rota para gerar relatório PDF do processo
         $this->add_route('/process_obatala/(?P<id>\d+)/report-pdf', [
             'methods' => 'GET',
@@ -1250,6 +1267,46 @@ class ProcessApi extends ObatalaAPI {
             'ordered_nodes' => $orderedNodes,
             'progress'      => $progress
         ], 200);       
+    }
+
+    /**
+     * Retorna o progresso de varios processos numa unica requisicao.
+     *
+     * Substitui o padrao anterior de uma chamada GET /node por processo na
+     * listagem. Nao persiste a hidratacao dos nodes (ao contrario de
+     * valid_nodes): calculate_progress_percentage ja hidrata em memoria, e a
+     * listagem so precisa do percentual.
+     *
+     * @param \WP_REST_Request $request
+     * @return WP_REST_Response Mapa de process_id => percentual.
+     */
+    public function get_processes_progress($request) {
+        $ids = $request->get_param('ids');
+        $ids = is_array($ids) ? $ids : explode(',', (string) $ids);
+        $ids = array_values(array_unique(array_filter(array_map('intval', $ids))));
+        $ids = array_slice($ids, 0, 200);
+
+        if (empty($ids)) {
+            return new WP_REST_Response([], 200);
+        }
+
+        // Prime o cache de posts e meta de uma vez, em vez de uma query por processo.
+        _prime_post_caches($ids, false, true);
+
+        $progress = [];
+        foreach ($ids as $id) {
+            if (get_post_type($id) !== 'process_obatala') {
+                continue;
+            }
+
+            $flow_data = maybe_unserialize(get_post_meta($id, 'flowData', true));
+
+            $progress[$id] = (is_array($flow_data) && isset($flow_data['nodes'], $flow_data['edges']))
+                ? $this->calculate_progress_percentage($id, $flow_data['nodes'], $flow_data['edges'])
+                : 0;
+        }
+
+        return new WP_REST_Response($progress, 200);
     }
 
     private function get_process_stage_data($post_id) {
