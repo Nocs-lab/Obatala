@@ -26,7 +26,11 @@ const DashboardPage = () => {
 	const [ sectors, setSectors ] = useState( [] );
 	const [ sectorsUsers, setSectorsUsers ] = useState( [] );
 	const [ topModels, setTopModels ] = useState( [] );
-	const [ isLoading, setIsLoading ] = useState( true );
+	// Spinner de tela cheia apenas na carga inicial. Atualizacoes posteriores
+	// (ex.: processos pendentes, que so carregam depois que currentUser resolve)
+	// nao podem esconder a tela ja renderizada.
+	const [ isInitialLoading, setIsInitialLoading ] = useState( true );
+	const [ isLoadingPending, setIsLoadingPending ] = useState( false );
 	const [ pendingProcesses, setPendingProcesses ] = useState( [] );
 	const [ tainacanItemsCount, setTainacanItemsCount ] = useState( 0 );
 
@@ -234,11 +238,15 @@ const DashboardPage = () => {
 	};
 
 	useEffect( () => {
-		loadProcessTypes();
-		loadProcesses();
-		loadSectors();
-		loadSectorsUsers();
-		loadTainacanItemsCount();
+		// A tela so aparece quando toda a carga inicial termina, evitando
+		// renderizar com dados parciais do primeiro loader que responder.
+		Promise.all( [
+			loadProcessTypes(),
+			loadProcesses(),
+			loadSectors(),
+			loadSectorsUsers(),
+			loadTainacanItemsCount(),
+		] ).finally( () => setIsInitialLoading( false ) );
 	}, [] );
 
 	useEffect( () => {
@@ -246,15 +254,12 @@ const DashboardPage = () => {
 	}, [ processes ] );
 
 	const loadProcessTypes = () => {
-		setIsLoading( true );
-		fetchProcessModels()
+		return fetchProcessModels()
 			.then( ( data ) => {
 				setProcessTypes( data );
-				setIsLoading( false );
 			} )
 			.catch( () => {
 				console.error( 'Error fetching process types:' );
-				setIsLoading( false );
 			} );
 	};
 
@@ -382,8 +387,10 @@ const DashboardPage = () => {
 			return;
 		}
 
+		let isCurrent = true;
+
 		const loadPendingProcesses = async () => {
-			setIsLoading( true );
+			setIsLoadingPending( true );
 			try {
 				const processes = await apiFetch( {
 					path: '/obatala/v1/process_obatala?per_page=100&_embed',
@@ -408,19 +415,26 @@ const DashboardPage = () => {
 						};
 					} );
 
-				setPendingProcesses( pending );
+				if ( isCurrent ) {
+					setPendingProcesses( pending );
+				}
 			} catch {
 				console.error( 'Error loading pending processes:' );
 			} finally {
-				setIsLoading( false );
+				if ( isCurrent ) {
+					setIsLoadingPending( false );
+				}
 			}
 		};
 
 		loadPendingProcesses();
+
+		return () => {
+			isCurrent = false;
+		};
 	}, [ currentUser?.id, sectorsUsers ] );
 
 	const loadProcesses = async () => {
-		setIsLoading( true );
 		try {
 			const data = await apiFetch( {
 				path: `/obatala/v1/process_obatala?per_page=100&_embed`,
@@ -433,14 +447,11 @@ const DashboardPage = () => {
 			}
 		} catch {
 			console.error( 'Error fetching processes:' );
-		} finally {
-			setIsLoading( false );
 		}
 	};
 
 	const loadSectors = () => {
-		setIsLoading( true );
-		fetchSectors()
+		return fetchSectors()
 			.then( ( data ) => {
 				const sectors = Object.entries( data ).map(
 					( [ key, value ] ) => ( {
@@ -452,29 +463,24 @@ const DashboardPage = () => {
 				);
 
 				setSectors( sectors );
-				setIsLoading( false );
 			} )
 			.catch( () => {
 				console.error( 'Error fetching sectors:' );
-				setIsLoading( false );
 			} );
 	};
 
 	const loadSectorsUsers = () => {
-		setIsLoading( true );
-		fetchSectorsUsers()
+		return fetchSectorsUsers()
 			.then( ( data ) => {
 				setSectorsUsers( data );
-				setIsLoading( false );
 			} )
 			.catch( () => {
 				console.error( 'Error fetching sectors:' );
-				setIsLoading( false );
 			} );
 	};
 
 	const loadTainacanItemsCount = () => {
-		fetchTainacanItemsCount()
+		return fetchTainacanItemsCount()
 			.then( setTainacanItemsCount )
 			.catch( () => {
 				console.error( 'Error fetching Tainacan items count:' );
@@ -504,8 +510,6 @@ const DashboardPage = () => {
 
 	const topFiveModels = () => {
 		try {
-			setIsLoading( true );
-
 			const modelCount = {};
 
 			processes.map( ( process ) => {
@@ -531,8 +535,6 @@ const DashboardPage = () => {
 			setTopModels( sortedModels );
 		} catch {
 			console.error( 'Erro ao buscar dados dos processos:' );
-		} finally {
-			setIsLoading( false );
 		}
 	};
 
@@ -563,7 +565,7 @@ const DashboardPage = () => {
 		).format( tainacanItemsCount );
 	}, [ tainacanItemsCount ] );
 
-	if ( isLoading ) {
+	if ( isInitialLoading ) {
 		return <Spinner />;
 	}
 
@@ -612,13 +614,16 @@ const DashboardPage = () => {
 									</div>
 								) }
 							</div>
-							{ pendingProcesses.length > 0 && (
+							{ ( isLoadingPending ||
+								pendingProcesses.length > 0 ) && (
 								<Panel className="warning">
 									<PanelHeader>
 										{ __( 'Pending processes', 'obatala' ) }
 									</PanelHeader>
 									<PanelRow>
-										{ pendingProcesses.length > 0 ? (
+										{ isLoadingPending ? (
+											<Spinner />
+										) : (
 											<ul className="list-actions mb-0">
 												{ pendingProcesses.map(
 													( process ) => {
@@ -660,16 +665,6 @@ const DashboardPage = () => {
 													}
 												) }
 											</ul>
-										) : (
-											<Notice
-												status="info"
-												isDismissible={ false }
-											>
-												{ __(
-													'No pending processes found.',
-													'obatala'
-												) }
-											</Notice>
 										) }
 									</PanelRow>
 								</Panel>
