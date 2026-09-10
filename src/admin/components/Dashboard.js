@@ -27,11 +27,8 @@ const DashboardPage = () => {
 	const [ sectorsUsers, setSectorsUsers ] = useState( [] );
 	const [ topModels, setTopModels ] = useState( [] );
 	// Spinner de tela cheia apenas na carga inicial. Atualizacoes posteriores
-	// (ex.: processos pendentes, que so carregam depois que currentUser resolve)
 	// nao podem esconder a tela ja renderizada.
 	const [ isInitialLoading, setIsInitialLoading ] = useState( true );
-	const [ isLoadingPending, setIsLoadingPending ] = useState( false );
-	const [ pendingProcesses, setPendingProcesses ] = useState( [] );
 	const [ tainacanItemsCount, setTainacanItemsCount ] = useState( 0 );
 
 	const currentUser = useSelect(
@@ -382,57 +379,37 @@ const DashboardPage = () => {
 		return isUserAllowedInSector( currentNode.sector_obatala );
 	};
 
-	useEffect( () => {
+	// Derivado de `processes`, que ja vem da carga inicial: a lista nao precisa
+	// de fetch proprio (era a mesma chamada, repetida a cada mudanca de
+	// sectorsUsers) nem de estado de carregamento — o painel so existe quando
+	// ha algo para mostrar, em vez de aparecer vazio e sumir depois.
+	const pendingProcesses = useMemo( () => {
 		if ( ! currentUser?.id ) {
-			return;
+			return [];
 		}
 
-		let isCurrent = true;
+		return processes
+			.filter( isProcessPending )
+			.slice( 0, 10 )
+			.map( ( process ) => {
+				const details = getProcessDetails( process );
 
-		const loadPendingProcesses = async () => {
-			setIsLoadingPending( true );
-			try {
-				const processes = await apiFetch( {
-					path: '/obatala/v1/process_obatala?per_page=100&_embed',
-				} );
-
-				const pending = processes
-					.filter( isProcessPending )
-					.slice( 0, 10 )
-					.map( ( process ) => {
-						const details = getProcessDetails( process );
-
-						return {
-							id: process.id,
-							title: process.title?.rendered || __( 'Sem título', 'obatala' ),
-							percentage: details.percentage,
-							lastUpdate: details.lastUpdate,
-							currentStage: details.currentStage,
-							currentStageId: details.currentStageId,
-							link:
-								obatalaApp.admin_url +
-								`admin.php?page=process-viewer&process_id=${ process.id }`,
-						};
-					} );
-
-				if ( isCurrent ) {
-					setPendingProcesses( pending );
-				}
-			} catch {
-				console.error( 'Error loading pending processes:' );
-			} finally {
-				if ( isCurrent ) {
-					setIsLoadingPending( false );
-				}
-			}
-		};
-
-		loadPendingProcesses();
-
-		return () => {
-			isCurrent = false;
-		};
-	}, [ currentUser?.id, sectorsUsers ] );
+				return {
+					id: process.id,
+					title:
+						process.title?.rendered ||
+						__( 'Sem título', 'obatala' ),
+					percentage: details.percentage,
+					lastUpdate: details.lastUpdate,
+					currentStage: details.currentStage,
+					currentStageId: details.currentStageId,
+					link:
+						obatalaApp.admin_url +
+						`admin.php?page=process-viewer&process_id=${ process.id }`,
+				};
+			} );
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [ processes, sectorsUsers, currentUser?.id ] );
 
 	const loadProcesses = async () => {
 		try {
@@ -565,7 +542,10 @@ const DashboardPage = () => {
 		).format( tainacanItemsCount );
 	}, [ tainacanItemsCount ] );
 
-	if ( isInitialLoading ) {
+	// currentUser tambem entra no gate: a tela le currentUser.avatar_urls sem
+	// guarda e os pendentes dependem do id, entao renderizar antes dele
+	// resolver quebraria ou mostraria o painel chegando depois.
+	if ( isInitialLoading || ! currentUser ) {
 		return <Spinner />;
 	}
 
@@ -614,58 +594,49 @@ const DashboardPage = () => {
 									</div>
 								) }
 							</div>
-							{ ( isLoadingPending ||
-								pendingProcesses.length > 0 ) && (
+							{ pendingProcesses.length > 0 && (
 								<Panel className="warning">
 									<PanelHeader>
 										{ __( 'Pending processes', 'obatala' ) }
 									</PanelHeader>
 									<PanelRow>
-										{ isLoadingPending ? (
-											<Spinner />
-										) : (
-											<ul className="list-actions mb-0">
-												{ pendingProcesses.map(
-													( process ) => {
-														return (
-															<li
-																key={
-																	process.id
+										<ul className="list-actions mb-0">
+											{ pendingProcesses.map(
+												( process ) => {
+													return (
+														<li key={ process.id }>
+															<a
+																href={
+																	process.link
 																}
 															>
-																<a
-																	href={
-																		process.link
+																<span className="percent">
+																	{
+																		process.percentage
 																	}
-																>
-																	<span className="percent">
-																		{
-																			process.percentage
-																		}
-																		%
-																	</span>
-																	<span className="text">
-																		{
-																			process.title
-																		}
-																		<small className="d-block">
-																			{ __(
-																				'Current stage',
-																				'obatala'
-																			) }
-																			:{ ' ' }
-																			{ process.currentStage ||
-																				'N/A' }
-																		</small>
-																	</span>
-																	<Icon icon="arrow-right-alt2" />
-																</a>
-															</li>
-														);
-													}
-												) }
-											</ul>
-										) }
+																	%
+																</span>
+																<span className="text">
+																	{
+																		process.title
+																	}
+																	<small className="d-block">
+																		{ __(
+																			'Current stage',
+																			'obatala'
+																		) }
+																		:{ ' ' }
+																		{ process.currentStage ||
+																			'N/A' }
+																	</small>
+																</span>
+																<Icon icon="arrow-right-alt2" />
+															</a>
+														</li>
+													);
+												}
+											) }
+										</ul>
 									</PanelRow>
 								</Panel>
 							) }
