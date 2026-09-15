@@ -16,17 +16,14 @@ const BrandHeader = () => {
                 </a>
                 <a href={obatalaApp.admin_url + "admin.php?page=obatala-main"} className="menu-link"><Icon icon="admin-home" /> {__('Dashboard', 'obatala')}</a>
                 <a href={obatalaApp.admin_url +"admin.php?page=process-manager"} className="menu-link"><Icon icon="admin-page" /> {__('Processes', 'obatala')}</a>
-                <a href={obatalaApp.admin_url +"admin.php?page=process-type-manager"} className="menu-link"><Icon icon="welcome-widgets-menus" /> {__('Models', 'obatala')}</a>
                 <a href={obatalaApp.admin_url +"admin.php?page=collection-items"} className="menu-link"><Icon icon="archive" /> {__('Collection items', 'obatala')}</a>
+                <a href={obatalaApp.admin_url +"admin.php?page=process-type-manager"} className="menu-link"><Icon icon="welcome-widgets-menus" /> {__('Models', 'obatala')}</a>
+                <a href={obatalaApp.admin_url +"admin.php?page=sector_manager"} className="menu-link"><Icon icon="groups" /> {__('Groups', 'obatala')}</a>
                 <a href={obatalaApp.admin_url +"admin.php?page=tainacan_admin#/home"} className="menu-tainacan menu-link ms-auto">Tainacan</a>
                 <DropdownMenu
                     icon="admin-generic"
                     label={__('Settings', 'obatala')}
                     controls={ [
-                        {
-                            title: __('Groups', 'obatala'),
-                            onClick: () => window.location.href = obatalaApp.admin_url +'admin.php?page=sector_manager',
-                        },
                         {
                             title: __('Users', 'obatala'),
                             onClick: () => window.location.href = obatalaApp.admin_url +'users.php',

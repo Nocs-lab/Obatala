@@ -14,12 +14,12 @@ namespace Obatala\Admin {
     {
         private static $pages = [
             'main' => [
-                'title' => 'obatala',
-                'menu_title' => 'obatala',
+                'title' => 'Tainacan: Processos',
+                'menu_title' => 'Processos',
                 'capability' => 'obatala_access',
                 'slug' => 'obatala-main',
                 'callback' => 'render_main_page',
-                'icon' => 'dashicons-admin-site',
+                'icon' => 'tainacan-white.svg',
                 'position' => 2
             ],
             'submenus' => [
@@ -30,7 +30,7 @@ namespace Obatala\Admin {
                     'capability' => 'obatala_access',
                     'slug' => 'obatala-main',
                     'callback' => 'render_main_page',
-                    'show_in_menu' => true
+                    'show_in_menu' => false
                 ],
                 [
                     'parent_slug' => 'obatala-main',
@@ -39,7 +39,7 @@ namespace Obatala\Admin {
                     'capability' => 'obatala_manage_processes',
                     'slug' => 'process-manager',
                     'callback' => 'render_page',
-                    'show_in_menu' => true
+                    'show_in_menu' => false
                 ],
                 [
                     'parent_slug' => 'obatala-main',
@@ -48,7 +48,7 @@ namespace Obatala\Admin {
                     'capability' => 'obatala_manage_models',
                     'slug' => 'process-type-manager',
                     'callback' => 'render_page',
-                    'show_in_menu' => true
+                    'show_in_menu' => false
                 ],
                 [
                     'parent_slug' => 'obatala-main',
@@ -66,7 +66,7 @@ namespace Obatala\Admin {
                     'capability' => 'obatala_manage_groups',
                     'slug' => 'sector_manager',
                     'callback' => 'render_page',
-                    'show_in_menu' => true
+                    'show_in_menu' => false
                 ],
                 [
                     'parent_slug' => 'obatala-main',
@@ -122,7 +122,7 @@ namespace Obatala\Admin {
                 $main['capability'],
                 $main['slug'],
                 [self::class, $main['callback']],
-                $main['icon'],
+                self::get_menu_icon($main['icon']),
                 $main['position']
             );
 
@@ -175,6 +175,22 @@ namespace Obatala\Admin {
                 default:
                     return $label;
             }
+        }
+
+        private static function get_menu_icon($icon)
+        {
+            if ($icon !== 'tainacan-white.svg') {
+                return $icon;
+            }
+
+            $icon_path = dirname(__DIR__, 2) . '/images/' . $icon;
+            $icon_contents = file_exists($icon_path) ? file_get_contents($icon_path) : false;
+
+            if ($icon_contents === false) {
+                return 'dashicons-admin-site';
+            }
+
+            return 'data:image/svg+xml;base64,' . base64_encode($icon_contents);
         }
 
 

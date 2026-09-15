@@ -1804,7 +1804,7 @@ const MappersManager = ({
                                 <div className="counter-container flex-basis-100">
                                     <hr className="mb-2" />
                                     {showProfileSelectorSection && (
-                                        <BaseControl
+                                        <BaseControl className="counter-item"
                                             label={__('Collection selection at process start', 'obatala')}
                                             help={__('Choose the field in the initial step that will automatically receive the collection options.', 'obatala')}
                                         >
@@ -1846,7 +1846,7 @@ const MappersManager = ({
                                             })}
                                         </div>
 
-                                        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap', marginTop: '6px' }}>
+                                        <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }} className="mt-1">
                                             {selectedProfiles.map((profile, index) => {
                                                 const displayName = getCollectionLabel(
                                                     profile.collection_id,
@@ -1916,6 +1916,7 @@ const MappersManager = ({
                                             onChange={handleSelectedStepsChange}
                                             isDisabled={!currentProfile}
                                             placeholder={__('Select the fields...', 'obatala')}
+                                            className="react-select-2-input-container"
                                         />
                                     </BaseControl>
 
