@@ -206,7 +206,6 @@ const ProcessManager = ({ onSelectProcess }) => {
         try {
             const response = await deleteProcess(processToDelete.id);
             setProcesses((prev) => prev.filter((p) => p.id !== processToDelete.id));
-            setProcessTypeMappings((prev) => prev.filter((m) => m.processId !== processToDelete.id));
             const successMessage = response?.message
                 ? __(response.message, 'obatala')
                 : __('Process deleted successfully.', 'obatala');

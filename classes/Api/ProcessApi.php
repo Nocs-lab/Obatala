@@ -1284,7 +1284,14 @@ class ProcessApi extends ObatalaAPI {
         $ids = $request->get_param('ids');
         $ids = is_array($ids) ? $ids : explode(',', (string) $ids);
         $ids = array_values(array_unique(array_filter(array_map('intval', $ids))));
-        $ids = array_slice($ids, 0, 200);
+
+        if (count($ids) > 200) {
+            return new WP_Error(
+                'obatala_too_many_processes',
+                __('A maximum of 200 process IDs can be requested.', 'obatala'),
+                ['status' => 400]
+            );
+        }
 
         if (empty($ids)) {
             return new WP_REST_Response([], 200);
@@ -1295,7 +1302,10 @@ class ProcessApi extends ObatalaAPI {
 
         $progress = [];
         foreach ($ids as $id) {
-            if (get_post_type($id) !== 'process_obatala') {
+            if (
+                get_post_type($id) !== 'process_obatala'
+                || !current_user_can('read_post', $id)
+            ) {
                 continue;
             }
 

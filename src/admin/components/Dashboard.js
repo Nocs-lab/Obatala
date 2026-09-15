@@ -25,7 +25,6 @@ const DashboardPage = () => {
 	const [ processes, setProcesses ] = useState( [] );
 	const [ sectors, setSectors ] = useState( [] );
 	const [ sectorsUsers, setSectorsUsers ] = useState( [] );
-	const [ topModels, setTopModels ] = useState( [] );
 	// Spinner de tela cheia apenas na carga inicial. Atualizacoes posteriores
 	// nao podem esconder a tela ja renderizada.
 	const [ isInitialLoading, setIsInitialLoading ] = useState( true );
@@ -237,18 +236,16 @@ const DashboardPage = () => {
 	useEffect( () => {
 		// A tela so aparece quando toda a carga inicial termina, evitando
 		// renderizar com dados parciais do primeiro loader que responder.
-		Promise.all( [
+		Promise.allSettled( [
 			loadProcessTypes(),
 			loadProcesses(),
 			loadSectors(),
 			loadSectorsUsers(),
-			loadTainacanItemsCount(),
 		] ).finally( () => setIsInitialLoading( false ) );
-	}, [] );
 
-	useEffect( () => {
-		topFiveModels();
-	}, [ processes ] );
+		// A contagem do Tainacan nao bloqueia o restante do dashboard.
+		loadTainacanItemsCount();
+	}, [] );
 
 	const loadProcessTypes = () => {
 		return fetchProcessModels()
@@ -485,40 +482,27 @@ const DashboardPage = () => {
 		} );
 	}, [ sectorsUserLogged, sectors ] );
 
-	const topFiveModels = () => {
-		try {
-			const modelCount = {};
+	const topModels = useMemo( () => {
+		const modelCount = {};
 
-			processes.map( ( process ) => {
-				const modelId = process?.meta?.process_type[ 0 ];
-				if ( modelId ) {
-					if ( modelId ) {
-						if ( ! modelCount[ modelId ] ) {
-							modelCount[ modelId ] = 0;
-						}
-						modelCount[ modelId ] += 1;
-					}
-				}
-			} );
-			const sortedModels = Object.entries( modelCount )
-				.sort( ( a, b ) => b[ 1 ] - a[ 1 ] )
-				.slice( 0, 5 )
-				.map( ( [ modelId, count ] ) => ( {
-					modelId,
-					count,
-					modelName: getModelNameById( modelId ),
-				} ) );
+		processes.forEach( ( process ) => {
+			const modelId = process?.meta?.process_type?.[ 0 ];
+			if ( modelId ) {
+				modelCount[ modelId ] = ( modelCount[ modelId ] || 0 ) + 1;
+			}
+		} );
 
-			setTopModels( sortedModels );
-		} catch {
-			console.error( 'Erro ao buscar dados dos processos:' );
-		}
-	};
-
-	const getModelNameById = ( modelId ) => {
-		const model = processTypes.find( ( m ) => m.id.toString() === modelId );
-		return model ? model.title.rendered : 'Desconhecido';
-	};
+		return Object.entries( modelCount )
+			.sort( ( a, b ) => b[ 1 ] - a[ 1 ] )
+			.slice( 0, 5 )
+			.map( ( [ modelId, count ] ) => ( {
+				modelId,
+				count,
+				modelName:
+					processTypes.find( ( model ) => model.id.toString() === modelId )
+						?.title.rendered || 'Desconhecido',
+			} ) );
+	}, [ processes, processTypes ] );
 
 	// Função para contar processos concluídos
 	const countCompletedProcesses = useMemo( () => {
