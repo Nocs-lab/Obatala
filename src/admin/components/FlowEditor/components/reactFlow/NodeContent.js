@@ -158,9 +158,11 @@ const NodeContent = ({ id, data = {} }) => {
                         <h3 className="title">{__('Select a field to add:', 'obatala')}</h3>
                         <ul className="node-meta-list-container">
                             {FIELD_OPTIONS.map((option) => (
-                                <Button variant="primary" size="small" icon={<Icon icon={option.icon} />} onClick={() => addFieldToNode(option.id)}>
-                                    {option.label}
-                                </Button>
+                                <li>
+                                    <Button variant="primary" size="small" icon={<Icon icon={option.icon} />} onClick={() => addFieldToNode(option.id)}>
+                                        {option.label}
+                                    </Button>
+                                </li>
                             ))}
                         </ul>
                     </div>
