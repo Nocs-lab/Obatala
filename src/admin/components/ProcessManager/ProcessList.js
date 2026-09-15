@@ -83,7 +83,7 @@ const isPdfReportAvailable =
     window.obatalaApp &&
     Boolean(window.obatalaApp.pdf_report_available);
 
-const ProcessList = ({ processes, progressMap, progressFilter, setProgressFilter, onEdit, onViewProcess, onDelete, processTypeMappings, processTypes, accessLevel, setAccessLevel, modelFilter, setModelFilter }) => {
+const ProcessList = ({ processes, progressMap, progressFilter, setProgressFilter, onEdit, onViewProcess, onDelete, processTypes, accessLevel, setAccessLevel, modelFilter, setModelFilter }) => {
     const [pdfLoadingId, setPdfLoadingId] = useState(null);
     const [pdfError, setPdfError] = useState(null);
 
@@ -135,19 +135,7 @@ const ProcessList = ({ processes, progressMap, progressFilter, setProgressFilter
             },
             {
                 Header: __("Model", "obatala"),
-                Cell: ({ row }) => {
-                    const typeMapping = processTypeMappings.find(
-                        (m) => m.processId === row.original.id
-                    );
-                    const processType = typeMapping
-                        ? processTypes.find(
-                            (type) => type.id == typeMapping.processTypeId
-                        )
-                        : null;
-                        
-                    return row.original.meta.process_title;
-                    //return processType ? processType.title.rendered : "Unknown Model";
-                },
+                Cell: ({ row }) => row.original.meta.process_title,
             },
             {
                 Header: __('Current step', 'obatala'),
@@ -239,7 +227,7 @@ const ProcessList = ({ processes, progressMap, progressFilter, setProgressFilter
                 ),
             },
         ],
-        [processTypeMappings, processTypes, pdfLoadingId, handlePdfDownload, onDelete, onEdit, onViewProcess, isPdfReportAvailable]
+        [processTypes, pdfLoadingId, handlePdfDownload, onDelete, onEdit, onViewProcess, isPdfReportAvailable]
     );
 
     const data = useMemo(() => {

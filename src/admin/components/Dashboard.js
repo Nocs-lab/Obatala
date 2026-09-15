@@ -25,9 +25,9 @@ const DashboardPage = () => {
 	const [ processes, setProcesses ] = useState( [] );
 	const [ sectors, setSectors ] = useState( [] );
 	const [ sectorsUsers, setSectorsUsers ] = useState( [] );
-	const [ topModels, setTopModels ] = useState( [] );
-	const [ isLoading, setIsLoading ] = useState( true );
-	const [ pendingProcesses, setPendingProcesses ] = useState( [] );
+	// Spinner de tela cheia apenas na carga inicial. Atualizacoes posteriores
+	// nao podem esconder a tela ja renderizada.
+	const [ isInitialLoading, setIsInitialLoading ] = useState( true );
 	const [ tainacanItemsCount, setTainacanItemsCount ] = useState( 0 );
 
 	const currentUser = useSelect(
@@ -234,27 +234,26 @@ const DashboardPage = () => {
 	};
 
 	useEffect( () => {
-		loadProcessTypes();
-		loadProcesses();
-		loadSectors();
-		loadSectorsUsers();
+		// A tela so aparece quando toda a carga inicial termina, evitando
+		// renderizar com dados parciais do primeiro loader que responder.
+		Promise.allSettled( [
+			loadProcessTypes(),
+			loadProcesses(),
+			loadSectors(),
+			loadSectorsUsers(),
+		] ).finally( () => setIsInitialLoading( false ) );
+
+		// A contagem do Tainacan nao bloqueia o restante do dashboard.
 		loadTainacanItemsCount();
 	}, [] );
 
-	useEffect( () => {
-		topFiveModels();
-	}, [ processes ] );
-
 	const loadProcessTypes = () => {
-		setIsLoading( true );
-		fetchProcessModels()
+		return fetchProcessModels()
 			.then( ( data ) => {
 				setProcessTypes( data );
-				setIsLoading( false );
 			} )
 			.catch( () => {
 				console.error( 'Error fetching process types:' );
-				setIsLoading( false );
 			} );
 	};
 
@@ -377,50 +376,39 @@ const DashboardPage = () => {
 		return isUserAllowedInSector( currentNode.sector_obatala );
 	};
 
-	useEffect( () => {
+	// Derivado de `processes`, que ja vem da carga inicial: a lista nao precisa
+	// de fetch proprio (era a mesma chamada, repetida a cada mudanca de
+	// sectorsUsers) nem de estado de carregamento — o painel so existe quando
+	// ha algo para mostrar, em vez de aparecer vazio e sumir depois.
+	const pendingProcesses = useMemo( () => {
 		if ( ! currentUser?.id ) {
-			return;
+			return [];
 		}
 
-		const loadPendingProcesses = async () => {
-			setIsLoading( true );
-			try {
-				const processes = await apiFetch( {
-					path: '/obatala/v1/process_obatala?per_page=100&_embed',
-				} );
+		return processes
+			.filter( isProcessPending )
+			.slice( 0, 10 )
+			.map( ( process ) => {
+				const details = getProcessDetails( process );
 
-				const pending = processes
-					.filter( isProcessPending )
-					.slice( 0, 10 )
-					.map( ( process ) => {
-						const details = getProcessDetails( process );
-
-						return {
-							id: process.id,
-							title: process.title?.rendered || __( 'Sem título', 'obatala' ),
-							percentage: details.percentage,
-							lastUpdate: details.lastUpdate,
-							currentStage: details.currentStage,
-							currentStageId: details.currentStageId,
-							link:
-								obatalaApp.admin_url +
-								`admin.php?page=process-viewer&process_id=${ process.id }`,
-						};
-					} );
-
-				setPendingProcesses( pending );
-			} catch {
-				console.error( 'Error loading pending processes:' );
-			} finally {
-				setIsLoading( false );
-			}
-		};
-
-		loadPendingProcesses();
-	}, [ currentUser?.id, sectorsUsers ] );
+				return {
+					id: process.id,
+					title:
+						process.title?.rendered ||
+						__( 'Sem título', 'obatala' ),
+					percentage: details.percentage,
+					lastUpdate: details.lastUpdate,
+					currentStage: details.currentStage,
+					currentStageId: details.currentStageId,
+					link:
+						obatalaApp.admin_url +
+						`admin.php?page=process-viewer&process_id=${ process.id }`,
+				};
+			} );
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [ processes, sectorsUsers, currentUser?.id ] );
 
 	const loadProcesses = async () => {
-		setIsLoading( true );
 		try {
 			const data = await apiFetch( {
 				path: `/obatala/v1/process_obatala?per_page=100&_embed`,
@@ -433,14 +421,11 @@ const DashboardPage = () => {
 			}
 		} catch {
 			console.error( 'Error fetching processes:' );
-		} finally {
-			setIsLoading( false );
 		}
 	};
 
 	const loadSectors = () => {
-		setIsLoading( true );
-		fetchSectors()
+		return fetchSectors()
 			.then( ( data ) => {
 				const sectors = Object.entries( data ).map(
 					( [ key, value ] ) => ( {
@@ -452,29 +437,24 @@ const DashboardPage = () => {
 				);
 
 				setSectors( sectors );
-				setIsLoading( false );
 			} )
 			.catch( () => {
 				console.error( 'Error fetching sectors:' );
-				setIsLoading( false );
 			} );
 	};
 
 	const loadSectorsUsers = () => {
-		setIsLoading( true );
-		fetchSectorsUsers()
+		return fetchSectorsUsers()
 			.then( ( data ) => {
 				setSectorsUsers( data );
-				setIsLoading( false );
 			} )
 			.catch( () => {
 				console.error( 'Error fetching sectors:' );
-				setIsLoading( false );
 			} );
 	};
 
 	const loadTainacanItemsCount = () => {
-		fetchTainacanItemsCount()
+		return fetchTainacanItemsCount()
 			.then( setTainacanItemsCount )
 			.catch( () => {
 				console.error( 'Error fetching Tainacan items count:' );
@@ -502,44 +482,27 @@ const DashboardPage = () => {
 		} );
 	}, [ sectorsUserLogged, sectors ] );
 
-	const topFiveModels = () => {
-		try {
-			setIsLoading( true );
+	const topModels = useMemo( () => {
+		const modelCount = {};
 
-			const modelCount = {};
+		processes.forEach( ( process ) => {
+			const modelId = process?.meta?.process_type?.[ 0 ];
+			if ( modelId ) {
+				modelCount[ modelId ] = ( modelCount[ modelId ] || 0 ) + 1;
+			}
+		} );
 
-			processes.map( ( process ) => {
-				const modelId = process?.meta?.process_type[ 0 ];
-				if ( modelId ) {
-					if ( modelId ) {
-						if ( ! modelCount[ modelId ] ) {
-							modelCount[ modelId ] = 0;
-						}
-						modelCount[ modelId ] += 1;
-					}
-				}
-			} );
-			const sortedModels = Object.entries( modelCount )
-				.sort( ( a, b ) => b[ 1 ] - a[ 1 ] )
-				.slice( 0, 5 )
-				.map( ( [ modelId, count ] ) => ( {
-					modelId,
-					count,
-					modelName: getModelNameById( modelId ),
-				} ) );
-
-			setTopModels( sortedModels );
-		} catch {
-			console.error( 'Erro ao buscar dados dos processos:' );
-		} finally {
-			setIsLoading( false );
-		}
-	};
-
-	const getModelNameById = ( modelId ) => {
-		const model = processTypes.find( ( m ) => m.id.toString() === modelId );
-		return model ? model.title.rendered : 'Desconhecido';
-	};
+		return Object.entries( modelCount )
+			.sort( ( a, b ) => b[ 1 ] - a[ 1 ] )
+			.slice( 0, 5 )
+			.map( ( [ modelId, count ] ) => ( {
+				modelId,
+				count,
+				modelName:
+					processTypes.find( ( model ) => model.id.toString() === modelId )
+						?.title.rendered || 'Desconhecido',
+			} ) );
+	}, [ processes, processTypes ] );
 
 	// Função para contar processos concluídos
 	const countCompletedProcesses = useMemo( () => {
@@ -563,7 +526,10 @@ const DashboardPage = () => {
 		).format( tainacanItemsCount );
 	}, [ tainacanItemsCount ] );
 
-	if ( isLoading ) {
+	// currentUser tambem entra no gate: a tela le currentUser.avatar_urls sem
+	// guarda e os pendentes dependem do id, entao renderizar antes dele
+	// resolver quebraria ou mostraria o painel chegando depois.
+	if ( isInitialLoading || ! currentUser ) {
 		return <Spinner />;
 	}
 
@@ -618,59 +584,43 @@ const DashboardPage = () => {
 										{ __( 'Pending processes', 'obatala' ) }
 									</PanelHeader>
 									<PanelRow>
-										{ pendingProcesses.length > 0 ? (
-											<ul className="list-actions mb-0">
-												{ pendingProcesses.map(
-													( process ) => {
-														return (
-															<li
-																key={
-																	process.id
+										<ul className="list-actions mb-0">
+											{ pendingProcesses.map(
+												( process ) => {
+													return (
+														<li key={ process.id }>
+															<a
+																href={
+																	process.link
 																}
 															>
-																<a
-																	href={
-																		process.link
+																<span className="percent">
+																	{
+																		process.percentage
 																	}
-																>
-																	<span className="percent">
-																		{
-																			process.percentage
-																		}
-																		%
-																	</span>
-																	<span className="text">
-																		{
-																			process.title
-																		}
-																		<small className="d-block">
-																			{ __(
-																				'Current stage',
-																				'obatala'
-																			) }
-																			:{ ' ' }
-																			{ process.currentStage ||
-																				'N/A' }
-																		</small>
-																	</span>
-																	<Icon icon="arrow-right-alt2" />
-																</a>
-															</li>
-														);
-													}
-												) }
-											</ul>
-										) : (
-											<Notice
-												status="info"
-												isDismissible={ false }
-											>
-												{ __(
-													'No pending processes found.',
-													'obatala'
-												) }
-											</Notice>
-										) }
+																	%
+																</span>
+																<span className="text">
+																	{
+																		process.title
+																	}
+																	<small className="d-block">
+																		{ __(
+																			'Current stage',
+																			'obatala'
+																		) }
+																		:{ ' ' }
+																		{ process.currentStage ||
+																			'N/A' }
+																	</small>
+																</span>
+																<Icon icon="arrow-right-alt2" />
+															</a>
+														</li>
+													);
+												}
+											) }
+										</ul>
 									</PanelRow>
 								</Panel>
 							) }

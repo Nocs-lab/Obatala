@@ -801,3 +801,7 @@ msgstr ""
 
 msgid "%1$s (field %2$d)"
 msgstr ""
+
+#: classes/Api/ProcessApi.php
+msgid "A maximum of 200 process IDs can be requested."
+msgstr ""

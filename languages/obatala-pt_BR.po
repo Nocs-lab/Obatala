@@ -1550,3 +1550,7 @@ msgstr "Finalizado"
 
 msgid "In progress"
 msgstr "Em progresso"
+
+#: classes/Api/ProcessApi.php
+msgid "A maximum of 200 process IDs can be requested."
+msgstr "É possível solicitar no máximo 200 IDs de processos."
