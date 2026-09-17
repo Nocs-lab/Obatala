@@ -25,15 +25,6 @@ namespace Obatala\Admin {
             'submenus' => [
                 [
                     'parent_slug' => 'obatala-main',
-                    'title' => 'Dashboard',
-                    'menu_title' => 'Dashboard',
-                    'capability' => 'obatala_access',
-                    'slug' => 'obatala-main',
-                    'callback' => 'render_main_page',
-                    'show_in_menu' => false
-                ],
-                [
-                    'parent_slug' => 'obatala-main',
                     'title' => 'Processes',
                     'menu_title' => 'Processes',
                     'capability' => 'obatala_manage_processes',

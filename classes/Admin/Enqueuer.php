@@ -9,12 +9,15 @@ if (!defined('ABSPATH')) {
 class Enqueuer {
     private static $pages = [
         'obatala_page_process-manager' => 'process-manager',
+        'admin_page_process-manager' => 'process-manager',
         'obatala_page_process-type-manager' => 'process-type-manager',
+        'admin_page_process-type-manager' => 'process-type-manager',
         'obatala_page_process-viewer' => 'process-viewer',
         'obatala_page_process-step-manager' => 'process-step-manager',
         'obatala_page_process-type-editor' => 'process-type-editor',
         'admin_page_process-type-editor' => 'process-type-editor',
         'obatala_page_sector_manager' => 'sector_manager',
+        'admin_page_sector_manager' => 'sector_manager',
         'toplevel_page_obatala-main' => 'dashboard',
         'obatala_page_sector-details' => 'sector-details',
         'admin_page_sector-details' => 'sector-details',
