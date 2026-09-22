@@ -80,6 +80,11 @@ const SectorManager = () => {
             } else {
                 savedSector = await saveSector(newSector);
             }
+
+            if (!editingSector && savedSector?.id) {
+                window.location.href = `?page=sector-details&sector_id=${encodeURIComponent(savedSector.id)}`;
+                return;
+            }
         
             setNotice({ status: 'success', message: __('Group successfully saved.', 'obatala') });
             setEditingSector(null);
@@ -99,23 +104,23 @@ const SectorManager = () => {
         }   
   
     };
-    const handleDelete = (sector) => {
-        setIsLoading(true)
-        deleteSector(sector.id)
-            .then(() => {
-                const updatedSectors = sectors.filter(type => type.id !== sector.id);
-                setSectors(updatedSectors);
-                setIsLoading(false);
-                setNotice({ status: 'success', message: __('Group successfully removed.', 'obatala') })
-                
-            })
-            .catch(error => {
-                if(error === 'Erro ao deletar o setor, o setor esta vinculado a um usuario'){
-                    setNotice({ status: 'error', message: __('Cannot delete group linked to a user.', 'obatala') }); 
-                }
-                console.error('Error deleting process type:', error);
-                setIsLoading(false);
-            });
+    const handleDelete = async (sector) => {
+        setIsLoading(true);
+        try {
+            await deleteSector(sector.id);
+            setSectors(currentSectors => currentSectors.filter(type => type.id !== sector.id));
+            setNotice({ status: 'success', message: __('Group successfully removed.', 'obatala') });
+        } catch (error) {
+            console.error('Error deleting group:', error);
+
+            const message = error?.code === 'obatala_sector_has_users'
+                ? __('Cannot delete group linked to a user.', 'obatala')
+                : error?.message || __('Error deleting group.', 'obatala');
+
+            setNotice({ status: 'error', message });
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleAdd = () => {
@@ -198,6 +203,7 @@ const SectorManager = () => {
                 >
                     {({ tab }) => (
                         <SectorList sectors={filteredSectors}
+                            sectorsUsers={sectorsUsers}
                             onEdit={handleEdit}
                             onDelete={handleConfirmDelete}
                             status={status}

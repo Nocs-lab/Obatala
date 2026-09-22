@@ -219,6 +219,17 @@ class ProcessTypeApi extends ObatalaAPI {
         if (is_wp_error($prepared_post)) {
             return $prepared_post;
         }
+
+        $is_creation = strtoupper((string) $request->get_method()) === 'POST'
+            && empty($prepared_post->ID);
+        if ($is_creation && !self::has_registered_sectors()) {
+            return new WP_Error(
+                'obatala_process_model_requires_sector',
+                __('Não é possível criar um modelo de processo sem existir grupos cadastrados.', 'obatala'),
+                ['status' => 400]
+            );
+        }
+
         $meta = $request->get_param('meta');
         if (empty($meta['flowData']) || !is_array($meta['flowData'])) {
             return $prepared_post;
@@ -232,6 +243,12 @@ class ProcessTypeApi extends ObatalaAPI {
             );
         }
         return $prepared_post;
+    }
+
+    private static function has_registered_sectors() {
+        $sectors = json_decode((string) get_option('obatala_setores', '{}'), true);
+
+        return is_array($sectors) && !empty($sectors);
     }
 
     /**

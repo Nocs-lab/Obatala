@@ -17,6 +17,14 @@ const UserSelect = ({ users, sectorUsers, onSelectUser }) => {
     const handleRemoveUser = (userId) => {
         setSelectedUser(selectedUser.filter((user) => user !== userId));
     };
+    const handleAddUsers = async () => {
+        const saved = await onSelectUser(selectedUser);
+        if (saved === false) {
+            return;
+        }
+        setSelectedUser([]);
+        setStepInputValue('');
+    };
     const associatedUserIds = sectorUsers.map(user => user.ID);
 
     return (
@@ -52,7 +60,7 @@ const UserSelect = ({ users, sectorUsers, onSelectUser }) => {
             )}
             <Button 
                 variant="primary" 
-                onClick={() => onSelectUser(selectedUser)}
+                onClick={handleAddUsers}
                 disabled={selectedUser.length === 0}   
             >
                 {__('Add user(s)', 'obatala')}
