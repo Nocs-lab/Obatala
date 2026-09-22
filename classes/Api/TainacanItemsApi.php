@@ -347,9 +347,17 @@ class TainacanItemsApi extends ObatalaAPI {
         $values = $this->flatten_values($value);
         $processes = [];
 
-        foreach ($values as $raw_url) {
-            $decoded_url = html_entity_decode(trim((string) $raw_url), ENT_QUOTES, 'UTF-8');
-            $url = esc_url_raw($decoded_url);
+        foreach ($values as $raw_reference) {
+            $decoded_reference = html_entity_decode(trim((string) $raw_reference), ENT_QUOTES, 'UTF-8');
+            $stored_title = '';
+            $url_value = $decoded_reference;
+
+            if (preg_match('/^\[([^\]]+)\]\(([^\s)]+)\)$/', $decoded_reference, $matches)) {
+                $stored_title = $this->decode_text((string) $matches[1]);
+                $url_value = (string) $matches[2];
+            }
+
+            $url = esc_url_raw($url_value);
             if ($url === '') {
                 continue;
             }
@@ -368,9 +376,10 @@ class TainacanItemsApi extends ObatalaAPI {
             $process_number = is_array($process_number_data)
                 ? (string) ($process_number_data['numero_processo'] ?? '')
                 : '';
-            $title = $process_post instanceof \WP_Post && $process_post->post_type === 'process_obatala'
-                ? $this->decode_text((string) get_the_title($process_id))
-                : '';
+            $title = $stored_title;
+            if ($title === '' && $process_post instanceof \WP_Post && $process_post->post_type === 'process_obatala') {
+                $title = $this->decode_text((string) get_the_title($process_id));
+            }
             if ($title === '') {
                 $title = $process_id > 0
                     ? sprintf(__('Process #%d', 'obatala'), $process_id)

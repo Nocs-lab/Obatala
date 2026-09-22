@@ -40,9 +40,16 @@ class Sector {
         }
 
         // Armazenar o setor no wp_options como JSON
-        self::cadastrar_setor($sector_name, $description, $status);
+        $sector_id = self::cadastrar_setor($sector_name, $description, $status);
 
-        return new WP_REST_Response('Setor cadastrado com sucesso', 201);
+        $response = rest_ensure_response([
+            'success' => true,
+            'id' => $sector_id,
+            'message' => 'Setor cadastrado com sucesso',
+        ]);
+        $response->set_status(201);
+
+        return $response;
     }
 
     // Função para cadastrar o setor no wp_options
@@ -68,6 +75,8 @@ class Sector {
 
         // Codificar o array em JSON antes de salvar
         update_option('obatala_setores', json_encode($setores));
+
+        return $sector_id;
     }
 
     // Fubnçao que consulta setor por id
@@ -92,7 +101,12 @@ class Sector {
         }
 
         // Retorna os dados do setor encontrado
-        return new WP_REST_Response($setores[$sector_id], 200); // Retorna o setor como resposta
+        return rest_ensure_response([
+            'id' => $sector_id,
+            'nome' => $setores[$sector_id]['nome'] ?? '',
+            'descricao' => $setores[$sector_id]['descricao'] ?? '',
+            'status' => $setores[$sector_id]['status'] ?? '',
+        ]);
     }
 
     public static function get_all_sectors($request) {
@@ -176,12 +190,24 @@ class Sector {
             $updated = update_option('obatala_setores', json_encode($setores));
 
             if ($updated) {
-                return new WP_REST_Response('Setor deletado com sucesso', 200); // Sucesso
+                return rest_ensure_response([
+                    'success' => true,
+                    'id' => $sector_id,
+                    'message' => 'Setor deletado com sucesso',
+                ]);
             } else {
-                return new WP_REST_Response('Erro ao deletar o setor', 500); // Falha ao salvar
+                return new \WP_Error(
+                    'obatala_sector_delete_failed',
+                    'Erro ao deletar o setor',
+                    ['status' => 500]
+                );
             }
         } else {
-            return new WP_REST_Response('Erro ao deletar o setor, o setor esta vinculado a um usuario', 500); // ja possue um usuario associado a um setor
+            return new \WP_Error(
+                'obatala_sector_has_users',
+                'Erro ao deletar o setor, o setor esta vinculado a um usuario',
+                ['status' => 409]
+            );
         }
     }
 
@@ -249,7 +275,11 @@ class Sector {
         // Associar o setor ao usuário nos meta dados
         update_user_meta($user_id, 'associated_sector', $sectors);
 
-        return new WP_REST_Response('Usuário associado ao setor com sucesso.', 200);
+        return rest_ensure_response([
+            'success' => true,
+            'sector_id' => $sector_id,
+            'user_id' => $user_id,
+        ]);
     }
 
     // Funçao que retorna a lista de usuarios associados a um setor usando return_sector_users
@@ -263,12 +293,7 @@ class Sector {
 
         $users = self::return_sector_users($sector_id);
 
-        // Se não encontrar usuários, retorna um erro (talvez seja redundante por conta da funçao return_sector_users())
-        if (empty($users)) {
-            return new WP_REST_Response('Nenhum usuário encontrado para o setor especificado.', 404);
-        }
-
-        return new WP_REST_Response($users, 200);
+        return rest_ensure_response(is_array($users) ? $users : []);
     }
 
     // Função que retorna lista de usuarios associados a um setor
@@ -279,7 +304,7 @@ class Sector {
         ));
 
         if (empty($user_query)) {
-            return null; // Se não encontrar nenhum usuário, retorna null
+            return [];
         }
 
         // Buscar os dados dos usuários com base nos IDs e verificar se o setor está associado
@@ -387,7 +412,11 @@ class Sector {
         // Atualiza os metadados do usuário com a nova lista de setores
         update_user_meta($user_id, 'associated_sector', $sectors);
 
-        return new WP_REST_Response('Usuário removido do setor com sucesso', 200);
+        return rest_ensure_response([
+            'success' => true,
+            'sector_id' => $sector_id,
+            'user_id' => $user_id,
+        ]);
     }
 
     public static function check_permission($user_id, $process_id) {

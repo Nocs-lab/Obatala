@@ -169,6 +169,11 @@ const ProcessManager = ({ onSelectProcess }) => {
         } else {
             setProcesses((prev) => sortProcessesNewestFirst([...prev, newProcess]));
             setAddingProcess(null);
+
+            if (newProcess?.id) {
+                onSelectProcess(newProcess.id);
+                return;
+            }
         }
 
         setNotice({ status: 'success', message: __('Process saved successfully.', 'obatala') });

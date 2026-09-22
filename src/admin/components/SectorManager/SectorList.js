@@ -1,39 +1,17 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useMemo } from 'react';
 import { __, sprintf } from '@wordpress/i18n';
-import apiFetch from "@wordpress/api-fetch";
 import { useTable, usePagination, useSortBy, useGlobalFilter } from 'react-table';
-import { Button, Tooltip, Panel, PanelRow, Notice, Modal, TextControl } from '@wordpress/components';
-import { edit, trash, people, info } from '@wordpress/icons';
-import UsersManager from './UserManager/UserManager';
+import { Button, Tooltip, Panel, PanelRow, Notice, TextControl } from '@wordpress/components';
+import { edit, trash, info } from '@wordpress/icons';
 import SectorFilter from './SectorFilters';
 
-const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGroup, loadSectorsUsers }) => {
+const SectorList = ({ sectors, sectorsUsers, onEdit, onDelete, status, setStatus }) => {
     const data = useMemo(() => sectors, [sectors]);
-    const [addingUsers, setAddingUsers] = useState(null);
-
-    const handleManagerUsers = (sector) => {
-        setAddingUsers(sector);
-    };
 
     const handleViewSector = (sector) => {
         window.location.href = `?page=sector-details&sector_id=${sector.id}`;
         console.log(sector);
     };
-    const handleCancel = () => {
-        setAddingUsers(null);
-    };
-
-    // Função para buscar usuários do setor
-    const fetchUserCount = async (sectorId) => {
-        try {
-            const data = await apiFetch({ path: `/obatala/v1/sector_obatala/${sectorId}/users` });
-            return data.length;
-        } catch (error) {
-            console.error(`Erro ao buscar usuários do setor ${sectorId}:`, error);
-            return 0;
-        }
-    };
-
     const columns = useMemo(() => [
         {
             Header: __('Title', 'obatala'),
@@ -67,13 +45,14 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
         Header: __('Number of users', 'obatala'),
         accessor: 'userCount',
         Cell: ({ row }) => {
-            const [userCount, setUserCount] = useState(null);
+            const sectorWithUsers = sectorsUsers.find(
+                sector => String(sector.sector_id) === String(row.original.id)
+            );
+            const userCount = Array.isArray(sectorWithUsers?.users)
+                ? sectorWithUsers.users.length
+                : 0;
 
-            if (userCount === null) {
-                fetchUserCount(row.original.id).then(count => setUserCount(count));
-            }
-
-            return userCount !== null ? userCount : __('Loading...', 'obatala');
+            return userCount;
         },
         },
         {
@@ -88,13 +67,6 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
                     >
                         {__('View group', 'obatala')}
                     </Button>
-                    <Tooltip text={__('Manage users', 'obatala')}>
-                        <Button
-                            variant="tertiary"
-                            icon={people}
-                            onClick={() => handleManagerUsers(row.original)}
-                        >{__('Manage users', 'obatala')}</Button>
-                    </Tooltip>
                     <Tooltip text={__('Edit', 'obatala')}>
                         <Button
                             variant="tertiary"
@@ -112,7 +84,7 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
                 </div>
             ),
         },
-    ], [addingUsers]);
+    ], [sectorsUsers]);
 
     const {
         getTableProps,
@@ -213,23 +185,9 @@ const SectorList = ({ sectors, onEdit, onDelete, status, setStatus, group, setGr
                 ) : (
                     <Notice isDismissible={false} status="warning">{__('No existing groups.', 'obatala')}</Notice>
                 )}
-                {addingUsers && (
-                    <Modal
-                        title={<>{__('Manage users', 'obatala')}: {addingUsers.name}</>}
-                        onRequestClose={handleCancel}
-                        isDismissible={true}
-                        size="large"
-                    >
-                        <UsersManager
-                            sector={addingUsers}
-                            loadSectorsUsers={loadSectorsUsers}
-                        />
-                    </Modal>
-                )}
             </PanelRow>
         </Panel>
     );
 };
 
 export default SectorList;
-

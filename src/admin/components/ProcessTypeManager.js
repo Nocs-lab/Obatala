@@ -9,7 +9,7 @@ import {
     __experimentalConfirmDialog as ConfirmDialog 
 } from '@wordpress/components';
 import { plus } from "@wordpress/icons";
-import { fetchProcessModels, saveProcessType, deleteProcessType } from '../api/apiRequests';
+import { fetchProcessModels, fetchSectors, saveProcessType, deleteProcessType } from '../api/apiRequests';
 import ProcessTypeForm from './ProcessTypeManager/ProcessTypeForm';
 import ProcessTypeList from './ProcessTypeManager/ProcessTypeList';
 import Reducer, { initialState } from '../redux/reducer';
@@ -51,10 +51,16 @@ const ProcessTypeManager = () => {
     const handleSaveProcessType = async (processType) => {
         setIsLoading(true);
         try {
+            let savedProcessType;
             if (editingProcessType) {
-                await saveProcessType(processType, editingProcessType);
+                savedProcessType = await saveProcessType(processType, editingProcessType);
             } else {
-                await saveProcessType(processType);
+                savedProcessType = await saveProcessType(processType);
+            }
+
+            if (!editingProcessType && savedProcessType?.id) {
+                window.location.href = `?page=process-type-editor&process_type_id=${encodeURIComponent(savedProcessType.id)}`;
+                return;
             }
 
             setNotice({ status: 'success', message: __('Process model saved successfully.', 'obatala') });
@@ -91,8 +97,26 @@ const ProcessTypeManager = () => {
         setEditingProcessType(model);
     };
 
-    const handleAdd = () => {
-        setAddingProcessType(true);
+    const handleAdd = async () => {
+        try {
+            const sectors = await fetchSectors();
+            if (!sectors || Object.keys(sectors).length === 0) {
+                setNotice({
+                    status: 'error',
+                    message: __('Não é possível criar um modelo de processo sem existir grupos cadastrados.', 'obatala')
+                });
+                return;
+            }
+
+            setNotice(null);
+            setAddingProcessType(true);
+        } catch (error) {
+            console.error('Error checking groups before creating process model:', error);
+            setNotice({
+                status: 'error',
+                message: __('Não foi possível verificar os grupos cadastrados.', 'obatala')
+            });
+        }
     }
 
     const handleCancel = () => {

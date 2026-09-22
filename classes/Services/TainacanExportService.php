@@ -15,7 +15,8 @@ class TainacanExportService {
     private const MAPPER_STATUS_DISABLED = 'disabled';
     private const PROCESS_STATUS_FINISHED = 'Finished';
     private const PROCESS_REFERENCE_METADATA_SLUG = 'obatala-process-reference';
-    private const PROCESS_REFERENCE_METADATA_NAME = 'Link do processo no Obatala';
+    private const PROCESS_REFERENCE_METADATA_NAME = 'Link do Processo no Tainancan Processos';
+    private const PROCESS_REFERENCE_METADATA_LEGACY_NAME = 'Link do processo no Obatala';
     private const PROCESS_REFERENCE_METADATA_TYPE = 'Tainacan\\Metadata_Types\\URL';
     private const PROCESS_REFERENCE_METADATA_MARKER_META_KEY = '_obatala_process_reference_metadata';
 
@@ -477,6 +478,7 @@ class TainacanExportService {
             $result['message'] = 'Não foi possível gerar a URL de referência do processo.';
             return $result;
         }
+        $process_reference_title = $this->build_process_reference_title($process_id);
 
         $items_repository = \Tainacan\Repositories\Items::get_instance();
         $metadata_repository = \Tainacan\Repositories\Metadata::get_instance();
@@ -525,6 +527,7 @@ class TainacanExportService {
                     $item,
                     $process_reference_metadatum,
                     $process_reference_url,
+                    $process_reference_title,
                     $item_metadata_repository
                 );
 
@@ -1371,6 +1374,7 @@ class TainacanExportService {
 
         $warnings = [];
         $process_reference_url = $this->build_process_reference_url((int) $process_id);
+        $process_reference_title = $this->build_process_reference_title((int) $process_id);
         $process_reference_metadatum = $this->ensure_process_reference_metadatum($collection, $metadata_repository, $warnings);
 
         $metadatum_cache = [];
@@ -1480,6 +1484,7 @@ class TainacanExportService {
                     $item,
                     $process_reference_metadatum,
                     $process_reference_url,
+                    $process_reference_title,
                     $item_metadata_repository
                 );
 
@@ -2077,7 +2082,13 @@ class TainacanExportService {
         $existing_metadatum = $this->find_process_reference_metadatum($collection_id, $metadata_repository);
         if ($existing_metadatum instanceof \Tainacan\Entities\Metadatum) {
             if ($this->is_process_reference_metadatum_compatible($existing_metadatum)) {
-                return $this->ensure_process_reference_metadatum_is_multiple(
+                $existing_metadatum = $this->ensure_process_reference_metadatum_is_multiple(
+                    $existing_metadatum,
+                    $metadata_repository,
+                    $warnings
+                );
+
+                return $this->ensure_process_reference_metadatum_name(
                     $existing_metadatum,
                     $metadata_repository,
                     $warnings
@@ -2132,6 +2143,55 @@ class TainacanExportService {
         ];
 
         return null;
+    }
+
+    private function ensure_process_reference_metadatum_name($metadatum, $metadata_repository, array &$warnings) {
+        if (!$metadatum instanceof \Tainacan\Entities\Metadatum) {
+            return null;
+        }
+
+        $current_name = method_exists($metadatum, 'get_name')
+            ? trim((string) $metadatum->get_name())
+            : '';
+
+        if ($current_name === self::PROCESS_REFERENCE_METADATA_NAME) {
+            return $metadatum;
+        }
+
+        try {
+            $metadatum->set_name(self::PROCESS_REFERENCE_METADATA_NAME);
+
+            if (!$metadatum->validate()) {
+                $warnings[] = [
+                    'metadata_id' => (int) $metadatum->get_id(),
+                    'message' => 'Não foi possível validar o novo nome do metadado de referência do processo.',
+                    'errors' => $metadatum->get_errors(),
+                ];
+                return $metadatum;
+            }
+
+            $updated_metadatum = $metadata_repository->update($metadatum, [
+                'name' => self::PROCESS_REFERENCE_METADATA_NAME,
+            ]);
+
+            if ($updated_metadatum instanceof \Tainacan\Entities\Metadatum) {
+                return $updated_metadatum;
+            }
+        } catch (\Throwable $error) {
+            $warnings[] = [
+                'metadata_id' => (int) $metadatum->get_id(),
+                'message' => 'Não foi possível atualizar o nome do metadado de referência do processo.',
+                'errors' => [$error->getMessage()],
+            ];
+            return $metadatum;
+        }
+
+        $warnings[] = [
+            'metadata_id' => (int) $metadatum->get_id(),
+            'message' => 'Falha ao atualizar o nome do metadado de referência do processo.',
+        ];
+
+        return $metadatum;
     }
 
     private function ensure_process_reference_metadatum_is_multiple($metadatum, $metadata_repository, array &$warnings) {
@@ -2307,6 +2367,7 @@ class TainacanExportService {
             if (
                 $candidate_slug === self::PROCESS_REFERENCE_METADATA_SLUG
                 || $candidate_name === self::PROCESS_REFERENCE_METADATA_NAME
+                || $candidate_name === self::PROCESS_REFERENCE_METADATA_LEGACY_NAME
             ) {
                 update_post_meta((int) $candidate->get_id(), self::PROCESS_REFERENCE_METADATA_MARKER_META_KEY, '1');
                 return $candidate;
@@ -2344,7 +2405,7 @@ class TainacanExportService {
         return $type !== '' && strcasecmp($type, self::PROCESS_REFERENCE_METADATA_TYPE) === 0;
     }
 
-    private function append_process_reference_to_item($item, $metadatum, $process_reference_url, $item_metadata_repository) {
+    private function append_process_reference_to_item($item, $metadatum, $process_reference_url, $process_reference_title, $item_metadata_repository) {
         if (
             !$item instanceof \Tainacan\Entities\Item
             || !$metadatum instanceof \Tainacan\Entities\Metadatum
@@ -2369,6 +2430,11 @@ class TainacanExportService {
             ];
         }
 
+        $process_reference_value = $this->build_process_reference_value(
+            $process_reference_title,
+            $process_reference_url
+        );
+
         $item_metadata = new \Tainacan\Entities\Item_Metadata_Entity($item, $metadatum);
         $current_value = $item_metadata->get_value();
         $current_values = is_array($current_value) ? $current_value : [$current_value];
@@ -2376,7 +2442,21 @@ class TainacanExportService {
             return trim((string) $value);
         }, $current_values)));
 
-        if (in_array($process_reference_url, $current_values, true)) {
+        $reference_found = false;
+        $next_values = [];
+        foreach ($current_values as $current_reference) {
+            if ($this->extract_process_reference_url($current_reference) === $process_reference_url) {
+                if (!$reference_found) {
+                    $next_values[] = $process_reference_value;
+                }
+                $reference_found = true;
+                continue;
+            }
+
+            $next_values[] = $current_reference;
+        }
+
+        if ($reference_found && $next_values === $current_values) {
             return [
                 'status' => 'unchanged',
                 'message' => 'O item já possui a referência deste processo.',
@@ -2384,8 +2464,11 @@ class TainacanExportService {
             ];
         }
 
-        $current_values[] = $process_reference_url;
-        $item_metadata->set_value(array_values(array_unique($current_values)));
+        if (!$reference_found) {
+            $next_values[] = $process_reference_value;
+        }
+
+        $item_metadata->set_value(array_values(array_unique($next_values)));
 
         if (!$item_metadata->validate()) {
             return [
@@ -2458,6 +2541,37 @@ class TainacanExportService {
 
         $public_url = get_permalink($process_id);
         return $public_url ? esc_url_raw((string) $public_url) : '';
+    }
+
+    private function build_process_reference_title($process_id) {
+        $process_id = (int) $process_id;
+        $title = $process_id > 0 ? get_the_title($process_id) : '';
+        $title = sanitize_text_field(wp_strip_all_tags((string) $title));
+
+        if ($title === '') {
+            $title = sprintf(__('Process #%d', 'obatala'), $process_id);
+        }
+
+        // Colchetes delimitam o título na sintaxe de link aceita pelo Tainacan.
+        return trim(str_replace(['[', ']'], ['(', ')'], $title));
+    }
+
+    private function build_process_reference_value($title, $url) {
+        $title = trim((string) $title);
+        $url = esc_url_raw((string) $url);
+
+        return $title !== '' && $url !== ''
+            ? sprintf('[%s](%s)', $title, $url)
+            : $url;
+    }
+
+    private function extract_process_reference_url($reference) {
+        $reference = html_entity_decode(trim((string) $reference), ENT_QUOTES, 'UTF-8');
+        if (preg_match('/^\[[^\]]+\]\(([^\s)]+)\)$/', $reference, $matches)) {
+            $reference = $matches[1];
+        }
+
+        return esc_url_raw($reference);
     }
 
     private function normalize_obatala_value($value) {

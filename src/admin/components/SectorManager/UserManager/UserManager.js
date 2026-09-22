@@ -12,7 +12,7 @@ import UserSelect from './UserSelect';
 import Reducer, { initialState } from '../../../redux/reducer';
 
 
-const UserManager = ({sector,loadSectorsUsers}) => {
+const UserManager = ({sector, loadSectorsUsers = () => {}}) => {
     const [users, setUsers] = useState([]);
     const [sectorUsers, setSectorUsers] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -38,16 +38,15 @@ const UserManager = ({sector,loadSectorsUsers}) => {
 
     // Obtem os usuários de um setor especifico
     const loadSectorUsers = async (sectorId) => {
-        setIsLoading(true)
-        fetchUsersBySector(sectorId)
-            .then((data) => {
-                setSectorUsers(data);
-                setIsLoading(false)
-            })
-            .catch (error => {
-                console.error('Error fetching sector users:', error);
-                setIsLoading(false)
-        });
+        setIsLoading(true);
+        try {
+            const data = await fetchUsersBySector(sectorId);
+            setSectorUsers(Array.isArray(data) ? data : []);
+        } catch (error) {
+            console.error('Error fetching sector users:', error);
+        } finally {
+            setIsLoading(false);
+        }
     };
     // Associa um usuário ao setor com base no ID de ambos
     const assignUserSector = async (usersId) => {
@@ -57,33 +56,28 @@ const UserManager = ({sector,loadSectorsUsers}) => {
                 return assignUserToSector(data);
             }));
             setNotice({ status: 'success', message: __('Users successfully added.', 'obatala') });
-            setTimeout(() => {
-                loadSectorUsers(sector.id);
-                loadSectorsUsers();
-            }, 2000); 
+            await loadSectorUsers(sector.id);
+            loadSectorsUsers();
+            return true;
         } catch (error) {
             console.error('Error adding users:', error);
             setNotice({ status: 'error', message: __('Error adding users.', 'obatala') });
+            return false;
         }
     };
     
     // Remove o usuário do setor
     const handleDeleteUser = async (user) => {
         const data = { user_id: user.ID };
-        deleteSectorUser(sector.id, data)
-            .then(() => {
-                const updatedUsers = sectorUsers.filter(type => type.id !== user.id);
-                setSectorUsers(updatedUsers);
-                setNotice({ status: 'success', message: __('User successfully removed.', 'obatala') })
-                setTimeout(() => {
-                    loadSectorUsers(sector.id);
-                    loadSectorsUsers();
-                }, 2000); 
-            })
-            .catch(error => {
-                console.error('Error removing users to sector:', error);
-                setNotice({ status: 'error', message: __('Error removing user.', 'obatala') })
-            });
+        try {
+            await deleteSectorUser(sector.id, data);
+            setSectorUsers(currentUsers => currentUsers.filter(type => type.ID !== user.ID));
+            setNotice({ status: 'success', message: __('User successfully removed.', 'obatala') });
+            loadSectorsUsers();
+        } catch (error) {
+            console.error('Error removing users from group:', error);
+            setNotice({ status: 'error', message: __('Error removing user.', 'obatala') });
+        }
     };
 
     const handleConfirmDelete = (user) => {
@@ -99,7 +93,7 @@ const UserManager = ({sector,loadSectorsUsers}) => {
     }
 
     return (
-        <>
+        <div className="sector-user-manager">
             {notice && (
                 <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
                     {notice.message}
@@ -166,7 +160,7 @@ const UserManager = ({sector,loadSectorsUsers}) => {
             ) : (
                 <Notice isDismissible={false} status="warning">{__('No existing users for this group.', 'obatala')}</Notice>
             )}
-        </>
+        </div>
     );
 }
 

@@ -351,6 +351,14 @@ form.flex-form {
 .combobox-selection + .components-button {
   margin-top: .5rem;
 }
+.sector-user-manager {
+  min-width: 0;
+  width: 100%;
+}
+.sector-user-manager .components-base-control__label,
+.sector-user-manager .components-input-control__label {
+  white-space: nowrap;
+}
 .components-base-control,
 .components-base-control:not(.components-checkbox-control)
   + div:has(> .components-base-control) {

@@ -331,14 +331,61 @@ export const saveSector = async ( sector, editingSector ) => {
 		? `/obatala/v1/update_sector_obatala/${ editingSector.id }`
 		: `/obatala/v1/create_sector_obatala`;
 	const method = 'POST';
-	return apiFetch( { path, method, data: sector } );
+
+	try {
+		return await apiFetch( { path, method, data: sector } );
+	} catch ( error ) {
+		if ( error?.code !== 'invalid_json' ) {
+			throw error;
+		}
+
+		// A persistência pode ter sido concluída mesmo quando algum output
+		// inesperado do WordPress invalida o corpo da resposta REST. Confirme o
+		// resultado antes de apresentar uma falha ou repetir a criação.
+		const persistedSectors = await fetchSectors();
+		const expectedName = String( sector?.sector_name || '' );
+		const persistedEntry = Object.entries( persistedSectors || {} ).find(
+			( [ sectorId, persistedSector ] ) => {
+				if ( editingSector ) {
+					return String( sectorId ) === String( editingSector.id );
+				}
+
+				return String( persistedSector?.nome || '' ) === expectedName;
+			}
+		);
+
+		if ( ! persistedEntry ) {
+			throw error;
+		}
+
+		return {
+			id: persistedEntry[ 0 ],
+			...persistedEntry[ 1 ],
+		};
+	}
 };
 
-export const deleteSector = ( id ) => {
-	return apiFetch( {
-		path: `/obatala/v1/delete_sector_obatala/${ id }`,
-		method: 'DELETE',
-	} );
+export const deleteSector = async ( id ) => {
+	try {
+		return await apiFetch( {
+			path: `/obatala/v1/delete_sector_obatala/${ id }`,
+			method: 'DELETE',
+		} );
+	} catch ( error ) {
+		if ( error?.code !== 'invalid_json' ) {
+			throw error;
+		}
+
+		const persistedSectors = await fetchSectors();
+		if ( Object.prototype.hasOwnProperty.call( persistedSectors || {}, id ) ) {
+			throw error;
+		}
+
+		return {
+			success: true,
+			id,
+		};
+	}
 };
 
 export const fetchUsers = () => {
