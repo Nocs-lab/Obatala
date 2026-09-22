@@ -271,7 +271,6 @@ header {
 }
 main {
   padding: var(--gap) var(--gap-external);
-  min-height: calc(100vh - 145px);
   .components-notice:first-child {
     margin-top: 0;
   }
