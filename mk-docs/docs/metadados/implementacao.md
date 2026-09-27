@@ -5,7 +5,7 @@ Os dados de execução das etapas são persistidos principalmente em `stageData`
 ## Exportação para o Tainacan no editor do modelo
 
 A configuração de exportação faz parte do editor do modelo de processo. Um
-usuário com a capability `obatala_manage_mappers` pode selecionar as coleções de
+usuário com a capability `tainacan_processes_manage_mappings` pode selecionar as coleções de
 destino e, no drawer de cada field, associá-lo a um metadado do Tainacan.
 
 O mapeador possui três estados: `disabled` (desativado), `draft` (configuração

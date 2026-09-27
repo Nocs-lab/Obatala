@@ -22,27 +22,27 @@ class ProcessTypeApi extends ObatalaAPI {
         $this->add_route('process_type/(?P<id>\d+)/meta', [
             'methods' => 'GET',
             'callback' => [$this, 'get_meta'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_access'],
         ]);
 
         $this->add_route('process_type/(?P<id>\d+)/meta', [
             'methods' => 'PUT',
             'callback' => [$this, 'update_meta'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_manage_models'],
             'args' => $this->get_meta_args(),
         ]);
 
         $this->add_route('process_type/(?P<id>\d+)/fields', [
             'methods' => 'GET',
             'callback' => [$this, 'get_fields'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_access'],
         ]);
 
         // Rota para associar e gerenciar histórico de setores das etapas
         $this->add_route('process_type/(?P<id>\d+)/assosiate_sector', [
             'methods' => 'POST',
             'callback' => [$this, 'assosiate_sector'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_manage_models'],
             'args' => [
                 'sector_id' => [
                     'required' => true,
@@ -62,19 +62,19 @@ class ProcessTypeApi extends ObatalaAPI {
         $this->add_route('process_type/(?P<id>\d+)/get_node', [
             'methods' => 'GET',
             'callback' => [$this, 'get_node'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'], // Ajuste conforme necessário
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_process_access'],
         ]);
 
         $this->add_route('process_type/upload', [
             'methods' => 'POST',
             'callback' => [$this, 'upload'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_stage_action'],
         ]);
 
         $this->add_route('process_type/download', [
             'methods' => 'GET',
             'callback' => [$this, 'download'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_process_access'],
         ]);
     }
 
@@ -458,11 +458,12 @@ class ProcessTypeApi extends ObatalaAPI {
 
     public function get_node($request) {
         $process_id = $request['id'];
-        $user_id = $request->get_param('user');
+        $user_id = get_current_user_id();
         $permission = Sector::check_permission($user_id, $process_id);
 
         // Obter os dados do flowData do processo
         $flow_data = get_post_meta($process_id, 'flowData', true);
+        $sector_names = $this->get_process_sector_names($flow_data);
 
         $access_level = get_post_meta($process_id, 'access_level', true);
 
@@ -471,7 +472,8 @@ class ProcessTypeApi extends ObatalaAPI {
                 return new WP_REST_Response([
                     'data' => $flow_data,
                     'status' => true,
-                    'data_sector' => $permission['data_sector'] ?? []
+                    'data_sector' => $permission['data_sector'] ?? [],
+                    'sector_names' => $sector_names,
                 ], 200);
             }
             return new WP_REST_Response($permission['message'], 403);
@@ -480,9 +482,32 @@ class ProcessTypeApi extends ObatalaAPI {
                 'data' => $flow_data,
                 'status' => $permission['status'],
                 'message' => $permission['message'],
-                'data_sector' => $permission['data_sector'] ?? []
+                'data_sector' => $permission['data_sector'] ?? [],
+                'sector_names' => $sector_names,
             ], 200);
         }
+    }
+
+    private function get_process_sector_names($flow_data) {
+        if (!is_array($flow_data)) {
+            return [];
+        }
+
+        $configured_sectors = json_decode((string) get_option('obatala_setores', '{}'), true);
+        $configured_sectors = is_array($configured_sectors) ? $configured_sectors : [];
+        $sector_names = [];
+
+        foreach (($flow_data['nodes'] ?? []) as $node) {
+            $sector_id = (string) ($node['sector_obatala'] ?? $node['tempSector'] ?? '');
+            if ($sector_id === '' || !isset($configured_sectors[$sector_id])) {
+                continue;
+            }
+            $sector_names[$sector_id] = sanitize_text_field(
+                (string) ($configured_sectors[$sector_id]['nome'] ?? '')
+            );
+        }
+
+        return $sector_names;
     }
 
     public function upload($request) {
@@ -636,7 +661,7 @@ class ProcessTypeApi extends ObatalaAPI {
 
     public function download($request) {
         $process_id = intval($request['id']);
-        $user_id = intval($request->get_param('user'));
+        $user_id = get_current_user_id();
         $file_name = sanitize_file_name($request->get_param('file'));
     
         // Verificar permissão
@@ -650,6 +675,17 @@ class ProcessTypeApi extends ObatalaAPI {
                 ],
                 403
             );
+        }
+
+        $flow_data = maybe_unserialize(get_post_meta($process_id, 'flowData', true));
+        $process_files = [];
+        foreach ((array) ($flow_data['nodes'] ?? []) as $node) {
+            if (!empty($node['file']) && is_array($node['file'])) {
+                $process_files = array_merge($process_files, array_map('sanitize_file_name', $node['file']));
+            }
+        }
+        if (!in_array($file_name, $process_files, true)) {
+            return new WP_REST_Response(['error' => 'Arquivo não encontrado'], 404);
         }
     
         // Caminho do arquivo

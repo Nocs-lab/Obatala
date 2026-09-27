@@ -2,6 +2,8 @@
 
 namespace Obatala\Admin;
 
+use Obatala\Security\Roles;
+
 if (!defined('ABSPATH')) {
     exit; // Se sim, encerra a execução para segurança
 }
@@ -95,7 +97,20 @@ class Enqueuer {
                 'plugin_url' => OBATALA_PLUGIN_URL,
                 // Dompdf (composer): if false, ProcessList hides the PDF report button.
                 'pdf_report_available' => class_exists('\Dompdf\Dompdf'),
-                'can_manage_mappers' => current_user_can('obatala_manage_mappers'),
+                'can_manage_mappers' => Roles::can_manage_mappings(),
+                'permissions' => [
+                    'access' => Roles::can_access_obatala(),
+                    'manage_processes' => Roles::can_manage_processes(),
+                    'advance_stages' => Roles::can_advance_stages(),
+                    'manage_comments' => Roles::can_manage_comments(),
+                    'generate_reports' => Roles::can_generate_reports(),
+                    'manage_models' => Roles::can_manage_models(),
+                    'manage_groups' => Roles::can_manage_groups(),
+                    'manage_mappings' => Roles::can_manage_mappings(),
+                    'delete_models' => Roles::can_delete_models(),
+                    'delete_processes' => Roles::can_delete_processes(),
+                    'execute_exports' => Roles::can_execute_exports(),
+                ],
             ]);
 
         }

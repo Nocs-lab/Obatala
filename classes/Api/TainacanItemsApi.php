@@ -2,6 +2,8 @@
 
 namespace Obatala\Api;
 
+defined('ABSPATH') || exit;
+
 use Obatala\Entities\Process;
 use Obatala\Services\ProcessNumberService;
 use WP_Error;
@@ -16,7 +18,7 @@ class TainacanItemsApi extends ObatalaAPI {
         $this->add_route('tainacan/items/(?P<id>\d+)', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'get_item'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_access'],
             'args' => [
                 'id' => [
                     'required' => true,
@@ -28,7 +30,7 @@ class TainacanItemsApi extends ObatalaAPI {
         $this->add_route('tainacan/items', [
             'methods' => WP_REST_Server::READABLE,
             'callback' => [$this, 'get_items'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_access'],
             'args' => [
                 'page' => [
                     'default' => 1,

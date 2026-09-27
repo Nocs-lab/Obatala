@@ -225,7 +225,7 @@ Responsável pelas interfaces administrativas do WordPress:
 #### 📁 `Api/`
 Controladores REST para comunicação entre o frontend e o backend:
 
-- `ObatalaAPI.php`: Controlador base que agrupa as rotas da API e define callbacks de permissão (`permission_check_edit_posts`, `permission_check_manage_options`). Todas as rotas exigem usuário autenticado com capacidade `edit_posts`.
+- `ObatalaAPI.php`: Controlador base que agrupa as rotas e seus callbacks de permissão. As verificações usam capabilities `tainacan_processes_*` e, nas operações de processos e etapas, também validam os grupos do usuário.
 - `CustomPostTypeApi.php`: Registro e definição de custom post types.
 - `ProcessApi.php`, `ProcessTypeApi.php`, `SectorApi.php`, `ExporterApi.php`: Rotas específicas para cada domínio funcional.
 
@@ -380,7 +380,7 @@ Testes unitários (sem bootstrap WordPress completo para regras puras):
 - `run-process-number-tests.php` (runner standalone: `php tests/run-process-number-tests.php`)
 
 ### 📁 `classes/Security/`
-- `Roles.php`: papéis Obatalá (`obatala_administrator`, `obatala_editor`, `obatala_author`) e capabilities (`obatala_manage_processes`, `obatala_report_generate`, etc.).
+- `Roles.php`: catálogo central das capabilities `tainacan_processes_*`, helpers contextuais de grupos e o perfil `tainacan-processes-participant` (Tainacan Participant). `RoleMigration.php` converte usuários e remove de forma versionada os antigos perfis e capabilities `obatala_*`.
 
 ### 📁 `vendor/`
 Dependências instaladas via **Composer** (autoloader PSR-4 e Dompdf). A pasta está no `.gitignore` e **não** vem no clone Git — execute `composer install` após copiar o plugin. Sem `vendor/`, o `obatala.php` não carrega.

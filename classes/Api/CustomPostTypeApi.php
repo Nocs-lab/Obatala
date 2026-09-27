@@ -2,7 +2,10 @@
 
 namespace Obatala\Api;
 
+defined('ABSPATH') || exit;
+
 use Obatala\Entities\Process;
+use Obatala\Security\Roles;
 use Obatala\Services\ProcessNumberService;
 use Obatala\Services\TainacanMappingService;
 use WP_Error;
@@ -40,6 +43,12 @@ class CustomPostTypeApi extends ObatalaAPI {
             [
                 'methods' => WP_REST_Server::READABLE, // HTTP GET
                 'callback' => function ($request) use ($controller, $post_type) {
+                    if ($post_type === 'process_obatala' && !$this->scope_process_collection_request($request)) {
+                        $empty_response = new WP_REST_Response([], 200);
+                        $empty_response->header('X-WP-Total', 0);
+                        $empty_response->header('X-WP-TotalPages', 0);
+                        return $empty_response;
+                    }
                     $response = $controller->get_items($request);
                     if (is_wp_error($response)) {
                         return $response;
@@ -53,7 +62,8 @@ class CustomPostTypeApi extends ObatalaAPI {
                     if ($post_type === 'process_obatala') {
                         $data = $this->filter_processes_by_number_query($data, $request);
                         $data = array_values(array_filter($data, function ($item) {
-                            return !Process::is_deleted($item['id']);
+                            return !Process::is_deleted($item['id'])
+                                && Roles::can_access_process((int) $item['id']);
                         }));
                     }
 
@@ -65,7 +75,7 @@ class CustomPostTypeApi extends ObatalaAPI {
                     $response->set_data($data);
                     return $response;
                 },
-                'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'], // Check for permissions
+                'permission_callback' => [ObatalaAPI::class, 'permission_check_access'],
                 'args' => array_merge($controller->get_collection_params(), [
                     'numero_processo' => [
                         'type' => 'string',
@@ -82,7 +92,11 @@ class CustomPostTypeApi extends ObatalaAPI {
                     }
                     return $controller->create_item($request);
                 },
-                'permission_callback' => [$controller, 'create_item_permissions_check'], // Check for permissions
+                'permission_callback' => function ($request) use ($post_type) {
+                    return $post_type === 'process_obatala'
+                        ? ObatalaAPI::permission_check_process_manage($request)
+                        : ObatalaAPI::permission_check_manage_models($request);
+                },
                 'args' => $controller->get_endpoint_args_for_item_schema(WP_REST_Server::CREATABLE), // Arguments for item creation
             ],
         ]);
@@ -110,7 +124,11 @@ class CustomPostTypeApi extends ObatalaAPI {
                     }
                     return $response; // Return the final response
                 },
-                'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'], // Check for permissions
+                'permission_callback' => function ($request) use ($post_type) {
+                    return $post_type === 'process_obatala'
+                        ? ObatalaAPI::permission_check_process_access($request)
+                        : ObatalaAPI::permission_check_access($request);
+                },
                 'args' => [
                     'context' => [
                         'default' => 'view', // Default view context
@@ -120,7 +138,11 @@ class CustomPostTypeApi extends ObatalaAPI {
             [
                 'methods' => WP_REST_Server::EDITABLE, // HTTP PUT for updating an item
                 'callback' => [$controller, 'update_item'], // Callback for updating an item
-                'permission_callback' => [$controller, 'update_item_permissions_check'], // Check for permissions
+                'permission_callback' => function ($request) use ($post_type) {
+                    return $post_type === 'process_obatala'
+                        ? ObatalaAPI::permission_check_process_manage($request)
+                        : ObatalaAPI::permission_check_manage_models($request);
+                },
                 'args' => $controller->get_endpoint_args_for_item_schema(WP_REST_Server::EDITABLE), // Arguments for item update
             ],
             [
@@ -128,7 +150,11 @@ class CustomPostTypeApi extends ObatalaAPI {
                 'callback' => $post_type === 'process_obatala'
                     ? [$this, 'soft_delete_process']
                     : [$controller, 'delete_item'],
-                'permission_callback' => [$controller, 'delete_item_permissions_check'],
+                'permission_callback' => function ($request) use ($post_type) {
+                    return $post_type === 'process_obatala'
+                        ? ObatalaAPI::permission_check_delete_process($request)
+                        : ObatalaAPI::permission_check_delete_model($request);
+                },
                 'args' => [
                     'force' => [
                         'default' => false,
@@ -357,6 +383,37 @@ class CustomPostTypeApi extends ObatalaAPI {
     }
 
     /**
+     * Applies group visibility before the core controller paginates the query.
+     */
+    protected function scope_process_collection_request($request) {
+        if (Roles::is_process_administrator()) {
+            return true;
+        }
+
+        $process_ids = get_posts([
+            'post_type' => Process::get_post_type(),
+            'post_status' => ['publish', 'draft', 'pending', 'private', 'future'],
+            'numberposts' => -1,
+            'fields' => 'ids',
+            'no_found_rows' => true,
+        ]);
+        $process_ids = array_values(array_filter(array_map('intval', $process_ids), function ($process_id) {
+            return !Process::is_deleted($process_id) && Roles::can_access_process($process_id);
+        }));
+
+        $requested_ids = array_map('intval', (array) $request->get_param('include'));
+        if (!empty($requested_ids)) {
+            $process_ids = array_values(array_intersect($process_ids, $requested_ids));
+        }
+        if (empty($process_ids)) {
+            return false;
+        }
+
+        $request->set_param('include', $process_ids);
+        return true;
+    }
+
+    /**
      * @param array<string, mixed> $item
      * @return array<string, mixed>
      */
@@ -387,6 +444,17 @@ class CustomPostTypeApi extends ObatalaAPI {
         }
 
         $item['meta'] = $meta;
+        if ($post_type === 'process_obatala') {
+            $process_id = (int) $item['id'];
+            $item['tainacan_processes_permissions'] = [
+                'can_access' => Roles::can_access_process($process_id),
+                'can_act' => Roles::can_act_on_stage($process_id),
+                'can_manage' => Roles::can_manage_processes(),
+                'can_comment' => Roles::can_manage_comments(),
+                'can_report' => Roles::can_generate_reports(),
+                'can_delete' => Roles::can_delete_processes(),
+            ];
+        }
         return $item;
     }
 }

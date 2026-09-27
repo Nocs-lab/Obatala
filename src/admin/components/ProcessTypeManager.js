@@ -19,6 +19,8 @@ import BrandHeader from './BrandHeader';
 import BrandFooter from './BrandFooter';
 
 const ProcessTypeManager = () => {
+    const permissions = window.obatalaApp?.permissions || {};
+    const canDeleteModels = Boolean(permissions.delete_models);
     const [processTypes, setProcessTypes] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [editingProcessType, setEditingProcessType] = useState(null);
@@ -169,7 +171,7 @@ const ProcessTypeManager = () => {
                         {notice.message}
                     </Notice>
                 )}
-                <ConfirmDialog
+                {canDeleteModels && <ConfirmDialog
                     isOpen={state.isOpen}
                     onConfirm={() => {
                         handleDeleteProcessType(state.processModel);
@@ -181,13 +183,13 @@ const ProcessTypeManager = () => {
                         __('Are you sure you want to delete process model %s?', 'obatala'),
                         state.processModel?.title?.rendered || ''
                     )}
-                </ConfirmDialog>
+                </ConfirmDialog>}
                 <div className="panel-container">
                     <ProcessTypeList
                         processTypes={filteredModels}
                         onEdit={handleEditModel}
                         onManager={handleManageProcessModel}
-                        onDelete={handleConfirmDelete}
+                        onDelete={canDeleteModels ? handleConfirmDelete : null}
                         status={status}
                         setStatus={setStatus}
                         authorsById={authorsById}

@@ -35,6 +35,7 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Instalação: instalacao.md
+  - Perfis e permissões: perfis-e-permissoes.md
   - Organização: organizacao.md
   - Internacionalização: internacionalizacao.md
   - Processos:

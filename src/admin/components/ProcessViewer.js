@@ -578,6 +578,8 @@ const SpreadsheetRowsModal = ({
 };
 
 const ProcessViewer = () => {
+    const permissions = window.obatalaApp?.permissions || {};
+    const canExecuteExports = Boolean(permissions.execute_exports);
     const [process, setProcess] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -707,7 +709,7 @@ const ProcessViewer = () => {
     };
 
     const loadExportRuntime = useCallback(async () => {
-        if (!processId) return;
+        if (!processId || !canExecuteExports) return;
 
         try {
             const runtime = await fetchProcessExportRuntime(processId);
@@ -715,10 +717,10 @@ const ProcessViewer = () => {
         } catch {
             setExportRuntimeConfig(null);
         }
-    }, [processId]);
+    }, [processId, canExecuteExports]);
 
     const loadExportReview = useCallback(async () => {
-        if (!processId) return;
+        if (!processId || !canExecuteExports) return;
 
         try {
             const review = await fetchProcessExportReview(processId);
@@ -726,7 +728,7 @@ const ProcessViewer = () => {
         } catch {
             setExportReview(null);
         }
-    }, [processId]);
+    }, [processId, canExecuteExports]);
 
     const handleExportPreparationSaved = async (response) => {
         if (response?.runtime) {
@@ -748,12 +750,6 @@ const ProcessViewer = () => {
         const initializeNodeData = async () => {
             try {
                 setIsLoading(true);
-
-                await apiFetch({
-                    path: `/obatala/v1/process_obatala/${processId}/node`,
-                    method: 'PUT',
-                });
-
                 await fetchUpdatedProcessNodes();
                 //await fetchMetaData(processId, orderedSteps);
 
@@ -767,6 +763,26 @@ const ProcessViewer = () => {
         initializeNodeData();
 
     }, [processId]);
+
+    useEffect(() => {
+        if (!processId || !process?.tainacan_processes_permissions?.can_act) {
+            return;
+        }
+
+        const initializeAuthorizedFirstStep = async () => {
+            try {
+                await apiFetch({
+                    path: `/obatala/v1/process_obatala/${processId}/node`,
+                    method: 'PUT',
+                });
+                await fetchUpdatedProcessNodes();
+            } catch {
+                // The regular process notices handle contextual permission errors.
+            }
+        };
+
+        initializeAuthorizedFirstStep();
+    }, [processId, process?.id]);
 
     useEffect(() => {
         if (processId && orderedSteps.length > 0) {
@@ -793,7 +809,9 @@ const ProcessViewer = () => {
         const processId = getProcessIdFromUrl();
         if (processId) {
             setIsLoading(true);
-            loadSectors();
+            if (permissions.manage_groups) {
+                loadSectors();
+            }
             fetchProcessById(processId)
                 .then((data) => {
                     setProcess(data);
@@ -820,10 +838,13 @@ const ProcessViewer = () => {
                     setError(__("Error fetching process details.", "obatala"));
                 })
                 .finally(() => setIsProcessLoading(false));
-            fetchNodePermission(processId, currentUser.id)
+            fetchNodePermission(processId)
                 .then((result) => {
                     setHasPermission(Boolean(result.status));
                     setSectorUser(Array.isArray(result.data_sector) ? result.data_sector : [])
+                    if (!permissions.manage_groups && result.sector_names) {
+                        setSectors(Object.entries(result.sector_names).map(([id, name]) => ({ id, name })));
+                    }
                 })
                 .catch((error) => {
                     console.error("Error fetching process:", error);
@@ -2292,23 +2313,6 @@ const ProcessViewer = () => {
                 [stepId]: [new Date(), currentUser.name],
             }));
 
-            const nextNodeId = nodeUpdateResponse?.next_node_id;
-            if (nextNodeId) {
-                const nextNode = process?.meta?.flowData?.nodes?.find(node => node.id === nextNodeId);
-                const nextGroup = nextNode?.sector_obatala
-                    ? getSectorName(nextNode.sector_obatala)
-                    : '';
-
-                await apiFetch({
-                    path: `/obatala/v1/process_obatala/${process.id}/meta`,
-                    method: 'POST',
-                    data: {
-                        current_stage: nextNodeId,
-                        groupResponsible: nextGroup
-                    }
-                });
-            }
-
             if (nodeUpdateResponse?.export_result) {
                 setNotice(buildExportNoticeFromResult(nodeUpdateResponse.export_result));
             }
@@ -2344,7 +2348,6 @@ const ProcessViewer = () => {
             }
             const params = new URLSearchParams({
                 id: process.id,
-                user: currentUser.id,
                 file: file,
                 node_id: stepId
             });

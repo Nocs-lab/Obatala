@@ -33,6 +33,16 @@ Development repository: https://github.com/Nocs-lab/Obatala
 * Notifications: Send email and admin interface notifications when the process status changes.
 
 * Tainacan Integration: Attach Tainacan items and collections to processes, with access to item history tracking.
+* Integrated roles and permissions: Uses Tainacan Administrator and Editor roles plus the Tainacan Participant role, with process and stage access restricted by groups.
+
+= Roles and permissions =
+
+* WordPress Administrator and Tainacan Administrator have full access, including process models, groups, mappings, settings, and deletion operations.
+* Tainacan Editor can create and edit authorized processes, work on stages assigned to their groups, comment, generate reports, and execute exports. It cannot create or edit process models.
+* Tainacan Participant can view processes involving their groups, fill in and advance the current stage assigned to their group, comment, and generate permitted reports.
+* Tainacan Author keeps its native Tainacan permissions and receives no Tainacan Processes access by default.
+
+The plugin uses its own `tainacan_processes_*` capabilities and does not change Tainacan source files or native `tnc_*` capabilities. Legacy Obatala roles and `obatala_*` capabilities are migrated and removed during the versioned upgrade.
 
 
 == Installation ==

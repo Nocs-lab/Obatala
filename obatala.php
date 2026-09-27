@@ -101,7 +101,7 @@ namespace Obatala {
 		 */
 		public function maybe_notice_pdf_library()
 		{
-			if (!current_user_can('edit_posts')) {
+			if (!\Obatala\Security\Roles::can_generate_reports()) {
 				return;
 			}
 			$screen = function_exists('get_current_screen') ? get_current_screen() : null;

@@ -81,9 +81,10 @@ const processListGlobalFilter = (rows, _columnIds, filterValue) => {
 const isPdfReportAvailable =
     typeof window !== 'undefined' &&
     window.obatalaApp &&
-    Boolean(window.obatalaApp.pdf_report_available);
+    Boolean(window.obatalaApp.pdf_report_available) &&
+    Boolean(window.obatalaApp.permissions?.generate_reports);
 
-const ProcessList = ({ processes, progressMap, progressFilter, setProgressFilter, onEdit, onViewProcess, onDelete, processTypes, accessLevel, setAccessLevel, modelFilter, setModelFilter }) => {
+const ProcessList = ({ processes, progressMap, progressFilter, setProgressFilter, onEdit, onViewProcess, onDelete, canManageProcesses, canDeleteProcesses, processTypes, accessLevel, setAccessLevel, modelFilter, setModelFilter }) => {
     const [pdfLoadingId, setPdfLoadingId] = useState(null);
     const [pdfError, setPdfError] = useState(null);
 
@@ -188,13 +189,13 @@ const ProcessList = ({ processes, progressMap, progressFilter, setProgressFilter
                         >
                             {__("View process", "obatala")}
                         </Button>
-                        <Tooltip text={__("Edit", "obatala")}>
+                        {canManageProcesses && <Tooltip text={__("Edit", "obatala")}>
                             <Button
                                 variant="tertiary"
                                 icon={edit}
                                 onClick={() => onEdit(row.original)}
                             />
-                        </Tooltip>
+                        </Tooltip>}
                         <Tooltip text={__("History", "obatala")}>
                             <Button
                                 variant="tertiary"
@@ -216,18 +217,18 @@ const ProcessList = ({ processes, progressMap, progressFilter, setProgressFilter
                                 />
                             </Tooltip>
                         )}
-                        <Tooltip text={__("Delete process", "obatala")}>
+                        {canDeleteProcesses && <Tooltip text={__("Delete process", "obatala")}>
                             <Button
                                 variant="tertiary"
                                 icon={trash}
                                 onClick={() => onDelete(row.original)}
                             />
-                        </Tooltip>
+                        </Tooltip>}
                     </div>
                 ),
             },
         ],
-        [processTypes, pdfLoadingId, handlePdfDownload, onDelete, onEdit, onViewProcess, isPdfReportAvailable]
+        [processTypes, pdfLoadingId, handlePdfDownload, onDelete, onEdit, onViewProcess, canManageProcesses, canDeleteProcesses, isPdfReportAvailable]
     );
 
     const data = useMemo(() => {
