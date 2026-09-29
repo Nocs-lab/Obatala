@@ -529,7 +529,7 @@ const processDataEditor = () => {
                                 {notice.message}
                             </Notice>
                         )}
-                        <Panel header={ __('Gerenciar modelo de processo', 'obatala') }>
+                        <Panel header={ __('Manage process model', 'obatala') }>
                             {canManageMappers && (
                                 <PanelBody 
                                     title={ <TainacanExportPanelTitle /> } 

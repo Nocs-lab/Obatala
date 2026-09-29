@@ -1,28 +1,16 @@
-import React, { useEffect, useReducer, useState } from 'react';
-import { Button,
-        Tooltip,
-        Notice,
-        Spinner,
-        __experimentalConfirmDialog as ConfirmDialog
-    } from '@wordpress/components';
-import { trash } from '@wordpress/icons';
-import { __, sprintf } from '@wordpress/i18n';
-import { assignUserToSector, deleteSectorUser, fetchUsers, fetchUsersBySector } from '../../../api/apiRequests';
+import React, { useEffect, useState } from 'react';
+import { Notice, Panel, PanelHeader, PanelRow } from '@wordpress/components';
+import { __ } from '@wordpress/i18n';
+import { assignUserToSector, fetchUsers } from '../../../api/apiRequests';
 import UserSelect from './UserSelect';
-import Reducer, { initialState } from '../../../redux/reducer';
 
 
-const UserManager = ({sector, loadSectorsUsers = () => {}}) => {
+const UserManager = ({ sector, sectorUsers, onUsersChanged = () => {}, loadSectorsUsers = () => {} }) => {
     const [users, setUsers] = useState([]);
-    const [sectorUsers, setSectorUsers] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
     const [notice, setNotice] = useState(null);
-
-    const [state, dispatch] = useReducer(Reducer, initialState)
 
     useEffect(() => {
         loadUsers();
-        loadSectorUsers(sector.id);
     }, []);
 
     // Obtem todos os usuários
@@ -36,18 +24,6 @@ const UserManager = ({sector, loadSectorsUsers = () => {}}) => {
             });
     };
 
-    // Obtem os usuários de um setor especifico
-    const loadSectorUsers = async (sectorId) => {
-        setIsLoading(true);
-        try {
-            const data = await fetchUsersBySector(sectorId);
-            setSectorUsers(Array.isArray(data) ? data : []);
-        } catch (error) {
-            console.error('Error fetching sector users:', error);
-        } finally {
-            setIsLoading(false);
-        }
-    };
     // Associa um usuário ao setor com base no ID de ambos
     const assignUserSector = async (usersId) => {
         try {
@@ -56,7 +32,7 @@ const UserManager = ({sector, loadSectorsUsers = () => {}}) => {
                 return assignUserToSector(data);
             }));
             setNotice({ status: 'success', message: __('Users successfully added.', 'obatala') });
-            await loadSectorUsers(sector.id);
+            await onUsersChanged();
             loadSectorsUsers();
             return true;
         } catch (error) {
@@ -66,101 +42,25 @@ const UserManager = ({sector, loadSectorsUsers = () => {}}) => {
         }
     };
     
-    // Remove o usuário do setor
-    const handleDeleteUser = async (user) => {
-        const data = { user_id: user.ID };
-        try {
-            await deleteSectorUser(sector.id, data);
-            setSectorUsers(currentUsers => currentUsers.filter(type => type.ID !== user.ID));
-            setNotice({ status: 'success', message: __('User successfully removed.', 'obatala') });
-            loadSectorsUsers();
-        } catch (error) {
-            console.error('Error removing users from group:', error);
-            setNotice({ status: 'error', message: __('Error removing user.', 'obatala') });
-        }
-    };
-
-    const handleConfirmDelete = (user) => {
-        dispatch({type: 'OPEN_MODAL_USER', payload: user})
-    };
-
-    const handleCancel = () => {
-        dispatch({ type: 'CLOSE_MODAL' });
-    };
-
-    if (isLoading) {
-        return <Spinner />;
-    }
-
     return (
-        <div className="sector-user-manager">
+        <aside className="sector-user-manager">
             {notice && (
                 <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
                     {notice.message}
                 </Notice>
             )}
 
-            <UserSelect
-                users={users}
-                sectorUsers={sectorUsers}
-                onSelectUser={assignUserSector}
-            />
-
-            <hr className="mt-2" />
-             
-            <div className='title-container-table'>
-                <h3>{__('Related users', 'obatala')}</h3>
-                <span className="badge">{sectorUsers.length}</span>
-            </div>
-
-            <ConfirmDialog
-                isOpen={state.isOpen}
-                onConfirm={() => {
-                    handleDeleteUser(state.user);
-                    dispatch({type: 'CLOSE_MODAL'})
-                }}
-                onCancel={ handleCancel }
-            >
-                {sprintf(__('Are you sure you want to delete user %s?', 'obatala'), state.user?.display_name || '')}
-            </ConfirmDialog>
-
-            {sectorUsers.length > 0 ? (
-                <div className="table-responsive">
-                    <table className="wp-list-table widefat striped mt-1">
-                        <thead>
-                            <tr>
-                                <th>{__('Name', 'obatala')}</th>
-                                <th>{__('Username', 'obatala')}</th>
-                                <th>{__('Email', 'obatala')}</th>
-                                <th>{__('Actions', 'obatala')}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {sectorUsers.map(user => (
-                                <tr key={user.ID}>
-                                    <td>{user.display_name}</td>
-                                    <td>{user.username}</td>
-                                    <td>{user.email}</td>
-                                    <td>
-                                        <div className="group-button">
-                                            <Tooltip text={__('Remove user from sector', 'obatala')}>
-                                                <Button
-                                                    isDestructive
-                                                    icon={trash}
-                                                    onClick={() => handleConfirmDelete(user)}
-                                                />
-                                            </Tooltip>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            ) : (
-                <Notice isDismissible={false} status="warning">{__('No existing users for this group.', 'obatala')}</Notice>
-            )}
-        </div>
+            <Panel>
+                <PanelHeader>{__('Add new user', 'obatala')}</PanelHeader>
+                <PanelRow>
+                    <UserSelect
+                        users={users}
+                        sectorUsers={sectorUsers}
+                        onSelectUser={assignUserSector}
+                    />
+                </PanelRow>
+            </Panel>
+        </aside>
     );
 }
 
