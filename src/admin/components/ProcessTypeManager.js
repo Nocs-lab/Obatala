@@ -61,7 +61,7 @@ const ProcessTypeManager = () => {
             }
 
             if (!editingProcessType && savedProcessType?.id) {
-                window.location.href = `?page=process-type-editor&process_type_id=${encodeURIComponent(savedProcessType.id)}`;
+                window.location.href = `?page=process-type-editor&process_type_id=${encodeURIComponent(savedProcessType.id)}&created=1`;
                 return;
             }
 

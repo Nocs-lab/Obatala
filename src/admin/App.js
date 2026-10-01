@@ -10,8 +10,17 @@ import MappersManager from './components/MappersManager';
 import TainacanItemsPage from './components/TainacanItems/TainacanItemsPage';
 
 // Função para navegar para o ProcessViewer ao selecionar um processo
-const navigateToProcessViewer = ( processId ) => {
-	window.location.href = `?page=process-viewer&process_id=${ processId }`;
+const navigateToProcessViewer = ( processId, options = {} ) => {
+	const params = new URLSearchParams( {
+		page: 'process-viewer',
+		process_id: processId,
+	} );
+
+	if ( options.created ) {
+		params.set( 'created', '1' );
+	}
+
+	window.location.href = `?${ params.toString() }`;
 };
 
 // Adiciona um evento listener para ser executado quando o conteúdo do DOM for completamente carregado
