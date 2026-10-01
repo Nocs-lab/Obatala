@@ -17,6 +17,21 @@ const SectorDetailsPage = () => {
     const [userToDelete, setUserToDelete] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [notice, setNotice] = useState(() => (
+        new URLSearchParams(window.location.search).get("created") === "1"
+            ? { status: "success", message: __("Group successfully saved.", "obatala") }
+            : null
+    ));
+
+    useEffect(() => {
+        const url = new URL(window.location.href);
+        if (url.searchParams.get("created") !== "1") {
+            return;
+        }
+
+        url.searchParams.delete("created");
+        window.history.replaceState({}, "", url.toString());
+    }, []);
 
     const getSectorIdFromUrl = () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -140,6 +155,11 @@ const SectorDetailsPage = () => {
                 </div>
             </div>
             <main className="panel-container">
+                {notice && (
+                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                        {notice.message}
+                    </Notice>
+                )}
                 <ConfirmDialog
                     isOpen={Boolean(userToDelete)}
                     onConfirm={handleDeleteUser}

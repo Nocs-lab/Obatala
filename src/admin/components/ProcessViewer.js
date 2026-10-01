@@ -597,7 +597,11 @@ const ProcessViewer = () => {
     const [currentStageData, setCurrentStageData] = useState({});
     const [uploadedFiles, setUploadedFiles] = useState({});
     const [fileInfo, setFileInfo] = useState({});
-    const [notice, setNotice] = useState(null);
+    const [notice, setNotice] = useState(() => (
+        new URLSearchParams(window.location.search).get('created') === '1'
+            ? { status: 'success', message: __('Process created successfully.', 'obatala') }
+            : null
+    ));
     const [progress, setProgress] = useState(0);
     const [hasComments, setHasComments] = useState(false);
     const [isItemsMatrixOpen, setIsItemsMatrixOpen] = useState(false);
@@ -627,6 +631,16 @@ const ProcessViewer = () => {
         return urlParams.get("process_id");
     };
     const processId = getProcessIdFromUrl();
+
+    useEffect(() => {
+        const url = new URL(window.location.href);
+        if (url.searchParams.get('created') !== '1') {
+            return;
+        }
+
+        url.searchParams.delete('created');
+        window.history.replaceState({}, '', url.toString());
+    }, []);
 
     const normalizeProcessTypeId = (value) => {
         if (Array.isArray(value)) {

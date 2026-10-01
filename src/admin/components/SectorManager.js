@@ -82,7 +82,7 @@ const SectorManager = () => {
             }
 
             if (!editingSector && savedSector?.id) {
-                window.location.href = `?page=sector-details&sector_id=${encodeURIComponent(savedSector.id)}`;
+                window.location.href = `?page=sector-details&sector_id=${encodeURIComponent(savedSector.id)}&created=1`;
                 return;
             }
         

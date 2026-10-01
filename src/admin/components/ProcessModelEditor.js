@@ -90,7 +90,11 @@ const processDataEditor = () => {
     const params = new URLSearchParams(window.location.search);
     const id = params.get("process_type_id");
     const [processData, setProcessData] = useState(null);
-    const [notice, setNotice] = useState(null);
+    const [notice, setNotice] = useState(() => (
+        params.get("created") === "1"
+            ? { status: "success", message: __("Process model saved successfully.", "obatala") }
+            : null
+    ));
     const [isLoading, setIsLoading] = useState(true);
     const [mapperStatus, setMapperStatus] = useState(MAPPER_STATUS_DISABLED);
     const flowRef = useRef(null); 
@@ -100,6 +104,16 @@ const processDataEditor = () => {
     const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
     const isTainacanMapperEnabled = mapperStatus !== MAPPER_STATUS_DISABLED;
     const shouldOpenExportPanel = params.get("section") === "export";
+
+    useEffect(() => {
+        const url = new URL(window.location.href);
+        if (url.searchParams.get("created") !== "1") {
+            return;
+        }
+
+        url.searchParams.delete("created");
+        window.history.replaceState({}, "", url.toString());
+    }, []);
 
     const getProcessIdFromUrl = () => {
         const urlParams = new URLSearchParams(window.location.search);

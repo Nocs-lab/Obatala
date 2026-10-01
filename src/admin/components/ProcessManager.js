@@ -174,7 +174,7 @@ const ProcessManager = ({ onSelectProcess }) => {
             setAddingProcess(null);
 
             if (newProcess?.id) {
-                onSelectProcess(newProcess.id);
+                onSelectProcess(newProcess.id, { created: true });
                 return;
             }
         }
