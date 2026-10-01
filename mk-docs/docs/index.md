@@ -111,7 +111,7 @@ private static $pages = [
     'main' => [
         'title' => 'obatala',
         'menu_title' => 'obatala',
-        'capability' => 'manage_options',
+        'capability' => \Obatala\Security\Roles::CAP_TP_ACCESS,
         'slug' => 'obatala-main',
         'callback' => 'render_main_page',
         'icon' => 'dashicons-admin-site',
@@ -122,7 +122,7 @@ private static $pages = [
             'parent_slug' => 'obatala-main',
             'title' => 'Dashboard',
             'menu_title' => 'Dashboard',
-            'capability' => 'manage_options',
+            'capability' => \Obatala\Security\Roles::CAP_TP_ACCESS,
             'slug' => 'obatala-main',
             'callback' => 'render_main_page',
             'show_in_menu' => true
@@ -131,7 +131,7 @@ private static $pages = [
             'parent_slug' => 'obatala-main',
             'title' => 'Processes',
             'menu_title' => 'Processes',
-            'capability' => 'manage_options',
+            'capability' => \Obatala\Security\Roles::CAP_TP_ACCESS,
             'slug' => 'process-manager',
             'callback' => 'render_page',
             'show_in_menu' => true
@@ -140,7 +140,7 @@ private static $pages = [
             'parent_slug' => 'obatala-main',
             'title' => 'Models',
             'menu_title' => 'Models',
-            'capability' => 'edit_posts',
+            'capability' => \Obatala\Security\Roles::CAP_TP_MANAGE_MODELS,
             'slug' => 'process-type-manager',
             'callback' => 'render_page',
             'show_in_menu' => true
@@ -149,7 +149,7 @@ private static $pages = [
             'parent_slug' => 'obatala-main',
             'title' => 'Groups',
             'menu_title' => 'Groups',
-            'capability' => 'manage_options',
+            'capability' => \Obatala\Security\Roles::CAP_TP_MANAGE_GROUPS,
             'slug' => 'sector_manager',
             'callback' => 'render_page',
             'show_in_menu' => true
@@ -160,6 +160,10 @@ private static $pages = [
 ```
 
 Os títulos são traduzidos em tempo de execução via `__($submenu['title'], 'obatala')` em `add_admin_pages()`, pois funções não podem ser usadas em propriedades estáticas (expressões constantes).
+
+As páginas usam as capabilities `tainacan_processes_*`; operações REST também
+validam a capability específica e, quando há um processo ou etapa envolvido, os
+grupos do usuário. Consulte [Perfis e permissões](perfis-e-permissoes.md).
 
 ### 🧱 Enqueuer
 Classe que gerencia o carregamento de arquivos de estilo e script.

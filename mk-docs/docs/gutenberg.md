@@ -25,12 +25,14 @@ Na classe AdminMenu, criamos uma nova página no painel. O callback associado im
 ```php
 namespace Obatala\Admin;
 
+use Obatala\Security\Roles;
+
 class AdminMenu {
     public static function add_admin_pages() {
         add_menu_page(
             __('Exemplo', 'obatala'),
             __('Exemplo', 'obatala'),
-            'manage_options',
+            Roles::CAP_TP_ACCESS,
             'exemplo',
             [self::class, 'funcao_exemplo'],
             'dashicons-admin-generic',
@@ -43,6 +45,10 @@ class AdminMenu {
     }
 }
 ```
+
+Escolha a capability `tainacan_processes_*` correspondente à função da página.
+Abrir uma página não substitui a autorização das operações REST executadas por
+ela; consulte [Perfis e permissões](perfis-e-permissoes.md).
 
 ### 3️⃣ Enfileiramento Condicional de Scripts
 Na classe Enqueuer, verificamos se o hook da página atual corresponde à nossa página personalizada. Se sim, os scripts e estilos são carregados:

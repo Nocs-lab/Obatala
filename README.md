@@ -27,9 +27,30 @@ Ideal para instituições que buscam inovar na apresentação e gestão de suas 
 - **Relatórios em PDF**: Relatório consolidado do processo e PDF do documento da etapa (Dompdf via Composer).
 - **Metadados Dinâmicos**: Adição e configuração de metadados personalizados para cada etapa do processo.
 - **Gestão de Setores**: Agrupamento de usuários em setores, com permissões específicas e atribuição de setores às etapas do processo.
+- **Perfis integrados ao Tainacan**: Capabilities próprias do Tainacan Processos nos perfis Tainacan Administrator e Editor, além do perfil operacional Tainacan Participant, sempre combinadas com as regras de grupos.
 - **Interação com Processos**: Usuários podem adicionar comentários e mudar o status das etapas.
 - **Notificações**: Envio de notificações por email e na interface de administração quando o status do processo mudar.
 - **Integração com Tainacan**: Anexação de itens e coleções do Tainacan aos processos, com verificação do histórico dos itens.
+
+## Perfis e permissões
+
+O Tainacan Processos aproveita os perfis **Tainacan Administrator** e
+**Tainacan Editor** e cria somente um perfil adicional: **Tainacan
+Participant**. O perfil nativo **Tainacan Author** não recebe acesso ao
+Tainacan Processos.
+
+| Perfil | Acesso no Tainacan Processos |
+| --- | --- |
+| Administrador WordPress / Tainacan Administrator | Acesso completo, inclusive criação e exclusão de modelos, grupos, mapeamentos e configurações |
+| Tainacan Editor | Cria e edita processos autorizados, atua nas etapas dos seus grupos, comenta, gera relatórios e executa exportações; não cria modelos |
+| Tainacan Participant | Visualiza processos dos seus grupos, preenche e avança a etapa do seu grupo, comenta e gera relatórios |
+| Tainacan Author | Nenhum acesso automático ao Tainacan Processos |
+
+As permissões funcionais usam o prefixo `tainacan_processes_` e são combinadas
+com os grupos já existentes. A implementação pertence exclusivamente a este
+plugin: arquivos, perfis e capabilities nativas `tnc_*` do Tainacan não são
+alterados. Consulte [Perfis e permissões](mk-docs/docs/perfis-e-permissoes.md)
+para a matriz completa e as regras de migração.
 
 ## Visão geral da estrutura do plugin
 
@@ -120,6 +141,7 @@ Tópicos recentes:
 
 - [Gestão de processos](mk-docs/docs/processos/gestao-processos.md) — numeração única (`AAAA-NNNNN-DV`), listagem, busca, exclusão lógica e PDF
 - [Instalação](mk-docs/docs/instalacao.md) — Composer, npm, tabelas de numeração e backfill
+- [Perfis e permissões](mk-docs/docs/perfis-e-permissoes.md) — perfis do Tainacan, Tainacan Participant, grupos e capabilities
 
 ## Colaboração
 

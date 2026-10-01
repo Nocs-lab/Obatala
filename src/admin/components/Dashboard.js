@@ -21,6 +21,7 @@ import BrandHeader from './BrandHeader';
 import BrandFooter from './BrandFooter';
 
 const DashboardPage = () => {
+	const permissions = window.obatalaApp?.permissions || {};
 	const [ processTypes, setProcessTypes ] = useState( [] );
 	const [ processes, setProcesses ] = useState( [] );
 	const [ sectors, setSectors ] = useState( [] );
@@ -236,12 +237,14 @@ const DashboardPage = () => {
 	useEffect( () => {
 		// A tela so aparece quando toda a carga inicial termina, evitando
 		// renderizar com dados parciais do primeiro loader que responder.
-		Promise.allSettled( [
+		const initialRequests = [
 			loadProcessTypes(),
 			loadProcesses(),
-			loadSectors(),
-			loadSectorsUsers(),
-		] ).finally( () => setIsInitialLoading( false ) );
+		];
+		if ( permissions.manage_groups ) {
+			initialRequests.push( loadSectors(), loadSectorsUsers() );
+		}
+		Promise.allSettled( initialRequests ).finally( () => setIsInitialLoading( false ) );
 
 		// A contagem do Tainacan nao bloqueia o restante do dashboard.
 		loadTainacanItemsCount();
@@ -315,19 +318,6 @@ const DashboardPage = () => {
 		return null;
 	};
 
-	const isUserAllowedInSector = ( sectorId ) => {
-		if ( ! sectorId ) {
-			return true;
-		}
-
-		return sectorsUsers.some(
-			( sector ) =>
-				String( sector.sector_id ) === String( sectorId ) &&
-				sector.sector_status === 'Active' &&
-				sector.users?.some( ( user ) => user.ID === currentUser?.id )
-		);
-	};
-
 	// Função para verificar se um processo está pendente
 	const isProcessPending = ( process ) => {
 		if ( process.status !== 'publish' ) {
@@ -373,7 +363,7 @@ const DashboardPage = () => {
 			return false;
 		}
 
-		return isUserAllowedInSector( currentNode.sector_obatala );
+		return Boolean( process.tainacan_processes_permissions?.can_act );
 	};
 
 	// Derivado de `processes`, que ja vem da carga inicial: a lista nao precisa
@@ -658,7 +648,7 @@ const DashboardPage = () => {
 									<Icon icon="admin-page" />
 								</span>
 							</a>
-							<a
+							{ permissions.manage_models && <a
 								href={
 									obatalaApp.admin_url +
 									'admin.php?page=process-type-manager'
@@ -672,8 +662,8 @@ const DashboardPage = () => {
 									{ processTypes.length }{ ' ' }
 									<Icon icon="welcome-widgets-menus" />
 								</span>
-							</a>
-							<a
+							</a> }
+							{ permissions.manage_groups && <a
 								href={
 									obatalaApp.admin_url +
 									'admin.php?page=sector_manager'
@@ -686,7 +676,7 @@ const DashboardPage = () => {
 								<span className="indicator">
 									{ sectors.length } <Icon icon="groups" />
 								</span>
-							</a>
+							</a> }
 						</div>
 						<div className="panel-container mt-2">
 							<Panel>

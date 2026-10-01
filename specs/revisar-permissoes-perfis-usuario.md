@@ -2,11 +2,19 @@
 
 ## Metadados
 
-- **Status:** Rascunho
+- **Status:** Substituída
 - **Responsavel:** Equipe Obatala
 - **Data:** 2026-08-06
 - **Issue/PR:** Nao informado
 - **Versao alvo:** Nao informada
+
+> Esta especificacao foi consolidada e substituida por
+> `migrar-perfis-tainacan-processos.md`, que define a matriz vigente com os
+> perfis do Tainacan, o perfil Tainacan Participant e as
+> capabilities `tainacan_processes_*`.
+> O conteúdo abaixo registra o diagnóstico e a proposta anterior e não deve ser
+> usado como referência de implementação. Consulte a especificação substituta e
+> `mk-docs/docs/perfis-e-permissoes.md` para o comportamento vigente.
 
 ## Contexto e problema
 

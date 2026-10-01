@@ -109,7 +109,7 @@ O WordPress precisa gravar em:
 
 ### 6. Conferir se os PDFs estão disponíveis
 
-Com usuário que tenha `edit_posts` (ou papel Obatalá equivalente):
+Com usuário que tenha `tainacan_processes_generate_reports`:
 
 1. Acesse qualquer página do menu **Obatalá** no admin.
 2. Se o Dompdf **não** estiver instalado, aparece um aviso amarelo: *"PDF generation library is not available. Run: composer install"*.
@@ -137,6 +137,26 @@ Processos já existentes recebem numeração retroativa (backfill) com base no a
 Após atualizar o código, **reative o plugin** ou acesse o admin uma vez para garantir que as tabelas existam. Novos processos passam a exibir o número na coluna **Nº do processo** (ex.: `2026-00042-6`).
 
 Detalhes da regra `AAAA-NNNNN-DV`, API e busca: [Gestão de processos — Numeração](processos/gestao-processos.md#numeracao-unica-do-processo).
+
+### 8. Conferir perfis e grupos
+
+Na primeira carga após a atualização, o plugin cria o perfil **Tainacan
+Participant** e executa a migração versionada dos antigos perfis
+Obatalá. O perfil Tainacan Author não é modificado. Confira a matriz e o
+procedimento em [Perfis e permissões](perfis-e-permissoes.md).
+
+Em **Usuários**, confirme que:
+
+- **Tainacan Participant** está disponível;
+- **Tainacan Processos Manager**, **Tainacan Processos Operator** e **Obatala
+  Author** não aparecem;
+- **Tainacan Administrator**, **Tainacan Editor** e **Tainacan Author** continuam
+  com seus nomes nativos;
+- usuários migrados mantêm suas associações de grupo.
+
+Para a operação normal, atribua **Tainacan Administrator** a quem cria modelos e
+administra grupos; **Tainacan Editor** a quem cria e conduz processos; e
+**Tainacan Participant** a quem atua somente nas etapas dos seus grupos.
 
 ---
 
@@ -187,6 +207,8 @@ A documentação publicada está em: [Documentação oficial](https://nocs-lab.g
 - [ ] `npm run build` executado
 - [ ] Pasta `build/` com `index.js` e `index.asset.php`
 - [ ] Plugin Obatalá ativo sem erro fatal
+- [ ] Perfis antigos removidos e Tainacan Participant disponível
+- [ ] Usuários associados aos grupos corretos
 - [ ] Nenhum aviso de biblioteca PDF no admin Obatalá
 - [ ] Teste: gerar PDF de um processo ou documento da etapa
 

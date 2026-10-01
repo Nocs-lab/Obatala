@@ -56,7 +56,7 @@ class ExporterApi extends ObatalaAPI {
          $this->add_route('get_items_collection/(?P<collection_id>[a-zA-Z0-9_\-.]+)', [
             'methods' => 'GET',
             'callback' => [$this, 'get_items_collection'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_manage_mappings'],
         ]);
 
         $this->add_route('exporter/save_mapping_data', [
@@ -68,61 +68,61 @@ class ExporterApi extends ObatalaAPI {
         $this->add_route('exporter/process/(?P<process_id>\d+)/input', [
             'methods' => 'GET',
             'callback' => [$this, 'get_process_export_input'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_execute_exports'],
         ]);
 
         $this->add_route('exporter/process/(?P<process_id>\d+)/input-file', [
             'methods' => 'POST',
             'callback' => [$this, 'upload_process_export_input_file'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_execute_exports'],
         ]);
 
         $this->add_route('exporter/process/(?P<process_id>\d+)/input', [
             'methods' => 'POST',
             'callback' => [$this, 'save_process_export_input'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_execute_exports'],
         ]);
 
         $this->add_route('exporter/process/(?P<process_id>\d+)/runtime-config', [
             'methods' => 'GET',
             'callback' => [$this, 'get_runtime_config'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_execute_exports'],
         ]);
 
         $this->add_route('exporter/process/(?P<process_id>\d+)/spreadsheet-template', [
             'methods' => 'GET',
             'callback' => [$this, 'get_process_spreadsheet_template'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_execute_exports'],
         ]);
 
         $this->add_route('exporter/process/(?P<process_id>\d+)/manual-items', [
             'methods' => 'GET',
             'callback' => [$this, 'get_manual_items'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_execute_exports'],
         ]);
 
         $this->add_route('exporter/process/(?P<process_id>\d+)/manual-items', [
             'methods' => 'POST',
             'callback' => [$this, 'save_manual_items'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_execute_exports'],
         ]);
 
         $this->add_route('exporter/process/(?P<process_id>\d+)/execute', [
             'methods' => 'POST',
             'callback' => [$this, 'execute_process_export'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_execute_exports'],
         ]);
 
         $this->add_route('exporter/process/(?P<process_id>\d+)/review', [
             'methods' => 'GET',
             'callback' => [$this, 'get_process_export_review'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_execute_exports'],
         ]);
 
         $this->add_route('exporter/process/(?P<process_id>\d+)/decision', [
             'methods' => 'POST',
             'callback' => [$this, 'decide_process_export'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_execute_exports'],
         ]);
 
     }
@@ -138,7 +138,9 @@ class ExporterApi extends ObatalaAPI {
         $collections = \Tainacan\Repositories\Collections::get_instance()->fetch([], 'OBJECT');
         
         foreach ($collections as $collection) {
-            $collections_names[] = $collection;
+            if ($collection instanceof \Tainacan\Entities\Collection && $collection->can_read()) {
+                $collections_names[] = $collection;
+            }
         }
 
         return $collections_names;
@@ -147,6 +149,14 @@ class ExporterApi extends ObatalaAPI {
     public function get_metadata_collection($request){
 
         $collection_id = sanitize_text_field($request['collection_id']);
+        $collection = \Tainacan\Repositories\Collections::get_instance()->fetch((int) $collection_id);
+        if (!$collection instanceof \Tainacan\Entities\Collection || !$collection->can_read()) {
+            return new \WP_Error(
+                'tainacan_processes_collection_forbidden',
+                __('You do not have permission to perform this action.', 'obatala'),
+                ['status' => 403]
+            );
+        }
     
         // Obtém a instância do repositório de metadados
         $metadata_repository = \Tainacan\Repositories\Metadata::get_instance();
@@ -156,6 +166,12 @@ class ExporterApi extends ObatalaAPI {
             [ 'collection_id' => $collection_id ],
             'OBJECT'
         );
+
+        if (is_array($metadata)) {
+            $metadata = array_values(array_filter($metadata, function ($metadatum) {
+                return $metadatum instanceof \Tainacan\Entities\Metadatum && $metadatum->can_read();
+            }));
+        }
 
         return $metadata;
     }
@@ -186,6 +202,10 @@ class ExporterApi extends ObatalaAPI {
         $metadados = [];
 
         foreach ($items->posts as $item) {
+            $tainacan_item = $items_repository->fetch((int) $item->ID);
+            if (!$tainacan_item instanceof \Tainacan\Entities\Item || !$tainacan_item->can_read()) {
+                continue;
+            }
             $item_metadados = get_post_meta($item->ID);
 
             $metadados[] = $item_metadados;
@@ -457,7 +477,7 @@ class ExporterApi extends ObatalaAPI {
     }
 
     public function permission_check_manage_mappers($request) {
-        return is_user_logged_in() && current_user_can('obatala_manage_mappers');
+        return ObatalaAPI::permission_check_manage_mappings($request);
     }
 
     public function get_process_export_input($request) {

@@ -805,3 +805,19 @@ msgstr ""
 #: classes/Api/ProcessApi.php
 msgid "A maximum of 200 process IDs can be requested."
 msgstr ""
+
+#: classes/Security/Roles.php
+msgid "Tainacan Participant"
+msgstr ""
+
+#: classes/Api/ObatalaAPI.php
+msgid "You do not have permission to perform this action."
+msgstr ""
+
+#: classes/Api/ObatalaAPI.php
+msgid "Authentication is required."
+msgstr ""
+
+#: classes/Api/ProcessApi.php
+msgid "Only the active step can be selected."
+msgstr ""

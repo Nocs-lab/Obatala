@@ -310,9 +310,9 @@ export const deleteProcess = ( id ) => {
 	} );
 };
 
-export const fetchUserProcesses = ( currentUserId ) => {
+export const fetchUserProcesses = () => {
 	return apiFetch( {
-		path: `/obatala/v1/process_obatala/users?user_id=${ currentUserId }`,
+		path: `/obatala/v1/process_obatala/users`,
 	} );
 };
 
@@ -410,9 +410,9 @@ export const deleteSectorUser = ( sectorId, data ) => {
 	} );
 };
 
-export const fetchNodePermission = ( processId, currentUserId ) => {
+export const fetchNodePermission = ( processId ) => {
 	return apiFetch( {
-		path: `/obatala/v1/process_type/${ processId }/get_node?user=${ currentUserId }`,
+		path: `/obatala/v1/process_type/${ processId }/get_node`,
 	} );
 };
 
@@ -422,18 +422,18 @@ export const addComment = ( processId, data ) => {
 	return apiFetch( { path, method, data } );
 };
 
-export const fetchProcessComments = ( processId, user_id ) => {
+export const fetchProcessComments = ( processId ) => {
 	return apiFetch( {
-		path: `/obatala/v1/process_obatala/${ processId }/comments?user_id=${ user_id }`,
+		path: `/obatala/v1/process_obatala/${ processId }/comments`,
 	} );
 };
 export const fetchProcess = ( processId ) => {
 	return apiFetch( { path: `/obatala/v1/process_obatala/${ processId }` } );
 };
 
-export const deleteComment = ( commentId, user_id ) => {
+export const deleteComment = ( commentId ) => {
 	return apiFetch( {
-		path: `/obatala/v1/process_obatala/comment/${ commentId }?user_id=${ user_id }`,
+		path: `/obatala/v1/process_obatala/comment/${ commentId }`,
 		method: 'DELETE',
 	} );
 };

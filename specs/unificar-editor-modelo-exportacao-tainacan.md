@@ -47,12 +47,12 @@ como uma única ação da interface.
 
 | Perfil/ator | Pode visualizar | Pode executar | Capability necessária |
 | --- | --- | --- | --- |
-| Administrador do Obatalá / WordPress | Editor do modelo e configuração Tainacan | Editar etapas, configurar e salvar mapeamentos | `obatala_manage_models` e `obatala_manage_mappers` |
-| Usuário que gerencia modelos, mas não mapeadores | Editor do modelo sem controles Tainacan | Editar e salvar somente o modelo | `obatala_manage_models` |
-| Usuário sem permissão para modelos | Não deve acessar o editor | Nenhuma dessas operações | Sem `obatala_manage_models` |
+| Administrador WordPress / Tainacan Administrator | Editor do modelo e configuração Tainacan | Editar etapas, configurar e salvar mapeamentos | `tainacan_processes_manage_models` e `tainacan_processes_manage_mappings` |
+| Tainacan Editor | Não deve acessar o editor de modelos | Nenhuma dessas operações | Sem `tainacan_processes_manage_models` |
+| Tainacan Participant / Tainacan Author | Não deve acessar o editor de modelos | Nenhuma dessas operações | Sem `tainacan_processes_manage_models` |
 
 A disponibilidade dos controles de mapeamento no frontend deve ser derivada da
-capability `obatala_manage_mappers`, exposta em `window.obatalaApp` como
+capability `tainacan_processes_manage_mappings`, exposta em `window.obatalaApp` como
 `can_manage_mappers`. Os endpoints REST continuam responsáveis pela autorização
 efetiva; ocultar um controle no frontend não substitui a verificação no servidor.
 
@@ -161,21 +161,21 @@ efetiva; ocultar um controle no frontend não substitui a verificação no servi
 ### Backend PHP
 
 - `classes/Admin/Enqueuer.php` deve expor `can_manage_mappers` ao bundle usando o
-  resultado de `current_user_can('obatala_manage_mappers')`.
+  resultado de `Roles::can_manage_mappings()`.
 - A implementação deve reutilizar `Obatala\Api\ExporterApi` e
   `Obatala\Services\TainacanMappingService`; não é necessário criar uma nova
   estrutura de persistência.
-- A capability que protege a página de edição do modelo continua sendo
-  `obatala_manage_models`.
-- As rotas de mapeamento devem continuar protegidas no servidor por uma
-  `permission_callback` compatível com `obatala_manage_mappers`.
+- A capability que protege a página de edição do modelo é
+  `tainacan_processes_manage_models`.
+- As rotas de mapeamento são protegidas no servidor pelo callback central de
+  `tainacan_processes_manage_mappings`.
 
 ### API REST
 
 | Campo | Definição |
 | --- | --- |
 | Método e rota | `GET obatala/v1/exporter/all_collections_tainacan` |
-| Capability | Estado atual: `permission_check_edit_posts`; requisito desta spec: `obatala_manage_mappers` |
+| Capability | `tainacan_processes_manage_mappings` |
 | Parâmetros | Nenhum |
 | Corpo | Não aplicável |
 | Resposta de sucesso | Coleções Tainacan disponíveis |
@@ -185,7 +185,7 @@ efetiva; ocultar um controle no frontend não substitui a verificação no servi
 | Campo | Definição |
 | --- | --- |
 | Método e rota | `GET obatala/v1/exporter/get_metadata_collection/<collection_id>` |
-| Capability | Estado atual: `permission_check_edit_posts`; requisito desta spec: `obatala_manage_mappers` |
+| Capability | `tainacan_processes_manage_mappings` |
 | Parâmetros | Identificador da coleção |
 | Corpo | Não aplicável |
 | Resposta de sucesso | Metadados da coleção selecionada |
@@ -195,7 +195,7 @@ efetiva; ocultar um controle no frontend não substitui a verificação no servi
 | Campo | Definição |
 | --- | --- |
 | Método e rota | `GET obatala/v1/exporter/get_mapper_process_type/<process_model_id>` |
-| Capability | Estado atual: `permission_check_edit_posts`; requisito desta spec: `obatala_manage_mappers` |
+| Capability | `tainacan_processes_manage_mappings` |
 | Parâmetros | Identificador do modelo de processo |
 | Corpo | Não aplicável |
 | Resposta de sucesso | `mapping_data` previamente persistido |
@@ -205,7 +205,7 @@ efetiva; ocultar um controle no frontend não substitui a verificação no servi
 | Campo | Definição |
 | --- | --- |
 | Método e rota | `POST obatala/v1/exporter/save_mapping_data` |
-| Capability | Estado atual: `permission_check_edit_posts`; requisito desta spec: `obatala_manage_mappers` |
+| Capability | `tainacan_processes_manage_mappings` |
 | Parâmetros | Não aplicável |
 | Corpo | `process_model_id` e `mappings` com `status`, `profiles`, `profile_selector_field_id` e `decision_rules` |
 | Resposta de sucesso | Objeto com `success: true` e mensagem |
@@ -243,7 +243,7 @@ efetiva; ocultar um controle no frontend não substitui a verificação no servi
 
 ### Segurança e privacidade
 
-- A página do editor exige `obatala_manage_models`.
+- A página do editor exige `tainacan_processes_manage_models`.
 - Os controles Tainacan somente são apresentados quando
   `can_manage_mappers` for verdadeiro.
 - As rotas REST de leitura e gravação do mapeador devem validar a capability no
@@ -269,7 +269,7 @@ efetiva; ocultar um controle no frontend não substitui a verificação no servi
 - [x] A listagem oferece uma única ação **Gerenciar modelo** para abrir o editor
   de etapas e exportação.
 - [x] A ação separada **Editar dados de exportação** foi removida da listagem.
-- [x] Usuários com `obatala_manage_mappers` podem expandir o painel
+- [x] Usuários com `tainacan_processes_manage_mappings` podem expandir o painel
   **Tainacan Export** no editor do modelo.
 - [x] O painel permite ativar/desativar o mapeador e selecionar uma ou mais
   coleções de destino.
@@ -281,7 +281,7 @@ efetiva; ocultar um controle no frontend não substitui a verificação no servi
   mapeamento.
 - [x] URLs legadas do mapeador com um modelo identificado redirecionam para o
   editor unificado com o painel de exportação aberto.
-- [x] Usuários sem `obatala_manage_mappers` não veem os controles Tainacan no
+- [x] Usuários sem `tainacan_processes_manage_mappings` não veem os controles Tainacan no
   editor do modelo.
 - [x] Novos modelos não persistem os fields técnicos `obatala_ctrl_*` nas etapas.
 - [x] A preparação operacional é persistida por processo em
@@ -289,7 +289,7 @@ efetiva; ocultar um controle no frontend não substitui a verificação no servi
 - [x] Uma configuração sem fields mapeados é salva como `draft`, não como ativa.
 - [x] Processos legados continuam podendo ler valores dos antigos fields de controle.
 - [x] Todos os textos novos usam `@wordpress/i18n` com o text domain `obatala`.
-- [x] As rotas de configuração do mapeador exigem `obatala_manage_mappers` no
+- [x] As rotas de configuração do mapeador exigem `tainacan_processes_manage_mappings` no
   servidor, em vez da permissão genérica `permission_check_edit_posts`.
 - [ ] Entradas e falhas dos endpoints foram verificadas com perfis autorizado e
   não autorizado em uma instalação WordPress com Tainacan.
@@ -324,7 +324,7 @@ regressão do backend existente.
 | Salvar e recarregar | Administrador; mapeamento válido | Salvar, sair e reabrir o mesmo modelo | Fluxo, status, coleções e mapeamentos são restaurados |
 | Excluir campo mapeado | Administrador; campo previamente mapeado | Excluir o campo, salvar e recarregar | Campo não aparece no fluxo nem no mapeamento persistido |
 | Mapeador sem coleção | Administrador | Ativar mapeador sem selecionar coleção e tentar salvar | Aviso é exibido e configuração inválida não é salva |
-| Usuário sem capability | Usuário com `obatala_manage_models`, sem `obatala_manage_mappers` | Abrir e salvar o editor | Controles Tainacan não aparecem e o fluxo pode ser editado sem sobrescrever o mapeamento |
+| Perfil sem gestão de modelos | Tainacan Editor | Abrir diretamente o editor de modelos | Acesso bloqueado |
 | URL legada | Administrador; URL `?page=mappers&process_type_id=<id>` | Acessar a URL | Navegador redireciona ao editor do modelo com `section=export` |
 | Responsividade | Administrador; viewport menor ou igual a 782 px | Abrir painel e resumo | Conteúdo permanece legível e o cabeçalho do resumo fica vertical |
 
@@ -339,12 +339,10 @@ regressão do backend existente.
 ## Riscos, dependências e questões em aberto
 
 - **Riscos:** falha parcial ao salvar fluxo e mapeamento em requisições
-  separadas; textos ainda não internacionalizados; rotas do mapeador atualmente
-  protegidas por uma permissão mais ampla que `obatala_manage_mappers`;
-  mapeamentos obsoletos caso um campo seja alterado por importação de fluxo em
-  vez de removido pela interface.
+  separadas; textos ainda não internacionalizados; mapeamentos obsoletos caso um
+  campo seja alterado por importação de fluxo em vez de removido pela interface.
 - **Dependências:** Tainacan ativo; endpoints de coleções e metadados; capability
-  `obatala_manage_mappers`; `@wordpress/api-fetch`, `@wordpress/components` e
+  `tainacan_processes_manage_mappings`; `@wordpress/api-fetch`, `@wordpress/components` e
   `react-select`.
 - **Questões em aberto:** definir se a página/componente legado do mapeador será
   removido em versão futura; definir o comportamento desejado quando salvar o

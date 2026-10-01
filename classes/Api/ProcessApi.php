@@ -8,6 +8,7 @@ use WP_REST_Response; // Certifique-se de importar a classe WP_REST_Response
 use WP_Error;
 use Obatala\Entities\Process;
 use Obatala\Entities\Sector;
+use Obatala\Security\Roles;
 use Obatala\Services\ProcessNumberService;
 use Obatala\Services\TainacanExportService;
 
@@ -18,14 +19,14 @@ class ProcessApi extends ObatalaAPI {
         $this->add_route('process_obatala/(?P<id>\d+)/current_stage', [
             'methods' => 'GET',
             'callback' => [$this, 'get_current_stage'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_process_access'],
         ]);
 
         // Route to update the current stage
         $this->add_route('process_obatala/(?P<id>\d+)/current_stage', [
             'methods' => 'POST',
             'callback' => [$this, 'update_current_stage'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_stage_action'],
             'args' => [
                 'current_stage' => [
                     'required' => true,
@@ -40,14 +41,14 @@ class ProcessApi extends ObatalaAPI {
         $this->add_route('process_obatala/(?P<id>\d+)/process_type', [
             'methods' => 'GET',
             'callback' => [$this, 'get_process_type'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_process_access'],
         ]);
 
         // Route to update the process type
         $this->add_route('process_obatala/(?P<id>\d+)/process_type', [
             'methods' => 'POST',
             'callback' => [$this, 'update_process_type'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_process_manage'],
             'args' => [
                 'process_type' => [
                     'required' => true,
@@ -62,27 +63,27 @@ class ProcessApi extends ObatalaAPI {
         $this->add_route('process_obatala/(?P<id>\d+)/meta', [
             'methods' => 'GET',
             'callback' => [$this, 'get_meta'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_process_access'],
         ]);
         
         // Route to update multiple meta fields
         $this->add_route('process_obatala/(?P<id>\d+)/meta', [
             'methods' => 'POST',
             'callback' => [$this, 'update_meta'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_process_meta_update'],
         ]);
 
         // Rota para obter todos os comentários associados a um processo
         $this->add_route('process_obatala/users', [
             'methods' => 'GET',
             'callback' => [$this, 'get_user_processes'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_access'],
         ]);
 
         $this->add_route('process_obatala/(?P<id>\d+)/comments', [
             'methods' => 'GET',
             'callback' => [$this, 'get_comments'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_process_access'],
         ]);
 
        
@@ -90,35 +91,35 @@ class ProcessApi extends ObatalaAPI {
         $this->add_route('process_obatala/(?P<id>\d+)/comment', [
             'methods' => 'POST',
             'callback' => [$this, 'add_comment'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_comments'],
         ]);
 
         //Rota para editar um comentario de um processo
         $this->add_route('/process_obatala/comment/(?P<id>\d+)', [
             'methods' => 'PUT',
             'callback' => [$this, 'update_comment'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_comments'],
         ]);
 
         //Rota para deletar um comentario de um processo
         $this->add_route('/process_obatala/comment/(?P<id>\d+)', [
             'methods' => 'DELETE',
             'callback' => [$this, 'delete_comment'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_comments'],
         ]);
 
         //Rota para editar uma etapa de um processo(mudar node_status e parametros gerais)
         $this->add_route('/process_obatala/(?P<id>\d+)/node', [
             'methods' => 'PUT',
             'callback' => [$this, 'update_node'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_stage_action'],
         ]);
 
         // Rota para retornar nodes validos(Started e Finished)
         $this->add_route('/process_obatala/(?P<id>\d+)/node', [
             'methods' => 'GET',
             'callback' => [$this, 'valid_nodes'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_process_access'],
         ]);
 
         // Rota para retornar o progresso de varios processos numa unica requisicao.
@@ -127,7 +128,7 @@ class ProcessApi extends ObatalaAPI {
         $this->add_route('/process_obatala/progress', [
             'methods' => 'GET',
             'callback' => [$this, 'get_processes_progress'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_access'],
             'args' => [
                 'ids' => [
                     'required' => true,
@@ -142,25 +143,25 @@ class ProcessApi extends ObatalaAPI {
         $this->add_route('/process_obatala/(?P<id>\d+)/report-pdf', [
             'methods' => 'GET',
             'callback' => [$this, 'generate_report_pdf'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_reports'],
         ]);
 
         $this->add_route('/process_obatala/(?P<id>\d+)/stage-document-pdf', [
             'methods' => ['GET', 'POST'],
             'callback' => [$this, 'generate_stage_document_pdf'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_stage_document'],
         ]);
 
         $this->add_route('/process_obatala/(?P<id>\d+)/stage-document-signed', [
             'methods' => 'POST',
             'callback' => [$this, 'upload_signed_stage_document'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_stage_document'],
         ]);
 
         $this->add_route('/process_obatala/(?P<id>\d+)/stage-document-signed', [
             'methods' => 'GET',
             'callback' => [$this, 'download_signed_stage_document'],
-            'permission_callback' => [ObatalaAPI::class, 'permission_check_edit_posts'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_reports'],
         ]);
     }
 
@@ -549,7 +550,13 @@ class ProcessApi extends ObatalaAPI {
 
     public function update_current_stage($request) {
         $post_id = (int) $request['id'];
-        $current_stage = (int) $request['current_stage'];
+        $current_stage = (string) $request['current_stage'];
+        if ($current_stage !== Roles::get_active_stage_id($post_id)) {
+            return new WP_REST_Response([
+                'error' => 'invalid_stage',
+                'message' => __('Only the active step can be selected.', 'obatala'),
+            ], 400);
+        }
         return update_post_meta($post_id, 'current_stage', $current_stage);
     }
 
@@ -579,6 +586,12 @@ class ProcessApi extends ObatalaAPI {
     public function update_meta($request) {
         $post_id = (int) $request['id'];
         $meta = $request->get_json_params();
+
+        if (!Roles::can_manage_processes()) {
+            $meta = array_intersect_key($meta, array_flip(['stageData', 'submittedStages']));
+            $meta = $this->merge_active_stage_meta($post_id, $meta);
+        }
+
         $this->sanitize_stage_document_meta($meta);
 
         $submission_error = $this->validate_stage_submissions($post_id, $meta);
@@ -611,6 +624,40 @@ class ProcessApi extends ObatalaAPI {
             update_post_meta($post_id, $key, $value);
         }
         return true;
+    }
+
+    /**
+     * Participants submit the complete form state, but may persist only the
+     * currently active stage. Previously stored stages are retained server-side.
+     */
+    private function merge_active_stage_meta($post_id, $meta) {
+        $active_stage_id = Roles::get_active_stage_id($post_id);
+        if ($active_stage_id === '') {
+            return [];
+        }
+
+        foreach (['stageData', 'submittedStages'] as $meta_key) {
+            if (!isset($meta[$meta_key]) || !is_array($meta[$meta_key])) {
+                unset($meta[$meta_key]);
+                continue;
+            }
+
+            $incoming = [];
+            if (array_key_exists($active_stage_id, $meta[$meta_key])) {
+                $incoming[$active_stage_id] = $meta[$meta_key][$active_stage_id];
+            }
+
+            if (empty($incoming)) {
+                unset($meta[$meta_key]);
+                continue;
+            }
+
+            $stored = maybe_unserialize(get_post_meta($post_id, $meta_key, true));
+            $stored = is_array($stored) ? $stored : [];
+            $meta[$meta_key] = array_replace($stored, $incoming);
+        }
+
+        return $meta;
     }
 
     private function sanitize_stage_document_meta(&$meta) {
@@ -649,7 +696,7 @@ class ProcessApi extends ObatalaAPI {
     }
     
     public function get_user_processes($request) {
-        $user_id = (int) $request->get_param('user_id'); 
+        $user_id = get_current_user_id();
         $processes = get_posts([
             'post_type'   => 'process_obatala', 
             'numberposts' => -1,
@@ -680,7 +727,7 @@ class ProcessApi extends ObatalaAPI {
     
     public function add_comment($request) {
         $post_id = (int) $request['id'];
-        $user_id = (int) $request->get_param('user_id'); // ID do usuário autenticado
+        $user_id = get_current_user_id();
         $body = sanitize_text_field($request->get_param('text'));
     
         // Verifica se o post existe
@@ -745,7 +792,7 @@ class ProcessApi extends ObatalaAPI {
     public function get_comments($request) {
         $post_id = (int) $request['id'];
         $comments = get_comments(['post_id' => $post_id]); // Busca os comentários do post
-        $user_id = (int) $request->get_param('user_id'); // ID do usuário autenticado
+        $user_id = get_current_user_id();
         
         // Verificar permissão
         $permission = Sector::check_permission($user_id, $post_id);
@@ -768,7 +815,6 @@ class ProcessApi extends ObatalaAPI {
             return [
                 'comment_ID'          => (int) $comment->comment_ID,
                 'comment_author'      => $comment->comment_author,
-                'comment_author_email'=> $comment->comment_author_email,
                 'comment_content'     => $comment->comment_content,
                 'user_id'             => (int) $comment->user_id,
                 'comment_date'        => $comment->comment_date,
@@ -782,7 +828,7 @@ class ProcessApi extends ObatalaAPI {
     public function update_comment($request) {
         $comment_id = (int) $request['id'];
         $body = sanitize_text_field($request->get_param('text'));
-        $user_id = (int) $request->get_param('user_id'); // ID do usuário autenticado
+        $user_id = get_current_user_id();
     
         // Verifica se o comentário existe
         $comment = get_comment($comment_id);
@@ -793,7 +839,7 @@ class ProcessApi extends ObatalaAPI {
         }
     
         // Verifica se o usuário autenticado é o dono do comentário
-        if ((int) $comment->user_id !== $user_id) {
+        if ((int) $comment->user_id !== $user_id && !Roles::is_process_administrator($user_id)) {
             return new WP_REST_Response([
                 'message' => 'You do not have permission to edit this comment.',
             ], 403); // 403 = Forbidden
@@ -831,7 +877,7 @@ class ProcessApi extends ObatalaAPI {
     //Remover um comentário específico
     public function delete_comment($request) {
         $comment_id = (int) $request['id'];
-        $user_id = (int) $request->get_param('user_id'); // ID do usuário autenticado
+        $user_id = get_current_user_id();
     
         // Verifica se o comentário existe
         $comment = get_comment($comment_id);
@@ -842,7 +888,7 @@ class ProcessApi extends ObatalaAPI {
         }
     
         // Verifica se o usuário autenticado é o dono do comentário
-        if ((int) $comment->user_id !== $user_id) {
+        if ((int) $comment->user_id !== $user_id && !Roles::is_process_administrator($user_id)) {
             return new WP_REST_Response([
                 'message' => 'You do not have permission to delete this comment.',
             ], 403); // 403 = Forbidden
@@ -1021,16 +1067,18 @@ class ProcessApi extends ObatalaAPI {
 
                     try {
                         $export_service = new TainacanExportService();
-                        try {
-                            $linked_item_reference_result = $export_service->append_process_reference_to_linked_items($post_id);
-                        } catch (\Throwable $reference_exception) {
-                            $linked_item_reference_result = [
-                                'success' => false,
-                                'message' => 'Falha ao vincular o processo aos itens selecionados no Tainacan.',
-                                'process_id' => $post_id,
-                                'failed_items' => [],
-                                'warnings' => [$reference_exception->getMessage()],
-                            ];
+                        if (Roles::can_execute_exports()) {
+                            try {
+                                $linked_item_reference_result = $export_service->append_process_reference_to_linked_items($post_id);
+                            } catch (\Throwable $reference_exception) {
+                                $linked_item_reference_result = [
+                                    'success' => false,
+                                    'message' => 'Falha ao vincular o processo aos itens selecionados no Tainacan.',
+                                    'process_id' => $post_id,
+                                    'failed_items' => [],
+                                    'warnings' => [$reference_exception->getMessage()],
+                                ];
+                            }
                         }
                         $runtime = $export_service->get_runtime_config($post_id);
                         $has_configured_mapper = !empty($runtime['configured']);
@@ -1087,6 +1135,7 @@ class ProcessApi extends ObatalaAPI {
                 foreach ($nodes as &$node) {
                     if ($node['id'] === $next_node_id && $node['node_status'] === 'Stopped') {
                         $node['node_status'] = 'Started';
+                        $this->sync_current_stage_meta($post_id, $node);
                         break;
                     }
                 }
@@ -1177,6 +1226,7 @@ class ProcessApi extends ObatalaAPI {
             foreach ($nodes as &$node) {
                 if ($node['id'] === $first_node_id && $node['node_status'] === 'Stopped') {
                     $node['node_status'] = 'Started';
+                    $this->sync_current_stage_meta($post_id, $node);
                     
                     // Atualiza também o status do post para started
                     update_post_meta($post_id, 'status', 'Started');
@@ -1198,6 +1248,23 @@ class ProcessApi extends ObatalaAPI {
         return new WP_REST_Response([
             'message' => 'Could not initialize first node.'
         ], 400);
+    }
+
+    private function sync_current_stage_meta($process_id, $node) {
+        $node_id = (string) ($node['id'] ?? '');
+        if ($node_id === '') {
+            return;
+        }
+
+        update_post_meta($process_id, 'current_stage', $node_id);
+
+        $sector_id = (string) ($node['sector_obatala'] ?? $node['tempSector'] ?? '');
+        $sectors = json_decode((string) get_option('obatala_setores', '{}'), true);
+        $sectors = is_array($sectors) ? $sectors : [];
+        $sector_name = isset($sectors[$sector_id])
+            ? sanitize_text_field((string) ($sectors[$sector_id]['nome'] ?? ''))
+            : '';
+        update_post_meta($process_id, 'groupResponsible', $sector_name);
     }
 
     public function valid_nodes($request) {
@@ -1304,7 +1371,7 @@ class ProcessApi extends ObatalaAPI {
         foreach ($ids as $id) {
             if (
                 get_post_type($id) !== 'process_obatala'
-                || !current_user_can('read_post', $id)
+                || !Roles::can_access_process($id)
             ) {
                 continue;
             }

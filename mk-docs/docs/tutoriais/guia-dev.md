@@ -35,12 +35,14 @@ A interface administrativa é composta por um menu principal e submenus no paine
 <?php
 namespace Obatala\Admin;
 
+use Obatala\Security\Roles;
+
 class AdminMenu {
     private static $pages = [
         'main' => [
             'title' => 'Obatala',
             'menu_title' => 'Obatala',
-            'capability' => 'manage_options',
+            'capability' => Roles::CAP_TP_ACCESS,
             'slug' => 'obatala-main',
             'callback' => 'render_main_page',
             'icon' => 'dashicons-admin-site',
@@ -51,7 +53,7 @@ class AdminMenu {
                 'parent_slug' => 'obatala-main',
                 'title' => 'Dashboard',
                 'menu_title' => 'Dashboard',
-                'capability' => 'manage_options',
+                'capability' => Roles::CAP_TP_ACCESS,
                 'slug' => 'obatala-main',
                 'callback' => 'render_main_page',
                 'show_in_menu' => true
@@ -60,7 +62,7 @@ class AdminMenu {
                 'parent_slug' => 'obatala-main',
                 'title' => 'Processes',
                 'menu_title' => 'Processes',
-                'capability' => 'manage_options',
+                'capability' => Roles::CAP_TP_ACCESS,
                 'slug' => 'process-manager',
                 'callback' => 'render_page',
                 'show_in_menu' => true
@@ -69,7 +71,7 @@ class AdminMenu {
                 'parent_slug' => 'obatala-main',
                 'title' => 'Models',
                 'menu_title' => 'Models',
-                'capability' => 'edit_posts',
+                'capability' => Roles::CAP_TP_MANAGE_MODELS,
                 'slug' => 'process-type-manager',
                 'callback' => 'render_page',
                 'show_in_menu' => true
@@ -78,7 +80,7 @@ class AdminMenu {
                 'parent_slug' => 'obatala-main',
                 'title' => 'Process type editor',
                 'menu_title' => 'Process type editor',
-                'capability' => 'manage_options',
+                'capability' => Roles::CAP_TP_MANAGE_MODELS,
                 'slug' => 'process-type-editor',
                 'callback' => 'render_page',
                 'show_in_menu' => true
@@ -87,7 +89,7 @@ class AdminMenu {
                 'parent_slug' => 'obatala-main',
                 'title' => 'Groups',
                 'menu_title' => 'Groups',
-                'capability' => 'manage_options',
+                'capability' => Roles::CAP_TP_MANAGE_GROUPS,
                 'slug' => 'sector_manager',
                 'callback' => 'render_page',
                 'show_in_menu' => true
@@ -96,7 +98,7 @@ class AdminMenu {
                 'parent_slug' => 'obatala-main',
                 'title' => 'Process viewer',
                 'menu_title' => 'Process viewer',
-                'capability' => 'read',
+                'capability' => Roles::CAP_TP_ACCESS,
                 'slug' => 'process-viewer',
                 'callback' => 'render_page',
                 'show_in_menu' => true
@@ -105,7 +107,7 @@ class AdminMenu {
                 'parent_slug' => 'obatala-main',
                 'title' => 'Group details',
                 'menu_title' => 'Group details',
-                'capability' => 'manage_options',
+                'capability' => Roles::CAP_TP_MANAGE_GROUPS,
                 'slug' => 'sector-details',
                 'callback' => 'render_page',
                 'show_in_menu' => true
@@ -114,7 +116,7 @@ class AdminMenu {
                 'parent_slug' => 'obatala-main',
                 'title' => 'Mappers',
                 'menu_title' => 'Mappers',
-                'capability' => 'read',
+                'capability' => Roles::CAP_TP_MANAGE_MAPPINGS,
                 'slug' => 'mappers',
                 'callback' => 'render_mappers_page',
                 'show_in_menu' => true
@@ -193,18 +195,22 @@ A segurança é fundamental. Recomenda-se sempre:
 - Restringir acesso com current_user_can() para proteger conteúdo sensível.
 
 ## 5. 🔑 Permissões e Controle de Acesso
-As capacidades (capability) definidas em cada submenu determinam quem pode visualizar e interagir com cada página:
+As capabilities definidas em cada submenu determinam quem pode abrir a página.
+As operações executadas dentro dela continuam protegidas pelas verificações
+equivalentes da API REST:
 
-- manage_options: administradores.
+- `tainacan_processes_access`: abrir o Tainacan Processos;
+- `tainacan_processes_manage_models`: criar e editar modelos;
+- `tainacan_processes_manage_groups`: administrar grupos;
+- `tainacan_processes_manage_mappings`: configurar mapeamentos.
 
-- edit_posts: editores e acima.
-
-- read: qualquer usuário autenticado.
+Para processos e etapas, a capability funcional é combinada com a associação do
+usuário aos grupos. Consulte [Perfis e permissões](../perfis-e-permissoes.md).
 
 Utilize:
 
 ```php
-if ( ! current_user_can( 'manage_options' ) ) {
+if ( ! current_user_can( Roles::CAP_TP_MANAGE_MODELS ) ) {
     wp_die( __( 'Acesso negado.', 'obatala' ) );
 }
 ```

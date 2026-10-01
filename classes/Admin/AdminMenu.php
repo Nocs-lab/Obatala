@@ -7,8 +7,7 @@ namespace {
 }
 
 namespace Obatala\Admin {
-
-
+    use Obatala\Security\Roles;
 
     class AdminMenu
     {
@@ -16,7 +15,7 @@ namespace Obatala\Admin {
             'main' => [
                 'title' => 'Tainacan: Processos',
                 'menu_title' => 'Processos',
-                'capability' => 'obatala_access',
+                'capability' => Roles::CAP_TP_ACCESS,
                 'slug' => 'obatala-main',
                 'callback' => 'render_main_page',
                 'icon' => 'tainacan-white.svg',
@@ -27,7 +26,7 @@ namespace Obatala\Admin {
                     'parent_slug' => 'obatala-main',
                     'title' => 'Processes',
                     'menu_title' => 'Processes',
-                    'capability' => 'obatala_manage_processes',
+                    'capability' => Roles::CAP_TP_ACCESS,
                     'slug' => 'process-manager',
                     'callback' => 'render_page',
                     'show_in_menu' => false
@@ -36,7 +35,7 @@ namespace Obatala\Admin {
                     'parent_slug' => 'obatala-main',
                     'title' => 'Models',
                     'menu_title' => 'Models',
-                    'capability' => 'obatala_manage_models',
+                    'capability' => Roles::CAP_TP_MANAGE_MODELS,
                     'slug' => 'process-type-manager',
                     'callback' => 'render_page',
                     'show_in_menu' => false
@@ -45,7 +44,7 @@ namespace Obatala\Admin {
                     'parent_slug' => 'obatala-main',
                     'title' => 'Process type editor',
                     'menu_title' => 'Process type editor',
-                    'capability' => 'obatala_manage_models',
+                    'capability' => Roles::CAP_TP_MANAGE_MODELS,
                     'slug' => 'process-type-editor',
                     'callback' => 'render_page',
                     'show_in_menu' => false
@@ -54,7 +53,7 @@ namespace Obatala\Admin {
                     'parent_slug' => 'obatala-main',
                     'title' => 'Groups',
                     'menu_title' => 'Groups',
-                    'capability' => 'obatala_manage_groups',
+                    'capability' => Roles::CAP_TP_MANAGE_GROUPS,
                     'slug' => 'sector_manager',
                     'callback' => 'render_page',
                     'show_in_menu' => false
@@ -63,7 +62,7 @@ namespace Obatala\Admin {
                     'parent_slug' => 'obatala-main',
                     'title' => 'Collection items',
                     'menu_title' => 'Collection items',
-                    'capability' => 'obatala_access',
+                    'capability' => Roles::CAP_TP_ACCESS,
                     'slug' => 'collection-items',
                     'callback' => 'render_page',
                     'show_in_menu' => false
@@ -72,7 +71,7 @@ namespace Obatala\Admin {
                     'parent_slug' => 'obatala-main',
                     'title' => 'Process viewer',
                     'menu_title' => 'Process viewer',
-                    'capability' => 'obatala_access',
+                    'capability' => Roles::CAP_TP_ACCESS,
                     'slug' => 'process-viewer',
                     'callback' => 'render_page',
                     'show_in_menu' => false
@@ -81,7 +80,7 @@ namespace Obatala\Admin {
                     'parent_slug' => 'obatala-main',
                     'title' => 'Group details',
                     'menu_title' => 'Group details',
-                    'capability' => 'obatala_manage_groups',
+                    'capability' => Roles::CAP_TP_MANAGE_GROUPS,
                     'slug' => 'sector-details',
                     'callback' => 'render_page',
                     'show_in_menu' => false
@@ -90,7 +89,7 @@ namespace Obatala\Admin {
                     'parent_slug' => 'obatala-main',
                     'title' => 'Mappers',
                     'menu_title' => 'Mappers',
-                    'capability' => 'obatala_manage_mappers',
+                    'capability' => Roles::CAP_TP_MANAGE_MAPPINGS,
                     'slug' => 'mappers',
                     'callback' => 'render_mappers_page',
                     'show_in_menu' => false

@@ -2,6 +2,8 @@
 
 namespace Obatala\Entities;
 
+use Obatala\Security\Roles;
+
 defined('ABSPATH') || exit;
 
 use WP_REST_Response;
@@ -420,6 +422,10 @@ class Sector {
     }
 
     public static function check_permission($user_id, $process_id) {
+        // Authorization is always evaluated for the authenticated user; request
+        // parameters cannot impersonate another account.
+        $user_id = get_current_user_id();
+
         if ($user_id === 0) {
             return [
                 'status' => false,
@@ -427,35 +433,13 @@ class Sector {
             ];
         }
 
-        // Pega os setores associados ao usuário
-        $user_sectors = get_user_meta($user_id, 'associated_sector', false);
+        $user_sectors = Roles::get_user_sector_ids($user_id);
+        $allowed = Roles::can_access_process((int) $process_id, $user_id);
 
-        // Pega o flowData do processo
-        $flowData = get_post_meta($process_id, 'flowData', true);
-
-        // Verifica se o usuário possui setores associados e se flowData está no formato esperado
-        if (!empty($user_sectors) && is_array($user_sectors) && !empty($flowData['nodes'])) {
-            // Verifica cada nó do processo
-            foreach ($flowData['nodes'] as $node) {
-                // Filtra os nós do tipo `customNode` e verifica se `sector_obatala` do nó está em `user_sectors`
-                if ($node['type'] === 'customNode' && in_array($node['sector_obatala'], $user_sectors[0])) {
-                    return [
-                        'status' => true,
-                        'message' => 'Permissão concedida.',
-                        'data_sector' => $user_sectors[0]
-                    ];
-                }
-            }
-            return [
-                'status' => false,
-                'message' => 'Usuário não possui permissão.',
-                'data_sector' => $user_sectors[0]
-            ];
-        } else {
-            return [
-                'status' => false,
-                'message' => 'Usuário não possui setores vinculados ou flowData está vazio.'
-            ];
-        }
+        return [
+            'status' => $allowed,
+            'message' => $allowed ? 'Permissão concedida.' : 'Usuário não possui permissão.',
+            'data_sector' => $user_sectors,
+        ];
     }
 }

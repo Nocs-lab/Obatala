@@ -4,6 +4,8 @@ namespace Obatala\Services;
 
 defined('ABSPATH') || exit;
 
+use Obatala\Security\Roles;
+
 class TainacanExportService {
     const MANUAL_ITEMS_META_KEY = '_obatala_tainacan_manual_items';
     const EXPORT_RESULT_META_KEY = '_obatala_tainacan_export_result';
@@ -336,6 +338,17 @@ class TainacanExportService {
 
     public function execute_export($process_id, $force = false) {
         $process_id = (int) $process_id;
+        if (!Roles::can_execute_exports() || !Roles::can_access_process($process_id)) {
+            return [
+                'status' => 'error',
+                'message' => 'O usuário não possui permissão para executar esta exportação.',
+                'process_id' => $process_id,
+                'collection_id' => 0,
+                'exported_items' => [],
+                'failed_items' => [],
+                'warnings' => [],
+            ];
+        }
         $runtime = $this->get_runtime_config($process_id);
         $saved_result = $this->get_saved_export_result($process_id);
 
@@ -430,6 +443,12 @@ class TainacanExportService {
             'warnings' => [],
         ];
 
+        if (!Roles::can_execute_exports() || !Roles::can_access_process($process_id)) {
+            $result['success'] = false;
+            $result['message'] = 'O usuário não possui permissão para atualizar itens do Tainacan.';
+            return $result;
+        }
+
         if ($process_id <= 0) {
             $result['success'] = false;
             $result['message'] = 'Processo inválido para vinculação com itens do Tainacan.';
@@ -496,11 +515,27 @@ class TainacanExportService {
                     continue;
                 }
 
+                if (!$item->can_edit()) {
+                    $result['failed_items'][] = [
+                        'item_id' => $item_id,
+                        'message' => 'O usuário não possui permissão para editar este item no Tainacan.',
+                    ];
+                    continue;
+                }
+
                 $collection = $item->get_collection();
                 if (!$collection instanceof \Tainacan\Entities\Collection) {
                     $result['failed_items'][] = [
                         'item_id' => $item_id,
                         'message' => 'Não foi possível identificar a coleção do item no Tainacan.',
+                    ];
+                    continue;
+                }
+
+                if (!$collection->user_can('edit_metadata')) {
+                    $result['failed_items'][] = [
+                        'item_id' => $item_id,
+                        'message' => 'O usuário não possui permissão para editar metadados desta coleção no Tainacan.',
                     ];
                     continue;
                 }
@@ -1372,6 +1407,20 @@ class TainacanExportService {
             ];
         }
 
+        if (
+            !$collection->can_read()
+            || !$collection->user_can('edit_items')
+            || !$collection->user_can('edit_metadata')
+        ) {
+            return [
+                'status' => 'error',
+                'message' => 'O usuário não possui as permissões nativas necessárias nesta coleção do Tainacan.',
+                'exported_items' => [],
+                'failed_items' => [],
+                'warnings' => [],
+            ];
+        }
+
         $warnings = [];
         $process_reference_url = $this->build_process_reference_url((int) $process_id);
         $process_reference_title = $this->build_process_reference_title((int) $process_id);
@@ -1383,7 +1432,11 @@ class TainacanExportService {
             if (!$metadata_id || isset($metadatum_cache[$metadata_id])) {
                 continue;
             }
-            $metadatum_cache[$metadata_id] = $metadata_repository->fetch($metadata_id);
+            $metadatum = $metadata_repository->fetch($metadata_id);
+            $metadatum_cache[$metadata_id] = (
+                $metadatum instanceof \Tainacan\Entities\Metadatum
+                && $metadatum->can_edit()
+            ) ? $metadatum : null;
         }
 
         $process_post = get_post((int) $process_id);

@@ -44,6 +44,9 @@ const sortProcessesNewestFirst = (processList) => {
 };
 
 const ProcessManager = ({ onSelectProcess }) => {
+    const permissions = window.obatalaApp?.permissions || {};
+    const canManageProcesses = Boolean(permissions.manage_processes);
+    const canDeleteProcesses = Boolean(permissions.delete_processes);
     const [processTypes, setProcessTypes] = useState([]);
     const [processes, setProcesses] = useState([]);
     const [isLoadingProcesses, setIsLoadingProcesses] = useState(true);
@@ -124,7 +127,7 @@ const ProcessManager = ({ onSelectProcess }) => {
         }
 
         setIsLoadingUserProcesses(true);
-        return fetchUserProcesses(currentUser.id)
+        return fetchUserProcesses()
             .then(data => {
                 setProcessUser(data);
                 setIsLoadingUserProcesses(false);
@@ -278,7 +281,7 @@ const ProcessManager = ({ onSelectProcess }) => {
             <div className="title-container">
                 <h2>{__('Processes', 'obatala')}</h2>
                 <span className="badge default">{filteredProcess.length}</span>
-                <div className="group-button">
+                {canManageProcesses && <div className="group-button">
                     <Button
                         variant="secondary"
                         size="small"
@@ -287,7 +290,7 @@ const ProcessManager = ({ onSelectProcess }) => {
                     >
                         {__('Add new', 'obatala')}
                     </Button>
-                </div>
+                </div>}
             </div>
             <main>
                 {notice && (
@@ -336,6 +339,8 @@ const ProcessManager = ({ onSelectProcess }) => {
                                 onEdit={handleEditProcess}
                                 onViewProcess={handleSelectProcess}
                                 onDelete={handleConfirmDelete}
+                                canManageProcesses={canManageProcesses}
+                                canDeleteProcesses={canDeleteProcesses}
                                 processTypes={processTypes}
                                 accessLevel={accessLevel}
                                 setAccessLevel={setAccessLevel}
@@ -345,7 +350,7 @@ const ProcessManager = ({ onSelectProcess }) => {
                         )}
                     </TabPanel>
                 </div>
-                {editingProcess && (
+                {canManageProcesses && editingProcess && (
                     <Modal
                         title={__('Edit Process', 'obatala')}
                         onRequestClose={handleCancel}
@@ -359,7 +364,7 @@ const ProcessManager = ({ onSelectProcess }) => {
                         />
                     </Modal>
                 )}
-                {addingProcess && (
+                {canManageProcesses && addingProcess && (
                     <Modal
                         title={__('Add new process', 'obatala')}
                         onRequestClose={handleCancel}

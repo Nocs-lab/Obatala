@@ -76,13 +76,13 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager, status, se
                             onClick={() => onEdit(row.original)}
                         />
                     </Tooltip>
-                    <Tooltip text={__('Delete model', 'obatala')}>
+                    {onDelete && <Tooltip text={__('Delete model', 'obatala')}>
                         <Button
                             variant="tertiary"
                             icon={trash}
                             onClick={() => onDelete(row.original)}
                         />
-                    </Tooltip>
+                    </Tooltip>}
                 </div>
             ),
         },

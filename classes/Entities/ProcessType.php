@@ -4,6 +4,8 @@ namespace Obatala\Entities;
 
 defined('ABSPATH') || exit;
 
+use Obatala\Security\Roles;
+
 class ProcessType {
     /* 
     * Register the post type for the Process Type entity
@@ -40,6 +42,23 @@ class ProcessType {
             'query_var'          => true,
             'rewrite'            => array('slug' => 'process_types'),
             'capability_type'    => 'post',
+            'map_meta_cap'       => false,
+            'capabilities'       => array(
+                'edit_post'              => Roles::CAP_TP_MANAGE_MODELS,
+                'read_post'              => Roles::CAP_TP_ACCESS,
+                'delete_post'            => Roles::CAP_TP_DELETE_MODELS,
+                'edit_posts'             => Roles::CAP_TP_MANAGE_MODELS,
+                'edit_others_posts'      => Roles::CAP_TP_MANAGE_MODELS,
+                'publish_posts'          => Roles::CAP_TP_MANAGE_MODELS,
+                'read_private_posts'     => Roles::CAP_TP_ACCESS,
+                'delete_posts'           => Roles::CAP_TP_DELETE_MODELS,
+                'delete_private_posts'   => Roles::CAP_TP_DELETE_MODELS,
+                'delete_published_posts' => Roles::CAP_TP_DELETE_MODELS,
+                'delete_others_posts'    => Roles::CAP_TP_DELETE_MODELS,
+                'edit_private_posts'     => Roles::CAP_TP_MANAGE_MODELS,
+                'edit_published_posts'   => Roles::CAP_TP_MANAGE_MODELS,
+                'create_posts'           => Roles::CAP_TP_MANAGE_MODELS,
+            ),
             'has_archive'        => true,
             'hierarchical'       => false,
             'menu_position'      => 99,

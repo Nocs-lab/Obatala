@@ -34,7 +34,7 @@ const CommentForm = ({ processId, setHasComments }) => {
     const fetchComments = () => {
         if (!currentUser?.id || !processId) return;
 
-        fetchProcessComments(processId, currentUser.id)
+        fetchProcessComments(processId)
             .then(data => {
                 setComments(data);
                 if (data.length > 0) {
@@ -72,7 +72,6 @@ const CommentForm = ({ processId, setHasComments }) => {
 
         const newComment = {
             text: comment,
-            user_id: currentUser.id,
         };
 
         addComment(processId, newComment)
@@ -91,7 +90,7 @@ const CommentForm = ({ processId, setHasComments }) => {
     };
 
     const handleDeleteComment = (commentId) => {
-        deleteComment(commentId, currentUser.id)
+        deleteComment(commentId)
             .then(() => {
                 fetchComments();
             })
@@ -113,7 +112,6 @@ const CommentForm = ({ processId, setHasComments }) => {
 
         const newComment = {
             text: editContent,
-            user_id: currentUser.id,
         };
 
         updateComment(commentId, newComment)

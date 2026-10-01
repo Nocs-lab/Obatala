@@ -1480,3 +1480,19 @@ msgstr "En progreso"
 #: classes/Api/ProcessApi.php
 msgid "A maximum of 200 process IDs can be requested."
 msgstr "Se pueden solicitar como máximo 200 ID de procesos."
+
+#: classes/Security/Roles.php
+msgid "Tainacan Participant"
+msgstr "Tainacan Participant"
+
+#: classes/Api/ObatalaAPI.php
+msgid "You do not have permission to perform this action."
+msgstr "No tiene permiso para realizar esta acción."
+
+#: classes/Api/ObatalaAPI.php
+msgid "Authentication is required."
+msgstr "Es necesario autenticarse."
+
+#: classes/Api/ProcessApi.php
+msgid "Only the active step can be selected."
+msgstr "Solo se puede seleccionar la etapa activa."

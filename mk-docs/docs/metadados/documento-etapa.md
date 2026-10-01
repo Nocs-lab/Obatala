@@ -199,7 +199,9 @@ Essa sinalização permite identificar rapidamente quais etapas possuem document
 
 ## Permissões e rastreabilidade
 
-A geração de PDF e o upload/download do PDF assinado exigem usuário logado e acesso ao processo, validado por `Sector::check_permission`.
+A geração de PDF e o upload/download do PDF assinado exigem
+`tainacan_processes_generate_reports` e acesso contextual ao processo, validado
+pelos helpers de `Obatala\Security\Roles`.
 
 O documento registra metadados básicos de rastreabilidade:
 

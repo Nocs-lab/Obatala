@@ -4,6 +4,8 @@ namespace Obatala\Entities;
 
 defined('ABSPATH') || exit;
 
+use Obatala\Security\Roles;
+
 class Process {
 
     public static function get_post_type() {
@@ -37,6 +39,23 @@ class Process {
             'query_var'          => true,
             'rewrite'            => array('slug' => 'obatala_processes'),
             'capability_type'    => 'post',
+            'map_meta_cap'       => false,
+            'capabilities'       => array(
+                'edit_post'              => Roles::CAP_TP_MANAGE,
+                'read_post'              => Roles::CAP_TP_ACCESS,
+                'delete_post'            => Roles::CAP_TP_DELETE_PROCESSES,
+                'edit_posts'             => Roles::CAP_TP_MANAGE,
+                'edit_others_posts'      => Roles::CAP_TP_MANAGE,
+                'publish_posts'          => Roles::CAP_TP_MANAGE,
+                'read_private_posts'     => Roles::CAP_TP_ACCESS,
+                'delete_posts'           => Roles::CAP_TP_DELETE_PROCESSES,
+                'delete_private_posts'   => Roles::CAP_TP_DELETE_PROCESSES,
+                'delete_published_posts' => Roles::CAP_TP_DELETE_PROCESSES,
+                'delete_others_posts'    => Roles::CAP_TP_DELETE_PROCESSES,
+                'edit_private_posts'     => Roles::CAP_TP_MANAGE,
+                'edit_published_posts'   => Roles::CAP_TP_MANAGE,
+                'create_posts'           => Roles::CAP_TP_MANAGE,
+            ),
             'has_archive'        => true,
             'hierarchical'       => true,
             'menu_position'      => 99,
