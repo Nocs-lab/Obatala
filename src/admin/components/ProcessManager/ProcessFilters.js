@@ -1,17 +1,20 @@
-import { Button, DropdownMenu, MenuGroup, MenuItem } from '@wordpress/components';
-import { close, settings } from '@wordpress/icons';
+import { Button } from '@wordpress/components';
+import { close } from '@wordpress/icons';
 import { __ } from '@wordpress/i18n';
+import FilterSelect from '../FilterSelect';
 
 const ProcessFilter = ({ accessLevel, setAccessLevel, modelFilter, setModelFilter, processTypes, progressFilter, setProgressFilter }) => {
     const optionsLevel = [
-        { title: __("Restricted", "obatala"), value: "Restricted" },
-        { title: __("Not Restricted", "obatala"), value: "Not restricted" },
+        { label: __("All access levels", "obatala"), value: '' },
+        { label: __("Restricted", "obatala"), value: "Restricted" },
+        { label: __("Not restricted", "obatala"), value: "Not restricted" },
     ];
 
     const optionsProgress = [
-        { title: __("Not started", "obatala"), value: "not_started" },
-        { title: __("In progress", "obatala"), value: "in_progress" },
-        { title: __("Finished", "obatala"), value: "finished" },
+        { label: __("All progress", "obatala"), value: '' },
+        { label: __("Not started", "obatala"), value: "not_started" },
+        { label: __("In progress", "obatala"), value: "in_progress" },
+        { label: __("Finished", "obatala"), value: "finished" },
     ];
 
     const handleClearFilters = () => {
@@ -21,70 +24,40 @@ const ProcessFilter = ({ accessLevel, setAccessLevel, modelFilter, setModelFilte
     }
 
     return (
-        <div className="search-filter-controls">
-            <DropdownMenu
-                icon={settings}
-                label={__("Filter", "obatala")}
-                text={__("Filters", "obatala")}
-            >
-                {({ onClose }) => (
-                    <div className="search-filter-controls-popover">
-                        <MenuGroup label={__("Access Level", "obatala")}>
-                            {optionsLevel.map(option => (
-                                <MenuItem
-                                    key={option.value}
-                                    className={option.value === accessLevel ? 'active' : undefined}
-                                    onClick={() => {
-                                        setAccessLevel(option.value);
-                                        onClose();
-                                    }}
-                                >
-                                    {option.title}
-                                </MenuItem>
-                            ))}
-                        </MenuGroup>
-
-                        <MenuGroup label={__("Process Type", "obatala")}>
-                            {processTypes.map(option => (
-                                <MenuItem
-                                    key={option.id}
-                                    className={option.id === modelFilter ? 'active' : undefined}
-                                    onClick={() => {
-                                        setModelFilter(option.id);
-                                        onClose();
-                                    }}
-                                >
-                                    {option.title.rendered}
-                                </MenuItem>
-                              ))}
-                        </MenuGroup> 
-
-                        <MenuGroup label={__("Progress", "obatala")}>
-                            {optionsProgress.map(option => (
-                                <MenuItem
-                                    key={option.value}
-                                    className={option.value === progressFilter ? 'active' : undefined}
-                                    onClick={() => {
-                                        setProgressFilter(option.value);
-                                        onClose();
-                                    }}
-                                >
-                                    {option.title}
-                                </MenuItem>
-                            ))}
-                        </MenuGroup>
-                    </div>
-                )}
-            </DropdownMenu>
+        <>
+            <FilterSelect
+                label={__("Access level", "obatala")}
+                value={accessLevel || ''}
+                options={optionsLevel}
+                onChange={setAccessLevel}
+            />
+            <FilterSelect
+                label={__("Process type", "obatala")}
+                value={modelFilter ? String(modelFilter) : ''}
+                options={[
+                    { label: __("All process types", "obatala"), value: '' },
+                    ...processTypes.map(option => ({
+                        label: option.title.rendered,
+                        value: String(option.id),
+                    })),
+                ]}
+                onChange={setModelFilter}
+            />
+            <FilterSelect
+                label={__("Progress", "obatala")}
+                value={progressFilter || ''}
+                options={optionsProgress}
+                onChange={setProgressFilter}
+            />
 
             {(accessLevel || modelFilter || progressFilter) && (
                 <Button
                     icon={close}
-                    onClick={() => handleClearFilters()}
+                    onClick={handleClearFilters}
                     label={__("Clear", "obatala")}
                 />
             )}
-        </div>
+        </>
     );
 };
 
