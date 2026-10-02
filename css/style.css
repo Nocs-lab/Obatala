@@ -51,6 +51,9 @@
 }
 body {
   background: var(--white);
+  &.toplevel_page_obatala-main {
+    background-color: var(--primary-900);
+  }
 }
 a {
   color: var(--primary-900);
