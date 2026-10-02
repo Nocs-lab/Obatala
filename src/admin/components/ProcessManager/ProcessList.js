@@ -274,7 +274,6 @@ const ProcessList = ({ processes, progressMap, progressFilter, setProgressFilter
                 )}
                 <div className='container_searchAndSelect'>
                     <TextControl
-                        className="mb-1"
                         value={globalFilter || ''}
                         onChange={value => setGlobalFilter(value)}
                         placeholder={__("Search by title or process number", "obatala")}

@@ -1,39 +1,23 @@
-import { DropdownMenu, MenuGroup, MenuItem, Button } from '@wordpress/components';
-import { close, settings } from '@wordpress/icons';
-import { __, sprintf } from '@wordpress/i18n';
+import { Button } from '@wordpress/components';
+import { close } from '@wordpress/icons';
+import { __ } from '@wordpress/i18n';
+import FilterSelect from '../FilterSelect';
 
 const ProcessTypeFilter = ({ status, setStatus }) => {
     const options = [
-        { title: __('Active', 'obatala'), value: 'Active' },
-        { title: __('Inactive', 'obatala'), value: 'Inactive' },
+        { label: __('All statuses', 'obatala'), value: '' },
+        { label: __('Active', 'obatala'), value: 'Active' },
+        { label: __('Inactive', 'obatala'), value: 'Inactive' },
     ];
 
     return (
-        <div className="search-filter-controls">
-            <DropdownMenu
-                icon={settings}
-                label={__('Filter', 'obatala')}
-                text={status ? sprintf(__('Status: %s', 'obatala'), status) : __('Filters', 'obatala')}
-            >
-                {({ onClose }) => (
-                    <div className="search-filter-controls-popover">
-                        <MenuGroup label={__('Status', 'obatala')}>
-                            {options.map(option => (
-                                <MenuItem
-                                    key={option.value}
-                                    className={option.value === status ? 'active' : undefined}
-                                    onClick={() => {
-                                        setStatus(option.value);
-                                        onClose();
-                                    }}
-                                >
-                                    {option.title}
-                                </MenuItem>
-                            ))}
-                        </MenuGroup>
-                    </div>
-                )}
-            </DropdownMenu>
+        <>
+            <FilterSelect
+                label={__('Status', 'obatala')}
+                value={status || ''}
+                options={options}
+                onChange={setStatus}
+            />
 
             {status && (
                 <Button
@@ -42,7 +26,7 @@ const ProcessTypeFilter = ({ status, setStatus }) => {
                     label={__('Clear', 'obatala')}
                 />
             )}
-        </div>
+        </>
     );
 };
 
