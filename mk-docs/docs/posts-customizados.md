@@ -17,10 +17,17 @@ Define a estrutura reutilizável de um processo:
 
 - Título e descrição do modelo
 - `flowData`: nós (etapas), arestas (conexões) e campos dinâmicos por etapa
-- `step_order`, status ativo/inativo
+- `step_order` e status `Draft`, `Active` ou `Inactive`
 - Configuração de exportação Tainacan (mappers)
 
 Editado na tela **Modelos** e no **editor de fluxo** (`process-type-editor`).
+
+Modelos novos começam como **rascunho** (`Draft`). O editor salva o progresso
+mesmo quando ainda existem etapas desconectadas ou configurações pendentes e
+apresenta as validações que faltam. O modelo só muda para **ativo** (`Active`)
+quando toda a estrutura é válida; somente modelos ativos ficam disponíveis na
+criação de processos. `Inactive` representa um modelo desativado
+administrativamente, e não um trabalho ainda incompleto.
 
 ## 🏗️ `process_obatala` (instância)
 

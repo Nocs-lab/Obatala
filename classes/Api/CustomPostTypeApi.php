@@ -8,6 +8,7 @@ use Obatala\Entities\Process;
 use Obatala\Security\Roles;
 use Obatala\Services\ProcessNumberService;
 use Obatala\Services\TainacanMappingService;
+use Obatala\Services\ProcessTypeValidationService;
 use WP_Error;
 use WP_REST_Posts_Controller;
 use WP_REST_Response;
@@ -263,99 +264,11 @@ class CustomPostTypeApi extends ObatalaAPI {
             );
         }
 
-        $flow_data = get_post_meta($process_type_id, 'flowData', true);
-        if (is_string($flow_data)) {
-            $flow_data = json_decode($flow_data, true);
-        }
-
-        $nodes = is_array($flow_data) && isset($flow_data['nodes']) && is_array($flow_data['nodes'])
-            ? $flow_data['nodes']
-            : [];
-        $edges = is_array($flow_data) && isset($flow_data['edges']) && is_array($flow_data['edges'])
-            ? $flow_data['edges']
-            : [];
-
-        $nodes_by_id = [];
-        foreach ($nodes as $node) {
-            $node_id = isset($node['id']) ? (string) $node['id'] : '';
-            if ($node_id !== '') {
-                $nodes_by_id[$node_id] = $node;
-            }
-        }
-
-        $regular_nodes = array_filter($nodes_by_id, function ($node, $node_id) {
-            return $node_id !== 'Start'
-                && $node_id !== 'End'
-                && strpos($node_id, 'Condicional') !== 0;
-        }, ARRAY_FILTER_USE_BOTH);
-
-        $sectors = json_decode((string) get_option('obatala_setores', '{}'), true);
-        $sectors = is_array($sectors) ? $sectors : [];
-
-        if (!isset($nodes_by_id['Start'], $nodes_by_id['End']) || empty($regular_nodes)) {
-            return $this->incomplete_process_type_error();
-        }
-
-        foreach ($regular_nodes as $node) {
-            $fields = $node['data']['fields'] ?? [];
-            $sector_id = (string) ($node['tempSector'] ?? $node['sector_obatala'] ?? '');
-            if (empty($fields) || $sector_id === '' || !isset($sectors[$sector_id])) {
-                return $this->incomplete_process_type_error();
-            }
-        }
-
-        $incoming = array_fill_keys(array_keys($nodes_by_id), 0);
-        $outgoing = array_fill_keys(array_keys($nodes_by_id), 0);
-        $graph = array_fill_keys(array_keys($nodes_by_id), []);
-
-        foreach ($edges as $edge) {
-            $source = isset($edge['source']) ? (string) $edge['source'] : '';
-            $target = isset($edge['target']) ? (string) $edge['target'] : '';
-            if (!isset($nodes_by_id[$source], $nodes_by_id[$target])) {
-                continue;
-            }
-            $outgoing[$source]++;
-            $incoming[$target]++;
-            $graph[$source][] = $target;
-        }
-
-        foreach ($nodes_by_id as $node_id => $node) {
-            if (
-                ($node_id !== 'Start' && $incoming[$node_id] === 0)
-                || ($node_id !== 'End' && $outgoing[$node_id] === 0)
-            ) {
-                return $this->incomplete_process_type_error();
-            }
-        }
-
-        $visited = [];
-        $queue = ['Start'];
-        while (!empty($queue)) {
-            $node_id = array_shift($queue);
-            if (isset($visited[$node_id])) {
-                continue;
-            }
-            $visited[$node_id] = true;
-            foreach ($graph[$node_id] as $target) {
-                if (!isset($visited[$target])) {
-                    $queue[] = $target;
-                }
-            }
-        }
-
-        if (count($visited) !== count($nodes_by_id) || !isset($visited['End'])) {
-            return $this->incomplete_process_type_error();
-        }
-
-        return null;
-    }
-
-    private function incomplete_process_type_error() {
-        return new WP_Error(
-            'obatala_incomplete_process_type',
-            __('The selected process model is incomplete. Connect all steps and define at least one field and a valid group for each step.', 'obatala'),
-            ['status' => 400]
+        $validation = ProcessTypeValidationService::validate_for_activation(
+            get_post_meta($process_type_id, 'flowData', true)
         );
+
+        return is_wp_error($validation) ? $validation : null;
     }
 
     /**

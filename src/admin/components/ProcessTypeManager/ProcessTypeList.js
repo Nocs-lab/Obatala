@@ -20,11 +20,16 @@ const ProcessTypeList = ({ processTypes, onEdit, onDelete, onManager, status, se
         {
             Header: __('Status', 'obatala'),
             accessor: 'meta.status[0]',
-            Cell: ({ value }) => (
-                <span className={`badge ${value === 'Active' ? 'success' : 'error'}`}>
-                    {value === 'Active' ? __('Active', 'obatala') : __('Inactive', 'obatala')}
-                </span>
-            ),
+            Cell: ({ value }) => {
+                const statusConfig = {
+                    Active: { badge: 'success', label: __('Active', 'obatala') },
+                    Draft: { badge: 'default', label: __('Draft', 'obatala') },
+                    Inactive: { badge: 'error', label: __('Inactive', 'obatala') },
+                };
+                const config = statusConfig[value] || statusConfig.Draft;
+
+                return <span className={`badge ${config.badge}`}>{config.label}</span>;
+            },
         },
         {
             Header: __('Created at', 'obatala'),

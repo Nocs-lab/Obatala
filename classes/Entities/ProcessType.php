@@ -104,7 +104,7 @@ class ProcessType {
             'description' => 'Process Type Status',
             'single' => true,
             'show_in_rest' => true,
-            'default' => 'Active',
+            'default' => 'Draft',
         ]);
 
         register_post_meta('process_type', 'updateAt', [

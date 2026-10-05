@@ -40,7 +40,7 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
             status: "publish",
             meta: {
                 description,
-                status: editingProcessType ? status : "Active" ,
+                status: editingProcessType ? status : "Draft" ,
                 updateAt: new Date().toISOString(),
                 user: currentUser?.name || ""
             },
@@ -86,6 +86,7 @@ const ProcessTypeForm = ({ onSave, editingProcessType, onCancel }) => {
                     label={__("Status", "obatala")}
                     value={status}
                     options={[
+                    { label: __('Draft', 'obatala'), value: 'Draft' },
                     { label: __('Active', 'obatala'), value: 'Active' },
                     { label: __('Inactive', 'obatala'), value: 'Inactive' }
                 ]}

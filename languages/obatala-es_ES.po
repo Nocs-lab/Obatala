@@ -1326,6 +1326,10 @@ msgstr "En revisión"
 msgid "Draft"
 msgstr "Borrador"
 
+#: src/admin/components/ProcessModelEditor.js
+msgid "The model was saved as a draft because it still has pending validations."
+msgstr "El modelo se guardó como borrador porque aún tiene validaciones pendientes."
+
 #: classes/Api/TainacanItemsApi.php
 #: src/admin/components/TainacanItems/TainacanItemsPage.js
 msgid "Private"

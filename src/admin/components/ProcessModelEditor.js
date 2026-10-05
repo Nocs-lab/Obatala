@@ -338,7 +338,7 @@ const processDataEditor = () => {
                     node.id === "Start" ||
                     node.id === "End" ||
                     node.id.startsWith("Condicional");
-                return !isIgnored && !node.tempSector;
+                return !isIgnored && !node.tempSector && !node.sector_obatala;
             });
 
             if (nodesWithoutSector.length > 0) {
@@ -420,31 +420,33 @@ const processDataEditor = () => {
                 errorMessages.push(...conditionalErrors);
             }
 
-            if (errorMessages.length > 0) {
-                setNotice({
-                    status: "error",
-                    message: (
-                        <ol>
-                            {errorMessages.map((msg, i) => (
-                                <li key={i}>{msg}</li>
-                            ))}
-                        </ol>
-                    ),
-                });
-                return;
-            }
+            const currentStatus = Array.isArray(processData?.meta?.status)
+                ? processData.meta.status[0]
+                : processData?.meta?.status;
+            const validatedStatus = currentStatus === "Inactive" ? "Inactive" : "Active";
+            const statusBeforeFullSave = validatedStatus === "Inactive" && errorMessages.length === 0
+                ? "Inactive"
+                : "Draft";
+
             await apiFetch({
                 path: `/obatala/v1/process_type/${id}/meta`,
                 method: "PUT",
                 data: {
                     flowData,
+                    status: statusBeforeFullSave,
                     updateAt: new Date().toISOString(),
                     user: currentUser?.name || "",
                 },
             });
 
             if (canManageMappers && exportConfigRef.current?.save) {
-                await exportConfigRef.current.save();
+                try {
+                    await exportConfigRef.current.save();
+                } catch (error) {
+                    errorMessages.push(
+                        error?.message || __("Could not save the mapping.", "obatala")
+                    );
+                }
             }
 
             for (const node of flowData.nodes) {
@@ -453,9 +455,28 @@ const processDataEditor = () => {
                         await updateNodeSector(node.id, node.tempSector);
 
                     } catch (error) {
-                console.error(sprintf(__('Error associating group to node %s:', 'obatala'), node.id), error);
+                        const associationError = sprintf(
+                            __('Error associating group to node %s:', 'obatala'),
+                            node.id
+                        );
+                        console.error(associationError, error);
+                        errorMessages.push(associationError);
                     }
                 }
+            }
+
+            if (errorMessages.length === 0) {
+                await apiFetch({
+                    path: `/obatala/v1/process_type/${id}/meta`,
+                    method: "PUT",
+                    data: { status: validatedStatus },
+                });
+            } else if (statusBeforeFullSave !== "Draft") {
+                await apiFetch({
+                    path: `/obatala/v1/process_type/${id}/meta`,
+                    method: "PUT",
+                    data: { status: "Draft" },
+                });
             }
 
             const savedMeta = await apiFetch({
@@ -482,10 +503,25 @@ const processDataEditor = () => {
                 },
             });
 
-            setNotice({
-                status: "success",
-                message: __("Process type and meta updated successfully.", "obatala"),
-            });
+            setNotice(errorMessages.length > 0
+                ? {
+                    status: "warning",
+                    message: (
+                        <>
+                            <p>{__("The model was saved as a draft because it still has pending validations.", "obatala")}</p>
+                            <ol>
+                                {errorMessages.map((msg, i) => (
+                                    <li key={i}>{msg}</li>
+                                ))}
+                            </ol>
+                        </>
+                    ),
+                }
+                : {
+                    status: "success",
+                    message: __("Process type and meta updated successfully.", "obatala"),
+                }
+            );
         } catch (error) {
             console.error(error);
             setNotice({
