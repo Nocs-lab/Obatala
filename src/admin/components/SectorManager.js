@@ -1,30 +1,40 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect, useReducer, useMemo } from 'react';
+import { __, sprintf } from '@wordpress/i18n';
 import {
     Spinner,
     Button,
     Notice,
     Modal,
-    ButtonGroup,
     Icon,
+    TabPanel,
     __experimentalConfirmDialog as ConfirmDialog 
 } from '@wordpress/components';
 import { plus } from "@wordpress/icons";
 import SectorCreator from './SectorManager/SectorCreator';
-import { deleteSector, fetchSectors, saveSector } from '../api/apiRequests';
+import { deleteSector, fetchSectors, fetchSectorsUsers, saveSector } from '../api/apiRequests';
 import SectorList from './SectorManager/SectorList';
 import Reducer, { initialState } from '../redux/reducer';
+import { useSelect } from '@wordpress/data';
+import { store as coreStore } from '@wordpress/core-data';
+import BrandHeader from './BrandHeader';
+import BrandFooter from './BrandFooter';
 
 const SectorManager = () => {
     const [sectors, setSectors] = useState([])
+    const [sectorsUsers, setSectorsUsers] = useState([])
     const [editingSector, setEditingSector] = useState(null);
     const [addingSector, setAddingSector] = useState(null);
+    const [status, setStatus] = useState(null);
+    const [group, setGroup] = useState(null);
     const [isLoading, setIsLoading] = useState(false)
     const [notice, setNotice] = useState(null);
 
+    const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
     const [state, dispatch] = useReducer(Reducer, initialState)
 
     useEffect(() => {
         loadSectors();
+        loadSectorsUsers();
     }, []);
 
     const loadSectors = () => {
@@ -47,6 +57,19 @@ const SectorManager = () => {
             });
     };
 
+    const loadSectorsUsers = () => {
+        setIsLoading(true);
+        fetchSectorsUsers()
+            .then(data => {
+                setSectorsUsers(data);
+                setIsLoading(false);
+            })
+            .catch(error => {
+                console.error('Error fetching sectors:', error);
+                setIsLoading(false);
+            });
+    }
+
     const handleSectorSaved = async (newSector) => {
         setIsLoading(true);
         try {
@@ -57,8 +80,13 @@ const SectorManager = () => {
             } else {
                 savedSector = await saveSector(newSector);
             }
+
+            if (!editingSector && savedSector?.id) {
+                window.location.href = `?page=sector-details&sector_id=${encodeURIComponent(savedSector.id)}&created=1`;
+                return;
+            }
         
-            setNotice({ status: 'success', message: 'Group successfully saved.' });
+            setNotice({ status: 'success', message: __('Group successfully saved.', 'obatala') });
             setEditingSector(null);
             setAddingSector(null);
             loadSectors();
@@ -66,9 +94,9 @@ const SectorManager = () => {
             console.error('Error saving sector:', error);
            
             if (error === 'Setor já existe' || error === 'Setor com o mesmo nome já existe') {
-                setNotice({ status: 'error', message: 'Group already exists.' });
+                setNotice({ status: 'error', message: __('Group already exists.', 'obatala') });
             } else {
-                setNotice({ status: 'error', message: 'Error saving group.' });
+                setNotice({ status: 'error', message: __('Error saving group.', 'obatala') });
             }
             setEditingSector(null);
             setAddingSector(null);
@@ -76,23 +104,23 @@ const SectorManager = () => {
         }   
   
     };
-    const handleDelete = (sector) => {
-        setIsLoading(true)
-        deleteSector(sector.id)
-            .then(() => {
-                const updatedSectors = sectors.filter(type => type.id !== sector.id);
-                setSectors(updatedSectors);
-                setIsLoading(false);
-                setNotice({ status: 'success', message: 'Group successfully removed.' })
-                
-            })
-            .catch(error => {
-                if(error === 'Erro ao deletar o setor, o setor esta vinculado a um usuario'){
-                    setNotice({ status: 'error', message: 'Cannot deleting group linked to a user.' }); 
-                }
-                console.error('Error deleting process type:', error);
-                setIsLoading(false);
-            });
+    const handleDelete = async (sector) => {
+        setIsLoading(true);
+        try {
+            await deleteSector(sector.id);
+            setSectors(currentSectors => currentSectors.filter(type => type.id !== sector.id));
+            setNotice({ status: 'success', message: __('Group successfully removed.', 'obatala') });
+        } catch (error) {
+            console.error('Error deleting group:', error);
+
+            const message = error?.code === 'obatala_sector_has_users'
+                ? __('Cannot delete group linked to a user.', 'obatala')
+                : error?.message || __('Error deleting group.', 'obatala');
+
+            setNotice({ status: 'error', message });
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleAdd = () => {
@@ -101,7 +129,6 @@ const SectorManager = () => {
 
     const handleEdit = (sector) => {
         setEditingSector(sector);
-        
     }
 
     const handleCancel = () => {
@@ -112,78 +139,114 @@ const SectorManager = () => {
 
     const handleConfirmDelete = (sector) => {
         dispatch({type: 'OPEN_MODAL_SECTOR', payload: sector})
-    }
+    };
 
+    const filteredSectors = useMemo(() => {
+        return sectors.filter(sector => {
+          const matchesStatus = status
+            ? sector?.status.includes(status)
+            : true; 
+          const matchesGroups = group === 'my groups'
+            ? sectorsUsers.some(sectorUser =>  sectorUser.sector_id === sector.id &&  sectorUser.users.some(user => user.ID === currentUser?.id))
+            : true;
+      
+          return matchesStatus && matchesGroups;
+        });
+    }, [status, group, sectors, sectorsUsers]);
+    
     if (isLoading) {
         return <Spinner />;
     }
 
-  return (
-      <main>
-          <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
-          <div className="title-container">
-              <h2>Group manager</h2>
-              <ButtonGroup>
-                  <Button variant="primary" 
-                          icon={<Icon icon={plus}/>}
-                          onClick={handleAdd}
-                          >Add new</Button>
-              </ButtonGroup>
-          </div>
-          {notice && (
-              <div className="notice-container">
-                  <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                      {notice.message}
-                  </Notice>
-              </div>
-          )}
+    return (
+        <>
+            <BrandHeader />
+            <div className="title-container">
+                <h2>{__('Groups', 'obatala')}</h2>
+                <span className="badge default">{filteredSectors.length}</span>
+                <div className="group-button">
+                    <Button variant="secondary"
+                        size="small"
+                        icon={<Icon icon={plus} />}
+                        onClick={handleAdd}
+                    >{__('Add new', 'obatala')}</Button>
+                </div>
+            </div>
+            <main>
+                {notice && (
+                        <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                            {notice.message}
+                        </Notice>
+                )}
+                <ConfirmDialog
+                    isOpen={state.isOpen}
+                    onConfirm={() => {
+                        handleDelete(state.sector);
+                        dispatch({ type: 'CLOSE_MODAL' })
+                    }}
+                    onCancel={handleCancel}
+                >
+                    {sprintf(
+                        __('Are you sure you want to delete group %s?', 'obatala'),
+                        state.sector?.name || ''
+                    )}
+                </ConfirmDialog>
 
-          <ConfirmDialog
-              isOpen={state.isOpen}
-              onConfirm={() => {
-                  handleDelete(state.sector);
-                  dispatch({type: 'CLOSE_MODAL'})
-              }}
-              onCancel={ handleCancel }
-          >
-              Are you sure you want to delete group {state.sector?.name}?
-          </ConfirmDialog>
+                <TabPanel
+                    activeClass="active-tab"
+                    onSelect={(tabName) => setGroup(tabName === 'all' ? '' : 'my groups')}
+                    initialTabName={group === 'my groups' ? 'my' : 'all'}
+                    tabs={[
+                        { name: 'all', title: __('All groups', 'obatala'), className: group === '' ? 'is-active' : '' },
+                        { name: 'my', title: __('My groups', 'obatala'), className: group === 'my groups' ? 'is-active' : '' },
+                    ]}
+                >
+                    {({ tab }) => (
+                        <SectorList sectors={filteredSectors}
+                            sectorsUsers={sectorsUsers}
+                            onEdit={handleEdit}
+                            onDelete={handleConfirmDelete}
+                            status={status}
+                            setStatus={setStatus}
+                            group={group}
+                            setGroup={setGroup}
+                            loadSectorsUsers={loadSectorsUsers}
+                        />
+                    )}
+                </TabPanel>
 
-          <SectorList sectors={sectors}
-                      onEdit={handleEdit}
-                      onDelete={handleConfirmDelete}
-          />
+                {/* Open modal to editing Sector */}
+                {editingSector && (
+                    <Modal
+                        title={__('Edit Group', 'obatala')}
+                        onRequestClose={handleCancel}
+                        isDismissible={true}
+                    >
+                        <SectorCreator
+                            onSave={handleSectorSaved}
+                            editingSector={editingSector}
+                            onCancel={handleCancel}
+                        />
+                    </Modal>
+                )}
 
-          {/* Open modal to editing Sector */}
-          {editingSector && (
-              <Modal
-                  title="Edit Group"
-                  onRequestClose={handleCancel}
-                  isDismissible={true}
-              >
-                  <SectorCreator
-                      onSave={handleSectorSaved} 
-                      editingSector={editingSector}
-                      onCancel={handleCancel}
-                  />
-              </Modal>
-          )}
-
-          {/* Open modal to adding Sector */}
-          {addingSector && (
-              <Modal
-                  title="Add Group"
-                  onRequestClose={handleCancel}
-                  isDismissible={true}
-              >
-                  <SectorCreator
-                      onSave={handleSectorSaved} 
-                      onCancel={handleCancel}
-                  />
-              </Modal>
-          )}
-      </main>
-  );
+                {/* Open modal to adding Sector */}
+                {addingSector && (
+                    <Modal
+                        title={__('Add Group', 'obatala')}
+                        onRequestClose={handleCancel}
+                        isDismissible={true}
+                    >
+                        <SectorCreator
+                            onSave={handleSectorSaved}
+                            onCancel={handleCancel}
+                        />
+                    </Modal>
+                )}
+            </main>
+            <BrandFooter />
+        </>
+    );
 };
 
 export default SectorManager;

@@ -17,7 +17,6 @@ class ProcessMetadataManager {
      */
     public static function save_metadata($step_id, $meta_value, $meta_key = '') {
         if (!is_numeric($step_id) || $step_id <= 0) {
-            error_log('ID da etapa inválido: ' . $step_id);
             return false;
         }
 
@@ -30,7 +29,6 @@ class ProcessMetadataManager {
 
         // Valida os dados do metadado
         if (!self::validate_metadata($sanitized_meta_value)) {
-            error_log('Metadados inválidos para etapa ' . $step_id);
             return false;
         }
 
@@ -43,7 +41,6 @@ class ProcessMetadataManager {
         if ($result) {
             return true;
         } else {
-            error_log('Erro ao salvar metadado para o passo ' . $step_id);
             return false;
         }
     }
@@ -97,12 +94,6 @@ class ProcessMetadataManager {
     public static function delete_metadata($step_id, $meta_key) {
         // Remove o metadado específico
         $result = delete_post_meta($step_id, $meta_key);
-
-        if ($result) {
-            error_log('Metadado removido com sucesso para a etapa ' . $step_id);
-        } else {
-            error_log('Erro ao remover metadado para a etapa ' . $step_id);
-        }
 
         return $result;
     }
@@ -173,8 +164,8 @@ class ProcessMetadataManager {
         $value = isset($args['value']) ? esc_attr($args['value']) : '';
         $placeholder = isset($args['placeholder']) ? esc_attr($args['placeholder']) : '';
 
-        echo '<label for="' . $name . '">' . $label . '</label><br />';
-        echo '<input type="' . $type . '" id="' . $name . '" name="' . $name . '" value="' . $value . '" placeholder="' . $placeholder . '" />';
+        echo '<label for="' . esc_attr($name) . '">' . esc_html($label) . '</label><br />';
+        echo '<input type="' . esc_attr($type) . '" id="' . esc_attr($name) . '" name="' . esc_attr($name) . '" value="' . esc_attr($value) . '" placeholder="' . esc_attr($placeholder) . '" />';
         echo '<br />';
     }
 
@@ -185,12 +176,12 @@ class ProcessMetadataManager {
      * @return void
      */
     private static function render_textarea($args) {
-        $name  = isset($args['name']) ? esc_attr($args['name']) : '';
-        $label = isset($args['label']) ? esc_html($args['label']) : '';
-        $value = isset($args['value']) ? esc_textarea($args['value']) : '';
+        $name  = isset($args['name']) ? $args['name'] : '';
+        $label = isset($args['label']) ? $args['label'] : '';
+        $value = isset($args['value']) ? $args['value'] : '';
 
-        echo '<label for="' . $name . '">' . $label . '</label><br />';
-        echo '<textarea id="' . $name . '" name="' . $name . '">' . $value . '</textarea>';
+        echo '<label for="' . esc_attr($name) . '">' . esc_html($label) . '</label><br />';
+        echo '<textarea id="' . esc_attr($name) . '" name="' . esc_attr($name) . '">' . esc_textarea($value) . '</textarea>';
         echo '<br />';
     }
 
@@ -202,14 +193,14 @@ class ProcessMetadataManager {
      * @return void
      */
     private static function render_select($args) {
-        $name    = isset($args['name']) ? esc_attr($args['name']) : '';
-        $label   = isset($args['label']) ? esc_html($args['label']) : '';
+        $name    = isset($args['name']) ? $args['name'] : '';
+        $label   = isset($args['label']) ? $args['label'] : '';
         $options = isset($args['options']) && is_array($args['options']) ? $args['options'] : array();
 
-        echo '<label for="' . $name . '">' . $label . '</label><br />';
-        echo '<select id="' . $name . '" name="' . $name . '">';
-        foreach ($options as $value => $label) {
-            echo '<option value="' . esc_attr($value) . '">' . esc_html($label) . '</option>';
+        echo '<label for="' . esc_attr($name) . '">' . esc_html($label) . '</label><br />';
+        echo '<select id="' . esc_attr($name) . '" name="' . esc_attr($name) . '">';
+        foreach ($options as $value => $option_label) {
+            echo '<option value="' . esc_attr($value) . '">' . esc_html($option_label) . '</option>';
         }
         echo '</select>';
         echo '<br />';
@@ -223,14 +214,14 @@ class ProcessMetadataManager {
      * @return void
      */
     private static function render_radio($args) {
-        $name    = isset($args['name']) ? esc_attr($args['name']) : '';
-        $label   = isset($args['label']) ? esc_html($args['label']) : '';
+        $name    = isset($args['name']) ? $args['name'] : '';
+        $label   = isset($args['label']) ? $args['label'] : '';
         $options = isset($args['options']) && is_array($args['options']) ? $args['options'] : array();
 
-        echo '<label>' . $label . '</label><br />';
-        foreach ($options as $value => $label) {
-            echo '<input type="radio" id="' . esc_attr($value) . '" name="' . $name . '" value="' . esc_attr($value) . '">';
-            echo '<label for="' . esc_attr($value) . '">' . esc_html($label) . '</label><br />';
+        echo '<label>' . esc_html($label) . '</label><br />';
+        foreach ($options as $value => $option_label) {
+            echo '<input type="radio" id="' . esc_attr($value) . '" name="' . esc_attr($name) . '" value="' . esc_attr($value) . '">';
+            echo '<label for="' . esc_attr($value) . '">' . esc_html($option_label) . '</label><br />';
         }
         echo '<br />';
     }
@@ -281,7 +272,7 @@ class ProcessMetadataManager {
      */
     private static function validate_metadata($meta_data) {
         if (empty($meta_data['name'])) {
-            error_log('Campo "name" não fornecido para os metadados: ' . json_encode($meta_data));
+
             return false;
         }
         return true;

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Button, ComboboxControl, } from '@wordpress/components';
-import {closeSmall } from '@wordpress/icons';
+import { Button, ComboboxControl } from '@wordpress/components';
+import { closeSmall } from '@wordpress/icons';
+import { __ } from '@wordpress/i18n';
 
 const UserSelect = ({ users, sectorUsers, onSelectUser }) => {
     const [stepInputValue, setStepInputValue] = useState('');
@@ -16,12 +17,20 @@ const UserSelect = ({ users, sectorUsers, onSelectUser }) => {
     const handleRemoveUser = (userId) => {
         setSelectedUser(selectedUser.filter((user) => user !== userId));
     };
+    const handleAddUsers = async () => {
+        const saved = await onSelectUser(selectedUser);
+        if (saved === false) {
+            return;
+        }
+        setSelectedUser([]);
+        setStepInputValue('');
+    };
     const associatedUserIds = sectorUsers.map(user => user.ID);
 
     return (
         <>
             <ComboboxControl
-                label="Select one or more users"
+                label={__('Select one or more users', 'obatala')}
                 value={stepInputValue}
                 options={users.map(user => ({ 
                     label: user.display_name, 
@@ -50,11 +59,11 @@ const UserSelect = ({ users, sectorUsers, onSelectUser }) => {
                 </div>
             )}
             <Button 
-                variant="secondary" 
-                onClick={() => onSelectUser(selectedUser)}
+                variant="primary" 
+                onClick={handleAddUsers}
                 disabled={selectedUser.length === 0}   
             >
-                Add user(s)
+                {__('Add user(s)', 'obatala')}
             </Button>
         </>       
     );

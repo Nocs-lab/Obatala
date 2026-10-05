@@ -2,8 +2,8 @@
 # This file is distributed under the GPLv2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Obatala - Plugin de Gestão de Processos Curatoriais "
-"para WordPress beta.0.1\n"
+"Project-Id-Version: Obatala - Plugin de Gestão de Processos Curatoriais para "
+"WordPress beta.0.1\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/Obatala\n"
 "POT-Creation-Date: 2024-05-28T20:38:23+00:00\n"
 "PO-Revision-Date: 2024-07-01 11:55-0300\n"
@@ -301,3 +301,1284 @@ msgstr "Tipos de etapa"
 #: obatala.php:116
 msgid "Obatala requires the Tainacan plugin to be installed and activated."
 msgstr "Obatala requer a instalação e a ativação do plugin Tainacan."
+
+# Frontend (React) strings
+msgid "Menu"
+msgstr "Menu"
+
+msgid "Dashboard"
+msgstr "Painel"
+
+msgid "Processes"
+msgstr "Processos"
+
+msgid "Models"
+msgstr "Modelos"
+
+msgid "Groups"
+msgstr "Grupos"
+
+msgid "Collection items"
+msgstr "Itens do acervo"
+
+msgid "Users"
+msgstr "Usuários"
+
+msgid "WordPress"
+msgstr "WordPress"
+
+msgid "Add new"
+msgstr "Adicionar novo"
+
+msgid "All processes"
+msgstr "Todos os processos"
+
+msgid "My processes"
+msgstr "Meus processos"
+
+msgid "Add new process"
+msgstr "Adicionar novo processo"
+
+msgid "Process Title"
+msgstr "Título do processo"
+
+msgid "Process Model"
+msgstr "Modelo do processo"
+
+msgid "Select a process model..."
+msgstr "Selecione um modelo de processo..."
+
+msgid "Access level"
+msgstr "Nível de acesso"
+
+msgid "Not restricted"
+msgstr "Não restrito"
+
+msgid "Restricted"
+msgstr "Restrito"
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Save"
+msgstr "Salvar"
+
+msgid "Please provide a title and select a process type."
+msgstr "Informe um título e selecione um tipo de processo."
+
+msgid "Invalid process type selected."
+msgstr "Tipo de processo inválido selecionado."
+
+msgid ""
+"The process cannot be created because the selected process model is inactive"
+msgstr ""
+"O processo não pode ser criado porque o modelo de processo selecionado está "
+"inativo"
+
+msgid ""
+"The selected process model is incomplete. Connect all steps and define at "
+"least one field and a valid group for each step."
+msgstr ""
+"O modelo de processo selecionado está incompleto. Conecte todas as etapas e "
+"defina pelo menos um campo e um grupo válido para cada etapa."
+
+msgid "Field names must be unique within each step. Check step: %s"
+msgstr "Os nomes dos campos devem ser únicos dentro de cada etapa. Verifique a etapa: %s"
+
+msgid "Some fields have an empty or default name. Check step: %s"
+msgstr "Alguns campos estão sem nome ou mantêm o nome padrão. Verifique etapa: %s"
+
+msgid "%1$s (field %2$d)"
+msgstr "%1$s (campo %2$d)"
+
+msgid "Process updated successfully."
+msgstr "Processo atualizado com sucesso."
+
+msgid "Process saved successfully."
+msgstr "Processo salvo com sucesso."
+
+msgid "Process created successfully."
+msgstr "Processo criado com sucesso."
+
+msgid "Error creating process."
+msgstr "Erro ao criar processo."
+
+msgid "Group successfully saved."
+msgstr "Grupo salvo com sucesso."
+
+msgid "Group already exists."
+msgstr "Grupo já existe."
+
+msgid "Error saving group."
+msgstr "Erro ao salvar grupo."
+
+msgid "Group successfully removed."
+msgstr "Grupo removido com sucesso."
+
+msgid "Cannot delete group linked to a user."
+msgstr "Não é possível excluir grupo vinculado a um usuário."
+
+msgid "Process model saved successfully."
+msgstr "Modelo de processo salvo com sucesso."
+
+msgid "Error saving process model."
+msgstr "Erro ao salvar modelo de processo."
+
+msgid "Add process model"
+msgstr "Adicionar modelo de processo"
+
+msgid "Are you sure you want to delete process model %s?"
+msgstr "Tem certeza que deseja excluir o modelo de processo %s?"
+
+msgid "Manage process model"
+msgstr "Gerenciar modelo de processo"
+
+# Additional frontend strings
+msgid "Model"
+msgstr "Modelo"
+
+msgid "Current step"
+msgstr "Etapa atual"
+
+msgid "No group"
+msgstr "Nenhum grupo"
+
+msgid "Not started"
+msgstr "Não iniciado"
+
+msgid "Progress"
+msgstr "Progresso"
+
+msgid "View process"
+msgstr "Ver processo"
+
+msgid "Edit"
+msgstr "Editar"
+
+msgid "History"
+msgstr "Histórico"
+
+msgid "Search by title"
+msgstr "Buscar por título"
+
+msgid "Search by title or process number"
+msgstr "Buscar por título ou número do processo"
+
+msgid "Process number"
+msgstr "Nº do processo"
+
+msgid "No numbering"
+msgstr "Sem numeração"
+
+msgid "Previous"
+msgstr "Anterior"
+
+msgid "Page"
+msgstr "Página"
+
+msgid "Next"
+msgstr "Próximo"
+
+msgid "No existing processes."
+msgstr "Nenhum processo existente."
+
+msgid "Filter"
+msgstr "Filtrar"
+
+msgid "Filters"
+msgstr "Filtros"
+
+msgid "Not Restricted"
+msgstr "Não restrito"
+
+msgid "Access Level"
+msgstr "Nível de acesso"
+
+msgid "Process Type"
+msgstr "Tipo de processo"
+
+msgid "Clear"
+msgstr "Limpar"
+
+msgid "Process"
+msgstr "Processo"
+
+msgid "Back to Processes"
+msgstr "Voltar aos Processos"
+
+msgid "Current Stage"
+msgstr "Etapa atual"
+
+msgid "View Previous Stage"
+msgstr "Ver etapa anterior"
+
+msgid "Advance Stage"
+msgstr "Avançar etapa"
+
+msgid "Reopen Stage"
+msgstr "Reabrir etapa"
+
+msgid "Comments"
+msgstr "Comentários"
+
+msgid "Attachments"
+msgstr "Anexos"
+
+msgid "Attach file"
+msgstr "Anexar arquivo"
+
+msgid "Add Comment"
+msgstr "Adicionar comentário"
+
+msgid "Error fetching node data."
+msgstr "Erro ao buscar dados do nó."
+
+msgid "Error fetching process type."
+msgstr "Erro ao buscar tipo de processo."
+
+msgid "Error fetching process details."
+msgstr "Erro ao buscar detalhes do processo."
+
+msgid "Error fetching process meta."
+msgstr "Erro ao buscar metadados do processo."
+
+msgid "No process ID found in the URL."
+msgstr "ID do processo não encontrado na URL."
+
+msgid "Unknown"
+msgstr "Desconhecido"
+
+msgid "You do not have permission to access this process."
+msgstr "Você não tem permissão para acessar este processo."
+
+msgid "Completed"
+msgstr "Concluído"
+
+msgid "Pending"
+msgstr "Pendente"
+
+msgid "Completed on %s"
+msgstr "Concluído em %s"
+
+msgid "Pending input"
+msgstr "Aguardando entrada"
+
+msgid "You can only view this step."
+msgstr "Você só pode visualizar esta etapa."
+
+msgid "Submit"
+msgstr "Enviar"
+
+msgid "No fields found for this step."
+msgstr "Nenhum campo encontrado para esta etapa."
+
+msgid "No steps found for this process."
+msgstr "Nenhuma etapa encontrada para este processo."
+
+msgid "Process type title"
+msgstr "Título do tipo de processo"
+
+msgid "Title"
+msgstr "Título"
+
+msgid "Description"
+msgstr "Descrição"
+
+msgid "Number of users"
+msgstr "Número de usuários"
+
+msgid "Loading..."
+msgstr "Carregando..."
+
+msgid "View group"
+msgstr "Ver grupo"
+
+msgid "Manage users"
+msgstr "Gerenciar usuários"
+
+msgid "Delete"
+msgstr "Excluir"
+
+msgid "Search by title or description"
+msgstr "Buscar por título ou descrição"
+
+msgid "No existing groups."
+msgstr "Nenhum grupo existente."
+
+msgid "Title and description are required."
+msgstr "Título e descrição são obrigatórios."
+
+msgid "Group saved successfully."
+msgstr "Grupo salvo com sucesso."
+
+msgid "Status"
+msgstr "Status"
+
+msgid "Active"
+msgstr "Ativo"
+
+msgid "Inactive"
+msgstr "Inativo"
+
+msgid "All"
+msgstr "Todos"
+
+msgid "All groups"
+msgstr "Todos os grupos"
+
+msgid "My groups"
+msgstr "Meus grupos"
+
+msgid "Created at"
+msgstr "Criado em"
+
+msgid "Last update"
+msgstr "Última atualização"
+
+msgid "Manage steps"
+msgstr "Gerenciar etapas"
+
+msgid "Manage model"
+msgstr "Gerenciar modelo"
+
+msgid "Tainacan Export"
+msgstr "Exportação para o Tainacan"
+
+msgid "Enable mapper status"
+msgstr "Ativar status do mapeador"
+
+msgid "Exporter status"
+msgstr "Situação do exportador"
+
+msgid "Enable to configure field export to Tainacan."
+msgstr "Ative para configurar a exportação dos fields para o Tainacan."
+
+msgid "Target collections"
+msgstr "Coleções de destino"
+
+msgid "Select one or more collections…"
+msgstr "Selecione uma ou mais coleções…"
+
+msgid "Select at least one collection to map fields."
+msgstr "Selecione, no mínimo, uma coleção para mapear os fields."
+
+msgid "Tainacan mapping summary"
+msgstr "Resumo do mapeamento Tainacan"
+
+msgid "Obatala field"
+msgstr "Field do Obatalá"
+
+msgid "Tainacan metadata"
+msgstr "Metadado Tainacan"
+
+msgid "No fields mapped in this collection."
+msgstr "Nenhum field mapeado nesta coleção."
+
+msgid "Do not map this field"
+msgstr "Não mapear este field"
+
+msgid "Select metadata"
+msgstr "Selecione o metadado"
+
+msgid "Target collection"
+msgstr "Coleção de destino"
+
+msgid "Target metadata"
+msgstr "Metadado de destino"
+
+msgid "Could not load the Tainacan configuration."
+msgstr "Não foi possível carregar a configuração do Tainacan."
+
+msgid "Could not save the mapping."
+msgstr "Não foi possível salvar o mapeamento."
+
+msgid "Select at least one target collection to configure the mapper."
+msgstr "Selecione ao menos uma coleção de destino para configurar o mapeador."
+
+msgid "Tainacan export preparation"
+msgstr "Preparação da exportação para o Tainacan"
+
+msgid "Define how this process will generate items without adding technical fields to its steps."
+msgstr "Defina como este processo gerará itens sem adicionar fields técnicos às etapas."
+
+msgid "Number of items"
+msgstr "Número de itens"
+
+msgid "One item"
+msgstr "Um item"
+
+msgid "Multiple items"
+msgstr "Vários itens"
+
+msgid "Quantity of items"
+msgstr "Quantidade de itens"
+
+msgid "Data source"
+msgstr "Origem dos dados"
+
+msgid "Manual entry"
+msgstr "Preenchimento manual"
+
+msgid "Spreadsheet"
+msgstr "Planilha"
+
+msgid "Select spreadsheet"
+msgstr "Selecionar planilha"
+
+msgid "Repeat base values between items"
+msgstr "Repetir valores-base entre os itens"
+
+msgid "Unique identifier field"
+msgstr "Field identificador único"
+
+msgid "Select a field…"
+msgstr "Selecione um field…"
+
+msgid "Use an identifier prefix"
+msgstr "Usar prefixo no identificador"
+
+msgid "Identifier prefix"
+msgstr "Prefixo do identificador"
+
+msgid "Save export preparation"
+msgstr "Salvar preparação da exportação"
+
+msgid "Could not save the export preparation."
+msgstr "Não foi possível salvar a preparação da exportação."
+
+msgid "Export preparation saved successfully."
+msgstr "Preparação da exportação salva com sucesso."
+
+msgid "Edit export data"
+msgstr "Editar dados de exportação"
+
+msgid "Edit general data"
+msgstr "Editar dados gerais"
+
+msgid "Delete model"
+msgstr "Excluir modelo"
+
+msgid "No existing process models."
+msgstr "Nenhum modelo de processo existente."
+
+msgid "Status: %s"
+msgstr "Status: %s"
+
+msgid "You do not have permission to view the comments for this process."
+msgstr "Você não tem permissão para visualizar os comentários deste processo."
+
+msgid "Error fetching comments."
+msgstr "Erro ao buscar comentários."
+
+msgid "Error fetching process."
+msgstr "Erro ao buscar processo."
+
+msgid "Please enter a comment."
+msgstr "Digite um comentário."
+
+msgid "Comment added successfully."
+msgstr "Comentário adicionado com sucesso."
+
+msgid "You do not have permission to comment on this process."
+msgstr "Você não tem permissão para comentar neste processo."
+
+msgid "Error adding comment."
+msgstr "Erro ao adicionar comentário."
+
+msgid "You do not have permission to delete this comment."
+msgstr "Você não tem permissão para excluir este comentário."
+
+msgid "Error deleting comments."
+msgstr "Erro ao excluir comentários."
+
+msgid "You do not have permission to edit this comment."
+msgstr "Você não tem permissão para editar este comentário."
+
+msgid "Comment updated successfully."
+msgstr "Comentário atualizado com sucesso."
+
+msgid "Error updating comment."
+msgstr "Erro ao atualizar comentário."
+
+msgid "Anonymous"
+msgstr "Anônimo"
+
+msgid "commented"
+msgstr "comentou"
+
+msgid "Select an action"
+msgstr "Selecione uma ação"
+
+msgid "Submit comment"
+msgstr "Enviar comentário"
+
+msgid "Add a comment"
+msgstr "Adicionar um comentário"
+
+msgid "Process created"
+msgstr "Processo criado"
+
+msgid "Responsible"
+msgstr "Responsável"
+
+msgid "Unknown sector"
+msgstr "Setor desconhecido"
+
+msgid "You have left the group successfully."
+msgstr "Você saiu do grupo com sucesso."
+
+msgid "Failed to leave the group. Please try again."
+msgstr "Falha ao sair do grupo. Tente novamente."
+
+msgid "Sector ID not found in URL"
+msgstr "ID do setor não encontrado na URL"
+
+msgid "Failed to load group details"
+msgstr "Falha ao carregar detalhes do grupo"
+
+msgid "Group not found"
+msgstr "Grupo não encontrado"
+
+msgid "Associated users"
+msgstr "Usuários associados"
+
+msgid "Name"
+msgstr "Nome"
+
+msgid "Username"
+msgstr "Nome de usuário"
+
+msgid "Email"
+msgstr "E-mail"
+
+msgid "Leave group"
+msgstr "Sair do grupo"
+
+msgid "No users in this group."
+msgstr "Nenhum usuário neste grupo."
+
+msgid "Are you sure you want to leave the group \"%s\"?"
+msgstr "Tem certeza que deseja sair do grupo \"%s\"?"
+
+msgid "Unknown Title"
+msgstr "Título desconhecido"
+
+msgid "Unknown title"
+msgstr "Título desconhecido"
+
+msgid "Enter a value..."
+msgstr "Digite um valor..."
+
+msgid "Select Options"
+msgstr "Selecionar opções"
+
+msgid "File"
+msgstr "Arquivo"
+
+# Dashboard strings
+msgid "%1$s/%2$s completed processes"
+msgstr "%1$s/%2$s processos concluídos"
+
+msgid "My group"
+msgstr "Meu grupo"
+
+msgid "Pending processes"
+msgstr "Processos pendentes"
+
+msgid "Current stage"
+msgstr "Etapa atual"
+
+msgid "No pending processes found."
+msgstr "Nenhum processo pendente encontrado."
+
+msgid "Top 5 most used models"
+msgstr "Top 5 modelos mais usados"
+
+msgid "Quantity"
+msgstr "Quantidade"
+
+msgid "No results."
+msgstr "Sem resultados."
+
+msgid "Obatala | Curatorial Process Management"
+msgstr "Obatala | Gestão de Processos Curatoriais"
+
+msgid "Process type saved successfully."
+msgstr "Tipo de processo salvo com sucesso."
+
+msgid "Error saving process type."
+msgstr "Erro ao salvar tipo de processo."
+
+# FlowEditor / Process Model Editor
+msgid "Cancel changes"
+msgstr "Cancelar alterações"
+
+msgid "Elements"
+msgstr "Elementos"
+
+msgid "Add step"
+msgstr "Adicionar etapa"
+
+msgid "Add conditional"
+msgstr "Adicionar condicional"
+
+msgid "Fullscreen"
+msgstr "Tela cheia"
+
+msgid "Export JSON"
+msgstr "Exportar JSON"
+
+msgid "Export"
+msgstr "Exportar"
+
+msgid "No steps to export."
+msgstr "Não há etapas para exportar."
+
+msgid "Error exporting diagram."
+msgstr "Erro ao exportar o diagrama."
+
+msgid "Import JSON"
+msgstr "Importar JSON"
+
+msgid "Step name"
+msgstr "Nome da etapa"
+
+msgid "Enter the step name"
+msgstr "Informe o nome da etapa"
+
+msgid "Group responsible"
+msgstr "Grupo responsável"
+
+msgid "Fields"
+msgstr "Campos"
+
+msgid "Add field"
+msgstr "Adicionar campo"
+
+msgid "Select a field to add:"
+msgstr "Selecione um campo para adicionar:"
+
+msgid "Process type and meta updated successfully."
+msgstr "Tipo de processo e metadados atualizados com sucesso."
+
+msgid "Error updating process type and meta."
+msgstr "Erro ao atualizar tipo de processo e metadados."
+
+msgid "Start"
+msgstr "Início"
+
+msgid "End"
+msgstr "Fim"
+
+msgid "Are you sure you want to delete node %s?"
+msgstr "Tem certeza que deseja excluir o nó %s?"
+
+msgid "Move step"
+msgstr "Mover etapa"
+
+msgid "Remove step"
+msgstr "Remover etapa"
+
+msgid "Are you sure you want to delete connection between %s and %s?"
+msgstr "Tem certeza que deseja excluir a conexão entre %s e %s?"
+
+msgid "Remove connection"
+msgstr "Remover conexão"
+
+# Admin menu (PHP)
+msgid "Process type editor"
+msgstr "Editor de tipo de processo"
+
+msgid "Process viewer"
+msgstr "Visualizador de processo"
+
+msgid "Group details"
+msgstr "Detalhes do grupo"
+
+msgid "Mappers"
+msgstr "Mapeadores"
+
+# UserManager
+msgid "Select one or more users"
+msgstr "Selecione um ou mais usuários"
+
+msgid "Add user(s)"
+msgstr "Adicionar usuário(s)"
+
+msgid "Related users"
+msgstr "Usuários relacionados"
+
+msgid "No existing users for this group."
+msgstr "Nenhum usuário neste grupo."
+
+msgid "Users successfully added."
+msgstr "Usuários adicionados com sucesso."
+
+msgid "Error adding users."
+msgstr "Erro ao adicionar usuários."
+
+msgid "User successfully removed."
+msgstr "Usuário removido com sucesso."
+
+msgid "Error removing user."
+msgstr "Erro ao remover usuário."
+
+msgid "Are you sure you want to delete user %s?"
+msgstr "Tem certeza que deseja excluir o usuário %s?"
+
+msgid "Actions"
+msgstr "Ações"
+
+msgid "Remove user from sector"
+msgstr "Remover usuário do setor"
+
+# NodeConditional, ProcessFlow
+msgid "Select a field"
+msgstr "Selecione um campo"
+
+msgid "Select a value"
+msgstr "Selecione um valor"
+
+msgid "If receives"
+msgstr "Se receber"
+
+msgid "then go to"
+msgstr "ir para"
+
+msgid "No output stages"
+msgstr "Nenhuma etapa de saída"
+
+msgid "Remove"
+msgstr "Remover"
+
+msgid "Apply"
+msgstr "Aplicar"
+
+msgid "Validation Errors:"
+msgstr "Erros de validação:"
+
+msgid "Edit field"
+msgstr "Editar campo"
+
+msgid "Edit number field"
+msgstr "Editar campo numérico"
+
+msgid "Edit date picker field"
+msgstr "Editar campo de data"
+
+msgid "Edit select field"
+msgstr "Editar campo de seleção"
+
+msgid "Edit file upload field"
+msgstr "Editar campo de upload de arquivo"
+
+#: classes/Api/ProcessApi.php obatala.php
+msgid "PDF generation library is not available. Run: composer install"
+msgstr "Biblioteca de geração de PDF não disponível. Execute: composer install"
+
+#: obatala.php
+msgid "in the plugin folder to enable the \"Generate PDF report\" feature."
+msgstr "na pasta do plugin para habilitar o recurso \"Gerar relatório PDF\"."
+
+#: src/admin/components/ProcessManager/ProcessList.js
+msgid "Generate PDF report"
+msgstr "Gerar relatório PDF"
+
+msgid "Error generating PDF report."
+msgstr "Erro ao gerar relatório PDF."
+
+#: classes/Report/ProcessReportPdf.php
+msgid "Process Report"
+msgstr "Relatório do Processo"
+
+msgid "Generated at"
+msgstr "Gerado em"
+
+msgid "Generated by"
+msgstr "Gerado por"
+
+msgid "General data"
+msgstr "Dados gerais"
+
+msgid "Field"
+msgstr "Campo"
+
+msgid "Value"
+msgstr "Valor"
+
+msgid "Process ID"
+msgstr "ID do processo"
+
+msgid "Process name"
+msgstr "Nome do processo"
+
+msgid "Model (type)"
+msgstr "Modelo (tipo)"
+
+msgid "Created"
+msgstr "Criado em"
+
+msgid "Last updated"
+msgstr "Última atualização"
+
+msgid "Current responsible"
+msgstr "Responsável atual"
+
+msgid "Step"
+msgstr "Etapa"
+
+msgid "Order"
+msgstr "Ordem"
+
+msgid "Updated by"
+msgstr "Atualizado por"
+
+msgid "Filled fields"
+msgstr "Campos preenchidos"
+
+msgid "No fields or no data filled."
+msgstr "Nenhum campo ou dado preenchido."
+
+msgid "Report generated by Obatala - Curatorial Process Management"
+msgstr "Relatório gerado por Obatala - Gestão de Processos Curatoriais"
+
+msgid "Report generated by Tainacan Process Management"
+msgstr "Relatório gerado por Tainacan Processos"
+
+msgid "Not informed"
+msgstr "Não informado"
+
+msgid "File attached"
+msgstr "Arquivo anexado"
+
+#: ProcessModelEditor.js, classes/Api/ProcessTypeApi.php
+msgid "Some fields are missing a valid title (empty or default). Check: %s"
+msgstr "Alguns campos não têm título válido (vazio ou padrão). Verifique: %s"
+
+#: ProcessModelEditor.js, classes/Api/ProcessTypeApi.php
+msgid "%1$s (field %2$s)"
+msgstr "%1$s (campo %2$s)"
+
+#: classes/Api/ProcessApi.php classes/Report/StageDocumentPdf.php
+#: src/admin/components/FlowEditor/components/inputControls/StageDocumentControls.js
+#: src/admin/components/FlowEditor/components/reactFlow/NodeContent.js
+#: src/admin/components/ProcessManager/MetaFieldDisplay.js
+#: src/admin/components/ProcessManager/MetaFieldInputs.js
+#: src/admin/components/ProcessViewer.js
+msgid "Stage document"
+msgstr "Documento da etapa"
+
+msgid "The label is required."
+msgstr "O rótulo é obrigatório."
+
+msgid "Settings saved successfully."
+msgstr "Configurações salvas com sucesso."
+
+msgid "Edit stage document"
+msgstr "Editar documento da etapa"
+
+msgid "Label"
+msgstr "Rótulo"
+
+msgid "Document title"
+msgstr "Título do documento"
+
+msgid "Document type"
+msgstr "Tipo de documento"
+
+msgid "Opinion, report, order, or term"
+msgstr "Parecer, relatório, despacho ou termo"
+
+msgid "Help text"
+msgstr "Texto de ajuda para preenchimento"
+
+msgid "Instructions for filling this document"
+msgstr "Instruções para preencher este documento"
+
+msgid "Required"
+msgstr "Obrigatório"
+
+msgid "Require document content"
+msgstr "Exigir preenchimento do documento"
+
+msgid "Require signed PDF upload"
+msgstr "Exigir upload do PDF assinado"
+
+msgid "Document template"
+msgstr "Modelo do documento"
+
+msgid "Optional initial text shown when the document is empty."
+msgstr "Texto inicial opcional exibido quando o documento estiver vazio."
+
+msgid "Save settings"
+msgstr "Salvar configurações"
+
+msgid "Bold"
+msgstr "Negrito"
+
+msgid "Italic"
+msgstr "Itálico"
+
+msgid "Underline"
+msgstr "Sublinhado"
+
+msgid "Align left"
+msgstr "Alinhar à esquerda"
+
+msgid "Center"
+msgstr "Centralizar"
+
+msgid "Align right"
+msgstr "Alinhar à direita"
+
+msgid "Justify"
+msgstr "Justificar"
+
+msgid "Bulleted list"
+msgstr "Lista com marcadores"
+
+msgid "Numbered list"
+msgstr "Lista numerada"
+
+msgid "Clear formatting"
+msgstr "Limpar formatação"
+
+msgid "Generate PDF"
+msgstr "Gerar PDF"
+
+msgid "Replace signed PDF"
+msgstr "Substituir PDF assinado"
+
+msgid "Attach signed PDF"
+msgstr "Anexar PDF assinado"
+
+msgid "Signed PDF upload is required for this document."
+msgstr "O upload do PDF assinado é obrigatório para este documento."
+
+msgid "Document PDF generated successfully."
+msgstr "PDF do documento gerado com sucesso."
+
+msgid "Could not generate the document PDF."
+msgstr "Não foi possível gerar o PDF do documento."
+
+msgid "Signed PDF attached successfully."
+msgstr "PDF assinado anexado com sucesso."
+
+msgid "Could not attach the signed PDF."
+msgstr "Não foi possível anexar o PDF assinado."
+
+msgid "Could not download the signed PDF."
+msgstr "Não foi possível baixar o PDF assinado."
+
+msgid "Signed document"
+msgstr "Documento assinado"
+
+msgid "Document PDF generated"
+msgstr "PDF do documento gerado"
+
+msgid "Document draft"
+msgstr "Rascunho do documento"
+
+msgid "Save draft"
+msgstr "Salvar rascunho"
+
+msgid "Saved draft"
+msgstr "Rascunho salvo"
+
+msgid "Draft saved successfully."
+msgstr "Rascunho salvo com sucesso."
+
+msgid "Could not save the draft."
+msgstr "Não foi possível salvar o rascunho."
+
+msgid "No signed PDF was sent."
+msgstr "Nenhum PDF assinado foi enviado."
+
+msgid "Only PDF files are allowed."
+msgstr "Apenas arquivos PDF são permitidos."
+
+msgid "Could not create the document directory."
+msgstr "Não foi possível criar o diretório do documento."
+
+msgid "Could not save the signed PDF."
+msgstr "Não foi possível salvar o PDF assinado."
+
+msgid "No signed PDF is attached to this document."
+msgstr "Nenhum PDF assinado está anexado a este documento."
+
+msgid "Signed PDF not found."
+msgstr "PDF assinado não encontrado."
+
+msgid "You must be logged in."
+msgstr "Você precisa estar logado."
+
+msgid "The node_id and field_id parameters are required."
+msgstr "Os parâmetros node_id e field_id são obrigatórios."
+
+msgid "You do not have permission to access this process document."
+msgstr "Você não tem permissão para acessar este documento do processo."
+
+msgid "Step not found."
+msgstr "Etapa não encontrada."
+
+msgid "Stage document field not found."
+msgstr "Campo de documento da etapa não encontrado."
+
+msgid "No document content was found for this step."
+msgstr "Nenhum conteúdo de documento foi encontrado para esta etapa."
+
+msgid "Obatala - Curatorial Process Management"
+msgstr "Obatalá - Gestão de Processos Curatoriais"
+
+msgid "Tainacan Process Management"
+msgstr "Tainacan Processos"
+
+msgid "Document"
+msgstr "Documento"
+
+msgid "Type"
+msgstr "Tipo"
+
+msgid "Print/export date"
+msgstr "Data de impressão/exportação"
+
+msgid "Signed PDF"
+msgstr "PDF assinado"
+
+msgid "Process deleted successfully."
+msgstr "Processo excluído com sucesso."
+
+msgid "Error deleting process."
+msgstr "Erro ao excluir processo."
+
+msgid "Are you sure you want to delete process %s?"
+msgstr "Tem certeza que deseja excluir o processo %s?"
+
+msgid "Delete process"
+msgstr "Excluir processo"
+
+msgid "Process not found."
+msgstr "Processo não encontrado."
+
+msgid "Process already deleted."
+msgstr "Processo já excluído."
+
+msgid "Unable to record process deletion without an authenticated user."
+msgstr ""
+"Não foi possível registrar a exclusão do processo sem um usuário autenticado."
+
+msgid "Error uploading file for field %s."
+msgstr "Erro ao enviar arquivo para o campo %s."
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Tainacan is not available."
+msgstr "O Tainacan não está disponível."
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Process #%d"
+msgstr "Processo #%d"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Obatala process"
+msgstr "Processo do Obatalá"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Published"
+msgstr "Publicado"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Under review"
+msgstr "Em revisão"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Draft"
+msgstr "Rascunho"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Private"
+msgstr "Privado"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Error loading collection items."
+msgstr "Erro ao carregar os itens do acervo."
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "All collections"
+msgstr "Todas as coleções"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "All situations"
+msgstr "Todas as situações"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Error downloading item data."
+msgstr "Erro ao baixar os dados do item."
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Item deleted successfully."
+msgstr "Item excluído com sucesso."
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Error deleting item."
+msgstr "Erro ao excluir o item."
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "%s process"
+msgstr "%s processo"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "%s processes"
+msgstr "%s processos"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Add item"
+msgstr "Adicionar item"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "All items"
+msgstr "Todos os itens"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "My items"
+msgstr "Meus itens"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Search collection items"
+msgstr "Buscar itens do acervo"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Search by title, registration number, or keyword"
+msgstr "Buscar por título, número de registro ou palavra-chave"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Situation"
+msgstr "Situação"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Clear filters"
+msgstr "Limpar filtros"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Registration number"
+msgstr "Nº de registro"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Linked processes"
+msgstr "Processos vinculados"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Item #%d"
+msgstr "Item #%d"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "by %s"
+msgstr "por %s"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "View item"
+msgstr "Ver item"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Edit item"
+msgstr "Editar item"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "View details and history"
+msgstr "Ver detalhes e histórico"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Download item data"
+msgstr "Baixar dados do item"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Delete item"
+msgstr "Excluir item"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Page %1$s of %2$s"
+msgstr "Página %1$s de %2$s"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "No collection items found."
+msgstr "Nenhum item do acervo encontrado."
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Linked processes for %s"
+msgstr "Processos vinculados a %s"
+
+#: classes/Api/TainacanItemsApi.php
+#: src/admin/components/TainacanItems/TainacanItemsPage.js
+msgid "Are you sure you want to delete item %s?"
+msgstr "Tem certeza que deseja excluir o item %s?"
+
+msgid "Finished"
+msgstr "Finalizado"
+
+msgid "In progress"
+msgstr "Em progresso"
+
+#: classes/Api/ProcessApi.php
+msgid "A maximum of 200 process IDs can be requested."
+msgstr "É possível solicitar no máximo 200 IDs de processos."
+
+#: classes/Security/Roles.php
+msgid "Tainacan Participant"
+msgstr "Tainacan Participant"
+
+#: classes/Api/ObatalaAPI.php
+msgid "You do not have permission to perform this action."
+msgstr "Você não tem permissão para executar esta ação."
+
+#: classes/Api/ObatalaAPI.php
+msgid "Authentication is required."
+msgstr "É necessário estar autenticado."
+
+#: classes/Api/ProcessApi.php
+msgid "Only the active step can be selected."
+msgstr "Somente a etapa ativa pode ser selecionada."
+
+#: src/admin/components/FlowEditor/components/reactFlow/NodeConditional.js
+msgid "Apply conditional"
+msgstr "Aplicar condicional"
+
+#: src/admin/components/FlowEditor/components/reactFlow/NodeConditional.js
+msgid ""
+"There are pending changes in this conditional. Click \"Apply conditional\" "
+"to keep them before collapsing the steps or saving the model."
+msgstr ""
+"Há alterações pendentes neste condicional. Clique em \"Aplicar condicional\" "
+"para mantê-las antes de recolher as etapas ou salvar o modelo."

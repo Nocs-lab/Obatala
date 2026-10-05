@@ -51,7 +51,7 @@ jobs:
           git config --local user.email "info@nocslab.ifrn.edu.br"
           
           # Adiciona os arquivos modificados
-          git add package.json obatala.php README.md
+          git add package.json obatala.php README.md readme.txt
           
           # Faz o commit
           git commit -m "chore: update plugin version to ${VERSION}"

@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect, useReducer, useMemo } from 'react';
+import { __, sprintf } from '@wordpress/i18n';
 import {
     Button,
-    ButtonGroup,
     Icon,
     Spinner,
     Modal,
@@ -9,160 +9,210 @@ import {
     __experimentalConfirmDialog as ConfirmDialog 
 } from '@wordpress/components';
 import { plus } from "@wordpress/icons";
-import { fetchProcessModels, saveProcessType, deleteProcessType, updateProcessTypeMeta } from '../api/apiRequests';
+import { fetchProcessModels, fetchSectors, saveProcessType, deleteProcessType } from '../api/apiRequests';
 import ProcessTypeForm from './ProcessTypeManager/ProcessTypeForm';
 import ProcessTypeList from './ProcessTypeManager/ProcessTypeList';
 import Reducer, { initialState } from '../redux/reducer';
+import { useSelect } from '@wordpress/data';
+import { store as coreStore } from '@wordpress/core-data';
+import BrandHeader from './BrandHeader';
+import BrandFooter from './BrandFooter';
 
 const ProcessTypeManager = () => {
-  const [processTypes, setProcessTypes] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [editingProcessType, setEditingProcessType] = useState(null);
-  const [addingProcessType, setAddingProcessType] = useState(null);
-  const [notice, setNotice] = useState(null);
+    const permissions = window.obatalaApp?.permissions || {};
+    const canDeleteModels = Boolean(permissions.delete_models);
+    const [processTypes, setProcessTypes] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
+    const [editingProcessType, setEditingProcessType] = useState(null);
+    const [addingProcessType, setAddingProcessType] = useState(null);
+    const [status, setStatus] = useState(null);
+    const [notice, setNotice] = useState(null);
+    const [state, dispatch] = useReducer(Reducer, initialState);
+    
+    const allAuthors = useSelect(select => select(coreStore).getUsers({ who: 'authors' }), []);
+    
+    useEffect(() => {
+        loadProcessTypes();
+    }, []);
 
-  const [state, dispatch] = useReducer(Reducer, initialState)
 
-  useEffect(() => {
-      loadProcessTypes();
-  }, []);
+    const loadProcessTypes = () => {
+        setIsLoading(true);
+        fetchProcessModels()
+        .then(data => {
+            const sortedProcessTypes = data.sort((a, b) => a.title.rendered.localeCompare(b.title.rendered));
+            setProcessTypes(sortedProcessTypes);
+            setIsLoading(false);
+        })
+        .catch(error => {
+            console.error('Error fetching process types:', error);
+            setIsLoading(false);
+        });
+    };
 
-  const loadProcessTypes = () => {
-    setIsLoading(true);
-    fetchProcessModels()
-      .then(data => {
-          const sortedProcessTypes = data.sort((a, b) => a.title.rendered.localeCompare(b.title.rendered));
-          setProcessTypes(sortedProcessTypes);
-          setIsLoading(false);
-      })
-      .catch(error => {
-          console.error('Error fetching process types:', error);
-          setIsLoading(false);
-      });
-  };
+    const handleSaveProcessType = async (processType) => {
+        setIsLoading(true);
+        try {
+            let savedProcessType;
+            if (editingProcessType) {
+                savedProcessType = await saveProcessType(processType, editingProcessType);
+            } else {
+                savedProcessType = await saveProcessType(processType);
+            }
 
-  const handleSaveProcessType = async (processType) => {
-      setIsLoading(true);
-      try {
-          let savedProcessType;
-          if (editingProcessType) {
-              savedProcessType = await saveProcessType(processType, editingProcessType);
+            if (!editingProcessType && savedProcessType?.id) {
+                window.location.href = `?page=process-type-editor&process_type_id=${encodeURIComponent(savedProcessType.id)}&created=1`;
+                return;
+            }
 
-          } else {
-              savedProcessType = await saveProcessType(processType);
-          }
-          const meta = {
-              description: processType.meta.description || '',
-              status: processType.meta.status || ''
-          };
+            setNotice({ status: 'success', message: __('Process model saved successfully.', 'obatala') });
+            setEditingProcessType(null);
+            setAddingProcessType(null);
+            loadProcessTypes();
+        } catch (error) {
+            console.error('Error saving process model:', error);
+            setNotice({
+                status: 'error',
+                message: error?.message || __('Error saving process model.', 'obatala')
+            });
+            setIsLoading(false);
+            throw error;
+        }
+    };
 
-          await updateProcessTypeMeta(savedProcessType.id, meta);
+    const handleDeleteProcessType = (processModel) => {
+        deleteProcessType(processModel.id)
+            .then(() => {
+                const updatedProcessTypes = processTypes.filter(type => type.id !== processModel.id);
+                setProcessTypes(updatedProcessTypes);
+            })
+            .catch(error => {
+                console.error('Error deleting process type:', error);
+            });
+    };
 
-          setNotice({ status: 'success', message: 'Process model saved successfully.' });
-          setEditingProcessType(null);
-          setAddingProcessType(null);
-          loadProcessTypes();
-      } catch (error) {
-          console.error('Error saving process model:', error);
-          setNotice({ status: 'error', message: 'Error saving process model.' });
-          setIsLoading(false);
-      }
-  };
+    const handleManageProcessModel = (id) => {
+        window.location.href = `?page=process-type-editor&process_type_id=${id}`;
+    };
 
-  const handleDeleteProcessType = (processModel) => {
-    deleteProcessType(processModel.id)
-      .then(() => {
-          const updatedProcessTypes = processTypes.filter(type => type.id !== processModel.id);
-          setProcessTypes(updatedProcessTypes);
-      })
-      .catch(error => {
-          console.error('Error deleting process type:', error);
-      });
-  };
+    const handleEditModel = (model) => {
+        setEditingProcessType(model);
+    };
 
-  const handleManageProcessModel = (id) => {
-    window.location.href = `?page=process-type-editor&process_type_id=${id}`;
-  };
+    const handleAdd = async () => {
+        try {
+            const sectors = await fetchSectors();
+            if (!sectors || Object.keys(sectors).length === 0) {
+                setNotice({
+                    status: 'error',
+                    message: __('Não é possível criar um modelo de processo sem existir grupos cadastrados.', 'obatala')
+                });
+                return;
+            }
 
-  const handleEditModel = (model) => {
-    setEditingProcessType(model);
-  };
+            setNotice(null);
+            setAddingProcessType(true);
+        } catch (error) {
+            console.error('Error checking groups before creating process model:', error);
+            setNotice({
+                status: 'error',
+                message: __('Não foi possível verificar os grupos cadastrados.', 'obatala')
+            });
+        }
+    }
 
-  const handleAdd = () => {
-    setAddingProcessType(true);
-  }
+    const handleCancel = () => {
+        setEditingProcessType(null);
+        setAddingProcessType(null);
+        dispatch({ type: 'CLOSE_MODAL' });
+    };
 
-  const handleCancel = () => {
-    setEditingProcessType(null);
-    setAddingProcessType(null);
-    dispatch({ type: 'CLOSE_MODAL' });
-  };
+    const handleConfirmDelete = (processModel) => {
+        dispatch({type: 'OPEN_MODAL_PROCESS_MODEL', payload: processModel})
+    }
+    const authorsById = allAuthors ? allAuthors.reduce((acc, user) => {
+        acc[user.id] = user;
+        return acc;
+    }, {}) : {};
 
-  const handleConfirmDelete = (processModel) => {
-    dispatch({type: 'OPEN_MODAL_PROCESS_MODEL', payload: processModel})
-  }
+    const filteredModels = useMemo(() => {
+        if (!status) return processTypes;
+        return processTypes.filter((processType) => 
+            processType
+                ? processType.meta.status[0].includes(status) 
+                : true
+        );
+    }, [status, processTypes]);
 
-  if (isLoading) {
-    return <Spinner />;
-  }
+    if (isLoading) {
+        return <Spinner />;
+    }
 
-  return (
-    <main>
-      <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
-      <div className="title-container">
-        <h2>Process Models</h2>
-        <ButtonGroup>
-          <Button 
-              variant="primary" 
-              icon={<Icon icon={plus} />}
-              onClick={handleAdd}
-              >Add process model</Button>
-        </ButtonGroup>
-      </div>
-      {notice && (
-        <div className="notice-container">
-          <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-            {notice.message}
-          </Notice>
-        </div>
-      )}
-      <div className="panel-container">
-        <main>
-            <ConfirmDialog
-                isOpen={state.isOpen}
-                onConfirm={() => {
-                    handleDeleteProcessType(state.processModel);
-                    dispatch({type: 'CLOSE_MODAL'})
-                }}
-                onCancel={ handleCancel }
-            >
-                Are you sure you want to delete process model {state.processModel?.title.rendered}?
-            </ConfirmDialog>
-
-            <ProcessTypeList
-                processTypes={processTypes}
-                onEdit={handleEditModel}
-                onManager={handleManageProcessModel}
-                onDelete={handleConfirmDelete}
-            />
-        </main>
-        {addingProcessType || editingProcessType ? (
-          <Modal
-            title={ editingProcessType ? "Edit process model" : "Add process model"}
-            onRequestClose={handleCancel}
-            isDismissible={true}
-            size="medium"
-          >
-            <ProcessTypeForm
-              onSave={handleSaveProcessType}
-              onCancel={handleCancel}
-              editingProcessType={editingProcessType ? editingProcessType : null}
-            />
-          </Modal>
-        ) :  null}
-      </div>
-    </main>
-  );
+    return (
+        <>
+            <BrandHeader />
+            <div className="title-container">
+                <h2>{__('Models', 'obatala')}</h2>
+                <span className="badge default">{filteredModels.length}</span>
+                <div className="group-button">
+                    <Button
+                        variant="secondary"
+                        size="small"
+                        icon={<Icon icon={plus} />}
+                        onClick={handleAdd}
+                    >
+                        {__('Add process model', 'obatala')}
+                    </Button>
+                </div>
+            </div>
+            <main>
+                {notice && (
+                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                        {notice.message}
+                    </Notice>
+                )}
+                {canDeleteModels && <ConfirmDialog
+                    isOpen={state.isOpen}
+                    onConfirm={() => {
+                        handleDeleteProcessType(state.processModel);
+                        dispatch({ type: 'CLOSE_MODAL' })
+                    }}
+                    onCancel={handleCancel}
+                >
+                    {sprintf(
+                        __('Are you sure you want to delete process model %s?', 'obatala'),
+                        state.processModel?.title?.rendered || ''
+                    )}
+                </ConfirmDialog>}
+                <div className="panel-container">
+                    <ProcessTypeList
+                        processTypes={filteredModels}
+                        onEdit={handleEditModel}
+                        onManager={handleManageProcessModel}
+                        onDelete={canDeleteModels ? handleConfirmDelete : null}
+                        status={status}
+                        setStatus={setStatus}
+                        authorsById={authorsById}
+                    />
+                    {addingProcessType || editingProcessType ? (
+                        <Modal
+                            title={editingProcessType ? __('Edit process model', 'obatala') : __('Add process model', 'obatala')}
+                            onRequestClose={handleCancel}
+                            isDismissible={true}
+                            size="medium"
+                        >
+                            <ProcessTypeForm
+                                onSave={handleSaveProcessType}
+                                onCancel={handleCancel}
+                                editingProcessType={editingProcessType ? editingProcessType : null}
+                            />
+                        </Modal>
+                    ) : null}
+                </div>
+            </main>
+            <BrandFooter />
+        </>
+    );
 };
 
 export default ProcessTypeManager;

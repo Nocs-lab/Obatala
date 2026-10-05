@@ -1,8 +1,10 @@
-![Versão do Plugin](https://img.shields.io/badge/version-1.4.0-blue.svg)
+
+![Versão do Plugin](https://img.shields.io/badge/version-1.8.0-blue.svg)
 ![Compatibilidade com WordPress](https://img.shields.io/badge/WordPress-v5.7%2B-blue.svg)
 ![Licença](https://img.shields.io/badge/license-GPLv2-blue.svg)
 ![Tainacan](https://img.shields.io/badge/Tainacan-Addon-blue.svg)
 ![Gestão de Processos](https://img.shields.io/badge/Gestão-de_Processos-blue.svg)
+
 
 # Obatala: Plugin de Gestão de Processos Curatoriais para WordPress
 
@@ -18,12 +20,37 @@ Ideal para instituições que buscam inovar na apresentação e gestão de suas 
 
 ## Funcionalidades
 
+- **Internacionalização (i18n)**: Suporte a português brasileiro, espanhol e inglês (padrão) no painel (PHP) e no frontend (React), via arquivos `.po`/`.mo` e JSON.
 - **Gerenciamento de Processos e Etapas**: Criação e edição de processos curatoriais com múltiplas etapas.
+- **Numeração única de processos**: Identificador automático no formato `AAAA-NNNNN-DV` (ex.: `2026-00042-6`), com dígito verificador, sequencial anual e busca na listagem.
+- **Exclusão lógica de processos**: Remoção da interface com registro de quem excluiu e quando (`deleted_at`, `deleted_by`, `deleted_by_name`).
+- **Relatórios em PDF**: Relatório consolidado do processo e PDF do documento da etapa (Dompdf via Composer).
 - **Metadados Dinâmicos**: Adição e configuração de metadados personalizados para cada etapa do processo.
 - **Gestão de Setores**: Agrupamento de usuários em setores, com permissões específicas e atribuição de setores às etapas do processo.
+- **Perfis integrados ao Tainacan**: Capabilities próprias do Tainacan Processos nos perfis Tainacan Administrator e Editor, além do perfil operacional Tainacan Participant, sempre combinadas com as regras de grupos.
 - **Interação com Processos**: Usuários podem adicionar comentários e mudar o status das etapas.
 - **Notificações**: Envio de notificações por email e na interface de administração quando o status do processo mudar.
 - **Integração com Tainacan**: Anexação de itens e coleções do Tainacan aos processos, com verificação do histórico dos itens.
+
+## Perfis e permissões
+
+O Tainacan Processos aproveita os perfis **Tainacan Administrator** e
+**Tainacan Editor** e cria somente um perfil adicional: **Tainacan
+Participant**. O perfil nativo **Tainacan Author** não recebe acesso ao
+Tainacan Processos.
+
+| Perfil | Acesso no Tainacan Processos |
+| --- | --- |
+| Administrador WordPress / Tainacan Administrator | Acesso completo, inclusive criação e exclusão de modelos, grupos, mapeamentos e configurações |
+| Tainacan Editor | Cria e edita processos autorizados, atua nas etapas dos seus grupos, comenta, gera relatórios e executa exportações; não cria modelos |
+| Tainacan Participant | Visualiza processos dos seus grupos, preenche e avança a etapa do seu grupo, comenta e gera relatórios |
+| Tainacan Author | Nenhum acesso automático ao Tainacan Processos |
+
+As permissões funcionais usam o prefixo `tainacan_processes_` e são combinadas
+com os grupos já existentes. A implementação pertence exclusivamente a este
+plugin: arquivos, perfis e capabilities nativas `tnc_*` do Tainacan não são
+alterados. Consulte [Perfis e permissões](mk-docs/docs/perfis-e-permissoes.md)
+para a matriz completa e as regras de migração.
 
 ## Visão geral da estrutura do plugin
 
@@ -96,9 +123,25 @@ classDiagram
     Processo "1" -- "*" Arquivo : possui
 ```
 
+## Instalação
+
+1. Instale e ative o plugin **Tainacan** no WordPress.
+2. Copie este repositório para `wp-content/plugins/Obatala/`.
+3. Na pasta do plugin, execute **`composer install`** (obrigatório — carrega o autoload PSR-4 e o **Dompdf** para geração de PDF).
+4. Execute **`npm ci`** e **`npm run build`** (interface administrativa React).
+5. Ative o plugin Obatalá no painel WordPress.
+
+Passo a passo detalhado, checklist e solução de problemas: [mk-docs/docs/instalacao.md](mk-docs/docs/instalacao.md) (também na [documentação publicada](https://nocs-lab.github.io/Obatala/instalacao/)).
+
 ## Documentação
 
-A documentação completa do plugin está disponível no diretório `mk-docs` e pode ser acessada online no seguinte link: [Documentação Oficial](https://nocs-lab.github.io/Obatala/).
+A documentação completa do plugin está no diretório `mk-docs` e online em [Documentação Oficial](https://nocs-lab.github.io/Obatala/).
+
+Tópicos recentes:
+
+- [Gestão de processos](mk-docs/docs/processos/gestao-processos.md) — numeração única (`AAAA-NNNNN-DV`), listagem, busca, exclusão lógica e PDF
+- [Instalação](mk-docs/docs/instalacao.md) — Composer, npm, tabelas de numeração e backfill
+- [Perfis e permissões](mk-docs/docs/perfis-e-permissoes.md) — perfis do Tainacan, Tainacan Participant, grupos e capabilities
 
 ## Colaboração
 

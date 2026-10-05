@@ -1,114 +1,197 @@
-import { useState, useEffect } from 'react';
-import { Spinner, Button, Notice, Panel, PanelHeader, PanelRow, Icon, ButtonGroup, Tooltip, Modal} from '@wordpress/components';
+import { useState, useEffect, useMemo } from 'react';
+import { Spinner, Button, Notice, Icon, Modal, TabPanel, __experimentalConfirmDialog as ConfirmDialog } from '@wordpress/components';
+import { __, sprintf } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import ProcessCreator from './ProcessManager/ProcessCreator';
-import { edit, seen, plus } from '@wordpress/icons';
+import { plus } from '@wordpress/icons';
 import ProcessList from './ProcessManager/ProcessList';
+import { fetchUserProcesses, deleteProcess } from '../api/apiRequests';
+import { useSelect } from '@wordpress/data';
+import { store as coreStore } from '@wordpress/core-data';
+import BrandHeader from './BrandHeader';
+import BrandFooter from './BrandFooter';
+
+const getMetaValue = (meta, key) => {
+    if (!meta || meta[key] === undefined || meta[key] === null) {
+        return '';
+    }
+    const value = meta[key];
+    return Array.isArray(value) ? (value[0] ?? '') : value;
+};
+
+const sortProcessesNewestFirst = (processList) => {
+    return [...processList].sort((a, b) => {
+        const aAno = parseInt(getMetaValue(a.meta, 'ano_processo') || '0', 10);
+        const bAno = parseInt(getMetaValue(b.meta, 'ano_processo') || '0', 10);
+        if (aAno !== bAno) {
+            return bAno - aAno;
+        }
+
+        const aSeq = parseInt(getMetaValue(a.meta, 'sequencial_processo') || '0', 10);
+        const bSeq = parseInt(getMetaValue(b.meta, 'sequencial_processo') || '0', 10);
+        if (aSeq !== bSeq) {
+            return bSeq - aSeq;
+        }
+
+        const aDate = new Date(a.date || a.modified || 0).getTime();
+        const bDate = new Date(b.date || b.modified || 0).getTime();
+        if (aDate !== bDate) {
+            return bDate - aDate;
+        }
+
+        return (b.id || 0) - (a.id || 0);
+    });
+};
 
 const ProcessManager = ({ onSelectProcess }) => {
+    const permissions = window.obatalaApp?.permissions || {};
+    const canManageProcesses = Boolean(permissions.manage_processes);
+    const canDeleteProcesses = Boolean(permissions.delete_processes);
     const [processTypes, setProcessTypes] = useState([]);
     const [processes, setProcesses] = useState([]);
-    const [processTypeMappings, setProcessTypeMappings] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
-    const [processSteps, setProcessSteps] = useState([]);
+    const [isLoadingProcesses, setIsLoadingProcesses] = useState(true);
+    const [isLoadingUserProcesses, setIsLoadingUserProcesses] = useState(false);
+    const [processUser, setProcessUser] = useState([]);
     const [selectedProcessId, setSelectedProcessId] = useState(null);
     const [addingProcess, setAddingProcess] = useState(null);
     const [editingProcess, setEditingProcess] = useState(null);
+    const [accessLevel, setAccessLevel] = useState(null);
+    const [modelFilter, setModelFilter] = useState(null);
     const [notice, setNotice] = useState(null);
+    const [activeTab, setActiveTab] = useState('all');
+    const [processToDelete, setProcessToDelete] = useState(null);
+    const [isDeletingProcess, setIsDeletingProcess] = useState(false);
+    const [progressMap, setProgressMap] = useState({});
+    const [progressFilter, setProgressFilter] = useState('');
 
-  useEffect(() => {
-    fetchProcessModels();
-    fetchProcesses();
-  }, []);
+    const currentUser = useSelect(select => select(coreStore).getCurrentUser(), []);
 
-  const fetchProcessModels = () => {
-    apiFetch({ path: `/obatala/v1/process_type?per_page=100&_embed` })
-      .then((data) => {
-        const sortedProcessType = data.sort((a, b) =>
-          a.title.rendered.localeCompare(b.title.rendered)
-        );
-        setProcessTypes(sortedProcessType);
-      })
-      .catch((error) => {
-        console.error("Error fetching process types:", error);
-      });
-  };
+    useEffect(() => {
+        fetchProcessModels();
+        fetchProcesses();
+    }, []);
 
-  const fetchProcesses = async () => {
-    setIsLoading(true);
-    try {
-      const data = await apiFetch({
-        path: `/obatala/v1/process_obatala?per_page=100&_embed`,
-      });
-      if (data && Array.isArray(data)) {
-        setProcesses(data);
-        await fetchProcessModelsForProcesses(data);
-      } else {
-        console.error("No processes data returned.");
-        setProcesses([]); // Garanta que processes seja sempre um array
-      }
-    } catch (error) {
-      console.error("Error fetching processes:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    useEffect(() => {
+        fetchProcessesUser();
+    }, [currentUser])
 
-  const fetchProcessModelsForProcesses = async (processes) => {
-    if (!processes || processes.length === 0) {
-      console.error("No processes available for fetching process types.");
-      return;
-    }
+    useEffect(() => {
+        if (processes.length === 0) {
+            setProgressMap({});
+            return;
+        }
 
-    const promises = processes.map(async (process) => {
-      try {
-        const processTypeId = await apiFetch({
-          path: `/obatala/v1/process_obatala/${process.id}/process_type`,
+        let isCurrent = true;
+        const ids = processes.map((process) => process.id).join(',');
+
+        apiFetch({
+            path: `/obatala/v1/process_obatala/progress?ids=${ids}`,
+            method: 'GET',
+        })
+        .then((response) => {
+            if (isCurrent) {
+                setProgressMap(response || {});
+            }
+        })
+        .catch((error) => {
+            console.error('Erro ao buscar progresso dos processos:', error);
+            if (isCurrent) {
+                setProgressMap({});
+            }
         });
-        return { processId: process.id, processTypeId };
-      } catch (error) {
-        console.error(
-          `Error fetching process type for process ${process.id}:`,
-          error
-        );
-        return { processId: process.id, processTypeId: null };
-      }
-    });
 
-    const results = await Promise.all(promises);
-    setProcessTypeMappings(results);
-  };
+        return () => {
+            isCurrent = false;
+        };
+    }, [processes]);
+
+
+    const fetchProcessModels = () => {
+        apiFetch({ path: `/obatala/v1/process_type?per_page=100&_embed` })
+        .then((data) => {
+            const sortedProcessType = data.sort((a, b) =>
+            a.title.rendered.localeCompare(b.title.rendered)
+            );
+            setProcessTypes(sortedProcessType);
+        })
+        .catch((error) => {
+            console.error("Error fetching process types:", error);
+        });
+    };
+
+    const fetchProcessesUser = () => {
+        if (!currentUser?.id) {
+            setProcessUser([]);
+            setIsLoadingUserProcesses(false);
+            return Promise.resolve([]);
+        }
+
+        setIsLoadingUserProcesses(true);
+        return fetchUserProcesses()
+            .then(data => {
+                setProcessUser(data);
+                setIsLoadingUserProcesses(false);
+                return data;
+            })
+            .catch(error => {
+                console.error('Error fetching sectors:', error);
+                setIsLoadingUserProcesses(false);
+                return [];
+            });
+    };
+
+    const fetchProcesses = async () => {
+        setIsLoadingProcesses(true);
+        try {
+            const data = await apiFetch({
+                path: `/obatala/v1/process_obatala?per_page=100&_embed`,
+            });
+            if (data && Array.isArray(data)) {
+                setProcesses(sortProcessesNewestFirst(data));
+            } else {
+                console.error("No processes data returned.");
+                setProcesses([]);
+            }
+        } catch (error) {
+            console.error("Error fetching processes:", error);
+        } finally {
+            setIsLoadingProcesses(false);
+        }
+    };
 
     const handleProcessSaved = async (newProcess) => {
         if (editingProcess) {
-            const updatedProcesses = processes.map(process =>
-                process.id === editingProcess.id ? newProcess : process
+            setProcesses((prev) =>
+                sortProcessesNewestFirst(
+                    prev.map((process) =>
+                        process.id === editingProcess.id ? newProcess : process
+                    )
+                )
             );
-            setProcesses(updatedProcesses);
             setEditingProcess(null);
-        }
-        else {
-            // Adiciona o novo processo à lista
-            setProcesses(prevProcesses => [...prevProcesses, newProcess]);
+        } else {
+            setProcesses((prev) => sortProcessesNewestFirst([...prev, newProcess]));
             setAddingProcess(null);
+
+            if (newProcess?.id) {
+                onSelectProcess(newProcess.id, { created: true });
+                return;
+            }
         }
-        setIsLoading(true);
-        // Atualiza os mapeamentos de tipo de processo
-        const updatedProcesses = [...processes, newProcess];
-        setNotice({ status: 'success', message: 'Process saved successfully.' });
-        await fetchProcessModelsForProcesses(updatedProcesses);
-        setIsLoading(false);
+
+        setNotice({ status: 'success', message: __('Process saved successfully.', 'obatala') });
+
+        await fetchProcessesUser();
     };
-    
 
-  const handleSelectProcess = (processId) => {
-    setSelectedProcessId(processId);
-    onSelectProcess(processId);
-  };
+    const handleSelectProcess = (processId) => {
+        setSelectedProcessId(processId);
+        onSelectProcess(processId);
+    };
 
-  const handleEditProcess = (process) => {
-    setEditingProcess(process);
-  };
+    const handleEditProcess = (process) => {
+        setEditingProcess(process);
+    };
 
     const handleAddProcess = () => {
         setAddingProcess(true);
@@ -118,74 +201,192 @@ const ProcessManager = ({ onSelectProcess }) => {
         setAddingProcess(null);
     };
 
+    const handleConfirmDelete = (process) => {
+        setProcessToDelete(process);
+    };
 
-  if (isLoading) {
-    return <Spinner />;
-  }
+    const handleDeleteProcess = async () => {
+        if (!processToDelete) {
+            return;
+        }
 
-  return (
-    <main>
-      <span className="brand"><strong>Obatala</strong> Curatorial Process Management</span>
-      <div className="title-container">
-        <h2>Process Manager</h2>
-        <ButtonGroup>
-          <Button variant="primary" 
-            icon={<Icon icon={plus}/>}
-            onClick={handleAddProcess}
-            >Add new</Button>
-        </ButtonGroup>
-      </div>
+        setIsDeletingProcess(true);
+        try {
+            const response = await deleteProcess(processToDelete.id);
+            setProcesses((prev) => prev.filter((p) => p.id !== processToDelete.id));
+            const successMessage = response?.message
+                ? __(response.message, 'obatala')
+                : __('Process deleted successfully.', 'obatala');
+            setNotice({ status: 'success', message: successMessage });
+            await fetchProcessesUser();
+        } catch (error) {
+            console.error('Error deleting process:', error);
+            const rawMessage = error?.message || error?.data?.message;
+            setNotice({
+                status: 'error',
+                message: typeof rawMessage === 'string'
+                    ? __(rawMessage, 'obatala')
+                    : __('Error deleting process.', 'obatala'),
+            });
+        } finally {
+            setIsDeletingProcess(false);
+            setProcessToDelete(null);
+        }
+    };
 
-      {notice && (
-        <div className="notice-container">
-          <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-            {notice.message}
-          </Notice>
-        </div>
-      )}
+    const filteredUserProcesses =useMemo(() => {
+        return Array.isArray(processUser)
+        ?   processes.filter(process => processUser?.includes(process.id))
+        : []
+    }, [processUser,processes]);
 
-      <ProcessList
-          processes={processes}
-          onEdit={handleEditProcess}
-          onViewProcess={handleSelectProcess}
-          processTypeMappings={processTypeMappings}
-          processTypes={processTypes}
-      />
-        {editingProcess && (
-                <Modal
-                    title="Edit Process"
-                    onRequestClose={handleCancel}
-                    isDismissible={true}
-                >
-                    <ProcessCreator 
-                        processTypes={processTypes} 
-                        onProcessSaved={handleProcessSaved} 
-                        editingProcess={editingProcess}
-                        onCancel={handleCancel} 
-                    />
-                </Modal>
-        )}
-        {addingProcess && (
-            <Modal
-                title="Add new process"
-                onRequestClose={handleCancel}
-                isDismissible={true}
-            >
-                <ProcessCreator 
-                    processTypes={processTypes} 
-                    onProcessSaved={handleProcessSaved}
-                    onCancel={handleCancel}
-                />
-            </Modal>
-        )}
-        {selectedProcessId && (
-            <div>
-                {/* Render your ProcessViewer component or call onSelectProcess with selectedProcessId */}
-                {onSelectProcess(selectedProcessId)}
+    const filteredProcess = useMemo(() => {
+        const processList = activeTab === 'all' ? processes : filteredUserProcesses;
+
+        return sortProcessesNewestFirst(
+            processList.filter(process => {
+                const matchesAccessLevel = !accessLevel ||
+                    process?.meta?.access_level?.[0]?.includes(accessLevel);
+
+                const matchesProcessType = !modelFilter ||
+                    process?.meta?.process_type?.[0]?.includes(modelFilter.toString());
+
+                if (!matchesAccessLevel || !matchesProcessType) {
+                    return false;
+                }
+
+                const progress = progressMap[process.id];
+                if (progressFilter === 'not_started') {
+                    return progress === 0;
+                }
+                if (progressFilter === 'in_progress') {
+                    return progress > 0 && progress < 100;
+                }
+                if (progressFilter === 'finished') {
+                    return progress === 100;
+                }
+
+                return true;
+            })
+        );
+    }, [accessLevel, modelFilter, processes, filteredUserProcesses, activeTab, progressMap, progressFilter]);
+
+    if (isLoadingProcesses) {
+        return <Spinner />;
+    }
+
+    return (
+        <>
+            <BrandHeader />
+            <div className="title-container">
+                <h2>{__('Processes', 'obatala')}</h2>
+                <span className="badge default">{filteredProcess.length}</span>
+                {canManageProcesses && <div className="group-button">
+                    <Button
+                        variant="secondary"
+                        size="small"
+                        icon={<Icon icon={plus} />}
+                        onClick={handleAddProcess}
+                    >
+                        {__('Add new', 'obatala')}
+                    </Button>
+                </div>}
             </div>
-        )}
-    </main>
-  );
+            <main>
+                {notice && (
+                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                        {notice.message}
+                    </Notice>
+                )}
+                <ConfirmDialog
+                    isOpen={!!processToDelete}
+                    onConfirm={handleDeleteProcess}
+                    onCancel={() => setProcessToDelete(null)}
+                    confirmButtonText={__('Delete', 'obatala')}
+                    cancelButtonText={__('Cancel', 'obatala')}
+                    isBusy={isDeletingProcess}
+                >
+                    {sprintf(
+                        __('Are you sure you want to delete process %s?', 'obatala'),
+                        processToDelete?.title?.rendered || ''
+                    )}
+                </ConfirmDialog>
+                <div className="panel-container">
+                    <TabPanel
+                        activeClass="active-tab"
+                        onSelect={(tabName) => setActiveTab(tabName)}
+                        initialTabName="all"
+                        tabs={[
+                            {
+                                name: 'all',
+                                title: __('All processes', 'obatala'),
+                                className: activeTab === 'all' ? 'is-active' : ''
+                            },
+                            {
+                                name: 'my',
+                                title: __('My processes', 'obatala'),
+                                className: activeTab === 'my' ? 'is-active' : ''
+                            },
+                        ]}
+                    >
+                        {({ tab }) => (
+                            <ProcessList
+                                processes={filteredProcess}
+                                progressMap={progressMap}
+                                progressFilter={progressFilter}
+                                setProgressFilter={setProgressFilter}
+                                loading={isLoadingProcesses || (activeTab === 'my' && isLoadingUserProcesses)}
+                                onEdit={handleEditProcess}
+                                onViewProcess={handleSelectProcess}
+                                onDelete={handleConfirmDelete}
+                                canManageProcesses={canManageProcesses}
+                                canDeleteProcesses={canDeleteProcesses}
+                                processTypes={processTypes}
+                                accessLevel={accessLevel}
+                                setAccessLevel={setAccessLevel}
+                                modelFilter={modelFilter}
+                                setModelFilter={setModelFilter}
+                            />
+                        )}
+                    </TabPanel>
+                </div>
+                {canManageProcesses && editingProcess && (
+                    <Modal
+                        title={__('Edit Process', 'obatala')}
+                        onRequestClose={handleCancel}
+                        isDismissible={true}
+                    >
+                        <ProcessCreator
+                            processTypes={processTypes}
+                            onProcessSaved={handleProcessSaved}
+                            editingProcess={editingProcess}
+                            onCancel={handleCancel}
+                        />
+                    </Modal>
+                )}
+                {canManageProcesses && addingProcess && (
+                    <Modal
+                        title={__('Add new process', 'obatala')}
+                        onRequestClose={handleCancel}
+                        isDismissible={true}
+                    >
+                        <ProcessCreator
+                            processTypes={processTypes}
+                            onProcessSaved={handleProcessSaved}
+                            onCancel={handleCancel}
+                        />
+                    </Modal>
+                )}
+                {selectedProcessId && (
+                    <div>
+                        {/* Render your ProcessViewer component or call onSelectProcess with selectedProcessId */}
+                        {onSelectProcess(selectedProcessId)}
+                    </div>
+                )}
+            </main>
+            <BrandFooter />
+        </>
+    );
 };
 
 export default ProcessManager;

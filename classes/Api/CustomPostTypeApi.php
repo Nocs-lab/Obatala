@@ -2,7 +2,15 @@
 
 namespace Obatala\Api;
 
+defined('ABSPATH') || exit;
+
+use Obatala\Entities\Process;
+use Obatala\Security\Roles;
+use Obatala\Services\ProcessNumberService;
+use Obatala\Services\TainacanMappingService;
+use WP_Error;
 use WP_REST_Posts_Controller;
+use WP_REST_Response;
 use WP_REST_Server;
 
 class CustomPostTypeApi extends ObatalaAPI {
@@ -35,37 +43,60 @@ class CustomPostTypeApi extends ObatalaAPI {
             [
                 'methods' => WP_REST_Server::READABLE, // HTTP GET
                 'callback' => function ($request) use ($controller, $post_type) {
-                    // Retrieve the collection of items for this post type
-                    $response = $controller->get_items($request);
-                    if (!is_wp_error($response)) {
-                        $data = $response->get_data();
-                        // Add custom meta fields (like 'step_order' and 'flowData') to each item
-                        foreach ($data as &$item) {
-                            $meta = get_post_meta($item['id']);
-
-                            // Deserialize 'step_order' if it exists
-                            if (isset($meta['step_order'])) {
-                                $meta['step_order'] = maybe_unserialize($meta['step_order'][0]);
-                            }
-
-                            // Deserialize 'flowData' if it exists
-                            if (isset($meta['flowData'])) {
-                                $meta['flowData'] = maybe_unserialize($meta['flowData'][0]);
-                            }
-
-                            $item['meta'] = $meta; // Attach meta data to the item
-                        }
-                        $response->set_data($data); // Update response with modified data
+                    if ($post_type === 'process_obatala' && !$this->scope_process_collection_request($request)) {
+                        $empty_response = new WP_REST_Response([], 200);
+                        $empty_response->header('X-WP-Total', 0);
+                        $empty_response->header('X-WP-TotalPages', 0);
+                        return $empty_response;
                     }
-                    return $response; // Return the final response
+                    $response = $controller->get_items($request);
+                    if (is_wp_error($response)) {
+                        return $response;
+                    }
+
+                    $data = $response->get_data();
+                    if (!is_array($data)) {
+                        return $response;
+                    }
+
+                    if ($post_type === 'process_obatala') {
+                        $data = $this->filter_processes_by_number_query($data, $request);
+                        $data = array_values(array_filter($data, function ($item) {
+                            return !Process::is_deleted($item['id'])
+                                && Roles::can_access_process((int) $item['id']);
+                        }));
+                    }
+
+                    foreach ($data as &$item) {
+                        $item = $this->attach_process_meta($item, $post_type);
+                    }
+                    unset($item);
+
+                    $response->set_data($data);
+                    return $response;
                 },
-                'permission_callback' => [$controller, 'get_items_permissions_check'], // Check for permissions
-                'args' => $controller->get_collection_params(), // Arguments for the collection
+                'permission_callback' => [ObatalaAPI::class, 'permission_check_access'],
+                'args' => array_merge($controller->get_collection_params(), [
+                    'numero_processo' => [
+                        'type' => 'string',
+                        'description' => __('Filter processes by number (full, partial, or unmasked).', 'obatala'),
+                        'sanitize_callback' => 'sanitize_text_field',
+                    ],
+                ]),
             ],
             [
                 'methods' => WP_REST_Server::CREATABLE, // HTTP POST
-                'callback' => [$controller, 'create_item'], // Callback for creating an item
-                'permission_callback' => [$controller, 'create_item_permissions_check'], // Check for permissions
+                'callback' => function ($request) use ($controller, $post_type) {
+                    if ($post_type === 'process_obatala') {
+                        return $this->create_process_item($request, $controller);
+                    }
+                    return $controller->create_item($request);
+                },
+                'permission_callback' => function ($request) use ($post_type) {
+                    return $post_type === 'process_obatala'
+                        ? ObatalaAPI::permission_check_process_manage($request)
+                        : ObatalaAPI::permission_check_manage_models($request);
+                },
                 'args' => $controller->get_endpoint_args_for_item_schema(WP_REST_Server::CREATABLE), // Arguments for item creation
             ],
         ]);
@@ -79,24 +110,25 @@ class CustomPostTypeApi extends ObatalaAPI {
                     $response = $controller->get_item($request);
                     if (!is_wp_error($response)) {
                         $data = $response->get_data();
-                        $meta = get_post_meta($data['id']);
 
-                        // Deserialize 'step_order' if it exists
-                        if (isset($meta['step_order'])) {
-                            $meta['step_order'] = maybe_unserialize($meta['step_order'][0]);
+                        if ($post_type === 'process_obatala' && Process::is_deleted($data['id'])) {
+                            return new WP_Error(
+                                'rest_post_invalid_id',
+                                __('Process not found.', 'obatala'),
+                                ['status' => 404]
+                            );
                         }
 
-                        // Deserialize 'flowData' if it exists
-                        if (isset($meta['flowData'])) {
-                            $meta['flowData'] = maybe_unserialize($meta['flowData'][0]);
-                        }
-
-                        $data['meta'] = $meta; // Attach meta data to the item
+                        $data = $this->attach_process_meta($data, $post_type);
                         $response->set_data($data); // Update response with modified data
                     }
                     return $response; // Return the final response
                 },
-                'permission_callback' => [$controller, 'get_item_permissions_check'], // Check for permissions
+                'permission_callback' => function ($request) use ($post_type) {
+                    return $post_type === 'process_obatala'
+                        ? ObatalaAPI::permission_check_process_access($request)
+                        : ObatalaAPI::permission_check_access($request);
+                },
                 'args' => [
                     'context' => [
                         'default' => 'view', // Default view context
@@ -106,16 +138,26 @@ class CustomPostTypeApi extends ObatalaAPI {
             [
                 'methods' => WP_REST_Server::EDITABLE, // HTTP PUT for updating an item
                 'callback' => [$controller, 'update_item'], // Callback for updating an item
-                'permission_callback' => [$controller, 'update_item_permissions_check'], // Check for permissions
+                'permission_callback' => function ($request) use ($post_type) {
+                    return $post_type === 'process_obatala'
+                        ? ObatalaAPI::permission_check_process_manage($request)
+                        : ObatalaAPI::permission_check_manage_models($request);
+                },
                 'args' => $controller->get_endpoint_args_for_item_schema(WP_REST_Server::EDITABLE), // Arguments for item update
             ],
             [
                 'methods' => WP_REST_Server::DELETABLE, // HTTP DELETE for deleting an item
-                'callback' => [$controller, 'delete_item'], // Callback for deleting an item
-                'permission_callback' => [$controller, 'delete_item_permissions_check'], // Check for permissions
+                'callback' => $post_type === 'process_obatala'
+                    ? [$this, 'soft_delete_process']
+                    : [$controller, 'delete_item'],
+                'permission_callback' => function ($request) use ($post_type) {
+                    return $post_type === 'process_obatala'
+                        ? ObatalaAPI::permission_check_delete_process($request)
+                        : ObatalaAPI::permission_check_delete_model($request);
+                },
                 'args' => [
                     'force' => [
-                        'default' => false, // Whether to force delete
+                        'default' => false,
                     ],
                 ],
             ],
@@ -127,5 +169,292 @@ class CustomPostTypeApi extends ObatalaAPI {
             'callback' => [$controller, 'get_public_item_schema'], // Callback for fetching the schema
             'permission_callback' => '__return_true', // No permission check needed for schema
         ]);
+    }
+
+    /**
+     * Exclusão lógica de um processo (marca meta is_deleted em vez de remover o post).
+     */
+    public function soft_delete_process($request) {
+        $process_id = (int) $request['id'];
+        $post = get_post($process_id);
+
+        if (!$post || $post->post_type !== Process::get_post_type()) {
+            return new WP_Error(
+                'rest_post_invalid_id',
+                __('Process not found.', 'obatala'),
+                ['status' => 404]
+            );
+        }
+
+        if (Process::is_deleted($process_id)) {
+            return new WP_Error(
+                'rest_post_already_deleted',
+                __('Process already deleted.', 'obatala'),
+                ['status' => 410]
+            );
+        }
+
+        $deletion = Process::soft_delete($process_id);
+        if (is_wp_error($deletion)) {
+            return $deletion;
+        }
+
+        return new WP_REST_Response([
+            'deleted' => true,
+            'id' => $process_id,
+            'message' => __('Process deleted successfully.', 'obatala'),
+            'deleted_at' => $deletion['deleted_at'],
+            'deleted_by' => $deletion['deleted_by'],
+            'deleted_by_name' => $deletion['deleted_by_name'],
+        ], 200);
+    }
+
+    /**
+     * Creates a process and assigns its unique number.
+     */
+    public function create_process_item($request, WP_REST_Posts_Controller $controller) {
+        $process_type_id = (int) $request->get_param('process_type');
+        $validation_error = $this->validate_process_type_for_creation($process_type_id);
+        if (is_wp_error($validation_error)) {
+            return $validation_error;
+        }
+
+        $response = $controller->create_item($request);
+        if (is_wp_error($response)) {
+            return $response;
+        }
+
+        $data = $response->get_data();
+        $post_id = isset($data['id']) ? (int) $data['id'] : 0;
+        if ($post_id <= 0) {
+            return $response;
+        }
+
+        $number_service = new ProcessNumberService();
+        $assigned = $number_service->assignToProcess($post_id);
+        if (is_wp_error($assigned)) {
+            wp_delete_post($post_id, true);
+            return $assigned;
+        }
+
+        $data = $this->attach_process_meta($data, Process::get_post_type());
+        $response->set_data($data);
+        return $response;
+    }
+
+    /**
+     * Prevents process creation from inactive or structurally incomplete models.
+     */
+    private function validate_process_type_for_creation($process_type_id) {
+        $process_type = get_post($process_type_id);
+        if (!$process_type || $process_type->post_type !== 'process_type') {
+            return new WP_Error(
+                'obatala_invalid_process_type',
+                __('Invalid process model selected.', 'obatala'),
+                ['status' => 400]
+            );
+        }
+
+        if (get_post_meta($process_type_id, 'status', true) !== 'Active') {
+            return new WP_Error(
+                'obatala_inactive_process_type',
+                __('The process cannot be created because the selected process model is inactive', 'obatala'),
+                ['status' => 400]
+            );
+        }
+
+        $flow_data = get_post_meta($process_type_id, 'flowData', true);
+        if (is_string($flow_data)) {
+            $flow_data = json_decode($flow_data, true);
+        }
+
+        $nodes = is_array($flow_data) && isset($flow_data['nodes']) && is_array($flow_data['nodes'])
+            ? $flow_data['nodes']
+            : [];
+        $edges = is_array($flow_data) && isset($flow_data['edges']) && is_array($flow_data['edges'])
+            ? $flow_data['edges']
+            : [];
+
+        $nodes_by_id = [];
+        foreach ($nodes as $node) {
+            $node_id = isset($node['id']) ? (string) $node['id'] : '';
+            if ($node_id !== '') {
+                $nodes_by_id[$node_id] = $node;
+            }
+        }
+
+        $regular_nodes = array_filter($nodes_by_id, function ($node, $node_id) {
+            return $node_id !== 'Start'
+                && $node_id !== 'End'
+                && strpos($node_id, 'Condicional') !== 0;
+        }, ARRAY_FILTER_USE_BOTH);
+
+        $sectors = json_decode((string) get_option('obatala_setores', '{}'), true);
+        $sectors = is_array($sectors) ? $sectors : [];
+
+        if (!isset($nodes_by_id['Start'], $nodes_by_id['End']) || empty($regular_nodes)) {
+            return $this->incomplete_process_type_error();
+        }
+
+        foreach ($regular_nodes as $node) {
+            $fields = $node['data']['fields'] ?? [];
+            $sector_id = (string) ($node['tempSector'] ?? $node['sector_obatala'] ?? '');
+            if (empty($fields) || $sector_id === '' || !isset($sectors[$sector_id])) {
+                return $this->incomplete_process_type_error();
+            }
+        }
+
+        $incoming = array_fill_keys(array_keys($nodes_by_id), 0);
+        $outgoing = array_fill_keys(array_keys($nodes_by_id), 0);
+        $graph = array_fill_keys(array_keys($nodes_by_id), []);
+
+        foreach ($edges as $edge) {
+            $source = isset($edge['source']) ? (string) $edge['source'] : '';
+            $target = isset($edge['target']) ? (string) $edge['target'] : '';
+            if (!isset($nodes_by_id[$source], $nodes_by_id[$target])) {
+                continue;
+            }
+            $outgoing[$source]++;
+            $incoming[$target]++;
+            $graph[$source][] = $target;
+        }
+
+        foreach ($nodes_by_id as $node_id => $node) {
+            if (
+                ($node_id !== 'Start' && $incoming[$node_id] === 0)
+                || ($node_id !== 'End' && $outgoing[$node_id] === 0)
+            ) {
+                return $this->incomplete_process_type_error();
+            }
+        }
+
+        $visited = [];
+        $queue = ['Start'];
+        while (!empty($queue)) {
+            $node_id = array_shift($queue);
+            if (isset($visited[$node_id])) {
+                continue;
+            }
+            $visited[$node_id] = true;
+            foreach ($graph[$node_id] as $target) {
+                if (!isset($visited[$target])) {
+                    $queue[] = $target;
+                }
+            }
+        }
+
+        if (count($visited) !== count($nodes_by_id) || !isset($visited['End'])) {
+            return $this->incomplete_process_type_error();
+        }
+
+        return null;
+    }
+
+    private function incomplete_process_type_error() {
+        return new WP_Error(
+            'obatala_incomplete_process_type',
+            __('The selected process model is incomplete. Connect all steps and define at least one field and a valid group for each step.', 'obatala'),
+            ['status' => 400]
+        );
+    }
+
+    /**
+     * @param array<int, array<string, mixed>> $items
+     * @return array<int, array<string, mixed>>
+     */
+    protected function filter_processes_by_number_query(array $items, $request) {
+        $query = $request->get_param('numero_processo');
+        $query = is_string($query) ? trim($query) : '';
+        if ($query === '') {
+            return $items;
+        }
+
+        return array_values(array_filter($items, function ($item) use ($query) {
+            $post_id = (int) ($item['id'] ?? 0);
+            $number_data = ProcessNumberService::getProcessNumberData($post_id) ?? [];
+
+            if (!empty($number_data) && ProcessNumberService::matchesSearchQuery($number_data, $query)) {
+                return true;
+            }
+
+            $title = isset($item['title']['rendered']) ? (string) $item['title']['rendered'] : '';
+            return stripos($title, $query) !== false;
+        }));
+    }
+
+    /**
+     * Applies group visibility before the core controller paginates the query.
+     */
+    protected function scope_process_collection_request($request) {
+        if (Roles::is_process_administrator()) {
+            return true;
+        }
+
+        $process_ids = get_posts([
+            'post_type' => Process::get_post_type(),
+            'post_status' => ['publish', 'draft', 'pending', 'private', 'future'],
+            'numberposts' => -1,
+            'fields' => 'ids',
+            'no_found_rows' => true,
+        ]);
+        $process_ids = array_values(array_filter(array_map('intval', $process_ids), function ($process_id) {
+            return !Process::is_deleted($process_id) && Roles::can_access_process($process_id);
+        }));
+
+        $requested_ids = array_map('intval', (array) $request->get_param('include'));
+        if (!empty($requested_ids)) {
+            $process_ids = array_values(array_intersect($process_ids, $requested_ids));
+        }
+        if (empty($process_ids)) {
+            return false;
+        }
+
+        $request->set_param('include', $process_ids);
+        return true;
+    }
+
+    /**
+     * @param array<string, mixed> $item
+     * @return array<string, mixed>
+     */
+    protected function attach_process_meta(array $item, $post_type) {
+        $meta = get_post_meta($item['id']);
+        $mapping_service = new TainacanMappingService();
+
+        if (isset($meta['step_order'])) {
+            $meta['step_order'] = maybe_unserialize($meta['step_order'][0]);
+        }
+
+        if (isset($meta['flowData'])) {
+            $flow_data = maybe_unserialize($meta['flowData'][0]);
+
+            if (is_array($flow_data) && isset($flow_data['nodes']) && is_array($flow_data['nodes'])) {
+                if ($post_type === 'process_type') {
+                    $flow_data = $mapping_service->apply_profile_options_to_flow_data((int) $item['id'], $flow_data);
+                } elseif ($post_type === 'process_obatala') {
+                    $process_type_id = isset($meta['process_type'][0]) ? (int) $meta['process_type'][0] : 0;
+                    if ($process_type_id > 0) {
+                        $mapping_config = $mapping_service->get_mapping_config_for_process((int) $item['id'], $process_type_id);
+                        $flow_data = $mapping_service->apply_profile_options_to_flow_data_from_config($flow_data, $mapping_config);
+                    }
+                }
+            }
+
+            $meta['flowData'] = $flow_data;
+        }
+
+        $item['meta'] = $meta;
+        if ($post_type === 'process_obatala') {
+            $process_id = (int) $item['id'];
+            $item['tainacan_processes_permissions'] = [
+                'can_access' => Roles::can_access_process($process_id),
+                'can_act' => Roles::can_act_on_stage($process_id),
+                'can_manage' => Roles::can_manage_processes(),
+                'can_comment' => Roles::can_manage_comments(),
+                'can_report' => Roles::can_generate_reports(),
+                'can_delete' => Roles::can_delete_processes(),
+            ];
+        }
+        return $item;
     }
 }

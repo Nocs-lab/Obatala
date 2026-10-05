@@ -2,6 +2,8 @@
 
 namespace Obatala\Entities;
 
+use Obatala\Security\Roles;
+
 defined('ABSPATH') || exit;
 
 use WP_REST_Response;
@@ -9,8 +11,6 @@ use WP_REST_Response;
 class Sector {
 
     public static function add_sector($request) {
-
-        error_log('create_sector function called');
 
         $sector_name = sanitize_text_field($request['sector_name']);
         $description = sanitize_text_field($request['sector_description']);
@@ -42,9 +42,16 @@ class Sector {
         }
 
         // Armazenar o setor no wp_options como JSON
-        self::cadastrar_setor($sector_name, $description, $status);
+        $sector_id = self::cadastrar_setor($sector_name, $description, $status);
 
-        return new WP_REST_Response('Setor cadastrado com sucesso', 201);
+        $response = rest_ensure_response([
+            'success' => true,
+            'id' => $sector_id,
+            'message' => 'Setor cadastrado com sucesso',
+        ]);
+        $response->set_status(201);
+
+        return $response;
     }
 
     // Função para cadastrar o setor no wp_options
@@ -70,6 +77,8 @@ class Sector {
 
         // Codificar o array em JSON antes de salvar
         update_option('obatala_setores', json_encode($setores));
+
+        return $sector_id;
     }
 
     // Fubnçao que consulta setor por id
@@ -94,12 +103,15 @@ class Sector {
         }
 
         // Retorna os dados do setor encontrado
-        return new WP_REST_Response($setores[$sector_id], 200); // Retorna o setor como resposta
+        return rest_ensure_response([
+            'id' => $sector_id,
+            'nome' => $setores[$sector_id]['nome'] ?? '',
+            'descricao' => $setores[$sector_id]['descricao'] ?? '',
+            'status' => $setores[$sector_id]['status'] ?? '',
+        ]);
     }
 
     public static function get_all_sectors($request) {
-
-        error_log('retorne sector function called');
 
         // Recuperar setores já existentes no formato JSON
         $setores_json = get_option('obatala_setores', '{}'); // Recupera como JSON ou inicializa como um objeto vazio
@@ -110,7 +122,6 @@ class Sector {
 
     public static function update_sector($request) {
 
-        error_log('update_sector function called');
         $sector_id = sanitize_text_field($request['sector_id']);
         $sector_name = sanitize_text_field($request['sector_name']);
         $description = sanitize_text_field($request['sector_description']);
@@ -156,8 +167,6 @@ class Sector {
 
     public static function delete_sector($request) {
 
-        error_log('delete_sector function called');
-
         $sector_id = sanitize_text_field($request['sector_id']);
 
         if (empty($sector_id)) {
@@ -183,12 +192,24 @@ class Sector {
             $updated = update_option('obatala_setores', json_encode($setores));
 
             if ($updated) {
-                return new WP_REST_Response('Setor deletado com sucesso', 200); // Sucesso
+                return rest_ensure_response([
+                    'success' => true,
+                    'id' => $sector_id,
+                    'message' => 'Setor deletado com sucesso',
+                ]);
             } else {
-                return new WP_REST_Response('Erro ao deletar o setor', 500); // Falha ao salvar
+                return new \WP_Error(
+                    'obatala_sector_delete_failed',
+                    'Erro ao deletar o setor',
+                    ['status' => 500]
+                );
             }
         } else {
-            return new WP_REST_Response('Erro ao deletar o setor, o setor esta vinculado a um usuario', 500); // ja possue um usuario associado a um setor
+            return new \WP_Error(
+                'obatala_sector_has_users',
+                'Erro ao deletar o setor, o setor esta vinculado a um usuario',
+                ['status' => 409]
+            );
         }
     }
 
@@ -256,7 +277,11 @@ class Sector {
         // Associar o setor ao usuário nos meta dados
         update_user_meta($user_id, 'associated_sector', $sectors);
 
-        return new WP_REST_Response('Usuário associado ao setor com sucesso.', 200);
+        return rest_ensure_response([
+            'success' => true,
+            'sector_id' => $sector_id,
+            'user_id' => $user_id,
+        ]);
     }
 
     // Funçao que retorna a lista de usuarios associados a um setor usando return_sector_users
@@ -270,24 +295,18 @@ class Sector {
 
         $users = self::return_sector_users($sector_id);
 
-        // Se não encontrar usuários, retorna um erro (talvez seja redundante por conta da funçao return_sector_users())
-        if (empty($users)) {
-            return new WP_REST_Response('Nenhum usuário encontrado para o setor especificado.', 404);
-        }
-
-        return new WP_REST_Response($users, 200);
+        return rest_ensure_response(is_array($users) ? $users : []);
     }
 
     // Função que retorna lista de usuarios associados a um setor
     public static function return_sector_users($sector_id) {
-        // Consulta os IDs dos usuários que possuem 'associated_sector' nos metadados
+        // Consulta os IDs dos usuários e filtra em memória os que possuem o setor associado.
         $user_query = get_users(array(
-            'meta_key'   => 'associated_sector', // Chave do meta valor associado ao setor
-            'fields'     => 'ID'                 // Retorna apenas os IDs dos usuários
+            'fields' => 'ID'
         ));
 
         if (empty($user_query)) {
-            return null; // Se não encontrar nenhum usuário, retorna null
+            return [];
         }
 
         // Buscar os dados dos usuários com base nos IDs e verificar se o setor está associado
@@ -321,17 +340,15 @@ class Sector {
         }
 
         $sectors_with_users = [];
+        $user_query = get_users(array(
+            'fields' => 'ID'
+        ));
 
         if (is_array($setores) && !empty($setores)) {
             foreach ($setores as $id => $sector_data) {
                 $sector_id = $id;
                 $sector_name = $sector_data['nome'];
-
-                // Consulta todos os usuários que têm o meta_key 'associated_sector'
-                $user_query = get_users(array(
-                    'meta_key'   => 'associated_sector', // Chave do meta valor associado ao setor
-                    'fields'     => 'ID'                 // Retorna apenas os IDs
-                ));
+                $sector_status = $sector_data['status'];
 
                 // Obtém os dados dos usuários associados ao setor atual
                 $users = [];
@@ -359,6 +376,7 @@ class Sector {
                 $sectors_with_users[] = [
                     'sector_id' => $sector_id,
                     'sector_name' => $sector_name,
+                    'sector_status' => $sector_status,
                     'users' => $users
                 ];
             }
@@ -396,10 +414,18 @@ class Sector {
         // Atualiza os metadados do usuário com a nova lista de setores
         update_user_meta($user_id, 'associated_sector', $sectors);
 
-        return new WP_REST_Response('Usuário removido do setor com sucesso', 200);
+        return rest_ensure_response([
+            'success' => true,
+            'sector_id' => $sector_id,
+            'user_id' => $user_id,
+        ]);
     }
 
     public static function check_permission($user_id, $process_id) {
+        // Authorization is always evaluated for the authenticated user; request
+        // parameters cannot impersonate another account.
+        $user_id = get_current_user_id();
+
         if ($user_id === 0) {
             return [
                 'status' => false,
@@ -407,35 +433,13 @@ class Sector {
             ];
         }
 
-        // Pega os setores associados ao usuário
-        $user_sectors = get_user_meta($user_id, 'associated_sector', false);
+        $user_sectors = Roles::get_user_sector_ids($user_id);
+        $allowed = Roles::can_access_process((int) $process_id, $user_id);
 
-        // Pega o flowData do processo
-        $flowData = get_post_meta($process_id, 'flowData', true);
-
-        // Verifica se o usuário possui setores associados e se flowData está no formato esperado
-        if (!empty($user_sectors) && is_array($user_sectors) && !empty($flowData['nodes'])) {
-            // Verifica cada nó do processo
-            foreach ($flowData['nodes'] as $node) {
-                // Verifica se `sector_obatala` do nó está em `user_sectors`
-                if (in_array($node['sector_obatala'], $user_sectors[0])) {
-                    return [
-                        'status' => true,
-                        'message' => 'Permissão concedida.',
-                        'data_sector' => $user_sectors[0]
-                    ];
-                }
-            }
-            return [
-                'status' => false,
-                'message' => 'Usuário não possui permissão.',
-                'data_sector' => $user_sectors[0]
-            ];
-        } else {
-            return [
-                'status' => false,
-                'message' => 'Usuário não possui setores vinculados ou flowData está vazio.'
-            ];
-        }
+        return [
+            'status' => $allowed,
+            'message' => $allowed ? 'Permissão concedida.' : 'Usuário não possui permissão.',
+            'data_sector' => $user_sectors,
+        ];
     }
 }

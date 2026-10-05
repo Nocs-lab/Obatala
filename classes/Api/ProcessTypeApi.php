@@ -4,32 +4,45 @@ namespace Obatala\Api;
 
 defined('ABSPATH') || exit;
 
+use WP_Error;
 use WP_REST_Response;
 use Obatala\Entities\Sector;
+use Obatala\Services\TainacanMappingService;
 
 class ProcessTypeApi extends ObatalaAPI {
 
-
+    /** @var bool */
+    private static $flow_title_validation_filter_registered = false;
 
     public function register_routes() {
+        if (!self::$flow_title_validation_filter_registered) {
+            add_filter('rest_pre_insert_process_type', [self::class, 'filter_rest_validate_flow_field_titles'], 10, 2);
+            self::$flow_title_validation_filter_registered = true;
+        }
         $this->add_route('process_type/(?P<id>\d+)/meta', [
             'methods' => 'GET',
             'callback' => [$this, 'get_meta'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_access'],
         ]);
 
         $this->add_route('process_type/(?P<id>\d+)/meta', [
             'methods' => 'PUT',
             'callback' => [$this, 'update_meta'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_manage_models'],
             'args' => $this->get_meta_args(),
+        ]);
+
+        $this->add_route('process_type/(?P<id>\d+)/fields', [
+            'methods' => 'GET',
+            'callback' => [$this, 'get_fields'],
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_access'],
         ]);
 
         // Rota para associar e gerenciar histórico de setores das etapas
         $this->add_route('process_type/(?P<id>\d+)/assosiate_sector', [
             'methods' => 'POST',
             'callback' => [$this, 'assosiate_sector'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_manage_models'],
             'args' => [
                 'sector_id' => [
                     'required' => true,
@@ -49,19 +62,19 @@ class ProcessTypeApi extends ObatalaAPI {
         $this->add_route('process_type/(?P<id>\d+)/get_node', [
             'methods' => 'GET',
             'callback' => [$this, 'get_node'],
-            'permission_callback' => '__return_true', // Ajuste conforme necessário
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_process_access'],
         ]);
 
         $this->add_route('process_type/upload', [
             'methods' => 'POST',
             'callback' => [$this, 'upload'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_stage_action'],
         ]);
 
         $this->add_route('process_type/download', [
             'methods' => 'GET',
             'callback' => [$this, 'download'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [ObatalaAPI::class, 'permission_check_process_access'],
         ]);
     }
 
@@ -126,6 +139,11 @@ class ProcessTypeApi extends ObatalaAPI {
             $flowData = json_decode($flowData, true);
         }
 
+        $mapping_service = new TainacanMappingService();
+        $flowData = is_array($flowData)
+            ? $mapping_service->apply_profile_options_to_flow_data($post_id, $flowData)
+            : [];
+
         $meta = [
             'accept_attachments' => (bool) get_post_meta($post_id, 'accept_attachments', true),
             'accept_tainacan_items' => (bool) get_post_meta($post_id, 'accept_tainacan_items', true),
@@ -134,8 +152,186 @@ class ProcessTypeApi extends ObatalaAPI {
             'status' => get_post_meta($post_id, 'status', true) ?: '',
             'step_order' => get_post_meta($post_id, 'step_order', true) ?: [],
             'flowData' => $flowData ?: [],
+            'tainacan_export_mapping' => $mapping_service->build_process_mapping_snapshot($post_id),
         ];
         return rest_ensure_response($meta);
+    }
+
+    public function get_fields($request) {
+        $post_id = (int) $request['id'];
+
+        $flowData = get_post_meta($post_id, 'flowData', true);
+
+        // Decodificar JSON se for uma string
+        if (is_string($flowData)) {
+            $flowData = json_decode($flowData, true);
+        }
+
+        // Verifica se existe o índice 'nodes' e se é um array
+        if (is_array($flowData) && isset($flowData['nodes']) && is_array($flowData['nodes'])) {
+            // Filtra os nodes que não possuem 'Start', 'End' ou 'Condicional' no id
+            $filteredNodes = array_filter($flowData['nodes'], function ($node) {
+                if (!isset($node['id']) || !is_string($node['id'])) {
+                    return true;
+                }
+
+                return !(
+                    str_contains($node['id'], 'Start') ||
+                    str_contains($node['id'], 'End') ||
+                    str_contains($node['id'], 'Condicional')
+                );
+            });
+
+            // Array final para armazenar todos os fields
+            $allFields = [];
+
+            // Percorre os nodes filtrados e extrai os fields
+            foreach ($filteredNodes as $node) {
+                if (
+                    isset($node['data']) &&
+                    is_array($node['data']) &&
+                    isset($node['data']['fields']) &&
+                    is_array($node['data']['fields'])
+                ) {
+                     foreach ($node['data']['fields'] as $field) {
+                        // Adiciona o campo 'stage' com o id do node
+                        $field['stage'] = $node['id'];
+                        $allFields[] = $field;
+                    }
+                }
+            }
+
+            return rest_ensure_response($allFields);
+        }
+
+        // Retorna vazio se não houver nodes válidos
+        return rest_ensure_response([]);
+}
+
+    /**
+     * REST: block saving process_type when meta.flowData has fields without a valid title.
+     *
+     * @param \WP_Post|\WP_Error $prepared_post
+     * @param \WP_REST_Request   $request
+     * @return \WP_Post|\WP_Error
+     */
+    public static function filter_rest_validate_flow_field_titles($prepared_post, $request) {
+        if (is_wp_error($prepared_post)) {
+            return $prepared_post;
+        }
+
+        $is_creation = strtoupper((string) $request->get_method()) === 'POST'
+            && empty($prepared_post->ID);
+        if ($is_creation && !self::has_registered_sectors()) {
+            return new WP_Error(
+                'obatala_process_model_requires_sector',
+                __('Não é possível criar um modelo de processo sem existir grupos cadastrados.', 'obatala'),
+                ['status' => 400]
+            );
+        }
+
+        $meta = $request->get_param('meta');
+        if (empty($meta['flowData']) || !is_array($meta['flowData'])) {
+            return $prepared_post;
+        }
+        $err = self::validate_flow_field_titles($meta['flowData']);
+        if (is_string($err) && $err !== '') {
+            return new WP_Error(
+                'obatala_field_without_title',
+                $err,
+                ['status' => 400]
+            );
+        }
+        return $prepared_post;
+    }
+
+    private static function has_registered_sectors() {
+        $sectors = json_decode((string) get_option('obatala_setores', '{}'), true);
+
+        return is_array($sectors) && !empty($sectors);
+    }
+
+    /**
+     * Ensures every field in custom steps has a non-empty title (not the default placeholder).
+     *
+     * @param array $flow_data flowData structure with nodes/edges.
+     * @return string|null Error message or null if valid.
+     */
+    private static function validate_flow_field_titles(array $flow_data) {
+        $default_untitled = 'Campo sem título';
+        if (empty($flow_data['nodes']) || !is_array($flow_data['nodes'])) {
+            return null;
+        }
+        $problems = [];
+        $duplicates = [];
+        foreach ($flow_data['nodes'] as $node) {
+            $node_id = isset($node['id']) ? (string) $node['id'] : '';
+            if ($node_id === 'Start' || $node_id === 'End' || strpos($node_id, 'Condicional') === 0) {
+                continue;
+            }
+            $fields = $node['data']['fields'] ?? null;
+            if (!is_array($fields)) {
+                continue;
+            }
+            $stage_name = isset($node['data']['stageName']) ? (string) $node['data']['stageName'] : $node_id;
+            $seen_labels = [];
+            foreach ($fields as $field_index => $field) {
+                if (!is_array($field)) {
+                    continue;
+                }
+                $label = '';
+                if (isset($field['config']['label']) && is_string($field['config']['label']) && trim($field['config']['label']) !== '') {
+                    $label = trim($field['config']['label']);
+                } else {
+                    $label = isset($field['title']) ? trim((string) $field['title']) : '';
+                }
+                if ($label === '' || $label === $default_untitled) {
+                    $problems[] = [
+                        'stage' => $stage_name,
+                        'position' => (int) $field_index + 1,
+                    ];
+                    continue;
+                }
+
+                $normalized_label = strtolower(remove_accents($label));
+                if (isset($seen_labels[$normalized_label])) {
+                    $duplicates[$stage_name . "\0" . $normalized_label] = [
+                        'stage' => $stage_name,
+                        'label' => $label,
+                    ];
+                }
+                $seen_labels[$normalized_label] = true;
+            }
+        }
+        if (!empty($problems)) {
+            $parts = [];
+            foreach ($problems as $p) {
+                $parts[] = sprintf(
+                    /* translators: 1: step name, 2: field position within the step */
+                    __('%1$s (field %2$d)', 'obatala'),
+                    $p['stage'],
+                    $p['position']
+                );
+            }
+            return sprintf(
+                /* translators: %s: semicolon-separated list, e.g. "Step A (field 1); Step B (field 2)" */
+                __('Some fields have an empty or default name. Check step: %s', 'obatala'),
+                implode('; ', $parts)
+            );
+        }
+
+        if (!empty($duplicates)) {
+            $parts = array_map(function ($duplicate) {
+                return $duplicate['stage'] . ': ' . $duplicate['label'];
+            }, array_values($duplicates));
+
+            return sprintf(
+                __('Field names must be unique within each step. Check step: %s', 'obatala'),
+                implode('; ', $parts)
+            );
+        }
+
+        return null;
     }
 
     public function update_meta($request) {
@@ -147,6 +343,8 @@ class ProcessTypeApi extends ObatalaAPI {
             'generate_tainacan_items',
             'description',
             'status',
+            'updateAt',
+            'user',
             'step_order',
             'flowData',
         ];
@@ -157,15 +355,35 @@ class ProcessTypeApi extends ObatalaAPI {
                 if ($key === 'flowData' && is_string($request[$key])) {
                     $flowData = json_decode($request[$key], true);
                     if ($flowData) {
+                        $title_err = self::validate_flow_field_titles($flowData);
+                        if (is_string($title_err) && $title_err !== '') {
+                            return new WP_Error(
+                                'obatala_field_without_title',
+                                $title_err,
+                                ['status' => 400]
+                            );
+                        }
                         update_post_meta($post_id, $key, $flowData); // Armazena como array
                     }
+                } elseif ($key === 'flowData' && is_array($request[$key])) {
+                    $title_err = self::validate_flow_field_titles($request[$key]);
+                    if (is_string($title_err) && $title_err !== '') {
+                        return new WP_Error(
+                            'obatala_field_without_title',
+                            $title_err,
+                            ['status' => 400]
+                        );
+                    }
+                    update_post_meta($post_id, $key, $request[$key]);
                 } else {
                     update_post_meta($post_id, $key, $request[$key]);
                 }
             }
         }
 
-        return rest_ensure_response('Meta updated successfully.');
+        return rest_ensure_response([
+            'success' => true,
+        ]);
     }
 
     public function assosiate_sector($request) {
@@ -177,7 +395,11 @@ class ProcessTypeApi extends ObatalaAPI {
         // Verificar se o processo existe
         $process = get_post($process_id);
         if (!$process || $process->post_type !== 'process_type') {
-            return new WP_REST_Response('Processo não encontrado ou tipo de processo inválido', 404);
+            return new WP_Error(
+                'obatala_invalid_process_type',
+                __('Process not found.', 'obatala'),
+                ['status' => 404]
+            );
         }
 
         // Obter os dados do flowData do processo
@@ -185,13 +407,21 @@ class ProcessTypeApi extends ObatalaAPI {
 
         // Verificar se o flowData está configurado corretamente
         if (!isset($flow_data['nodes']) || !is_array($flow_data['nodes'])) {
-            return new WP_REST_Response('Os dados do fluxo não estão configurados corretamente', 400);
+            return new WP_Error(
+                'obatala_invalid_flow_data',
+                __('Error saving process model.', 'obatala'),
+                ['status' => 400]
+            );
         }
 
         // Procurar o nó correspondente ao node_id fornecido
         $node_key = array_search($node_id, array_column($flow_data['nodes'], 'id'));
         if ($node_key === false) {
-            return new WP_REST_Response('Nó não encontrado nos dados do fluxo', 404);
+            return new WP_Error(
+                'obatala_node_not_found',
+                __('Step not found.', 'obatala'),
+                ['status' => 404]
+            );
         }
 
         // Adicionar o setor ao histórico da etapa (node)
@@ -210,21 +440,30 @@ class ProcessTypeApi extends ObatalaAPI {
         // Atualizar o flowData com o novo histórico
         $updated = update_post_meta($process_id, 'flowData', $flow_data);
 
-        // Verificar se a atualização foi bem-sucedida
-        if ($updated) {
-            return new WP_REST_Response('Setor associado com sucesso', 200);
-        } else {
-            return new WP_REST_Response('Erro ao associar o setor', 500);
+        // update_post_meta() also returns false when the stored value is unchanged.
+        if (!$updated && get_post_meta($process_id, 'flowData', true) !== $flow_data) {
+            return new WP_Error(
+                'obatala_sector_association_failed',
+                __('Error saving process model.', 'obatala'),
+                ['status' => 500]
+            );
         }
+
+        return rest_ensure_response([
+            'success' => true,
+            'node_id' => $node_id,
+            'sector_id' => $sector_id,
+        ]);
     }
 
     public function get_node($request) {
         $process_id = $request['id'];
-        $user_id = $request->get_param('user');
+        $user_id = get_current_user_id();
         $permission = Sector::check_permission($user_id, $process_id);
 
         // Obter os dados do flowData do processo
         $flow_data = get_post_meta($process_id, 'flowData', true);
+        $sector_names = $this->get_process_sector_names($flow_data);
 
         $access_level = get_post_meta($process_id, 'access_level', true);
 
@@ -233,7 +472,8 @@ class ProcessTypeApi extends ObatalaAPI {
                 return new WP_REST_Response([
                     'data' => $flow_data,
                     'status' => true,
-                    'data_sector' => $permission['data_sector']
+                    'data_sector' => $permission['data_sector'] ?? [],
+                    'sector_names' => $sector_names,
                 ], 200);
             }
             return new WP_REST_Response($permission['message'], 403);
@@ -242,14 +482,45 @@ class ProcessTypeApi extends ObatalaAPI {
                 'data' => $flow_data,
                 'status' => $permission['status'],
                 'message' => $permission['message'],
-                'data_sector' => $permission['data_sector']
+                'data_sector' => $permission['data_sector'] ?? [],
+                'sector_names' => $sector_names,
             ], 200);
         }
     }
 
+    private function get_process_sector_names($flow_data) {
+        if (!is_array($flow_data)) {
+            return [];
+        }
+
+        $configured_sectors = json_decode((string) get_option('obatala_setores', '{}'), true);
+        $configured_sectors = is_array($configured_sectors) ? $configured_sectors : [];
+        $sector_names = [];
+
+        foreach (($flow_data['nodes'] ?? []) as $node) {
+            $sector_id = (string) ($node['sector_obatala'] ?? $node['tempSector'] ?? '');
+            if ($sector_id === '' || !isset($configured_sectors[$sector_id])) {
+                continue;
+            }
+            $sector_names[$sector_id] = sanitize_text_field(
+                (string) ($configured_sectors[$sector_id]['nome'] ?? '')
+            );
+        }
+
+        return $sector_names;
+    }
+
     public function upload($request) {
+        if ( ! isset( $_SERVER['HTTP_X_WP_NONCE'] ) 
+            || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_SERVER['HTTP_X_WP_NONCE'] ) ), 'wp_rest' ) ) {
+            return new WP_REST_Response( [
+                'error' => 'Nonce inválido ou ausente',
+            ], 403 );
+        }
+
         $process_id = $request['id'];
         $node_id = sanitize_text_field($request['node_id']);
+        
         // Carregar a função wp_handle_upload, se necessário
         if (!function_exists('wp_handle_upload')) {
             require_once ABSPATH . 'wp-admin/includes/file.php';
@@ -262,7 +533,6 @@ class ProcessTypeApi extends ObatalaAPI {
             ], 400);
         }
 
-        $file = $_FILES['file'];
         $overrides = [
             'test_form' => false,
             'mimes' => [
@@ -272,6 +542,9 @@ class ProcessTypeApi extends ObatalaAPI {
                 'jpg' => 'image/jpeg',
                 'jpeg' => 'image/jpeg',
                 'png' => 'image/png',
+                'csv' => 'text/csv',
+                'xls' => 'application/vnd.ms-excel',
+                'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             ],
         ];
 
@@ -289,15 +562,13 @@ class ProcessTypeApi extends ObatalaAPI {
         // Configurar o arquivo .htaccess para proteção
         $htaccess_path = $custom_dir . '/.htaccess';
         if (!file_exists($htaccess_path)) {
-            $htaccess_content = <<<EOT
-                    <IfModule mod_rewrite.c>
-                        RewriteEngine On
+            $htaccess_content  = "<IfModule mod_rewrite.c>\n";
+            $htaccess_content .= "    RewriteEngine On\n\n";
+            $htaccess_content .= "    # Bloquear acesso direto ao diretório e redirecionar ao WordPress\n";
+            $htaccess_content .= "    RewriteCond %{REQUEST_FILENAME} -f\n";
+            $htaccess_content .= "    RewriteRule ^ - [F]\n";
+            $htaccess_content .= "</IfModule>\n";
 
-                        # Bloquear acesso direto ao diretório e redirecionar ao WordPress
-                        RewriteCond %{REQUEST_FILENAME} -f
-                        RewriteRule ^ - [F]
-                    </IfModule>
-                EOT;
             if (file_put_contents($htaccess_path, $htaccess_content) === false) {
                 return new WP_REST_Response([
                     'error' => 'Erro ao criar o arquivo .htaccess no diretório de upload.',
@@ -306,7 +577,7 @@ class ProcessTypeApi extends ObatalaAPI {
         }
 
         // Fazer upload do arquivo
-        $uploaded_file = wp_handle_upload($file, $overrides);
+        $uploaded_file = wp_handle_upload($_FILES['file'], $overrides);
 
         if (isset($uploaded_file['error'])) {
             return new WP_REST_Response([
@@ -314,20 +585,39 @@ class ProcessTypeApi extends ObatalaAPI {
             ], 500);
         }
 
+        // Inicializar o WP_Filesystem
+        if ( ! function_exists( 'request_filesystem_credentials' ) ) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
+        }
 
-        // Modificar o nome do arquivo
-        $process_name = get_the_title($process_id);
-        $filename = sanitize_file_name($file['name']);
-        $filename_parts = pathinfo($filename);
-        $new_filename = $process_name . '-' .
-            $node_id . '-' . $filename_parts['filename'] . '.' .
-            $filename_parts['extension'];
+        WP_Filesystem();
+        global $wp_filesystem;
 
-        // Mover o arquivo para o diretório personalizado
-        $filename = sanitize_file_name($new_filename);
-        $new_file_path = trailingslashit($custom_dir) . $filename;
+        if ( ! $wp_filesystem ) {
+            return new WP_REST_Response([
+                'error' => 'Não foi possível inicializar o sistema de arquivos.',
+            ], 500);
+        }
 
-        if (!rename($uploaded_file['file'], $new_file_path)) {
+        if ( ! isset( $_FILES['file']['name'] ) ) {
+            return new WP_REST_Response( [
+                'error' => 'Nome do arquivo não encontrado.',
+            ], 400 );
+        }
+
+        $filename       = sanitize_file_name( $_FILES['file']['name'] );
+        $new_file_path  = trailingslashit( $custom_dir ) . $filename;
+        $upload_path    = $uploaded_file['file'];
+
+        // Verificar se o arquivo existe antes de mover
+        if ( ! $wp_filesystem->exists( $upload_path ) ) {
+            return new WP_REST_Response([
+                'error' => 'Arquivo de upload não encontrado.',
+            ], 500);
+        }
+
+        // Tentar mover o arquivo para o diretório personalizado
+        if ( ! $wp_filesystem->move( $upload_path, $new_file_path, true ) ) {
             return new WP_REST_Response([
                 'error' => 'Erro ao salvar o arquivo no diretório personalizado.',
             ], 500);
@@ -365,48 +655,97 @@ class ProcessTypeApi extends ObatalaAPI {
             'success' => true,
             'message' => 'Arquivo enviado com sucesso.',
             'file_path' => $new_file_path,
+            'file_name' => $filename
         ], 200);
     }
 
     public function download($request) {
         $process_id = intval($request['id']);
-        $user_id = intval($request->get_param('user'));
+        $user_id = get_current_user_id();
         $file_name = sanitize_file_name($request->get_param('file'));
-
+    
         // Verificar permissão
         $permission = Sector::check_permission($user_id, $process_id);
 
         if (!$permission['status']) {
             return new WP_REST_Response(
                 [
-                    'error' => 'Permissão negada',
+                    'error' => 'Permissao negada',
                     'status' => $permission['message']
                 ],
                 403
             );
         }
 
+        $flow_data = maybe_unserialize(get_post_meta($process_id, 'flowData', true));
+        $process_files = [];
+        foreach ((array) ($flow_data['nodes'] ?? []) as $node) {
+            if (!empty($node['file']) && is_array($node['file'])) {
+                $process_files = array_merge($process_files, array_map('sanitize_file_name', $node['file']));
+            }
+        }
+        if (!in_array($file_name, $process_files, true)) {
+            return new WP_REST_Response(['error' => 'Arquivo não encontrado'], 404);
+        }
+    
         // Caminho do arquivo
         $upload_dir = wp_upload_dir();
         $custom_dir = trailingslashit($upload_dir['basedir']) . 'obatala';
         $file_path = trailingslashit($custom_dir) . $file_name;
-
+    
         if (!file_exists($file_path)) {
             return new WP_REST_Response(
                 ['error' => 'Arquivo não encontrado'],
                 404
             );
+        }    
+        // Usar a função wp_send_file para forçar o download
+        return $this->wp_send_file($file_path);
+    }
+    
+    private function wp_send_file($file_path) {
+        // Inicializa o sistema de arquivos do WordPress
+        global $wp_filesystem;
+        
+        if (!function_exists('WP_Filesystem')) {
+            require_once ABSPATH . 'wp-admin/includes/file.php';
         }
-
-        // Gerar a URL para o arquivo e retornar para o cliente
-        $file_url = trailingslashit($upload_dir['baseurl']) . 'obatala/' . $file_name;
-
-        return new WP_REST_Response(
-            [
-                'success' => true,
-                'file_url' => $file_url,
-            ],
-            200
-        );
+        
+        $initialized = WP_Filesystem();
+        
+        if (!$initialized || !is_object($wp_filesystem)) {
+            wp_die(esc_html__('Falha ao inicializar o sistema de arquivos do WordPress', 'obatala'));
+        }
+        
+        // Verifica se o arquivo existe
+        if (!$wp_filesystem->exists($file_path)) {
+            wp_die(esc_html__('Arquivo não encontrado', 'obatala'));
+        }
+        
+        // Obtém o nome do arquivo seguro para saída
+        $filename = basename($file_path);
+        $filename = sanitize_file_name($filename);
+        $disposition = sprintf('attachment; filename="%s"', esc_attr($filename));
+        
+        // Força o download do arquivo com saída escapada
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: ' . $disposition);
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . absint($wp_filesystem->size($file_path)));
+        
+        // Limpar buffers de saída antes de enviar o arquivo
+        ob_clean();
+        flush();
+        
+        // Ler e enviar o arquivo com verificação
+        $file_contents = $wp_filesystem->get_contents($file_path);
+        if ($file_contents !== false) {
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            echo $file_contents; // Binário não deve ser escapado
+        }
+        exit;
     }
 }
