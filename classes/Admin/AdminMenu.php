@@ -100,7 +100,27 @@ namespace Obatala\Admin {
         public static function init()
         {
             add_action('admin_menu', [self::class, 'add_admin_pages']);
+            add_action('admin_head', [self::class, 'add_admin_favicon']);
             add_action('admin_enqueue_scripts', [self::class, 'enqueue_scripts']);
+        }
+
+        public static function add_admin_favicon()
+        {
+            $current_page = isset($_GET['page']) ? sanitize_key(wp_unslash($_GET['page'])) : '';
+            $plugin_pages = [self::$pages['main']['slug']];
+
+            foreach (self::$pages['submenus'] as $submenu) {
+                $plugin_pages[] = $submenu['slug'];
+            }
+
+            if (!in_array($current_page, $plugin_pages, true)) {
+                return;
+            }
+
+            printf(
+                '<link rel="icon" href="%s" type="image/svg+xml">' . "\n",
+                esc_url(OBATALA_PLUGIN_URL . 'images/tainacan.svg')
+            );
         }
 
         public static function add_admin_pages()
