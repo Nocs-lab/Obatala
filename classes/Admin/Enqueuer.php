@@ -2,8 +2,6 @@
 
 namespace Obatala\Admin;
 
-use Obatala\Security\Roles;
-
 if (!defined('ABSPATH')) {
     exit; // Se sim, encerra a execução para segurança
 }
@@ -11,22 +9,11 @@ if (!defined('ABSPATH')) {
 class Enqueuer {
     private static $pages = [
         'obatala_page_process-manager' => 'process-manager',
-        'admin_page_process-manager' => 'process-manager',
         'obatala_page_process-type-manager' => 'process-type-manager',
-        'admin_page_process-type-manager' => 'process-type-manager',
         'obatala_page_process-viewer' => 'process-viewer',
         'obatala_page_process-step-manager' => 'process-step-manager',
         'obatala_page_process-type-editor' => 'process-type-editor',
-        'admin_page_process-type-editor' => 'process-type-editor',
-        'obatala_page_sector_manager' => 'sector_manager',
-        'admin_page_sector_manager' => 'sector_manager',
-        'toplevel_page_obatala-main' => 'dashboard',
-        'obatala_page_sector-details' => 'sector-details',
-        'admin_page_sector-details' => 'sector-details',
-        'obatala_page_mappers' => 'mappers',
-        'admin_page_mappers' => 'mappers',
-        'admin_page_process-viewer' => 'process-viewer',
-        'admin_page_collection-items' => 'collection-items',
+        'obatala_page_sector_manager' => 'sector_manager'
     ];
 
     public static function init() {
@@ -38,40 +25,14 @@ class Enqueuer {
            
             $asset_file = include OBATALA_PLUGIN_DIR . 'build/index.asset.php';
 
-            $script_deps = array_merge(
-                $asset_file['dependencies'],
-                ['wp-i18n']
-            );
             wp_register_script(
                 'obatala-admin-scripts',
                 OBATALA_PLUGIN_URL . 'build/index.js',
-                $script_deps,
+                array_merge($asset_file['dependencies']),
                 $asset_file['version'],
                 true
             );
             wp_enqueue_script('obatala-admin-scripts');
-            wp_set_script_translations(
-                'obatala-admin-scripts',
-                'obatala',
-                OBATALA_PLUGIN_DIR . 'languages'
-            );
-
-            wp_add_inline_script(
-                'obatala-admin-scripts',
-                'window.wpApiSettings = window.wpApiSettings || {};'
-                . 'window.wpApiSettings.root = ' . wp_json_encode( esc_url_raw( rest_url() ) ) . ';'
-                . 'window.wpApiSettings.nonce = ' . wp_json_encode( wp_create_nonce('wp_rest') ) . ';',
-                'before'
-            );
-
-            // Localiza o nonce para o JS
-            wp_localize_script(
-                'obatala-admin-scripts',
-                'ObatalaApi',
-                [
-                    'nonce' => wp_create_nonce('wp_rest'),
-                ]
-            );
 
             // Enfileirando o estilo principal do plugin
             wp_register_style(
@@ -90,29 +51,6 @@ class Enqueuer {
                 $asset_file['version']
             );
             wp_enqueue_style('react-flow-styles');
-
-            wp_localize_script('obatala-admin-scripts', 'obatalaApp', [
-                'admin_url' => admin_url(),
-                'site_url'  => site_url(),
-                'plugin_url' => OBATALA_PLUGIN_URL,
-                // Dompdf (composer): if false, ProcessList hides the PDF report button.
-                'pdf_report_available' => class_exists('\Dompdf\Dompdf'),
-                'can_manage_mappers' => Roles::can_manage_mappings(),
-                'permissions' => [
-                    'access' => Roles::can_access_obatala(),
-                    'manage_processes' => Roles::can_manage_processes(),
-                    'advance_stages' => Roles::can_advance_stages(),
-                    'manage_comments' => Roles::can_manage_comments(),
-                    'generate_reports' => Roles::can_generate_reports(),
-                    'manage_models' => Roles::can_manage_models(),
-                    'manage_groups' => Roles::can_manage_groups(),
-                    'manage_mappings' => Roles::can_manage_mappings(),
-                    'delete_models' => Roles::can_delete_models(),
-                    'delete_processes' => Roles::can_delete_processes(),
-                    'execute_exports' => Roles::can_execute_exports(),
-                ],
-            ]);
-
         }
     }
 }

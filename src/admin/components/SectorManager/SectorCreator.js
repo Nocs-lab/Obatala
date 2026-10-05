@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { __ } from '@wordpress/i18n';
 import {
   Button,
+  ButtonGroup,
   TextControl,
   SelectControl,
   Notice,
@@ -29,7 +29,7 @@ const SectorCreator = ({onSave, editingSector, onCancel}) => {
         e.preventDefault();
 
         if (!title || !description) {
-            setNotice({ status: "error", message: __("Title and description are required.", "obatala") });
+            setNotice({ status: "error", message: "Title and description is required." });
             return;
         }
         const savedSector = {
@@ -42,10 +42,10 @@ const SectorCreator = ({onSave, editingSector, onCancel}) => {
             await onSave(savedSector);
             setNotice({
                 status: "success",
-                message: __("Group saved successfully.", "obatala"),
+                message: "Sector saved successfully.",
               });
         } catch (error) {
-              setNotice({ status: "error", message: __("Error saving group.", "obatala") });
+              setNotice({ status: "error", message: "Error saving sector." });
         }
     };
 
@@ -57,43 +57,43 @@ const SectorCreator = ({onSave, editingSector, onCancel}) => {
 
     return ( 
         <form onSubmit={handleSave}>
-            {notice && (
-                <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
-                    {notice.message}
-                </Notice>
-            )}
+              {notice && (
+                    <Notice status={notice.status} isDismissible onRemove={() => setNotice(null)}>
+                        {notice.message}
+                    </Notice>
+                )}
 
-            <TextControl
-                label={__("Title", "obatala")}
-                value={title}
-                onChange={(value) => setTitle(value)}
-            />
-            <TextControl
-                label={__("Description", "obatala")}
-                value={description}
-                onChange={(value) => setDescription(value)}
-            />
+                <TextControl
+                  label="Title"
+                  value={title}
+                  onChange={(value) => setTitle(value)}
+                />
+                <TextControl
+                  label="Description"
+                  value={description}
+                  onChange={(value) => setDescription(value)}
+                />
 
             {editingSector && (
-                <SelectControl
-                    label={__("Status", "obatala")}
-                    value={status}
-                    options={[
-                        { label: __('Active', 'obatala'), value: 'Active' },
-                        { label: __('Inactive', 'obatala'), value: 'Inactive' }
-                    ]}
-                    onChange={(value) => setStatus(value)}
-                />
+              <SelectControl
+              label="Status"
+              value={status}
+              options={[
+                  { label: 'Active', value: 'Active' },
+                  { label: 'Inactive', value: 'Inactive' }
+              ]}
+              onChange={(value) => setStatus(value)}
+          />
             )}
 
-            <div className="group-button">
-                <Button variant="tertiary" onClick={handleCancel}>
-                    {__('Cancel', 'obatala')}
+            <ButtonGroup>
+                <Button variant="link" onClick={handleCancel}>
+                    Cancel
                 </Button>
                 <Button variant="primary" type="submit">
-                    {__('Save', 'obatala')}
+                    Save
                 </Button>
-            </div>
+            </ButtonGroup>
         </form>
     )
 }

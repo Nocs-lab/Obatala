@@ -1,289 +1,156 @@
 <?php
 
-namespace {
-    if (!defined('ABSPATH')) {
-        exit;
-    }
-}
+namespace Obatala\Admin;
 
-namespace Obatala\Admin {
-    use Obatala\Security\Roles;
-
-    class AdminMenu
-    {
-        private static $pages = [
-            'main' => [
-                'title' => 'Tainacan: Processos',
-                'menu_title' => 'Processos',
-                'capability' => Roles::CAP_TP_ACCESS,
-                'slug' => 'obatala-main',
-                'callback' => 'render_main_page',
-                'icon' => 'tainacan-white.svg',
-                'position' => 2
+class AdminMenu {
+    private static $pages = [
+        'main' => [
+            'title' => 'Obatala',
+            'menu_title' => 'Obatala',
+            'capability' => 'manage_options',
+            'slug' => 'obatala-main',
+            'callback' => 'render_main_page',
+            'icon' => 'dashicons-admin-site',
+            'position' => 2
+        ],
+        'submenus' => [
+            [
+                'parent_slug' => 'obatala-main',
+                'title' => 'Process Manager',
+                'menu_title' => 'Process Manager',
+                'capability' => 'manage_options',
+                'slug' => 'process-manager',
+                'callback' => 'render_page',
+                'show_in_menu' => true
             ],
-            'submenus' => [
-                [
-                    'parent_slug' => 'obatala-main',
-                    'title' => 'Processes',
-                    'menu_title' => 'Processes',
-                    'capability' => Roles::CAP_TP_ACCESS,
-                    'slug' => 'process-manager',
-                    'callback' => 'render_page',
-                    'show_in_menu' => false
-                ],
-                [
-                    'parent_slug' => 'obatala-main',
-                    'title' => 'Models',
-                    'menu_title' => 'Models',
-                    'capability' => Roles::CAP_TP_MANAGE_MODELS,
-                    'slug' => 'process-type-manager',
-                    'callback' => 'render_page',
-                    'show_in_menu' => false
-                ],
-                [
-                    'parent_slug' => 'obatala-main',
-                    'title' => 'Process type editor',
-                    'menu_title' => 'Process type editor',
-                    'capability' => Roles::CAP_TP_MANAGE_MODELS,
-                    'slug' => 'process-type-editor',
-                    'callback' => 'render_page',
-                    'show_in_menu' => false
-                ],
-                [
-                    'parent_slug' => 'obatala-main',
-                    'title' => 'Groups',
-                    'menu_title' => 'Groups',
-                    'capability' => Roles::CAP_TP_MANAGE_GROUPS,
-                    'slug' => 'sector_manager',
-                    'callback' => 'render_page',
-                    'show_in_menu' => false
-                ],
-                [
-                    'parent_slug' => 'obatala-main',
-                    'title' => 'Collection items',
-                    'menu_title' => 'Collection items',
-                    'capability' => Roles::CAP_TP_ACCESS,
-                    'slug' => 'collection-items',
-                    'callback' => 'render_page',
-                    'show_in_menu' => false
-                ],
-                [
-                    'parent_slug' => 'obatala-main',
-                    'title' => 'Process viewer',
-                    'menu_title' => 'Process viewer',
-                    'capability' => Roles::CAP_TP_ACCESS,
-                    'slug' => 'process-viewer',
-                    'callback' => 'render_page',
-                    'show_in_menu' => false
-                ],
-                [
-                    'parent_slug' => 'obatala-main',
-                    'title' => 'Group details',
-                    'menu_title' => 'Group details',
-                    'capability' => Roles::CAP_TP_MANAGE_GROUPS,
-                    'slug' => 'sector-details',
-                    'callback' => 'render_page',
-                    'show_in_menu' => false
-                ],
-                [
-                    'parent_slug' => 'obatala-main',
-                    'title' => 'Mappers',
-                    'menu_title' => 'Mappers',
-                    'capability' => Roles::CAP_TP_MANAGE_MAPPINGS,
-                    'slug' => 'mappers',
-                    'callback' => 'render_mappers_page',
-                    'show_in_menu' => false
-                ]
+            [
+                'parent_slug' => 'obatala-main',
+                'title' => 'Process Viewer',
+                'menu_title' => 'Process Viewer',
+                'capability' => 'read',
+                'slug' => 'process-viewer',
+                'callback' => 'render_page',
+                'show_in_menu' => true
+            ],
+            [
+                'parent_slug' => 'obatala-main',
+                'title' => 'Process Models',
+                'menu_title' => 'Process Models',
+                'capability' => 'edit_posts',
+                'slug' => 'process-type-manager',
+                'callback' => 'render_page',
+                'show_in_menu' => true
+            ],
+            [
+                'parent_slug' => 'obatala-main',
+                'title' => 'Process Type Editor',
+                'menu_title' => 'Process Type Editor',
+                'capability' => 'manage_options',
+                'slug' => 'process-type-editor',
+                'callback' => 'render_page',
+                'show_in_menu' => true
+            ],
+            [
+                'parent_slug' => 'obatala-main', // Permitir acesso direto
+                'title' => 'Group Manager',
+                'menu_title' => 'Group Manager',
+                'capability' => 'manage_options',
+                'slug' => 'sector_manager',
+                'callback' => 'render_page',
+                'show_in_menu' => true
             ]
-        ];
+        ]
+    ];
 
-        public static function init()
-        {
-            add_action('admin_menu', [self::class, 'add_admin_pages']);
-            add_action('admin_enqueue_scripts', [self::class, 'enqueue_scripts']);
-        }
+    /**
+     * Inicializa o hook para adicionar as páginas de administração ao menu do WordPress.
+     */
+    public static function init() {
+        add_action('admin_menu', [self::class, 'add_admin_pages']);
+        add_action('admin_enqueue_scripts', [self::class, 'enqueue_scripts']);
+    }
 
-        public static function add_admin_pages()
-        {
-            $main = self::$pages['main'];
-            add_menu_page(
-                self::translate_menu_label($main['title']),
-                self::translate_menu_label($main['menu_title']),
-                $main['capability'],
-                $main['slug'],
-                [self::class, $main['callback']],
-                self::get_menu_icon($main['icon']),
-                $main['position']
-            );
+    /**
+     * Adiciona as páginas de administração ao menu do WordPress.
+     */
+    public static function add_admin_pages() {
+        // Adiciona o menu principal "Obatala".
+        $main = self::$pages['main'];
+        add_menu_page(
+            __($main['title'], 'obatala'),
+            __($main['menu_title'], 'obatala'),
+            $main['capability'],
+            $main['slug'],
+            [self::class, $main['callback']],
+            $main['icon'],
+            $main['position']
+        );
 
-            foreach (self::$pages['submenus'] as $submenu) {
-                $title = self::translate_menu_label($submenu['title']);
-                $menu_title = self::translate_menu_label($submenu['menu_title']);
-                if ($submenu['show_in_menu']) {
-                    add_submenu_page(
-                        $submenu['parent_slug'],
-                        $title,
-                        $menu_title,
-                        $submenu['capability'],
-                        $submenu['slug'],
-                        [self::class, $submenu['callback']]
-                    );
-                } else {
-                    add_submenu_page(
-                        null,
-                        $title,
-                        $menu_title,
-                        $submenu['capability'],
-                        $submenu['slug'],
-                        [self::class, $submenu['callback']]
-                    );
-                }
+        // Adiciona os submenus.
+        foreach (self::$pages['submenus'] as $submenu) {
+            if ($submenu['show_in_menu']) {
+                add_submenu_page(
+                    $submenu['parent_slug'],
+                    __($submenu['title'], 'obatala'),
+                    __($submenu['menu_title'], 'obatala'),
+                    $submenu['capability'],
+                    $submenu['slug'],
+                    [self::class, $submenu['callback']]
+                );
+            } else {
+                add_submenu_page(
+                    null, // Permitir acesso direto
+                    __($submenu['title'], 'obatala'),
+                    __($submenu['menu_title'], 'obatala'),
+                    $submenu['capability'],
+                    $submenu['slug'],
+                    [self::class, $submenu['callback']]
+                );
             }
         }
+    }
 
-        private static function translate_menu_label($label)
-        {
-            switch ($label) {
-                case 'Dashboard':
-                    return __('Dashboard', 'obatala');
-                case 'Processes':
-                    return __('Processes', 'obatala');
-                case 'Models':
-                    return __('Models', 'obatala');
-                case 'Process type editor':
-                    return __('Process type editor', 'obatala');
-                case 'Groups':
-                    return __('Groups', 'obatala');
-                case 'Collection items':
-                    return __('Collection items', 'obatala');
-                case 'Process viewer':
-                    return __('Process viewer', 'obatala');
-                case 'Group details':
-                    return __('Group details', 'obatala');
-                case 'Mappers':
-                    return __('Mappers', 'obatala');
-                default:
-                    return $label;
-            }
-        }
-
-        private static function get_menu_icon($icon)
-        {
-            if ($icon !== 'tainacan-white.svg') {
-                return $icon;
-            }
-
-            $icon_path = dirname(__DIR__, 2) . '/images/' . $icon;
-            $icon_contents = file_exists($icon_path) ? file_get_contents($icon_path) : false;
-
-            if ($icon_contents === false) {
-                return 'dashicons-admin-site';
-            }
-
-            return 'data:image/svg+xml;base64,' . base64_encode($icon_contents);
-        }
-
-
-        public static function render_main_page()
-        {
-            echo '<div id="dashboard"></div>';
-        }
-
-        public static function render_mappers_page()
-        {
-            echo '<div id="mappers"></div>';
-        }
-
-        /**
-         * Renderiza a página de administração correta com base no slug da página atual.
-         */
-
-        public static function render_page()
-        {
-            $screen = get_current_screen();
-
-            if (!$screen || empty($screen->id)) {
-                echo '<h1>' . esc_html__('Página não encontrada', 'obatala') . '</h1>';
-                return;
-            }
-
-            $page_id = $screen->id;
-            $prefixes = ['obatala_page_', 'admin_page_'];
-
-            foreach ($prefixes as $prefix) {
-                if (is_string($page_id) && strpos($page_id, $prefix) === 0) {
-                    $id_cleaned = str_replace('_', '-', substr($page_id, strlen($prefix)));
-                    echo '<div id="' . esc_attr($id_cleaned) . '"></div>';
-                    return;
-                }
-            }
-
-            echo '<h1>' . esc_html__('Página não encontrada', 'obatala') . '</h1>';
-        }
-
-        public static function enqueue_scripts($hook)
-        {
-            if (!is_string($hook) || strpos($hook, 'obatala') === false) {
-                return;
-            }
-
-            $inline_script = "
-                document.addEventListener('DOMContentLoaded', function () {
-                    const processViewerItem = document.querySelector('#toplevel_page_obatala-main .wp-submenu li a[href*=\"process-viewer\"]');
-                    const processTypeEditorItem = document.querySelector('#toplevel_page_obatala-main .wp-submenu li a[href*=\"process-type-editor\"]');
-                    const processSectorDetails = document.querySelector('#toplevel_page_obatala-main .wp-submenu li a[href*=\"sector-details\"]');
-                    const processTypeExport = document.querySelector('#toplevel_page_obatala-main .wp-submenu li a[href*=\"mappers\"]');
-
-                    if (processSectorDetails) {
-                        processSectorDetails.parentElement.style.display = 'none';
-                    }
-
-                    if (processViewerItem) {
-                        processViewerItem.parentElement.style.display = 'none';
-                    }
-
-                    if (processTypeEditorItem) {
-                        processTypeEditorItem.parentElement.style.display = 'none';
-                    }
-
-                    if (processTypeExport) {
-                        processTypeExport.parentElement.style.display = 'none';
-                    }
-
-                    const menuItem = document.querySelector('#toplevel_page_obatala-main');
-                    if (menuItem) {
-                        menuItem.addEventListener('click', function () {
-                            if (processViewerItem) {
-                                processViewerItem.parentElement.style.display = 'block';
-                            }
-                            if (processTypeEditorItem) {
-                                processTypeEditorItem.parentElement.style.display = 'block';
-                            }
-                            if (processSectorDetails) {
-                                processSectorDetails.parentElement.style.display = 'block';
-                            }
-                        });
-                    }
-                });
-            ";
-
-            $inline_style = "
-                #toplevel_page_obatala-main .wp-submenu li a[href*=\"process-viewer\"],
-                #toplevel_page_obatala-main .wp-submenu li a[href*=\"process-type-editor\"],
-                #toplevel_page_obatala-main .wp-submenu li a[href*=\"sector-details\"] {
+    /**
+     * Renderiza a página principal do menu.
+     */
+    public static function render_main_page() {
+        echo '<h1>' . __('Bem-vindo ao Obatala', 'obatala') . '</h1>';
+        echo '<p>' . __('Selecione uma opção do submenu para começar.', 'obatala') . '</p>';
+        echo '<style>.wp-admin #toplevel_page_obatala-main .wp-submenu li a[href*="process-viewer"],
+                .wp-admin #toplevel_page_obatala-main .wp-submenu li a[href*="process-step-editor"],
+                .wp-admin #toplevel_page_obatala-main .wp-submenu li a[href*="process-type-editor"] {
                     display: none;
-                }
-            ";
+                }</style>';
+    }
 
-            $inline_asset_version = (string) filemtime(__FILE__);
+    /**
+     * Renderiza a página de administração correta com base no slug da página atual.
+     */
+    public static function render_page() {
+        $screen = get_current_screen();
+        $page_id = $screen->id;
 
-            wp_register_script('obatala-admin-menu-inline-script', false, [], $inline_asset_version, true);
-            wp_enqueue_script('obatala-admin-menu-inline-script');
-            wp_add_inline_script('obatala-admin-menu-inline-script', $inline_script);
-
-            wp_register_style('obatala-admin-menu-inline-style', false, [], $inline_asset_version);
-            wp_enqueue_style('obatala-admin-menu-inline-style');
-            wp_add_inline_style('obatala-admin-menu-inline-style', $inline_style);
+        // Renderiza a div correspondente com base no ID da tela
+        if (strpos($page_id, 'obatala_page_') === 0) {
+            echo '<div id="' . str_replace('_', '-', substr($page_id, strlen('obatala_page_'))) . '"></div>';
+        } else {
+            echo '<h1>Page Not Found</h1>';
         }
+    }
+
+    /**
+     * Enfileira os scripts necessários para garantir o comportamento do menu.
+     */
+    public static function enqueue_scripts() {
+        add_action('admin_footer', function () {
+            echo '<style>
+                #toplevel_page_obatala-main.wp-menu-open > .wp-submenu {
+                    display: block;
+                }
+                #toplevel_page_obatala-main:hover > .wp-submenu {
+                    display: block;
+                }
+            </style>';
+        });
     }
 }

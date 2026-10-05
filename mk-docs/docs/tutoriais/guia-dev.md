@@ -1,284 +1,169 @@
-# 🧩 Criação de Interfaces no WordPress para Gerenciamento de Processos no Plugin Obatala
+# Criação de Interfaces no WordPress para Gerenciamento de Processos no Plugin Obatala
 
-Antes de desenvolver ou testar localmente, siga o guia [Instalação](../instalacao.md) (`composer install`, `npm run build`, Tainacan ativo).
+O desenvolvimento de interfaces de usuário no WordPress para gerenciar processos personalizados no plugin Obatala envolve a criação de menus de administração, registro de tipos de posts (Custom Post Types) e implementação de blocos no editor Gutenberg. Este documento descreve como configurar a interface administrativa e gerenciar processos, utilizando funções nativas do WordPress e padrões de desenvolvimento recomendados.
 
-O desenvolvimento de interfaces administrativas no WordPress com o plugin **Obatala** envolve:
+## 1. Registro de Custom Post Types
 
-- Criação de menus personalizados.
-- Registro de Custom Post Types (CPTs).
-- Uso de blocos Gutenberg com React.
-- Implementação de endpoints REST personalizados.
+Para a gestão de processos no Obatala, utilizamos o [Tainacan](https://tainacan.github.io/tainacan-wiki/#/dev/repository-methods) para criar e gerenciar tipos de posts personalizados. Estendemos a classe de coleção do Tainacan para definir os tipos de posts necessários, como `Process`, `ProcessType` e `Sector`.
 
-Este guia mostra como configurar essas funcionalidades de forma segura e escalável.
+## 2. Criação da Interface de Administração
 
----
+Para criar uma interface de administração no WordPress utilizando o plugin Obatala, são configurados menus e submenus, permitindo aos usuários acessar diferentes ferramentas de gerenciamento de processos.
 
-## 1. 📦 Registro de Custom Post Types com Tainacan
+### Estrutura do Menu Principal
 
-Para o gerenciamento de processos, o Obatala utiliza o [Tainacan](https://tainacan.github.io/tainacan-wiki/#/dev/repository-methods) como base para registro de **Custom Post Types**, como:
-
-- `Process`
-- `ProcessType`
-- `Sector`
-
-Cada tipo é tratado como uma coleção dentro da estrutura do Tainacan, permitindo controle sobre metadados, permissões e visualização.
-
----
-
-## 2. 🛠️ Criação da Interface de Administração
-
-A interface administrativa é composta por um menu principal e submenus no painel do WordPress, gerenciados pela classe `AdminMenu`.
-
-### 📋 Estrutura do Menu
+Abaixo está o código PHP usado para registrar o menu principal e seus submenus no painel administrativo. A classe `AdminMenu` gerencia a criação do menu "Obatala" com suas páginas de submenus específicas, como `Process Manager`, `Process Viewer`, `Process Models`, `Process Type Editor`, e `Sector Manager`.
 
 ```php
 <?php
-namespace Obatala\Admin;
+    namespace Obatala\Admin;
 
-use Obatala\Security\Roles;
-
-class AdminMenu {
-    private static $pages = [
-        'main' => [
-            'title' => 'Obatala',
-            'menu_title' => 'Obatala',
-            'capability' => Roles::CAP_TP_ACCESS,
-            'slug' => 'obatala-main',
-            'callback' => 'render_main_page',
-            'icon' => 'dashicons-admin-site',
-            'position' => 2
-        ],
-        'submenus' => [
-            [
-                'parent_slug' => 'obatala-main',
-                'title' => 'Dashboard',
-                'menu_title' => 'Dashboard',
-                'capability' => Roles::CAP_TP_ACCESS,
+    class AdminMenu {
+        private static $pages = [
+            'main' => [
+                'title' => 'Obatala',
+                'menu_title' => 'Obatala',
+                'capability' => 'manage_options',
                 'slug' => 'obatala-main',
                 'callback' => 'render_main_page',
-                'show_in_menu' => true
+                'icon' => 'dashicons-admin-site',
+                'position' => 2
             ],
-            [
-                'parent_slug' => 'obatala-main',
-                'title' => 'Processes',
-                'menu_title' => 'Processes',
-                'capability' => Roles::CAP_TP_ACCESS,
-                'slug' => 'process-manager',
-                'callback' => 'render_page',
-                'show_in_menu' => true
-            ],
-            [
-                'parent_slug' => 'obatala-main',
-                'title' => 'Models',
-                'menu_title' => 'Models',
-                'capability' => Roles::CAP_TP_MANAGE_MODELS,
-                'slug' => 'process-type-manager',
-                'callback' => 'render_page',
-                'show_in_menu' => true
-            ],
-            [
-                'parent_slug' => 'obatala-main',
-                'title' => 'Process type editor',
-                'menu_title' => 'Process type editor',
-                'capability' => Roles::CAP_TP_MANAGE_MODELS,
-                'slug' => 'process-type-editor',
-                'callback' => 'render_page',
-                'show_in_menu' => true
-            ],
-            [
-                'parent_slug' => 'obatala-main',
-                'title' => 'Groups',
-                'menu_title' => 'Groups',
-                'capability' => Roles::CAP_TP_MANAGE_GROUPS,
-                'slug' => 'sector_manager',
-                'callback' => 'render_page',
-                'show_in_menu' => true
-            ],
-            [
-                'parent_slug' => 'obatala-main',
-                'title' => 'Process viewer',
-                'menu_title' => 'Process viewer',
-                'capability' => Roles::CAP_TP_ACCESS,
-                'slug' => 'process-viewer',
-                'callback' => 'render_page',
-                'show_in_menu' => true
-            ],
-            [
-                'parent_slug' => 'obatala-main',
-                'title' => 'Group details',
-                'menu_title' => 'Group details',
-                'capability' => Roles::CAP_TP_MANAGE_GROUPS,
-                'slug' => 'sector-details',
-                'callback' => 'render_page',
-                'show_in_menu' => true
-            ],
-            [
-                'parent_slug' => 'obatala-main',
-                'title' => 'Mappers',
-                'menu_title' => 'Mappers',
-                'capability' => Roles::CAP_TP_MANAGE_MAPPINGS,
-                'slug' => 'mappers',
-                'callback' => 'render_mappers_page',
-                'show_in_menu' => true
+            'submenus' => [
+                [
+                    'parent_slug' => 'obatala-main',
+                    'title' => 'Process Manager',
+                    'menu_title' => 'Process Manager',
+                    'capability' => 'manage_options',
+                    'slug' => 'process-manager',
+                    'callback' => 'render_page'
+                ],
+                [
+                    'parent_slug' => 'obatala-main',
+                    'title' => 'Process Viewer',
+                    'menu_title' => 'Process Viewer',
+                    'capability' => 'read',
+                    'slug' => 'process-viewer',
+                    'callback' => 'render_page'
+                ],
+                [
+                    'parent_slug' => 'obatala-main',
+                    'title' => 'Process Models',
+                    'menu_title' => 'Process Models',
+                    'capability' => 'edit_posts',
+                    'slug' => 'process-type-manager',
+                    'callback' => 'render_page'
+                ],
+                [
+                    'parent_slug' => 'obatala-main',
+                    'title' => 'Process Type Editor',
+                    'menu_title' => 'Process Type Editor',
+                    'capability' => 'manage_options',
+                    'slug' => 'process-type-editor',
+                    'callback' => 'render_page'
+                ],
+                [
+                    'parent_slug' => 'obatala-main',
+                    'title' => 'Sector Manager',
+                    'menu_title' => 'Sector Manager',
+                    'capability' => 'manage_options',
+                    'slug' => 'sector_manager',
+                    'callback' => 'render_page'
+                ]
             ]
-        ]
-    ];
+        ];
 
-    public static function init() {
-        add_action('admin_menu', [self::class, 'add_admin_pages']);
-        add_action('admin_enqueue_scripts', [self::class, 'enqueue_scripts']);
-    }
+        public static function init() {
+            add_action('admin_menu', [self::class, 'add_admin_pages']);
+            add_action('admin_enqueue_scripts', [self::class, 'enqueue_scripts']);
+        }
 
-    public static function add_admin_pages() {
-        $main = self::$pages['main'];
-        add_menu_page(
-            __($main['title'], 'obatala'),
-            __($main['menu_title'], 'obatala'),
-            $main['capability'],
-            $main['slug'],
-            [self::class, $main['callback']],
-            $main['icon'],
-            $main['position']
-        );
-
-        foreach (self::$pages['submenus'] as $submenu) {
-            $title = __($submenu['title'], 'obatala');
-            $menu_title = __($submenu['menu_title'], 'obatala');
-            add_submenu_page(
-                $submenu['parent_slug'],
-                $title,
-                $menu_title,
-                $submenu['capability'],
-                $submenu['slug'],
-                [self::class, $submenu['callback']]
+        public static function add_admin_pages() {
+            $main = self::$pages['main'];
+            add_menu_page(
+                __($main['title'], 'obatala'),
+                __($main['menu_title'], 'obatala'),
+                $main['capability'],
+                $main['slug'],
+                [self::class, $main['callback']],
+                $main['icon'],
+                $main['position']
             );
+
+            foreach (self::$pages['submenus'] as $submenu) {
+                add_submenu_page(
+                    $submenu['parent_slug'],
+                    __($submenu['title'], 'obatala'),
+                    __($submenu['menu_title'], 'obatala'),
+                    $submenu['capability'],
+                    $submenu['slug'],
+                    [self::class, $submenu['callback']]
+                );
+            }
         }
     }
-}
 ?>
 ```
 
-### 🖥️ Renderização do Conteúdo das Páginas
-A função `render_main_page` define um container `<div id="dashboard"></div>` onde o React monta o Dashboard. Os submenus utilizam `render_page`, que gera um `<div id="...">` conforme o slug da página; o React monta o componente correspondente.
-
-## 3. 🧱 Utilização de Blocos Gutenberg com React
-O Obatala utiliza blocos e componentes React dentro do painel administrativo com Gutenberg. Isso permite uma interface moderna e interativa para os usuários.
-
-Exemplo de Integração:
+### Renderização das Páginas de Menu
+Cada submenu é renderizado pela função render_page, que identifica a página com base no slug. A função render_main_page define o conteúdo inicial exibido ao acessar o menu principal "Obatala".
 
 ```php
 <?php
-function obatala_manage_processos_page() {
-    echo '<div class="wrap">';
-    echo '<h1>' . esc_html(get_admin_page_title()) . '</h1>';
-    echo '<div id="obatala-admin-app"></div>';
-    echo '</div>';
-
-    wp_enqueue_script(
-        'obatala-admin-scripts',
-        plugin_dir_url(__FILE__) . 'js/obatala-admin.js',
-        ['wp-element', 'wp-components', 'wp-i18n', 'wp-api-fetch', 'wp-data'],
-        filemtime(plugin_dir_path(__FILE__) . 'js/obatala-admin.js'),
-        true
-    );
-}
+    public static function render_main_page() {
+        echo '<h1>' . __('Bem-vindo ao Obatala', 'obatala') . '</h1>';
+        echo '<p>' . __('Selecione uma opção do submenu para começar.', 'obatala') . '</p>';
+    }
 ?>
 ```
 
-## 4. 🔐 Segurança e Validação
-A segurança é fundamental. Recomenda-se sempre:
-
-- Sanitizar entradas com sanitize_text_field(), esc_html(), esc_attr().
-
-- Verificar intenções com check_admin_referer().
-
-- Restringir acesso com current_user_can() para proteger conteúdo sensível.
-
-## 5. 🔑 Permissões e Controle de Acesso
-As capabilities definidas em cada submenu determinam quem pode abrir a página.
-As operações executadas dentro dela continuam protegidas pelas verificações
-equivalentes da API REST:
-
-- `tainacan_processes_access`: abrir o Tainacan Processos;
-- `tainacan_processes_manage_models`: criar e editar modelos;
-- `tainacan_processes_manage_groups`: administrar grupos;
-- `tainacan_processes_manage_mappings`: configurar mapeamentos.
-
-Para processos e etapas, a capability funcional é combinada com a associação do
-usuário aos grupos. Consulte [Perfis e permissões](../perfis-e-permissoes.md).
-
-Utilize:
-
-```php
-if ( ! current_user_can( Roles::CAP_TP_MANAGE_MODELS ) ) {
-    wp_die( __( 'Acesso negado.', 'obatala' ) );
-}
-```
-
-## 6. 🔗 Registro de Endpoints REST
-A API personalizada do Obatala expõe dados para manipulação via JavaScript/React:
+3. Uso de Blocos Gutenberg
+Para criar uma interface de administração interativa, o Obatala utiliza blocos do editor Gutenberg. Com o Gutenberg, é possível criar componentes de interface utilizando React, o que permite uma experiência de usuário mais dinâmica.
 
 ```php
 <?php
-private function register_api_endpoints() {
-    $custom_post_type_api = new \Obatala\Api\CustomPostTypeApi();
-    $custom_post_type_api->register();
-
-    $process_custom_fields = new \Obatala\Api\ProcessApi();
-    $process_custom_fields->register();
-
-    $process_type_custom_fields = new \Obatala\Api\ProcessTypeApi();
-    $process_type_custom_fields->register();
-
-    $sector_api = new \Obatala\Api\SectorApi();
-    $sector_api->register();
-
-    $exporter_api = new \Obatala\Api\ExporterApi();
-    $exporter_api->register();
-}
+    function obatala_manage_processos_page() {
+        <div class="wrap">
+            <h1>echo esc_html(get_admin_page_title());></h1>
+            <div id="obatala-admin-app"></div>
+        </div>
+        wp_enqueue_script(
+            'obatala-admin-scripts',
+            plugin_dir_url(__FILE__) . 'js/obatala-admin.js',
+            array('wp-element', 'wp-components', 'wp-i18n', 'wp-api-fetch', 'wp-data'),
+            filemtime(plugin_dir_path(__FILE__) . 'js/obatala-admin.js'),
+            true
+        );
+    }
 ?>
 ```
 
-Esses endpoints fornecem acesso a dados para:
+1. Segurança e Validação
+Para garantir segurança, todas as entradas de dados devem ser validadas e sanitizadas. Funções como sanitize_text_field() e check_admin_referer() devem ser usadas para proteger contra ataques como Cross-Site Scripting (XSS).
 
-- Listagem e edição de processos
-- **Numeração única** na criação (`POST /obatala/v1/process_obatala`) e filtro `?numero_processo=` na listagem
-- Exclusão lógica de processos (`DELETE /obatala/v1/process_obatala/{id}`)
-- Tipos de processo
-- Setores e suas relações
-- Relatórios PDF (`GET /obatala/v1/process_obatala/{id}/report-pdf`)
+1. Permissões e Restrições de Acesso
+As páginas e funcionalidades do plugin devem ser acessíveis apenas para usuários autorizados. Funções como current_user_can() são usadas para checar as permissões do usuário antes de exibir conteúdo sensível ou permitir certas ações.
 
-### Numeração de processo
+1. Registro de Endpoints da REST API
+O plugin registra endpoints personalizados da REST API para permitir a manipulação de dados do Obatala. Esses endpoints são implementados para manipular entidades como Process, ProcessType e Sector.
 
-Ao criar uma instância (`POST /obatala/v1/process_obatala`), o backend atribui automaticamente um número no formato **`AAAA-NNNNN-DV`** (ex.: `2026-00042-6`). Os metadados `numero_processo`, `ano_processo`, `sequencial_processo` e `digito_verificador_processo` são gravados e retornados na resposta.
+```php
+<?php
+    private function register_api_endpoints() {
+        $custom_post_type_api = new \Obatala\Api\CustomPostTypeApi();
+        $custom_post_type_api->register();
 
-Filtrar listagem por número (completo, parcial ou sem máscara):
+        $process_custom_fields = new \Obatala\Api\ProcessApi();
+        $process_custom_fields->register();
 
-```http
-GET /wp-json/obatala/v1/process_obatala?numero_processo=2026-00042-6
+        $process_type_custom_fields = new \Obatala\Api\ProcessTypeApi();
+        $process_type_custom_fields->register();
+
+        $sector_api = new \Obatala\Api\SectorApi();
+        $sector_api->register();
+    }
+?>
 ```
 
-Regra do dígito verificador: soma dos dígitos de `AAAANNNNN` módulo 10. Detalhes, tabelas de banco e testes em [Gestão de processos](../processos/gestao-processos.md#numeracao-unica-do-processo).
-
-### Exclusão lógica de processo
-
-```http
-DELETE /wp-json/obatala/v1/process_obatala/{id}
-```
-
-Marca `is_deleted = 1` e grava `deleted_at`, `deleted_by` e `deleted_by_name`. Processos excluídos não aparecem nas listagens REST nem na interface. Detalhes em [Gestão de processos](../processos/gestao-processos.md).
-
-**Controle de acesso:** As rotas REST usam `permission_callback` definido em `ObatalaAPI` (`Obatala\Security\Roles::can_access_obatala()`), exigindo usuário autenticado com permissão Obatalá adequada.
-
-### ✅ Conclusão
-A arquitetura do plugin Obatala integra:
-
-- WordPress como CMS robusto
-
-- Tainacan para estrutura de dados personalizada
-
-- Gutenberg para interfaces ricas com React
-
-- REST API para integração entre front-end e back-end
-
-Essas práticas garantem um ambiente intuitivo, modular e seguro para o gerenciamento de processos curatoriais no WordPress.
+## Conclusão
+Essas etapas configuram uma interface robusta e segura para o WordPress com o plugin Obatala. A integração com o Tainacan e o uso de blocos Gutenberg permite que os usuários interajam com o plugin de maneira eficaz e moderna, proporcionando uma experiência de gestão de processos curatoriais intuitiva e personalizada.
