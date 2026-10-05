@@ -1496,3 +1496,16 @@ msgstr "Es necesario autenticarse."
 #: classes/Api/ProcessApi.php
 msgid "Only the active step can be selected."
 msgstr "Solo se puede seleccionar la etapa activa."
+
+#: src/admin/components/FlowEditor/components/reactFlow/NodeConditional.js
+msgid "Apply conditional"
+msgstr "Aplicar condicional"
+
+#: src/admin/components/FlowEditor/components/reactFlow/NodeConditional.js
+msgid ""
+"There are pending changes in this conditional. Click \"Apply conditional\" "
+"to keep them before collapsing the steps or saving the model."
+msgstr ""
+"Hay cambios pendientes en este condicional. Haga clic en \"Aplicar "
+"condicional\" para conservarlos antes de contraer las etapas o guardar el "
+"modelo."

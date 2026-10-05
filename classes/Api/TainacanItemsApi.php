@@ -543,30 +543,20 @@ class TainacanItemsApi extends ObatalaAPI {
 
     private function calculate_process_progress($process_id) {
         $flow_data = maybe_unserialize(get_post_meta((int) $process_id, 'flowData', true));
-        $submitted_stages = maybe_unserialize(get_post_meta((int) $process_id, 'submittedStages', true));
-        $nodes = is_array($flow_data) && isset($flow_data['nodes']) && is_array($flow_data['nodes'])
-            ? array_filter($flow_data['nodes'], [$this, 'is_process_stage_node'])
-            : [];
-        $total = count($nodes);
-
-        if ($total === 0) {
+        if (
+            !is_array($flow_data)
+            || empty($flow_data['nodes'])
+            || empty($flow_data['edges'])
+        ) {
             $status = (string) get_post_meta((int) $process_id, 'status', true);
             return $status === 'Finished' ? 100 : 0;
         }
 
-        $finished = 0;
-        foreach ($nodes as $node) {
-            $node_id = (string) ($node['id'] ?? '');
-            $is_submitted = is_array($submitted_stages)
-                && array_key_exists($node_id, $submitted_stages)
-                && $this->is_truthy($submitted_stages[$node_id]);
-
-            if (($node['node_status'] ?? '') === 'Finished' || $is_submitted) {
-                $finished++;
-            }
-        }
-
-        return (int) round(($finished / $total) * 100);
+        return (new ProcessApi())->calculate_progress_percentage(
+            (int) $process_id,
+            $flow_data['nodes'],
+            $flow_data['edges']
+        );
     }
 
     private function is_process_stage_node($node) {
@@ -576,10 +566,6 @@ class TainacanItemsApi extends ObatalaAPI {
             && $node_id !== 'Start'
             && $node_id !== 'End'
             && strpos($node_id, 'Condicional') !== 0;
-    }
-
-    private function is_truthy($value) {
-        return $value === true || $value === 1 || $value === '1' || $value === 'true';
     }
 
     private function get_process_status_group($status, $progress) {

@@ -821,3 +821,13 @@ msgstr ""
 #: classes/Api/ProcessApi.php
 msgid "Only the active step can be selected."
 msgstr ""
+
+#: src/admin/components/FlowEditor/components/reactFlow/NodeConditional.js
+msgid "Apply conditional"
+msgstr ""
+
+#: src/admin/components/FlowEditor/components/reactFlow/NodeConditional.js
+msgid ""
+"There are pending changes in this conditional. Click \"Apply conditional\" "
+"to keep them before collapsing the steps or saving the model."
+msgstr ""

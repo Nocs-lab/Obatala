@@ -74,7 +74,9 @@ O botão **Enviar** fica habilitado quando as regras de obrigatoriedade da etapa
 
 ## Progresso do processo e PDF assinado
 
-O percentual de progresso exibido na lista de processos e no visualizador é calculado no backend (`ProcessApi::calculate_progress_percentage`).
+O percentual de progresso exibido na lista de processos, no visualizador e nos detalhes dos itens do acervo é calculado no backend (`ProcessApi::calculate_progress_percentage`).
+
+Etapas que permanecem com status `Stopped` porque pertencem a um ramo não selecionado por uma condicional não entram no total de etapas do progresso.
 
 Uma etapa só conta como concluída para o progresso quando:
 

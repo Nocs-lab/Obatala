@@ -560,6 +560,13 @@ const processDataEditor = () => {
                             <PanelBody 
                                 title={ __('Manage steps', 'obatala') } 
                                 initialOpen={ true }
+								onToggle={ ( isOpen ) => {
+									if ( ! isOpen && flowRef.current ) {
+										setFlowData(
+											flowRef.current.getFlowData()
+										);
+									}
+								} }
                             >
                                 <PanelRow>
                                     <FlowControls
