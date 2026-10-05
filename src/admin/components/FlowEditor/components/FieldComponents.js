@@ -1,22 +1,21 @@
 import React from "react";
-import { __ } from "@wordpress/i18n";
 
 // Componente para renderizar os controles de Texto, Email, Telefone, Endereço
 export const TextFieldControls = ({ label, placeholder, onChange }) => (
   <div>
-    <label>{__('Rótulo:', 'obatala')}</label>
+    <label>Label:</label>
     <input
       type="text"
       value={label}
       onChange={(e) => onChange("label", e.target.value)}
-      placeholder={__('Digite o rótulo', 'obatala')}
+      placeholder="Digite o label"
     />
-    <label>{__('Texto de exemplo:', 'obatala')}</label>
+    <label>Placeholder:</label>
     <input
       type="text"
       value={placeholder}
       onChange={(e) => onChange("placeholder", e.target.value)}
-      placeholder={__('Digite o texto de exemplo', 'obatala')}
+      placeholder="Digite o placeholder"
     />
   </div>
 );
@@ -24,26 +23,26 @@ export const TextFieldControls = ({ label, placeholder, onChange }) => (
 // Componente para renderizar os controles de Número
 export const NumberFieldControls = ({ label, min, max, onChange }) => (
   <div>
-    <label>{__('Rótulo:', 'obatala')}</label>
+    <label>Label:</label>
     <input
       type="text"
       value={label}
       onChange={(e) => onChange("label", e.target.value)}
-      placeholder={__('Digite o rótulo', 'obatala')}
+      placeholder="Digite o label"
     />
-    <label>{__('Valor mínimo:', 'obatala')}</label>
+    <label>Valor Mínimo:</label>
     <input
       type="number"
       value={min}
       onChange={(e) => onChange("min", e.target.value)}
-      placeholder={__('Digite o valor mínimo', 'obatala')}
+      placeholder="Digite o valor mínimo"
     />
-    <label>{__('Valor máximo:', 'obatala')}</label>
+    <label>Valor Máximo:</label>
     <input
       type="number"
       value={max}
       onChange={(e) => onChange("max", e.target.value)}
-      placeholder={__('Digite o valor máximo', 'obatala')}
+      placeholder="Digite o valor máximo"
     />
   </div>
 );
@@ -51,14 +50,14 @@ export const NumberFieldControls = ({ label, min, max, onChange }) => (
 // Componente para renderizar os controles de DatePicker
 export const DatePickerControls = ({ label, onChange }) => (
   <div>
-    <label>{__('Rótulo:', 'obatala')}</label>
+    <label>Label:</label>
     <input
       type="text"
       value={label}
       onChange={(e) => onChange("label", e.target.value)}
-      placeholder={__('Digite o rótulo', 'obatala')}
+      placeholder="Digite o label"
     />
-    <label>{__('Selecionar data:', 'obatala')}</label>
+    <label>Selecionar Data:</label>
     <input
       type="date"
       onChange={(e) => onChange("value", e.target.value)}
@@ -69,14 +68,14 @@ export const DatePickerControls = ({ label, onChange }) => (
 // Componente para renderizar os controles de Upload de Arquivo
 export const FileUploadControls = ({ label, onChange }) => (
   <div>
-    <label>{__('Rótulo:', 'obatala')}</label>
+    <label>Label:</label>
     <input
       type="text"
       value={label}
       onChange={(e) => onChange("label", e.target.value)}
-      placeholder={__('Digite o rótulo', 'obatala')}
+      placeholder="Digite o label"
     />
-    <label>{__('Upload de arquivo:', 'obatala')}</label>
+    <label>Upload de Arquivo:</label>
     <input
       type="file"
       onChange={(e) => onChange("value", e.target.files[0]?.name)}
@@ -87,19 +86,19 @@ export const FileUploadControls = ({ label, onChange }) => (
 // Componente para renderizar os controles de Select e Radio
 export const SelectRadioControls = ({ label, options, onChange }) => (
   <div>
-    <label>{__('Rótulo:', 'obatala')}</label>
+    <label>Label:</label>
     <input
       type="text"
       value={label}
       onChange={(e) => onChange("label", e.target.value)}
-      placeholder={__('Digite o rótulo', 'obatala')}
+      placeholder="Digite o label"
     />
-    <label>{__('Opções (separadas por vírgulas):', 'obatala')}</label>
+    <label>Opções (separadas por vírgula):</label>
     <input
       type="text"
       value={options}
       onChange={(e) => onChange("options", e.target.value)}
-      placeholder={__('Opções separadas por vírgulas', 'obatala')}
+      placeholder="Opções, separadas por vírgula"
     />
   </div>
 );

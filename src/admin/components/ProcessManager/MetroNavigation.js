@@ -44,7 +44,7 @@ const MetroNavigation = ({ options, currentStep, onStepChange, submittedSteps })
                     text-align: left;
                 }
                 .navigation-point.active {
-                    background-color: var(--primary-700);
+                    background-color: var(--primary-500);
                     color: var(--white);
                 }
                 .navigation-point .badge {

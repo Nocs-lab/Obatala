@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Spinner, Button, TextareaControl, FormFileUpload } from '@wordpress/components';
-import { __ } from '@wordpress/i18n';
 import apiFetch from '@wordpress/api-fetch';
 import { __experimentalGetSettings, dateI18n } from '@wordpress/date';
 import { useSelect } from '@wordpress/data';
@@ -49,7 +48,7 @@ const ProcessStage = ({ process, onCancelEdit }) => {
             .then(data => {
                 const stages = data.map((stage, index) => ({
                     id: stage.id,
-                    title: stage.title ? stage.title.rendered : __('Sem título', 'obatala'),
+                    title: stage.title ? stage.title.rendered : 'Untitled',
                     content: stage.content ? stage.content.rendered : '',
                 }));
                 stages.sort((a, b) => a.id - b.id); // Ordenar as etapas pelo ID
@@ -92,7 +91,7 @@ const ProcessStage = ({ process, onCancelEdit }) => {
 
     const handleAddComment = () => {
         if (!newComment) {
-            alert(__('Please enter a comment.', 'obatala'));
+            alert('Please enter a comment.');
             return;
         }
 
@@ -171,34 +170,34 @@ const ProcessStage = ({ process, onCancelEdit }) => {
 
     return (
         <div className='panel'>
-            <h3>{__('Process', 'obatala')}: {process.title.rendered}</h3>
-            <Button variant="link" onClick={onCancelEdit}>{__('Back to Processes', 'obatala')}</Button>
+            <h3>Process: {process.title.rendered}</h3>
+            <Button variant="link" onClick={onCancelEdit}>Back to Processes</Button>
             <div>
-                <h4>{__('Current Stage', 'obatala')}: {currentStage.title}</h4>
+                <h4>Current Stage: {currentStage.title}</h4>
                 <p>{currentStage.content}</p>
                 <Button
                     variant="link"
                     onClick={handlePreviousStage}
                     disabled={stages.findIndex(stage => stage.id === currentStage.id) === 0}
                 >
-                    {__('View Previous Stage', 'obatala')}
+                    View Previous Stage
                 </Button>
                 <Button
                     variant="link"
                     onClick={handleAdvanceStage}
                     disabled={stages.findIndex(stage => stage.id === currentStage.id) === stages.length - 1}
                 >
-                    {__('Advance Stage', 'obatala')}
+                    Advance Stage
                 </Button>
                 <Button
                     variant="link"
                     onClick={() => handleReopenStage(currentStage.id)}
                     disabled={stages.findIndex(stage => stage.id === currentStage.id) <= stages.findIndex(stage => stage.id === process.current_stage)}
                 >
-                    {__('Reopen Stage', 'obatala')}
+                    Reopen Stage
                 </Button>
                 <div>
-                    <h5>{__('Comments', 'obatala')}</h5>
+                    <h5>Comments</h5>
                     <ul className="comment-list">
                         {comments.filter(comment => comment.meta.stage_id == currentStage.id).map(comment => (
                             <li key={comment.id} className={`comment ${comment.author === currentUser?.id ? 'current-user' : ''}`}>
@@ -210,7 +209,7 @@ const ProcessStage = ({ process, onCancelEdit }) => {
                             </li>
                         ))}
                     </ul>
-                    <h5>{__('Attachments', 'obatala')}</h5>
+                    <h5>Attachments</h5>
                     <ul className="attachment-list">
                         {attachments.map(attachment => (
                             <li key={attachment.id} className="attachment">
@@ -221,11 +220,11 @@ const ProcessStage = ({ process, onCancelEdit }) => {
                         ))}
                     </ul>
                     <FormFileUpload onChange={handleFileUpload} style={{border: "1px solid blue"}}>
-                        {__('Attach file', 'obatala')}
+                        Attach file
                     </FormFileUpload>
 
                     <TextareaControl
-                        label={__('Add a comment', 'obatala')}
+                        label="Add a comment"
                         value={newComment}
                         onChange={(value) => setNewComment(value)}
                         disabled={false}
@@ -235,7 +234,7 @@ const ProcessStage = ({ process, onCancelEdit }) => {
                         onClick={handleAddComment}
                         disabled={false}
                     >
-                        {__('Add Comment', 'obatala')}
+                        Add Comment
                     </Button>
                 </div>
             </div>

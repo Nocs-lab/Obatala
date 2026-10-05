@@ -4,8 +4,6 @@ namespace Obatala\Entities;
 
 defined('ABSPATH') || exit;
 
-use Obatala\Security\Roles;
-
 class ProcessType {
     /* 
     * Register the post type for the Process Type entity
@@ -38,31 +36,14 @@ class ProcessType {
             'public'             => true,
             'publicly_queryable' => true,
             'show_ui'            => true,
-            'show_in_menu'       => false,
+            'show_in_menu'       => true,
             'query_var'          => true,
             'rewrite'            => array('slug' => 'process_types'),
             'capability_type'    => 'post',
-            'map_meta_cap'       => false,
-            'capabilities'       => array(
-                'edit_post'              => Roles::CAP_TP_MANAGE_MODELS,
-                'read_post'              => Roles::CAP_TP_ACCESS,
-                'delete_post'            => Roles::CAP_TP_DELETE_MODELS,
-                'edit_posts'             => Roles::CAP_TP_MANAGE_MODELS,
-                'edit_others_posts'      => Roles::CAP_TP_MANAGE_MODELS,
-                'publish_posts'          => Roles::CAP_TP_MANAGE_MODELS,
-                'read_private_posts'     => Roles::CAP_TP_ACCESS,
-                'delete_posts'           => Roles::CAP_TP_DELETE_MODELS,
-                'delete_private_posts'   => Roles::CAP_TP_DELETE_MODELS,
-                'delete_published_posts' => Roles::CAP_TP_DELETE_MODELS,
-                'delete_others_posts'    => Roles::CAP_TP_DELETE_MODELS,
-                'edit_private_posts'     => Roles::CAP_TP_MANAGE_MODELS,
-                'edit_published_posts'   => Roles::CAP_TP_MANAGE_MODELS,
-                'create_posts'           => Roles::CAP_TP_MANAGE_MODELS,
-            ),
             'has_archive'        => true,
             'hierarchical'       => false,
             'menu_position'      => 99,
-            'supports'           => array('title', 'author',),
+            'supports'           => array('title'),
             'show_in_rest'       => true,
             'menu_icon'          => 'dashicons-media-document'
         );
@@ -99,28 +80,6 @@ class ProcessType {
             'show_in_rest' => true,
         ]);
 
-        register_post_meta('process_type', 'status', [
-            'type' => 'string',
-            'description' => 'Process Type Status',
-            'single' => true,
-            'show_in_rest' => true,
-            'default' => 'Active',
-        ]);
-
-        register_post_meta('process_type', 'updateAt', [
-            'type' => 'string',
-            'description' => 'Process Type Last Update',
-            'single' => true,
-            'show_in_rest' => true,
-        ]);
-
-        register_post_meta('process_type', 'user', [
-            'type' => 'string',
-            'description' => 'Process Type Last Editor',
-            'single' => true,
-            'show_in_rest' => true,
-        ]);
-
         register_post_meta('process_type', 'step_order', [
             'type' => 'array',
             'description' => 'Order of the Steps',
@@ -153,11 +112,6 @@ class ProcessType {
                                         'type' => 'string',
                                         'description' => 'Node ID',
                                     ],
-                                    'node_status' => [
-                                        'type' => 'string',
-                                        'description' => 'Status of the node',
-                                        'default' => 'Stopped'
-                                    ],
                                     'position' => [
                                         'type' => 'object',
                                         'description' => 'Position of the node',
@@ -183,25 +137,6 @@ class ProcessType {
                                         'type' => 'string',
                                         'description' => 'Name of the stage (node)',
                                     ],
-                                    'condition' => [
-                                        'type' => 'object',
-                                        'description' => 'Conditional settings for the node',
-                                        'properties' => [
-                                            'inputNode' => ['type' => 'string', 'description' => 'ID of the input node'],
-                                            'condition' => ['type' => 'string', 'description' => 'Condition to check'],
-                                            'outputNodes' => [
-                                                'type' => 'array',
-                                                'description' => 'List of output nodes',
-                                                'items' => [
-                                                    'type' => 'object',
-                                                    'properties' => [
-                                                        'conditionValue' => ['type' => 'string', 'description' => 'Condition value to match'],
-                                                        'nodeId' => ['type' => 'string', 'description' => 'ID of the output node'],
-                                                    ],
-                                                ],
-                                            ],
-                                        ],
-                                    ],
                                     'sector_history' => [
                                         'type' => 'array',
                                         'sector_id' => [
@@ -219,7 +154,7 @@ class ProcessType {
                                         'name' => [
                                             'type' => 'string'
                                         ]
-                                    ],
+                                    ]
                                 ],
                             ],
                         ],
