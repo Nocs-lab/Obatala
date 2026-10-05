@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Handle, Position } from "@xyflow/react";
 import { useFlowContext } from "../../context/FlowContext";
-import { Button, Tooltip } from "@wordpress/components";
+import { Button, Notice, Tooltip } from '@wordpress/components';
 import { __ } from "@wordpress/i18n";
 import { close } from "@wordpress/icons";
 
@@ -27,6 +27,7 @@ const NodeConditional = ({ id, data }) => {
     const containerRef = useRef(null);
     const [hasError, setHasError] = useState(false);
     const [isInitialized, setIsInitialized] = useState(false);
+	const [ hasPendingChanges, setHasPendingChanges ] = useState( false );
 
     useEffect(() => {
         const isConnectedInput = edges.some(edge => edge.target === id);
@@ -93,6 +94,7 @@ const NodeConditional = ({ id, data }) => {
         }
 
         // Atualiza o campo com o novo valor
+		setHasPendingChanges( true );
         setSelectedFields((prev) => {
             const updatedFields = [...prev];
             updatedFields[fieldIndex] = { ...updatedFields[fieldIndex], value };
@@ -162,6 +164,7 @@ const NodeConditional = ({ id, data }) => {
         );
 
         updateNodeCondition(id, updatedCondition);
+		setHasPendingChanges( false );
 
         alert(__('Changes applied successfully.', 'obatala'));
     };
@@ -196,6 +199,7 @@ const NodeConditional = ({ id, data }) => {
                                 value={selectedField}
                                 onChange={(e) => {
                                     setSelectedField(e.target.value);
+									setHasPendingChanges( true );
                                     setSelectedFields((prev) =>
                                         prev.map((field) => ({ ...field, field: e.target.value }))
                                     );
@@ -240,12 +244,21 @@ const NodeConditional = ({ id, data }) => {
                 )}
             </dl>
 
+			{ hasPendingChanges && (
+				<Notice status="warning" isDismissible={ false }>
+					{ __(
+						'There are pending changes in this conditional. Click "Apply conditional" to keep them before collapsing the steps or saving the model.',
+						'obatala'
+					) }
+				</Notice>
+			) }
+
             <hr />
             <div className="components-button-container">
                 <Button variant="primary"
                     onClick={handleSave}
                 >
-                    {__('Apply', 'obatala')}
+					{ __( 'Apply conditional', 'obatala' ) }
                 </Button>
             </div>
         </div>
