@@ -137,11 +137,12 @@ const ProcessTypeManager = () => {
 
     const filteredModels = useMemo(() => {
         if (!status) return processTypes;
-        return processTypes.filter((processType) => 
-            processType
-                ? processType.meta.status[0].includes(status) 
-                : true
-        );
+        return processTypes.filter((processType) => {
+            const modelStatus = Array.isArray(processType?.meta?.status)
+                ? processType.meta.status[0]
+                : processType?.meta?.status;
+            return modelStatus === status;
+        });
     }, [status, processTypes]);
 
     if (isLoading) {

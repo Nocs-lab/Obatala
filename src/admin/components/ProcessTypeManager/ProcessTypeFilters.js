@@ -6,6 +6,7 @@ import FilterSelect from '../FilterSelect';
 const ProcessTypeFilter = ({ status, setStatus }) => {
     const options = [
         { label: __('All statuses', 'obatala'), value: '' },
+        { label: __('Draft', 'obatala'), value: 'Draft' },
         { label: __('Active', 'obatala'), value: 'Active' },
         { label: __('Inactive', 'obatala'), value: 'Inactive' },
     ];
