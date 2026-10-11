@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Handle, Position } from "@xyflow/react";
 import { useFlowContext } from "../../context/FlowContext";
-import { Button, Notice, Tooltip } from '@wordpress/components';
+import { Button, Modal, Notice, Tooltip } from '@wordpress/components';
 import { __ } from "@wordpress/i18n";
 import { close } from "@wordpress/icons";
 
@@ -28,6 +28,15 @@ const NodeConditional = ({ id, data }) => {
     const [hasError, setHasError] = useState(false);
     const [isInitialized, setIsInitialized] = useState(false);
 	const [ hasPendingChanges, setHasPendingChanges ] = useState( false );
+    const [feedbackModal, setFeedbackModal] = useState(null);
+
+    const showFeedbackModal = (status, message) => {
+        setFeedbackModal({ status, message });
+    };
+
+    const closeFeedbackModal = () => {
+        setFeedbackModal(null);
+    };
 
     useEffect(() => {
         const isConnectedInput = edges.some(edge => edge.target === id);
@@ -89,7 +98,10 @@ const NodeConditional = ({ id, data }) => {
     const handleValueChange = (fieldIndex, value) => {
         // Verifica se o valor já foi selecionado
         if (isValueSelected(value)) {
-            alert(__('This value has already been selected for another field.', 'obatala'));
+            showFeedbackModal(
+                'warning',
+                __('This value has already been selected for another field.', 'obatala')
+            );
             return; // Não permite selecionar o valor
         }
 
@@ -133,12 +145,18 @@ const NodeConditional = ({ id, data }) => {
         );
 
         if (!selectedField) {
-            alert(__('Please select a field for the first line.', 'obatala'));
+            showFeedbackModal(
+                'warning',
+                __('Please select a field for the first line.', 'obatala')
+            );
             return;
         }
 
         if (!areAllFieldsFilled) {
-            alert(__('Please fill out all select fields before saving.', 'obatala'));
+            showFeedbackModal(
+                'warning',
+                __('Please fill out all select fields before saving.', 'obatala')
+            );
             return;
         }
 
@@ -166,14 +184,35 @@ const NodeConditional = ({ id, data }) => {
         updateNodeCondition(id, updatedCondition);
 		setHasPendingChanges( false );
 
-        alert(__('Changes applied successfully.', 'obatala'));
+        showFeedbackModal(
+            'success',
+            __('Changes applied successfully.', 'obatala')
+        );
     };
 
     return (
-        <div
-            ref={containerRef}
-            className={`step-container custom-drag-handle ${hasError ? 'error' : ''}`}
-        >
+        <>
+            {feedbackModal && (
+                <Modal
+                    title={__('Apply conditional', 'obatala')}
+                    onRequestClose={closeFeedbackModal}
+                    isDismissible={true}
+                    size="small"
+                >
+                    <Notice status={feedbackModal.status} isDismissible={false}>
+                        {feedbackModal.message}
+                    </Notice>
+                    <div className="components-button-container">
+                        <Button variant="primary" onClick={closeFeedbackModal}>
+                            {__('Close', 'obatala')}
+                        </Button>
+                    </div>
+                </Modal>
+            )}
+            <div
+                ref={containerRef}
+                className={`step-container custom-drag-handle ${hasError ? 'error' : ''}`}
+            >
             <div className="step-header">
                 <Tooltip text={__('Move step', 'obatala')}>
                     <div className="custom-drag-handle">
@@ -262,6 +301,7 @@ const NodeConditional = ({ id, data }) => {
                 </Button>
             </div>
         </div>
+        </>
     );
 };
 
