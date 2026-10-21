@@ -606,6 +606,12 @@ svg.react-flow__connectionline {
   outline: none;
 }
 
+.react-flow__node.react-flow__node-customNodeConditional {
+  .step-container {
+    border: 1px solid var(--secondary-500);
+  }
+}
+
 .react-flow__controls-button:hover {
   background: var(--xy-controls-button-background-color-hover-props,
       var(--xy-controls-button-background-color-hover, var(--xy-controls-button-background-color-hover-default)));
@@ -747,10 +753,12 @@ svg.react-flow__connectionline {
 }
 
 .step-header {
+  border-bottom: 1px solid var(--gray-500);
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1rem;
+  padding-bottom: 1rem;
   width: 100%;
   .components-button {
     min-width: 28px;
