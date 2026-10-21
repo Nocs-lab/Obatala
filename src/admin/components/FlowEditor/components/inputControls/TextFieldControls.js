@@ -165,7 +165,7 @@ export const TextFieldControls = ({
                 onChange={(value) =>
                 setFormValues((prev) => ({ ...prev, placeholder: value }))
                 }
-                placeholder={__('Informe um texto de exemplo', 'obatala')}
+                placeholder={__('Enter sample text', 'obatala')}
                 help={errors.placeholder}
             />
 
