@@ -318,11 +318,18 @@ class Sector {
             if (is_array($sectors) && in_array($sector_id, $sectors)) {
                 $user_data = get_userdata($user_id);
                 if ($user_data) {
+                    $wp_roles = wp_roles();
+                    $role_names = array_map(function ($role) use ($wp_roles) {
+                        $role_name = $wp_roles->roles[$role]['name'] ?? $role;
+                        return translate_user_role($role_name);
+                    }, $user_data->roles);
+
                     $users[] = [
                         'ID' => $user_data->ID,
                         'username' => $user_data->user_login,
                         'display_name' => $user_data->display_name,
                         'email' => $user_data->user_email,
+                        'roles' => $role_names,
                     ];
                 }
             }
