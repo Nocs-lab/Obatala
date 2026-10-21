@@ -15,7 +15,7 @@ const FIELD_OPTIONS = [
     { id: "phone", label: __("Phone", "obatala"), icon: mobile },
     { id: "address", label: __("Address", "obatala"), icon: mapMarker },
     { id: "number", label: __("Number", "obatala"), icon: keyboard },
-    { id: "datepicker", label: __("Date Picker", "obatala"), icon: calendar },
+    { id: "datepicker", label: __("Date", "obatala"), icon: calendar },
     { id: "upload", label: __("File upload", "obatala"), icon: file },
     { id: "stage_document", label: __("Stage document", "obatala"), icon: file },
     { id: "select", label: __("Select (Multiple Options)", "obatala"), icon: listView },
