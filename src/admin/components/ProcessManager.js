@@ -288,7 +288,7 @@ const ProcessManager = ({ onSelectProcess }) => {
                         icon={<Icon icon={plus} />}
                         onClick={handleAddProcess}
                     >
-                        {__('Add new', 'obatala')}
+                        {__('Add process', 'obatala')}
                     </Button>
                 </div>}
             </div>
