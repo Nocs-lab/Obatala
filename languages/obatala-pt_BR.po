@@ -1586,3 +1586,100 @@ msgid ""
 msgstr ""
 "Há alterações pendentes neste condicional. Clique em \"Aplicar condicional\" "
 "para mantê-las antes de recolher as etapas ou salvar o modelo."
+
+#: src/admin/components/ProcessManager/ProcessFilters.js
+msgid "All access levels"
+msgstr "Todos os níveis de acesso"
+
+#: src/admin/components/ProcessManager/ProcessFilters.js
+msgid "All progress"
+msgstr "Todos os progressos"
+
+#: src/admin/components/ProcessManager/ProcessFilters.js
+msgid "Process type"
+msgstr "Tipo de processo"
+
+#: src/admin/components/ProcessManager/ProcessFilters.js
+msgid "All process types"
+msgstr "Todos os tipos de processo"
+
+#: src/admin/components/ProcessTypeManager/ProcessTypeFilters.js
+msgid "All statuses"
+msgstr "Todos os status"
+
+#: src/admin/components/ProcessModelEditor.js
+#, javascript-format
+msgid "Step \"%s\" has no input or output."
+msgstr "A etapa \"%s\" não possui entrada nem saída."
+
+#: src/admin/components/ProcessModelEditor.js
+#, javascript-format
+msgid "%1$s \"%2$s\" has no input."
+msgstr "%1$s \"%2$s\" não possui entrada."
+
+#: src/admin/components/ProcessModelEditor.js
+msgid "Node"
+msgstr "Nó"
+
+#: src/admin/components/ProcessModelEditor.js
+#, javascript-format
+msgid "%1$s \"%2$s\" has no output."
+msgstr "%1$s \"%2$s\" não possui saída."
+
+#: src/admin/components/ProcessModelEditor.js
+#, javascript-format
+msgid "The steps %s do not have a group defined."
+msgstr "As etapas %s não possuem um grupo definido."
+
+#: src/admin/components/ProcessModelEditor.js
+#, javascript-format
+msgid "The step %s does not have a group defined."
+msgstr "A etapa %s não possui um grupo definido."
+
+#: src/admin/components/ProcessModelEditor.js
+#, javascript-format
+msgid "The steps %s do not have fields defined."
+msgstr "As etapas %s não possuem campos definidos."
+
+#: src/admin/components/ProcessModelEditor.js
+#, javascript-format
+msgid "The step %s does not have fields defined."
+msgstr "A etapa %s não possui campos definidos."
+
+#: src/admin/components/ProcessModelEditor.js
+msgid "Unknown step"
+msgstr "Etapa desconhecida"
+
+#: src/admin/components/ProcessModelEditor.js
+#, javascript-format
+msgid "The conditional after step \"%s\" is incomplete."
+msgstr "A condicional após a etapa \"%s\" está incompleta."
+
+#: src/admin/components/ProcessModelEditor.js
+#, javascript-format
+msgid "Error associating group to node %s:"
+msgstr "Erro ao associar grupo ao nó %s:"
+
+#: src/admin/components/ProcessModelEditor.js
+msgid "Process model"
+msgstr "Modelo de processo"
+
+#: src/admin/components/FlowEditor/components/reactFlow/NodeConditional.js
+msgid "This value has already been selected for another field."
+msgstr "Este valor já foi selecionado para outro campo."
+
+#: src/admin/components/FlowEditor/components/reactFlow/NodeConditional.js
+msgid "Please select a field for the first line."
+msgstr "Selecione um campo para a primeira linha."
+
+#: src/admin/components/FlowEditor/components/reactFlow/NodeConditional.js
+msgid "Please fill out all select fields before saving."
+msgstr "Preencha todos os campos de seleção antes de salvar."
+
+#: src/admin/components/FlowEditor/components/reactFlow/NodeConditional.js
+msgid "Changes applied successfully."
+msgstr "Alterações aplicadas com sucesso."
+
+#: src/admin/components/FlowEditor/components/reactFlow/NodeConditional.js
+msgid "Close"
+msgstr "Fechar"
