@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 import { useFlowContext } from "../../context/FlowContext";
 import { Button, DropdownMenu, Icon } from "@wordpress/components";
-import { check, chevronDown, closeSmall, download, upload } from "@wordpress/icons";
+import { check, chevronDown, closeSmall, download, image } from "@wordpress/icons";
 import { __ } from "@wordpress/i18n";
 
 const ModelControls = ({ onSave, onCancel }) => {
@@ -49,7 +49,7 @@ const ModelControls = ({ onSave, onCancel }) => {
                 </Button>
                 <DropdownMenu
                     icon={download}
-                    label={__('Exportar', 'obatala')}
+                    label={__('Data', 'obatala')}
                     variant="secondary"
                     toggleProps={{
                         variant: 'secondary',
@@ -57,24 +57,24 @@ const ModelControls = ({ onSave, onCancel }) => {
                         className: 'has-text',
                         children: (
                             <>
-                                <span>{__('Exportar', 'obatala')}</span>
+                                <span>{__('Data', 'obatala')}</span>
                                 <Icon icon={chevronDown} />
                             </>
                         ),
                     }}
                     controls={[
                         {
-                            title: __('Etapas como PNG', 'obatala'),
-                            onClick: () => exportFlowImage(),
+                            title: __('Import steps', 'obatala'),
+                            onClick: () => handleImportClick(),
                         },
                         {
-                            title: __('Etapas como JSON', 'obatala'),
+                            title: __('Export steps', 'obatala'),
                             onClick: () => handleExport(),
                         },
                     ]}
                 />
-                <Button icon={upload} variant="secondary" size="small" onClick={handleImportClick}>
-                    {__('Importar etapas', 'obatala')}
+                <Button icon={image} variant="secondary" size="small" onClick={exportFlowImage}>
+                    {__('Export image', 'obatala')}
                 </Button>
                 <Button icon={closeSmall} variant="secondary" size="small" onClick={onCancel}>
                     {__('Cancelar alterações', 'obatala')}

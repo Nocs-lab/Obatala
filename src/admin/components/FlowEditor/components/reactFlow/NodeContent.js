@@ -15,12 +15,12 @@ const FIELD_OPTIONS = [
     { id: "phone", label: __("Phone", "obatala"), icon: mobile },
     { id: "address", label: __("Address", "obatala"), icon: mapMarker },
     { id: "number", label: __("Number", "obatala"), icon: keyboard },
-    { id: "datepicker", label: __("Date Picker", "obatala"), icon: calendar },
+    { id: "datepicker", label: __("Date", "obatala"), icon: calendar },
     { id: "upload", label: __("File upload", "obatala"), icon: file },
     { id: "stage_document", label: __("Stage document", "obatala"), icon: file },
-    { id: "select", label: __("Select (Multiple Options)", "obatala"), icon: listView },
-    { id: "radio", label: __("Radio (Selection Options)", "obatala"), icon: listView },
-    { id: "search", label: __("Busca no Tainacan", "obatala"), icon: search },
+    { id: "select", label: __("Multiple selection", "obatala"), icon: listView },
+    { id: "radio", label: __("Single selection", "obatala"), icon: listView },
+    { id: "search", label: __("Tainacan item", "obatala"), icon: search },
 ];
 
 const NodeContent = ({ id, data = {} }) => {

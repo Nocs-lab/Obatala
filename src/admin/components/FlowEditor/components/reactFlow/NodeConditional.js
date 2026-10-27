@@ -3,7 +3,7 @@ import { Handle, Position } from "@xyflow/react";
 import { useFlowContext } from "../../context/FlowContext";
 import { Button, Modal, Notice, Tooltip } from '@wordpress/components';
 import { __ } from "@wordpress/i18n";
-import { close } from "@wordpress/icons";
+import { close, check } from "@wordpress/icons";
 
 const NodeConditional = ({ id, data }) => {
     const { edges, nodes, removeNode, setNodes, updateNodeCondition } = useFlowContext();
@@ -230,7 +230,7 @@ const NodeConditional = ({ id, data }) => {
             <dl>
                 <dt>{__('Etapa de entrada:', 'obatala')}</dt>
                 <dd>{matchedEdgeInput?.source ? getNodeLabel(matchedEdgeInput.source) : <span className="false">{__('Nenhuma etapa de entrada', 'obatala')}</span>}</dd>
-                <dt>{__('Etapas de saída:', 'obatala')}</dt>
+                <dt>{__('Conditional field:', 'obatala')}</dt>
                 {matchedEdgeOutput?.length > 0 ? (
                     <>
                         <dd>
@@ -255,28 +255,44 @@ const NodeConditional = ({ id, data }) => {
                                 ))}
                             </select>
                         </dd>
-                        {matchedEdgeOutput.map((edge, index) => (
-                            <dd className="mt-1" key={index}>
-                                {__('If receives', 'obatala')}
-                                <select
-                                    value={selectedFields[index]?.value || ""}
-                                    onChange={(e) => handleValueChange(index, e.target.value)}
-                                    disabled={!selectedField}
-                                >
-                                    <option value="" disabled>{__('Select a value', 'obatala')}</option>
-                                    {selectedField &&
-                                        radioFields
-                                            .find((field) => field.id === selectedField)
-                                            ?.config?.options
-                                            ?.split(",")
-                                            .map((option, optionIndex) => (
-                                                <option key={optionIndex} value={option.trim()}>
-                                                    {option.trim()}
-                                                </option>
-                                            ))}
-                                </select> {__('then go to', 'obatala')} <strong>{getNodeLabel(edge.target)}</strong>.
-                            </dd>
-                        ))}
+                        <dd>
+                            <table className="wp-list-table widefat striped mt-1">
+                                <thead>
+                                    <tr>
+                                        <th scope="col">{__('If conditional field receives', 'obatala')}</th>
+                                        <th scope="col">{__('Then next step is', 'obatala')}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {matchedEdgeOutput.map((edge, index) => (
+                                        <tr key={edge.id}>
+                                            <td>
+                                                <select
+                                                    value={selectedFields[index]?.value || ""}
+                                                    onChange={(e) => handleValueChange(index, e.target.value)}
+                                                    disabled={!selectedField}
+                                                >
+                                                    <option value="" disabled>{__('Select a value', 'obatala')}</option>
+                                                    {selectedField &&
+                                                        radioFields
+                                                            .find((field) => field.id === selectedField)
+                                                            ?.config?.options
+                                                            ?.split(",")
+                                                            .map((option, optionIndex) => (
+                                                                <option key={optionIndex} value={option.trim()}>
+                                                                    {option.trim()}
+                                                                </option>
+                                                            ))}
+                                                </select>
+                                            </td>
+                                            <td>
+                                                {edge.target === 'End' ? __('End', 'obatala') : getNodeLabel(edge.target)}
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </dd>
                     </>
                 ) : (
                     <dd className="false">{__('Nenhuma etapa de saída', 'obatala')}</dd>
@@ -292,11 +308,8 @@ const NodeConditional = ({ id, data }) => {
 				</Notice>
 			) }
 
-            <hr />
             <div className="components-button-container">
-                <Button variant="primary"
-                    onClick={handleSave}
-                >
+                <Button variant="primary" onClick={handleSave} icon={check} size="small">
 					{ __( 'Apply conditional', 'obatala' ) }
                 </Button>
             </div>

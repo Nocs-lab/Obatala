@@ -188,6 +188,7 @@ const SectorDetailsPage = () => {
                                             <th>{__('Name', 'obatala')}</th>
                                             <th>{__('Username', 'obatala')}</th>
                                             <th>{__('Email', 'obatala')}</th>
+                                            <th>{__('WordPress role', 'obatala')}</th>
                                             <th>{__('Actions', 'obatala')}</th>
                                         </tr>
                                     </thead>
@@ -197,6 +198,7 @@ const SectorDetailsPage = () => {
                                                 <td>{user.display_name}</td>
                                                 <td>{user.username}</td>
                                                 <td>{user.email}</td>
+                                                <td>{Array.isArray(user.roles) ? user.roles.join(', ') : ''}</td>
                                                 <td>
                                                     <div className="group-button">
                                                         <Tooltip text={__('Remove user from sector', 'obatala')}>
